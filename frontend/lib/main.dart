@@ -1,5 +1,8 @@
 import 'package:ehrenamtskarte/map.dart';
+import 'package:ehrenamtskarte/util/secrets/secretLoader.dart';
 import 'package:flutter/material.dart';
+
+import 'util/secrets/secret.dart';
 
 void main() {
   runApp(MyApp());
@@ -60,7 +63,19 @@ class HomePage extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: Text(this.title),
       ),
-      body: FullMap(""), // TODO get API key from key vault
+      body: FutureBuilder<Secret>(
+          future: SecretLoader(secretPath: "secrets.json").load(),
+          builder: (BuildContext context, AsyncSnapshot<Secret> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Text(snapshot.hasData
+                    ? "Failed to fetch MapBox API key"
+                    : "Fetching MapBox API key …"),
+              );
+            }
+            return FullMap(snapshot.data.mapboxKey);
+          },
+      ),
     );
   }
 }
