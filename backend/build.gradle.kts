@@ -34,5 +34,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "xyz.elite-se.ehrenamtskarte.AppKt"
+    mainClassName = "xyz.elitese.ehrenamtskarte.AppKt"
 }

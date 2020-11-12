@@ -3,6 +3,7 @@
  */
 package backend
 
+import xyz.elitese.ehrenamtskarte.App
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
