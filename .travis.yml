@@ -4,10 +4,6 @@ addons:
   apt:
     packages:
       - lib32stdc++6
-env:
-  global:
-    # environment variable secretsJson, containing the content of frontend/secrets.json
-    - secure: "h6YNStDQeOAlf6r3pwxFjrVGUwPGuNmP0MaMHY9Iey7Cu9Uh8yt0e9KJpVM/P7AW8K1T1gA6oNDlDYHmkIJT1owPWFw6dcYk37fRgLEPuY30bDloBhD+esJP/dfKqit+6NWhYC/ahMSwRjBjBheDraGavXHSj4cfLwB1Bj9enFN+K394LmaSSG0V3nRUqjuDL1kW/h9ZfsR0x4H76THZBmKpOThxtrSWT+dKHF5hb5PWBhEAdPtes3aPTy9QivVhryIzZ/wAbI4bEHgmiUG30vXjgX2LjnGJQIIUmCIFoVuddtE5XlboqUFZOIcPRtnGmHMb4T0z3Rv52ihU0imuLiQgFSwkAdlav5xGcQhU4hX0CpQkxybMm7xqb4lc0Bj8WpIVb8uMT0DNKkRx8hQvZrmDERKWRZ98I2kMHH9gXoJ24KKF6BrgYaInVKQyFIOKbmeEx+PPvFq7+tZvEYEBaAxp/Z29aat0TYD1HZy35jbNF/19NstkqFP2yqUHuLIYXaHnbsazG9eTlYI/33DGJkxQ0/5OnDiMdDZ72CPEX7VKHkm0fCd8oD2yFqODPEcnwtVJ9djKR6ZMJJ9iWVeqLlgKBbMbUx0n07lZe8lqaCule5rzXLIg8nSm9LhyDTS25WPvsNIXLF4wYeF/y+hZ7ws/8ZHbcWWpa84k21h0teo="
 
 stages:
   - test
