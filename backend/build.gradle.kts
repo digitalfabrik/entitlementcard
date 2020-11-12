@@ -16,9 +16,16 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
+    implementation("io.javalin:javalin:3.11.0")
+
+    implementation("log4j", "log4j", "1.2.17")
+
+    implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
+
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 

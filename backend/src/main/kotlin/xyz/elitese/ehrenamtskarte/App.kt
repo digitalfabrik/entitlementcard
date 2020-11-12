@@ -3,13 +3,10 @@
  */
 package xyz.elitese.ehrenamtskarte
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello world."
-        }
-}
+import io.javalin.Javalin
 
 fun main(args: Array<String>) {
-    println(App().greeting)
+    val app = Javalin.create().start(7000)
+    app.get("/") { ctx -> ctx.result("Hello World!") }
+    println("Server is running at http://localhost:7000")
 }
