@@ -4,12 +4,50 @@ addons:
   apt:
     packages:
       - lib32stdc++6
-install:
-  - git clone https://github.com/flutter/flutter.git -b stable
-  - ./flutter/bin/flutter doctor
-script:
-  - cd frontend
-  - ../flutter/bin/flutter test
-cache:
-  directories:
-    - $HOME/.pub-cache
+
+stages:
+  - test
+  - build
+  - name: deploy
+    if: branch = main
+
+jobs:
+  include:
+    - stage: test
+      name: "Frontend flutter tests"
+      install: scripts/setUpFlutter.sh
+      script: cd frontend && ./flutter/bin/flutter test
+      cache:
+        directories:
+          - $HOME/.pub-cache
+
+    - stage: build
+      name: "Build Android app"
+      language: android
+      dist: trusty
+      android:
+        components:
+          - tools
+          - platform-tools
+          - build-tools-29.0.3
+          - android-30
+          - extra-android-m2repository
+        licenses:
+          - android-sdk-preview-license-.+
+          - android-sdk-license-.+
+      install:
+        - tar -xf scripts/androidLicenses.tar -C /usr/local/android-sdk
+        - scripts/setUpFlutter.sh
+      script: cd frontend && ./flutter/bin/flutter build appbundle
+      cache:
+        directories:
+          - $HOME/.pub-cache
+
+    - name: "Build iOS app"
+      os: osx
+      osx_image: xcode12
+      install: scripts/setUpFlutter.sh
+      script: cd frontend && ./flutter/bin/flutter build ios --release --no-codesign
+      cache:
+        directories:
+          - $HOME/.pub-cache
