@@ -1,4 +1,4 @@
-package com.example.ehrenamtskarte
+package xyz.elitese.ehrenamtskarte
 
 import io.flutter.embedding.android.FlutterActivity
 
