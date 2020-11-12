@@ -1,16 +1,16 @@
-# ehrenamtskarte
+# Ehrenamtskarte frontend
 
-A new Flutter project.
+The Flutter app for the bavarian Ehrenamtskarte.
+
+## Project structure
+
+* `android`: A android project like for a native app. Put android specific code, needed permissions, … here
+* `ios`: A iOS project like for a native app. Put iOS specific code, needed permissions, … here
+* `lib`: Cross-platform production dart code. Here lives most of our code.
+* `test`: Cross-platform test dart code. Put widget tests, unit tests, … here
+* `pubspec.yaml`: Like packages.json. Specifies common information about our app (name, …) and the packages we want to use.
+* `pubspec.lock`: Like `packages.lock`. Do not edit manually. Lists all the packages with their specific version we use
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The Ehrenamtskarte app uses Flutter. Follow [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it.
