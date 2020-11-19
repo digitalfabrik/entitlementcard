@@ -12,7 +12,7 @@ Future<void> main() async {
       cache: InMemoryCache(),
       link: Link.from([
         HttpLink(
-          uri: 'http://localhost:7000/graphql',
+          uri: 'http://10.0.2.2:7000/graphql',
         )
       ]),
     ),

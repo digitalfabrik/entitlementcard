@@ -22,7 +22,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        home: HomePage(title: "Digitale Ehrenamstkarte"),
+        home: HomePage(title: "Digitale Ehrenamtskarte"),
         routes: {
           'home': (context) => HomePage(title: "Digitale Ehrenamstkarte"),
           'home1': (context) => HomePage(title: "Digitale Ehrenamstkarte")
