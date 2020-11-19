@@ -8,6 +8,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+        <option name="gradleHome" value="/usr/share/java/gradle" />
         <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
