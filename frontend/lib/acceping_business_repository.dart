@@ -1,5 +1,9 @@
 class AcceptingBusinessRepository {
-  Future<List<String>> loadAcceptingBusinesses() {}
+  Future<List<String>> loadAcceptingBusinesses() {
+    return Future.value(["1", "2"]);
+  }
 
-  Future saveAcceptingBusinesses(List<String> businesses) {}
+  Future saveAcceptingBusinesses(List<String> businesses) {
+    return Future.value(null);
+  }
 }
