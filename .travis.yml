@@ -17,7 +17,7 @@ jobs:
       name: "Frontend flutter tests"
       install: scripts/setUpFlutter.sh
       script:
-        - ./scripts/enforeDartStyle.sh
+        - ./scripts/enforceDartStyle.sh
         - cd frontend
         - ./flutter/bin/flutter test
       cache:
