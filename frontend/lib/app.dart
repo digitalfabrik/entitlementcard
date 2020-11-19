@@ -1,9 +1,9 @@
-import 'package:ehrenamtskarte/acceping_businesses_repository.dart';
-import 'package:ehrenamtskarte/accepting_businesses_model.dart';
+import 'package:ehrenamtskarte/repositories/acceping_businesses_repository.dart';
+import 'package:ehrenamtskarte/models/accepting_businesses_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'home/home_page.dart';
 
 class App extends StatelessWidget {
   final AcceptingBusinessesRepository repository;

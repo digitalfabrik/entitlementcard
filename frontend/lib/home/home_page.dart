@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'graphql/graphql_page.dart';
-import 'map/map_page.dart';
+import '../graphql/graphql_page.dart';
+import '../map/map_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);

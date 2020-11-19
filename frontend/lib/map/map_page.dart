@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../util/secrets/secret.dart';
 import '../util/secrets/secretLoader.dart';
-import 'map.dart';
+import 'full_map.dart';
 
 class MapPage extends StatelessWidget {
   MapPage({Key key}) : super(key: key);

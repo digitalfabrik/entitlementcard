@@ -1,11 +1,24 @@
-import 'package:ehrenamtskarte/graphql/wrapper.dart';
 import 'package:flutter/material.dart';
-import 'acceping_businesses_repository.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+
+import 'repositories/acceping_businesses_repository.dart';
 import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(
-      GraphQLWrapper(child: App(repository: AcceptingBusinessesRepository())));
+  var client = ValueNotifier(
+    GraphQLClient(
+      cache: InMemoryCache(),
+      link: Link.from([
+        HttpLink(
+          uri: 'http://localhost:7000/graphql',
+        )
+      ]),
+    ),
+  );
+  runApp(GraphQLProvider(
+      child: CacheProvider(
+          child: App(repository: AcceptingBusinessesRepository())),
+      client: client));
 }
