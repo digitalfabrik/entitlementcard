@@ -29,4 +29,26 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
 
 ## Conventions
 
-We follow the official [effective dart guides](https://dart.dev/guides/language/effective-dart).
+We follow the official [effective dart guides](https://dart.dev/guides/language/effective-dart). The pipeline will fail if dart files are not formatted correctly.
+It is encouraged to add a pre-commit hook like this:
+```sh
+#!/bin/bash
+
+dart_files=$(git ls-tree --name-only --full-tree -r HEAD | grep '.dart$')
+if [ -z "$dart_files" ]; then
+  echo "No dart files in repo."
+  exit 0
+fi
+
+output=$(flutter format --set-exit-if-changed $dart_files)
+status=$?
+
+if [ $status -eq 0 ]; then
+  echo "All Dart files formatted correctly."
+  exit 0
+else
+  echo "$output"
+  echo "Re-attempt commit."
+  exit 1
+fi
+```

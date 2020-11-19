@@ -16,7 +16,10 @@ jobs:
     - stage: test
       name: "Frontend flutter tests"
       install: scripts/setUpFlutter.sh
-      script: cd frontend && ./flutter/bin/flutter test
+      script:
+        - ./scripts/enforeDartStyle.sh
+        - cd frontend
+        - ./flutter/bin/flutter test
       cache:
         directories:
           - $HOME/.pub-cache

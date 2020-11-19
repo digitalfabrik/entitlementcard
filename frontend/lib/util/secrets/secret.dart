@@ -7,4 +7,3 @@ class Secret {
     return new Secret(mapboxKey: jsonMap["mapbox_key"]);
   }
 }
-

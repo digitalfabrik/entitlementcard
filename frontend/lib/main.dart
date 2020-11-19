@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
   // always marked "final".
 
   final String title;
-  
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -64,17 +64,17 @@ class HomePage extends StatelessWidget {
         title: Text(this.title),
       ),
       body: FutureBuilder<Secret>(
-          future: SecretLoader(secretPath: "secrets.json").load(),
-          builder: (BuildContext context, AsyncSnapshot<Secret> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Text(snapshot.hasData
-                    ? "Failed to fetch MapBox API key"
-                    : "Fetching MapBox API key …"),
-              );
-            }
-            return FullMap(snapshot.data.mapboxKey);
-          },
+        future: SecretLoader(secretPath: "secrets.json").load(),
+        builder: (BuildContext context, AsyncSnapshot<Secret> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: Text(snapshot.hasData
+                  ? "Failed to fetch MapBox API key"
+                  : "Fetching MapBox API key …"),
+            );
+          }
+          return FullMap(snapshot.data.mapboxKey);
+        },
       ),
     );
   }

@@ -22,10 +22,9 @@ class FullMapState extends State<FullMap> {
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
-        accessToken: this.mapboxToken,
-        onMapCreated: _onMapCreated,
-        initialCameraPosition:
-        const CameraPosition(target: LatLng(0.0, 0.0)),
+      accessToken: this.mapboxToken,
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
     );
   }
 }

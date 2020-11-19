@@ -7,7 +7,8 @@ import 'secret.dart';
 class SecretLoader {
   final String secretPath;
 
-  SecretLoader({this.secretPath});  Future<Secret> load() {
+  SecretLoader({this.secretPath});
+  Future<Secret> load() {
     return rootBundle.loadStructuredData<Secret>(this.secretPath,
         (jsonStr) async {
       final secret = Secret.fromJson(json.decode(jsonStr));
