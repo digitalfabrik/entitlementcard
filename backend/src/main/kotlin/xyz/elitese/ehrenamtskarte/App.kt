@@ -4,11 +4,13 @@
 package xyz.elitese.ehrenamtskarte
 
 import io.javalin.Javalin
+import io.javalin.http.staticfiles.Location
 
 fun main(args: Array<String>) {
     val app = Javalin.create { cfg ->
         cfg.enableDevLogging()
         cfg.enableCorsForAllOrigins()
+        cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
     }.start(7000)
 
     app.get("/") { ctx -> ctx.result("Hello World!") }
