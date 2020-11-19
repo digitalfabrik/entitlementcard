@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/list/accepting_businesses_page.dart';
 import 'package:flutter/material.dart';
 
 import '../graphql/graphql_page.dart';
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _tabs = <Widget>[
     MapPage(),
     GraphQLTestPage(),
+    AcceptingBusinessesPage()
   ];
 
   void _onTabTapped(int index) {
@@ -36,7 +38,8 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "GraphQL Test")
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "GraphQL Test"),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Provider Test")
         ],
         currentIndex: _currentTabIndex,
         onTap: _onTabTapped,

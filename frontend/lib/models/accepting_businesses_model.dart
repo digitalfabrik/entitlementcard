@@ -44,4 +44,9 @@ class AcceptingBusinessesModel extends ChangeNotifier {
       }
     }).toList();
   }
+
+  void removeTodo(String business) {
+    _acceptingBusinesses.removeWhere((it) => it == business);
+    notifyListeners();
+  }
 }
