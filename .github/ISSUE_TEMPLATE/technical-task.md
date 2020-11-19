@@ -2,7 +2,7 @@
 name: Technical Task
 about: Suggest an idea for this project
 title: ''
-labels: techinal task
+labels: technical task
 assignees: ''
 
 ---
