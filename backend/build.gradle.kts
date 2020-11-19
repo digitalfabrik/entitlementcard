@@ -21,8 +21,8 @@ repositories {
 
 dependencies {
     implementation("io.javalin:javalin:3.11.0")
-
-    implementation("log4j", "log4j", "1.2.17")
+    implementation("com.google.code.gson", "gson", "2.8.6")
+    implementation("org.slf4j", "slf4j-simple", "1.7.30")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
 
