@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:ehrenamtskarte/acceping_business_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
+import 'acceping_businesses_repository.dart';
+
 class AcceptingBusinessesModel extends ChangeNotifier {
-  final AcceptingBusinessRepository repository;
+  final AcceptingBusinessesRepository repository;
 
   List<String> _acceptingBusinesses;
 
-  UnmodifiableListView<String> get todos =>
+  UnmodifiableListView<String> get acceptingBusinesses =>
       UnmodifiableListView(_acceptingBusinesses);
 
   bool _isLoading = false;
