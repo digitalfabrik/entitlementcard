@@ -35,14 +35,8 @@ class _HomePageState extends State<HomePage> {
       body: _tabs.elementAt(_currentTabIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: "Karte"
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: "GraphQL Test"
-          )
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "GraphQL Test")
         ],
         currentIndex: _currentTabIndex,
         onTap: _onTabTapped,

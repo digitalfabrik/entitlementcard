@@ -6,7 +6,6 @@ class GraphQLTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Text("TODO")
-    ); // TODO show something fetched from GraphQL
+        child: Text("TODO")); // TODO show something fetched from GraphQL
   }
 }

@@ -8,9 +8,7 @@ class GraphQLWrapper extends GraphQLProvider {
     Widget child,
   }) : super(
             key: key,
-            child: CacheProvider(
-                child: child
-            ),
+            child: CacheProvider(child: child),
             client: ValueNotifier(
               GraphQLClient(
                 cache: InMemoryCache(),

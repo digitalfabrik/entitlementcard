@@ -6,5 +6,6 @@ import 'app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(GraphQLWrapper(child: App(repository: AcceptingBusinessesRepository())));
+  runApp(
+      GraphQLWrapper(child: App(repository: AcceptingBusinessesRepository())));
 }
