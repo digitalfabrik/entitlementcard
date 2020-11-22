@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
-import '../repositories/acceping_businesses_repository.dart';
+import '../repositories/accepting_businesses_repository.dart';
 
 class AcceptingBusinessesModel extends ChangeNotifier {
   final AcceptingBusinessesRepository repository;
