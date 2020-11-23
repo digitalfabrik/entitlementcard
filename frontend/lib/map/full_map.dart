@@ -11,9 +11,9 @@ class FullMapState extends State<FullMap> {
   void loadData(MapboxMapController mapController) async {
     String data = await DefaultAssetBundle.of(context)
         .loadString("verguenstigungen.json");
-    ByteData marker = await DefaultAssetBundle.of(context)
-        .load("custom_marker.png");
-    
+    ByteData marker =
+        await DefaultAssetBundle.of(context).load("custom_marker.png");
+
     mapController.addImage('custom-marker', marker.buffer.asUint8List());
     mapController.addSource("sourceId", data);
     mapController.addSymbolLayer("sourceId", "layer", {

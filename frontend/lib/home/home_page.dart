@@ -39,9 +39,12 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "GraphQL Test"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Provider Test"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Provider Test 2")
+          BottomNavigationBarItem(
+              icon: Icon(Icons.chat), label: "GraphQL Test"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.chat), label: "Provider Test"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.chat), label: "Provider Test 2")
         ],
         currentIndex: _currentTabIndex,
         onTap: _onTabTapped,
