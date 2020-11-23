@@ -1,7 +1,8 @@
 # Frontend
 
-This guide focuses on setting up the project using IntelliJ instead of Android Studio.
+The Ehrenamtskarte app uses Flutter. You can have a look at [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it.
 
+This short guide focuses on setting up the project using IntelliJ instead of Android Studio:
 1. Install [Dart SDK](https://dart.dev/get-dart)
    1.1. On Arch Linux you can just do: `pacman -S dart`
 2. Install [Flutter](https://flutter.dev/docs/get-started/install/linux)
@@ -17,7 +18,17 @@ This guide focuses on setting up the project using IntelliJ instead of Android S
    4.1. Install the Dart extension in IntelliJ and set the SDK path in the settings of IntelliJ
    4.2. Install the Flutter extension in IntelliJ and set the SDK path in the settings of IntelliJ
 5. Run `flutter pub get` in `frontend/`
+7. Place the `secrets.json` in `./frontend/secrets.json` (see below)
 6. Execute the "Run Flutter" (upper right corner of IDE) configuration from within IntelliJ
-7. Place the `secrets.json` in `./frontend/secrets.json`
+
+### Add a file with secrets
+
+You have to add a file named `secrets.json` next to `pubspec.yaml` with content like this:
+```json
+{
+  "mapbox_key": "<YOUR PUBLIC MAPBOX API KEY>"
+}
+```
+Be careful not to add this file to the repository. For our build pipeline, we have an encrypted version `secrets.json.enc`. You can read more about this in the [Travis Docs](https://docs.travis-ci.com/user/encrypting-files/).
 
 # Backend
