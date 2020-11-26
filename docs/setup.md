@@ -32,3 +32,18 @@ You have to add a file named `secrets.json` next to `pubspec.yaml` with content 
 Be careful not to add this file to the repository. For our build pipeline, we have an encrypted version `secrets.json.enc`. You can read more about this in the [Travis Docs](https://docs.travis-ci.com/user/encrypting-files/).
 
 # Backend
+
+1. Install docker
+2. `sudo docker-compose up`
+3. Open Adminer: [http://localhost:5433](http://localhost:5433/?pgsql=db&username=postgres&db=ehrenamtskarte)
+
+   The credentials are:
+
+   |Property|Value|
+   |---|---|
+   |Host (within Docker)|db|
+   |Username|postgres|
+   |Password|postgres|
+   |Database|ehrenamtskarte|
+4. Install JDK8
+5. Run the backend: `./backend/gradlew run`
