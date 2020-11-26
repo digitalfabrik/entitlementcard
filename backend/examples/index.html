@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+
+<body>
+<div id='map' style='width: 1000px; height: 1000px;'></div>
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoibWF4YW1tYW5uIiwiYSI6ImNraHlzdGNmejBkaGsycm9hNjJjcWZzdmwifQ.3NaekT5CjDsBnBNdUr1F7g'
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+    center: [11.576124, 48.137154], // starting position [lng, lat]
+    zoom: 5 // starting zoom
+  })
+  map.on('load', function () {
+    map.loadImage(
+      'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+      function (error, image) {
+        if (error) throw error
+        map.addImage('custom-marker', image)
+      }
+    )
+
+    // map.addLayer({
+    //   id: 'public.points',
+    //   'type': 'circle',
+    //   source: {
+    //     type: 'vector',
+    //     url: 'http://localhost:3001/rpc/public.function_source.json'
+    //   },
+    //   'source-layer': 'public.function_source',
+    //   paint: {
+    //     'circle-radius': 2,
+    //     'circle-color': 'red'
+    //   }
+    // })
+
+    map.addLayer({
+      id: 'public.cluster_source_circle',
+      type: 'circle',
+      source: {
+        type: 'vector',
+        url: 'http://localhost:3001/rpc/public.cluster_source.json'
+      },
+      'source-layer': 'public.cluster_source',
+      paint: {
+        'circle-radius': {
+          property: 'cluster_count',
+          stops: [
+            [0, 5],
+            [250, 20]
+          ]
+        },
+        'circle-color': {
+          property: 'cluster_count',
+          stops: [
+            [0, '#f1f075'],
+            [250, '#e55e5e']
+          ]
+        }
+      }
+    })
+
+    map.addLayer({
+      id: 'public.cluster_source_text',
+      type: 'symbol',
+      source: {
+        type: 'vector',
+        url: 'http://localhost:3001/rpc/public.cluster_source.json'
+      },
+      'source-layer': 'public.cluster_source',
+      'layout': {
+        'text-field': ['get', 'cluster_count'],
+      }
+    })
+
+
+
+//     map.addLayer({
+//       id: 'public.points',
+//       'type': 'symbol',
+//       source: {
+//         type: 'vector',
+//         url: 'http://localhost:3001/rpc/public.function_source.json'
+//       },
+//       'source-layer': 'public.function_source',
+//       'layout': {
+//         'icon-image': 'custom-marker',
+// // get the title name from the source's "title" property
+//         'text-field': ['get', 'title'],
+//         'text-font': [
+//           'Open Sans Semibold',
+//           'Arial Unicode MS Bold'
+//         ],
+//         'text-offset': [0, 1.25],
+//         'text-anchor': 'top'
+//       }
+//     })
+  })
+</script>
+</body>
+</html>
