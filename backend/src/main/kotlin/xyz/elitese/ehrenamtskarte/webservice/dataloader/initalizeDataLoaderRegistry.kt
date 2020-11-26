@@ -1,5 +1,6 @@
+package xyz.elitese.ehrenamtskarte.webservice.dataloader
+
 import org.dataloader.DataLoaderRegistry
-import xyz.elitese.ehrenamtskarte.webservice.dataloader.*
 
 fun initializeDataLoaderRegistry(dataLoaderRegistry: DataLoaderRegistry) {
     dataLoaderRegistry.register(CONTACT_LOADER_NAME, batchContactLoader)
