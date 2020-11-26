@@ -53,7 +53,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "xyz.elitese.ehrenamtskarte.AppKt"
+    mainClassName = "xyz.elitese.ehrenamtskarte.webservice.EntrypointKt"
 }
 
 tasks.withType<JavaExec>().configureEach {

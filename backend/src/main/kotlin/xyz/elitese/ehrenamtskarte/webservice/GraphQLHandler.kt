@@ -1,12 +1,7 @@
-package xyz.elitese.ehrenamtskarte
+package xyz.elitese.ehrenamtskarte.webservice
 
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
-import xyz.elitese.ehrenamtskarte.schema.BookQueryService
-import xyz.elitese.ehrenamtskarte.schema.CourseQueryService
-import xyz.elitese.ehrenamtskarte.schema.HelloQueryService
-import xyz.elitese.ehrenamtskarte.schema.LoginMutationService
-import xyz.elitese.ehrenamtskarte.schema.UniversityQueryService
 import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -14,26 +9,22 @@ import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.initializeDataLoaderRegistry
 import org.dataloader.DataLoaderRegistry
-import xyz.elitese.ehrenamtskarte.schema.models.*
+import xyz.elitese.ehrenamtskarte.webservice.schema.AcceptingStoreQueryService
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-data class AuthorizedContext(val authorizedUser: User? = null, var guestUUID: String? = null)
-
 class GraphQLHandler {
     companion object {
-        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte"))
+        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.webservice.schema"))
         private val queries = listOf(
-                TopLevelObject(HelloQueryService()),
-                TopLevelObject(BookQueryService()),
-                TopLevelObject(CourseQueryService()),
-                TopLevelObject(UniversityQueryService())
+                TopLevelObject(AcceptingStoreQueryService())
         )
 
-        private val mutations = listOf(
-                TopLevelObject(LoginMutationService())
+        private val mutations = listOf<TopLevelObject>(
+                // TopLevelObject(LoginMutationService())
         )
 
         val graphQLSchema = toSchema(config, queries, mutations)
@@ -46,9 +37,7 @@ class GraphQLHandler {
     private val dataLoaderRegistry = DataLoaderRegistry()
 
     init {
-        dataLoaderRegistry.register(UNIVERSITY_LOADER_NAME, batchUniversityLoader)
-        dataLoaderRegistry.register(COURSE_LOADER_NAME, batchCourseLoader)
-        dataLoaderRegistry.register(BATCH_BOOK_LOADER_NAME, batchBookLoader)
+        initializeDataLoaderRegistry(this.dataLoaderRegistry)
     }
 
     /**
@@ -69,18 +58,6 @@ class GraphQLHandler {
     private fun getVariables(payload: Map<String, *>) =
             payload.getOrElse("variables") { emptyMap<String, Any>() } as Map<String, Any>
 
-    /**
-     * Find attache user to context (authentication would go here)
-     */
-    private fun getContext(request: HttpServletRequest): AuthorizedContext {
-        val loggedInUser = User(
-                email = "fake@site.com",
-                firstName = "Someone",
-                lastName = "You Don't know",
-                universityId = 4
-        )
-        return AuthorizedContext(loggedInUser)
-    }
 
     /**
      * Get any errors and data from [executionResult].
@@ -119,7 +96,6 @@ class GraphQLHandler {
                             .query(payload["query"].toString())
                             .variables(getVariables(payload))
                             .dataLoaderRegistry(dataLoaderRegistry)
-                            .context(getContext(request))
             ).get()
             val result = getResult(executionResult)
 

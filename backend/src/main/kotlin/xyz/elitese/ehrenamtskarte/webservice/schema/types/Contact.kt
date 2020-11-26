@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2020 Expedia, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.elitese.ehrenamtskarte.schema
 
-import com.expediagroup.graphql.annotations.GraphQLDescription
-import xyz.elitese.ehrenamtskarte.schema.models.Book
+package xyz.elitese.ehrenamtskarte.webservice.schema.types
 
-/**
- * Provide Search options for book data
- */
-class BookQueryService {
-    @GraphQLDescription("Return list of books based on BookSearchParameter options")
-    @Suppress("unused")
-    suspend fun searchBooks(params: BookSearchParameters) = Book.search(params.ids)
+
+data class Contact(
+        val id: Long,
+        val email: String,
+        val telephone: String,
+        val website: String
+) {
+
 }
-
-data class BookSearchParameters(val ids: List<Long>)
