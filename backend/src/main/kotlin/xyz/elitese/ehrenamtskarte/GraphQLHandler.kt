@@ -2,11 +2,6 @@ package xyz.elitese.ehrenamtskarte
 
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
-import xyz.elitese.ehrenamtskarte.schema.BookQueryService
-import xyz.elitese.ehrenamtskarte.schema.CourseQueryService
-import xyz.elitese.ehrenamtskarte.schema.HelloQueryService
-import xyz.elitese.ehrenamtskarte.schema.LoginMutationService
-import xyz.elitese.ehrenamtskarte.schema.UniversityQueryService
 import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -15,7 +10,10 @@ import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
 import org.dataloader.DataLoaderRegistry
-import xyz.elitese.ehrenamtskarte.schema.models.*
+import xyz.elitese.ehrenamtskarte.dataloader.CONTACT_LOADER_NAME
+import xyz.elitese.ehrenamtskarte.dataloader.batchContactLoader
+import xyz.elitese.ehrenamtskarte.schema.*
+import xyz.elitese.ehrenamtskarte.schema.types.*
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -24,8 +22,9 @@ data class AuthorizedContext(val authorizedUser: User? = null, var guestUUID: St
 
 class GraphQLHandler {
     companion object {
-        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte"))
+        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.schema"))
         private val queries = listOf(
+                TopLevelObject(AcceptingStoreQueryService()),
                 TopLevelObject(HelloQueryService()),
                 TopLevelObject(BookQueryService()),
                 TopLevelObject(CourseQueryService()),
@@ -46,6 +45,7 @@ class GraphQLHandler {
     private val dataLoaderRegistry = DataLoaderRegistry()
 
     init {
+        dataLoaderRegistry.register(CONTACT_LOADER_NAME, batchContactLoader)
         dataLoaderRegistry.register(UNIVERSITY_LOADER_NAME, batchUniversityLoader)
         dataLoaderRegistry.register(COURSE_LOADER_NAME, batchCourseLoader)
         dataLoaderRegistry.register(BATCH_BOOK_LOADER_NAME, batchBookLoader)

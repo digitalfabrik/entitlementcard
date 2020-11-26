@@ -15,7 +15,7 @@
  */
 package xyz.elitese.ehrenamtskarte.schema
 
-import xyz.elitese.ehrenamtskarte.schema.models.User
+import xyz.elitese.ehrenamtskarte.schema.types.User
 
 data class AuthPayload(val token: String? = null, val user: User? = null)
 

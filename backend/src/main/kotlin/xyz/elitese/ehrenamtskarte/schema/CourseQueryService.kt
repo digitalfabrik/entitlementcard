@@ -15,7 +15,7 @@
  */
 package xyz.elitese.ehrenamtskarte.schema
 
-import xyz.elitese.ehrenamtskarte.schema.models.Course
+import xyz.elitese.ehrenamtskarte.schema.types.Course
 
 class CourseQueryService {
     suspend fun searchCourses(params: CourseSearchParameters) = Course.search(params.ids)

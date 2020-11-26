@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2020 Expedia, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.elitese.ehrenamtskarte.schema.models
 
-import graphql.GraphQLException
+package xyz.elitese.ehrenamtskarte.schema.types
 
-data class User(
+
+data class Contact(
+        val id: Long,
         val email: String,
-        val firstName: String?,
-        val lastName: String?,
-        val universityId: Long?,
-        val isAdmin: Boolean = false
+        val telephone: String,
+        val website: String
 ) {
-    suspend fun university(): University? {
-        universityId ?: return null
-        return University.search(listOf(universityId))[0]
+    @Suppress("unused")
+    companion object {
+        fun search(ids: List<Long>): List<Book> {
+            return listOf(
+                    Book(id = 1, title = "Campbell Biology"),
+                    Book(id = 2, title = "The Cell"),
+                    Book(id = 3, title = "Data Structures in C++"),
+                    Book(id = 4, title = "The Algorithm Design Manual")
+            ).filter { ids.contains(it.id) }
+        }
     }
-
-    fun longThatNeverComes(): Long =
-            throw GraphQLException("This value will never return")
 }

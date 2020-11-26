@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package xyz.elitese.ehrenamtskarte.schema.models
+package xyz.elitese.ehrenamtskarte.schema.types
 
 import com.expediagroup.graphql.annotations.GraphQLDescription
 import kotlinx.coroutines.runBlocking

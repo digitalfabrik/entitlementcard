@@ -15,7 +15,7 @@
  */
 package xyz.elitese.ehrenamtskarte.schema
 
-import xyz.elitese.ehrenamtskarte.schema.models.University
+import xyz.elitese.ehrenamtskarte.schema.types.University
 import graphql.GraphQLException
 
 class UniversityQueryService {
