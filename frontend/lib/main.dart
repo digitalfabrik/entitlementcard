@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'repositories/acceping_businesses_repository.dart';
+import 'repositories/accepting_businesses_repository.dart';
 import 'app.dart';
 
 Future<void> main() async {

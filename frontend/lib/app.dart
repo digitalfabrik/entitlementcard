@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/repositories/acceping_businesses_repository.dart';
+import 'package:ehrenamtskarte/repositories/accepting_businesses_repository.dart';
 import 'package:ehrenamtskarte/models/accepting_businesses_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

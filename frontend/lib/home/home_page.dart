@@ -48,6 +48,10 @@ class _HomePageState extends State<HomePage> {
         ],
         currentIndex: _currentTabIndex,
         onTap: _onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.blue,
+        selectedItemColor: Colors.black54,
+        unselectedItemColor: Colors.black,
       ),
     );
   }
