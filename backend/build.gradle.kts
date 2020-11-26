@@ -41,5 +41,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "xyz.elitese.ehrenamtskarte.webservice.Entrypoint.kt"
+    mainClassName = "xyz.elitese.ehrenamtskarte.webservice.EntrypointKt"
 }

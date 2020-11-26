@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 
 class GraphQLHandler {
     companion object {
-        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.schema"))
+        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.webservice.schema"))
         private val queries = listOf(
                 TopLevelObject(AcceptingStoreQueryService())
         )
