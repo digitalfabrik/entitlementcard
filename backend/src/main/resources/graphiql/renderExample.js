@@ -96,7 +96,7 @@ function graphQLFetcher(graphQLParams, opts = { headers: {} }) {
     // In a PR preview, it connects to the Star Wars API externally.
     // Change this to point wherever you host your GraphQL server.
     const isDev = window.location.hostname.match(/localhost$/);
-    const api = '/graphql';
+    const api = '/';
     let headers = opts.headers;
     // Convert headers to an object.
     if (typeof headers === 'string') {
