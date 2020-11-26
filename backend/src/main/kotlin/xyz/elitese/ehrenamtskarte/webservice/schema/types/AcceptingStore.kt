@@ -1,8 +1,8 @@
-package xyz.elitese.ehrenamtskarte.schema.types
+package xyz.elitese.ehrenamtskarte.webservice.schema.types
 
 import graphql.schema.DataFetchingEnvironment
-import xyz.elitese.ehrenamtskarte.dataloader.CATEGORY_LOADER_NAME
-import xyz.elitese.ehrenamtskarte.dataloader.CONTACT_LOADER_NAME
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.CATEGORY_LOADER_NAME
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.CONTACT_LOADER_NAME
 
 
 data class AcceptingStore(

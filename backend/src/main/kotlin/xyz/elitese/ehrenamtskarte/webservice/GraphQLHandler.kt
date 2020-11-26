@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte
+package xyz.elitese.ehrenamtskarte.webservice
 
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
@@ -11,12 +11,10 @@ import graphql.ExecutionResult
 import graphql.GraphQL
 import initializeDataLoaderRegistry
 import org.dataloader.DataLoaderRegistry
-import xyz.elitese.ehrenamtskarte.schema.*
+import xyz.elitese.ehrenamtskarte.webservice.schema.AcceptingStoreQueryService
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-data class AuthorizedContext(val authorizedUser: User? = null, var guestUUID: String? = null)
 
 class GraphQLHandler {
     companion object {
@@ -25,8 +23,8 @@ class GraphQLHandler {
                 TopLevelObject(AcceptingStoreQueryService())
         )
 
-        private val mutations = listOf(
-                TopLevelObject(LoginMutationService())
+        private val mutations = listOf<TopLevelObject>(
+                // TopLevelObject(LoginMutationService())
         )
 
         val graphQLSchema = toSchema(config, queries, mutations)
@@ -60,18 +58,6 @@ class GraphQLHandler {
     private fun getVariables(payload: Map<String, *>) =
             payload.getOrElse("variables") { emptyMap<String, Any>() } as Map<String, Any>
 
-    /**
-     * Find attache user to context (authentication would go here)
-     */
-    private fun getContext(request: HttpServletRequest): AuthorizedContext {
-        val loggedInUser = User(
-                email = "fake@site.com",
-                firstName = "Someone",
-                lastName = "You Don't know",
-                universityId = 4
-        )
-        return AuthorizedContext(loggedInUser)
-    }
 
     /**
      * Get any errors and data from [executionResult].
@@ -110,7 +96,6 @@ class GraphQLHandler {
                             .query(payload["query"].toString())
                             .variables(getVariables(payload))
                             .dataLoaderRegistry(dataLoaderRegistry)
-                            .context(getContext(request))
             ).get()
             val result = getResult(executionResult)
 

@@ -1,10 +1,10 @@
-package xyz.elitese.ehrenamtskarte.schema
+package xyz.elitese.ehrenamtskarte.webservice.schema
 
 import com.expediagroup.graphql.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import xyz.elitese.ehrenamtskarte.dataloader.ACCEPTING_STORE_LOADER_NAME
-import xyz.elitese.ehrenamtskarte.dataloader.allStores
-import xyz.elitese.ehrenamtskarte.schema.types.AcceptingStore
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.ACCEPTING_STORE_LOADER_NAME
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.allStores
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.AcceptingStore
 
 class AcceptingStoreQueryService {
     @GraphQLDescription("Return list of all accepting stores.")

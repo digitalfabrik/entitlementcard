@@ -1,8 +1,8 @@
-package xyz.elitese.ehrenamtskarte.dataloader
+package xyz.elitese.ehrenamtskarte.webservice.dataloader
 
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
-import xyz.elitese.ehrenamtskarte.schema.types.Contact
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.Contact
 import java.util.concurrent.CompletableFuture
 
 const val CONTACT_LOADER_NAME = "CONTACT_LOADER"

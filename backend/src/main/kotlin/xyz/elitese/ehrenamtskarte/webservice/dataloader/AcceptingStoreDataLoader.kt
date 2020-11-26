@@ -1,8 +1,8 @@
-package xyz.elitese.ehrenamtskarte.dataloader
+package xyz.elitese.ehrenamtskarte.webservice.dataloader
 
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
-import xyz.elitese.ehrenamtskarte.schema.types.AcceptingStore
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.AcceptingStore
 import java.util.concurrent.CompletableFuture
 
 const val ACCEPTING_STORE_LOADER_NAME = "ACCEPTING_STORE_LOADER"
