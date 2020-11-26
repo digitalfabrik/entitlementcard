@@ -201,12 +201,10 @@ packages:
   mapbox_gl:
     dependency: "direct main"
     description:
-      path: "."
-      ref: layers
-      resolved-ref: "69560141712a92c1875005a2da81e9af54523bfa"
-      url: "https://github.com/maximumbuster/flutter-mapbox-gl"
-    source: git
-    version: "0.7.0"
+      name: mapbox_gl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   mapbox_gl_dart:
     dependency: transitive
     description:
@@ -215,22 +213,18 @@ packages:
     source: hosted
     version: "0.1.5"
   mapbox_gl_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: mapbox_gl_platform_interface
-      ref: layers
-      resolved-ref: "69560141712a92c1875005a2da81e9af54523bfa"
-      url: "https://github.com/maximumbuster/flutter-mapbox-gl"
-    source: git
-    version: "0.7.0"
+      name: mapbox_gl_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   mapbox_gl_web:
     dependency: transitive
     description:
-      path: mapbox_gl_web
-      ref: HEAD
-      resolved-ref: "7861b62ee1d396439d44ebb1f84563244aa6bf82"
-      url: "https://github.com/tobrun/flutter-mapbox-gl.git"
-    source: git
+      name: mapbox_gl_web
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.9.0"
   matcher:
     dependency: transitive
