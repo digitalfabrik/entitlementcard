@@ -18,7 +18,14 @@ class MapPage extends StatelessWidget {
                 : "Fetching MapBox API key …"),
           );
         }
-        return FullMap(snapshot.data.mapboxKey);
+        return FullMap(
+            snapshot.data.mapboxKey,
+            (feature) => {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text(feature["properties"]["k_name"].toString() ??
+                        "Name missing"),
+                  ))
+                });
       },
     );
   }
