@@ -8,8 +8,28 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+  martin:
+    image: urbica/martin
+    ports:
+      - 3000:3000
+    environment:
+      - WATCH_MODE=true
+      - DATABASE_URL=postgres://postgres:postgres@db_postgis/db
+    depends_on:
+      - db_postgis
+  db_postgis:
+    image: mdillon/postgis:11-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
   adminer:
     image: "adminer:4.7.7-standalone"
     restart: always
     ports:
-      - 5433:8080
+      - 5000:8080
