@@ -23,15 +23,5 @@ data class Contact(
         val telephone: String,
         val website: String
 ) {
-    @Suppress("unused")
-    companion object {
-        fun search(ids: List<Long>): List<Book> {
-            return listOf(
-                    Book(id = 1, title = "Campbell Biology"),
-                    Book(id = 2, title = "The Cell"),
-                    Book(id = 3, title = "Data Structures in C++"),
-                    Book(id = 4, title = "The Algorithm Design Manual")
-            ).filter { ids.contains(it.id) }
-        }
-    }
+
 }

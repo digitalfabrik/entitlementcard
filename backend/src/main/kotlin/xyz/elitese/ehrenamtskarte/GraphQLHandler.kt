@@ -12,7 +12,6 @@ import graphql.GraphQL
 import initializeDataLoaderRegistry
 import org.dataloader.DataLoaderRegistry
 import xyz.elitese.ehrenamtskarte.schema.*
-import xyz.elitese.ehrenamtskarte.schema.types.User
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -23,11 +22,7 @@ class GraphQLHandler {
     companion object {
         private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.schema"))
         private val queries = listOf(
-                TopLevelObject(AcceptingStoreQueryService()),
-                TopLevelObject(HelloQueryService()),
-                TopLevelObject(BookQueryService()),
-                TopLevelObject(CourseQueryService()),
-                TopLevelObject(UniversityQueryService())
+                TopLevelObject(AcceptingStoreQueryService())
         )
 
         private val mutations = listOf(
