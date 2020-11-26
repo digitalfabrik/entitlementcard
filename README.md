@@ -7,6 +7,10 @@
 
 For setting up the frontend and backend see the [setup documentation](./docs/setup.md)
 
+# Resources about the Ehrenamtskarte
+
+See [here](https://github.com/ehrenamtskarte/artefacts/blob/main/resources.md)
+
 # Conventions
 
 - [Conventions](./docs/conventions.md)
