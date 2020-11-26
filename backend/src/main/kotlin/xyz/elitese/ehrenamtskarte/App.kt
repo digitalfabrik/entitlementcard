@@ -6,16 +6,18 @@ package xyz.elitese.ehrenamtskarte
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 
+const val PORT = 7000
+
 fun main(args: Array<String>) {
     val app = Javalin.create { cfg ->
         cfg.enableDevLogging()
         cfg.enableCorsForAllOrigins()
         cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
-    }.start(7000)
+    }.start(PORT)
 
-    app.get("/") { ctx -> ctx.result("Hello World!") }
     println("Server is running at http://localhost:7000")
+    println("Goto http://localhost:7000/graphiql for a graphical editor")
 
     val graphQLHandler = GraphQLHandler()
-    app.post("/graphql") { ctx -> graphQLHandler.handle(ctx.req, ctx.res) }
+    app.post("/") { ctx -> graphQLHandler.handle(ctx.req, ctx.res) }
 }
