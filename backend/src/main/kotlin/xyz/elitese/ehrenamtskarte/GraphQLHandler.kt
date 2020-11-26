@@ -9,11 +9,10 @@ import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
+import initializeDataLoaderRegistry
 import org.dataloader.DataLoaderRegistry
-import xyz.elitese.ehrenamtskarte.dataloader.CONTACT_LOADER_NAME
-import xyz.elitese.ehrenamtskarte.dataloader.batchContactLoader
 import xyz.elitese.ehrenamtskarte.schema.*
-import xyz.elitese.ehrenamtskarte.schema.types.*
+import xyz.elitese.ehrenamtskarte.schema.types.User
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -45,10 +44,7 @@ class GraphQLHandler {
     private val dataLoaderRegistry = DataLoaderRegistry()
 
     init {
-        dataLoaderRegistry.register(CONTACT_LOADER_NAME, batchContactLoader)
-        dataLoaderRegistry.register(UNIVERSITY_LOADER_NAME, batchUniversityLoader)
-        dataLoaderRegistry.register(COURSE_LOADER_NAME, batchCourseLoader)
-        dataLoaderRegistry.register(BATCH_BOOK_LOADER_NAME, batchBookLoader)
+        initializeDataLoaderRegistry(this.dataLoaderRegistry)
     }
 
     /**
