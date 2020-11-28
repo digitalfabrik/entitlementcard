@@ -1,0 +1,27 @@
+frontend_task_template: &FRONTEND_TASK_TEMPLATE
+  container:
+    image: cirrusci/flutter:latest
+  pub_cache:
+    folder: ~/.pub-cache
+    reupload_on_changes: false # since there is a fingerprint script
+    fingerprint_script:
+      - echo $CIRRUS_OS
+      - flutter --version
+      - cat frontend/pubspec.yaml
+    populate_script: 
+      - cd frontend
+      - flutter pub get
+
+lint_task:
+  << : *FRONTEND_TASK_TEMPLATE
+  lint_script:
+    - cd frontend
+    - ../scripts/enforceDartStyle.yml
+
+test_task:
+  << : *FRONTEND_TASK_TEMPLATE
+  test_script:
+    - cd frontend
+    - flutter test
+
+ 
