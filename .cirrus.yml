@@ -62,3 +62,5 @@ fe_build_android_task:
     - flutter build appbundle
   android_app_artifacts:
     path: ./frontend/build/app/outputs/bundle/release/app-release.aab
+  android_sdk_cache:
+    folder: /opt/android-sdk-linux
