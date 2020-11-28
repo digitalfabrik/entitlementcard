@@ -91,5 +91,5 @@ be_build_task:
   << : *BE_TASK_TEMPLATE
   build_script:
     - cd backend
-    - gradle build
+    - ./gradlew build
   << : *BE_CLEAN_CACHE_TEMPLATE
