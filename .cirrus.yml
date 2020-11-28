@@ -82,7 +82,7 @@ be_clean_cache_template: &BE_CLEAN_CACHE_TEMPLATE
 
 be_task_template: &BE_TASK_TEMPLATE
   container:
-    image: gradle/jdk11
+    image: gradle:jdk11
   gradle_cache:
     folder: ~/.gradle/caches
 
