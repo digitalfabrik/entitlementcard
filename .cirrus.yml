@@ -41,8 +41,8 @@ fe_build_ios_task:
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   required_pr_labels: build-ios
   depends_on:
-    - fe_lint
-    - fe_test
+    - "FE: lint"
+    - "FE: test"
   osx_instance:
       image: catalina-flutter
   build_script:
