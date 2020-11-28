@@ -11,12 +11,17 @@ frontend_task_template: &FRONTEND_TASK_TEMPLATE
     populate_script: 
       - cd frontend
       - flutter pub get
+  environment:
+    SECRETS_JSON: ENCRYPTED[SECRETS_JSON]
+  secrets_json_file:
+    path: ~/frontend/secrets.json
+    variable_name: SECRETS_JSON
 
 lint_task:
   << : *FRONTEND_TASK_TEMPLATE
   lint_script:
     - cd frontend
-    - ../scripts/enforceDartStyle.yml
+    - ../scripts/enforceDartStyle.sh
 
 test_task:
   << : *FRONTEND_TASK_TEMPLATE
@@ -25,3 +30,32 @@ test_task:
     - flutter test
 
  
+build_android_task:
+  name: "build (Android)"
+  dist: trusty
+  android:
+    components:
+      - tools
+      - platform-tools
+      - build-tools-29.0.3
+      - android-30
+      - extra-android-m2repository
+    licenses:
+      - android-sdk-preview-license-.+
+      - android-sdk-license-.+
+  install:
+    - tar -xf scripts/androidLicenses.tar -C /usr/local/android-sdk
+    - scripts/setUpFlutter.sh
+  script: cd frontend && ./flutter/bin/flutter build appbundle
+  cache:
+    directories:
+      - $HOME/.pub-cache
+
+- name: "Build iOS app"
+  os: osx
+  osx_image: xcode12
+  install: scripts/setUpFlutter.sh
+  script: cd frontend && ./flutter/bin/flutter build ios --release --no-codesign
+  cache:
+    directories:
+      - $HOME/.pub-cache
