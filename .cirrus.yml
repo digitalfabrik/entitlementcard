@@ -50,3 +50,15 @@ fe_build_ios_task:
     - flutter build ios --release --no-codesign
   iOS_app_artifacts:
     path: ./frontend/build/ios/iphoneos/Runner.app
+
+fe_build_android_task:
+  name: "FE: build (Android)"
+  << : *FE_TASK_TEMPLATE
+  depends_on:
+    - "FE: lint"
+    - "FE: test"
+  build_script:
+    - cd frontend
+    - flutter build appbundle
+  android_app_artifacts:
+    path: ./frontend/build/app/outputs/bundle/release/app-release.aab
