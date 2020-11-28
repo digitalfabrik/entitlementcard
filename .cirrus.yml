@@ -58,8 +58,6 @@ fe_build_ios_task:
 fe_build_android_task:
   name: "FE: build (Android)"
   << : *FE_TASK_TEMPLATE
-  android_sdk_cache:
-    folder: /opt/android-sdk-linux
   depends_on:
     - "FE: lint"
     - "FE: test"
