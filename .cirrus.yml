@@ -1,4 +1,4 @@
-frontend_task_template: &FRONTEND_TASK_TEMPLATE
+fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   container:
     image: cirrusci/flutter:latest
   pub_cache:
@@ -17,14 +17,36 @@ frontend_task_template: &FRONTEND_TASK_TEMPLATE
     path: ./frontend/secrets.json
     variable_name: SECRETS_JSON
 
-lint_task:
-  << : *FRONTEND_TASK_TEMPLATE
+fe_task_template: &FE_TASK_TEMPLATE
+  << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
+  container:
+    image: cirrusci/flutter:latest
+
+fe_lint_task:
+  name: "FE: lint"
+  << : *FE_TASK_TEMPLATE
   lint_script:
     - cd frontend
     - ../scripts/enforceDartStyle.sh
 
-test_task:
-  << : *FRONTEND_TASK_TEMPLATE
+fe_test_task:
+  name: "FE: test"
+  << : *FE_TASK_TEMPLATE
   test_script:
     - cd frontend
     - flutter test
+
+fe_build_ios_task:
+  name: "FE: build (iOS)"
+  << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
+  required_pr_labels: build-ios
+  depends_on:
+    - fe_lint
+    - fe_test
+  osx_instance:
+      image: catalina-flutter
+  build_script:
+    - cd frontend
+    - flutter build ios --release --no-codesign
+  iOS_app_artifacts:
+    path: ./frontend/build/ios/iphoneos/Runner.app
