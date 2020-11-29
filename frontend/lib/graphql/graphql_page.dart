@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-String queryString = """
-  {
-    hello
-  }
-""";
+import 'graphql_api.dart';
 
 class GraphQLTestPage extends StatelessWidget {
   GraphQLTestPage({Key key}) : super(key: key);
@@ -14,7 +10,7 @@ class GraphQLTestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Query(
-      options: QueryOptions(documentNode: gql(queryString)),
+      options: QueryOptions(documentNode: AcceptingStoresQuery().document),
       builder: (QueryResult result,
           {VoidCallback refetch, FetchMore fetchMore}) {
         if (result.hasException) {
@@ -25,9 +21,9 @@ class GraphQLTestPage extends StatelessWidget {
         if (result.loading) {
           return Text('Loading …');
         }
-
-        String world = result.data['hello'];
-        return Text(world);
+        final allStores = AcceptingStores.fromJson(result.data).acceptingStores;
+        final resultNames = allStores.map((e) => e.name).join(" ");
+        return Text(resultNames);
       },
     ));
   }

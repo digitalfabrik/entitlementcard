@@ -1,0 +1,6 @@
+query AcceptingStores {
+    acceptingStores {
+        id
+        name
+    }
+}

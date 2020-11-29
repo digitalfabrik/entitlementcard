@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'repositories/accepting_businesses_repository.dart';
 import 'app.dart';
+import 'repositories/accepting_businesses_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
