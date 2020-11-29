@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/list/accepting_businesses_page.dart';
+import 'package:ehrenamtskarte/map/detail_view.dart';
 import 'package:flutter/material.dart';
 
 import '../graphql/graphql_page.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     MapPage(),
     GraphQLTestPage(),
     AcceptingBusinessesPage(),
-    AcceptingBusinessesPage()
+    DetailView()
   ];
 
   void _onTabTapped(int index) {
