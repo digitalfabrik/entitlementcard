@@ -8,23 +8,50 @@ class GraphQLTestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Query(
-      options: QueryOptions(documentNode: AcceptingStoresQuery().document),
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString(),
-              style: TextStyle(color: Colors.red));
-        }
+    return Column(children: [
+      Query(
+        options: QueryOptions(documentNode: AcceptingStoresQuery().document),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            return Text(result.exception.toString(),
+                style: TextStyle(color: Colors.red));
+          }
 
-        if (result.loading) {
-          return Text('Loading …');
-        }
-        final allStores = AcceptingStores.fromJson(result.data).acceptingStores;
-        final resultNames = allStores.map((e) => e.name).join(" ");
-        return Text(resultNames);
-      },
-    ));
+          if (result.loading) {
+            return Text('Loading …');
+          }
+          final allStores =
+              AcceptingStores.fromJson(result.data).acceptingStoreName;
+          final resultNames = allStores.map((e) => e.name).join(" ");
+          return Text(resultNames);
+        },
+      ),
+      Query(
+        options: QueryOptions(
+            documentNode: AcceptingStoreByIdQuery().document,
+            variables: {
+              "ids": {
+                "ids": [1]
+              }
+            }),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            return Text(result.exception.toString(),
+                style: TextStyle(color: Colors.red));
+          }
+
+          if (result.loading) {
+            return Text('Loading …');
+          }
+          final allStores =
+              AcceptingStoreById.fromJson(result.data).acceptingStoreById;
+          final resultNames =
+              "Store with id 1: " + allStores.map((e) => e.name).join(" ");
+          return Text(resultNames);
+        },
+      )
+    ]);
   }
 }

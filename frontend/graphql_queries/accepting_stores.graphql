@@ -1,5 +1,5 @@
 query AcceptingStores {
-    acceptingStores {
+    acceptingStoreName: acceptingStores {
         id
         name
     }
