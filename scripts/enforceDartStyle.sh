@@ -6,7 +6,7 @@ if [ -z "$dart_files" ]; then
   exit 0
 fi
 
-output=$(./frontend/flutter/bin/flutter format --set-exit-if-changed -n $dart_files)
+output=$(flutter format --set-exit-if-changed -n $dart_files)
 status=$?
 
 if [ $status -eq 0 ]; then
