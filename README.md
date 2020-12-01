@@ -1,5 +1,5 @@
 # Digitale Ehrenamtskarte
-[![Build Status](https://api.cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte.svg)](https://api.cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte.svg)
+[![Build Status](https://api.cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte.svg)](https://cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte/main)
 
 > App for the bavarian Ehrenamtskarte.
 
