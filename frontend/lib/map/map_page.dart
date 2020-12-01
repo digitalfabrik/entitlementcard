@@ -1,31 +1,48 @@
+import 'package:ehrenamtskarte/map/locationPermissionRequester.dart'
+    show requestLocationPermissionIfFirstTry;
 import 'package:flutter/material.dart';
+import 'package:location_permissions/location_permissions.dart';
 import '../util/secrets/secret.dart';
 import '../util/secrets/secretLoader.dart';
 import 'full_map.dart';
+
+class _FutureResult {
+  Secret secret;
+  PermissionStatus permissionStatus;
+  _FutureResult(this.secret, this.permissionStatus);
+}
 
 class MapPage extends StatelessWidget {
   MapPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Secret>(
-      future: SecretLoader(secretPath: "secrets.json").load(),
-      builder: (BuildContext context, AsyncSnapshot<Secret> snapshot) {
+    return FutureBuilder<_FutureResult>(
+      future: () async {
+        var futureSecrets = SecretLoader(secretPath: "secrets.json").load();
+        var futurePermissionState = requestLocationPermissionIfFirstTry(
+            LocationPermissionLevel.locationWhenInUse);
+        return _FutureResult(await futureSecrets, await futurePermissionState);
+      }(),
+      builder: (BuildContext context, AsyncSnapshot<_FutureResult> snapshot) {
         if (!snapshot.hasData) {
           return Center(
-            child: Text(snapshot.hasData
+            child: Text(snapshot.hasError
                 ? "Failed to fetch MapBox API key"
                 : "Fetching MapBox API key …"),
           );
         }
         return FullMap(
-            snapshot.data.mapboxKey,
-            (feature) => {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text(feature["properties"]["k_name"].toString() ??
-                        "Name missing"),
-                  ))
-                });
+          mapboxToken: snapshot.data.secret.mapboxKey,
+          onFeatureClick: (feature) => {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  feature["properties"]["k_name"].toString() ?? "Name missing"),
+            ))
+          },
+          myLocationEnabled:
+              snapshot.data.permissionStatus == PermissionStatus.granted,
+        );
       },
     );
   }

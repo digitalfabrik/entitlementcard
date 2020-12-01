@@ -44,4 +44,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 </manifest>
