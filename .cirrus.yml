@@ -1,0 +1,95 @@
+############
+# FRONTEND #
+############
+
+fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
+  container:
+    image: cirrusci/flutter:latest
+  pub_cache:
+    folder: ~/.pub-cache
+    reupload_on_changes: false # since there is a fingerprint script
+    fingerprint_script:
+      - echo $CIRRUS_OS
+      - flutter --version
+      - cat frontend/pubspec.lock
+    populate_script: 
+      - cd frontend
+      - flutter pub get
+  environment:
+    SECRETS_JSON: ENCRYPTED[c73df347c1def703d16419893945dfe6484e785569ac31fa720479de68addfd82070684f0006103fc34f890a6e2897e4]
+  secrets_json_file:
+    path: ./frontend/secrets.json
+    variable_name: SECRETS_JSON
+
+fe_task_template: &FE_TASK_TEMPLATE
+  << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
+  container:
+    image: cirrusci/flutter:latest
+
+fe_lint_task:
+  name: "FE: lint"
+  << : *FE_TASK_TEMPLATE
+  lint_script:
+    - cd frontend
+    - ../scripts/enforceDartStyle.sh
+
+fe_test_task:
+  name: "FE: test"
+  << : *FE_TASK_TEMPLATE
+  test_script:
+    - cd frontend
+    - flutter test
+
+fe_build_ios_task:
+  name: "FE: build (iOS)"
+  << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
+  required_pr_labels: build-ios
+  depends_on:
+    - "FE: lint"
+    - "FE: test"
+  osx_instance:
+      image: catalina-flutter
+  build_script:
+    - cd frontend
+    - flutter build ios --release --no-codesign
+  iOS_app_artifacts:
+    path: ./frontend/build/ios/iphoneos/Runner.app
+
+fe_build_android_task:
+  name: "FE: build (Android)"
+  << : *FE_TASK_TEMPLATE
+  depends_on:
+    - "FE: lint"
+    - "FE: test"
+  build_script:
+    - cd frontend
+    - flutter build appbundle
+  android_app_artifacts:
+    path: ./frontend/build/app/outputs/bundle/release/app-release.aab
+
+###########
+# BACKEND #
+###########
+
+be_clean_cache_template: &BE_CLEAN_CACHE_TEMPLATE
+  # see https://cirrus-ci.org/examples/#caching for an explanation
+  cleanup_before_cache_script:
+    - rm -rf ~/.gradle/caches/$GRADLE_VERSION/
+    - rm -rf ~/.gradle/caches/transforms-1
+    - rm -rf ~/.gradle/caches/journal-1
+    - rm -rf ~/.gradle/caches/jars-3/*/buildSrc.jar
+    - find ~/.gradle/caches/ -name "*.lock" -type f -delete
+
+be_task_template: &BE_TASK_TEMPLATE
+  container:
+    image: gradle:jdk11
+  gradle_cache:
+    folder: ~/.gradle/caches
+
+be_build_task:
+  name: "BE: build"
+  << : *BE_TASK_TEMPLATE
+  build_script:
+    - cd backend
+    - ./gradlew build
+  << : *BE_CLEAN_CACHE_TEMPLATE
