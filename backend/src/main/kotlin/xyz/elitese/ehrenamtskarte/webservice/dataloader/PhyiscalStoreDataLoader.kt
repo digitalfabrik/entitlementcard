@@ -7,7 +7,7 @@ import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
-const val PHYSICAL_STORE_LOADER_NAME = "ACCEPTING_STORE_LOADER"
+const val PHYSICAL_STORE_LOADER_NAME = "PHYSICAL_STORE_LOADER"
 
 val allPhysicalStores = listOf(
         PhysicalStore(1, Address(

@@ -8,6 +8,11 @@ class GraphQLTestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final byIdQuery = AcceptingStoreByIdQuery(
+        variables: AcceptingStoreByIdArguments(
+            ids: ParamsInput(ids: [1])
+        )
+    );
     return Column(children: [
       Query(
         options: QueryOptions(documentNode: AcceptingStoresQuery().document),
@@ -29,12 +34,9 @@ class GraphQLTestPage extends StatelessWidget {
       ),
       Query(
         options: QueryOptions(
-            documentNode: AcceptingStoreByIdQuery().document,
-            variables: {
-              "ids": {
-                "ids": [1]
-              }
-            }),
+          documentNode: byIdQuery.document,
+          variables: byIdQuery.getVariablesMap()
+        ),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.hasException) {
