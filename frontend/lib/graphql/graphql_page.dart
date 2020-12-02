@@ -22,7 +22,7 @@ class GraphQLTestPage extends StatelessWidget {
             return Text('Loading …');
           }
           final allStores =
-              AcceptingStores.fromJson(result.data).acceptingStoreName;
+              AcceptingStoresQuery().parse(result.data).acceptingStoreName;
           final resultNames = allStores.map((e) => e.name).join(" ");
           return Text(resultNames);
         },
@@ -45,8 +45,8 @@ class GraphQLTestPage extends StatelessWidget {
           if (result.loading) {
             return Text('Loading …');
           }
-          final allStores =
-              AcceptingStoreById.fromJson(result.data).acceptingStoreById;
+          final allStores = AcceptingStoreByIdQuery().parse(result.data)
+              .acceptingStoreById;
           final resultNames =
               "Store with id 1: " + allStores.map((e) => e.name).join(" ");
           return Text(resultNames);
