@@ -1,6 +1,6 @@
 ---
 # Database connection string
-connection_string: "postgres://postgres:postgres@db_postgis:5432/db"
+connection_string: "postgres://postgres:postgres@db_postgis:5432/ehrenamtskarte"
 
 # Connection keep alive timeout [default: 75]
 keep_alive: 75
