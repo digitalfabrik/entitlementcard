@@ -11,7 +11,7 @@ class FullMapState extends State<FullMap> {
     return new MapboxMap(
       accessToken: this.mapboxToken,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
-      styleString: "mapbox://styles/elkei24/ckhyn5h2l1yq519r9g3fbsogj",
+      styleString: "https://vector.ehrenamtskarte.app/style.json",
     );
   }
 }

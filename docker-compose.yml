@@ -24,17 +24,10 @@ services:
     restart: always
     ports:
       - 127.0.0.1:5001:8080
-  map_view:
-    image: "nginx:1.19.5"
-    restart: always
-    volumes:
-      - ./docker/map_view:/usr/share/nginx/html
-    ports:
-      - 127.0.0.1:5002:80
   style:
     image: "nginx:1.19.5"
     restart: always
     volumes:
       - ./docker/style:/usr/share/nginx/html
     ports:
-      - 127.0.0.1:5004:80
+      - 127.0.0.1:5002:80
