@@ -145,10 +145,10 @@ AcceptingStoreById$Query$AcceptingStore
         ? null
         : AcceptingStoreById$Query$AcceptingStore$Contact.fromJson(
             json['contact'] as Map<String, dynamic>)
-    ..phyiscalStore = json['phyiscalStore'] == null
+    ..physicalStore = json['physicalStore'] == null
         ? null
         : AcceptingStoreById$Query$AcceptingStore$PhysicalStore.fromJson(
-            json['phyiscalStore'] as Map<String, dynamic>);
+            json['physicalStore'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$AcceptingStoreById$Query$AcceptingStoreToJson(
@@ -158,7 +158,7 @@ Map<String, dynamic> _$AcceptingStoreById$Query$AcceptingStoreToJson(
       'name': instance.name,
       'category': instance.category?.toJson(),
       'contact': instance.contact?.toJson(),
-      'phyiscalStore': instance.phyiscalStore?.toJson(),
+      'physicalStore': instance.physicalStore?.toJson(),
     };
 
 AcceptingStoreById$Query _$AcceptingStoreById$QueryFromJson(

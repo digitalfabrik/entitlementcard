@@ -33,7 +33,7 @@ type AcceptingStore {
   contactId: Long!
   id: Long!
   name: String!
-  phyiscalStore: PhysicalStore
+  physicalStore: PhysicalStore
 }
 
 type Address {

@@ -8,7 +8,7 @@ query AcceptingStoreById($ids: ParamsInput!) {
             telephone
             website
         }
-        phyiscalStore {
+        physicalStore {
             address {
                 coordinates {
                     latitude

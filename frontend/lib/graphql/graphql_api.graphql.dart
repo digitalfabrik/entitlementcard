@@ -160,10 +160,10 @@ class AcceptingStoreById$Query$AcceptingStore with EquatableMixin {
 
   AcceptingStoreById$Query$AcceptingStore$Contact contact;
 
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore phyiscalStore;
+  AcceptingStoreById$Query$AcceptingStore$PhysicalStore physicalStore;
 
   @override
-  List<Object> get props => [id, name, category, contact, phyiscalStore];
+  List<Object> get props => [id, name, category, contact, physicalStore];
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreById$Query$AcceptingStoreToJson(this);
 }
@@ -336,7 +336,7 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
                           selectionSet: null)
                     ])),
                 FieldNode(
-                    name: NameNode(value: 'phyiscalStore'),
+                    name: NameNode(value: 'physicalStore'),
                     alias: null,
                     arguments: [],
                     directives: [],
