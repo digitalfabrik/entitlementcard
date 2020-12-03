@@ -25,7 +25,7 @@ table_sources:
   accepting_stores:
     id: public.acceptingstores
     schema: public
-    table: acceptingSstores
+    table: acceptingstores
     id_column: id
     geometry_column: location
     srid: 4326
