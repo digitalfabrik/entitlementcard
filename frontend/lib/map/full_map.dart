@@ -25,7 +25,8 @@ class FullMapState extends State<FullMap> {
       myLocationEnabled: this.myLocationEnabled,
       onMapCreated: (controller) {
         this._controller = controller;
-        Future.delayed(Duration(milliseconds: 500), bringCameraToUserLocation);
+        Future.delayed(Duration(milliseconds: 500), bringCameraToUserLocation)
+            .timeout(Duration(seconds: 1));
       },
       onMapClick: this.onMapClick,
     );
