@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/map/locationPermissionRequester.dart'
+import 'package:ehrenamtskarte/map/request_location_permission.dart'
     show requestLocationPermissionIfNotYetGranted;
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
