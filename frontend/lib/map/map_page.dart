@@ -24,14 +24,15 @@ class MapPage extends StatelessWidget {
         if (!snapshot.hasData) {
           return Center(
             child: Text(snapshot.hasError
-                ? "Failed to fetch MapBox API key"
-                : "Fetching MapBox API key …"),
+                ? "Failed to request location permission"
+                : "Requesting location permission …"),
           );
         }
         return FullMap(
           onFeatureClick: (feature) => {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
+                // TODO change loading of properties, as we no longer use the old fat geojson
                   feature["properties"]["k_name"].toString() ?? "Name missing"),
             ))
           },
