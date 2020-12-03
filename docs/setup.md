@@ -18,18 +18,7 @@ This short guide focuses on setting up the project using IntelliJ instead of And
    4.1. Install the Dart extension in IntelliJ and set the SDK path in the settings of IntelliJ
    4.2. Install the Flutter extension in IntelliJ and set the SDK path in the settings of IntelliJ
 5. Run `flutter pub get` in `frontend/`
-7. Place the `secrets.json` in `./frontend/secrets.json` (see below)
 6. Execute the "Run Flutter" (upper right corner of IDE) configuration from within IntelliJ
-
-### Add a file with secrets
-
-You have to add a file named `secrets.json` next to `pubspec.yaml` with content like this:
-```json
-{
-  "mapbox_key": "<YOUR PUBLIC MAPBOX API KEY>"
-}
-```
-Be careful not to add this file to the repository. For our CI pipeline, we have an encrypted environment variable that will be put into a `secrets.json` file when the pipeline runs.
 
 # Backend
 
