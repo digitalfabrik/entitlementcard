@@ -15,7 +15,7 @@ object Categories : IntIdTable() {
     val iconUrl = varchar("iconUrl", 50)
 }
 
-class CategoryEntity(id: EntityID<Int>): IntEntity(id) {
+class CategoryEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CategoryEntity>(Categories)
     var name by Categories.name
     var iconUrl by Categories.iconUrl
@@ -27,7 +27,7 @@ object Contacts : IntIdTable() {
     val website = varchar("website", 50)
 }
 
-class ContactEntity(id: EntityID<Int>): IntEntity(id) {
+class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object :  IntEntityClass<ContactEntity>(Contacts)
     var email by Contacts.email
     var telephone by Contacts.telephone
@@ -36,7 +36,7 @@ class ContactEntity(id: EntityID<Int>): IntEntity(id) {
 
 object AcceptingStores : IntIdTable() {
     val name = varchar("name", 50)
-    val location  = point("location")
+    val location = point("location")
     val contactId = reference("contactId", Contacts)
     val categoryId = reference("categoryId", Categories)
 }
@@ -48,10 +48,10 @@ class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     var categoryId by AcceptingStores.categoryId
 }
 
-fun Table.point(name: String, srid: Int = 4326): Column<Point>
-        = registerColumn(name, PointColumnType())
+fun Table.point(name: String, srid: Int = 4326) : Column<Point>
+        = registerColumn(name, PointColumnType(srid))
 
-private class PointColumnType(val srid: Int = 4326): ColumnType() {
+private class PointColumnType(val srid: Int = 4326) : ColumnType() {
     override fun sqlType() = "GEOMETRY(Point, $srid)"
     override fun valueFromDB(value: Any) = if (value is PGgeometry) value.geometry else value
     override fun notNullValueToDB(value: Any): Any {
