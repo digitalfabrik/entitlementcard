@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/map/locationPermissionRequester.dart'
-    show requestLocationPermissionIfFirstTry;
+    show requestLocationPermissionIfNotYetGranted;
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
 import '../util/secrets/secret.dart';
@@ -20,7 +20,7 @@ class MapPage extends StatelessWidget {
     return FutureBuilder<_FutureResult>(
       future: () async {
         var futureSecrets = SecretLoader(secretPath: "secrets.json").load();
-        var futurePermissionState = requestLocationPermissionIfFirstTry(
+        var futurePermissionState = requestLocationPermissionIfNotYetGranted(
             LocationPermissionLevel.locationWhenInUse);
         return _FutureResult(await futureSecrets, await futurePermissionState);
       }(),
