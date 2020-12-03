@@ -9,11 +9,11 @@ declare
     bbox geometry;
 begin
     bbox := ST_MakeEnvelope(
-                -max + (x * res),
-                max - (y * res),
-                -max + (x * res) + res,
-                max - (y * res) - res,
-                3857
+            -max + (x * res),
+            max - (y * res),
+            -max + (x * res) + res,
+            max - (y * res) - res,
+            3857
         );
     if srid = 3857 then
         return bbox;
@@ -29,53 +29,41 @@ $func$;
 CREATE OR REPLACE FUNCTION public.accepting_stores_clustered(z integer, x integer, y integer, query_params json) RETURNS bytea AS
 $$
 DECLARE
-    mvt bytea;
+    mvt           bytea;
+    cluster_k     int      = 3;
+    tile_bbox     geometry = TileBBox(z, x, y, 4326);
+    bavarian_bbox geometry = ST_MakeEnvelope(13.8350427083, 47.2703623267, 8.9771580802, 50.5644529365, 4326);
 BEGIN
-    SELECT INTO mvt ST_AsMVT(tile, 'accepting_stores_clustered', 4096, 'geom')
-    FROM (
--- z, x, y
-             SELECT kmean,
-                    count(*) AS cluster_count,
-                    ST_AsMVTGeom(st_centroid(ST_Extent(tsub.wkb_geometry_3857)), TileBBox(z, x, y, 3857), 4096, 64,
-                                 false) as geom
-             FROM (
-                      SELECT ST_ClusterKMeans(tsub1.wkb_geometry, CAST(LEAST(5, (SELECT count(*)
-                                                                                 FROM public.verguenstigungen v
-                                                                                 WHERE v.wkb_geometry && ST_Transform(TileBBox(z, x, y, 3857), 4326))) AS int))
-                             OVER ()                                AS kmean,
-                             ST_Transform(tsub1.wkb_geometry, 3857) as wkb_geometry_3857
-                      FROM (
-                               SELECT v.wkb_geometry
-                               FROM public.verguenstigungen v
-                               WHERE v.wkb_geometry && ST_Transform(TileBBox(z, x, y, 3857), 4326)
-                           ) tsub1
-                  ) tsub
-             GROUP BY kmean
 
-         ) as tile
-    WHERE geom IS NOT NULL;
+    SELECT INTO mvt ST_AsMVT(tile, 'accepting_stores_clustered', 4096, 'mvt_geom')
+    FROM (
+             WITH locations AS (
+                 SELECT store.location
+                 FROM public.acceptingstores store
+                 WHERE store.location && tile_bbox
+                   AND store.location && bavarian_bbox
+             ),
+                  k AS (
+                      SELECT CAST(LEAST(cluster_k, COUNT(*)) AS int)
+                      FROM locations
+                  ),
+                  clusters AS (
+                      SELECT ST_ClusterKMeans(locations.location, (SELECT * FROM k))
+                             OVER () AS cluster_index,
+                             locations.location
+                      FROM locations
+                  )
+             SELECT cluster_index,
+                    count(*)            AS cluster_count,
+                    ST_AsMVTGeom(ST_CENTROID(ST_COLLECT(ST_Transform(clusters.location, 3857))),
+                                 TileBBox(z, x, y, 3857), 4096, 64,
+                                 false) as mvt_geom
+             FROM clusters
+             GROUP BY cluster_index) as tile
+    WHERE mvt_geom IS NOT NULL;
 
     RETURN mvt;
 END
 $$ LANGUAGE plpgsql IMMUTABLE
                     STRICT
                     PARALLEL SAFE;
-
-
--- SELECT kmean,
---        count(*) AS cluster_count,
---        ST_AsMVTGeom(st_centroid(ST_Extent(tsub.wkb_geometry_3857)), TileBBox(10, 545, 352, 3857), 4096, 64,
---                     false) as geom
--- FROM (
---          SELECT ST_ClusterKMeans(tsub1.wkb_geometry, CAST(LEAST(5, (SELECT count(*)
---                                                                     FROM public.verguenstigungen v
---                                                                     WHERE v.wkb_geometry && ST_Transform(TileBBox(10, 545, 352, 3857), 4326))) AS int))
---                 OVER ()                                AS kmean,
---                 ST_Transform(tsub1.wkb_geometry, 3857) as wkb_geometry_3857
---          FROM (
---                   SELECT v.wkb_geometry
---                   FROM public.verguenstigungen v
---                   WHERE v.wkb_geometry && ST_Transform(TileBBox(10, 545, 352, 3857), 4326)
---               ) tsub1
---      ) tsub
--- GROUP BY kmean
