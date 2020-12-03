@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../util/secrets/secret.dart';
-import '../util/secrets/secretLoader.dart';
+
 import 'full_map.dart';
 
 class MapPage extends StatelessWidget {
@@ -8,6 +7,11 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FullMap();
+    return FullMap((feature) => {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(
+                feature["properties"]["k_name"].toString() ?? "Name missing"),
+          ))
+        });
   }
 }

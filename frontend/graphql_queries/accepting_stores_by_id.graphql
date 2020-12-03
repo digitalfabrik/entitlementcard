@@ -1,0 +1,25 @@
+query AcceptingStoreById($ids: ParamsInput!) {
+    acceptingStoreById(params: $ids) {
+        id
+        name
+        category { name }
+        contact {
+            email
+            telephone
+            website
+        }
+        physicalStore {
+            address {
+                coordinates {
+                    latitude
+                    longitude
+                }
+                houseNumber
+                street
+                postalCode
+                location
+                state
+            }
+        }
+    }
+}

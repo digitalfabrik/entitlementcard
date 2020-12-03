@@ -13,7 +13,7 @@ data class AcceptingStore(
         val categoryId: Long
 ) {
 
-    suspend fun phyiscalStore(dataFetchingEnvironment: DataFetchingEnvironment): PhysicalStore? {
+    suspend fun physicalStore(dataFetchingEnvironment: DataFetchingEnvironment): PhysicalStore? {
         return dataFetchingEnvironment.getDataLoader<Long, PhysicalStore?>(PHYSICAL_STORE_LOADER_NAME)
                 .load(id).join()
     }

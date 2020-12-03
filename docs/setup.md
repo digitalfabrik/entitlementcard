@@ -29,7 +29,7 @@ You have to add a file named `secrets.json` next to `pubspec.yaml` with content 
   "mapbox_key": "<YOUR PUBLIC MAPBOX API KEY>"
 }
 ```
-Be careful not to add this file to the repository. For our build pipeline, we have an encrypted version `secrets.json.enc`. You can read more about this in the [Travis Docs](https://docs.travis-ci.com/user/encrypting-files/).
+Be careful not to add this file to the repository. For our CI pipeline, we have an encrypted environment variable that will be put into a `secrets.json` file when the pipeline runs.
 
 # Backend
 
