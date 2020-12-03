@@ -43,12 +43,14 @@ AcceptingStoreById$Query$AcceptingStore$Category
     _$AcceptingStoreById$Query$AcceptingStore$CategoryFromJson(
         Map<String, dynamic> json) {
   return AcceptingStoreById$Query$AcceptingStore$Category()
+    ..id = json['id'] as int
     ..name = json['name'] as String;
 }
 
 Map<String, dynamic> _$AcceptingStoreById$Query$AcceptingStore$CategoryToJson(
         AcceptingStoreById$Query$AcceptingStore$Category instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
     };
 
