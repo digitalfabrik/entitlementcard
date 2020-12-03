@@ -22,8 +22,8 @@ worker_processes: 8
 
 # associative arrays of table sources
 table_sources:
-  accepting_stores_all:
-    id: accepting_stores_all
+  accepting_stores:
+    id: accepting_stores
     schema: public
     table: verguenstigungen
     id_column:

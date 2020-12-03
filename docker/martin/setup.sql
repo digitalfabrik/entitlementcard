@@ -9,11 +9,11 @@ declare
     bbox geometry;
 begin
     bbox := ST_MakeEnvelope(
-            -max + (x * res),
-            max - (y * res),
-            -max + (x * res) + res,
-            max - (y * res) - res,
-            3857
+                -max + (x * res),
+                max - (y * res),
+                -max + (x * res) + res,
+                max - (y * res) - res,
+                3857
         );
     if srid = 3857 then
         return bbox;
@@ -31,7 +31,7 @@ $$
 DECLARE
     mvt bytea;
 BEGIN
-    SELECT INTO mvt ST_AsMVT(tile, 'public.cluster_source', 4096, 'geom')
+    SELECT INTO mvt ST_AsMVT(tile, 'accepting_stores_clustered', 4096, 'geom')
     FROM (
 -- z, x, y
              SELECT kmean,
