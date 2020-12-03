@@ -35,6 +35,6 @@ services:
     image: "nginx:1.19.5"
     restart: always
     volumes:
-      - ./docker/style:/usr/share/nginx/
+      - ./docker/style:/usr/share/nginx/html
     ports:
       - 127.0.0.1:5004:80
