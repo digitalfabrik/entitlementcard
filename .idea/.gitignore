@@ -5,3 +5,7 @@
 /httpRequests/
 
 libraries/*
+
+# Ignore data base configurations
+dataSources
+dataSources.xml
