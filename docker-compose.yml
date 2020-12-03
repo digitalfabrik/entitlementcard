@@ -1,20 +1,11 @@
 version: "3.8"
 services:
-  db:
-    image: "postgres:13.1"
-    environment:
-      - POSTGRES_DB=ehrenamtskarte
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
   martin:
-    image: urbica/martin
+    build: ./docker/martin
     ports:
-      - 3000:3000
-    environment:
-      - WATCH_MODE=true
-      - DATABASE_URL=postgres://postgres:postgres@db_postgis/db
+      - 127.0.0.1:5003:3000
+    volumes:
+      - ./docker/martin/config.yaml:/app/config.yaml
     depends_on:
       - db_postgis
   db_postgis:
@@ -27,9 +18,16 @@ services:
     volumes:
       - ./pg_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - 127.0.0.1:5432:5432
   adminer:
     image: "adminer:4.7.7-standalone"
     restart: always
     ports:
-      - 5000:8080
+      - 127.0.0.1:5001:8080
+  map_view:
+    image: "nginx:1.19.5"
+    restart: always
+    volumes:
+      - ./docker/map_view:/usr/share/nginx/html
+    ports:
+      - 127.0.0.1:5002:80
