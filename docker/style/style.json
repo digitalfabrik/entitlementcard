@@ -1701,14 +1701,15 @@
       "id": "accepting_stores",
       "type": "symbol",
       "source": "accepting_stores",
-      "source-layer": "public.verguenstigungen",
+      "source-layer": "public.acceptingstores",
       "minzoom": 11,
       "maxzoom": 24,
+      "filter": ["all"],
       "layout": {
         "visibility": "visible",
         "icon-image": [
           "match",
-          ["get", "fid_oberkategorie"],
+          ["get", "categoryId"],
           [0],
           "car_11",
           [1],
