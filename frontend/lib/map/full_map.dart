@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -24,7 +25,7 @@ class FullMapState extends State<FullMap> {
       myLocationEnabled: this.myLocationEnabled,
       onMapCreated: (controller) {
         this._controller = controller;
-        bringCameraToUserLocation();
+        Future.delayed(Duration(milliseconds: 500), bringCameraToUserLocation);
       },
       onMapClick: this.onMapClick,
     );
@@ -37,10 +38,11 @@ class FullMapState extends State<FullMap> {
         });
   }
 
-  void bringCameraToUserLocation() {
-    _controller.requestMyLocationLatLng().then((location) => _controller
-        .animateCamera(CameraUpdate.newLatLngZoom(location, initialZoomLevel)));
-  }
+  void bringCameraToUserLocation() async =>
+      _controller.requestMyLocationLatLng().then(bringCameraToLocation);
+
+  void bringCameraToLocation(LatLng location) async => _controller
+      .animateCamera(CameraUpdate.newLatLngZoom(location, initialZoomLevel));
 }
 
 class FullMap extends StatefulWidget {
