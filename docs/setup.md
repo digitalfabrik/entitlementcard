@@ -56,7 +56,7 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
 ## Using ehrenamtskarte.app as database
 
 ```bash
-ssh -4 -L 5432:localhost:5432 -L 5001:localhost:5001 -L 5002:localhost:5002 -L 5003:localhost:5003 team@ehrenamtskarte.app
+ssh -L 5432:localhost:5432 -L 5001:localhost:5001 -L 5002:localhost:5002 -L 5003:localhost:5003 team@ehrenamtskarte.app
 ```
 
 ## Filling postgis with GeoJSON
