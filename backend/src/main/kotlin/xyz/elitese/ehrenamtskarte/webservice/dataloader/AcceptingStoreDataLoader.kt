@@ -2,21 +2,21 @@ package xyz.elitese.ehrenamtskarte.webservice.dataloader
 
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
+import org.jetbrains.exposed.sql.transactions.transaction
+import xyz.elitese.ehrenamtskarte.database.repos.AcceptingStoresRepository
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.AcceptingStore
 import java.util.concurrent.CompletableFuture
 
 const val ACCEPTING_STORE_LOADER_NAME = "ACCEPTING_STORE_LOADER"
 
-val allStores = listOf(
-        AcceptingStore(1, "Store1", 1, 2),
-        AcceptingStore(2, "Store2", 1, 3),
-        AcceptingStore(3, "Store3", 1, 3)
-)
-
-val acceptingStoreLoader = DataLoader<Long, AcceptingStore?> { ids ->
+val acceptingStoreLoader = DataLoader<Int, AcceptingStore?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
-            ids.map { id -> allStores.find { store -> store.id == id } }
+            transaction {
+                AcceptingStoresRepository.findByIds(ids).map {
+                    AcceptingStore(it.id.value, it.name, it.contactId.value, it.categoryId.value)
+                }
+            }
         }
     }
 }

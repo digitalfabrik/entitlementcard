@@ -23,7 +23,7 @@ object Contacts : IntIdTable() {
 }
 
 class ContactEntity(id: EntityID<Int>): IntEntity(id) {
-    companion object : IntEntityClass<ContactEntity>(Categories)
+    companion object :  IntEntityClass<ContactEntity>(Contacts)
     var email by Contacts.email
     var telephone by Contacts.telephone
     var website by Contacts.website
@@ -31,13 +31,13 @@ class ContactEntity(id: EntityID<Int>): IntEntity(id) {
 
 object AcceptingStores : IntIdTable() {
     val name = varchar("name", 50)
-    val contact = reference("contact", Contacts)
-    val category = reference("category", Categories)
+    val contactId = reference("contactId", Contacts)
+    val categoryId = reference("categoryId", Categories)
 }
 
 class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AcceptingStoreEntity>(AcceptingStores)
     var name by AcceptingStores.name
-    var contact by AcceptingStores.contact
-    var category by AcceptingStores.category
+    var contactId by AcceptingStores.contactId
+    var categoryId by AcceptingStores.categoryId
 }
