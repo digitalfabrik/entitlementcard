@@ -7,6 +7,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 typedef void OnFeatureClickCallback(dynamic feature);
 
 class FullMapState extends State<FullMap> {
+  static const double initialZoomLevel = 13;
   final String _mapboxToken;
   final OnFeatureClickCallback _onFeatureClick;
   final bool myLocationEnabled;
@@ -17,12 +18,16 @@ class FullMapState extends State<FullMap> {
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
-        accessToken: this._mapboxToken,
-        initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
-        styleString: "mapbox://styles/elkei24/ckhyn5h2l1yq519r9g3fbsogj",
-        onMapCreated: (controller) => {this._controller = controller},
-        onMapClick: this.onMapClick,
-        myLocationEnabled: this.myLocationEnabled);
+      accessToken: this._mapboxToken,
+      initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
+      styleString: "mapbox://styles/elkei24/ckhyn5h2l1yq519r9g3fbsogj",
+      myLocationEnabled: this.myLocationEnabled,
+      onMapCreated: (controller) {
+        this._controller = controller;
+        bringCameraToUserLocation();
+      },
+      onMapClick: this.onMapClick,
+    );
   }
 
   void onMapClick(Point<double> point, LatLng coordinates) {
@@ -30,6 +35,11 @@ class FullMapState extends State<FullMap> {
           if (features?.isNotEmpty)
             {this._onFeatureClick(json.decode(features[0]))}
         });
+  }
+
+  void bringCameraToUserLocation() {
+    _controller.requestMyLocationLatLng().then((location) => _controller
+        .animateCamera(CameraUpdate.newLatLngZoom(location, initialZoomLevel)));
   }
 }
 
