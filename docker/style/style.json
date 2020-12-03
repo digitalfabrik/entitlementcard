@@ -9,7 +9,7 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=zOWlRyA7SQOSf0eOTmmm"
+      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key={key}"
     },
     "natural_earth_shaded_relief": {
       "maxzoom": 6,
@@ -37,7 +37,7 @@
     }
   },
   "sprite": "https://maputnik.github.io/osm-liberty/sprites/osm-liberty",
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=zOWlRyA7SQOSf0eOTmmm",
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key={key}",
   "layers": [
     {
       "id": "background",
@@ -1728,7 +1728,8 @@
           [8],
           "cafe_15",
           "marker_11"
-        ]
+        ],
+        "text-field": ""
       }
     },
     {
@@ -1738,7 +1739,13 @@
       "source-layer": "accepting_stores_clustered",
       "minzoom": 0,
       "maxzoom": 11,
-      "layout": {"visibility": "visible", "icon-image": "circle-stroked_15"}
+      "layout": {
+        "visibility": "visible",
+        "icon-image": "circle-stroked_15",
+        "text-field": ["get", "cluster_count"],
+        "text-anchor": "center",
+        "text-offset": [0, 1]
+      }
     }
   ],
   "id": "osm-liberty"
