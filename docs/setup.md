@@ -50,8 +50,7 @@ Be careful not to add this file to the repository. For our CI pipeline, we have 
 4. Install JDK8
 5. Run the backend: `./backend/gradlew run`
 6. Take a look at the martin endpoints: [http://localhost:5003](http://localhost:5003/index.json) and [http://localhost:5003/rpc](http://localhost:5003/rpc/index.json)
-7. Take a look at the map_view: [http://localhost:5002](http://localhost:5002)
-
+7. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
 
 ## Using ehrenamtskarte.app as database
 
