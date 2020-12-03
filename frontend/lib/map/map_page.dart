@@ -8,18 +8,6 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Secret>(
-      future: SecretLoader(secretPath: "secrets.json").load(),
-      builder: (BuildContext context, AsyncSnapshot<Secret> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: Text(snapshot.hasData
-                ? "Failed to fetch MapBox API key"
-                : "Fetching MapBox API key …"),
-          );
-        }
-        return FullMap(snapshot.data.mapboxKey);
-      },
-    );
+    return FullMap();
   }
 }

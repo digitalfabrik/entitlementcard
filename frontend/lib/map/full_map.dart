@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class FullMapState extends State<FullMap> {
-  final String mapboxToken;
-
-  FullMapState(this.mapboxToken);
 
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
-      accessToken: this.mapboxToken,
+      accessToken: null,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
       styleString: "https://vector.ehrenamtskarte.app/style.json",
     );
@@ -17,10 +14,9 @@ class FullMapState extends State<FullMap> {
 }
 
 class FullMap extends StatefulWidget {
-  final String mapboxToken;
 
-  const FullMap(this.mapboxToken);
+  const FullMap();
 
   @override
-  State createState() => FullMapState(this.mapboxToken);
+  State createState() => FullMapState();
 }
