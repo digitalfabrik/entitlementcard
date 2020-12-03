@@ -1,4 +1,6 @@
+import 'package:ehrenamtskarte/map/detail_view.dart';
 import 'package:flutter/material.dart';
+
 import '../util/secrets/secret.dart';
 import '../util/secrets/secretLoader.dart';
 import 'full_map.dart';
@@ -24,9 +26,19 @@ class MapPage extends StatelessWidget {
                   Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text(feature["properties"]["k_name"].toString() ??
                         "Name missing"),
-                  ))
+                  )),
+                  _openDetailView(context, 1, feature["properties"]["k_name"])
                 });
       },
+    );
+  }
+
+  void _openDetailView(
+      BuildContext context, int acceptingStoreId, String storeName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DetailView(acceptingStoreId, storeName)),
     );
   }
 }

@@ -6,38 +6,43 @@ import '../graphql/graphql_api.dart';
 
 class DetailView extends StatelessWidget {
   int _acceptingStoreId;
+  String _storeName;
 
-  DetailView(this._acceptingStoreId);
+  DetailView(this._acceptingStoreId, this._storeName);
 
   @override
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(
             ids: ParamsInput(ids: [_acceptingStoreId])));
-    return Query(
-      options: QueryOptions(
-          documentNode: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()),
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString(),
-              style: TextStyle(color: Colors.red));
-        }
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(_storeName),
+        ),
+        body: Query(
+          options: QueryOptions(
+              documentNode: byIdQuery.document,
+              variables: byIdQuery.getVariablesMap()),
+          builder: (QueryResult result,
+              {VoidCallback refetch, FetchMore fetchMore}) {
+            if (result.hasException) {
+              return Text(result.exception.toString(),
+                  style: TextStyle(color: Colors.red));
+            }
 
-        if (result.loading) {
-          return Text('Loading …');
-        }
-        final matchingStores =
-            AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
-        if (matchingStores.isEmpty) {
-          return Text(
-              'Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
-        }
-        print(matchingStores.first.toJson());
-        return buildContent(context, matchingStores.first);
-      },
-    );
+            if (result.loading) {
+              return Text('Loading …');
+            }
+            final matchingStores =
+                AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
+            if (matchingStores.isEmpty) {
+              return Text(
+                  'Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
+            }
+            print(matchingStores.first.toJson());
+            return buildContent(context, matchingStores.first);
+          },
+        ));
   }
 
   Widget buildContent(BuildContext context,
