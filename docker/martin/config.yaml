@@ -23,34 +23,18 @@ worker_processes: 8
 # associative arrays of table sources
 table_sources:
   accepting_stores:
-    id: public.verguenstigungen
+    id: accepting_stores
     schema: public
-    table: verguenstigungen
+    table: acceptingstores
     id_column:
-    geometry_column: wkb_geometry
+    geometry_column: location
     srid: 4326
     extent: 4096
     buffer: 200
     clip_geom: true
     geometry_type: POINT
     properties:
-      gratis: varchar
-      k_name: varchar
-      objectid: int4
-      fid_kategorie_min: int4
-      k_plz: varchar
-      www: varchar
-      k_strasse: varchar
-      k_ort: varchar
-      k_adresszusatz: varchar
-      email: varchar
-      beschreibung: varchar
-      fid_oberkategorie: int4
-      k_hsnr: varchar
-      geber: varchar
-      ogc_fid: int4
-      id_verguenstigung: varchar
-      telefon: varchar
+      categoryId: int4
 
 function_sources:
   accepting_stores_clustered:
