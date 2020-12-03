@@ -23,7 +23,7 @@ worker_processes: 8
 # associative arrays of table sources
 table_sources:
   accepting_stores_all:
-    id: accepting_stores_clustered
+    id: public.verguenstigungen
     schema: public
     table: verguenstigungen
     id_column:
@@ -54,8 +54,8 @@ table_sources:
 
 function_sources:
   accepting_stores_clustered:
-    id: accepting_stores_clustered
+    id: public.cluster_source
     schema: public
 
     # function name
-    function: cluster_source
+    function: accepting_stores_clustered

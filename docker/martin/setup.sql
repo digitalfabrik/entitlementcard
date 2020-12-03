@@ -26,7 +26,7 @@ $func$;
 -- SRID DB: 4326
 -- SRID Output: 3857
 
-CREATE OR REPLACE FUNCTION public.cluster_source(z integer, x integer, y integer, query_params json) RETURNS bytea AS
+CREATE OR REPLACE FUNCTION public.accepting_stores_clustered(z integer, x integer, y integer, query_params json) RETURNS bytea AS
 $$
 DECLARE
     mvt bytea;
