@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     MapPage(),
     GraphQLTestPage(),
     AcceptingBusinessesPage(),
-    DetailView()
+    DetailView(1)
   ];
 
   void _onTabTapped(int index) {
