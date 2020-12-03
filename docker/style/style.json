@@ -29,7 +29,11 @@
     },
     "verguenstigungen": {
       "type": "vector",
-      "url": "https://vector.ehrenamtskarte.app/accepting_stores/rpc/public.cluster_source.json"
+      "tiles": [
+        "https://vector.ehrenamtskarte.app/accepting_stores/rpc/public.cluster_source/{z}/{x}/{y}.pbf"
+      ],
+      "minZoom": 0,
+      "maxZoom": 14
     }
   },
   "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
@@ -2064,6 +2068,16 @@
         "text-halo-blur": 0.5,
         "text-halo-color": "#ffffff",
         "text-halo-width": 1
+      }
+    },
+    {
+      "id": "v",
+      "type": "symbol",
+      "source": "verguenstigungen",
+      "source-layer": "public.cluster_source",
+      "layout": {
+        "icon-rotation-alignment": "auto",
+        "icon-image": {"stops": [[6, ""], [10, ""]]}
       }
     },
     {
