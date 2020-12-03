@@ -63,7 +63,7 @@ from contacts_temp;
 -- from (
 -- --
 -- ) as temp;
-
+TRUNCATE public.acceptingstores CASCADE;
 INSERT INTO public.acceptingstores
 select nextval('acceptingstores_id_seq')                                                  as id,
        geber                                                                              AS name,
