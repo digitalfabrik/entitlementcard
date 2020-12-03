@@ -9,7 +9,7 @@ services:
     depends_on:
       - db_postgis
   db_postgis:
-    image:  postgis/postgis:9.6-2.5-alpine
+    image:  postgis/postgis:13-3.0-alpine
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
