@@ -9,7 +9,6 @@ import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
-import xyz.elitese.ehrenamtskarte.webservice.dataloader.initializeDataLoaderRegistry
 import org.dataloader.DataLoaderRegistry
 import xyz.elitese.ehrenamtskarte.webservice.schema.AcceptingStoreQueryService
 import java.io.IOException

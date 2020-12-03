@@ -8,7 +8,7 @@ const val PORT = 7000
 
 class WebService {
     fun start() {
-        Database.exampleSetup()
+        Database.setup()
 
         val app = Javalin.create { cfg ->
             cfg.enableDevLogging()

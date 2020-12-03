@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ajalt.clikt:clikt:3.0.1")
-    implementation("io.javalin:javalin:3.11.0")
+    implementation("io.javalin:javalin:3.12.0")
     implementation("com.google.code.gson", "gson", "2.8.6")
     implementation("org.slf4j", "slf4j-simple", "1.7.30")
 
@@ -45,11 +45,13 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-
+    
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
     implementation("com.impossibl.pgjdbc-ng", "pgjdbc-ng", "0.8.6")
+
+    implementation("net.postgis", "postgis-jdbc", "2.5.0")
 }
 
 application {
