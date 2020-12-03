@@ -35,7 +35,7 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
 
 1. Install docker
 2. `sudo docker-compose up`
-3. Open Adminer: [http://localhost:5433](http://localhost:5433/?pgsql=db&username=postgres&db=ehrenamtskarte)
+3. Open Adminer: [http://localhost:5001](http://localhost:5001/?pgsql=db&username=postgres&db=ehrenamtskarte)
 
    The credentials are:
 
@@ -47,3 +47,12 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
    |Database|ehrenamtskarte|
 4. Install JDK8
 5. Run the backend: `./backend/gradlew run`
+6. Take a look at the martin endpoints: [http://localhost:5003](http://localhost:5003/index.json)
+7. Take a look at the map_view: [http://localhost:5002](http://localhost:5002)
+
+
+## Using ehrenamtskarte.app as database
+
+```bash
+
+```
