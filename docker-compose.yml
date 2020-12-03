@@ -9,14 +9,14 @@ services:
     depends_on:
       - db_postgis
   db_postgis:
-    image: mdillon/postgis:11-alpine
-    restart: unless-stopped
+    image:  postgis/postgis:9.6-2.5-alpine
+    restart: always
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
+#    volumes:
+#      - ./pg_data:/var/lib/postgresql/data
     ports:
       - 127.0.0.1:5432:5432
   adminer:

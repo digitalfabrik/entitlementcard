@@ -34,7 +34,9 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
 # Backend
 
 1. Install docker
-2. `sudo docker-compose up`
+2. `sudo docker-compose rm`
+2. `sudo docker-compose build`
+2. `sudo docker-compose up --force-recreate`
 3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db_postgis&username=postgres&db=ehrenamtskarte)
 
    The credentials are:
