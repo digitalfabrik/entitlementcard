@@ -23,10 +23,10 @@ worker_processes: 8
 # associative arrays of table sources
 table_sources:
   accepting_stores:
-    id: accepting_stores
+    id: public.acceptingstores
     schema: public
-    table: acceptingstores
-    id_column:
+    table: acceptingSstores
+    id_column: id
     geometry_column: location
     srid: 4326
     extent: 4096
