@@ -50,6 +50,8 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
     implementation("com.impossibl.pgjdbc-ng", "pgjdbc-ng", "0.8.6")
+
+    implementation("net.postgis", "postgis-jdbc", "2.5.0")
 }
 
 application {
