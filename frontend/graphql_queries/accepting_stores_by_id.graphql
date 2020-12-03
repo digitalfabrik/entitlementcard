@@ -2,7 +2,10 @@ query AcceptingStoreById($ids: ParamsInput!) {
     acceptingStoreById(params: $ids) {
         id
         name
-        category { name }
+        category {
+            id
+            name
+        }
         contact {
             email
             telephone

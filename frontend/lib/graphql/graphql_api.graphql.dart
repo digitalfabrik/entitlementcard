@@ -47,10 +47,13 @@ class AcceptingStoreById$Query$AcceptingStore$Category with EquatableMixin {
           Map<String, dynamic> json) =>
       _$AcceptingStoreById$Query$AcceptingStore$CategoryFromJson(json);
 
+  int id;
+
   String name;
 
   @override
-  List<Object> get props => [name];
+  List<Object> get props => [id, name];
+
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreById$Query$AcceptingStore$CategoryToJson(this);
 }
@@ -303,6 +306,12 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
                     arguments: [],
                     directives: [],
                     selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'id'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
                       FieldNode(
                           name: NameNode(value: 'name'),
                           alias: null,
