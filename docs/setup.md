@@ -54,3 +54,12 @@ Not really needed anymore because we have the data in the database.
 ```
 ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' user=postgres password=postgres" verguenstigungen.json
 ```
+
+
+# Styling the Map
+
+You can use maputnik to edit style the map:
+
+1. Download Maputnik CLI from https://github.com/maputnik/editor/releases
+2. Run `~/Downloads/maputnik --file docker/style/style.json`
+3. Commit the style.json after editing!
