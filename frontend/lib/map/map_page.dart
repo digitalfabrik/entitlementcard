@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'full_map.dart';
 
 class MapPage extends StatelessWidget {
