@@ -1,6 +1,5 @@
 package xyz.elitese.ehrenamtskarte.database
 
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -8,31 +7,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class Database {
 
     companion object {
-        object Cities: IntIdTable() {
-            val name = varchar("name", 50)
-        }
-        
-        fun exampleSetup() {
+        fun setup() {
             Database().db
-            
+
             transaction {
                 // print sql to std-out
                 addLogger(StdOutSqlLogger)
 
-                SchemaUtils.create(Cities)
-
-                Cities.insert {
-                    it[name] = "St. Petersburg"
-                } get Cities.id
-
-                // 'select *' SQL: SELECT Cities.id, Cities.name FROM Cities
-                println("Cities: ${Cities.selectAll()}")
-                
-                Cities.select {
-                    Cities.name regexp "St"
-                }.forEach {
-                    println(it[Cities.name])
-                }
+                SchemaUtils.create(
+                        Categories,
+                        Contacts,
+                        AcceptingStores
+                )
             }
         }
     }
