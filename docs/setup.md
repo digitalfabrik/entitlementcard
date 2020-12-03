@@ -49,7 +49,7 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
    |Database|ehrenamtskarte|
 4. Install JDK8
 5. Run the backend: `./backend/gradlew run`
-6. Take a look at the martin endpoints: [http://localhost:5003](http://localhost:5003/index.json)
+6. Take a look at the martin endpoints: [http://localhost:5003](http://localhost:5003/index.json) and [http://localhost:5003/rpc](http://localhost:5003/rpc/index.json)
 7. Take a look at the map_view: [http://localhost:5002](http://localhost:5002)
 
 
@@ -57,4 +57,10 @@ Be careful not to add this file to the repository. For our build pipeline, we ha
 
 ```bash
 ssh -4 -L 5432:localhost:5432 -L 5001:localhost:5001 -L 5002:localhost:5002 -L 5003:localhost:5003 team@ehrenamtskarte.app
+```
+
+## Filling postgis with GeoJSON
+
+```
+ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' user=postgres password=postgres" verguenstigungen.json
 ```

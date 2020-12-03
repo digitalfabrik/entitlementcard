@@ -53,13 +53,6 @@ table_sources:
       telefon: varchar
 
 function_sources:
-  public.function_source:
-    id: public.function_source
-    schema: public
-
-    # function name
-    function: function_source
-
   public.cluster_source:
     id: public.cluster_source
     schema: public
