@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
-import 'package:ehrenamtskarte/map/preview/BusinessSumary.dart';
+import 'package:ehrenamtskarte/map/preview/business_summary.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatelessWidget {
