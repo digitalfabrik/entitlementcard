@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _tabs = <Widget>[
     MapPage(),
     GraphQLTestPage(),
-    AcceptingBusinessesPage(),
     AcceptingBusinessesPage()
   ];
 
@@ -31,6 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -43,15 +43,16 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.chat), label: "GraphQL Test"),
           BottomNavigationBarItem(
               icon: Icon(Icons.chat), label: "Provider Test"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat), label: "Provider Test 2")
         ],
         currentIndex: _currentTabIndex,
         onTap: _onTabTapped,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.black54,
-        unselectedItemColor: Colors.black,
+        backgroundColor: theme.primaryColor,
+        selectedItemColor:
+            theme.brightness == Brightness.light ? Colors.white : Colors.black,
+        unselectedItemColor: theme.brightness == Brightness.light
+            ? theme.primaryColorLight
+            : theme.primaryColorDark,
       ),
     );
   }
