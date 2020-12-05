@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dart_files=$(git ls-tree --name-only --full-tree -r HEAD | grep '.dart$')
+dart_files=$(git ls-tree --name-only -r HEAD | grep '.dart$')
 if [ -z "$dart_files" ]; then
   echo "No dart files in repo."
   exit 0
