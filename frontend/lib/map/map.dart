@@ -55,7 +55,9 @@ class Map extends StatefulWidget {
   final OnFeatureClickCallback onFeatureClick;
   final bool myLocationEnabled;
 
-  const Map({this.mapboxToken, this.onFeatureClick, this.myLocationEnabled});
+  const Map(
+      {Key key, this.mapboxToken, this.onFeatureClick, this.myLocationEnabled})
+      : super(key: key);
 
   @override
   State createState() =>
