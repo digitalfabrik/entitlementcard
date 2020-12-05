@@ -7,7 +7,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
 
-class FullMapState extends State<FullMap> {
+class _MapState extends State<Map> {
   static const double userLocationZoomLevel = 13;
   static const double initialZoomLevel = 6;
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
@@ -16,7 +16,7 @@ class FullMapState extends State<FullMap> {
   final bool myLocationEnabled;
   MapboxMapController _controller;
 
-  FullMapState(this._mapboxToken, this._onFeatureClick, this.myLocationEnabled);
+  _MapState(this._mapboxToken, this._onFeatureClick, this.myLocationEnabled);
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +50,14 @@ class FullMapState extends State<FullMap> {
           CameraUpdate.newLatLngZoom(location, userLocationZoomLevel));
 }
 
-class FullMap extends StatefulWidget {
+class Map extends StatefulWidget {
   final String mapboxToken;
   final OnFeatureClickCallback onFeatureClick;
   final bool myLocationEnabled;
 
-  const FullMap(
-      {this.mapboxToken, this.onFeatureClick, this.myLocationEnabled});
+  const Map({this.mapboxToken, this.onFeatureClick, this.myLocationEnabled});
 
   @override
-  State createState() => FullMapState(
-      this.mapboxToken, this.onFeatureClick, this.myLocationEnabled);
+  State createState() =>
+      _MapState(this.mapboxToken, this.onFeatureClick, this.myLocationEnabled);
 }

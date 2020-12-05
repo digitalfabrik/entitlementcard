@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
 import '../util/secrets/secret.dart';
 import '../util/secrets/secretLoader.dart';
-import 'full_map.dart';
+import 'map.dart';
 
 class _FutureResult {
   Secret secret;
@@ -32,7 +32,7 @@ class MapPage extends StatelessWidget {
                 : "Fetching MapBox API key …"),
           );
         }
-        return FullMap(
+        return Map(
           mapboxToken: snapshot.data.secret.mapboxKey,
           onFeatureClick: (feature) => {
             Scaffold.of(context).showSnackBar(SnackBar(
