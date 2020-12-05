@@ -10,9 +10,22 @@ class BusinessSummary extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Card(
-          margin: EdgeInsets.all(10),
-          child: Text("Lorem ipsum"),
-        ),
+            margin: const EdgeInsets.all(10),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: Text(
+                    "Lorem ipsum",
+                  )),
+                  Icon(Icons.arrow_forward,
+                      color: Theme.of(context).primaryColor)
+                ],
+              ),
+            )),
       ),
     );
   }
