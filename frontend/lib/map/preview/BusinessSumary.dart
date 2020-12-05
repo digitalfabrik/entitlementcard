@@ -5,8 +5,15 @@ class BusinessSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Text("Lorem ipsum"),
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          margin: EdgeInsets.all(10),
+          child: Text("Lorem ipsum"),
+        ),
+      ),
     );
   }
 }
