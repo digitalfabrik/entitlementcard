@@ -1,9 +1,9 @@
-import 'package:ehrenamtskarte/map/request_location_permission.dart'
+import 'package:ehrenamtskarte/map/map/request_location_permission.dart'
     show requestLocationPermissionIfNotYetGranted;
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
-import '../util/secrets/secret.dart';
-import '../util/secrets/secretLoader.dart';
+import '../../util/secrets/secret.dart';
+import '../../util/secrets/secretLoader.dart';
 import 'map.dart';
 
 class _FutureResult {

@@ -1,4 +1,5 @@
-import 'package:ehrenamtskarte/map/map_with_futures.dart';
+import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
+import 'package:ehrenamtskarte/map/preview/BusinessSumary.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatelessWidget {
@@ -6,6 +7,6 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MapWithFutures();
+    return Stack(children: [MapWithFutures(), BusinessSummary()]);
   }
 }
