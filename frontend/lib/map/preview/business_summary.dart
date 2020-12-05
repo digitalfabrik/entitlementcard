@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'loading_business_summary.dart';
 
 class BusinessSummary extends StatelessWidget {
-  const BusinessSummary({Key key}) : super(key: key);
+  final String businessId;
+
+  BusinessSummary(this.businessId, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +20,7 @@ class BusinessSummary extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                      child: Text(
-                    "Lorem ipsum",
-                  )),
+                  Expanded(child: LoadingBusinessSummary(businessId)),
                   Icon(Icons.arrow_forward,
                       color: Theme.of(context).primaryColor)
                 ],
