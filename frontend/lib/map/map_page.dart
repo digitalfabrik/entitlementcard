@@ -33,7 +33,7 @@ class MapPage extends StatelessWidget {
           );
         }
         return FullMap(
-          mapboxToken: snapshot.data.secret.mapboxKey,
+          snapshot.data.secret.mapboxKey,
           onFeatureClick: (feature) => {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
