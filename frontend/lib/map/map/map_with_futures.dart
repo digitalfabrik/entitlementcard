@@ -13,7 +13,11 @@ class _FutureResult {
 }
 
 class MapWithFutures extends StatelessWidget {
-  MapWithFutures({Key key}) : super(key: key);
+  final OnFeatureClickCallback onFeatureClick;
+  final OnNoFeatureClickCallback onNoFeatureClick;
+
+  MapWithFutures({Key key, this.onNoFeatureClick, this.onFeatureClick})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +38,8 @@ class MapWithFutures extends StatelessWidget {
         }
         return Map(
           mapboxToken: snapshot.data.secret.mapboxKey,
-          onFeatureClick: (feature) => {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  feature["properties"]["k_name"].toString() ?? "Name missing"),
-            ))
-          },
+          onFeatureClick: this.onFeatureClick,
+          onNoFeatureClick: this.onNoFeatureClick,
           myLocationEnabled:
               snapshot.data.permissionStatus == PermissionStatus.granted,
         );

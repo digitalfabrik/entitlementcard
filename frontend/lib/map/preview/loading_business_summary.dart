@@ -26,12 +26,8 @@ class _LoadingBusinessSummaryState extends State<LoadingBusinessSummary> {
     Future.delayed(
         Duration(seconds: 1),
         () => this.setState(() {
-              business = AcceptingBusiness(
-                  widget.businessId,
-                  "Busy Business",
-                  "Mock business data for ID ${widget.businessId}. "
-                      "It could happen that this text is too wide for a single "
-                      "line, so we should test it.");
+              business = AcceptingBusiness(widget.businessId, "Busy Business",
+                  "Mock business data for ID:\n${widget.businessId}");
             }));
   }
 

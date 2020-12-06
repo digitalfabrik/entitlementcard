@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
+typedef void OnNoFeatureClickCallback();
 
 class _MapState extends State<Map> {
   static const double userLocationZoomLevel = 13;
   static const double initialZoomLevel = 6;
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final String _mapboxToken;
-  final OnFeatureClickCallback _onFeatureClick;
   final bool myLocationEnabled;
   MapboxMapController _controller;
 
-  _MapState(this._mapboxToken, this._onFeatureClick, this.myLocationEnabled);
+  _MapState(this._mapboxToken, this.myLocationEnabled);
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,16 @@ class _MapState extends State<Map> {
   }
 
   void onMapClick(Point<double> point, LatLng coordinates) {
-    this._controller.queryRenderedFeatures(point, [], null).then((features) => {
-          if (features?.isNotEmpty)
-            {this._onFeatureClick(json.decode(features[0]))}
-        });
+    this._controller.queryRenderedFeatures(point, [], null).then((features) {
+      if (features.isNotEmpty) {
+        var featureInfo = json.decode(features[0]);
+        if (featureInfo != null) {
+          if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
+          return;
+        }
+      }
+      if (widget.onNoFeatureClick != null) widget.onNoFeatureClick();
+    });
   }
 
   void bringCameraToUserLocation() async =>
@@ -53,13 +59,17 @@ class _MapState extends State<Map> {
 class Map extends StatefulWidget {
   final String mapboxToken;
   final OnFeatureClickCallback onFeatureClick;
+  final OnNoFeatureClickCallback onNoFeatureClick;
   final bool myLocationEnabled;
 
   const Map(
-      {Key key, this.mapboxToken, this.onFeatureClick, this.myLocationEnabled})
+      {Key key,
+      this.mapboxToken,
+      this.onFeatureClick,
+      this.onNoFeatureClick,
+      this.myLocationEnabled})
       : super(key: key);
 
   @override
-  State createState() =>
-      _MapState(this.mapboxToken, this.onFeatureClick, this.myLocationEnabled);
+  State createState() => _MapState(this.mapboxToken, this.myLocationEnabled);
 }
