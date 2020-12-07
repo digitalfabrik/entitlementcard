@@ -18,24 +18,15 @@ This short guide focuses on setting up the project using IntelliJ instead of And
    4.1. Install the Dart extension in IntelliJ and set the SDK path in the settings of IntelliJ
    4.2. Install the Flutter extension in IntelliJ and set the SDK path in the settings of IntelliJ
 5. Run `flutter pub get` in `frontend/`
-7. Place the `secrets.json` in `./frontend/secrets.json` (see below)
 6. Execute the "Run Flutter" (upper right corner of IDE) configuration from within IntelliJ
-
-### Add a file with secrets
-
-You have to add a file named `secrets.json` next to `pubspec.yaml` with content like this:
-```json
-{
-  "mapbox_key": "<YOUR PUBLIC MAPBOX API KEY>"
-}
-```
-Be careful not to add this file to the repository. For our CI pipeline, we have an encrypted environment variable that will be put into a `secrets.json` file when the pipeline runs.
 
 # Backend
 
-1. Install docker
-2. `sudo docker-compose up`
-3. Open Adminer: [http://localhost:5433](http://localhost:5433/?pgsql=db&username=postgres&db=ehrenamtskarte)
+1. Install docker and docker-compose
+2. `sudo docker-compose rm`
+2. `sudo docker-compose build`
+2. `sudo docker-compose up --force-recreate`
+3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db_postgis&username=postgres&db=ehrenamtskarte)
 
    The credentials are:
 
@@ -46,4 +37,29 @@ Be careful not to add this file to the repository. For our CI pipeline, we have 
    |Password|postgres|
    |Database|ehrenamtskarte|
 4. Install JDK8
-5. Run the backend: `./backend/gradlew run`
+5. Run the backend: `./backend/gradlew run` or `.\backend\gradlew.bat run` on Windows
+6. Take a look at the martin endpoints: [http://localhost:5003/index.json](http://localhost:5003/index.json) and [http://localhost:5003/rpc/index.json](http://localhost:5003/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
+7. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
+
+## Using ehrenamtskarte.app as database
+
+```bash
+ssh -L 5432:localhost:5432 -L 5001:localhost:5001 -L 5002:localhost:5002 -L 5003:localhost:5003 team@ehrenamtskarte.app
+```
+
+## (Old) Filling postgis with GeoJSON
+
+Not really needed anymore because we have the data in the database.
+
+```
+ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' user=postgres password=postgres" verguenstigungen.json
+```
+
+
+# Styling the Map
+
+You can use maputnik to edit style the map:
+
+1. Download Maputnik CLI from https://github.com/maputnik/editor/releases
+2. Run `~/Downloads/maputnik --file docker/style/style.json`
+3. Commit the style.json after editing!
