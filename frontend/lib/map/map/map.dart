@@ -14,11 +14,13 @@ class Map extends StatefulWidget {
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
+  final List<String> onFeatureClickLayerFilter;
   final bool myLocationEnabled;
 
   const Map(
       {this.onFeatureClick,
       this.onNoFeatureClick,
+      this.onFeatureClickLayerFilter,
       this.myLocationEnabled = false});
 
   @override
@@ -47,7 +49,11 @@ class _MapState extends State<Map> {
   }
 
   void _onMapClick(Point<double> point, LatLng coordinates) {
-    this._controller.queryRenderedFeatures(point, [], null).then((features) {
+    this
+        ._controller
+        .queryRenderedFeatures(
+            point, widget.onFeatureClickLayerFilter ?? [], null)
+        .then((features) {
       if (features.isNotEmpty) {
         var featureInfo = json.decode(features[0]);
         if (featureInfo != null) {

@@ -23,6 +23,7 @@ class _MapPageState extends State<MapPage> {
                 feature.toString() // TODO find ID here
             ),
         onNoFeatureClick: () => setState(() => this.selectedBusinessId = null),
+        onFeatureClickLayerFilter: ["accepting_stores"],
       ),
       selectedBusinessId != null ? BusinessSummary(selectedBusinessId) : null,
     ].where((element) => element != null).toList(growable: false));

@@ -7,8 +7,13 @@ import 'map.dart';
 class MapWithFutures extends StatelessWidget {
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
+  final List<String> onFeatureClickLayerFilter;
 
-  MapWithFutures({Key key, this.onNoFeatureClick, this.onFeatureClick})
+  MapWithFutures(
+      {Key key,
+      this.onNoFeatureClick,
+      this.onFeatureClick,
+      this.onFeatureClickLayerFilter})
       : super(key: key);
 
   @override
@@ -29,6 +34,7 @@ class MapWithFutures extends StatelessWidget {
           onFeatureClick: this.onFeatureClick,
           onNoFeatureClick: this.onNoFeatureClick,
           myLocationEnabled: snapshot.data == PermissionStatus.granted,
+          onFeatureClickLayerFilter: this.onFeatureClickLayerFilter,
         );
       },
     );
