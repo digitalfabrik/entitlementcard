@@ -31,6 +31,7 @@ table_sources:
     srid: 4326
     geometry_type: POINT
     properties:
+      id: int4
       categoryId: int4
 
 function_sources:
