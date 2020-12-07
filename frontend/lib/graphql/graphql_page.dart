@@ -9,10 +9,7 @@ class GraphQLTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
-        variables: AcceptingStoreByIdArguments(
-            ids: ParamsInput(ids: [1])
-        )
-    );
+        variables: AcceptingStoreByIdArguments(ids: ParamsInput(ids: [1])));
     return Column(children: [
       Query(
         options: QueryOptions(documentNode: AcceptingStoresQuery().document),
@@ -34,9 +31,8 @@ class GraphQLTestPage extends StatelessWidget {
       ),
       Query(
         options: QueryOptions(
-          documentNode: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()
-        ),
+            documentNode: byIdQuery.document,
+            variables: byIdQuery.getVariablesMap()),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.hasException) {
@@ -47,8 +43,8 @@ class GraphQLTestPage extends StatelessWidget {
           if (result.loading) {
             return Text('Loading …');
           }
-          final allStores = AcceptingStoreByIdQuery().parse(result.data)
-              .acceptingStoreById;
+          final allStores =
+              AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
           final resultNames =
               "Store with id 1: " + allStores.map((e) => e.name).join(" ");
           return Text(resultNames);

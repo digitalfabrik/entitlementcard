@@ -1,15 +1,28 @@
-version: "3.8"
+version: "3.3"
 services:
-  db:
-    image: "postgres:13.1"
+  martin:
+    build: ./docker/martin
+    ports:
+      - 127.0.0.1:5003:3000
+    volumes:
+      - ./docker/martin/config.yaml:/app/config.yaml
+    depends_on:
+      - db_postgis
+  db_postgis:
+    image:  postgis/postgis:13-3.0-alpine
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
+      - 127.0.0.1:5432:5432
   adminer:
     image: "adminer:4.7.7-standalone"
-    restart: always
     ports:
-      - 5433:8080
+      - 127.0.0.1:5001:8080
+  style:
+    image: "nginx:1.19.5"
+    volumes:
+      - ./docker/style:/usr/share/nginx/html
+    ports:
+      - 127.0.0.1:5002:80
