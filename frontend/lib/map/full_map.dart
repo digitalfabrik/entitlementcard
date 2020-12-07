@@ -11,12 +11,10 @@ class FullMap extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
   static const double initialZoomLevel = 6;
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
-  final String mapboxToken;
   final OnFeatureClickCallback onFeatureClick;
   final bool myLocationEnabled;
 
-  const FullMap(this.mapboxToken,
-      {this.onFeatureClick, this.myLocationEnabled = false});
+  const FullMap({this.onFeatureClick, this.myLocationEnabled = false});
 
   @override
   State createState() => _FullMapState();
@@ -28,10 +26,9 @@ class _FullMapState extends State<FullMap> {
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
-      accessToken: widget.mapboxToken,
       initialCameraPosition: const CameraPosition(
           target: FullMap.initialLocation, zoom: FullMap.initialZoomLevel),
-      styleString: "mapbox://styles/elkei24/ckhyn5h2l1yq519r9g3fbsogj",
+      styleString: "https://vector.ehrenamtskarte.app/style.json",
       myLocationEnabled: widget.myLocationEnabled,
       onMapCreated: (controller) {
         setState(() {

@@ -12,19 +12,17 @@ import org.postgis.Point
 
 object Categories : IntIdTable() {
     val name = varchar("name", 50)
-    val iconUrl = varchar("iconUrl", 50)
 }
 
 class CategoryEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CategoryEntity>(Categories)
     var name by Categories.name
-    var iconUrl by Categories.iconUrl
 }
 
 object Contacts : IntIdTable() {
-    val email = varchar("email", 50)
+    val email = varchar("email", 100)
     val telephone = varchar("telephone", 50)
-    val website = varchar("website", 50)
+    val website = varchar("website", 150)
 }
 
 class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -35,8 +33,10 @@ class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object AcceptingStores : IntIdTable() {
-    val name = varchar("name", 50)
+    val name = varchar("name", 150)
+    val description = varchar("description", 2500)
     val location = point("location")
+    val address = varchar("address", 200)
     val contactId = reference("contactId", Contacts)
     val categoryId = reference("categoryId", Categories)
 }
