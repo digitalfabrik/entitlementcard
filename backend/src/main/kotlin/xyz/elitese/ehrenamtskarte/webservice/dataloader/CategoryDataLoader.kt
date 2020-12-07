@@ -14,7 +14,7 @@ val batchCategoryLoader = DataLoader<Int, Category?> { ids ->
         runBlocking {
             transaction {
                 CategoriesRepository.findByIds(ids).map {
-                    Category(it.id.value, it.name, it.iconUrl)
+                    Category(it.id.value, it.name)
                 }
             }
         }

@@ -15,11 +15,6 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
     populate_script: 
       - cd frontend
       - flutter pub get
-  environment:
-    SECRETS_JSON: ENCRYPTED[c73df347c1def703d16419893945dfe6484e785569ac31fa720479de68addfd82070684f0006103fc34f890a6e2897e4]
-  secrets_json_file:
-    path: ./frontend/secrets.json
-    variable_name: SECRETS_JSON
 
 fe_task_template: &FE_TASK_TEMPLATE
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE

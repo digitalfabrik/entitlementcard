@@ -2,14 +2,11 @@ import 'package:ehrenamtskarte/map/request_location_permission.dart'
     show requestLocationPermissionIfNotYetGranted;
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
-import '../util/secrets/secret.dart';
-import '../util/secrets/secretLoader.dart';
 import 'full_map.dart';
 
 class _FutureResult {
-  Secret secret;
   PermissionStatus permissionStatus;
-  _FutureResult(this.secret, this.permissionStatus);
+  _FutureResult(this.permissionStatus);
 }
 
 class MapPage extends StatelessWidget {
@@ -19,24 +16,23 @@ class MapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<_FutureResult>(
       future: () async {
-        var futureSecrets = SecretLoader(secretPath: "secrets.json").load();
         var futurePermissionState = requestLocationPermissionIfNotYetGranted(
             LocationPermissionLevel.locationWhenInUse);
-        return _FutureResult(await futureSecrets, await futurePermissionState);
+        return _FutureResult(await futurePermissionState);
       }(),
       builder: (BuildContext context, AsyncSnapshot<_FutureResult> snapshot) {
         if (!snapshot.hasData) {
           return Center(
             child: Text(snapshot.hasError
-                ? "Failed to fetch MapBox API key"
-                : "Fetching MapBox API key …"),
+                ? "Failed to request location permission"
+                : "Requesting location permission …"),
           );
         }
         return FullMap(
-          mapboxToken: snapshot.data.secret.mapboxKey,
           onFeatureClick: (feature) => {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
+                // TODO change loading of properties, as we no longer use the old fat geojson
                   feature["properties"]["k_name"].toString() ?? "Name missing"),
             ))
           },
