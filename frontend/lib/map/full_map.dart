@@ -53,10 +53,9 @@ class FullMap extends StatefulWidget {
   final OnFeatureClickCallback onFeatureClick;
   final bool myLocationEnabled;
 
-  const FullMap(
-      {this.onFeatureClick, this.myLocationEnabled});
+  const FullMap({this.onFeatureClick, this.myLocationEnabled});
 
   @override
-  State createState() => FullMapState(
-      this.onFeatureClick, this.myLocationEnabled);
+  State createState() =>
+      FullMapState(this.onFeatureClick, this.myLocationEnabled);
 }
