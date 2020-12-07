@@ -25,7 +25,10 @@ class _MapPageState extends State<MapPage> {
         onNoFeatureClick: () => setState(() => this.selectedBusinessId = null),
         onFeatureClickLayerFilter: ["accepting_stores"],
       ),
-      selectedBusinessId != null ? BusinessSummary(selectedBusinessId) : null,
+      selectedBusinessId != null
+          ? BusinessSummary(selectedBusinessId,
+              key: ValueKey(selectedBusinessId))
+          : null,
     ].where((element) => element != null).toList(growable: false));
   }
 }
