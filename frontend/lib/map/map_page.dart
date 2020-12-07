@@ -32,7 +32,7 @@ class MapPage extends StatelessWidget {
           onFeatureClick: (feature) => {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
-                // TODO change loading of properties, as we no longer use the old fat geojson
+                  // TODO change loading of properties, as we no longer use the old fat geojson
                   feature["properties"]["k_name"].toString() ?? "Name missing"),
             ))
           },
