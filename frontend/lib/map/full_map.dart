@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,38 +7,51 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
 
-class FullMapState extends State<FullMap> {
+class FullMap extends StatefulWidget {
+  static const double userLocationZoomLevel = 13;
+  static const double initialZoomLevel = 6;
+  static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
-  final String _mapboxToken;
-  MapboxMapController _controller;
+  final bool myLocationEnabled;
 
-  FullMapState(this._mapboxToken, this.onFeatureClick);
+  const FullMap({this.onFeatureClick, this.myLocationEnabled = false});
+
+  @override
+  State createState() => _FullMapState();
+}
+
+class _FullMapState extends State<FullMap> {
+  MapboxMapController _controller;
 
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
-      accessToken: this._mapboxToken,
-      initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
-      styleString: "mapbox://styles/elkei24/ckhyn5h2l1yq519r9g3fbsogj",
-      onMapCreated: (controller) => {this._controller = controller},
-      onMapClick: this.onMapClick,
+      initialCameraPosition: const CameraPosition(
+          target: FullMap.initialLocation, zoom: FullMap.initialZoomLevel),
+      styleString: "https://vector.ehrenamtskarte.app/style.json",
+      myLocationEnabled: widget.myLocationEnabled,
+      onMapCreated: (controller) {
+        setState(() {
+          this._controller = controller;
+        });
+        Future.delayed(Duration(milliseconds: 500), _bringCameraToUserLocation)
+            .timeout(Duration(seconds: 1));
+      },
+      onMapClick: this._onMapClick,
     );
   }
 
-  void onMapClick(Point<double> point, LatLng coordinates) {
+  void _onMapClick(Point<double> point, LatLng coordinates) {
     this._controller.queryRenderedFeatures(point, [], null).then((features) => {
           if (features?.isNotEmpty)
-            {this.onFeatureClick(json.decode(features[0]))}
+            {widget.onFeatureClick(json.decode(features[0]))}
         });
   }
-}
 
-class FullMap extends StatefulWidget {
-  final String mapboxToken;
-  final OnFeatureClickCallback onFeatureClick;
+  void _bringCameraToUserLocation() async =>
+      _controller.requestMyLocationLatLng().then(_bringCameraToLocation);
 
-  const FullMap(this.mapboxToken, this.onFeatureClick);
-
-  @override
-  State createState() => FullMapState(this.mapboxToken, this.onFeatureClick);
+  void _bringCameraToLocation(LatLng location) async =>
+      _controller.animateCamera(
+          CameraUpdate.newLatLngZoom(location, FullMap.userLocationZoomLevel));
 }

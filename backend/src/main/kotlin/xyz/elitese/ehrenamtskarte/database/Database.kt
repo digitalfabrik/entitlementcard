@@ -1,38 +1,43 @@
 package xyz.elitese.ehrenamtskarte.database
 
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.Database.Companion.connect
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class Database {
 
     companion object {
-        object Cities: IntIdTable() {
-            val name = varchar("name", 50)
+        private fun executeScript(path: String) {
+            val java = Database::class.java
+            val resource = java.classLoader.getResource(path) ?: throw Exception("Failed to find script")
+
+            val uri = resource.toURI()
+            val sql = String(Files.readAllBytes(Paths.get(uri)));
+            with(TransactionManager.current()) {
+                exec(sql)
+            }
         }
-        
-        fun exampleSetup() {
+
+        fun setup() {
             Database().db
-            
+
             transaction {
                 // print sql to std-out
                 addLogger(StdOutSqlLogger)
 
-                SchemaUtils.create(Cities)
+                SchemaUtils.create(
+                        Categories,
+                        Contacts,
+                        AcceptingStores
+                )
 
-                Cities.insert {
-                    it[name] = "St. Petersburg"
-                } get Cities.id
-
-                // 'select *' SQL: SELECT Cities.id, Cities.name FROM Cities
-                println("Cities: ${Cities.selectAll()}")
-                
-                Cities.select {
-                    Cities.name regexp "St"
-                }.forEach {
-                    println(it[Cities.name])
-                }
+                executeScript("sql/create_tilebbox.sql")
+                executeScript("sql/create_accepting_stores_clustered.sql")
             }
         }
     }
@@ -43,7 +48,7 @@ class Database {
         val user = System.getProperty("app.postgres.user")
         val password = System.getProperty("app.postgres.password")
         val database = System.getProperty("app.postgres.database")
-        
+
         connect("jdbc:pgsql://$host:$port/$database",
                 driver = "com.impossibl.postgres.jdbc.PGDriver",
                 user = user, password = password)

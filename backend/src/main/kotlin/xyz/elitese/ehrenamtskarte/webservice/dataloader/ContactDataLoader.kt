@@ -2,15 +2,21 @@ package xyz.elitese.ehrenamtskarte.webservice.dataloader
 
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
+import org.jetbrains.exposed.sql.transactions.transaction
+import xyz.elitese.ehrenamtskarte.database.repos.ContactsRepository
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.Contact
 import java.util.concurrent.CompletableFuture
 
 const val CONTACT_LOADER_NAME = "CONTACT_LOADER"
 
-val batchContactLoader = DataLoader<Long, Contact?> { ids ->
+val batchContactLoader = DataLoader<Int, Contact?> { ids ->
     CompletableFuture.supplyAsync {
-        runBlocking { // Mock Contact
-            listOf(Contact(1, "my@mail.de", "01234 5678", "https://web.site"))
+        runBlocking {
+            transaction {
+                ContactsRepository.findByIds(ids).map {
+                    Contact(it.id.value, it.email, it.telephone, it.website)
+                }
+            }
         }
     }
 }
