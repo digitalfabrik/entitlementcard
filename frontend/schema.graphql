@@ -27,13 +27,13 @@ directive @specifiedBy(
   ) on SCALAR
 
 type AcceptingStore {
-  category: Category!
-  categoryId: Long!
-  contact: Contact!
-  contactId: Long!
-  id: Long!
-  name: String!
-  physicalStore: PhysicalStore
+    category: Category!
+    categoryId: Int!
+    contact: Contact!
+    contactId: Int!
+    id: Int!
+    name: String!
+    physicalStore: PhysicalStore
 }
 
 type Address {
@@ -46,16 +46,15 @@ type Address {
 }
 
 type Category {
-  iconUrl: String!
-  id: Long!
-  name: String!
+    id: Int!
+    name: String!
 }
 
 type Contact {
-  email: String!
-  id: Long!
-  telephone: String!
-  website: String!
+    email: String!
+    id: Int!
+    telephone: String!
+    website: String!
 }
 
 type Coordinates {

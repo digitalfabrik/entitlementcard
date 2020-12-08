@@ -15,8 +15,13 @@ val acceptingStoreLoader = DataLoader<Int, AcceptingStore?> { ids ->
             transaction {
                 AcceptingStoresRepository.findByIds(ids).map {
                     AcceptingStore(it.id.value, it.name, it.contactId.value, it.categoryId.value)
-                }
+                }.associateWithKeys<AcceptingStore, Int>({ it.id }, ids)
             }
         }
     }
+}
+
+fun <TValue, TKey> List<TValue>.associateWithKeys(keyFetcher: (TValue) -> TKey, keys: Iterable<TKey>): List<TValue?> {
+    val objectsMap = this.associateBy { keyFetcher(it) }
+    return keys.map { key -> objectsMap[key] }.asIterable().toList()
 }

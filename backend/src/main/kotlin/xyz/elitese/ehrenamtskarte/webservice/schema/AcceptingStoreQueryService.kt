@@ -18,7 +18,7 @@ class AcceptingStoreQueryService {
     }
 
     @Suppress("unused")
-    suspend fun acceptingStoreById(params: Params, dataFetchingEnvironment: DataFetchingEnvironment) =
+    suspend fun acceptingStoreById(params: Params, dataFetchingEnvironment: DataFetchingEnvironment): List<AcceptingStore?> =
             dataFetchingEnvironment.getDataLoader<Long, AcceptingStore>(ACCEPTING_STORE_LOADER_NAME)
                     .loadMany(params.ids).join()
 }

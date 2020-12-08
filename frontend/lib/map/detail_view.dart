@@ -6,9 +6,8 @@ import '../graphql/graphql_api.dart';
 
 class DetailView extends StatelessWidget {
   int _acceptingStoreId;
-  String _storeName;
 
-  DetailView(this._acceptingStoreId, this._storeName);
+  DetailView(this._acceptingStoreId);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class DetailView extends StatelessWidget {
             ids: ParamsInput(ids: [_acceptingStoreId])));
     return Scaffold(
         appBar: AppBar(
-          title: Text(_storeName),
+          title: Text("Akzeptanzstelle"),
         ),
         body: Query(
           options: QueryOptions(
@@ -35,7 +34,8 @@ class DetailView extends StatelessWidget {
             }
             final matchingStores =
                 AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
-            if (matchingStores.isEmpty) {
+            if (matchingStores.isEmpty ||
+                matchingStores.any((element) => element == null)) {
               return Text(
                   'Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
             }

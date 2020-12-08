@@ -53,7 +53,6 @@ class AcceptingStoreById$Query$AcceptingStore$Category with EquatableMixin {
 
   @override
   List<Object> get props => [id, name];
-
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreById$Query$AcceptingStore$CategoryToJson(this);
 }
