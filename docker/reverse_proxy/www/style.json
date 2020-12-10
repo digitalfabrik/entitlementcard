@@ -4142,7 +4142,7 @@
       "id": "physical_stores",
       "type": "symbol",
       "source": "physical_stores",
-      "source-layer": "physical_stores",
+      "source-layer": "public.physical_stores",
       "minzoom": 11,
       "maxzoom": 24,
       "filter": [
@@ -4150,6 +4150,7 @@
       ],
       "layout": {
         "visibility": "visible",
+        "text-field": "",
         "icon-image": [
           "match",
           [
@@ -4193,8 +4194,7 @@
           ],
           "8",
           "marker_11"
-        ],
-        "text-field": ""
+        ]
       }
     },
     {
