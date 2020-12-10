@@ -33,7 +33,9 @@ class Database {
                 SchemaUtils.create(
                         Categories,
                         Contacts,
-                        AcceptingStores
+                        AcceptingStores,
+                        PhysicalStores,
+                        Addresses
                 )
 
                 executeScript("sql/create_tilebbox.sql")
