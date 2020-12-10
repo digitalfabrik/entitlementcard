@@ -49,7 +49,7 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
-    implementation("com.impossibl.pgjdbc-ng", "pgjdbc-ng", "0.8.6")
+    implementation("org.postgresql", "postgresql", "42.2.18")
 
     implementation("net.postgis", "postgis-jdbc", "2.5.0")
 

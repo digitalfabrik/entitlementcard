@@ -14,15 +14,23 @@ import xyz.elitese.ehrenamtskarte.importer.annotations.IntegerField
 import xyz.elitese.ehrenamtskarte.importer.converters.booleanConverter
 import xyz.elitese.ehrenamtskarte.importer.converters.doubleConverter
 import xyz.elitese.ehrenamtskarte.importer.converters.integerConverter
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.stream.Collectors
 
 object AcceptingStoresImporter {
 
-    val URL = ""
-
     private suspend fun requestFromFreinet(): FreinetData? {
+        val java = AcceptingStoresImporter::class.java
+        val resource = java.classLoader.getResource("freinet_url.txt") ?: throw Exception("Failed to find freinet url")
+        val stream = resource.openStream()
+        val url: String = BufferedReader(InputStreamReader(stream))
+                .lines().collect(Collectors.joining("\n"))
+        stream.close()
+
         val client = HttpClient()
         val response = client.request<String> {
-            url(URL)
+            url(url)
             method = HttpMethod.Get
         }
 
@@ -36,30 +44,34 @@ object AcceptingStoresImporter {
     private fun importSingleAcceptingStore(acceptingStore: FreinetAcceptingStore, category: CategoryEntity) {
         println("import " + acceptingStore.name)
 
-        transaction {
-            val address = AddressEntity.new {
-                street = acceptingStore.street
-                houseNumber = "10"
-                postalCode = acceptingStore.postalCode
-                locaction = acceptingStore.location
-                state = "de"
+        try {
+            transaction {
+                val address = AddressEntity.new {
+                    street = acceptingStore.street
+                    houseNumber = "10"
+                    postalCode = acceptingStore.postalCode
+                    locaction = acceptingStore.location
+                    state = "de"
+                }
+                val contact = ContactEntity.new {
+                    email = acceptingStore.email
+                    telephone = acceptingStore.telephone
+                    website = acceptingStore.homepage
+                }
+                val store = AcceptingStoreEntity.new {
+                    name = acceptingStore.name
+                    description = acceptingStore.discount
+                    contactId = contact.id
+                    categoryId = category.id
+                }
+                PhysicalStoreEntity.new {
+                    storeId = store.id
+                    addressId = address.id
+                    coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
+                }
             }
-            val contact = ContactEntity.new {
-                email = acceptingStore.email
-                telephone = acceptingStore.telephone
-                website = acceptingStore.homepage
-            }
-            val store = AcceptingStoreEntity.new {
-                name = acceptingStore.name
-                description = acceptingStore.discount
-                contactId = contact.id
-                categoryId = category.id
-            }
-            PhysicalStoreEntity.new {
-                storeId = store.id
-                addressId = address.id
-                // coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
