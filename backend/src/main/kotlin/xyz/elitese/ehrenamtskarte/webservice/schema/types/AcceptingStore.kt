@@ -9,14 +9,10 @@ import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORE_LOADER_NA
 data class AcceptingStore(
         val id: Int,
         val name: String,
+        val description: String,
         val contactId: Int,
         val categoryId: Int
 ) {
-
-    suspend fun physicalStore(dataFetchingEnvironment: DataFetchingEnvironment): PhysicalStore? {
-        return dataFetchingEnvironment.getDataLoader<Int, PhysicalStore?>(PHYSICAL_STORE_LOADER_NAME)
-                .load(id).join()
-    }
 
     suspend fun contact(dataFetchingEnvironment: DataFetchingEnvironment): Contact {
         return dataFetchingEnvironment.getDataLoader<Int, Contact>(CONTACT_LOADER_NAME)

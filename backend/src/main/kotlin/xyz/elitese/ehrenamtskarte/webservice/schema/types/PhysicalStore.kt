@@ -1,21 +1,19 @@
 package xyz.elitese.ehrenamtskarte.webservice.schema.types
 
+import graphql.schema.DataFetchingEnvironment
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.ACCEPTING_STORE_LOADER_NAME
+
 
 data class PhysicalStore(
-        val id: Long,
-        val address: Address
-)
+        val id: Int,
+        val storeId: Int,
+        val addressId: Int
+) {
 
-data class Address(
-        val street: String,
-        val houseNumber: String,
-        val postalCode: String,
-        val location: String,
-        val state: String,
-        val coordinates: Coordinates
-)
+    suspend fun physicalStore(dataFetchingEnvironment: DataFetchingEnvironment): PhysicalStore? {
+        return dataFetchingEnvironment.getDataLoader<Int, PhysicalStore?>(ACCEPTING_STORE_LOADER_NAME)
+                .load(id).join()
+    }
 
-data class Coordinates(
-        val latitude: Double,
-        val longitude: Double
-)
+}
+
