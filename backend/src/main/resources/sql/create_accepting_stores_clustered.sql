@@ -15,10 +15,11 @@ BEGIN
     SELECT INTO mvt ST_AsMVT(tile, 'accepting_stores_clustered', extend, 'mvt_geom')
     FROM (
              WITH locations AS (
-                 SELECT store.location
-                 FROM public.acceptingstores store
-                 WHERE store.location && tile_bbox
-                   AND store.location && bavarian_bbox
+                 SELECT address.location
+                 FROM public.physicalstores store
+                 JOIN public.addresses address ON store."addressId" = address.id
+                 WHERE address.location && tile_bbox
+                   AND address.location && bavarian_bbox
              ),
                   k AS (
                       SELECT CAST(LEAST(cluster_k, COUNT(*)) AS int)
