@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
+import '../../configuration.dart';
+
 typedef void OnFeatureClickCallback(dynamic feature);
 typedef void OnNoFeatureClickCallback();
 
@@ -32,10 +34,11 @@ class _MapState extends State<Map> {
 
   @override
   Widget build(BuildContext context) {
+    final config = Configuration.of(context);
     return new MapboxMap(
       initialCameraPosition: const CameraPosition(
           target: Map.initialLocation, zoom: Map.initialZoomLevel),
-      styleString: "https://vector.ehrenamtskarte.app/style.json",
+      styleString: config.mapStyleUrl,
       myLocationEnabled: widget.myLocationEnabled,
       onMapCreated: (controller) {
         setState(() {
