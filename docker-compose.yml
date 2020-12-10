@@ -18,16 +18,12 @@ services:
     image: "adminer:4.7.7-standalone"
     ports:
       - 127.0.0.1:5001:8080
-  style:
-    image: "nginx:1.19.5"
-    volumes:
-      - ./docker/style/www:/usr/share/nginx/html
-      - ./docker/style/nginx.conf:/etc/nginx/conf.d/default.conf
   reverse_proxy:
     image: "nginx:1.19.5"
     ports:
       - "5002:80"
     volumes:
-      - ./docker/reverse_proxy/nginx-dev.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/reverse_proxy/www:/usr/share/nginx/html
+      - ./docker/reverse_proxy/nginx-development.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - martin
