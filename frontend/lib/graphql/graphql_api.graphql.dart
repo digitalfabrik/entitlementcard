@@ -8,35 +8,69 @@ import 'package:gql/ast.dart';
 part 'graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName();
+class AcceptingStoreSummaryById$Query$AcceptingStore$Category
+    with EquatableMixin {
+  AcceptingStoreSummaryById$Query$AcceptingStore$Category();
 
-  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
+  factory AcceptingStoreSummaryById$Query$AcceptingStore$Category.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
+      _$AcceptingStoreSummaryById$Query$AcceptingStore$CategoryFromJson(json);
+
+  String name;
+
+  @override
+  List<Object> get props => [name];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreSummaryById$Query$AcceptingStore$CategoryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoreSummaryById$Query$AcceptingStore with EquatableMixin {
+  AcceptingStoreSummaryById$Query$AcceptingStore();
+
+  factory AcceptingStoreSummaryById$Query$AcceptingStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryById$Query$AcceptingStoreFromJson(json);
 
   int id;
 
   String name;
 
+  AcceptingStoreSummaryById$Query$AcceptingStore$Category category;
+
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [id, name, category];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
+      _$AcceptingStoreSummaryById$Query$AcceptingStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query with EquatableMixin {
-  AcceptingStores$Query();
+class AcceptingStoreSummaryById$Query with EquatableMixin {
+  AcceptingStoreSummaryById$Query();
 
-  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStores$QueryFromJson(json);
+  factory AcceptingStoreSummaryById$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryById$QueryFromJson(json);
 
-  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
+  List<AcceptingStoreSummaryById$Query$AcceptingStore> acceptingStoreById;
 
   @override
-  List<Object> get props => [acceptingStoreName];
-  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
+  List<Object> get props => [acceptingStoreById];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreSummaryById$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ParamsInput with EquatableMixin {
+  ParamsInput({@required this.ids});
+
+  factory ParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$ParamsInputFromJson(json);
+
+  List<int> ids;
+
+  @override
+  List<Object> get props => [ids];
+  Map<String, dynamic> toJson() => _$ParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -183,35 +217,83 @@ class AcceptingStoreById$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class ParamsInput with EquatableMixin {
-  ParamsInput({@required this.ids});
+class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
+  AcceptingStores$Query$AcceptingStoreName();
 
-  factory ParamsInput.fromJson(Map<String, dynamic> json) =>
-      _$ParamsInputFromJson(json);
+  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
 
-  List<int> ids;
+  int id;
+
+  String name;
+
+  @override
+  List<Object> get props => [id, name];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStores$Query with EquatableMixin {
+  AcceptingStores$Query();
+
+  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStores$QueryFromJson(json);
+
+  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
+
+  @override
+  List<Object> get props => [acceptingStoreName];
+  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoreSummaryByIdArguments extends JsonSerializable
+    with EquatableMixin {
+  AcceptingStoreSummaryByIdArguments({@required this.ids});
+
+  @override
+  factory AcceptingStoreSummaryByIdArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
+
+  final ParamsInput ids;
 
   @override
   List<Object> get props => [ids];
-  Map<String, dynamic> toJson() => _$ParamsInputToJson(this);
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreSummaryByIdArgumentsToJson(this);
 }
 
-class AcceptingStoresQuery
-    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
-  AcceptingStoresQuery();
+class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
+    AcceptingStoreSummaryById$Query, AcceptingStoreSummaryByIdArguments> {
+  AcceptingStoreSummaryByIdQuery({this.variables});
 
   @override
   final DocumentNode document = DocumentNode(definitions: [
     OperationDefinitionNode(
         type: OperationType.query,
-        name: NameNode(value: 'AcceptingStores'),
-        variableDefinitions: [],
+        name: NameNode(value: 'AcceptingStoreSummaryById'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'ids')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'ParamsInput'), isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
         directives: [],
         selectionSet: SelectionSetNode(selections: [
           FieldNode(
-              name: NameNode(value: 'acceptingStores'),
-              alias: NameNode(value: 'acceptingStoreName'),
-              arguments: [],
+              name: NameNode(value: 'acceptingStoreById'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'params'),
+                    value: VariableNode(name: NameNode(value: 'ids')))
+              ],
               directives: [],
               selectionSet: SelectionSetNode(selections: [
                 FieldNode(
@@ -225,19 +307,35 @@ class AcceptingStoresQuery
                     alias: null,
                     arguments: [],
                     directives: [],
-                    selectionSet: null)
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'category'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'name'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
+                    ]))
               ]))
         ]))
   ]);
 
   @override
-  final String operationName = 'AcceptingStores';
+  final String operationName = 'AcceptingStoreSummaryById';
 
   @override
-  List<Object> get props => [document, operationName];
+  final AcceptingStoreSummaryByIdArguments variables;
+
   @override
-  AcceptingStores$Query parse(Map<String, dynamic> json) =>
-      AcceptingStores$Query.fromJson(json);
+  List<Object> get props => [document, operationName, variables];
+  @override
+  AcceptingStoreSummaryById$Query parse(Map<String, dynamic> json) =>
+      AcceptingStoreSummaryById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -413,4 +511,48 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
   @override
   AcceptingStoreById$Query parse(Map<String, dynamic> json) =>
       AcceptingStoreById$Query.fromJson(json);
+}
+
+class AcceptingStoresQuery
+    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
+  AcceptingStoresQuery();
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.query,
+        name: NameNode(value: 'AcceptingStores'),
+        variableDefinitions: [],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'acceptingStores'),
+              alias: NameNode(value: 'acceptingStoreName'),
+              arguments: [],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'name'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null)
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'AcceptingStores';
+
+  @override
+  List<Object> get props => [document, operationName];
+  @override
+  AcceptingStores$Query parse(Map<String, dynamic> json) =>
+      AcceptingStores$Query.fromJson(json);
 }

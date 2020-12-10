@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'loading_business_summary.dart';
 
 class BusinessSummary extends StatelessWidget {
-  final String businessId;
+  final int businessId;
 
   BusinessSummary(this.businessId, {Key key}) : super(key: key);
 

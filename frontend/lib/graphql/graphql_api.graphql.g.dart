@@ -6,37 +6,67 @@ part of 'graphql_api.graphql.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AcceptingStores$Query$AcceptingStoreName
-    _$AcceptingStores$Query$AcceptingStoreNameFromJson(
+AcceptingStoreSummaryById$Query$AcceptingStore$Category
+    _$AcceptingStoreSummaryById$Query$AcceptingStore$CategoryFromJson(
         Map<String, dynamic> json) {
-  return AcceptingStores$Query$AcceptingStoreName()
-    ..id = json['id'] as int
+  return AcceptingStoreSummaryById$Query$AcceptingStore$Category()
     ..name = json['name'] as String;
 }
 
-Map<String, dynamic> _$AcceptingStores$Query$AcceptingStoreNameToJson(
-        AcceptingStores$Query$AcceptingStoreName instance) =>
+Map<String, dynamic>
+    _$AcceptingStoreSummaryById$Query$AcceptingStore$CategoryToJson(
+            AcceptingStoreSummaryById$Query$AcceptingStore$Category instance) =>
+        <String, dynamic>{
+          'name': instance.name,
+        };
+
+AcceptingStoreSummaryById$Query$AcceptingStore
+    _$AcceptingStoreSummaryById$Query$AcceptingStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query$AcceptingStore()
+    ..id = json['id'] as int
+    ..name = json['name'] as String
+    ..category = json['category'] == null
+        ? null
+        : AcceptingStoreSummaryById$Query$AcceptingStore$Category.fromJson(
+            json['category'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryById$Query$AcceptingStoreToJson(
+        AcceptingStoreSummaryById$Query$AcceptingStore instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'category': instance.category?.toJson(),
     };
 
-AcceptingStores$Query _$AcceptingStores$QueryFromJson(
+AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
     Map<String, dynamic> json) {
-  return AcceptingStores$Query()
-    ..acceptingStoreName = (json['acceptingStoreName'] as List)
+  return AcceptingStoreSummaryById$Query()
+    ..acceptingStoreById = (json['acceptingStoreById'] as List)
         ?.map((e) => e == null
             ? null
-            : AcceptingStores$Query$AcceptingStoreName.fromJson(
+            : AcceptingStoreSummaryById$Query$AcceptingStore.fromJson(
                 e as Map<String, dynamic>))
         ?.toList();
 }
 
-Map<String, dynamic> _$AcceptingStores$QueryToJson(
-        AcceptingStores$Query instance) =>
+Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
+        AcceptingStoreSummaryById$Query instance) =>
     <String, dynamic>{
-      'acceptingStoreName':
-          instance.acceptingStoreName?.map((e) => e?.toJson())?.toList(),
+      'acceptingStoreById':
+          instance.acceptingStoreById?.map((e) => e?.toJson())?.toList(),
+    };
+
+ParamsInput _$ParamsInputFromJson(Map<String, dynamic> json) {
+  return ParamsInput(
+    ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ParamsInputToJson(ParamsInput instance) =>
+    <String, dynamic>{
+      'ids': instance.ids,
     };
 
 AcceptingStoreById$Query$AcceptingStore$Category
@@ -179,15 +209,52 @@ Map<String, dynamic> _$AcceptingStoreById$QueryToJson(
           instance.acceptingStoreById?.map((e) => e?.toJson())?.toList(),
     };
 
-ParamsInput _$ParamsInputFromJson(Map<String, dynamic> json) {
-  return ParamsInput(
-    ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
+AcceptingStores$Query$AcceptingStoreName
+    _$AcceptingStores$Query$AcceptingStoreNameFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStores$Query$AcceptingStoreName()
+    ..id = json['id'] as int
+    ..name = json['name'] as String;
+}
+
+Map<String, dynamic> _$AcceptingStores$Query$AcceptingStoreNameToJson(
+        AcceptingStores$Query$AcceptingStoreName instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
+
+AcceptingStores$Query _$AcceptingStores$QueryFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStores$Query()
+    ..acceptingStoreName = (json['acceptingStoreName'] as List)
+        ?.map((e) => e == null
+            ? null
+            : AcceptingStores$Query$AcceptingStoreName.fromJson(
+                e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$AcceptingStores$QueryToJson(
+        AcceptingStores$Query instance) =>
+    <String, dynamic>{
+      'acceptingStoreName':
+          instance.acceptingStoreName?.map((e) => e?.toJson())?.toList(),
+    };
+
+AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoreSummaryByIdArguments(
+    ids: json['ids'] == null
+        ? null
+        : ParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$ParamsInputToJson(ParamsInput instance) =>
+Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
+        AcceptingStoreSummaryByIdArguments instance) =>
     <String, dynamic>{
-      'ids': instance.ids,
+      'ids': instance.ids?.toJson(),
     };
 
 AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(

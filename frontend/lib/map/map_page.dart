@@ -12,16 +12,17 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  String selectedBusinessId;
+  int selectedBusinessId;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
         children: [
       MapWithFutures(
-        onFeatureClick: (feature) => setState(() => this.selectedBusinessId =
-                feature.toString() // TODO find ID here
-            ),
+        onFeatureClick: (feature) {
+          var id = feature["properties"]["id"];
+          setState(() => this.selectedBusinessId = (id is int) ? id : null);
+        },
         onNoFeatureClick: () => setState(() => this.selectedBusinessId = null),
         onFeatureClickLayerFilter: ["accepting_stores"],
       ),

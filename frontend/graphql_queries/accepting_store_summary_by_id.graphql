@@ -1,0 +1,7 @@
+query AcceptingStoreSummaryById($ids: ParamsInput!) {
+    acceptingStoreById(params: $ids) {
+        id
+        name
+        category { name }
+    }
+}
