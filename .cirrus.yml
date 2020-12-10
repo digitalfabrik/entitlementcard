@@ -44,7 +44,7 @@ fe_build_ios_task:
       image: catalina-flutter
   build_script:
     - cd frontend
-    - flutter build ios --release --no-codesign
+    - flutter build ios --release --no-codesign -t lib/main_prod.dart
   iOS_app_artifacts:
     path: ./frontend/build/ios/iphoneos/Runner.app
 
@@ -56,7 +56,7 @@ fe_build_android_task:
     - "FE: test"
   build_script:
     - cd frontend
-    - flutter build appbundle
+    - flutter build appbundle -t lib/main_prod.dart
   android_app_artifacts:
     path: ./frontend/build/app/outputs/bundle/release/app-release.aab
 
