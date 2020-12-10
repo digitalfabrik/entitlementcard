@@ -28,9 +28,9 @@ class GraphQLTestPage extends StatelessWidget {
             return Text('Loading …');
           }
           final allStores =
-              AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
-          final resultNames =
-              "Store with id 1: " + allStores.map((e) => e.name).join(" ");
+              AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
+          final resultNames = "Store with id 1: " +
+              allStores.map((e) => e.store.name).join(" ");
           return Text(resultNames);
         },
       ),
@@ -50,7 +50,7 @@ class GraphQLTestPage extends StatelessWidget {
           }
           final allStores =
               AcceptingStoresQuery().parse(result.data).acceptingStoreName;
-          final resultNames = allStores.map((e) => e.name).join(" ");
+          final resultNames = allStores.map((e) => e.store.name).join(" ");
           return Text(resultNames);
         },
       ),

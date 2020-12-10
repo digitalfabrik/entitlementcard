@@ -33,7 +33,7 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: const LinearProgressIndicator());
             }
-            var stores = query.parse(result.data).acceptingStoreById;
+            var stores = query.parse(result.data).physicalStoresById;
             if (stores.isEmpty) {
               throw Exception("ID not found");
             }
@@ -53,9 +53,8 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
   }
 
   _convertToAcceptingStoreSummary(
-      AcceptingStoreSummaryById$Query$AcceptingStore store) {
-    return AcceptingStoreSummary(store.id, store.name,
-        "Eine Akzeptanzstelle der Kategorie „${store.category.name}“" // TODO get real description
-        );
+      AcceptingStoreSummaryById$Query$PhysicalStore store) {
+    return AcceptingStoreSummary(
+        store.id, store.store.name, store.store.description);
   }
 }
