@@ -36,7 +36,7 @@
       "maxZoom": 14
     }
   },
-  "sprite": "https://maputnik.github.io/osm-liberty/sprites/osm-liberty",
+  "sprite": "https://vector.ehrenamtskarte.app/sprites/osm-liberty",
   "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=zOWlRyA7SQOSf0eOTmmm",
   "layers": [
     {
