@@ -14,7 +14,7 @@ val acceptingStoreLoader = DataLoader<Int, AcceptingStore?> { ids ->
         runBlocking {
             transaction {
                 AcceptingStoresRepository.findByIds(ids).map {
-                    AcceptingStore(it.id.value, it.name, it.contactId.value, it.categoryId.value)
+                    AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
                 }.associateWithKeys<AcceptingStore, Int>({ it.id }, ids)
             }
         }

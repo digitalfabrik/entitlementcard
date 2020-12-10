@@ -10,12 +10,37 @@ class GraphQLTestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(ids: ParamsInput(ids: [1])));
-    return Column(children: [
+    return SingleChildScrollView(
+        child: Column(children: [
+      Query(
+        options: QueryOptions(
+            documentNode: byIdQuery.document,
+            variables: byIdQuery.getVariablesMap()),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            debugPrint(result.exception.toString());
+            return Text(result.exception.toString(),
+                style: TextStyle(color: Colors.red));
+          }
+
+          if (result.loading) {
+            return Text('Loading …');
+          }
+          final allStores =
+              AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
+          final resultNames = "Store with id 1: " +
+              allStores.map((e) => e.store.name).join(" ");
+          return Text(resultNames);
+        },
+      ),
+      const Divider(),
       Query(
         options: QueryOptions(documentNode: AcceptingStoresQuery().document),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.hasException) {
+            debugPrint(result.exception.toString());
             return Text(result.exception.toString(),
                 style: TextStyle(color: Colors.red));
           }
@@ -25,31 +50,10 @@ class GraphQLTestPage extends StatelessWidget {
           }
           final allStores =
               AcceptingStoresQuery().parse(result.data).acceptingStoreName;
-          final resultNames = allStores.map((e) => e.name).join(" ");
+          final resultNames = allStores.map((e) => e.store.name).join(" ");
           return Text(resultNames);
         },
       ),
-      Query(
-        options: QueryOptions(
-            documentNode: byIdQuery.document,
-            variables: byIdQuery.getVariablesMap()),
-        builder: (QueryResult result,
-            {VoidCallback refetch, FetchMore fetchMore}) {
-          if (result.hasException) {
-            return Text(result.exception.toString(),
-                style: TextStyle(color: Colors.red));
-          }
-
-          if (result.loading) {
-            return Text('Loading …');
-          }
-          final allStores =
-              AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
-          final resultNames =
-              "Store with id 1: " + allStores.map((e) => e.name).join(" ");
-          return Text(resultNames);
-        },
-      )
-    ]);
+    ]));
   }
 }

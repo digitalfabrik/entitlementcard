@@ -8,4 +8,5 @@ fun initializeDataLoaderRegistry(dataLoaderRegistry: DataLoaderRegistry) {
     dataLoaderRegistry.register(CATEGORY_LOADER_NAME, batchCategoryLoader)
     dataLoaderRegistry.register(ACCEPTING_STORE_LOADER_NAME, acceptingStoreLoader)
     dataLoaderRegistry.register(PHYSICAL_STORE_LOADER_NAME, physicalStoreLoader)
+    dataLoaderRegistry.register(ADDRESS_LOADER_NAME, batchAddressLoader)
 }

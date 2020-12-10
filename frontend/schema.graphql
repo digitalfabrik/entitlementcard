@@ -27,17 +27,16 @@ directive @specifiedBy(
   ) on SCALAR
 
 type AcceptingStore {
-    category: Category!
-    categoryId: Int!
-    contact: Contact!
-    contactId: Int!
-    id: Int!
-    name: String!
-    physicalStore: PhysicalStore
+  category: Category!
+  categoryId: Int!
+  contact: Contact!
+  contactId: Int!
+  description: String!
+  id: Int!
+  name: String!
 }
 
 type Address {
-  coordinates: Coordinates!
   houseNumber: String!
   location: String!
   postalCode: String!
@@ -46,36 +45,31 @@ type Address {
 }
 
 type Category {
-    id: Int!
-    name: String!
+  id: Int!
+  name: String!
 }
 
 type Contact {
-    email: String!
-    id: Int!
-    telephone: String!
-    website: String!
-}
-
-type Coordinates {
-  latitude: Float!
-  longitude: Float!
+  email: String!
+  id: Int!
+  telephone: String!
+  website: String!
 }
 
 type PhysicalStore {
-  address: Address!
-  id: Long!
+  address: Address
+  addressId: Int!
+  id: Int!
+  store: AcceptingStore
+  storeId: Int!
 }
 
 type Query {
-  acceptingStoreById(params: ParamsInput!): [AcceptingStore]!
   "Return list of all accepting stores."
-  acceptingStores: [AcceptingStore!]!
+  physicalStores: [PhysicalStore!]!
+  physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
 }
 
-"Long type"
-scalar Long
-
 input ParamsInput {
-  ids: [Long!]!
+  ids: [Int!]!
 }
