@@ -11,14 +11,14 @@ class AcceptingStoreQueryService {
 
     @GraphQLDescription("Return list of all accepting stores.")
     @Suppress("unused")
-    suspend fun acceptingStores() = transaction {
+    suspend fun physicalStores() = transaction {
         PhysicalStoresRepository.findAll().map {
             PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
         }
     }
 
     @Suppress("unused")
-    suspend fun acceptingStoreById(params: Params, dataFetchingEnvironment: DataFetchingEnvironment) =
+    suspend fun physicalStoresById(params: Params, dataFetchingEnvironment: DataFetchingEnvironment) =
             dataFetchingEnvironment.getDataLoader<Int, PhysicalStore>(PHYSICAL_STORE_LOADER_NAME)
                     .loadMany(params.ids).join()
 }

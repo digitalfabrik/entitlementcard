@@ -8,60 +8,16 @@ import 'package:gql/ast.dart';
 part 'graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName();
+class AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact
+    with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact();
 
-  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
+  factory AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$ContactFromJson(
+          json);
 
   int id;
-
-  String name;
-
-  @override
-  List<Object> get props => [id, name];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query with EquatableMixin {
-  AcceptingStores$Query();
-
-  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStores$QueryFromJson(json);
-
-  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
-
-  @override
-  List<Object> get props => [acceptingStoreName];
-  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore$Category with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore$Category();
-
-  factory AcceptingStoreById$Query$AcceptingStore$Category.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStore$CategoryFromJson(json);
-
-  String name;
-
-  @override
-  List<Object> get props => [name];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStore$CategoryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore$Contact with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore$Contact();
-
-  factory AcceptingStoreById$Query$AcceptingStore$Contact.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStore$ContactFromJson(json);
 
   String email;
 
@@ -70,48 +26,69 @@ class AcceptingStoreById$Query$AcceptingStore$Contact with EquatableMixin {
   String website;
 
   @override
-  List<Object> get props => [email, telephone, website];
+  List<Object> get props => [id, email, telephone, website];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStore$ContactToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$Coordinates
-    with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$Coordinates();
-
-  factory AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$Coordinates.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$CoordinatesFromJson(
-          json);
-
-  double latitude;
-
-  double longitude;
-
-  @override
-  List<Object> get props => [latitude, longitude];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$CoordinatesToJson(
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$ContactToJson(
           this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address
+class AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Category
     with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address();
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Category();
 
-  factory AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address.fromJson(
+  factory AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Category.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStore$AddressFromJson(
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$CategoryFromJson(
           json);
 
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address$Coordinates
-      coordinates;
+  int id;
 
-  String houseNumber;
+  String name;
+
+  @override
+  List<Object> get props => [id, name];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$CategoryToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoreById$Query$PhysicalStore$AcceptingStore
+    with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore();
+
+  factory AcceptingStoreById$Query$PhysicalStore$AcceptingStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStoreFromJson(json);
+
+  int id;
+
+  String name;
+
+  String description;
+
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact contact;
+
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Category category;
+
+  @override
+  List<Object> get props => [id, name, description, contact, category];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreById$Query$PhysicalStore$AcceptingStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoreById$Query$PhysicalStore$Address with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore$Address();
+
+  factory AcceptingStoreById$Query$PhysicalStore$Address.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreById$Query$PhysicalStore$AddressFromJson(json);
 
   String street;
+
+  String houseNumber;
 
   String postalCode;
 
@@ -120,52 +97,27 @@ class AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address
   String state;
 
   @override
-  List<Object> get props =>
-      [coordinates, houseNumber, street, postalCode, location, state];
+  List<Object> get props => [street, houseNumber, postalCode, location, state];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStore$AddressToJson(
-          this);
+      _$AcceptingStoreById$Query$PhysicalStore$AddressToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore$PhysicalStore
-    with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore();
+class AcceptingStoreById$Query$PhysicalStore with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore();
 
-  factory AcceptingStoreById$Query$AcceptingStore$PhysicalStore.fromJson(
+  factory AcceptingStoreById$Query$PhysicalStore.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStoreFromJson(json);
+      _$AcceptingStoreById$Query$PhysicalStoreFromJson(json);
 
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address address;
+  AcceptingStoreById$Query$PhysicalStore$AcceptingStore store;
+
+  AcceptingStoreById$Query$PhysicalStore$Address address;
 
   @override
-  List<Object> get props => [address];
+  List<Object> get props => [store, address];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStore$PhysicalStoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoreById$Query$AcceptingStore with EquatableMixin {
-  AcceptingStoreById$Query$AcceptingStore();
-
-  factory AcceptingStoreById$Query$AcceptingStore.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStoreById$Query$AcceptingStoreFromJson(json);
-
-  int id;
-
-  String name;
-
-  AcceptingStoreById$Query$AcceptingStore$Category category;
-
-  AcceptingStoreById$Query$AcceptingStore$Contact contact;
-
-  AcceptingStoreById$Query$AcceptingStore$PhysicalStore physicalStore;
-
-  @override
-  List<Object> get props => [id, name, category, contact, physicalStore];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStoreById$Query$AcceptingStoreToJson(this);
+      _$AcceptingStoreById$Query$PhysicalStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -175,10 +127,10 @@ class AcceptingStoreById$Query with EquatableMixin {
   factory AcceptingStoreById$Query.fromJson(Map<String, dynamic> json) =>
       _$AcceptingStoreById$QueryFromJson(json);
 
-  List<AcceptingStoreById$Query$AcceptingStore> acceptingStoreById;
+  List<AcceptingStoreById$Query$PhysicalStore> physicalStoresById;
 
   @override
-  List<Object> get props => [acceptingStoreById];
+  List<Object> get props => [physicalStoresById];
   Map<String, dynamic> toJson() => _$AcceptingStoreById$QueryToJson(this);
 }
 
@@ -196,48 +148,53 @@ class ParamsInput with EquatableMixin {
   Map<String, dynamic> toJson() => _$ParamsInputToJson(this);
 }
 
-class AcceptingStoresQuery
-    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
-  AcceptingStoresQuery();
+@JsonSerializable(explicitToJson: true)
+class AcceptingStores$Query$AcceptingStoreName$AcceptingStore
+    with EquatableMixin {
+  AcceptingStores$Query$AcceptingStoreName$AcceptingStore();
+
+  factory AcceptingStores$Query$AcceptingStoreName$AcceptingStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreFromJson(json);
+
+  String name;
 
   @override
-  final DocumentNode document = DocumentNode(definitions: [
-    OperationDefinitionNode(
-        type: OperationType.query,
-        name: NameNode(value: 'AcceptingStores'),
-        variableDefinitions: [],
-        directives: [],
-        selectionSet: SelectionSetNode(selections: [
-          FieldNode(
-              name: NameNode(value: 'acceptingStores'),
-              alias: NameNode(value: 'acceptingStoreName'),
-              arguments: [],
-              directives: [],
-              selectionSet: SelectionSetNode(selections: [
-                FieldNode(
-                    name: NameNode(value: 'id'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'name'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null)
-              ]))
-        ]))
-  ]);
+  List<Object> get props => [name];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
+  AcceptingStores$Query$AcceptingStoreName();
+
+  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
+
+  int id;
+
+  AcceptingStores$Query$AcceptingStoreName$AcceptingStore store;
 
   @override
-  final String operationName = 'AcceptingStores';
+  List<Object> get props => [id, store];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStores$Query with EquatableMixin {
+  AcceptingStores$Query();
+
+  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStores$QueryFromJson(json);
+
+  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
 
   @override
-  List<Object> get props => [document, operationName];
-  @override
-  AcceptingStores$Query parse(Map<String, dynamic> json) =>
-      AcceptingStores$Query.fromJson(json);
+  List<Object> get props => [acceptingStoreName];
+  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -276,7 +233,7 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
         directives: [],
         selectionSet: SelectionSetNode(selections: [
           FieldNode(
-              name: NameNode(value: 'acceptingStoreById'),
+              name: NameNode(value: 'physicalStoresById'),
               alias: null,
               arguments: [
                 ArgumentNode(
@@ -286,117 +243,116 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
               directives: [],
               selectionSet: SelectionSetNode(selections: [
                 FieldNode(
-                    name: NameNode(value: 'id'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'name'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'category'),
+                    name: NameNode(value: 'store'),
                     alias: null,
                     arguments: [],
                     directives: [],
                     selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'id'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
                       FieldNode(
                           name: NameNode(value: 'name'),
                           alias: null,
                           arguments: [],
                           directives: [],
-                          selectionSet: null)
-                    ])),
-                FieldNode(
-                    name: NameNode(value: 'contact'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: SelectionSetNode(selections: [
+                          selectionSet: null),
                       FieldNode(
-                          name: NameNode(value: 'email'),
+                          name: NameNode(value: 'description'),
                           alias: null,
                           arguments: [],
                           directives: [],
                           selectionSet: null),
                       FieldNode(
-                          name: NameNode(value: 'telephone'),
-                          alias: null,
-                          arguments: [],
-                          directives: [],
-                          selectionSet: null),
-                      FieldNode(
-                          name: NameNode(value: 'website'),
-                          alias: null,
-                          arguments: [],
-                          directives: [],
-                          selectionSet: null)
-                    ])),
-                FieldNode(
-                    name: NameNode(value: 'physicalStore'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: SelectionSetNode(selections: [
-                      FieldNode(
-                          name: NameNode(value: 'address'),
+                          name: NameNode(value: 'contact'),
                           alias: null,
                           arguments: [],
                           directives: [],
                           selectionSet: SelectionSetNode(selections: [
                             FieldNode(
-                                name: NameNode(value: 'coordinates'),
-                                alias: null,
-                                arguments: [],
-                                directives: [],
-                                selectionSet: SelectionSetNode(selections: [
-                                  FieldNode(
-                                      name: NameNode(value: 'latitude'),
-                                      alias: null,
-                                      arguments: [],
-                                      directives: [],
-                                      selectionSet: null),
-                                  FieldNode(
-                                      name: NameNode(value: 'longitude'),
-                                      alias: null,
-                                      arguments: [],
-                                      directives: [],
-                                      selectionSet: null)
-                                ])),
-                            FieldNode(
-                                name: NameNode(value: 'houseNumber'),
+                                name: NameNode(value: 'id'),
                                 alias: null,
                                 arguments: [],
                                 directives: [],
                                 selectionSet: null),
                             FieldNode(
-                                name: NameNode(value: 'street'),
+                                name: NameNode(value: 'email'),
                                 alias: null,
                                 arguments: [],
                                 directives: [],
                                 selectionSet: null),
                             FieldNode(
-                                name: NameNode(value: 'postalCode'),
+                                name: NameNode(value: 'telephone'),
                                 alias: null,
                                 arguments: [],
                                 directives: [],
                                 selectionSet: null),
                             FieldNode(
-                                name: NameNode(value: 'location'),
+                                name: NameNode(value: 'website'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ])),
+                      FieldNode(
+                          name: NameNode(value: 'category'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'id'),
                                 alias: null,
                                 arguments: [],
                                 directives: [],
                                 selectionSet: null),
                             FieldNode(
-                                name: NameNode(value: 'state'),
+                                name: NameNode(value: 'name'),
                                 alias: null,
                                 arguments: [],
                                 directives: [],
                                 selectionSet: null)
                           ]))
+                    ])),
+                FieldNode(
+                    name: NameNode(value: 'address'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'street'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'houseNumber'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'postalCode'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'location'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'state'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
                     ]))
               ]))
         ]))
@@ -413,4 +369,55 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
   @override
   AcceptingStoreById$Query parse(Map<String, dynamic> json) =>
       AcceptingStoreById$Query.fromJson(json);
+}
+
+class AcceptingStoresQuery
+    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
+  AcceptingStoresQuery();
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.query,
+        name: NameNode(value: 'AcceptingStores'),
+        variableDefinitions: [],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'physicalStores'),
+              alias: NameNode(value: 'acceptingStoreName'),
+              arguments: [],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'store'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'name'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
+                    ]))
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'AcceptingStores';
+
+  @override
+  List<Object> get props => [document, operationName];
+  @override
+  AcceptingStores$Query parse(Map<String, dynamic> json) =>
+      AcceptingStores$Query.fromJson(json);
 }

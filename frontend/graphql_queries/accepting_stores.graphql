@@ -1,6 +1,8 @@
 query AcceptingStores {
-    acceptingStoreName: acceptingStores {
-        id
-        name
+    acceptingStoreName: physicalStores {
+        id,
+        store {
+            name
+        }
     }
 }
