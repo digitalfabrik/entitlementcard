@@ -1,10 +1,10 @@
+import 'package:ehrenamtskarte/map/detail_view.dart';
 import 'package:ehrenamtskarte/map/request_location_permission.dart'
     show requestLocationPermissionIfNotYetGranted;
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
-import 'full_map.dart';
-import 'package:ehrenamtskarte/map/detail_view.dart';
 
+import 'full_map.dart';
 
 class MapPage extends StatelessWidget {
   MapPage({Key key}) : super(key: key);
@@ -24,7 +24,9 @@ class MapPage extends StatelessWidget {
           );
         }
         return FullMap(
-          onFeatureClick: (feature) => {
+          onFeatureClick: (feature) =>
+          {
+            _openDetailView(context, 1),
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
                   // TODO change loading of properties, as we no longer use the old fat geojson
@@ -37,12 +39,11 @@ class MapPage extends StatelessWidget {
     );
   }
 
-  void _openDetailView(
-      BuildContext context, int acceptingStoreId, String storeName) {
+  void _openDetailView(BuildContext context, int acceptingStoreId) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => DetailView(acceptingStoreId, storeName)),
+          builder: (context) => DetailView(acceptingStoreId)),
     );
   }
 }

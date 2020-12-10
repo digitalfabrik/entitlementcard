@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/list/accepting_businesses_page.dart';
+import 'package:ehrenamtskarte/map/detail_view.dart';
 import 'package:flutter/material.dart';
 
 import '../graphql/graphql_page.dart';
@@ -16,11 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  List<Widget> _tabs = <Widget>[
-    MapPage(),
-    GraphQLTestPage(),
-    AcceptingBusinessesPage()
-  ];
+  List<Widget> _tabs = <Widget>[MapPage(), GraphQLTestPage(), DetailView(1)];
 
   void _onTabTapped(int index) {
     setState(() {

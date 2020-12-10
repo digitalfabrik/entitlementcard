@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -36,11 +37,11 @@ class DetailView extends StatelessWidget {
                 AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
             if (matchingStores.isEmpty ||
                 matchingStores.any((element) => element == null)) {
-              return Text(
-                  'Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
+              //return Text('Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
+              //matchingStores.add(mockData());
             }
-            print(matchingStores.first.toJson());
-            return buildContent(context, matchingStores.first);
+            //print(matchingStores.first.toJson());
+            return buildContent(context, mockData());
           },
         ));
   }
@@ -88,11 +89,33 @@ class DetailView extends StatelessWidget {
     return rows;
   }
 
-  TableRow _buildTableRow(
-      BuildContext context, String category, String content) {
+  TableRow _buildTableRow(BuildContext context, String category,
+      String content) {
     return TableRow(children: [
-      Text(category, style: Theme.of(context).textTheme.bodyText1),
+      Text(category, style: Theme
+          .of(context)
+          .textTheme
+          .bodyText1),
       Text(content)
     ]);
   }
+}
+
+AcceptingStoreById$Query$AcceptingStore mockData() {
+  final store = AcceptingStoreById$Query$AcceptingStore();
+  store.id = 1;
+  store.name = "Store Name";
+  store.physicalStore = AcceptingStoreById$Query$AcceptingStore$PhysicalStore();
+  store.physicalStore.address =
+      AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address();
+  store.physicalStore.address.location = "München";
+  store.physicalStore.address.postalCode = "81541";
+  store.physicalStore.address.houseNumber = "2";
+  store.physicalStore.address.street = "Taubenstr.";
+  store.physicalStore.address.state = "Deutschland";
+  store.contact = AcceptingStoreById$Query$AcceptingStore$Contact();
+  store.contact.website = "www.example.com";
+  store.contact.telephone = "01752578991";
+  store.contact.email = "pw@example.com";
+  return store;
 }
