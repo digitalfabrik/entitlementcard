@@ -5,3 +5,5 @@
 build
 
 local.properties
+
+src/main/resources/freinet_url.txt
