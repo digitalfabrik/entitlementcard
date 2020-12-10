@@ -1,37 +1,41 @@
-import 'package:ehrenamtskarte/map/request_location_permission.dart'
-    show requestLocationPermissionIfNotYetGranted;
+import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
+import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:location_permissions/location_permissions.dart';
-import 'full_map.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return _MapPageState();
+  }
+}
+
+class _MapPageState extends State<MapPage> {
+  int selectedAcceptingStoreId;
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PermissionStatus>(
-      future: requestLocationPermissionIfNotYetGranted(
-          LocationPermissionLevel.locationWhenInUse),
-      builder:
-          (BuildContext context, AsyncSnapshot<PermissionStatus> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: Text(snapshot.hasError
-                ? "Failed to request location permission"
-                : "Requesting location permission …"),
-          );
-        }
-        return FullMap(
-          onFeatureClick: (feature) => {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  // TODO change loading of properties, as we no longer use the old fat geojson
-                  feature["properties"]["k_name"].toString() ?? "Name missing"),
-            ))
-          },
-          myLocationEnabled: snapshot.data == PermissionStatus.granted,
-        );
-      },
-    );
+    return Stack(
+        children: [
+      MapWithFutures(
+        onFeatureClick: (feature) {
+          var id = feature["properties"]["id"];
+          setState(
+              () => this.selectedAcceptingStoreId = (id is int) ? id : null);
+        },
+        onNoFeatureClick: () =>
+            setState(() => this.selectedAcceptingStoreId = null),
+        onFeatureClickLayerFilter: ["accepting_stores"],
+      ),
+      AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: selectedAcceptingStoreId != null
+              ? AcceptingStoreSummary(selectedAcceptingStoreId,
+                  key: ValueKey(selectedAcceptingStoreId))
+              : null),
+    ].where((element) => element != null).toList(growable: false));
   }
 }

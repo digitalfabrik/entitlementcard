@@ -6,28 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
+typedef void OnNoFeatureClickCallback();
 
-class FullMap extends StatefulWidget {
+class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
   static const double initialZoomLevel = 6;
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
+  final OnNoFeatureClickCallback onNoFeatureClick;
+  final List<String> onFeatureClickLayerFilter;
   final bool myLocationEnabled;
 
-  const FullMap({this.onFeatureClick, this.myLocationEnabled = false});
+  const Map(
+      {this.onFeatureClick,
+      this.onNoFeatureClick,
+      this.onFeatureClickLayerFilter,
+      this.myLocationEnabled = false});
 
   @override
-  State createState() => _FullMapState();
+  State createState() => _MapState();
 }
 
-class _FullMapState extends State<FullMap> {
+class _MapState extends State<Map> {
   MapboxMapController _controller;
 
   @override
   Widget build(BuildContext context) {
     return new MapboxMap(
       initialCameraPosition: const CameraPosition(
-          target: FullMap.initialLocation, zoom: FullMap.initialZoomLevel),
+          target: Map.initialLocation, zoom: Map.initialZoomLevel),
       styleString: "https://vector.ehrenamtskarte.app/style.json",
       myLocationEnabled: widget.myLocationEnabled,
       onMapCreated: (controller) {
@@ -42,10 +49,20 @@ class _FullMapState extends State<FullMap> {
   }
 
   void _onMapClick(Point<double> point, LatLng coordinates) {
-    this._controller.queryRenderedFeatures(point, [], null).then((features) => {
-          if (features?.isNotEmpty)
-            {widget.onFeatureClick(json.decode(features[0]))}
-        });
+    this
+        ._controller
+        .queryRenderedFeatures(
+            point, widget.onFeatureClickLayerFilter ?? [], null)
+        .then((features) {
+      if (features.isNotEmpty) {
+        var featureInfo = json.decode(features[0]);
+        if (featureInfo != null) {
+          if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
+          return;
+        }
+      }
+      if (widget.onNoFeatureClick != null) widget.onNoFeatureClick();
+    });
   }
 
   void _bringCameraToUserLocation() async =>
@@ -53,5 +70,5 @@ class _FullMapState extends State<FullMap> {
 
   void _bringCameraToLocation(LatLng location) async =>
       _controller.animateCamera(
-          CameraUpdate.newLatLngZoom(location, FullMap.userLocationZoomLevel));
+          CameraUpdate.newLatLngZoom(location, Map.userLocationZoomLevel));
 }
