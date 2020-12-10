@@ -2,28 +2,22 @@ package xyz.elitese.ehrenamtskarte.webservice.dataloader
 
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
-import xyz.elitese.ehrenamtskarte.webservice.schema.types.Address
-import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
+import org.jetbrains.exposed.sql.transactions.transaction
+import xyz.elitese.ehrenamtskarte.database.repos.AcceptingStoresRepository
+import xyz.elitese.ehrenamtskarte.database.repos.PhysicalStoresRepository
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
 const val PHYSICAL_STORE_LOADER_NAME = "PHYSICAL_STORE_LOADER"
 
-val allPhysicalStores = listOf(
-        PhysicalStore(1, Address(
-                "Washington street",
-                "120a",
-                "123354",
-                "Washington",
-                "WAshington State",
-                Coordinates(23.23, 23.23)
-        ))
-)
-
-val physicalStoreLoader = DataLoader<Long, PhysicalStore?> { ids ->
+val physicalStoreLoader = DataLoader<Int, PhysicalStore?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
-            ids.map { id -> allPhysicalStores.find { store -> store.id == id } }
+            transaction {
+                PhysicalStoresRepository.findByIds(ids).map {
+                    PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
+                }
+            }
         }
     }
 }
