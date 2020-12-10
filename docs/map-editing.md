@@ -1,6 +1,8 @@
 # Map Editing
 
-## Creating icons
+We are using the [osm-liberty](https://github.com/maputnik/osm-liberty ) base style.
+
+## Adding icons
 
 See the [Modify Icons](https://github.com/maputnik/osm-liberty/blob/gh-pages/README.md#modify-icons) guide to integrate the icons.
 
