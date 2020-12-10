@@ -23,6 +23,15 @@ services:
   style:
     image: "nginx:1.19.5"
     volumes:
-      - ./docker/style:/usr/share/nginx/html
+      - ./docker/style/www:/usr/share/nginx/html
+      - ./docker/style/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 127.0.0.1:5002:80
+  reverse_proxy:
+    image: "nginx:1.19.5"
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/reverse_proxy/nginx-dev.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - martin
