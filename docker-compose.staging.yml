@@ -7,3 +7,9 @@ services:
       - ./docker/reverse_proxy/nginx-staging.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 127.0.0.1:5002:80
+    networks:
+      - network_proxy
+networks:
+  network_proxy:
+    external:
+      name: network
