@@ -11,10 +11,8 @@ typedef void OnExecptionCallback(Exception exception);
 
 class LoadingAcceptingStorySummary extends StatelessWidget {
   final int acceptingStoreId;
-  final OnExecptionCallback onException;
 
-  LoadingAcceptingStorySummary(this.acceptingStoreId,
-      {Key key, this.onException})
+  LoadingAcceptingStorySummary(this.acceptingStoreId, {Key key})
       : super(key: key);
 
   @override
