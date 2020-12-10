@@ -71,10 +71,10 @@ object Addresses : IntIdTable() {
 class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AddressEntity>(Addresses)
     var street by Addresses.street
-    var houseNumber = Addresses.houseNumber
-    var postalCode = Addresses.postalCode
-    var locaction = Addresses.location
-    var state = Addresses.state
+    var houseNumber by Addresses.houseNumber
+    var postalCode by Addresses.postalCode
+    var locaction by Addresses.location
+    var state by Addresses.state
 }
 
 fun Table.point(name: String, srid: Int = 4326) : Column<Point>
