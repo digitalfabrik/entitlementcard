@@ -45,7 +45,7 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-    
+
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
@@ -57,6 +57,9 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClassName = "xyz.elitese.ehrenamtskarte.EntryPointKt"
+    applicationDefaultJvmArgs = properties
+            .filter { it.key.startsWith("app.") }
+            .map { "-D" + it.key + "=" + it.value }
 }
 
 tasks.withType<JavaExec>().configureEach {
