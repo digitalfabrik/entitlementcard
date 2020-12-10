@@ -6,8 +6,6 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.nio.file.Files
-import java.nio.file.Paths
 import com.impossibl.postgres.jdbc.PGDataSource
 import java.util.stream.Collectors
 
@@ -46,7 +44,8 @@ class Database {
                 )
 
                 executeScript("sql/create_tilebbox.sql")
-                executeScript("sql/create_accepting_stores_clustered.sql")
+                executeScript("sql/create_physical_stores_clustered.sql")
+                executeScript("sql/create_physical_stores.sql")
             }
         }
     }
