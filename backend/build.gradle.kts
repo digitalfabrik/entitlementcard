@@ -57,9 +57,6 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClassName = "xyz.elitese.ehrenamtskarte.EntryPointKt"
-    applicationDefaultJvmArgs = properties
-            .filter { it.key.startsWith("app.") }
-            .map { "-D" + it.key + "=" + it.value }
 }
 
 tasks.withType<JavaExec>().configureEach {
