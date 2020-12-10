@@ -34,7 +34,7 @@ class DetailView extends StatelessWidget {
               return Text('Loading …');
             }
             final matchingStores =
-                AcceptingStoreByIdQuery().parse(result.data).acceptingStoreById;
+                AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
             if (matchingStores.isEmpty ||
                 matchingStores.any((element) => element == null)) {
               //return Text('Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
@@ -47,7 +47,7 @@ class DetailView extends StatelessWidget {
   }
 
   Widget buildContent(BuildContext context,
-      AcceptingStoreById$Query$AcceptingStore acceptingStore) {
+      AcceptingStoreById$Query$PhysicalStore acceptingStore) {
     final double sectionSpacing = 16.0;
     return Container(
         padding: const EdgeInsets.all(16.0),
@@ -57,8 +57,11 @@ class DetailView extends StatelessWidget {
               Container(
                   padding: EdgeInsets.only(bottom: 5),
                   child: Text(
-                    acceptingStore.name,
-                    style: Theme.of(context).textTheme.headline6,
+                    acceptingStore.store.name,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline6,
                   )),
               Text(
                 "vergünstigter Eintritt € 5,50 vergünstigter Eintritt € 5,50 vergünstigter Eintritt € 5,50",
@@ -75,17 +78,21 @@ class DetailView extends StatelessWidget {
   }
 
   List<TableRow> _buildTableRows(BuildContext context,
-      AcceptingStoreById$Query$AcceptingStore acceptingStore) {
+      AcceptingStoreById$Query$PhysicalStore acceptingStore) {
     List<TableRow> rows = [];
-    if (acceptingStore.physicalStore != null) {
-      final address = acceptingStore.physicalStore.address;
+    if (acceptingStore != null) {
+      final address = acceptingStore.address;
       rows.add(_buildTableRow(context, "Adresse",
-          "${address.street} ${address.houseNumber}\n${address.postalCode} ${address.location} ${address.state}"));
+          "${address.street} ${address.houseNumber}\n${address
+              .postalCode} ${address.location} ${address.state}"));
     }
-    rows.add(_buildTableRow(context, "Tel", acceptingStore.contact.telephone));
-    rows.add(_buildTableRow(context, "E-Mail", acceptingStore.contact.email));
     rows.add(
-        _buildTableRow(context, "Website", acceptingStore.contact.website));
+        _buildTableRow(context, "Tel", acceptingStore.store.contact.telephone));
+    rows.add(
+        _buildTableRow(context, "E-Mail", acceptingStore.store.contact.email));
+    rows.add(
+        _buildTableRow(
+            context, "Website", acceptingStore.store.contact.website));
     return rows;
   }
 
@@ -101,21 +108,21 @@ class DetailView extends StatelessWidget {
   }
 }
 
-AcceptingStoreById$Query$AcceptingStore mockData() {
-  final store = AcceptingStoreById$Query$AcceptingStore();
-  store.id = 1;
-  store.name = "Store Name";
-  store.physicalStore = AcceptingStoreById$Query$AcceptingStore$PhysicalStore();
-  store.physicalStore.address =
-      AcceptingStoreById$Query$AcceptingStore$PhysicalStore$Address();
-  store.physicalStore.address.location = "München";
-  store.physicalStore.address.postalCode = "81541";
-  store.physicalStore.address.houseNumber = "2";
-  store.physicalStore.address.street = "Taubenstr.";
-  store.physicalStore.address.state = "Deutschland";
-  store.contact = AcceptingStoreById$Query$AcceptingStore$Contact();
-  store.contact.website = "www.example.com";
-  store.contact.telephone = "01752578991";
-  store.contact.email = "pw@example.com";
-  return store;
+AcceptingStoreById$Query$PhysicalStore mockData() {
+  final physicalStore = AcceptingStoreById$Query$PhysicalStore();
+  physicalStore.store = AcceptingStoreById$Query$PhysicalStore$AcceptingStore();
+  physicalStore.store.id = 1;
+  physicalStore.store.name = "Store Name";
+  physicalStore.address = AcceptingStoreById$Query$PhysicalStore$Address();
+  physicalStore.address.location = "München";
+  physicalStore.address.postalCode = "81000";
+  physicalStore.address.houseNumber = "2";
+  physicalStore.address.street = "Examplestr.";
+  physicalStore.address.state = "Deutschland";
+  physicalStore.store.contact =
+      AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact();
+  physicalStore.store.contact.website = "www.example.com";
+  physicalStore.store.contact.telephone = "0175000000";
+  physicalStore.store.contact.email = "pw@example.com";
+  return physicalStore;
 }
