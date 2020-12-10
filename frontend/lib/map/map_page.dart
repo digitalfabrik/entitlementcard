@@ -26,10 +26,14 @@ class _MapPageState extends State<MapPage> {
         onNoFeatureClick: () => setState(() => this.selectedBusinessId = null),
         onFeatureClickLayerFilter: ["accepting_stores"],
       ),
-      selectedBusinessId != null
-          ? BusinessSummary(selectedBusinessId,
-              key: ValueKey(selectedBusinessId))
-          : null,
+      AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: selectedBusinessId != null
+              ? BusinessSummary(selectedBusinessId,
+                  key: ValueKey(selectedBusinessId))
+              : null),
     ].where((element) => element != null).toList(growable: false));
   }
 }
