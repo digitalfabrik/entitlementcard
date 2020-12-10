@@ -1,5 +1,14 @@
 version: "3.3"
 services:
+  backend:
+    build: ./backend/
+    ports:
+      - 127.0.0.1:8080:8080
+    depends_on:
+      - martin
+      - adminer
+      - db_postgis
+      - style
   martin:
     build: ./docker/martin
     ports:
