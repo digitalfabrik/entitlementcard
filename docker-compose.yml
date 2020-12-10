@@ -6,12 +6,16 @@ services:
       - BACKEND_OPTS=-Dapp.postgres.host=db-postgis -Dapp.postgres.user=postgres -Dapp.postgres.port=5432 -Dapp.postgres.password=postgres -Dapp.postgres.database=ehrenamtskarte
     depends_on:
       - db-postgis
+    networks:
+      - network
   martin:
     build: ./docker/martin
     volumes:
       - ./docker/martin/config.yaml:/app/config.yaml
     depends_on:
       - db-postgis
+    networks:
+      - network
   db-postgis:
     image:  postgis/postgis:13-3.0-alpine
     environment:
@@ -20,10 +24,14 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - 127.0.0.1:5432:5432
+    networks:
+      - network
   adminer:
     image: "adminer:4.7.7-standalone"
     ports:
       - 127.0.0.1:5001:8080
+    networks:
+      - network
   reverse_proxy:
     image: "nginx:1.19.5"
     ports:
@@ -35,3 +43,8 @@ services:
     depends_on:
       - martin
       - backend
+    networks:
+      - network
+networks:
+  network:
+    name: network
