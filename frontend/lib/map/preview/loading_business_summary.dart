@@ -41,7 +41,13 @@ class LoadingBusinessSummary extends StatelessWidget {
                 _convertToAcceptingBusiness(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return Text("Failed to load summary.");
+            return Row(children: [
+              Icon(Icons.warning, color: Colors.orange),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Fehler beim Laden der Infos."),
+            ]);
           }
         });
   }
