@@ -52,6 +52,11 @@ dependencies {
     implementation("com.impossibl.pgjdbc-ng", "pgjdbc-ng", "0.8.6")
 
     implementation("net.postgis", "postgis-jdbc", "2.5.0")
+
+    implementation("io.ktor:ktor-client-core:1.4.0")
+    implementation("io.ktor:ktor-client-cio:1.4.0")
+
+    implementation("com.beust:klaxon:5.0.1")
 }
 
 application {

@@ -2,13 +2,21 @@ package xyz.elitese.ehrenamtskarte.webservice
 
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.transactions.transaction
 import xyz.elitese.ehrenamtskarte.database.Database
+import xyz.elitese.ehrenamtskarte.importer.AcceptingStoresImporter
 
 const val PORT = 7000
 
 class WebService {
     fun start() {
         Database.setup()
+        runBlocking {
+            AcceptingStoresImporter.import()
+        }
 
         val app = Javalin.create { cfg ->
             cfg.enableDevLogging()
