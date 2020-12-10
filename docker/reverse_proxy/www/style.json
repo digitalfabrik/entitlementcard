@@ -22,7 +22,7 @@
     "physical_stores": {
       "type": "vector",
       "tiles": [
-        "https://vector.ehrenamtskarte.app/accepting_stores/physical_stores/{z}/{x}/{y}.pbf"
+        "https://vector.ehrenamtskarte.app/tiles/physical_stores/{z}/{x}/{y}.pbf"
       ],
       "minZoom": 0,
       "maxZoom": 14
@@ -30,7 +30,7 @@
     "physical_stores_clustered": {
       "type": "vector",
       "tiles": [
-        "https://vector.ehrenamtskarte.app/accepting_stores/rpc/physical_stores_clustered/{z}/{x}/{y}.pbf"
+        "https://vector.ehrenamtskarte.app/tiles/rpc/physical_stores_clustered/{z}/{x}/{y}.pbf"
       ],
       "minZoom": 0,
       "maxZoom": 14
