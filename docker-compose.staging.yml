@@ -5,3 +5,5 @@ services:
     volumes:
       - ./docker/reverse_proxy/www:/usr/share/nginx/html
       - ./docker/reverse_proxy/nginx-staging.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 127.0.0.1:5002:80

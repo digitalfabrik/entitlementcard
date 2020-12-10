@@ -26,7 +26,7 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 2. `sudo docker-compose rm`
 2. `sudo docker-compose build`
 2. `sudo docker-compose up --force-recreate`
-3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db_postgis&username=postgres&db=ehrenamtskarte)
+3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db-postgis&username=postgres&db=ehrenamtskarte)
 
    The credentials are:
 
