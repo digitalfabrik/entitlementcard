@@ -28,16 +28,15 @@ directive @specifiedBy(
 
 type AcceptingStore {
   category: Category!
-  categoryId: Long!
+  categoryId: Int!
   contact: Contact!
-  contactId: Long!
-  id: Long!
+  contactId: Int!
+  description: String!
+  id: Int!
   name: String!
-  physicalStore: PhysicalStore
 }
 
 type Address {
-  coordinates: Coordinates!
   houseNumber: String!
   location: String!
   postalCode: String!
@@ -46,37 +45,31 @@ type Address {
 }
 
 type Category {
-  iconUrl: String!
-  id: Long!
+  id: Int!
   name: String!
 }
 
 type Contact {
   email: String!
-  id: Long!
+  id: Int!
   telephone: String!
   website: String!
 }
 
-type Coordinates {
-  latitude: Float!
-  longitude: Float!
-}
-
 type PhysicalStore {
-  address: Address!
-  id: Long!
+  address: Address
+  addressId: Int!
+  id: Int!
+  store: AcceptingStore
+  storeId: Int!
 }
 
 type Query {
-  acceptingStoreById(params: ParamsInput!): [AcceptingStore]!
   "Return list of all accepting stores."
-  acceptingStores: [AcceptingStore!]!
+  physicalStores: [PhysicalStore!]!
+  physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
 }
 
-"Long type"
-scalar Long
-
 input ParamsInput {
-  ids: [Long!]!
+  ids: [Int!]!
 }

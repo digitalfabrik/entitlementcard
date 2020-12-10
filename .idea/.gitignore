@@ -9,3 +9,5 @@ libraries/*
 # Ignore data base configurations
 dataSources
 dataSources.xml
+# Datasource local storage ignored files
+/dataSources.local.xml

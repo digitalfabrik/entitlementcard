@@ -1,0 +1,9 @@
+query AcceptingStoreSummaryById($ids: ParamsInput!) {
+    physicalStoresById(params: $ids) {
+        id,
+        store {
+            name
+            description
+        }
+    }
+}
