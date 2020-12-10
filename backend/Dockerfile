@@ -1,7 +1,7 @@
 FROM gradle:jdk8 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+RUN ./gradlew build --no-daemon
 RUN unzip /home/gradle/src/build/distributions/backend.zip -d /output
 
 FROM openjdk:8-jre-slim
