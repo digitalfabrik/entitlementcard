@@ -8,6 +8,12 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.file.Files
 import java.nio.file.Paths
+import com.impossibl.postgres.jdbc.PGDataSource
+import java.util.stream.Collectors
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 class Database {
 
@@ -15,9 +21,10 @@ class Database {
         private fun executeScript(path: String) {
             val java = Database::class.java
             val resource = java.classLoader.getResource(path) ?: throw Exception("Failed to find script")
-
-            val uri = resource.toURI()
-            val sql = String(Files.readAllBytes(Paths.get(uri)));
+            val stream = resource.openStream()
+            val sql = BufferedReader(InputStreamReader(stream))
+                .lines().collect(Collectors.joining("\n"))
+            stream.close()
             with(TransactionManager.current()) {
                 exec(sql)
             }
@@ -45,14 +52,12 @@ class Database {
     }
 
     val db by lazy {
-        val host = System.getProperty("app.postgres.host")
-        val port = System.getProperty("app.postgres.port")
-        val user = System.getProperty("app.postgres.user")
-        val password = System.getProperty("app.postgres.password")
-        val database = System.getProperty("app.postgres.database")
+        val ds = PGDataSource()
+        ds.serverName = System.getProperty("app.postgres.host")
+        ds.databaseName = System.getProperty("app.postgres.database")
+        ds.user = System.getProperty("app.postgres.user")
+        ds.password = System.getProperty("app.postgres.password")
 
-        connect("jdbc:pgsql://$host:$port/$database",
-                driver = "com.impossibl.postgres.jdbc.PGDriver",
-                user = user, password = password)
+        connect(ds)
     }
 }
