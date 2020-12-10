@@ -40,7 +40,7 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 5. Run the backend: `./backend/gradlew run` or `.\backend\gradlew.bat run` on Windows
 6. Take a look at the martin endpoints: http://localhost:5002/tiles/accepting_stores/index.json and http://localhost:5002/tiles/accepting_stores/rpc/index.json. The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 7. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
-8. Take a look at the backend: http://localhost:5003 (The public version is available at api.ehrenamtskarte.app)
+8. Take a look at the backend: http://localhost:7000 (The public version is available at api.ehrenamtskarte.app)
 
 ## Using ehrenamtskarte.app as database
 

@@ -1,5 +1,13 @@
 version: "3.5"
 services:
+  backend:
+    build: ./backend/
+    environment:
+      - BACKEND_OPTS=-Dapp.postgres.host=db-postgis -Dapp.postgres.user=postgres -Dapp.postgres.port=5432 -Dapp.postgres.password=postgres -Dapp.postgres.database=ehrenamtskarte
+    depends_on:
+      - db-postgis
+    networks:
+      - network
   reverse_proxy:
     image: "nginx:1.19.5"
     volumes:
@@ -9,6 +17,9 @@ services:
       - 127.0.0.1:5002:80
     networks:
       - network_proxy
+    depends_on:
+      - martin
+      - backend
 networks:
   network_proxy:
     external:
