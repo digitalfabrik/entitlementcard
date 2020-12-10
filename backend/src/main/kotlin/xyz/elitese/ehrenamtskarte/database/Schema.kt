@@ -48,7 +48,7 @@ class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object PhysicalStores : IntIdTable() {
-    val coordinates = point("coordinates")
+    // val coordinates = point("coordinates")
     val addressId = reference("addressId", Addresses)
     val storeId = reference("storeId", AcceptingStores)
 }
@@ -57,7 +57,7 @@ class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PhysicalStoreEntity>(PhysicalStores)
     var storeId by PhysicalStores.storeId
     var addressId by PhysicalStores.addressId
-    var coordinates by PhysicalStores.coordinates
+    // var coordinates by PhysicalStores.coordinates
 }
 
 object Addresses : IntIdTable() {
