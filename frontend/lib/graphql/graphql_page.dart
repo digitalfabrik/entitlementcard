@@ -10,25 +10,8 @@ class GraphQLTestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(ids: ParamsInput(ids: [1])));
-    return Column(children: [
-      Query(
-        options: QueryOptions(documentNode: AcceptingStoresQuery().document),
-        builder: (QueryResult result,
-            {VoidCallback refetch, FetchMore fetchMore}) {
-          if (result.hasException) {
-            return Text(result.exception.toString(),
-                style: TextStyle(color: Colors.red));
-          }
-
-          if (result.loading) {
-            return Text('Loading …');
-          }
-          final allStores =
-              AcceptingStoresQuery().parse(result.data).acceptingStoreName;
-          final resultNames = allStores.map((e) => e.name).join(" ");
-          return Text(resultNames);
-        },
-      ),
+    return SingleChildScrollView(
+        child: Column(children: [
       Query(
         options: QueryOptions(
             documentNode: byIdQuery.document,
@@ -36,6 +19,7 @@ class GraphQLTestPage extends StatelessWidget {
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.hasException) {
+            debugPrint(result.exception.toString());
             return Text(result.exception.toString(),
                 style: TextStyle(color: Colors.red));
           }
@@ -49,7 +33,27 @@ class GraphQLTestPage extends StatelessWidget {
               "Store with id 1: " + allStores.map((e) => e.name).join(" ");
           return Text(resultNames);
         },
-      )
-    ]);
+      ),
+      const Divider(),
+      Query(
+        options: QueryOptions(documentNode: AcceptingStoresQuery().document),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            debugPrint(result.exception.toString());
+            return Text(result.exception.toString(),
+                style: TextStyle(color: Colors.red));
+          }
+
+          if (result.loading) {
+            return Text('Loading …');
+          }
+          final allStores =
+              AcceptingStoresQuery().parse(result.data).acceptingStoreName;
+          final resultNames = allStores.map((e) => e.name).join(" ");
+          return Text(resultNames);
+        },
+      ),
+    ]));
   }
 }
