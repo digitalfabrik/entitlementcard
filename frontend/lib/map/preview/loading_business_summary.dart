@@ -18,11 +18,12 @@ class LoadingBusinessSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var query = AcceptingStoreSummaryByIdQuery(
+    final query = AcceptingStoreSummaryByIdQuery(
         variables: AcceptingStoreSummaryByIdArguments(
             ids: ParamsInput(ids: [this.businessId])));
     return Query(
-        options: QueryOptions(documentNode: query.document),
+        options: QueryOptions(
+            documentNode: query.document, variables: query.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           try {
             if (result.hasException) {
@@ -55,7 +56,7 @@ class LoadingBusinessSummary extends StatelessWidget {
   _convertToAcceptingBusiness(
       AcceptingStoreSummaryById$Query$AcceptingStore store) {
     return AcceptingBusiness(store.id.toString(), store.name,
-        "An accepting store of category ${store.category.toString()}" // TODO get real description
+        "Eine Akzeptanzstelle der Kategorie „${store.category.name}“" // TODO get real description
         );
   }
 }
