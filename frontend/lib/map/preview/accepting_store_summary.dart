@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'loading_business_summary.dart';
+import 'loading_accepting_store_summary.dart';
 
-class BusinessSummary extends StatelessWidget {
-  final int businessId;
+class AcceptingStoreSummary extends StatelessWidget {
+  final int acceptingStoreId;
 
-  BusinessSummary(this.businessId, {Key key}) : super(key: key);
+  AcceptingStoreSummary(this.acceptingStoreId, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,8 @@ class BusinessSummary extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(child: LoadingBusinessSummary(businessId)),
+                  Expanded(
+                      child: LoadingAcceptingStorySummary(acceptingStoreId)),
                   Icon(Icons.arrow_forward,
                       color: Theme.of(context).primaryColor)
                 ],

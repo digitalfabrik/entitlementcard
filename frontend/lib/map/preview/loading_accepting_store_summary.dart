@@ -3,24 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'business.dart';
-import 'business_summary_content.dart';
+import 'models.dart';
+import 'accepting_store_summary_content.dart';
 import '../../graphql/graphql_api.dart';
 
 typedef void OnExecptionCallback(Exception exception);
 
-class LoadingBusinessSummary extends StatelessWidget {
-  final int businessId;
+class LoadingAcceptingStorySummary extends StatelessWidget {
+  final int acceptingStoreId;
   final OnExecptionCallback onException;
 
-  LoadingBusinessSummary(this.businessId, {Key key, this.onException})
+  LoadingAcceptingStorySummary(this.acceptingStoreId,
+      {Key key, this.onException})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final query = AcceptingStoreSummaryByIdQuery(
         variables: AcceptingStoreSummaryByIdArguments(
-            ids: ParamsInput(ids: [this.businessId])));
+            ids: ParamsInput(ids: [this.acceptingStoreId])));
     return Query(
         options: QueryOptions(
             documentNode: query.document, variables: query.getVariablesMap()),
@@ -38,8 +39,8 @@ class LoadingBusinessSummary extends StatelessWidget {
             if (stores.isEmpty) {
               throw Exception("ID not found");
             }
-            return BusinessSummaryContent(
-                _convertToAcceptingBusiness(stores[0]));
+            return AcceptingStoreSummaryContent(
+                _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
             return Row(children: [
@@ -53,9 +54,9 @@ class LoadingBusinessSummary extends StatelessWidget {
         });
   }
 
-  _convertToAcceptingBusiness(
+  _convertToAcceptingStoreSummary(
       AcceptingStoreSummaryById$Query$AcceptingStore store) {
-    return AcceptingBusiness(store.id.toString(), store.name,
+    return AcceptingStoreSummary(store.id, store.name,
         "Eine Akzeptanzstelle der Kategorie „${store.category.name}“" // TODO get real description
         );
   }

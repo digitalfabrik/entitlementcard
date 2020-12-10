@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'business.dart';
+import 'models.dart';
 
-class BusinessSummaryContent extends StatelessWidget {
-  final AcceptingBusiness business;
+class AcceptingStoreSummaryContent extends StatelessWidget {
+  final AcceptingStoreSummary acceptingStore;
 
-  BusinessSummaryContent(this.business, {Key key}) : super(key: key);
+  AcceptingStoreSummaryContent(this.acceptingStore, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +14,9 @@ class BusinessSummaryContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _space(8, [
-        Text(business.name,
+        Text(acceptingStore.name,
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-        Text(business.description)
+        Text(acceptingStore.description)
       ]),
     );
   }

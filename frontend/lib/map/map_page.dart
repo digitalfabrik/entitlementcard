@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
-import 'package:ehrenamtskarte/map/preview/business_summary.dart';
+import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,7 +12,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  int selectedBusinessId;
+  int selectedAcceptingStoreId;
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +21,20 @@ class _MapPageState extends State<MapPage> {
       MapWithFutures(
         onFeatureClick: (feature) {
           var id = feature["properties"]["id"];
-          setState(() => this.selectedBusinessId = (id is int) ? id : null);
+          setState(
+              () => this.selectedAcceptingStoreId = (id is int) ? id : null);
         },
-        onNoFeatureClick: () => setState(() => this.selectedBusinessId = null),
+        onNoFeatureClick: () =>
+            setState(() => this.selectedAcceptingStoreId = null),
         onFeatureClickLayerFilter: ["accepting_stores"],
       ),
       AnimatedSwitcher(
           duration: Duration(milliseconds: 200),
           transitionBuilder: (child, animation) =>
               FadeTransition(opacity: animation, child: child),
-          child: selectedBusinessId != null
-              ? BusinessSummary(selectedBusinessId,
-                  key: ValueKey(selectedBusinessId))
+          child: selectedAcceptingStoreId != null
+              ? AcceptingStoreSummary(selectedAcceptingStoreId,
+                  key: ValueKey(selectedAcceptingStoreId))
               : null),
     ].where((element) => element != null).toList(growable: false));
   }
