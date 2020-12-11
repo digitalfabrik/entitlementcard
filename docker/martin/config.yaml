@@ -1,6 +1,6 @@
 ---
 # Database connection string
-connection_string: "postgres://postgres:postgres@db_postgis:5432/ehrenamtskarte"
+connection_string: "postgres://postgres:postgres@db-postgis:5432/ehrenamtskarte"
 
 # Connection keep alive timeout [default: 75]
 keep_alive: 75
@@ -20,24 +20,17 @@ danger_accept_invalid_certs: false
 # Number of web server workers
 worker_processes: 8
 
-# associative arrays of table sources
-table_sources:
-  accepting_stores:
-    id: public.acceptingstores
-    schema:
-    table:
-    id_column:
-    geometry_column: location
-    srid: 4326
-    geometry_type: POINT
-    properties:
-      id: int4
-      categoryId: int4
-
 function_sources:
-  accepting_stores_clustered:
-    id: accepting_stores_clustered
+  physical_stores:
+    id: physical_stores
     schema: public
 
     # function name
-    function: accepting_stores_clustered
+    function: physical_stores
+
+  physical_stores_clustered:
+    id: physical_stores_clustered
+    schema: public
+
+    # function name
+    function: physical_stores_clustered

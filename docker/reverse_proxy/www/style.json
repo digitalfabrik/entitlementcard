@@ -19,18 +19,18 @@
       ],
       "type": "raster"
     },
-    "accepting_stores": {
+    "physical_stores": {
       "type": "vector",
       "tiles": [
-        "https://vector.ehrenamtskarte.app/accepting_stores/accepting_stores/{z}/{x}/{y}.pbf"
+        "https://vector.ehrenamtskarte.app/tiles/physical_stores/{z}/{x}/{y}.pbf"
       ],
       "minZoom": 0,
       "maxZoom": 14
     },
-    "accepting_stores_clustered": {
+    "physical_stores_clustered": {
       "type": "vector",
       "tiles": [
-        "https://vector.ehrenamtskarte.app/accepting_stores/rpc/accepting_stores_clustered/{z}/{x}/{y}.pbf"
+        "https://vector.ehrenamtskarte.app/tiles/rpc/physical_stores_clustered/{z}/{x}/{y}.pbf"
       ],
       "minZoom": 0,
       "maxZoom": 14
@@ -1698,9 +1698,9 @@
       }
     },
     {
-      "id": "accepting_stores",
+      "id": "physical_stores",
       "type": "symbol",
-      "source": "accepting_stores",
+      "source": "physical_stores",
       "source-layer": "public.acceptingstores",
       "minzoom": 11,
       "maxzoom": 24,
@@ -1734,10 +1734,10 @@
       }
     },
     {
-      "id": "accepting_stores_cluster",
+      "id": "physical_stores_cluster",
       "type": "symbol",
-      "source": "accepting_stores_clustered",
-      "source-layer": "accepting_stores_clustered",
+      "source": "physical_stores_clustered",
+      "source-layer": "physical_stores_clustered",
       "minzoom": 0,
       "maxzoom": 11,
       "layout": {
