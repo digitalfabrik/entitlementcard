@@ -1,7 +1,5 @@
-import 'package:ehrenamtskarte/map/detail/detail_view.dart';
 import 'package:flutter/material.dart';
 
-import '../graphql/graphql_page.dart';
 import '../map/map_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +14,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  List<Widget> _tabs = <Widget>[MapPage(), GraphQLTestPage(), DetailView(5)];
+  List<Widget> _tabs = <Widget>[
+    MapPage(),
+    Container(),
+    Container(),
+  ];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -26,25 +28,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     return Scaffold(
       body: _tabs.elementAt(_currentTabIndex),
       bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat), label: "GraphQL Test"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat), label: "Detail Test"),
-          ],
-          currentIndex: _currentTabIndex,
-          onTap: _onTabTapped,
-          type: BottomNavigationBarType.fixed,
-          //backgroundColor: theme.primaryColor,
-          selectedItemColor: theme.brightness == Brightness.light
-              ? theme.primaryColorDark
-              : theme.primaryColorLight,
-          unselectedItemColor: theme.textTheme.bodyText2.color),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Suche"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.card_giftcard), label: "Ausweisen"),
+        ],
+        currentIndex: _currentTabIndex,
+        onTap: _onTabTapped,
+        type: BottomNavigationBarType.fixed,
+      ),
     );
   }
 }

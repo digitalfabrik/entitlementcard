@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'app.dart';
-import 'repositories/accepting_businesses_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +16,5 @@ Future<void> main() async {
       ]),
     ),
   );
-  runApp(GraphQLProvider(
-      child: CacheProvider(
-          child: App(repository: AcceptingBusinessesRepository())),
-      client: client));
+  runApp(GraphQLProvider(child: CacheProvider(child: App()), client: client));
 }

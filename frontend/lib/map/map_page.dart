@@ -26,7 +26,7 @@ class _MapPageState extends State<MapPage> {
         },
         onNoFeatureClick: () =>
             setState(() => this.selectedAcceptingStoreId = null),
-        onFeatureClickLayerFilter: ["accepting_stores"],
+        onFeatureClickLayerFilter: ["physical_stores"],
       ),
       AnimatedSwitcher(
           duration: Duration(milliseconds: 200),

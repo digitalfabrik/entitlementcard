@@ -57,6 +57,7 @@ class _MapState extends State<Map> {
       if (features.isNotEmpty) {
         var featureInfo = json.decode(features[0]);
         if (featureInfo != null) {
+          _bringCameraToLocation(coordinates, animate: false);
           if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
           return;
         }
@@ -65,10 +66,17 @@ class _MapState extends State<Map> {
     });
   }
 
-  void _bringCameraToUserLocation() async =>
-      _controller.requestMyLocationLatLng().then(_bringCameraToLocation);
+  void _bringCameraToUserLocation() async => _controller
+      .requestMyLocationLatLng()
+      .then((location) => _bringCameraToLocation(location,
+          zoomLevel: Map.userLocationZoomLevel));
 
-  void _bringCameraToLocation(LatLng location) async =>
-      _controller.animateCamera(
-          CameraUpdate.newLatLngZoom(location, Map.userLocationZoomLevel));
+  void _bringCameraToLocation(LatLng location,
+      {double zoomLevel, bool animate = true}) async {
+    final move = animate ? _controller.animateCamera : _controller.moveCamera;
+    final update = zoomLevel != null
+        ? CameraUpdate.newLatLngZoom(location, zoomLevel)
+        : CameraUpdate.newLatLng(location);
+    move(update);
+  }
 }

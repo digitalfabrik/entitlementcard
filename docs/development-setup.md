@@ -26,7 +26,7 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 2. `sudo docker-compose rm`
 2. `sudo docker-compose build`
 2. `sudo docker-compose up --force-recreate`
-3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db_postgis&username=postgres&db=ehrenamtskarte)
+3. Open Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db-postgis&username=postgres&db=ehrenamtskarte)
 
    The credentials are:
 
@@ -38,28 +38,15 @@ This short guide focuses on setting up the project using IntelliJ instead of And
    |Database|ehrenamtskarte|
 4. Install JDK8
 5. Run the backend: `./backend/gradlew run` or `.\backend\gradlew.bat run` on Windows
-6. Take a look at the martin endpoints: [http://localhost:5003/index.json](http://localhost:5003/index.json) and [http://localhost:5003/rpc/index.json](http://localhost:5003/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
+6. Take a look at the martin endpoints: http://localhost:5002/tiles/accepting_stores/index.json and http://localhost:5002/tiles/accepting_stores/rpc/index.json. The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 7. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
+8. Take a look at the backend: http://localhost:7000 (The public version is available at api.ehrenamtskarte.app)
 
 ## Using ehrenamtskarte.app as database
 
 ```bash
-ssh -L 5432:localhost:5432 -L 5001:localhost:5001 -L 5002:localhost:5002 -L 5003:localhost:5003 team@ehrenamtskarte.app
+ssh -L 5432:localhost:5432 -L 5001:localhost:5001 team@ehrenamtskarte.app
 ```
 
-## (Old) Filling postgis with GeoJSON
+That way the Adminer and postgres will be available locally.
 
-Not really needed anymore because we have the data in the database.
-
-```
-ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' user=postgres password=postgres" verguenstigungen.json
-```
-
-
-# Styling the Map
-
-You can use maputnik to edit style the map:
-
-1. Download Maputnik CLI from https://github.com/maputnik/editor/releases
-2. Run `~/Downloads/maputnik --file docker/style/style.json`
-3. Commit the style.json after editing!

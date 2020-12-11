@@ -1,14 +1,14 @@
-version: "3.3"
+version: "3.5"
 services:
   martin:
     build: ./docker/martin
-    ports:
-      - 127.0.0.1:5003:3000
     volumes:
       - ./docker/martin/config.yaml:/app/config.yaml
     depends_on:
-      - db_postgis
-  db_postgis:
+      - db-postgis
+    networks:
+      - network
+  db-postgis:
     image:  postgis/postgis:13-3.0-alpine
     environment:
       - POSTGRES_DB=ehrenamtskarte
@@ -16,13 +16,25 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - 127.0.0.1:5432:5432
+    networks:
+      - network
   adminer:
     image: "adminer:4.7.7-standalone"
     ports:
       - 127.0.0.1:5001:8080
-  style:
+    networks:
+      - network
+  reverse_proxy:
     image: "nginx:1.19.5"
-    volumes:
-      - ./docker/style:/usr/share/nginx/html
     ports:
       - 127.0.0.1:5002:80
+    volumes:
+      - ./docker/reverse_proxy/www:/usr/share/nginx/html
+      - ./docker/reverse_proxy/nginx-development.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - martin
+    networks:
+      - network
+networks:
+  network:
+    name: network
