@@ -132,13 +132,13 @@ Map<String, dynamic> _$AcceptingStoreById$QueryToJson(
           instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
-ParamsInput _$ParamsInputFromJson(Map<String, dynamic> json) {
-  return ParamsInput(
+IdsParamsInput _$IdsParamsInputFromJson(Map<String, dynamic> json) {
+  return IdsParamsInput(
     ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
   );
 }
 
-Map<String, dynamic> _$ParamsInputToJson(ParamsInput instance) =>
+Map<String, dynamic> _$IdsParamsInputToJson(IdsParamsInput instance) =>
     <String, dynamic>{
       'ids': instance.ids,
     };
@@ -251,7 +251,7 @@ AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(
   return AcceptingStoreByIdArguments(
     ids: json['ids'] == null
         ? null
-        : ParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
+        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 
@@ -266,7 +266,7 @@ AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
   return AcceptingStoreSummaryByIdArguments(
     ids: json['ids'] == null
         ? null
-        : ParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
+        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 

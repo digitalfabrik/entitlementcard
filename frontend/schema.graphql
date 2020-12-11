@@ -67,9 +67,14 @@ type PhysicalStore {
 type Query {
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
-  physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
+  searchStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
-input ParamsInput {
+input IdsParamsInput {
   ids: [Int!]!
+}
+
+input SearchParamsInput {
+  searchText: String!
 }

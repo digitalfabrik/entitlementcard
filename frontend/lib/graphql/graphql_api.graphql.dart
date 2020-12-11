@@ -135,17 +135,17 @@ class AcceptingStoreById$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class ParamsInput with EquatableMixin {
-  ParamsInput({@required this.ids});
+class IdsParamsInput with EquatableMixin {
+  IdsParamsInput({@required this.ids});
 
-  factory ParamsInput.fromJson(Map<String, dynamic> json) =>
-      _$ParamsInputFromJson(json);
+  factory IdsParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$IdsParamsInputFromJson(json);
 
   List<int> ids;
 
   @override
   List<Object> get props => [ids];
-  Map<String, dynamic> toJson() => _$ParamsInputToJson(this);
+  Map<String, dynamic> toJson() => _$IdsParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -259,7 +259,7 @@ class AcceptingStoreByIdArguments extends JsonSerializable with EquatableMixin {
   factory AcceptingStoreByIdArguments.fromJson(Map<String, dynamic> json) =>
       _$AcceptingStoreByIdArgumentsFromJson(json);
 
-  final ParamsInput ids;
+  final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
@@ -280,7 +280,7 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
           VariableDefinitionNode(
               variable: VariableNode(name: NameNode(value: 'ids')),
               type: NamedTypeNode(
-                  name: NameNode(value: 'ParamsInput'), isNonNull: true),
+                  name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
               defaultValue: DefaultValueNode(value: null),
               directives: [])
         ],
@@ -486,7 +486,7 @@ class AcceptingStoreSummaryByIdArguments extends JsonSerializable
           Map<String, dynamic> json) =>
       _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
 
-  final ParamsInput ids;
+  final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
@@ -508,7 +508,7 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
           VariableDefinitionNode(
               variable: VariableNode(name: NameNode(value: 'ids')),
               type: NamedTypeNode(
-                  name: NameNode(value: 'ParamsInput'), isNonNull: true),
+                  name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
               defaultValue: DefaultValueNode(value: null),
               directives: [])
         ],
