@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -41,19 +42,12 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
                 _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return Row(children: [
-              Icon(Icons.warning, color: Colors.orange),
-              SizedBox(
-                width: 8,
-              ),
-              Text("Fehler beim Laden der Infos."),
-            ]);
+            return ErrorMessage("Fehler beim Laden der Infos.");
           }
         });
   }
 
-  _convertToAcceptingStoreSummary(
-      AcceptingStoreSummaryById$Query$PhysicalStore store) {
+  _convertToAcceptingStoreSummary(AcceptingStoreSummaryById$Query$PhysicalStore store) {
     return AcceptingStoreSummary(
         store.id, store.store.name, store.store.description);
   }

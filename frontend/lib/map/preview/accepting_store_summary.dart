@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../detail_view.dart';
+import '../detail/detail_view.dart';
 import 'loading_accepting_store_summary.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
@@ -26,9 +26,9 @@ class AcceptingStoreSummary extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.arrow_forward,
                         color: Theme.of(context).primaryColor),
-                    tooltip: 'Increase volume by 10',
+                    tooltip: 'Details',
                     onPressed: () {
-                      _openDetailView(context, acceptingStoreId, "", 1);
+                      _openDetailView(context, acceptingStoreId);
                     },
                   ),
                 ],
@@ -38,13 +38,12 @@ class AcceptingStoreSummary extends StatelessWidget {
     );
   }
 
-  void _openDetailView(BuildContext context, int acceptingStoreId,
-      String storeName, int categoryId) {
+  void _openDetailView(BuildContext context, int acceptingStoreId) {
     Navigator.push(
-      context,
-      MaterialPageRoute(
+        context,
+        MaterialPageRoute(
           builder: (context) =>
-              DetailView(acceptingStoreId, storeName, categoryId)),
-    );
+              DetailView(acceptingStoreId),
+        ));
   }
 }

@@ -25,7 +25,8 @@ class App extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: TextTheme(
               headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+              bodyText1:
+                  TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
               bodyText2: TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
             )),
         home: HomePage(title: "Digitale Ehrenamtskarte"),

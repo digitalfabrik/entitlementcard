@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/map/detail_view.dart';
+import 'package:ehrenamtskarte/map/detail/detail_view.dart';
 import 'package:flutter/material.dart';
 
 import '../graphql/graphql_page.dart';
@@ -16,11 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  List<Widget> _tabs = <Widget>[
-    MapPage(),
-    GraphQLTestPage(),
-    DetailView(1, "Store name", 1)
-  ];
+  List<Widget> _tabs = <Widget>[MapPage(), GraphQLTestPage(), DetailView(5)];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -39,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.chat), label: "GraphQL Test"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.chat), label: "Provider Test"),
+                icon: Icon(Icons.chat), label: "Detail Test"),
           ],
           currentIndex: _currentTabIndex,
           onTap: _onTabTapped,
