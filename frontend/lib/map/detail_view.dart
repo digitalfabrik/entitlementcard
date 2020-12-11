@@ -7,8 +7,10 @@ import '../graphql/graphql_api.dart';
 
 class DetailView extends StatelessWidget {
   int _acceptingStoreId;
+  String _storeName;
+  int _categoryId;
 
-  DetailView(this._acceptingStoreId);
+  DetailView(this._acceptingStoreId, this._storeName, this._categoryId);
 
   @override
   Widget build(BuildContext context) {
@@ -16,94 +18,124 @@ class DetailView extends StatelessWidget {
         variables: AcceptingStoreByIdArguments(
             ids: ParamsInput(ids: [_acceptingStoreId])));
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Akzeptanzstelle"),
-        ),
-        body: Query(
-          options: QueryOptions(
-              documentNode: byIdQuery.document,
-              variables: byIdQuery.getVariablesMap()),
-          builder: (QueryResult result,
-              {VoidCallback refetch, FetchMore fetchMore}) {
-            if (result.hasException) {
-              return Text(result.exception.toString(),
-                  style: TextStyle(color: Colors.red));
-            }
+        body: Column(children: <Widget>[
+      Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColorLight,
+            image: DecorationImage(
+                image: AssetImage("assets/detail_headers/mask_header.png"),
+                fit: BoxFit.contain,
+                alignment: Alignment.topRight),
+          ),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                AppBar(
+                  leading: new IconButton(
+                    icon: new Icon(Icons.arrow_back_ios),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0, //No shadow
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, top: 24, right: 16, bottom: 8),
+                  child: Text(
+                    _storeName,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                )
+              ])),
+      Query(
+        options: QueryOptions(
+            documentNode: byIdQuery.document,
+            variables: byIdQuery.getVariablesMap()),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          return buildContent(context, mockData());
+          if (result.hasException) {
+            return Text(result.exception.toString(),
+                style: TextStyle(color: Colors.red));
+          }
 
-            if (result.loading) {
-              return Text('Loading …');
-            }
-            final matchingStores =
-                AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
-            if (matchingStores.isEmpty ||
-                matchingStores.any((element) => element == null)) {
-              //return Text('Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
-              //matchingStores.add(mockData());
-            }
-            //print(matchingStores.first.toJson());
-            return buildContent(context, mockData());
-          },
-        ));
+          if (result.loading) {
+            return Text('Loading …');
+          }
+          final matchingStores =
+              AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
+          if (matchingStores.isEmpty ||
+              matchingStores.any((element) => element == null)) {
+            //return Text('Aktzeptanzstelle nicht gefunden [id: $_acceptingStoreId]');
+            //matchingStores.add(mockData());
+          }
+          //print(matchingStores.first.toJson());
+          return buildContent(context, mockData());
+        },
+      ),
+    ]));
   }
 
   Widget buildContent(BuildContext context,
       AcceptingStoreById$Query$PhysicalStore acceptingStore) {
-    final double sectionSpacing = 16.0;
-    return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    acceptingStore.store.name,
+    final address = acceptingStore.address;
+    return SingleChildScrollView(
+        child: Container(
+            padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
+            child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Divider(
+                      thickness: 0.7,
+                      height: 48,
+                      color: Theme
+                          .of(context)
+                          .primaryColorLight),
+                  Text(
+                    "vergünstigter Eintritt € 5,50",
                     style: Theme
                         .of(context)
                         .textTheme
-                        .headline6,
-                  )),
-              Text(
-                "vergünstigter Eintritt € 5,50 vergünstigter Eintritt € 5,50 vergünstigter Eintritt € 5,50",
-              ),
-              SizedBox(height: sectionSpacing),
-              Table(
-                columnWidths: {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(4),
-                },
-                children: _buildTableRows(context, acceptingStore),
-              ),
-            ]));
+                        .bodyText1,
+                  ),
+                  Divider(
+                      thickness: 0.7,
+                      height: 48,
+                      color: Theme
+                          .of(context)
+                          .primaryColorLight),
+                  Column(
+                    children: <Widget>[
+                      _buildTableRow(context, Icons.location_on,
+                          "${address.street} ${address.houseNumber}\n${address
+                              .postalCode} ${address.location}\n${address
+                              .state}"),
+                      _buildTableRow(context, Icons.phone,
+                          acceptingStore.store.contact.telephone),
+                      _buildTableRow(context, Icons.alternate_email,
+                          acceptingStore.store.contact.email),
+                      _buildTableRow(context, Icons.language,
+                          acceptingStore.store.contact.website)
+                    ],
+                  ),
+                ])));
   }
 
-  List<TableRow> _buildTableRows(BuildContext context,
-      AcceptingStoreById$Query$PhysicalStore acceptingStore) {
-    List<TableRow> rows = [];
-    if (acceptingStore != null) {
-      final address = acceptingStore.address;
-      rows.add(_buildTableRow(context, "Adresse",
-          "${address.street} ${address.houseNumber}\n${address
-              .postalCode} ${address.location} ${address.state}"));
-    }
-    rows.add(
-        _buildTableRow(context, "Tel", acceptingStore.store.contact.telephone));
-    rows.add(
-        _buildTableRow(context, "E-Mail", acceptingStore.store.contact.email));
-    rows.add(
-        _buildTableRow(
-            context, "Website", acceptingStore.store.contact.website));
-    return rows;
-  }
-
-  TableRow _buildTableRow(BuildContext context, String category,
-      String content) {
-    return TableRow(children: [
-      Text(category, style: Theme
-          .of(context)
-          .textTheme
-          .bodyText1),
-      Text(content)
+  Row _buildTableRow(BuildContext context, IconData icon, String content) {
+    return Row(children: [
+      Padding(
+          padding: EdgeInsets.only(top: 8, bottom: 8, right: 16),
+          child: ClipOval(
+            child: Container(
+              width: 50,
+              height: 50,
+              child: Icon(icon, size: 28),
+              color: Theme
+                  .of(context)
+                  .primaryColorLight,
+            ),
+          )),
+      Align(alignment: Alignment.bottomLeft, child: Text(content))
     ]);
   }
 }

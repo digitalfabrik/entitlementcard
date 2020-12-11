@@ -1,5 +1,5 @@
-import 'package:ehrenamtskarte/repositories/accepting_businesses_repository.dart';
 import 'package:ehrenamtskarte/models/accepting_businesses_model.dart';
+import 'package:ehrenamtskarte/repositories/accepting_businesses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,12 @@ class App extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.blue,
             brightness: Brightness.light,
-            visualDensity: VisualDensity.adaptivePlatformDensity),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            textTheme: TextTheme(
+              headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+              bodyText2: TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
+            )),
         home: HomePage(title: "Digitale Ehrenamtskarte"),
         routes: {
           'home': (context) => HomePage(title: "Digitale Ehrenamstkarte"),

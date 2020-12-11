@@ -16,7 +16,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  List<Widget> _tabs = <Widget>[MapPage(), GraphQLTestPage(), DetailView(1)];
+  List<Widget> _tabs = <Widget>[
+    MapPage(),
+    GraphQLTestPage(),
+    DetailView(1, "Store name", 1)
+  ];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -28,28 +32,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: _tabs.elementAt(_currentTabIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat), label: "GraphQL Test"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat), label: "Provider Test"),
-        ],
-        currentIndex: _currentTabIndex,
-        onTap: _onTabTapped,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: theme.primaryColor,
-        selectedItemColor:
-            theme.brightness == Brightness.light ? Colors.white : Colors.black,
-        unselectedItemColor: theme.brightness == Brightness.light
-            ? theme.primaryColorLight
-            : theme.primaryColorDark,
-      ),
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.chat), label: "GraphQL Test"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.chat), label: "Provider Test"),
+          ],
+          currentIndex: _currentTabIndex,
+          onTap: _onTabTapped,
+          type: BottomNavigationBarType.fixed,
+          //backgroundColor: theme.primaryColor,
+          selectedItemColor: theme.brightness == Brightness.light
+              ? theme.primaryColorDark
+              : theme.primaryColorLight,
+          unselectedItemColor: theme.textTheme.bodyText2.color),
     );
   }
 }
