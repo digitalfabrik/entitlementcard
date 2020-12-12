@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Auto/Zweirad"
+  },
+  {
+    "id": 2,
+    "name": "Multimedia"
+  },
+  {
+    "id": 3,
+    "name": "Gesundheit, Sport/Wellness"
+  },
+  {
+    "id": 4,
+    "name": "Bildung/Kultur/Unterhaltung"
+  },
+  {
+    "id": 5,
+    "name": "Dienstleistungen/Finanzen"
+  },
+  {
+    "id": 6,
+    "name": "Mode/Beauty"
+  },
+  {
+    "id": 7,
+    "name": "Wohnen/Haus/Garten"
+  },
+  {
+    "id": 8,
+    "name": "Freizeit/Reise/Unterkünfte"
+  },
+  {
+    "id": 9,
+    "name": "Essen/Trinken/Gastronomie"
+  }
+]

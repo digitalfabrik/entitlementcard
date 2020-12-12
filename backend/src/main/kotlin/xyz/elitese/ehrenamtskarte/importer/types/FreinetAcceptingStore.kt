@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.importer
+package xyz.elitese.ehrenamtskarte.importer.types
 
 import com.beust.klaxon.Json
 import xyz.elitese.ehrenamtskarte.importer.annotations.BooleanField

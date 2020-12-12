@@ -10,6 +10,7 @@ import java.util.stream.Collectors
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.sql.DriverManager
 
 
 class Database {
@@ -50,9 +51,10 @@ class Database {
     }
 
     val db by lazy {
-        connect("jdbc:postgresql://" +
+        val connectionUrl = "jdbc:postgresql://" +
                 "${System.getProperty("app.postgres.host")}:${System.getProperty("app.postgres.port")}" +
-                "/${System.getProperty("app.postgres.database")}", driver = "org.postgresql.Driver",
-                user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password"))
+                "/${System.getProperty("app.postgres.database")}?user=${System.getProperty("app.postgres.user")}&" +
+                "password=${System.getProperty("app.postgres.password")}&reWriteBatchedInserts=true"
+        connect({ DriverManager.getConnection(connectionUrl) })
     }
 }
