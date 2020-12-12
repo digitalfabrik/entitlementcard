@@ -5,7 +5,8 @@
 
 # Getting Started
 
-For setting up the frontend and backend see the [setup documentation](./docs/setup.md)
+* [Setup documentation](./docs/development-setup.md)
+* [Map editing](./docs/map-editing.md)
 
 # Resources about the Ehrenamtskarte
 
