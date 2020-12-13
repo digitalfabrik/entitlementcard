@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../detail/detail_view.dart';
 import 'loading_accepting_store_summary.dart';
 
@@ -42,8 +43,7 @@ class AcceptingStoreSummary extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              DetailView(acceptingStoreId),
+          builder: (context) => DetailView(acceptingStoreId),
         ));
   }
 }

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'models.dart';
-import 'accepting_store_summary_content.dart';
 import '../../graphql/graphql_api.dart';
+import 'accepting_store_summary_content.dart';
+import 'models.dart';
 
 typedef void OnExecptionCallback(Exception exception);
 
@@ -47,7 +47,8 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
         });
   }
 
-  _convertToAcceptingStoreSummary(AcceptingStoreSummaryById$Query$PhysicalStore store) {
+  _convertToAcceptingStoreSummary(
+      AcceptingStoreSummaryById$Query$PhysicalStore store) {
     return AcceptingStoreSummary(
         store.id, store.store.name, store.store.description);
   }
