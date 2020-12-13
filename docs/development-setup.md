@@ -32,7 +32,7 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 
    |Property|Value|
    |---|---|
-   |Host (within Docker)|db|
+   |Host (within Docker)|db-postgis|
    |Username|postgres|
    |Password|postgres|
    |Database|ehrenamtskarte|
