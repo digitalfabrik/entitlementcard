@@ -38,8 +38,10 @@ class DetailView extends StatelessWidget {
         }
         print(matchingStores.first);
         return DetailLayout(
-            title: matchingStores.first.store.name,
-            body: DetailContent(matchingStores.first));
+          title: matchingStores.first.store.name,
+          body: DetailContent(matchingStores.first),
+          category: matchingStores.first.store.category.id,
+        );
       },
     );
   }
