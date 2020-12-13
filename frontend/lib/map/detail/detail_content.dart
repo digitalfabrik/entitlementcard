@@ -26,57 +26,66 @@ class DetailContent extends StatelessWidget {
                   color: Theme.of(context).primaryColorLight),
               Column(
                 children: <Widget>[
-                  _buildTableRow(
-                      context,
+                  ContactInfoRow(
                       Icons.location_on,
-                      "${address.street} ${address.houseNumber}\n${address.postalCode} ${address.location}",
+                      "${address.street}\n${address.postalCode} ${address.location}",
                       "Adresse"),
-                  _buildTableRow(context, Icons.language,
+                  ContactInfoRow(Icons.language,
                       acceptingStore.store.contact.website, "Website",
                       isLink: true),
-                  _buildTableRow(context, Icons.phone, "Telefon",
-                      acceptingStore.store.contact.telephone),
-                  _buildTableRow(context, Icons.alternate_email, "E-Mail",
-                      acceptingStore.store.contact.email),
+                  ContactInfoRow(Icons.phone,
+                      acceptingStore.store.contact.telephone, "Telefon"),
+                  ContactInfoRow(Icons.alternate_email,
+                      acceptingStore.store.contact.email, "E-Mail"),
                 ],
               ),
             ]));
   }
+}
 
-  Row _buildTableRow(
-      BuildContext context, IconData icon, String content, String sematicLabel,
-      {bool isLink = false}) {
-    return Row(children: [
-      Padding(
-          padding: EdgeInsets.only(top: 8, bottom: 8, right: 16),
-          child: ClipOval(
-            child: Container(
-              width: 40,
-              height: 40,
-              child: Icon(
-                icon,
-                size: 28,
-                semanticLabel: sematicLabel,
-              ),
-              color: Theme.of(context).primaryColorLight,
-            ),
-          )),
-      Align(
-          alignment: Alignment.bottomLeft,
-          child: !isLink
-              ? Text(content)
-              : InkWell(
-                  child: Text(
-                    content,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .merge(TextStyle(color: Theme.of(context).accentColor)),
+class ContactInfoRow extends StatelessWidget {
+  final IconData _icon;
+  final String _description;
+  final String _semanticLabel;
+  final bool isLink;
+
+  ContactInfoRow(this._icon, this._description, this._semanticLabel,
+      {this.isLink = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return _description != null && _description.isNotEmpty
+        ? Row(children: [
+            Padding(
+                padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
+                child: ClipOval(
+                  child: Container(
+                    width: 42,
+                    height: 42,
+                    child: Icon(
+                      _icon,
+                      size: 28,
+                      semanticLabel: _semanticLabel,
+                    ),
+                    color: Theme.of(context).primaryColorLight,
                   ),
-                  onTap: () {
-                    launch(content);
-                  },
-                ))
-    ]);
+                )),
+            Expanded(
+                child: !isLink
+                    ? Text(
+                        _description,
+                      )
+                    : InkWell(
+                        child: Text(
+                          _description,
+                          style: Theme.of(context).textTheme.bodyText2.merge(
+                              TextStyle(color: Theme.of(context).accentColor)),
+                        ),
+                        onTap: () {
+                          launch(_description);
+                        },
+                      ))
+          ])
+        : Container(width: 0, height: 0);
   }
 }

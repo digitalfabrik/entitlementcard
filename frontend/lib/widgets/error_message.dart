@@ -14,8 +14,6 @@ class ErrorMessage extends StatelessWidget {
       Expanded(
           child: Text(
         _message,
-        maxLines: 4,
-        overflow: TextOverflow.ellipsis,
       ))
     ]);
   }
