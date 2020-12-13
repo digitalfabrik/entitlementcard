@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="483px" height="405px" viewBox="0 0 483 405" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>7_haus</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="7_haus" transform="translate(0.000000, 89.000000)" fill="#FFFFFF">
+            <g id="Group-4" transform="translate(322.000000, 17.000000)">
+                <polygon id="Path-8" fill-opacity="0.4"
+                         points="66.1798246 39.5263451 66.1798246 59 114.767544 59 114.767544 39.5263451 128.171053 29.915493 152.464912 29.915493 191 39.5263451 152.464912 1.71726377e-14 66.1798246 0 57.1955231 11.6338028 38.5350877 11.6338028 26.8070175 0 0 0 0 54.8450704 26.8070175 54.8450704 38.5350877 39.5263451"></polygon>
+                <polygon id="Path-9" fill-opacity="0.2" points="77 59 107 59 107 81 77 81"></polygon>
+                <polygon id="Path-10" fill-opacity="0.4" points="72 81 112 81 112 233 72 233"></polygon>
+                <polygon id="Path-10-Copy" fill-opacity="0.4" points="72 211 112 211 112 233 72 233"></polygon>
+            </g>
+            <polygon id="Path-6" fill-opacity="0.2"
+                     points="172.713693 0 0 141.616014 38.5394191 141.616014 38.5394191 316 311.170124 316 311.170124 141.616014 344 141.616014"></polygon>
+            <path d="M311.170124,142.60888 L174,29.9622567 L38.0350936,141.619133 L0,141.619133 L172.713693,0.00565221623 L344,141.619133 L311.170124,141.619133 L311.170124,142.60888 Z"
+                  id="Combined-Shape" fill-opacity="0.4"></path>
+            <rect id="Rectangle" fill-opacity="0.4" x="107" y="236" width="63" height="80"></rect>
+        </g>
+    </g>
+</svg>

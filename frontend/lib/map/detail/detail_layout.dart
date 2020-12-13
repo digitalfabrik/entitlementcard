@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class DetailLayout extends StatelessWidget {
   final String title;
@@ -39,43 +40,44 @@ class DetailLayout extends StatelessWidget {
         ));
   }
 
-  Image _headerImageForCategory() {
+  Widget _headerImageForCategory() {
     String path;
     print("CATEGORY: ${category}");
     switch (category) {
       case (1):
-        path = "assets/detail_headers/1_auto.png";
+        path = "assets/detail_headers/1_auto.svg";
         break;
       case (2):
-        path = "assets/detail_headers/2_multimedia.png";
+        path = "assets/detail_headers/2_multimedia.svg";
         break;
       case (3):
-        path = "assets/detail_headers/3_sport.png";
+        path = "assets/detail_headers/3_sport.svg";
         break;
       case (4):
-        path = "assets/detail_headers/4_kultur.png";
+        path = "assets/detail_headers/4_kultur.svg";
         break;
       case (5):
-        path = "assets/detail_headers/5_finanzen.png";
+        path = "assets/detail_headers/5_finanzen.svg";
         break;
       case (6):
-        path = "assets/detail_headers/6_mode.png";
+        path = "assets/detail_headers/6_mode.svg";
         break;
       case (7):
-        path = "assets/detail_headers/7_haus.png";
+        path = "assets/detail_headers/7_haus.svg";
         break;
       case (8):
-        path = "assets/detail_headers/8_freizeit.png";
+        path = "assets/detail_headers/8_freizeit.svg";
         break;
       case (9):
-        path = "assets/detail_headers/9_essen.png";
+        path = "assets/detail_headers/9_essen.svg";
         break;
       default:
         return null;
     }
-    return Image(
-        image: AssetImage(path),
-        fit: BoxFit.contain,
-        alignment: Alignment.topRight);
+    return SvgPicture.asset(
+      path,
+      semanticsLabel: 'Header',
+      alignment: Alignment.bottomRight,
+    );
   }
 }
