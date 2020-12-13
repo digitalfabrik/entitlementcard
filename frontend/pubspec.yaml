@@ -28,7 +28,7 @@ dependencies:
   graphql_flutter: ^3.1.0
   location_permissions: ^3.0.0
   url_launcher: ^5.7.10
-  flutter_svg: ^0.19.2+1
+  flutter_svg: ^0.18.0
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
