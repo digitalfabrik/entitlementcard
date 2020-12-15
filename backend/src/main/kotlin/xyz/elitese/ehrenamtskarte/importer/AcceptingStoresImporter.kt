@@ -46,10 +46,9 @@ object AcceptingStoresImporter {
                 for (acceptingStore in acceptingStores) {
                     val address = AddressEntity.new {
                         street = acceptingStore.street
-                        houseNumber = "10"
                         postalCode = acceptingStore.postalCode
                         locaction = acceptingStore.location
-                        state = "de"
+                        countryCode = "de"
                     }
                     val contact = ContactEntity.new {
                         email = acceptingStore.email
@@ -60,7 +59,8 @@ object AcceptingStoresImporter {
                         name = acceptingStore.name
                         description = acceptingStore.discount
                         contactId = contact.id
-                        categoryId = EntityID(acceptingStore.bavarianCategory!!, Categories)
+                        // freinet data category ids are 1-9, but we want 0-8 because that is used in the xml files
+                        categoryId = EntityID(acceptingStore.bavarianCategory!! - 1, Categories)
                     }
                     PhysicalStoreEntity.new {
                         storeId = store.id

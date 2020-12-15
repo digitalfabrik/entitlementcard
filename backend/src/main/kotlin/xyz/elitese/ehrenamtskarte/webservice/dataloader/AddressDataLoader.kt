@@ -14,7 +14,7 @@ val batchAddressLoader = DataLoader<Int, Address?> { ids ->
         runBlocking {
             transaction {
                 AddressRepository.findByIds(ids).map {
-                    Address(it.street, it.houseNumber, it.postalCode, it.locaction, it.state)
+                    Address(it.street, it.postalCode, it.locaction, it.countryCode)
                 }
             }
         }
