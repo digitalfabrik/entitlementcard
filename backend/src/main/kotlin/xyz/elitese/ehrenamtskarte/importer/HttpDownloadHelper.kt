@@ -6,9 +6,9 @@ import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 
-class FreinetDataImporter {
-    fun importAll() {
-        val url = FreinetDataImporter::class.java.getResource("/freinet_import/secrets/import_all.txt").readText()
+object HttpDownloadHelper {
+
+    fun downloadData(url: String): String {
         val client = HttpClient()
         var response: String?
         runBlocking {
@@ -17,6 +17,7 @@ class FreinetDataImporter {
                 method = HttpMethod.Get
             }
         }
-        AcceptingStoresImporter.importFromJsonFile(response!!)
+        return response!!
     }
+
 }

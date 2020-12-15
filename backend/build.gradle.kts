@@ -57,6 +57,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:1.4.0")
 
     implementation("com.beust:klaxon:5.0.1")
+
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
 }
 
 application {

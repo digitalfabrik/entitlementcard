@@ -1,20 +1,20 @@
-package xyz.elitese.ehrenamtskarte.importer
+package xyz.elitese.ehrenamtskarte.importer.freinet
 
 import com.beust.klaxon.Klaxon
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import xyz.elitese.ehrenamtskarte.database.*
-import xyz.elitese.ehrenamtskarte.importer.annotations.BooleanField
-import xyz.elitese.ehrenamtskarte.importer.annotations.DoubleField
-import xyz.elitese.ehrenamtskarte.importer.annotations.IntegerField
-import xyz.elitese.ehrenamtskarte.importer.converters.booleanConverter
-import xyz.elitese.ehrenamtskarte.importer.converters.doubleConverter
-import xyz.elitese.ehrenamtskarte.importer.converters.integerConverter
-import xyz.elitese.ehrenamtskarte.importer.dataqa.FreinetDataFilter
-import xyz.elitese.ehrenamtskarte.importer.types.Category
-import xyz.elitese.ehrenamtskarte.importer.types.FreinetAcceptingStore
-import xyz.elitese.ehrenamtskarte.importer.types.FreinetData
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.BooleanField
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.DoubleField
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.IntegerField
+import xyz.elitese.ehrenamtskarte.importer.freinet.converters.booleanConverter
+import xyz.elitese.ehrenamtskarte.importer.freinet.converters.doubleConverter
+import xyz.elitese.ehrenamtskarte.importer.freinet.converters.integerConverter
+import xyz.elitese.ehrenamtskarte.importer.freinet.dataqa.FreinetDataFilter
+import xyz.elitese.ehrenamtskarte.importer.freinet.types.Category
+import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetAcceptingStore
+import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetData
 
 object AcceptingStoresImporter {
 
