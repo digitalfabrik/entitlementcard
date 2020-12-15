@@ -15,6 +15,8 @@ import xyz.elitese.ehrenamtskarte.importer.freinet.dataqa.FreinetDataFilter
 import xyz.elitese.ehrenamtskarte.importer.freinet.types.Category
 import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetAcceptingStore
 import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetData
+import xyz.elitese.ehrenamtskarte.importer.general.GenericImportAcceptingStore
+import xyz.elitese.ehrenamtskarte.importer.general.ImportToDatabase
 
 object AcceptingStoresImporter {
 
@@ -40,37 +42,7 @@ object AcceptingStoresImporter {
             .parse<FreinetData>(freinetJson)
 
     private fun importAcceptingStores(acceptingStores: List<FreinetAcceptingStore>) {
-        println("Inserting data into db")
-        try {
-            transaction {
-                for (acceptingStore in acceptingStores) {
-                    val address = AddressEntity.new {
-                        street = acceptingStore.street
-                        postalCode = acceptingStore.postalCode
-                        locaction = acceptingStore.location
-                        countryCode = "de"
-                    }
-                    val contact = ContactEntity.new {
-                        email = acceptingStore.email
-                        telephone = acceptingStore.telephone
-                        website = acceptingStore.homepage
-                    }
-                    val store = AcceptingStoreEntity.new {
-                        name = acceptingStore.name
-                        description = acceptingStore.discount
-                        contactId = contact.id
-                        // freinet data category ids are 1-9, but we want 0-8 because that is used in the xml files
-                        categoryId = EntityID(acceptingStore.bavarianCategory!! - 1, Categories)
-                    }
-                    PhysicalStoreEntity.new {
-                        storeId = store.id
-                        addressId = address.id
-                        coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val genericStores = acceptingStores.map { GenericImportAcceptingStore(it) }
+        ImportToDatabase.import(genericStores)
     }
 }

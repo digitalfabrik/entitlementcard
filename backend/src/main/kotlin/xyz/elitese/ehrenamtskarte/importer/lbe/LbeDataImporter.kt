@@ -2,7 +2,7 @@ package xyz.elitese.ehrenamtskarte.importer.lbe
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import xyz.elitese.ehrenamtskarte.importer.HttpDownloadHelper
+import xyz.elitese.ehrenamtskarte.importer.general.HttpDownloadHelper
 import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeData
 
 object LbeDataImporter {
@@ -21,8 +21,3 @@ object LbeDataImporter {
     }
 
 }
-
-fun main() {
-    LbeDataImporter.import()
-}
-

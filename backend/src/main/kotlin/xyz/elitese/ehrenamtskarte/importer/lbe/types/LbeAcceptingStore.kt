@@ -33,7 +33,7 @@ data class LbeAcceptingStore(
         var email: String = "",
         @JsonProperty("homepage_url")
         @JacksonXmlCData
-        var website: String = "",
+        var homepage: String = "",
         @JsonProperty("rabatt")
         @JacksonXmlCData
         var discount: String = "",

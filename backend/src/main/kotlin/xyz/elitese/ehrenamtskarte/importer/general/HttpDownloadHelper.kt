@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.importer
+package xyz.elitese.ehrenamtskarte.importer.general
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
