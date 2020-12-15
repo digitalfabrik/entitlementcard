@@ -6,7 +6,7 @@ import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 
-class FreinetDataImporter() {
+class FreinetDataImporter {
     fun importAll() {
         val url = FreinetDataImporter::class.java.getResource("/freinet_import/secrets/import_all.txt").readText()
         val client = HttpClient()

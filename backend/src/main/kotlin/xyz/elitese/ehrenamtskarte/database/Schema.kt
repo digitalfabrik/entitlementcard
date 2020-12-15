@@ -62,19 +62,17 @@ class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
 
 object Addresses : IntIdTable() {
     val street = varchar("street", 200)
-    val houseNumber = varchar("houseNumber", 10)
     val postalCode = varchar("postalCode", 10)
     val location = varchar("location", 200)
-    val state = varchar("state", 200)
+    val countryCode = varchar("countryCode", 2)
 }
 
 class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AddressEntity>(Addresses)
     var street by Addresses.street
-    var houseNumber by Addresses.houseNumber
     var postalCode by Addresses.postalCode
     var locaction by Addresses.location
-    var state by Addresses.state
+    var countryCode by Addresses.countryCode
 }
 
 fun Table.point(name: String, srid: Int = 4326) : Column<Point>

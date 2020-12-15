@@ -6,11 +6,9 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.stream.Collectors
-
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.sql.DriverManager
+import java.util.stream.Collectors
 
 
 class Database {
@@ -51,10 +49,9 @@ class Database {
     }
 
     val db by lazy {
-        val connectionUrl = "jdbc:postgresql://" +
+        connect("jdbc:postgresql://" +
                 "${System.getProperty("app.postgres.host")}:${System.getProperty("app.postgres.port")}" +
-                "/${System.getProperty("app.postgres.database")}?user=${System.getProperty("app.postgres.user")}&" +
-                "password=${System.getProperty("app.postgres.password")}&reWriteBatchedInserts=true"
-        connect({ DriverManager.getConnection(connectionUrl) })
+                "/${System.getProperty("app.postgres.database")}", driver = "org.postgresql.Driver",
+                user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password"))
     }
 }
