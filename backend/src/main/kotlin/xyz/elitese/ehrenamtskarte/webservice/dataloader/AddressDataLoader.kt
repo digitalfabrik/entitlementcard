@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 
 const val ADDRESS_LOADER_NAME = "ADDRESS_LOADER"
 
-val batchAddressLoader = DataLoader<Int, Address?> { ids ->
+val addressLoader = DataLoader<Int, Address?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {
