@@ -12,36 +12,38 @@ class ContactInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _description != null && _description.isNotEmpty
-        ? Row(children: [
-            Padding(
-                padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
-                child: ClipOval(
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    child: Icon(
-                      _icon,
-                      size: 28,
-                      semanticLabel: _semanticLabel,
-                    ),
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                )),
-            Expanded(
-                child: (onTap == null)
-                    ? Text(
-                        _description,
-                      )
-                    : InkWell(
-                        child: Text(
-                          _description,
-                          style: Theme.of(context).textTheme.bodyText2.merge(
-                              TextStyle(color: Theme.of(context).accentColor)),
-                        ),
-                        onTap: onTap,
-                      ))
-          ])
-        : Container(width: 0, height: 0);
+    if (_description == null || _description.isEmpty) {
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    }
+    var row = Row(children: [
+      Padding(
+          padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
+          child: ClipOval(
+            child: Container(
+              width: 42,
+              height: 42,
+              child: Icon(
+                _icon,
+                size: 28,
+                semanticLabel: _semanticLabel,
+              ),
+              color: Theme.of(context).primaryColorLight,
+            ),
+          )),
+      Expanded(
+        child: Text(
+          _description,
+        ),
+      ),
+    ]);
+    return (onTap == null)
+        ? row
+        : InkWell(
+            child: row,
+            onTap: onTap,
+          );
   }
 }
