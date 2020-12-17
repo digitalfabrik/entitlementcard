@@ -13,29 +13,28 @@ class AcceptingStoreSummary extends StatelessWidget {
     return Container(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
-        width: double.infinity,
-        child: Card(
+          width: double.infinity,
+          child: Card(
             margin: const EdgeInsets.all(10),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                      child: LoadingAcceptingStorySummary(acceptingStoreId)),
-                  IconButton(
-                    icon: Icon(Icons.arrow_forward,
-                        color: Theme.of(context).primaryColor),
-                    tooltip: 'Details',
-                    onPressed: () {
-                      _openDetailView(context, acceptingStoreId);
-                    },
+            child: new InkWell(
+                onTap: () {
+                  _openDetailView(context, acceptingStoreId);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child:
+                              LoadingAcceptingStorySummary(acceptingStoreId)),
+                      Icon(Icons.arrow_forward,
+                          color: Theme.of(context).primaryColor),
+                    ],
                   ),
-                ],
-              ),
-            )),
-      ),
+                )),
+          )),
     );
   }
 
