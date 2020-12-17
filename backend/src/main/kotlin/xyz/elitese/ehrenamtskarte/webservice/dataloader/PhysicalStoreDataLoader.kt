@@ -3,7 +3,6 @@ package xyz.elitese.ehrenamtskarte.webservice.dataloader
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.jetbrains.exposed.sql.transactions.transaction
-import xyz.elitese.ehrenamtskarte.database.repos.AcceptingStoresRepository
 import xyz.elitese.ehrenamtskarte.database.repos.PhysicalStoresRepository
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
