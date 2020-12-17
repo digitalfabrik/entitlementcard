@@ -24,11 +24,11 @@ class AcceptingStoreQueryService {
                     .loadMany(params.ids).join()
     
     suspend fun searchAcceptingStores(params: SearchParams) = transaction {
-        AcceptingStoresRepository.findBySearch(params.searchText, params.cagegoryId).map {
+        AcceptingStoresRepository.findBySearch(params.searchText, params.categoryId).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String?, val cagegoryId: Int)
+data class SearchParams(val searchText: String?, val categoryId: Int)
