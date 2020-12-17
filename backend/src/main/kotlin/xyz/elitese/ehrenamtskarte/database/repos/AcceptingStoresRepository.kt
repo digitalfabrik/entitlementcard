@@ -19,7 +19,7 @@ object AcceptingStoresRepository {
     // TODO Probably not relevant right now
     fun findBySearch(searchText: String, categoryId: Int) = AcceptingStoreEntity.find {
         ((AcceptingStores.categoryId eq categoryId)) and 
-        (AcceptingStores.name like "%${searchText}%") or
+                ((AcceptingStores.name like "%${searchText}%") or
                 (AcceptingStores.description like "%${searchText}%") or
                 exists(PhysicalStores.select(
                     PhysicalStores.storeId eq AcceptingStores.id and
@@ -29,7 +29,7 @@ object AcceptingStoresRepository {
                                         (Addresses.postalCode like "%${searchText}%") or
                                         (Addresses.street like "%${searchText}%")
                             ))
-                ))
+                )))
     }
 
     fun findByCategory(categoryId: Int) = AcceptingStoreEntity.find {
