@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ResultList extends StatelessWidget {
-  String _searchText;
-  int _searchCategory;
+  final String _searchText;
+  final List<int> _searchCategory;
 
   ResultList(this._searchText, this._searchCategory);
 
@@ -38,11 +40,24 @@ class ResultList extends StatelessWidget {
         }
         return SliverList(
             delegate: SliverChildBuilderDelegate(
-                (ctx, index) => ListTile(
-                      title: Text(matchingStores[index].name),
-                      subtitle: Text(matchingStores[index].description),
-                    ),
-                childCount: 50));
+          (BuildContext context, int index) {
+            final int itemIndex = index ~/ 2;
+            if (index.isEven) {
+              return ListTile(
+                title: Text(matchingStores[itemIndex].name),
+                subtitle: Text(matchingStores[itemIndex].description),
+              );
+            }
+            return Divider(height: 0, color: Colors.grey);
+          },
+          semanticIndexCallback: (Widget widget, int localIndex) {
+            if (localIndex.isEven) {
+              return localIndex ~/ 2;
+            }
+            return null;
+          },
+          childCount: max(0, matchingStores.length * 2 - 1),
+        ));
       },
     );
   }
