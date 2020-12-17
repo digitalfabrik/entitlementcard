@@ -2,14 +2,11 @@ package xyz.elitese.ehrenamtskarte.webservice
 
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
-import xyz.elitese.ehrenamtskarte.database.Database
 
 const val PORT = 7000
 
 class WebService {
     fun start() {
-        Database.setup()
-
         val app = Javalin.create { cfg ->
             cfg.enableDevLogging()
             cfg.enableCorsForAllOrigins()

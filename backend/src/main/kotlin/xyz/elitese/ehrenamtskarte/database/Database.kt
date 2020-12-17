@@ -6,11 +6,9 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import com.impossibl.postgres.jdbc.PGDataSource
-import java.util.stream.Collectors
-
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.stream.Collectors
 
 
 class Database {
@@ -51,12 +49,9 @@ class Database {
     }
 
     val db by lazy {
-        val ds = PGDataSource()
-        ds.serverName = System.getProperty("app.postgres.host")
-        ds.databaseName = System.getProperty("app.postgres.database")
-        ds.user = System.getProperty("app.postgres.user")
-        ds.password = System.getProperty("app.postgres.password")
-
-        connect(ds)
+        connect("jdbc:postgresql://" +
+                "${System.getProperty("app.postgres.host")}:${System.getProperty("app.postgres.port")}" +
+                "/${System.getProperty("app.postgres.database")}", driver = "org.postgresql.Driver",
+                user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password"))
     }
 }
