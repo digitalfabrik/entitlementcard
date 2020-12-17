@@ -1,11 +1,12 @@
+import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'models.dart';
-import 'accepting_store_summary_content.dart';
 import '../../graphql/graphql_api.dart';
+import 'accepting_store_summary_content.dart';
+import 'models.dart';
 
 typedef void OnExecptionCallback(Exception exception);
 
@@ -41,13 +42,7 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
                 _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return Row(children: [
-              Icon(Icons.warning, color: Colors.orange),
-              SizedBox(
-                width: 8,
-              ),
-              Text("Fehler beim Laden der Infos."),
-            ]);
+            return ErrorMessage("Fehler beim Laden der Infos.");
           }
         });
   }
