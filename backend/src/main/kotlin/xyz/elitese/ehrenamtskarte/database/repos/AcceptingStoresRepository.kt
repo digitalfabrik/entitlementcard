@@ -15,7 +15,10 @@ object AcceptingStoresRepository {
     }
 
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
-    fun findBySearch(searchText: String) = AcceptingStoreEntity.find {
+    // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
+    // TODO Probably not relevant right now
+    fun findBySearch(searchText: String, categoryId: Int) = AcceptingStoreEntity.find {
+        ((AcceptingStores.categoryId eq categoryId)) and 
         (AcceptingStores.name like "%${searchText}%") or
                 (AcceptingStores.description like "%${searchText}%") or
                 exists(PhysicalStores.select(
@@ -29,4 +32,7 @@ object AcceptingStoresRepository {
                 ))
     }
 
+    fun findByCategory(categoryId: Int) = AcceptingStoreEntity.find {
+        (AcceptingStores.categoryId eq categoryId)
+    }
 }
