@@ -1,6 +1,5 @@
+import 'package:ehrenamtskarte/search/result_list.dart';
 import 'package:flutter/material.dart';
-
-import 'filter_bar.dart';
 
 class SearchPage extends StatelessWidget {
   @override
@@ -22,11 +21,8 @@ class SearchPage extends StatelessWidget {
             )
           ],
         ),
-        FilterBar(),
-        SliverList(
-            delegate: SliverChildBuilderDelegate(
-                (ctx, index) => ListTile(title: Text('Search result #$index')),
-                childCount: 500))
+        //FilterBar(),
+        ResultList("", 0)
       ],
     );
   }

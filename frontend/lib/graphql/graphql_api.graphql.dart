@@ -8,55 +8,6 @@ import 'package:gql/ast.dart';
 part 'graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName$AcceptingStore
-    with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName$AcceptingStore();
-
-  factory AcceptingStores$Query$AcceptingStoreName$AcceptingStore.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreFromJson(json);
-
-  String name;
-
-  @override
-  List<Object> get props => [name];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName();
-
-  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
-          Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
-
-  int id;
-
-  AcceptingStores$Query$AcceptingStoreName$AcceptingStore store;
-
-  @override
-  List<Object> get props => [id, store];
-  Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query with EquatableMixin {
-  AcceptingStores$Query();
-
-  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStores$QueryFromJson(json);
-
-  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
-
-  @override
-  List<Object> get props => [acceptingStoreName];
-  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
     with EquatableMixin {
   AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore();
@@ -121,7 +72,61 @@ class IdsParamsInput with EquatableMixin {
 
   @override
   List<Object> get props => [ids];
+
   Map<String, dynamic> toJson() => _$IdsParamsInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchAcceptingStores$Query$AcceptingStore with EquatableMixin {
+  SearchAcceptingStores$Query$AcceptingStore();
+
+  factory SearchAcceptingStores$Query$AcceptingStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$SearchAcceptingStores$Query$AcceptingStoreFromJson(json);
+
+  int id;
+
+  String name;
+
+  String description;
+
+  @override
+  List<Object> get props => [id, name, description];
+
+  Map<String, dynamic> toJson() =>
+      _$SearchAcceptingStores$Query$AcceptingStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchAcceptingStores$Query with EquatableMixin {
+  SearchAcceptingStores$Query();
+
+  factory SearchAcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
+      _$SearchAcceptingStores$QueryFromJson(json);
+
+  List<SearchAcceptingStores$Query$AcceptingStore> searchAcceptingStores;
+
+  @override
+  List<Object> get props => [searchAcceptingStores];
+
+  Map<String, dynamic> toJson() => _$SearchAcceptingStores$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchParamsInput with EquatableMixin {
+  SearchParamsInput({@required this.categoryId, this.searchText});
+
+  factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$SearchParamsInputFromJson(json);
+
+  int categoryId;
+
+  String searchText;
+
+  @override
+  List<Object> get props => [categoryId, searchText];
+
+  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -154,22 +159,6 @@ class AcceptingStoresSearch$Query with EquatableMixin {
   @override
   List<Object> get props => [searchAcceptingStores];
   Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({@required this.categoryId, this.searchText});
-
-  factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
-      _$SearchParamsInputFromJson(json);
-
-  int categoryId;
-
-  String searchText;
-
-  @override
-  List<Object> get props => [categoryId, searchText];
-  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -292,58 +281,8 @@ class AcceptingStoreById$Query with EquatableMixin {
 
   @override
   List<Object> get props => [physicalStoresById];
+
   Map<String, dynamic> toJson() => _$AcceptingStoreById$QueryToJson(this);
-}
-
-class AcceptingStoresQuery
-    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
-  AcceptingStoresQuery();
-
-  @override
-  final DocumentNode document = DocumentNode(definitions: [
-    OperationDefinitionNode(
-        type: OperationType.query,
-        name: NameNode(value: 'AcceptingStores'),
-        variableDefinitions: [],
-        directives: [],
-        selectionSet: SelectionSetNode(selections: [
-          FieldNode(
-              name: NameNode(value: 'physicalStores'),
-              alias: NameNode(value: 'acceptingStoreName'),
-              arguments: [],
-              directives: [],
-              selectionSet: SelectionSetNode(selections: [
-                FieldNode(
-                    name: NameNode(value: 'id'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'store'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: SelectionSetNode(selections: [
-                      FieldNode(
-                          name: NameNode(value: 'name'),
-                          alias: null,
-                          arguments: [],
-                          directives: [],
-                          selectionSet: null)
-                    ]))
-              ]))
-        ]))
-  ]);
-
-  @override
-  final String operationName = 'AcceptingStores';
-
-  @override
-  List<Object> get props => [document, operationName];
-  @override
-  AcceptingStores$Query parse(Map<String, dynamic> json) =>
-      AcceptingStores$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -353,20 +292,22 @@ class AcceptingStoreSummaryByIdArguments extends JsonSerializable
 
   @override
   factory AcceptingStoreSummaryByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
+      Map<String, dynamic> json) =>
       _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
 
   final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
+
   @override
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreSummaryByIdArgumentsToJson(this);
 }
 
 class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
-    AcceptingStoreSummaryById$Query, AcceptingStoreSummaryByIdArguments> {
+    AcceptingStoreSummaryById$Query,
+    AcceptingStoreSummaryByIdArguments> {
   AcceptingStoreSummaryByIdQuery({this.variables});
 
   @override
@@ -431,9 +372,94 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
+
   @override
   AcceptingStoreSummaryById$Query parse(Map<String, dynamic> json) =>
       AcceptingStoreSummaryById$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchAcceptingStoresArguments extends JsonSerializable
+    with EquatableMixin {
+  SearchAcceptingStoresArguments({@required this.searchParams});
+
+  @override
+  factory SearchAcceptingStoresArguments.fromJson(Map<String, dynamic> json) =>
+      _$SearchAcceptingStoresArgumentsFromJson(json);
+
+  final SearchParamsInput searchParams;
+
+  @override
+  List<Object> get props => [searchParams];
+
+  @override
+  Map<String, dynamic> toJson() => _$SearchAcceptingStoresArgumentsToJson(this);
+}
+
+class SearchAcceptingStoresQuery extends GraphQLQuery<
+    SearchAcceptingStores$Query,
+    SearchAcceptingStoresArguments> {
+  SearchAcceptingStoresQuery({this.variables});
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.query,
+        name: NameNode(value: 'SearchAcceptingStores'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'searchParams')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'SearchParamsInput'), isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'searchAcceptingStores'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'params'),
+                    value: VariableNode(name: NameNode(value: 'searchParams')))
+              ],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'name'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'description'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null)
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'SearchAcceptingStores';
+
+  @override
+  final SearchAcceptingStoresArguments variables;
+
+  @override
+  List<Object> get props => [document, operationName, variables];
+
+  @override
+  SearchAcceptingStores$Query parse(Map<String, dynamic> json) =>
+      SearchAcceptingStores$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)

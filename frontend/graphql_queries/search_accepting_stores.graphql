@@ -1,0 +1,7 @@
+query SearchAcceptingStores($searchParams: SearchParamsInput!) {
+    searchAcceptingStores(params: $searchParams) {
+        id,
+        name,
+        description
+    }
+}
