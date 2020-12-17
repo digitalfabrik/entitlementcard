@@ -107,7 +107,7 @@ Map<String, dynamic> _$SearchAcceptingStores$QueryToJson(
 
 SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
   return SearchParamsInput(
-    categoryId: json['categoryId'] as int,
+    categoryId: (json['categoryId'] as List)?.map((e) => e as int)?.toList(),
     searchText: json['searchText'] as String,
   );
 }
@@ -283,7 +283,7 @@ AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
 }
 
 Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
-    AcceptingStoreSummaryByIdArguments instance) =>
+        AcceptingStoreSummaryByIdArguments instance) =>
     <String, dynamic>{
       'ids': instance.ids?.toJson(),
     };

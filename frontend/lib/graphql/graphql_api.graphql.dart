@@ -72,7 +72,6 @@ class IdsParamsInput with EquatableMixin {
 
   @override
   List<Object> get props => [ids];
-
   Map<String, dynamic> toJson() => _$IdsParamsInputToJson(this);
 }
 
@@ -92,7 +91,6 @@ class SearchAcceptingStores$Query$AcceptingStore with EquatableMixin {
 
   @override
   List<Object> get props => [id, name, description];
-
   Map<String, dynamic> toJson() =>
       _$SearchAcceptingStores$Query$AcceptingStoreToJson(this);
 }
@@ -108,18 +106,17 @@ class SearchAcceptingStores$Query with EquatableMixin {
 
   @override
   List<Object> get props => [searchAcceptingStores];
-
   Map<String, dynamic> toJson() => _$SearchAcceptingStores$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({@required this.categoryId, this.searchText});
+  SearchParamsInput({this.categoryId, this.searchText});
 
   factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
       _$SearchParamsInputFromJson(json);
 
-  int categoryId;
+  List<int> categoryId;
 
   String searchText;
 
@@ -281,7 +278,6 @@ class AcceptingStoreById$Query with EquatableMixin {
 
   @override
   List<Object> get props => [physicalStoresById];
-
   Map<String, dynamic> toJson() => _$AcceptingStoreById$QueryToJson(this);
 }
 
@@ -292,14 +288,13 @@ class AcceptingStoreSummaryByIdArguments extends JsonSerializable
 
   @override
   factory AcceptingStoreSummaryByIdArguments.fromJson(
-      Map<String, dynamic> json) =>
+          Map<String, dynamic> json) =>
       _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
 
   final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
-
   @override
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreSummaryByIdArgumentsToJson(this);
@@ -372,7 +367,6 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   AcceptingStoreSummaryById$Query parse(Map<String, dynamic> json) =>
       AcceptingStoreSummaryById$Query.fromJson(json);
@@ -391,7 +385,6 @@ class SearchAcceptingStoresArguments extends JsonSerializable
 
   @override
   List<Object> get props => [searchParams];
-
   @override
   Map<String, dynamic> toJson() => _$SearchAcceptingStoresArgumentsToJson(this);
 }
@@ -456,7 +449,6 @@ class SearchAcceptingStoresQuery extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   SearchAcceptingStores$Query parse(Map<String, dynamic> json) =>
       SearchAcceptingStores$Query.fromJson(json);
