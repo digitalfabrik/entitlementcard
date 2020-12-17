@@ -9,23 +9,23 @@ import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
+import io.javalin.http.Context
 import org.dataloader.DataLoaderRegistry
 import xyz.elitese.ehrenamtskarte.webservice.schema.AcceptingStoreQueryService
 import xyz.elitese.ehrenamtskarte.webservice.schema.CategoriesQueryService
 import java.io.IOException
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class GraphQLHandler {
     companion object {
-        private val config = SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.webservice.schema"))
+        private val config =
+            SchemaGeneratorConfig(supportedPackages = listOf("xyz.elitese.ehrenamtskarte.webservice.schema"))
         private val queries = listOf(
-                TopLevelObject(AcceptingStoreQueryService()),
+            TopLevelObject(AcceptingStoreQueryService()),
                 TopLevelObject(CategoriesQueryService())
         )
 
         private val mutations = listOf<TopLevelObject>(
-                // TopLevelObject(LoginMutationService())
+            // TopLevelObject(LoginMutationService())
         )
 
         val graphQLSchema = toSchema(config, queries, mutations)
@@ -44,10 +44,9 @@ class GraphQLHandler {
     /**
      * Get payload from the request.
      */
-    private fun getPayload(request: HttpServletRequest): Map<String, Any>? {
+    private fun getPayload(context: Context): Map<String, Any>? {
         return try {
-            val body = if (request.reader.ready()) request.reader.readText() else ""
-            mapper.readValue<Map<String, Any>>(body)
+            mapper.readValue<Map<String, Any>>(context.body())
         } catch (e: IOException) {
             throw IOException("Unable to parse GraphQL payload.")
         }
@@ -57,7 +56,7 @@ class GraphQLHandler {
      * Get the variables passed in the request.
      */
     private fun getVariables(payload: Map<String, *>) =
-            payload.getOrElse("variables") { emptyMap<String, Any>() } as Map<String, Any>
+        payload.getOrElse("variables") { emptyMap<String, Any>() } as Map<String, Any>
 
 
     /**
@@ -88,27 +87,24 @@ class GraphQLHandler {
     /**
      * Execute a query against schema
      */
-    fun handle(request: HttpServletRequest, response: HttpServletResponse) {
-        val payload = getPayload(request)
+    fun handle(context: Context) {
+        val payload = getPayload(context)
         payload?.let {
             // Execute the query against the schema
             val executionResult = graphQL.executeAsync(
-                    ExecutionInput.Builder()
-                            .query(payload["query"].toString())
-                            .variables(getVariables(payload))
-                            .dataLoaderRegistry(dataLoaderRegistry)
+                ExecutionInput.Builder()
+                    .query(payload["query"].toString())
+                    .variables(getVariables(payload))
+                    .dataLoaderRegistry(dataLoaderRegistry)
             ).get()
             val result = getResult(executionResult)
 
             // write response as json
-            response.setHeader("Content-Type", "application/json")
-            response.writer.write(mapper.writeValueAsString(result))
-            response.status = 200
+            context.json(result)
         }
         if (payload == null) {
-            response.writer.write("Something went wrong.")
-            response.status = 400
+            context.status(400)
+            context.result("Something went wrong.")
         }
-
     }
 }

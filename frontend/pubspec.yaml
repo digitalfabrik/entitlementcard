@@ -27,6 +27,8 @@ dependencies:
   provider: ^4.3.2+2
   graphql_flutter: ^3.1.0
   location_permissions: ^3.0.0
+  url_launcher: ^5.7.10
+  flutter_svg: ^0.18.0
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
@@ -58,9 +60,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/detail_headers/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

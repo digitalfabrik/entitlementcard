@@ -17,10 +17,8 @@ query AcceptingStoreById($ids: IdsParamsInput!) {
         }
         address {
             street,
-            houseNumber,
             postalCode,
-            location,
-            state
+            location
         }
     }
 }
