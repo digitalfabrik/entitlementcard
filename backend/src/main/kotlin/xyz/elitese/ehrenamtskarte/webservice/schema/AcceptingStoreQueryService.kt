@@ -28,14 +28,7 @@ class AcceptingStoreQueryService {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
-    
-    suspend fun findAcceptingStoresByCategory(params: CategoryParams) = transaction {
-        AcceptingStoresRepository.findByCategory(params.cagegoryId).map {
-            AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
-        }
-    }
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String, val cagegoryId: Int) 
-data class CategoryParams(val cagegoryId: Int) 
+data class SearchParams(val searchText: String?, val cagegoryId: Int)

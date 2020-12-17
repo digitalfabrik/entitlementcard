@@ -66,15 +66,10 @@ type PhysicalStore {
 type Query {
   "Return list of all categories."
   categories: [Category!]!
-  findAcceptingStoresByCategory(params: CategoryParamsInput!): [AcceptingStore!]!
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
-}
-
-input CategoryParamsInput {
-  cagegoryId: Int!
 }
 
 input IdsParamsInput {
@@ -83,5 +78,5 @@ input IdsParamsInput {
 
 input SearchParamsInput {
   cagegoryId: Int!
-  searchText: String!
+  searchText: String
 }
