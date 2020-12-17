@@ -37,7 +37,6 @@ type AcceptingStore {
 }
 
 type Address {
-  houseNumber: String!
   location: String!
   postalCode: String!
   state: String!
