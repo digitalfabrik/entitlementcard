@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'filter_bar.dart';
+
 class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,16 +22,7 @@ class SearchPage extends StatelessWidget {
             )
           ],
         ),
-        SliverGrid.count(
-            crossAxisCount: 5,
-            children: Iterable.generate(10)
-                .map((i) => Container(
-                    color: Theme.of(context).accentColor,
-                    child: IconButton(
-                      icon: Icon(Icons.category),
-                      onPressed: () => {},
-                    )))
-                .toList()),
+        FilterBar(),
         SliverList(
             delegate: SliverChildBuilderDelegate(
                 (ctx, index) => ListTile(title: Text('Search result #$index')),
