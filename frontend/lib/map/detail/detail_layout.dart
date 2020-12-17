@@ -7,6 +7,18 @@ class DetailLayout extends StatelessWidget {
   final Widget body;
   final int category;
 
+  static const List _imagePaths = [
+    "assets/detail_headers/0_auto.svg",
+    "assets/detail_headers/1_multimedia.svg",
+    "assets/detail_headers/2_sport.svg",
+    "assets/detail_headers/3_kultur.svg",
+    "assets/detail_headers/4_finanzen.svg",
+    "assets/detail_headers/5_mode.svg",
+    "assets/detail_headers/6_haus.svg",
+    "assets/detail_headers/7_freizeit.svg",
+    "assets/detail_headers/8_essen.svg"
+  ];
+
   DetailLayout({this.title, this.body, this.category});
 
   @override
@@ -41,41 +53,11 @@ class DetailLayout extends StatelessWidget {
   }
 
   Widget _headerImageForCategory() {
-    String path;
-    print("CATEGORY: ${category}");
-    switch (category) {
-      case (1):
-        path = "assets/detail_headers/1_auto.svg";
-        break;
-      case (2):
-        path = "assets/detail_headers/2_multimedia.svg";
-        break;
-      case (3):
-        path = "assets/detail_headers/3_sport.svg";
-        break;
-      case (4):
-        path = "assets/detail_headers/4_kultur.svg";
-        break;
-      case (5):
-        path = "assets/detail_headers/5_finanzen.svg";
-        break;
-      case (6):
-        path = "assets/detail_headers/6_mode.svg";
-        break;
-      case (7):
-        path = "assets/detail_headers/7_haus.svg";
-        break;
-      case (8):
-        path = "assets/detail_headers/8_freizeit.svg";
-        break;
-      case (9):
-        path = "assets/detail_headers/9_essen.svg";
-        break;
-      default:
-        return null;
+    if (category == null || category > _imagePaths.length) {
+      return null;
     }
     return SvgPicture.asset(
-      path,
+      _imagePaths[category],
       semanticsLabel: 'Header',
       alignment: Alignment.bottomRight,
     );
