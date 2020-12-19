@@ -55,6 +55,22 @@ class _MapState extends State<Map> {
 
   _onMapCreated(controller) => this._controller = controller;
 
+  Symbol _symbol;
+  _removeSymbol() async {
+    if (_symbol != null) {
+      await _controller.removeSymbol(_symbol);
+      _symbol = null;
+    }
+  }
+
+  _addSymbol(LatLng location, int categoryId) async {
+    _symbol = await _controller.addSymbol(new SymbolOptions(
+        iconSize: 1.5,
+        geometry: location,
+        iconImage: categoryId.toString()
+    ));
+  }
+
   void _onMapClick(Point<double> point, clickCoordinates) async {
     var features = await this._controller.queryRenderedFeatures(
         point, widget.onFeatureClickLayerFilter ?? [], null
@@ -65,9 +81,14 @@ class _MapState extends State<Map> {
         if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
         var coordinates = featureInfo["geometry"]["coordinates"];
         var location = new LatLng(coordinates[1], coordinates[0]);
+        await _removeSymbol();
+        await _addSymbol(location, featureInfo["properties"]["categoryId"]);
         await _bringCameraToLocation(location);
       }
-    } else if (widget.onNoFeatureClick != null) widget.onNoFeatureClick();
+    } else if (widget.onNoFeatureClick != null) {
+      await _removeSymbol();
+      widget.onNoFeatureClick();
+    }
   }
 
   Future<void> _bringCameraToUserLocation() async {
