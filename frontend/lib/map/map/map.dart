@@ -57,6 +57,7 @@ class _MapState extends State<Map> {
   _onMapCreated(controller) => this._controller = controller;
 
   Symbol _symbol;
+
   _removeSymbol() async {
     if (_symbol != null) {
       await _controller.removeSymbol(_symbol);
@@ -66,10 +67,7 @@ class _MapState extends State<Map> {
 
   _addSymbol(LatLng location, int categoryId) async {
     _symbol = await _controller.addSymbol(new SymbolOptions(
-        iconSize: 1.5,
-        geometry: location,
-        iconImage: categoryId.toString()
-    ));
+        iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
