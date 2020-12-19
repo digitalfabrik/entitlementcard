@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
+import '../identification/identification_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<_TabData> _tabs = <_TabData>[
     _TabData(MapPage(), Icons.map, "Karte"),
     _TabData(Container(), Icons.search, "Suche"),
-    _TabData(Container(), Icons.remove_red_eye, "Ausweisen"),
+    _TabData(IdentificationPage(), Icons.remove_red_eye, "Ausweisen"),
   ];
 
   void _onTabTapped(int index) {
