@@ -18,10 +18,11 @@ class Map extends StatefulWidget {
   final List<String> onFeatureClickLayerFilter;
   final bool myLocationEnabled;
 
-  const Map({this.onFeatureClick,
-    this.onNoFeatureClick,
-    this.onFeatureClickLayerFilter,
-    this.myLocationEnabled});
+  const Map(
+      {this.onFeatureClick,
+      this.onNoFeatureClick,
+      this.onFeatureClickLayerFilter,
+      this.myLocationEnabled});
 
   @override
   State createState() => _MapState();
@@ -38,13 +39,13 @@ class _MapState extends State<Map> {
         initialCameraPosition: CameraPosition(
             target: Map.initialLocation,
             zoom: widget.myLocationEnabled
-                   ? Map.userLocationZoomLevel : Map.initialZoomLevel),
+                ? Map.userLocationZoomLevel
+                : Map.initialZoomLevel),
         styleString: config.mapStyleUrl,
         myLocationEnabled: true,
         myLocationTrackingMode: MyLocationTrackingMode.Tracking,
         onMapCreated: _onMapCreated,
-        onMapClick: _onMapClick
-    );
+        onMapClick: _onMapClick);
     super.didChangeDependencies();
   }
 
@@ -57,8 +58,7 @@ class _MapState extends State<Map> {
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
     var features = await this._controller.queryRenderedFeatures(
-        point, widget.onFeatureClickLayerFilter ?? [], null
-    );
+        point, widget.onFeatureClickLayerFilter ?? [], null);
     if (features.isNotEmpty) {
       var featureInfo = json.decode(features[0]);
       if (featureInfo != null) {
@@ -72,7 +72,8 @@ class _MapState extends State<Map> {
 
   Future<void> _bringCameraToUserLocation() async {
     var location = await _controller.requestMyLocationLatLng();
-    await _bringCameraToLocation(location, zoomLevel: Map.userLocationZoomLevel);
+    await _bringCameraToLocation(location,
+        zoomLevel: Map.userLocationZoomLevel);
   }
 
   Future<void> _bringCameraToLocation(LatLng location,
