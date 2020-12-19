@@ -18,10 +18,10 @@ class App extends StatelessWidget {
           bodyText2: TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
         ));
     return ConfiguredGraphQlProvider(
-      child: MaterialApp(
-          title: 'Digitale Ehrenamtskarte',
-          theme: theme,
-          home: HomePage(title: "Digitale Ehrenamtskarte")),
-    );
+        child: MaterialApp(
+      title: 'Digitale Ehrenamtskarte',
+      theme: theme,
+      home: HomePage(),
+    ));
   }
 }
