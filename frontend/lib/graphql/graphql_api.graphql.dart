@@ -76,57 +76,6 @@ class IdsParamsInput with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class SearchAcceptingStores$Query$AcceptingStore with EquatableMixin {
-  SearchAcceptingStores$Query$AcceptingStore();
-
-  factory SearchAcceptingStores$Query$AcceptingStore.fromJson(
-          Map<String, dynamic> json) =>
-      _$SearchAcceptingStores$Query$AcceptingStoreFromJson(json);
-
-  int id;
-
-  String name;
-
-  String description;
-
-  @override
-  List<Object> get props => [id, name, description];
-  Map<String, dynamic> toJson() =>
-      _$SearchAcceptingStores$Query$AcceptingStoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class SearchAcceptingStores$Query with EquatableMixin {
-  SearchAcceptingStores$Query();
-
-  factory SearchAcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
-      _$SearchAcceptingStores$QueryFromJson(json);
-
-  List<SearchAcceptingStores$Query$AcceptingStore> searchAcceptingStores;
-
-  @override
-  List<Object> get props => [searchAcceptingStores];
-  Map<String, dynamic> toJson() => _$SearchAcceptingStores$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({this.categoryId, this.searchText});
-
-  factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
-      _$SearchParamsInputFromJson(json);
-
-  List<int> categoryId;
-
-  String searchText;
-
-  @override
-  List<Object> get props => [categoryId, searchText];
-
-  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
   AcceptingStoresSearch$Query$AcceptingStore();
 
@@ -138,8 +87,10 @@ class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
 
   String name;
 
+  String description;
+
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [id, name, description];
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
 }
@@ -155,7 +106,24 @@ class AcceptingStoresSearch$Query with EquatableMixin {
 
   @override
   List<Object> get props => [searchAcceptingStores];
+
   Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchParamsInput with EquatableMixin {
+  SearchParamsInput({this.categoryId, this.searchText});
+
+  factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$SearchParamsInputFromJson(json);
+
+  List<int> categoryId;
+
+  String searchText;
+
+  @override
+  List<Object> get props => [categoryId, searchText];
+  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -373,88 +341,6 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class SearchAcceptingStoresArguments extends JsonSerializable
-    with EquatableMixin {
-  SearchAcceptingStoresArguments({@required this.searchParams});
-
-  @override
-  factory SearchAcceptingStoresArguments.fromJson(Map<String, dynamic> json) =>
-      _$SearchAcceptingStoresArgumentsFromJson(json);
-
-  final SearchParamsInput searchParams;
-
-  @override
-  List<Object> get props => [searchParams];
-  @override
-  Map<String, dynamic> toJson() => _$SearchAcceptingStoresArgumentsToJson(this);
-}
-
-class SearchAcceptingStoresQuery extends GraphQLQuery<
-    SearchAcceptingStores$Query,
-    SearchAcceptingStoresArguments> {
-  SearchAcceptingStoresQuery({this.variables});
-
-  @override
-  final DocumentNode document = DocumentNode(definitions: [
-    OperationDefinitionNode(
-        type: OperationType.query,
-        name: NameNode(value: 'SearchAcceptingStores'),
-        variableDefinitions: [
-          VariableDefinitionNode(
-              variable: VariableNode(name: NameNode(value: 'searchParams')),
-              type: NamedTypeNode(
-                  name: NameNode(value: 'SearchParamsInput'), isNonNull: true),
-              defaultValue: DefaultValueNode(value: null),
-              directives: [])
-        ],
-        directives: [],
-        selectionSet: SelectionSetNode(selections: [
-          FieldNode(
-              name: NameNode(value: 'searchAcceptingStores'),
-              alias: null,
-              arguments: [
-                ArgumentNode(
-                    name: NameNode(value: 'params'),
-                    value: VariableNode(name: NameNode(value: 'searchParams')))
-              ],
-              directives: [],
-              selectionSet: SelectionSetNode(selections: [
-                FieldNode(
-                    name: NameNode(value: 'id'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'name'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null),
-                FieldNode(
-                    name: NameNode(value: 'description'),
-                    alias: null,
-                    arguments: [],
-                    directives: [],
-                    selectionSet: null)
-              ]))
-        ]))
-  ]);
-
-  @override
-  final String operationName = 'SearchAcceptingStores';
-
-  @override
-  final SearchAcceptingStoresArguments variables;
-
-  @override
-  List<Object> get props => [document, operationName, variables];
-  @override
-  SearchAcceptingStores$Query parse(Map<String, dynamic> json) =>
-      SearchAcceptingStores$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class AcceptingStoresSearchArguments extends JsonSerializable
     with EquatableMixin {
   AcceptingStoresSearchArguments({@required this.params});
@@ -508,6 +394,12 @@ class AcceptingStoresSearchQuery extends GraphQLQuery<
                     selectionSet: null),
                 FieldNode(
                     name: NameNode(value: 'name'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'description'),
                     alias: null,
                     arguments: [],
                     directives: [],

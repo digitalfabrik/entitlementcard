@@ -15,9 +15,9 @@ class ResultList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final byIdQuery = SearchAcceptingStoresQuery(
-        variables: SearchAcceptingStoresArguments(
-            searchParams: SearchParamsInput(
+    final byIdQuery = AcceptingStoresSearchQuery(
+        variables: AcceptingStoresSearchArguments(
+            params: SearchParamsInput(
                 categoryId: _searchCategory, searchText: _searchText)));
     return Query(
       options: QueryOptions(
@@ -33,7 +33,7 @@ class ResultList extends StatelessWidget {
         if (result.loading) {
           return SliverToBoxAdapter(child: LinearProgressIndicator());
         }
-        final matchingStores = SearchAcceptingStoresQuery()
+        final matchingStores = AcceptingStoresSearchQuery()
             .parse(result.data)
             .searchAcceptingStores;
         if (matchingStores.isEmpty) {
