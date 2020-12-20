@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/map/detail/detail_view.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,19 @@ class ResultList extends StatelessWidget {
             final int itemIndex = index ~/ 2;
             if (index.isEven) {
               return ListTile(
-                title: Text(matchingStores[itemIndex].name),
-                subtitle: Text(matchingStores[itemIndex].description),
-              );
+                  title: Text(matchingStores[itemIndex].name),
+                  subtitle: Text(
+                    matchingStores[itemIndex].description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  isThreeLine: true,
+                  trailing: Container(
+                      child: Icon(Icons.keyboard_arrow_right, size: 30.0),
+                      height: double.infinity),
+                  onTap: () {
+                    _openDetailView(context, matchingStores[itemIndex].id);
+                  });
             }
             return Divider(height: 0, color: Colors.grey);
           },
@@ -60,5 +71,13 @@ class ResultList extends StatelessWidget {
         ));
       },
     );
+  }
+
+  void _openDetailView(BuildContext context, int acceptingStoreId) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DetailView(acceptingStoreId),
+        ));
   }
 }
