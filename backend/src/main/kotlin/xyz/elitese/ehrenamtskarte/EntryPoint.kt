@@ -4,6 +4,7 @@ import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import xyz.elitese.ehrenamtskarte.administration.webservice.AdminWebService
 import xyz.elitese.ehrenamtskarte.database.Database
 import xyz.elitese.ehrenamtskarte.importer.FreinetDataImporter
 import xyz.elitese.ehrenamtskarte.webservice.GraphQLHandler
@@ -28,6 +29,7 @@ class Entry : CliktCommand() {
                 FreinetDataImporter().importAll()
             }
             WebService().start()
+            AdminWebService().start()
         }
     }
 }
