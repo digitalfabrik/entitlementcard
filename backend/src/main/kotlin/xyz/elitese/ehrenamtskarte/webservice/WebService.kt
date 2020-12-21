@@ -13,7 +13,7 @@ class WebService {
             cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
         }.start(PORT)
 
-        println("Server is running at http://localhost:7000")
+        println("Server is running at http://localhost:${PORT}")
         println("Goto http://localhost:7000/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
