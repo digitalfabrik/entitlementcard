@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 
 const val CONTACT_LOADER_NAME = "CONTACT_LOADER"
 
-val batchContactLoader = DataLoader<Int, Contact?> { ids ->
+val contactLoader = DataLoader<Int, Contact?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {
