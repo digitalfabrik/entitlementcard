@@ -4083,6 +4083,37 @@
       }
     },
     {
+      "id": "physical_stores_clustered_circle",
+      "type": "circle",
+      "source": "physical_stores_clustered",
+      "source-layer": "physical_stores_clustered",
+      "maxzoom": 11,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "circle-radius": [
+          "max",
+          10,
+          [
+            "*",
+            3.5,
+            [
+              "ln",
+              [
+                "get",
+                "cluster_count"
+              ]
+            ]
+          ]
+        ],
+        "circle-pitch-scale": "map",
+        "circle-color": "rgba(80, 80, 80, 0.6)",
+        "circle-stroke-color": "rgba(50, 50, 50, 0.72)",
+        "circle-stroke-width": 1
+      }
+    },
+    {
       "id": "physical_stores_cluster",
       "type": "symbol",
       "source": "physical_stores_clustered",
@@ -4091,37 +4122,21 @@
       "maxzoom": 11,
       "layout": {
         "visibility": "visible",
-        "icon-image": "circle_15",
         "text-field": [
-          "to-string",
-          [
-            "-",
-            [
-              "get",
-              "cluster_count"
-            ],
-            [
-              "%",
-              [
-                "get",
-                "cluster_count"
-              ],
-              100
-            ]
-          ]
+          "get",
+          "cluster_count"
         ],
         "text-anchor": "center",
         "text-offset": [
           0,
-          1
+          0
         ],
-        "text-size": [
-          "*",
-          0.1,
-          [
-            "get",
-            "cluster_count"
-          ]
+        "text-size": 12,
+        "icon-size": 1,
+        "text-justify": "center",
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
         ]
       }
     }
