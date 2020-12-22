@@ -51,9 +51,6 @@
       "type": "raster",
       "source": "natural_earth_shaded_relief",
       "maxzoom": 6,
-      "layout": {
-        "visibility": "visible"
-      },
       "paint": {
         "raster-opacity": {
           "base": 1.5,
@@ -314,9 +311,6 @@
           "tunnel"
         ]
       ],
-      "layout": {
-        "visibility": "visible"
-      },
       "paint": {
         "fill-color": "rgb(158,189,255)"
       }
@@ -3453,6 +3447,46 @@
       }
     },
     {
+      "id": "poi_z16",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "poi",
+      "minzoom": 16,
+      "filter": [
+        "all",
+        [
+          "==",
+          "$type",
+          "Point"
+        ],
+        [
+          ">=",
+          "rank",
+          20
+        ]
+      ],
+      "layout": {
+        "icon-image": "{class}_11",
+        "text-anchor": "top",
+        "text-field": "{name}",
+        "text-font": [
+          "Roboto Condensed Italic"
+        ],
+        "text-max-width": 9,
+        "text-offset": [
+          0,
+          0.6
+        ],
+        "text-size": 12
+      },
+      "paint": {
+        "text-color": "#666",
+        "text-halo-blur": 0.5,
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    },
+    {
       "id": "poi_z15",
       "type": "symbol",
       "source": "openmaptiles",
@@ -3488,8 +3522,7 @@
           0,
           0.6
         ],
-        "text-size": 12,
-        "visibility": "visible"
+        "text-size": 12
       },
       "paint": {
         "text-color": "#666",
@@ -4060,8 +4093,7 @@
         ],
         "text-size": 13,
         "text-transform": "uppercase",
-        "text-justify": "center",
-        "visibility": "visible"
+        "text-justify": "center"
       },
       "paint": {
         "text-color": "#633",
