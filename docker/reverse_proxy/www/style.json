@@ -3250,8 +3250,11 @@
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "building",
-      "minzoom": 13,
-      "maxzoom": 14,
+      "minzoom": 14,
+      "maxzoom": 24,
+      "layout": {
+        "visibility": "visible"
+      },
       "paint": {
         "fill-color": "hsl(35, 8%, 85%)",
         "fill-outline-color": {
@@ -3267,25 +3270,6 @@
             ]
           ]
         }
-      }
-    },
-    {
-      "id": "building-3d",
-      "type": "fill-extrusion",
-      "source": "openmaptiles",
-      "source-layer": "building",
-      "minzoom": 14,
-      "paint": {
-        "fill-extrusion-color": "hsl(35, 8%, 85%)",
-        "fill-extrusion-height": {
-          "property": "render_height",
-          "type": "identity"
-        },
-        "fill-extrusion-base": {
-          "property": "render_min_height",
-          "type": "identity"
-        },
-        "fill-extrusion-opacity": 0.8
       }
     },
     {
@@ -3573,7 +3557,8 @@
           0,
           0.6
         ],
-        "text-size": 12
+        "text-size": 12,
+        "visibility": "visible"
       },
       "paint": {
         "text-color": "#666",
@@ -3609,7 +3594,8 @@
           0.9,
           0
         ],
-        "text-size": 12
+        "text-size": 12,
+        "visibility": "visible"
       },
       "paint": {
         "text-color": "#4898ff",
