@@ -25,7 +25,7 @@ class Entry : CliktCommand() {
             Database.setup()
             if (importFreinetData) {
                 println("Importing data from Freinet...")
-                FreinetDataImporter().importAll()
+                FreinetDataImporter.import()
             }
             WebService().start()
         }
