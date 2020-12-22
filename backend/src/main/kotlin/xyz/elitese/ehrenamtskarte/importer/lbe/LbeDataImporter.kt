@@ -10,7 +10,7 @@ import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeData
 object LbeDataImporter {
 
     fun import() {
-        val url = LbeDataImporter::class.java.getResource("/freinet_import/import_xml.txt").readText()
+        val url = System.getProperty("app.importer.xml")
         val xml = HttpDownloadHelper.downloadData(url)
 
         val xmlMapper = XmlMapper()

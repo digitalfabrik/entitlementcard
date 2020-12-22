@@ -5,8 +5,11 @@ import xyz.elitese.ehrenamtskarte.importer.general.HttpDownloadHelper
 object FreinetDataImporter {
 
     fun import() {
-        val url = FreinetDataImporter::class.java.getResource("/freinet_import/secrets/import_all.txt").readText()
-        val json = HttpDownloadHelper.downloadData(url)
+        val urlPrefix = System.getProperty("app.importer.json_1")
+        val urlSufix = System.getProperty("app.importer.json_2")
+        val token = FreinetDataImporter::class.java.getResource("/freinet_import/secret.txt").readText().trim()
+
+        val json = HttpDownloadHelper.downloadData(urlPrefix + token + urlSufix)
         AcceptingStoresImporter.importFromJsonFile(json)
     }
 
