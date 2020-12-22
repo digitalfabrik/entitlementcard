@@ -154,6 +154,8 @@ class _QRViewExampleState extends State<QRCodeScanner> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        Navigator.of(context).maybePop("Test");
+        print("Scan successful");
       });
     });
   }

@@ -19,6 +19,7 @@ class IdentificationPage extends StatefulWidget {
 }
 
 class _IdentificationPageState extends State<IdentificationPage> {
+  String name;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Center(
-            child: Text('Noch keine EAK hinterlegt'),
+            child: Text(name == null ? 'Noch keine EAK hinterlegt' : '$name'),
           ),
           OutlineButton(
             onPressed: () {
@@ -50,5 +51,6 @@ class _IdentificationPageState extends State<IdentificationPage> {
         MaterialPageRoute(
           builder: (context) => QRCodeScanner(),
         ));
+    result.then((value) => name = value);
   }
 }
