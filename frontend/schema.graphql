@@ -37,7 +37,6 @@ type AcceptingStore {
 }
 
 type Address {
-  houseNumber: String!
   location: String!
   postalCode: String!
   state: String!
@@ -57,16 +56,17 @@ type Contact {
 }
 
 type PhysicalStore {
-  address: Address
+  address: Address!
   addressId: Int!
   id: Int!
-  store: AcceptingStore
+  store: AcceptingStore!
   storeId: Int!
 }
 
 type Query {
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
+  "Returns list of all accepting stores queried by ids."
   physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
 }
 

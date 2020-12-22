@@ -17,6 +17,6 @@ class WebService {
         println("Goto http://localhost:7000/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
-        app.post("/") { ctx -> graphQLHandler.handle(ctx.req, ctx.res) }
+        app.post("/") { ctx -> graphQLHandler.handle(ctx) }
     }
 }

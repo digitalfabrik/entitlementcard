@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="420px" height="384px" viewBox="0 0 420 384" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>1_auto</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1_auto" transform="translate(0.000000, 126.000000)">
+            <path d="M204,218 L243,218 L243,250 C243,254.418278 239.418278,258 235,258 L212,258 C207.581722,258 204,254.418278 204,250 L204,218 Z"
+                  id="Rectangle-Copy-8" fill-opacity="0.2" fill="#FFFFFF"></path>
+            <path d="M0,130 L262,130 L262,218 L0,218 L0,130 Z M50.5,195 C60.1649831,195 68,187.164983 68,177.5 C68,167.835017 60.1649831,160 50.5,160 C40.8350169,160 33,167.835017 33,177.5 C33,187.164983 40.8350169,195 50.5,195 Z M210.5,195 C220.164983,195 228,187.164983 228,177.5 C228,167.835017 220.164983,160 210.5,160 C200.835017,160 193,167.835017 193,177.5 C193,187.164983 200.835017,195 210.5,195 Z"
+                  id="Combined-Shape" fill-opacity="0.4" fill="#FFFFFF"></path>
+            <path d="M234,130 L211,57 L62,57 L30,130 L2.84217094e-14,130 L45.0776901,34 L227.391904,34 L262,130 L234,130 Z"
+                  id="Combined-Shape" fill-opacity="0.2" fill="#FFFFFF"></path>
+            <g id="Group-9"
+               transform="translate(371.000000, 76.000000) scale(-1, 1) translate(-371.000000, -76.000000) translate(297.000000, 50.000000)"
+               stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="7">
+                <ellipse id="Oval" cx="24.6896602" cy="26.2481402" rx="24.5" ry="25.5"></ellipse>
+                <ellipse id="Oval-Copy-23" cx="123.168031" cy="26.1459987" rx="24.5" ry="25.5"></ellipse>
+            </g>
+            <path d="M20,218 L59,218 L59,250 C59,254.418278 55.418278,258 51,258 L28,258 C23.581722,258 20,254.418278 20,250 L20,218 Z"
+                  id="Rectangle" fill-opacity="0.2" fill="#FFFFFF"></path>
+            <polygon id="Path-16" stroke-opacity="0.3" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"
+                     points="333 35 384 35 420 75 370 75"></polygon>
+            <polyline id="Path-19" stroke-opacity="0.3" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"
+                      stroke-linejoin="round" points="378 54.5 389 18 373 18"></polyline>
+            <path d="M321,75 L342,0.755546828 C319.677106,0.755546828 311.010439,5.17036455 316,14" id="Path-20"
+                  stroke-opacity="0.3" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>
