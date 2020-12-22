@@ -202,6 +202,9 @@
         "class",
         "hospital"
       ],
+      "layout": {
+        "visibility": "visible"
+      },
       "paint": {
         "fill-color": "#fde"
       }
@@ -4160,15 +4163,37 @@
       "maxzoom": 11,
       "layout": {
         "visibility": "visible",
-        "icon-image": "circle-stroked_15",
+        "icon-image": "circle_15",
         "text-field": [
-          "get",
-          "cluster_count"
+          "to-string",
+          [
+            "-",
+            [
+              "get",
+              "cluster_count"
+            ],
+            [
+              "%",
+              [
+                "get",
+                "cluster_count"
+              ],
+              100
+            ]
+          ]
         ],
         "text-anchor": "center",
         "text-offset": [
           0,
           1
+        ],
+        "text-size": [
+          "*",
+          0.1,
+          [
+            "get",
+            "cluster_count"
+          ]
         ]
       }
     }
