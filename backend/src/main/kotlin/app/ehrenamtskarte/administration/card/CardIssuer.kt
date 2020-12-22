@@ -1,15 +1,19 @@
-package xyz.elitese.ehrenamtskarte.administration.card
+package app.ehrenamtskarte.administration.card
 
+import app.ehrenamtskarte.administration.serialization.QRCodeGenerator
 import com.beust.klaxon.Klaxon
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import xyz.elitese.ehrenamtskarte.administration.serialization.QRCodeGenerator
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 
 class CardIssuer(
     private val cardTokenGenerator: CardTokenGenerator =
         CardTokenGenerator(Keys.keyPairFor(SignatureAlgorithm.ES256).private)
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(CardIssuer::class.java)
+
     private val klaxon = Klaxon()
     private val qrCodeGenerator = QRCodeGenerator()
 
@@ -18,8 +22,7 @@ class CardIssuer(
         val cardToken = try {
             cardTokenGenerator.createCardToken(payload)
         } catch (e: CardIssueException) {
-            println(e.message)
-            e.printStackTrace()
+            logger.error(e.message, e)
             // don't expose internal details
             throw CardIssueException("Internal server error while creating token, check server logs for details.")
         }

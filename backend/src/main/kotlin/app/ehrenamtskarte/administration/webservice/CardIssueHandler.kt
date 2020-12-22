@@ -1,13 +1,13 @@
-package xyz.elitese.ehrenamtskarte.administration.webservice
+package app.ehrenamtskarte.administration.webservice
 
+import app.ehrenamtskarte.administration.card.CardDetails
+import app.ehrenamtskarte.administration.card.CardIssueException
+import app.ehrenamtskarte.administration.card.CardIssuer
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.InternalServerErrorResponse
 import io.javalin.plugin.openapi.dsl.OpenApiDocumentation
 import io.javalin.plugin.openapi.dsl.document
-import xyz.elitese.ehrenamtskarte.administration.card.CardDetails
-import xyz.elitese.ehrenamtskarte.administration.card.CardIssueException
-import xyz.elitese.ehrenamtskarte.administration.card.CardIssuer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -48,7 +48,7 @@ class CardIssueHandler {
                     "in ISO 8601, e.g.: 2020-12-21")
         }
 
-        return CardDetails(firstName, lastName, date)
+        return CardDetails(firstName, lastName, date, System.currentTimeMillis())
     }
 
     companion object {

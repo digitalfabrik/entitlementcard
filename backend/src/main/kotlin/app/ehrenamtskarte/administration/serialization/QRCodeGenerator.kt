@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.administration.serialization
+package app.ehrenamtskarte.administration.serialization
 
 import net.glxn.qrgen.javase.QRCode
 

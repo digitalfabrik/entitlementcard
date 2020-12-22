@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.administration.webservice
+package app.ehrenamtskarte.administration.webservice
 
 import io.javalin.Javalin
 import io.javalin.plugin.openapi.OpenApiOptions
@@ -6,10 +6,15 @@ import io.javalin.plugin.openapi.OpenApiPlugin
 import io.javalin.plugin.openapi.dsl.documented
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.swagger.v3.oas.models.info.Info
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 const val PORT = 7001
 
 class AdminWebService {
+
+    private val logger: Logger = LoggerFactory.getLogger(AdminWebService::class.java)
+
     fun start() {
         val app = Javalin.create { cfg ->
             cfg.enableDevLogging()
@@ -17,7 +22,7 @@ class AdminWebService {
             cfg.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }.start(PORT)
 
-        println("Admin Server is running at http://localhost:${PORT}")
+        logger.info("Admin Server is running at http://localhost:${PORT}")
 
         val cardIssueHandler = CardIssueHandler()
 

@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.administration.card
+package app.ehrenamtskarte.administration.card
 
 import io.jsonwebtoken.Jwts
 import java.security.Key
