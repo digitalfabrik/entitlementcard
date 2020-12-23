@@ -29,11 +29,11 @@ class AcceptingStoreQueryService {
 
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
     fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
-        AcceptingStoresRepository.findBySearch(params.searchText, params.categoryId).map {
+        AcceptingStoresRepository.findBySearch(params.searchText, params.categoryIds).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String?, val categoryId: List<Int>?)
+data class SearchParams(val searchText: String?, val categoryIds: List<Int>?)

@@ -10,7 +10,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class ResultList extends StatelessWidget {
   final String _searchText;
   final List<int> _searchCategories;
-  
+
   ResultList(this._searchText, this._searchCategories);
 
   @override
@@ -18,7 +18,7 @@ class ResultList extends StatelessWidget {
     final byIdQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryId: _searchCategories, searchText: _searchText)));
+                categoryIds: _searchCategories, searchText: _searchText)));
     return Query(
       options: QueryOptions(
           documentNode: byIdQuery.document,

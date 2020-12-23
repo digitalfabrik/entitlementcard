@@ -79,6 +79,6 @@ input IdsParamsInput {
 }
 
 input SearchParamsInput {
-  categoryId: [Int!]
+  categoryIds: [Int!]
   searchText: String
 }
