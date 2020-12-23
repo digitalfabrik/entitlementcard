@@ -11,7 +11,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
-  List<int> _selectedCategories;
+  List<int> _selectedCategories = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +37,21 @@ class _SearchPageState extends State<SearchPage> {
             )
           ],
         ),
-        FilterBar(onSelectedCategoriesChange: onSelectedCategoriesChange),
+        FilterBar(onCategoryPress: (index, isSelected) {
+          setState(() {
+            if (isSelected) {
+              this._selectedCategories.add(index);
+            } else {
+              this._selectedCategories.remove(index);
+            }
+          });
+        }),
         ResultList(
           _searchFieldText,
           _selectedCategories,
         )
       ],
     );
-  }
-
-  void onSelectedCategoriesChange(List<int> categories) {
-    setState(() {
-      _selectedCategories = categories;
-    });
   }
 
   @override

@@ -15,16 +15,16 @@ class ResultList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final byIdQuery = AcceptingStoresSearchQuery(
+    final searchQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
                 categoryIds: _searchCategories.isEmpty ? null : _searchCategories, searchText: _searchText)));
     return Query(
       options: QueryOptions(
-          documentNode: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()),
+          documentNode: searchQuery.document,
+          variables: searchQuery.getVariablesMap()),
       builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
+          {Refetch refetch, FetchMore fetchMore}) {
         if (result.hasException) {
           return SliverToBoxAdapter(
               child: ErrorMessage(result.exception.toString()));

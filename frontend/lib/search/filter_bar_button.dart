@@ -5,22 +5,22 @@ import '../category_assets.dart';
 
 class FilterBarButton extends StatefulWidget {
   final int index;
-  final Function(int, bool) onPress;
+  final Function(int, bool) onCategoryPress;
 
-  FilterBarButton({Key key, this.index, this.onPress}) : super(key: key);
+  FilterBarButton({Key key, this.index, this.onCategoryPress}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _FilterBarButtonState(index: this.index, onPress: this.onPress);
+    return _FilterBarButtonState(index: this.index, onCategoryPress: this.onCategoryPress);
   }
 }
 
 class _FilterBarButtonState extends State<FilterBarButton> {
   final int index;
   bool _selected = false;
-  final Function(int, bool) onPress;
+  final Function(int, bool) onCategoryPress;
 
-  _FilterBarButtonState({this.index, this.onPress});
+  _FilterBarButtonState({this.index, this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,12 @@ class _FilterBarButtonState extends State<FilterBarButton> {
         child: InkWell(
             splashColor: Colors.blue,
             onTap: () {
-              this.onPress(this.index, !this._selected);
-
+              var isSelected = !this._selected;
               setState(() {
-                this._selected = !this._selected;
+                this._selected = isSelected;
               });
+
+              this.onCategoryPress(this.index, isSelected);
             },
             child: Container(
                 child: Padding(
