@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/identification/card_details.dart';
-import 'package:ehrenamtskarte/identification/parse_jwt.dart';
+import 'package:ehrenamtskarte/identification/jwt/parse_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
@@ -159,8 +159,11 @@ class _QRViewExampleState extends State<QRCodeScanner> {
         print("Scan successful, reading payload...");
         try {
           var payload = parseJwtPayLoad(result.code);
-          var cardDetails = CardDetails(payload["firstName"],
-              payload["lastName"], DateTime.parse(payload["expirationDate"]));
+          var cardDetails = CardDetails(
+              payload["firstName"],
+              payload["lastName"],
+              DateTime.parse(payload["expirationDate"]),
+              payload["region"]);
           Navigator.of(context).maybePop(cardDetails);
         } on Exception {
           print("Failed to parse qr code content!");
