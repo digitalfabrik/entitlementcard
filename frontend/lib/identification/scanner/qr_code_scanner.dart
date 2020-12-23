@@ -10,10 +10,10 @@ import 'dart:io';
 
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-const flashOn = 'FLASH ON';
-const flashOff = 'FLASH OFF';
-const frontCamera = 'FRONT CAMERA';
-const backCamera = 'BACK CAMERA';
+const flashOn = 'Blitz an';
+const flashOff = 'Blitz aus';
+const frontCamera = 'Frontkamera';
+const backCamera = 'Standard Kamera';
 
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({
@@ -46,10 +46,25 @@ class _QRViewExampleState extends State<QRCodeScanner> {
 
   @override
   Widget build(BuildContext context) {
+    isDone = false;
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
+          Expanded(
+              flex: 4,
+              child: Scaffold(
+                appBar: AppBar(
+                  leading: new IconButton(
+                    icon: new Icon(
+                      Icons.arrow_back_ios,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  title: Text("Ehrenamtskarte hinzufügen"),
+                ),
+                body: _buildQrView(context),
+              )),
           Expanded(
             flex: 1,
             child: FittedBox(
@@ -57,55 +72,45 @@ class _QRViewExampleState extends State<QRCodeScanner> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
-                  else
-                    Text('Scan a code'),
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    child: Text('Halten Sie die Kamera auf den QR Code.'),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
+                        child: OutlineButton(
                           onPressed: () {
                             if (controller != null) {
                               controller.toggleFlash();
-                              if (_isFlashOn(flashState)) {
-                                setState(() {
-                                  flashState = flashOff;
-                                });
-                              } else {
-                                setState(() {
-                                  flashState = flashOn;
-                                });
-                              }
+                              setState(() {
+                                flashState =
+                                    _isFlashOn(flashState) ? flashOff : flashOn;
+                              });
                             }
                           },
                           child:
-                              Text(flashState, style: TextStyle(fontSize: 20)),
+                              Text(flashState, style: TextStyle(fontSize: 16)),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.all(8),
-                        child: RaisedButton(
+                        child: OutlineButton(
                           onPressed: () {
                             if (controller != null) {
                               controller.flipCamera();
-                              if (_isBackCamera(cameraState)) {
-                                setState(() {
-                                  cameraState = frontCamera;
-                                });
-                              } else {
-                                setState(() {
-                                  cameraState = backCamera;
-                                });
-                              }
+                              setState(() {
+                                cameraState = _isBackCamera(cameraState)
+                                    ? frontCamera
+                                    : backCamera;
+                              });
                             }
                           },
                           child:
-                              Text(cameraState, style: TextStyle(fontSize: 20)),
+                              Text(cameraState, style: TextStyle(fontSize: 16)),
                         ),
                       )
                     ],
