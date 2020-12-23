@@ -29,7 +29,7 @@ class _FilterBarButtonState extends State<FilterBarButton> {
         child: InkWell(
             splashColor: Colors.blue,
             onTap: () {
-              this.onPress(this.index, this._selected);
+              this.onPress(this.index, !this._selected);
 
               setState(() {
                 this._selected = !this._selected;

@@ -18,7 +18,7 @@ class ResultList extends StatelessWidget {
     final byIdQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryIds: _searchCategories, searchText: _searchText)));
+                categoryIds: _searchCategories.isEmpty ? null : _searchCategories, searchText: _searchText)));
     return Query(
       options: QueryOptions(
           documentNode: byIdQuery.document,
