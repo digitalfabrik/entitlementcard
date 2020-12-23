@@ -11,18 +11,19 @@ class ResultList extends StatelessWidget {
   final String _searchText;
   final List<int> _searchCategories;
 
-  ResultList(this._searchText, this._searchCategories);
+  ResultList(this._searchText, this._searchCategories, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final byIdQuery = AcceptingStoresSearchQuery(
+    final searchQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
                 categoryIds: _searchCategories, searchText: _searchText)));
     return Query(
       options: QueryOptions(
-          documentNode: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()),
+          documentNode: searchQuery.document,
+          variables: searchQuery.getVariablesMap()),
       builder: (QueryResult result,
           {VoidCallback refetch, FetchMore fetchMore}) {
         if (result.hasException) {
