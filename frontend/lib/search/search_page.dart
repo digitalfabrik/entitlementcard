@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/search/result_list.dart';
 import 'package:flutter/material.dart';
 
+import '../debouncer.dart';
 import 'filter_bar.dart';
 
 class SearchPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
   List<int> _selectedCategories = new List();
+  final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +22,9 @@ class _SearchPageState extends State<SearchPage> {
         SliverAppBar(
           title: TextField(
             onChanged: (text) {
-              setState(() {
+              _debouncer.run(() => setState(() {
                 _searchFieldText = text;
-              });
+              }));
             },
             controller: _textEditingController,
             decoration: InputDecoration.collapsed(
