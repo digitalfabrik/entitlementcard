@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/map/detail/detail_view.dart';
+import '../map/detail/detail_view.dart';
+import '../graphql/graphql_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
