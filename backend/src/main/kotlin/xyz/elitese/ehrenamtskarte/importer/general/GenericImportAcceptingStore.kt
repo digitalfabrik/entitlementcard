@@ -31,7 +31,7 @@ data class GenericImportAcceptingStore(
             data.telephone,
             data.homepage,
             data.discount,
-            if (data.category.toInt() == 99) 9 else data.category.toInt()
+            data.category.toInt()
     )
 
     constructor(data: FreinetAcceptingStore) : this(
