@@ -2,7 +2,7 @@ import 'card_details_model.dart';
 import 'package:provider/provider.dart';
 
 import 'card_details.dart';
-import 'qr_code_scanner.dart';
+import 'scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
 
 class IdentificationPage extends StatefulWidget {

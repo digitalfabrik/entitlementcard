@@ -1,9 +1,9 @@
 import 'package:provider/provider.dart';
 
-import 'card_details_model.dart';
+import '../card_details_model.dart';
 
-import 'card_details.dart';
-import 'jwt/parse_jwt.dart';
+import '../card_details.dart';
+import '../jwt/parse_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
