@@ -24,8 +24,8 @@ class _SearchPageState extends State<SearchPage> {
           title: TextField(
             onChanged: (text) {
               _debouncer.run(() => setState(() {
-                _searchFieldText = text;
-              }));
+                    _searchFieldText = text;
+                  }));
             },
             controller: _textEditingController,
             decoration: InputDecoration.collapsed(
