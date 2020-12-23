@@ -9,7 +9,7 @@ import xyz.elitese.ehrenamtskarte.webservice.schema.types.Category
 class CategoriesQueryService {
 
     @GraphQLDescription("Return list of all categories.")
-    suspend fun categories() = transaction {
+    fun categories(): List<Category> = transaction {
         CategoriesRepository.findAll().map {
             Category(it.id.value, it.name)
         }
