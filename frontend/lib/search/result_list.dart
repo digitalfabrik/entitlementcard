@@ -7,9 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../category_assets.dart';
+
 class ResultList extends StatelessWidget {
   final String _searchText;
-  final List<int> _searchCategories;
+  final List<CategoryAsset> _searchCategories;
 
   ResultList(this._searchText, this._searchCategories);
 
@@ -18,13 +20,15 @@ class ResultList extends StatelessWidget {
     final searchQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryIds: _searchCategories.isEmpty ? null : _searchCategories, searchText: _searchText)));
+                categoryIds: _searchCategories.isEmpty
+                    ? null
+                    : _searchCategories.map((asset) => asset.id).toList(),
+                searchText: _searchText)));
     return Query(
       options: QueryOptions(
           documentNode: searchQuery.document,
           variables: searchQuery.getVariablesMap()),
-      builder: (QueryResult result,
-          {Refetch refetch, FetchMore fetchMore}) {
+      builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
         if (result.hasException) {
           return SliverToBoxAdapter(
               child: ErrorMessage(result.exception.toString()));

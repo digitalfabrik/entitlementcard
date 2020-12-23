@@ -4,23 +4,24 @@ import 'package:flutter_svg/svg.dart';
 import '../category_assets.dart';
 
 class FilterBarButton extends StatefulWidget {
-  final int index;
-  final Function(int, bool) onCategoryPress;
+  final CategoryAsset asset;
+  final Function(CategoryAsset, bool) onCategoryPress;
 
-  FilterBarButton({Key key, this.index, this.onCategoryPress}) : super(key: key);
+  FilterBarButton({Key key, this.asset, this.onCategoryPress}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _FilterBarButtonState(index: this.index, onCategoryPress: this.onCategoryPress);
+    return _FilterBarButtonState(asset: this.asset, onCategoryPress: this.onCategoryPress);
   }
 }
 
 class _FilterBarButtonState extends State<FilterBarButton> {
-  final int index;
+  final CategoryAsset asset;
+  final Function(CategoryAsset, bool) onCategoryPress;
+  
   bool _selected = false;
-  final Function(int, bool) onCategoryPress;
 
-  _FilterBarButtonState({this.index, this.onCategoryPress});
+  _FilterBarButtonState({this.asset, this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +35,20 @@ class _FilterBarButtonState extends State<FilterBarButton> {
                 this._selected = isSelected;
               });
 
-              this.onCategoryPress(this.index, isSelected);
+              this.onCategoryPress(this.asset, isSelected);
             },
             child: Container(
                 child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Column(
                       children: [
-                        SvgPicture.asset(categoryAssets[index]['icon'],
+                        SvgPicture.asset(this.asset.icon,
                             width: 40.0,
-                            semanticsLabel: categoryAssets[index]['name']),
+                            semanticsLabel: this.asset.name),
                         Container(
                           width: 50,
                           padding: const EdgeInsets.only(top: 3),
-                          child: Text(categoryAssets[index]['name'],
+                          child: Text(this.asset.name,
                               style: TextStyle(fontSize: 10),
                               overflow: TextOverflow.ellipsis),
                         ),

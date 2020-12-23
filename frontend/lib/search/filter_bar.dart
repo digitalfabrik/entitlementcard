@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import '../category_assets.dart';
 
 class FilterBar extends StatelessWidget {
-  final Function(int, bool) onCategoryPress;
-
+  final Function(CategoryAsset, bool) onCategoryPress;
   FilterBar({Key key, this.onCategoryPress}) : super(key: key);
-
-  List<int> selectedCategories = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,7 @@ class FilterBar extends StatelessWidget {
           itemCount: categoryAssets.length,
           itemBuilder: (context, index) {
             return FilterBarButton(
-                index: index,
+                asset: categoryAssets[index],
                 onCategoryPress: this.onCategoryPress);
           },
         ),

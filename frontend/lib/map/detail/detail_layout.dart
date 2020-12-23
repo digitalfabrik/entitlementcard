@@ -43,11 +43,11 @@ class DetailLayout extends StatelessWidget {
   }
 
   Widget _headerImageForCategory() {
-    if (category == null || category >= categoryAssets.length) {
+    if (category == null || category > categoryAssets.length) {
       return null;
     }
     return SvgPicture.asset(
-      categoryAssets[category]['detailIcon'],
+      categoryAssets[category].detailIcon,
       semanticsLabel: 'Header',
       alignment: Alignment.bottomRight,
     );

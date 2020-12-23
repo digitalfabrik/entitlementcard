@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/search/result_list.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
-  List<int> _selectedCategories = new List();
+  List<CategoryAsset> _selectedCategories = new List();
   final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
 
   @override
@@ -39,12 +40,12 @@ class _SearchPageState extends State<SearchPage> {
             )
           ],
         ),
-        FilterBar(onCategoryPress: (index, isSelected) {
+        FilterBar(onCategoryPress: (asset, isSelected) {
           setState(() {
             if (isSelected) {
-              this._selectedCategories.add(index);
+              this._selectedCategories.add(asset);
             } else {
-              this._selectedCategories.remove(index);
+              this._selectedCategories.remove(asset);
             }
           });
         }),
