@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/search/result_list.dart';
+import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:flutter/material.dart';
 
 import 'filter_bar.dart';
@@ -38,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
         FilterBar(onSelectedCategoriesChange: onSelectedCategoriesChange),
-        ResultList(
+        ResultsLoader(
           _searchFieldText,
           _selectedCategories,
         )
