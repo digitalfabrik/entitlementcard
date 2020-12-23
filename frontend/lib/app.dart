@@ -19,7 +19,7 @@ class App extends StatelessWidget {
         ));
     return ConfiguredGraphQlProvider(
         child: MaterialApp(
-      title: 'Digitale Ehrenamtskarte',
+      title: 'Ehrenamtskarte',
       theme: theme,
       home: HomePage(),
     ));
