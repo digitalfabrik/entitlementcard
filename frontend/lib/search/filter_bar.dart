@@ -1,21 +1,26 @@
+import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
+import '../category_assets.dart';
 
 class FilterBar extends StatelessWidget {
-  final Function(List<int>) onSelectedCategoriesChange;
-
-  FilterBar({this.onSelectedCategoriesChange, Key key}) : super(key: key);
+  final Function(CategoryAsset, bool) onCategoryPress;
+  FilterBar({Key key, this.onCategoryPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SliverGrid.count(
-        crossAxisCount: 5,
-        children: Iterable.generate(5)
-            .map((i) => Container(
-                color: Theme.of(context).accentColor,
-                child: IconButton(
-                  icon: Icon(Icons.category),
-                  onPressed: () => {},
-                )))
-            .toList());
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 70.0,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: categoryAssets.length,
+          itemBuilder: (context, index) {
+            return FilterBarButton(
+                asset: categoryAssets[index],
+                onCategoryPress: this.onCategoryPress);
+          },
+        ),
+      ),
+    );
   }
 }

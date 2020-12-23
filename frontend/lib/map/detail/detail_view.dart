@@ -22,8 +22,7 @@ class DetailView extends StatelessWidget {
       options: QueryOptions(
           documentNode: byIdQuery.document,
           variables: byIdQuery.getVariablesMap()),
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
+      builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
         }

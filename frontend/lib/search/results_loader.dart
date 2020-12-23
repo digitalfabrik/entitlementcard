@@ -1,5 +1,5 @@
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/map/detail/detail_view.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +9,7 @@ import 'results_list.dart';
 
 class ResultsLoader extends StatelessWidget {
   final String searchText;
-  final List<int> searchCategories;
+  final List<CategoryAsset> searchCategories;
 
   ResultsLoader({this.searchText, this.searchCategories, Key key})
       : super(key: key);
@@ -19,7 +19,10 @@ class ResultsLoader extends StatelessWidget {
     final searchQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryIds: searchCategories, searchText: searchText)));
+                categoryIds: searchCategories.isEmpty
+                    ? null
+                    : searchCategories.map((asset) => asset.id).toList(),
+                searchText: searchText)));
     return Query(
       options: QueryOptions(
           documentNode: searchQuery.document,
@@ -43,13 +46,5 @@ class ResultsLoader extends StatelessWidget {
         return ResultsList(matchingStores);
       },
     );
-  }
-
-  void _openDetailView(BuildContext context, int acceptingStoreId) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailView(acceptingStoreId),
-        ));
   }
 }
