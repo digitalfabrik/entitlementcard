@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/search/result_list.dart';
+import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:flutter/material.dart';
 
 import '../debouncer.dart';
@@ -15,6 +15,7 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _textEditingController;
   List<CategoryAsset> _selectedCategories = new List();
   final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
+  FocusNode _focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
                   }));
             },
             controller: _textEditingController,
+            focusNode: _focusNode,
             decoration: InputDecoration.collapsed(
               hintText: "Tippen und schreiben, um zu suchen …",
             ),
@@ -36,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () => {},
+              onPressed: () => _focusNode.requestFocus(),
             )
           ],
         ),
@@ -60,12 +62,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    _focusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
     _textEditingController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }
