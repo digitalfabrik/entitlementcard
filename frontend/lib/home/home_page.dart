@@ -37,7 +37,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _tabs.elementAt(_currentTabIndex).widget,
+      body: IndexedStack(
+        index: _currentTabIndex,
+        children: _tabs.map((tab) => tab.widget).toList(),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: _tabs
             .map((tabData) => BottomNavigationBarItem(

@@ -1,7 +1,10 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'contact_info_row.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
@@ -11,6 +14,7 @@ class DetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
+    final contact = acceptingStore.store.contact;
     return Container(
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: new Column(
@@ -29,63 +33,29 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                       Icons.location_on,
                       "${address.street}\n${address.postalCode} ${address.location}",
-                      "Adresse"),
-                  ContactInfoRow(Icons.language,
-                      acceptingStore.store.contact.website, "Website",
-                      isLink: true),
-                  ContactInfoRow(Icons.phone,
-                      acceptingStore.store.contact.telephone, "Telefon"),
-                  ContactInfoRow(Icons.alternate_email,
-                      acceptingStore.store.contact.email, "E-Mail"),
+                      "Adresse",
+                      onTap: () => MapsLauncher.launchQuery(
+                          "${address.street}, ${address.postalCode} ${address.location}")),
+                  ContactInfoRow(
+                    Icons.language,
+                    acceptingStore.store.contact.website,
+                    "Website",
+                    onTap: () => launch(contact.website),
+                  ),
+                  ContactInfoRow(
+                    Icons.phone,
+                    contact.telephone,
+                    "Telefon",
+                    onTap: () => launch("tel:${contact.telephone}"),
+                  ),
+                  ContactInfoRow(
+                    Icons.alternate_email,
+                    contact.email,
+                    "E-Mail",
+                    onTap: () => launch("mailto:${contact.email}"),
+                  ),
                 ],
               ),
             ]));
-  }
-}
-
-class ContactInfoRow extends StatelessWidget {
-  final IconData _icon;
-  final String _description;
-  final String _semanticLabel;
-  final bool isLink;
-
-  ContactInfoRow(this._icon, this._description, this._semanticLabel,
-      {this.isLink = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return _description != null && _description.isNotEmpty
-        ? Row(children: [
-            Padding(
-                padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
-                child: ClipOval(
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    child: Icon(
-                      _icon,
-                      size: 28,
-                      semanticLabel: _semanticLabel,
-                    ),
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                )),
-            Expanded(
-                child: !isLink
-                    ? Text(
-                        _description,
-                      )
-                    : InkWell(
-                        child: Text(
-                          _description,
-                          style: Theme.of(context).textTheme.bodyText2.merge(
-                              TextStyle(color: Theme.of(context).accentColor)),
-                        ),
-                        onTap: () {
-                          launch(_description);
-                        },
-                      ))
-          ])
-        : Container(width: 0, height: 0);
   }
 }

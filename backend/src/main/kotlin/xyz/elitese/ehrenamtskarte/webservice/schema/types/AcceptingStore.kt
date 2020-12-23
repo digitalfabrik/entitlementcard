@@ -3,7 +3,7 @@ package xyz.elitese.ehrenamtskarte.webservice.schema.types
 import graphql.schema.DataFetchingEnvironment
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.CATEGORY_LOADER_NAME
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.CONTACT_LOADER_NAME
-import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORE_LOADER_NAME
+import java.util.concurrent.CompletableFuture
 
 
 data class AcceptingStore(
@@ -14,13 +14,10 @@ data class AcceptingStore(
         val categoryId: Int
 ) {
 
-    suspend fun contact(dataFetchingEnvironment: DataFetchingEnvironment): Contact {
-        return dataFetchingEnvironment.getDataLoader<Int, Contact>(CONTACT_LOADER_NAME)
-                .load(contactId).join()
-    }
+    fun contact(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<Contact> =
+        dataFetchingEnvironment.getDataLoader<Int, Contact>(CONTACT_LOADER_NAME).load(contactId)
 
-    suspend fun category(dataFetchingEnvironment: DataFetchingEnvironment): Category {
-        return dataFetchingEnvironment.getDataLoader<Int, Category>(CATEGORY_LOADER_NAME)
-                .load(categoryId).join()
-    }
+    fun category(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<Category> =
+        dataFetchingEnvironment.getDataLoader<Int, Category>(CATEGORY_LOADER_NAME).load(categoryId)
+
 }

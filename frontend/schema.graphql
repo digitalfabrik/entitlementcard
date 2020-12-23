@@ -56,10 +56,10 @@ type Contact {
 }
 
 type PhysicalStore {
-  address: Address
+  address: Address!
   addressId: Int!
   id: Int!
-  store: AcceptingStore
+  store: AcceptingStore!
   storeId: Int!
 }
 
@@ -68,6 +68,7 @@ type Query {
   categories: [Category!]!
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
+  "Returns list of all accepting stores queried by ids."
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
