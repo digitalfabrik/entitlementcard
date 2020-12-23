@@ -38,10 +38,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
         FilterBar(onSelectedCategoriesChange: onSelectedCategoriesChange),
-        ResultsLoader(
-          _searchFieldText,
-          _selectedCategories,
-        )
+        ResultsLoader(_searchFieldText, _selectedCategories)
       ],
     );
   }
