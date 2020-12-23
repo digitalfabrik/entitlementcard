@@ -17,7 +17,7 @@ class DetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(
-            ids: ParamsInput(ids: [_acceptingStoreId])));
+            ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
       options: QueryOptions(
           documentNode: byIdQuery.document,

@@ -64,12 +64,21 @@ type PhysicalStore {
 }
 
 type Query {
+  "Return list of all categories."
+  categories: [Category!]!
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
   "Returns list of all accepting stores queried by ids."
-  physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
+  "Search for accepting stores using searchText and categoryIds."
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
-input ParamsInput {
+input IdsParamsInput {
   ids: [Int!]!
+}
+
+input SearchParamsInput {
+  categoryIds: [Int!]
+  searchText: String
 }
