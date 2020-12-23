@@ -1,14 +1,14 @@
-import 'package:provider/provider.dart';
-
-import '../card_details_model.dart';
-
-import '../card_details.dart';
-import '../jwt/parse_jwt.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../card_details.dart';
+import '../card_details_model.dart';
+import '../jwt/invalid_jwt_exception.dart';
+import '../jwt/parse_jwt.dart';
 
 const flashOn = 'Blitz an';
 const flashOff = 'Blitz aus';
@@ -198,13 +198,22 @@ class _QRViewExampleState extends State<QRCodeScanner> {
       controller.pauseCamera();
       print("Failed to parse qr code content!");
       print(e);
+      String errorMessage;
+      if (e is InvalidJwtException) {
+        errorMessage =
+            "Der Inhalt des QR-Codes entspricht keinem bekannten Format.";
+      } else {
+        errorMessage = e.toString();
+      }
       if (isErrorDialogActive) {
         return;
       }
       isErrorDialogActive = true;
-      _showMyDialog(e.toString()).then((value) {
-        isErrorDialogActive = false;
-        controller.resumeCamera();
+      _showMyDialog(errorMessage).then((value) {
+        Future.delayed(Duration(milliseconds: 1000)).then((onValue) {
+          isErrorDialogActive = false;
+          controller.resumeCamera();
+        });
       });
     }
   }
@@ -215,7 +224,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Fehler beim Lesen des Codes!'),
+          title: Text('Fehler beim Lesen des Codes'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
