@@ -10,14 +10,21 @@ import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeData
 object LbeDataImporter {
 
     fun import() {
-        val url = System.getProperty("app.importer.xml")
+        val url = System.getProperty("app.import.xml")
         val xml = HttpDownloadHelper.downloadData(url)
 
         val xmlMapper = XmlMapper()
         xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
         val lbeData = xmlMapper.readValue(xml, LbeData::class.java)
 
-        val acceptingStores = lbeData.acceptingStores.map { GenericImportAcceptingStore(it) }
+        val filteredStores = lbeData.acceptingStores
+                .filter { it.latitude.isNotEmpty() && it.longitude.isNotEmpty() }
+                .filter { it.postalCode.length == 5 }
+
+        val acceptingStores = filteredStores
+                .map { GenericImportAcceptingStore(it) }
+
+        ImportToDatabase.prepareCategories()
         ImportToDatabase.import(acceptingStores)
     }
 

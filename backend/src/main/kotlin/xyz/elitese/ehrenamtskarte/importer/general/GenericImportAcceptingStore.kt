@@ -25,13 +25,13 @@ data class GenericImportAcceptingStore(
             data.postalCode,
             data.location,
             "de",
-            data.longitude.toDouble(),
-            data.latitude.toDouble(),
+            data.longitude.replace(",", ".").toDouble(),
+            data.latitude.replace(",", ".").toDouble(),
             data.email,
             data.telephone,
             data.homepage,
             data.discount,
-            data.category.toInt()
+            if (data.category.toInt() == 99) 9 else data.category.toInt()
     )
 
     constructor(data: FreinetAcceptingStore) : this(

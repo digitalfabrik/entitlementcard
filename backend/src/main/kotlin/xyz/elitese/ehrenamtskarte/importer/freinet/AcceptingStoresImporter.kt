@@ -23,15 +23,10 @@ object AcceptingStoresImporter {
     fun importFromJsonFile(jsonContent: String) {
         val freinetData = parseFreinetJson(jsonContent)!!
 
-        val categoriesJson = AcceptingStoresImporter::class.java
-                .getResource("/freinet_import/categories.json").readText()
-        val categories = Klaxon().parseArray<Category>(categoriesJson)!!
-        transaction {
-            categories.forEach { CategoryEntity.new(it.id) { name = it.name } }
-        }
         println("Filtering out invalid accepting stores, count before filtering: ${freinetData.data.size}")
         val filteredFreinetAcceptingStores = FreinetDataFilter.filterOutInvalidEntries(freinetData.data)
         println("Count after filtering: ${filteredFreinetAcceptingStores.size}")
+
         importAcceptingStores(filteredFreinetAcceptingStores)
     }
 

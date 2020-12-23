@@ -1,17 +1,30 @@
 package xyz.elitese.ehrenamtskarte.importer.general
 
+import com.beust.klaxon.Klaxon
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import xyz.elitese.ehrenamtskarte.database.*
+import xyz.elitese.ehrenamtskarte.importer.freinet.AcceptingStoresImporter
+import xyz.elitese.ehrenamtskarte.importer.freinet.types.Category
 
 object ImportToDatabase {
+
+    fun prepareCategories() {
+        val categoriesJson = AcceptingStoresImporter::class.java
+                .getResource("/freinet_import/categories.json").readText()
+        val categories = Klaxon().parseArray<Category>(categoriesJson)!!
+
+        transaction {
+            categories.forEach { CategoryEntity.new(it.id) { name = it.name } }
+        }
+    }
 
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
         println("Inserting data into db")
         try {
-            transaction {
-                for (acceptingStore in acceptingStores) {
+            for (acceptingStore in acceptingStores) {
+                transaction {
                     val address = AddressEntity.new {
                         street = acceptingStore.street
                         postalCode = acceptingStore.postalCode
