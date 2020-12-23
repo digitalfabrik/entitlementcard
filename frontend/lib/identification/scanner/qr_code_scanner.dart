@@ -31,6 +31,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isDone = false;
+  bool isErrorDialogActive = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -164,26 +165,75 @@ class _QRViewExampleState extends State<QRCodeScanner> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      result = scanData;
-      print("Scan successful, reading payload...");
-      try {
-        var payload = parseJwtPayLoad(result.code);
-        var cardDetails = CardDetails(
-            payload["firstName"] ?? "",
-            payload["lastName"] ?? "",
-            DateTime.parse(payload["expirationDate"]) ?? "",
-            payload["region"] ?? "");
-        if (isDone) {
-          return;
-        }
-        isDone = true;
-        Provider.of<CardDetailsModel>(context, listen: false)
-            .setCardDetails(cardDetails);
-        Navigator.of(context).maybePop();
-      } on Exception {
-        print("Failed to parse qr code content!");
+      if (scanData != null) {
+        _parseCodeContent(scanData.code);
       }
     });
+  }
+
+  void _parseCodeContent(String codeContent) {
+    print("Scan successful, reading payload...");
+    try {
+      var payload = parseJwtPayLoad(codeContent);
+      String firstName = payload["firstName"];
+      String lastName = payload["lastName"];
+
+      if (firstName == null || lastName == null) {
+        throw Exception("Name konnte nicht aus QR Code gelesen werden.");
+      }
+
+      final expirationDate = DateTime.parse(payload["expirationDate"]);
+      String region = payload["region"] ?? "";
+
+      var cardDetails =
+          CardDetails(firstName, lastName, expirationDate, region);
+      if (isDone) {
+        return;
+      }
+      isDone = true;
+      Provider.of<CardDetailsModel>(context, listen: false)
+          .setCardDetails(cardDetails);
+      Navigator.of(context).maybePop();
+    } catch (e) {
+      controller.pauseCamera();
+      print("Failed to parse qr code content!");
+      print(e);
+      if (isErrorDialogActive) {
+        return;
+      }
+      isErrorDialogActive = true;
+      _showMyDialog(e.toString()).then((value) {
+        isErrorDialogActive = false;
+        controller.resumeCamera();
+      });
+    }
+  }
+
+  Future<void> _showMyDialog(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Fehler beim Lesen des Codes!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
