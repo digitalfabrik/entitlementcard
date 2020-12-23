@@ -57,7 +57,7 @@ const List<CategoryAsset> categoryAssets = [
       id: 7,
       name: 'Freizeit/Reise/Unterkünfte',
       icon: "assets/category_icons/7.svg",
-      detailIcon: "assets/detail_headers/4_freizeit.svg"),
+      detailIcon: "assets/detail_headers/7_freizeit.svg"),
   const CategoryAsset(
       id: 8,
       name: 'Essen/Trinken/Gastronomie',
