@@ -51,9 +51,9 @@ class _SearchPageState extends State<SearchPage> {
             }
           });
         }),
-        ResultList(
-          _searchFieldText,
-          _selectedCategories,
+        ResultsLoader(
+          searchText: _searchFieldText,
+          searchCategories: _selectedCategories,
         )
       ],
     );
