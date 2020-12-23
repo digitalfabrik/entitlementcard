@@ -1,4 +1,6 @@
+import 'identification/card_details_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home/home_page.dart';
 
 import 'graphql/configured_graphql_provider.dart';
@@ -18,10 +20,16 @@ class App extends StatelessWidget {
           bodyText2: TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
         ));
     return ConfiguredGraphQlProvider(
-        child: MaterialApp(
-      title: 'Digitale Ehrenamtskarte',
-      theme: theme,
-      home: HomePage(),
-    ));
+      child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+                create: (context) => CardDetailsModel()..initialize()),
+          ],
+          child: MaterialApp(
+            title: 'Digitale Ehrenamtskarte',
+            theme: theme,
+            home: HomePage(),
+          )),
+    );
   }
 }

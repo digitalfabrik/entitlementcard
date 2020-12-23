@@ -1,5 +1,9 @@
-import 'package:ehrenamtskarte/identification/card_details.dart';
-import 'package:ehrenamtskarte/identification/jwt/parse_jwt.dart';
+import 'package:provider/provider.dart';
+
+import 'card_details_model.dart';
+
+import 'card_details.dart';
+import 'jwt/parse_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
@@ -26,6 +30,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
   var cameraState = frontCamera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool isDone = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -154,21 +159,25 @@ class _QRViewExampleState extends State<QRCodeScanner> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-        print("Scan successful, reading payload...");
-        try {
-          var payload = parseJwtPayLoad(result.code);
-          var cardDetails = CardDetails(
-              payload["firstName"],
-              payload["lastName"],
-              DateTime.parse(payload["expirationDate"]),
-              payload["region"]);
-          Navigator.of(context).maybePop(cardDetails);
-        } on Exception {
-          print("Failed to parse qr code content!");
+      result = scanData;
+      print("Scan successful, reading payload...");
+      try {
+        var payload = parseJwtPayLoad(result.code);
+        var cardDetails = CardDetails(
+            payload["firstName"] ?? "",
+            payload["lastName"] ?? "",
+            DateTime.parse(payload["expirationDate"]) ?? "",
+            payload["region"] ?? "");
+        if (isDone) {
+          return;
         }
-      });
+        isDone = true;
+        Provider.of<CardDetailsModel>(context, listen: false)
+            .setCardDetails(cardDetails);
+        Navigator.of(context).maybePop();
+      } on Exception {
+        print("Failed to parse qr code content!");
+      }
     });
   }
 
