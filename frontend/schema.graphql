@@ -70,6 +70,7 @@ type Query {
   physicalStores: [PhysicalStore!]!
   "Returns list of all accepting stores queried by ids."
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
+  "Search for accepting stores using searchText and categoryIds."
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 

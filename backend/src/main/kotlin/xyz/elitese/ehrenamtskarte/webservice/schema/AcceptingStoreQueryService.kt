@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture
 class AcceptingStoreQueryService {
 
     @GraphQLDescription("Return list of all accepting stores.")
-    fun physicalStores() = transaction {
+    fun physicalStores(): List<PhysicalStore> = transaction {
         PhysicalStoresRepository.findAll().map {
             PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
         }
@@ -27,7 +27,8 @@ class AcceptingStoreQueryService {
     ): CompletableFuture<List<PhysicalStore>> =
         environment.getDataLoader<Int, PhysicalStore>(PHYSICAL_STORE_LOADER_NAME).loadMany(params.ids)
 
-    fun searchAcceptingStores(params: SearchParams): CompletableFuture<List<AcceptingStore>> = transaction {
+    @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
+    fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
         AcceptingStoresRepository.findBySearch(params.searchText, params.categoryId).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
