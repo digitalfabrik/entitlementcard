@@ -234,17 +234,17 @@ class AcceptingStoresSearch$Query with EquatableMixin {
 
 @JsonSerializable(explicitToJson: true)
 class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({this.categoryId, this.searchText});
+  SearchParamsInput({this.categoryIds, this.searchText});
 
   factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
       _$SearchParamsInputFromJson(json);
 
-  List<int> categoryId;
+  List<int> categoryIds;
 
   String searchText;
 
   @override
-  List<Object> get props => [categoryId, searchText];
+  List<Object> get props => [categoryIds, searchText];
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 

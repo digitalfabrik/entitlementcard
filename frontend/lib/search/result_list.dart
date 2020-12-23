@@ -9,16 +9,16 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ResultList extends StatelessWidget {
   final String _searchText;
-  final List<int> _searchCategory;
+  final List<int> _searchCategories;
 
-  ResultList(this._searchText, this._searchCategory);
+  ResultList(this._searchText, this._searchCategories);
 
   @override
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryId: _searchCategory, searchText: _searchText)));
+                categoryIds: _searchCategories, searchText: _searchText)));
     return Query(
       options: QueryOptions(
           documentNode: byIdQuery.document,

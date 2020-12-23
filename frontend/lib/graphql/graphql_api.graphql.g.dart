@@ -229,14 +229,14 @@ Map<String, dynamic> _$AcceptingStoresSearch$QueryToJson(
 
 SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
   return SearchParamsInput(
-    categoryId: (json['categoryId'] as List)?.map((e) => e as int)?.toList(),
+    categoryIds: (json['categoryIds'] as List)?.map((e) => e as int)?.toList(),
     searchText: json['searchText'] as String,
   );
 }
 
 Map<String, dynamic> _$SearchParamsInputToJson(SearchParamsInput instance) =>
     <String, dynamic>{
-      'categoryId': instance.categoryId,
+      'categoryIds': instance.categoryIds,
       'searchText': instance.searchText,
     };
 
