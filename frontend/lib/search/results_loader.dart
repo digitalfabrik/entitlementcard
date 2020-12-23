@@ -8,10 +8,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'results_list.dart';
 
 class ResultsLoader extends StatelessWidget {
-  final String _searchText;
-  final List<int> _searchCategories;
+  final String searchText;
+  final List<int> searchCategories;
 
-  ResultsLoader(this._searchText, this._searchCategories, {Key key})
+  ResultsLoader({this.searchText, this.searchCategories, Key key})
       : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class ResultsLoader extends StatelessWidget {
     final searchQuery = AcceptingStoresSearchQuery(
         variables: AcceptingStoresSearchArguments(
             params: SearchParamsInput(
-                categoryIds: _searchCategories, searchText: _searchText)));
+                categoryIds: searchCategories, searchText: searchText)));
     return Query(
       options: QueryOptions(
           documentNode: searchQuery.document,

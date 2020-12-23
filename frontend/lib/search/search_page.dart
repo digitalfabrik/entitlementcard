@@ -12,6 +12,7 @@ class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
   List<int> _selectedCategories;
+  FocusNode _focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
               });
             },
             controller: _textEditingController,
+            focusNode: _focusNode,
             decoration: InputDecoration.collapsed(
               hintText: "Tippen und schreiben, um zu suchen …",
             ),
@@ -33,12 +35,13 @@ class _SearchPageState extends State<SearchPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () => {},
+              onPressed: () => _focusNode.requestFocus(),
             )
           ],
         ),
         FilterBar(onSelectedCategoriesChange: onSelectedCategoriesChange),
-        ResultsLoader(_searchFieldText, _selectedCategories)
+        ResultsLoader(
+            searchText: _searchFieldText, searchCategories: _selectedCategories)
       ],
     );
   }
@@ -52,12 +55,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    _focusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
     _textEditingController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

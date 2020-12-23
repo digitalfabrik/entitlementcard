@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class FilterBar extends StatelessWidget {
   final Function(List<int>) onSelectedCategoriesChange;
 
-  FilterBar({this.onSelectedCategoriesChange, key: Key}) : super(key: key);
+  FilterBar({this.onSelectedCategoriesChange, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
