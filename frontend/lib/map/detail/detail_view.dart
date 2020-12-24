@@ -17,13 +17,12 @@ class DetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(
-            ids: ParamsInput(ids: [_acceptingStoreId])));
+            ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
       options: QueryOptions(
           documentNode: byIdQuery.document,
           variables: byIdQuery.getVariablesMap()),
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
+      builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
         }

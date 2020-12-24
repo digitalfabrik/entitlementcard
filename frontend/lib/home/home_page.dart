@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
+import '../search/search_page.dart';
 import './app_flow.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   final List<AppFlow> appFlows = <AppFlow>[
     AppFlow(MapPage(), Icons.map, "Karte",
         GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
-    AppFlow(Container(), Icons.search, "Suche",
+    AppFlow(SearchPage(), Icons.search, "Suche",
         GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
     AppFlow(Container(), Icons.remove_red_eye, "Ausweisen",
         GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
@@ -38,7 +39,16 @@ class _HomePageState extends State<HomePage> {
         child: Scaffold(
           body: IndexedStack(
             index: _currentTabIndex,
-            children: appFlows.map(_buildNavigator).toList(),
+            children: appFlows
+                .asMap()
+                .map((index, flow) => MapEntry(
+                    index,
+                    Focus(
+                        key: ValueKey(index),
+                        child: _buildNavigator(flow),
+                        descendantsAreFocusable: _currentTabIndex == index)))
+                .values
+                .toList(growable: false),
           ),
           bottomNavigationBar: this._buildBottomNavigationBar(context),
         ),
