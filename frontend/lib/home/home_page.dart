@@ -6,6 +6,8 @@ import './app_flow.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
+  static _HomePageData of(BuildContext context) => _HomePageData.of(context);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -24,19 +26,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async =>
-          // do not pop if the inner navigator can handle it
-          !await appFlows[_currentTabIndex]
-              .navigatorKey
-              .currentState
-              .maybePop(),
-      child: Scaffold(
-        body: IndexedStack(
-          index: _currentTabIndex,
-          children: appFlows.map(_buildNavigator).toList(),
+    return _HomePageData(
+      goToMap: _goToMap,
+      child: WillPopScope(
+        onWillPop: () async =>
+            // do not pop if the inner navigator can handle it
+            !await appFlows[_currentTabIndex]
+                .navigatorKey
+                .currentState
+                .maybePop(),
+        child: Scaffold(
+          body: IndexedStack(
+            index: _currentTabIndex,
+            children: appFlows.map(_buildNavigator).toList(),
+          ),
+          bottomNavigationBar: this._buildBottomNavigationBar(context),
         ),
-        bottomNavigationBar: this._buildBottomNavigationBar(context),
       ),
     );
   }
@@ -75,5 +80,27 @@ class _HomePageState extends State<HomePage> {
             .popUntil((route) => route.isFirst);
       }
     });
+  }
+
+  void _goToMap() {
+    setState(() {
+      _currentTabIndex = 0;
+    });
+  }
+}
+
+class _HomePageData extends InheritedWidget {
+  final Function goToMap;
+
+  _HomePageData({Key key, this.goToMap, Widget child})
+      : super(key: key, child: child);
+
+  static _HomePageData of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_HomePageData>();
+  }
+
+  @override
+  bool updateShouldNotify(_HomePageData oldWidget) {
+    return oldWidget.goToMap != goToMap;
   }
 }
