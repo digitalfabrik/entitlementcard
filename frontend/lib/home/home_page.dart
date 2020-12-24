@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
@@ -29,38 +30,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return _HomePageData(
       goToMap: _goToMap,
-      child: WillPopScope(
-        onWillPop: () async =>
-            // do not pop if the inner navigator can handle it
-            !await appFlows[_currentTabIndex]
-                .navigatorKey
-                .currentState
-                .maybePop(),
-        child: Scaffold(
-          body: IndexedStack(
-            index: _currentTabIndex,
-            children: appFlows
-                .asMap()
-                .map((index, flow) => MapEntry(
-                    index,
-                    Focus(
-                        key: ValueKey(index),
-                        child: _buildNavigator(flow),
-                        descendantsAreFocusable: _currentTabIndex == index)))
-                .values
-                .toList(growable: false),
-          ),
-          bottomNavigationBar: this._buildBottomNavigationBar(context),
+      child: Scaffold(
+        body: AppFlowsStack(
+          appFlows: appFlows,
+          currentIndex: _currentTabIndex,
         ),
+        bottomNavigationBar: this._buildBottomNavigationBar(context),
       ),
-    );
-  }
-
-  Widget _buildNavigator(AppFlow appFlow) {
-    return Navigator(
-      key: appFlow.navigatorKey,
-      onGenerateRoute: (settings) => MaterialPageRoute(
-          settings: settings, builder: (context) => appFlow.widget),
     );
   }
 
