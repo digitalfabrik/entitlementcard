@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
+  MapPageController mapPageController;
 
   final MapPage mapPage;
   final List<AppFlow> appFlows;
@@ -77,12 +78,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _goToMap([IdWithCoordinates idWithCoordinates]) {
+  void _goToMap([PhysicalStoreFeatureData idWithCoordinates]) {
     setState(() {
       _currentTabIndex = 0;
     });
     if (idWithCoordinates != null) {
-      this.mapPage.showAcceptingStore(idWithCoordinates);
+      this.mapPageController.showAcceptingStore(idWithCoordinates);
     }
   }
 }

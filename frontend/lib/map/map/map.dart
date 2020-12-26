@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
+import 'map_controller.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
 typedef void OnNoFeatureClickCallback();
+typedef void OnMapCreatedCallback(MapController controller);
 
 class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
@@ -15,6 +17,7 @@ class Map extends StatefulWidget {
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
+  final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
   final bool myLocationEnabled;
 
@@ -22,15 +25,17 @@ class Map extends StatefulWidget {
       {this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
-      this.myLocationEnabled});
+      this.myLocationEnabled,
+      this.onMapCreated});
 
   @override
   State createState() => _MapState();
 }
 
-class _MapState extends State<Map> {
+class _MapState extends State<Map> implements MapController {
   MapboxMapController _controller;
   MapboxMap _mapboxMap;
+  Symbol _symbol;
 
   @override
   void didChangeDependencies() {
@@ -54,18 +59,21 @@ class _MapState extends State<Map> {
     return _mapboxMap;
   }
 
-  _onMapCreated(controller) => this._controller = controller;
-
-  Symbol _symbol;
-
-  _removeSymbol() async {
-    if (_symbol != null) {
-      await _controller.removeSymbol(_symbol);
-      _symbol = null;
+  _onMapCreated(controller) {
+    this._controller = controller;
+    if (widget.onMapCreated != null) {
+      widget.onMapCreated(this);
     }
   }
 
-  _addSymbol(LatLng location, int categoryId) async {
+  removeSymbol() async {
+    if (_symbol == null) return;
+    await _controller.removeSymbol(_symbol);
+    _symbol = null;
+  }
+
+  setSymbol(LatLng location, int categoryId) async {
+    removeSymbol();
     _symbol = await _controller.addSymbol(new SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
@@ -77,19 +85,13 @@ class _MapState extends State<Map> {
       var featureInfo = json.decode(features[0]);
       if (featureInfo != null) {
         if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
-        var coordinates = featureInfo["geometry"]["coordinates"];
-        var location = new LatLng(coordinates[1], coordinates[0]);
-        await _removeSymbol();
-        await _addSymbol(location, featureInfo["properties"]["categoryId"]);
-        await _bringCameraToLocation(location);
       }
     } else if (widget.onNoFeatureClick != null) {
-      await _removeSymbol();
       widget.onNoFeatureClick();
     }
   }
 
-  Future<void> _bringCameraToLocation(LatLng location,
+  Future<void> bringCameraToLocation(LatLng location,
       {double zoomLevel}) async {
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)

@@ -81,9 +81,9 @@ class DetailContent extends StatelessWidget {
   }
 
   void _showOnMap(BuildContext context) {
-    HomePage.of(context).goToMap(IdWithCoordinates(
+    HomePage.of(context).goToMap(PhysicalStoreFeatureData(
         acceptingStore.id,
-        LatLng(
-            acceptingStore.coordinates.lat, acceptingStore.coordinates.lng)));
+        LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),
+        acceptingStore.store.category.id));
   }
 }
