@@ -1,5 +1,6 @@
 query AcceptingStoreById($ids: IdsParamsInput!) {
     physicalStoresById(params: $ids) {
+        id,
         store {
             id,
             name,

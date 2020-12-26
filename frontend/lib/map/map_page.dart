@@ -9,6 +9,10 @@ class MapPage extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MapPageState();
   }
+
+  void showAcceptingStore(int physicalStoreId) {
+    // TODO implement
+  }
 }
 
 class _MapPageState extends State<MapPage> {

@@ -79,6 +79,6 @@ class DetailContent extends StatelessWidget {
   }
 
   void _showOnMap(BuildContext context) {
-    HomePage.of(context).goToMap();
+    HomePage.of(context).goToMap(acceptingStore.id);
   }
 }

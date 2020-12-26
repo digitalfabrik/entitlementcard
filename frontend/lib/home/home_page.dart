@@ -17,14 +17,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  final List<AppFlow> appFlows = <AppFlow>[
-    AppFlow(MapPage(), Icons.map, "Karte",
-        GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
-    AppFlow(SearchPage(), Icons.search, "Suche",
-        GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
-    AppFlow(Container(), Icons.remove_red_eye, "Ausweisen",
-        GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
-  ];
+  final MapPage mapPage;
+  final List<AppFlow> appFlows;
+
+  _HomePageState._(this.mapPage, this.appFlows);
+
+  factory _HomePageState() {
+    MapPage mapPage = MapPage();
+    List<AppFlow> appFlows = <AppFlow>[
+      AppFlow(mapPage, Icons.map, "Karte",
+          GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
+      AppFlow(SearchPage(), Icons.search, "Suche",
+          GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
+      AppFlow(Container(), Icons.remove_red_eye, "Ausweisen",
+          GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+    ];
+    return _HomePageState._(mapPage, appFlows);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +77,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _goToMap() {
+  void _goToMap([int physicalStoreId]) {
     setState(() {
       _currentTabIndex = 0;
     });
+    if (physicalStoreId != null) {
+      this.mapPage.showAcceptingStore(physicalStoreId);
+    }
   }
 }
 
