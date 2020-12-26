@@ -89,12 +89,6 @@ class _MapState extends State<Map> {
     }
   }
 
-  Future<void> _bringCameraToUserLocation() async {
-    var location = await _controller.requestMyLocationLatLng();
-    await _bringCameraToLocation(location,
-        zoomLevel: Map.userLocationZoomLevel);
-  }
-
   Future<void> _bringCameraToLocation(LatLng location,
       {double zoomLevel}) async {
     final update = zoomLevel != null
