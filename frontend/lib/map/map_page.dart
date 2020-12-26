@@ -31,6 +31,7 @@ abstract class MapPageController {
 
 class _MapPageState extends State<MapPage> implements MapPageController {
   int selectedAcceptingStoreId;
+  bool selectedAcceptingStoreInMap;
   MapController controller;
 
   @override
@@ -51,14 +52,21 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           transitionBuilder: (child, animation) =>
               FadeTransition(opacity: animation, child: child),
           child: selectedAcceptingStoreId != null
-              ? AcceptingStoreSummary(selectedAcceptingStoreId,
-                  key: ValueKey(selectedAcceptingStoreId))
+              ? AcceptingStoreSummary(
+                  selectedAcceptingStoreId,
+                  key: ValueKey(selectedAcceptingStoreId),
+                  hideShowOnMapButton: this.selectedAcceptingStoreInMap,
+                )
               : null),
     ].where((element) => element != null).toList(growable: false));
   }
 
-  Future<void> showAcceptingStore(PhysicalStoreFeatureData data) async {
-    setState(() => this.selectedAcceptingStoreId = data.id);
+  Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
+      {bool selectedAcceptingStoreInMap = false}) async {
+    setState(() {
+      this.selectedAcceptingStoreId = data.id;
+      this.selectedAcceptingStoreInMap = selectedAcceptingStoreInMap;
+    });
     if (data.coordinates != null) {
       if (data.categoryId != null) {
         await controller.setSymbol(data.coordinates, data.categoryId);
