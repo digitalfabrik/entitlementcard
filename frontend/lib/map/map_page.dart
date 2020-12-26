@@ -1,6 +1,13 @@
 import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+
+class IdWithCoordinates {
+  final int id;
+  final LatLng coordinates;
+  IdWithCoordinates(this.id, this.coordinates);
+}
 
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
@@ -10,7 +17,7 @@ class MapPage extends StatefulWidget {
     return _MapPageState();
   }
 
-  void showAcceptingStore(int physicalStoreId) {
+  void showAcceptingStore(IdWithCoordinates idWithCoordinates) {
     // TODO implement
   }
 }

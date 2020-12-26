@@ -7,6 +7,7 @@ import xyz.elitese.ehrenamtskarte.database.repos.AcceptingStoresRepository
 import xyz.elitese.ehrenamtskarte.database.repos.PhysicalStoresRepository
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORE_LOADER_NAME
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.AcceptingStore
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
@@ -16,7 +17,7 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Return list of all accepting stores.")
     fun physicalStores(): List<PhysicalStore> = transaction {
         PhysicalStoresRepository.findAll().map {
-            PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
+            PhysicalStore(it.id.value, it.storeId.value, it.addressId.value, Coordinates.fromPoint(it.coordinates))
         }
     }
 

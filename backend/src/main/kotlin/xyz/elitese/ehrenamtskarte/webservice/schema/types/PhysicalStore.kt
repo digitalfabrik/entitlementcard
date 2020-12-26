@@ -9,7 +9,8 @@ import java.util.concurrent.CompletableFuture
 data class PhysicalStore(
     val id: Int,
     val storeId: Int,
-    val addressId: Int
+    val addressId: Int,
+    val coordinates: Coordinates
 ) {
 
     fun store(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =

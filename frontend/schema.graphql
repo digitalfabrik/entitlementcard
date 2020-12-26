@@ -55,9 +55,15 @@ type Contact {
   website: String!
 }
 
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
 type PhysicalStore {
   address: Address!
   addressId: Int!
+  coordinates: Coordinates!
   id: Int!
   store: AcceptingStore!
   storeId: Int!

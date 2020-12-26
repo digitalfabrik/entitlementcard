@@ -77,12 +77,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _goToMap([int physicalStoreId]) {
+  void _goToMap([IdWithCoordinates idWithCoordinates]) {
     setState(() {
       _currentTabIndex = 0;
     });
-    if (physicalStoreId != null) {
-      this.mapPage.showAcceptingStore(physicalStoreId);
+    if (idWithCoordinates != null) {
+      this.mapPage.showAcceptingStore(idWithCoordinates);
     }
   }
 }

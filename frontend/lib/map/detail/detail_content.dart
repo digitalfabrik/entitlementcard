@@ -1,6 +1,8 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:flutter/material.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -79,6 +81,9 @@ class DetailContent extends StatelessWidget {
   }
 
   void _showOnMap(BuildContext context) {
-    HomePage.of(context).goToMap(acceptingStore.id);
+    HomePage.of(context).goToMap(IdWithCoordinates(
+        acceptingStore.id,
+        LatLng(
+            acceptingStore.coordinates.lat, acceptingStore.coordinates.lng)));
   }
 }

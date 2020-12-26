@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.jetbrains.exposed.sql.transactions.transaction
 import xyz.elitese.ehrenamtskarte.database.repos.PhysicalStoresRepository
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
@@ -14,7 +15,7 @@ val physicalStoreLoader = DataLoader<Int, PhysicalStore?> { ids ->
         runBlocking {
             transaction {
                 PhysicalStoresRepository.findByIds(ids).map {
-                    PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
+                    PhysicalStore(it.id.value, it.storeId.value, it.addressId.value, Coordinates.fromPoint(it.coordinates))
                 }
             }
         }
