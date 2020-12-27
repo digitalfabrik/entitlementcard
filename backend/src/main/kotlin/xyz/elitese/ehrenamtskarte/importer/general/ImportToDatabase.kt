@@ -42,7 +42,7 @@ object ImportToDatabase {
                         website = acceptingStore.website
                     }
                     val store = AcceptingStoreEntity.new {
-                        name = acceptingStore.name
+                        name = decodeSpecialCharacters(acceptingStore.name)
                         description = decodeSpecialCharacters(acceptingStore.discount)
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
