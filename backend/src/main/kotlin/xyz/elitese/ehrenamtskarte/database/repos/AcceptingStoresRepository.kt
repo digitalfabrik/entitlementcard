@@ -29,6 +29,7 @@ object AcceptingStoresRepository {
             else
                 OrOp(
                     listOf(
+                        AcceptingStores.name ilike "%$searchText%",
                         AcceptingStores.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
