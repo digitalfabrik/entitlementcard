@@ -55,9 +55,15 @@ type Contact {
   website: String!
 }
 
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
 type PhysicalStore {
   address: Address!
   addressId: Int!
+  coordinates: Coordinates!
   id: Int!
   store: AcceptingStore!
   storeId: Int!
@@ -74,11 +80,17 @@ type Query {
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
 input IdsParamsInput {
   ids: [Int!]!
 }
 
 input SearchParamsInput {
   categoryIds: [Int!]
+  coordinates: CoordinatesInput
   searchText: String
 }
