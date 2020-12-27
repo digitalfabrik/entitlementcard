@@ -2,22 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../category_assets.dart';
+
 class DetailLayout extends StatelessWidget {
   final String title;
   final Widget body;
   final int category;
-
-  static const List _imagePaths = [
-    "assets/detail_headers/0_auto.svg",
-    "assets/detail_headers/1_multimedia.svg",
-    "assets/detail_headers/2_sport.svg",
-    "assets/detail_headers/3_kultur.svg",
-    "assets/detail_headers/4_finanzen.svg",
-    "assets/detail_headers/5_mode.svg",
-    "assets/detail_headers/6_haus.svg",
-    "assets/detail_headers/7_freizeit.svg",
-    "assets/detail_headers/8_essen.svg"
-  ];
 
   DetailLayout({this.title, this.body, this.category});
 
@@ -53,11 +43,11 @@ class DetailLayout extends StatelessWidget {
   }
 
   Widget _headerImageForCategory() {
-    if (category == null || category > _imagePaths.length) {
+    if (category == null || category > categoryAssets.length) {
       return null;
     }
     return SvgPicture.asset(
-      _imagePaths[category],
+      categoryAssets[category].detailIcon,
       semanticsLabel: 'Header',
       alignment: Alignment.bottomRight,
     );

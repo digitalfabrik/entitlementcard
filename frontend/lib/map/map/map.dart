@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -23,7 +22,7 @@ class Map extends StatefulWidget {
       {this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
-      this.myLocationEnabled = false});
+      this.myLocationEnabled});
 
   @override
   State createState() => _MapState();
@@ -31,55 +30,76 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
   MapboxMapController _controller;
+  MapboxMap _mapboxMap;
+
+  @override
+  void didChangeDependencies() {
+    final config = Configuration.of(context);
+    _mapboxMap = new MapboxMap(
+        initialCameraPosition: CameraPosition(
+            target: Map.initialLocation,
+            zoom: widget.myLocationEnabled
+                ? Map.userLocationZoomLevel
+                : Map.initialZoomLevel),
+        styleString: config.mapStyleUrl,
+        myLocationEnabled: true,
+        myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+        onMapCreated: _onMapCreated,
+        onMapClick: _onMapClick);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final config = Configuration.of(context);
-    return new MapboxMap(
-      initialCameraPosition: const CameraPosition(
-          target: Map.initialLocation, zoom: Map.initialZoomLevel),
-      styleString: config.mapStyleUrl,
-      myLocationEnabled: widget.myLocationEnabled,
-      onMapCreated: (controller) {
-        setState(() {
-          this._controller = controller;
-        });
-        Future.delayed(Duration(milliseconds: 500), _bringCameraToUserLocation)
-            .timeout(Duration(seconds: 1));
-      },
-      onMapClick: this._onMapClick,
-    );
+    return _mapboxMap;
   }
 
-  void _onMapClick(Point<double> point, LatLng coordinates) {
-    this
-        ._controller
-        .queryRenderedFeatures(
-            point, widget.onFeatureClickLayerFilter ?? [], null)
-        .then((features) {
-      if (features.isNotEmpty) {
-        var featureInfo = json.decode(features[0]);
-        if (featureInfo != null) {
-          _bringCameraToLocation(coordinates, animate: false);
-          if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
-          return;
-        }
+  _onMapCreated(controller) => this._controller = controller;
+
+  Symbol _symbol;
+
+  _removeSymbol() async {
+    if (_symbol != null) {
+      await _controller.removeSymbol(_symbol);
+      _symbol = null;
+    }
+  }
+
+  _addSymbol(LatLng location, int categoryId) async {
+    _symbol = await _controller.addSymbol(new SymbolOptions(
+        iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+  }
+
+  void _onMapClick(Point<double> point, clickCoordinates) async {
+    var features = await this._controller.queryRenderedFeatures(
+        point, widget.onFeatureClickLayerFilter ?? [], null);
+    if (features.isNotEmpty) {
+      var featureInfo = json.decode(features[0]);
+      if (featureInfo != null) {
+        if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
+        var coordinates = featureInfo["geometry"]["coordinates"];
+        var location = new LatLng(coordinates[1], coordinates[0]);
+        await _removeSymbol();
+        await _addSymbol(location, featureInfo["properties"]["categoryId"]);
+        await _bringCameraToLocation(location);
       }
-      if (widget.onNoFeatureClick != null) widget.onNoFeatureClick();
-    });
+    } else if (widget.onNoFeatureClick != null) {
+      await _removeSymbol();
+      widget.onNoFeatureClick();
+    }
   }
 
-  void _bringCameraToUserLocation() async => _controller
-      .requestMyLocationLatLng()
-      .then((location) => _bringCameraToLocation(location,
-          zoomLevel: Map.userLocationZoomLevel));
+  Future<void> _bringCameraToUserLocation() async {
+    var location = await _controller.requestMyLocationLatLng();
+    await _bringCameraToLocation(location,
+        zoomLevel: Map.userLocationZoomLevel);
+  }
 
-  void _bringCameraToLocation(LatLng location,
-      {double zoomLevel, bool animate = true}) async {
-    final move = animate ? _controller.animateCamera : _controller.moveCamera;
+  Future<void> _bringCameraToLocation(LatLng location,
+      {double zoomLevel}) async {
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
-    move(update);
+    await _controller.animateCamera(update);
   }
 }

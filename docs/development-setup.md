@@ -42,6 +42,24 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 7. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
 8. Take a look at the backend: http://localhost:7000 (The public version is available at api.ehrenamtskarte.app)
 
+## Dumping and restoring the database through docker
+
+```bash
+docker exec -ti <container_id> pg_dump -c -U postgres ehrenamtskarte > dump-$(date +%F).sql
+```
+
+To copy the dump to your local machine:
+
+```bash
+rsync root@ehrenamtskarte.app:dump-2020-12-23.sql .
+```
+
+To restore the dump
+```bash
+docker exec -i <container_id> psql ehrenamtskarte postgres < dump-$(date +%F).sql
+```
+
+
 ## Using ehrenamtskarte.app as database
 
 ```bash
