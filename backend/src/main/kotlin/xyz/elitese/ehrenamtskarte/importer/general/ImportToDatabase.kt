@@ -13,7 +13,7 @@ object ImportToDatabase {
 
     fun prepareCategories() {
         val categoriesJson = AcceptingStoresImporter::class.java
-                .getResource("/freinet_import/categories.json").readText()
+            .getResource("/freinet_import/categories.json").readText()
         val categories = Klaxon().parseArray<Category>(categoriesJson)!!
 
         transaction {
@@ -22,7 +22,12 @@ object ImportToDatabase {
     }
 
     private fun decodeSpecialCharacters(text: String): String {
-        return StringEscapeUtils.unescapeHtml4(text).replace("<br/>", "\n")
+        // We often get a double encoded string, i.e. &amp;amp;
+        return StringEscapeUtils.unescapeHtml4(
+            StringEscapeUtils.unescapeHtml4(
+                text
+            )
+        ).replace("<br/>", "\n")
     }
 
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
