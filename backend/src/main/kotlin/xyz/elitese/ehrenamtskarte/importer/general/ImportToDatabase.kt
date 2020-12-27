@@ -1,6 +1,7 @@
 package xyz.elitese.ehrenamtskarte.importer.general
 
 import com.beust.klaxon.Klaxon
+import org.apache.commons.text.StringEscapeUtils
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
@@ -18,6 +19,10 @@ object ImportToDatabase {
         transaction {
             categories.forEach { CategoryEntity.new(it.id) { name = it.name } }
         }
+    }
+
+    private fun decodeSpecialCharacters(text: String): String {
+        return StringEscapeUtils.unescapeHtml4(text).replace("<br/>", "\n")
     }
 
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
@@ -38,7 +43,7 @@ object ImportToDatabase {
                     }
                     val store = AcceptingStoreEntity.new {
                         name = acceptingStore.name
-                        description = acceptingStore.discount
+                        description = decodeSpecialCharacters(acceptingStore.discount)
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
                     }
