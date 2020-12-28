@@ -34,7 +34,7 @@ type AcceptingStore {
   description: String!
   id: Int!
   name: String!
-  physicalStores: [PhysicalStore!]!
+  physicalStore: PhysicalStore
 }
 
 type Address {
