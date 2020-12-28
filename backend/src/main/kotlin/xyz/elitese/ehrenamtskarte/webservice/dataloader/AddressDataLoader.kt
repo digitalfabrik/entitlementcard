@@ -3,7 +3,7 @@ package xyz.elitese.ehrenamtskarte.webservice.dataloader
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.jetbrains.exposed.sql.transactions.transaction
-import xyz.elitese.ehrenamtskarte.database.repos.AddressRepository
+import xyz.elitese.ehrenamtskarte.database.AddressEntity
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.Address
 import java.util.concurrent.CompletableFuture
 
@@ -13,9 +13,13 @@ val addressLoader = DataLoader<Int, Address?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {
-                AddressRepository.findByIds(ids).map {
-                    Address(it.street, it.postalCode, it.locaction, it.countryCode)
-                }
+                ids
+                    .map { AddressEntity.findById(it) }
+                    .map {
+                        if (it != null)
+                            Address(it.id.value, it.street, it.postalCode, it.locaction, it.countryCode)
+                        else null
+                    }
             }
         }
     }
