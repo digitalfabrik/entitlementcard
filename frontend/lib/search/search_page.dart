@@ -52,9 +52,8 @@ class _SearchPageState extends State<SearchPage> {
           });
         }),
         ResultsLoader(
-          searchText: _searchFieldText,
-          searchCategories: _selectedCategories,
-        )
+            searchText: _searchFieldText,
+            categoryIds: _selectedCategories.map((e) => e.id).toList())
       ],
     );
   }
