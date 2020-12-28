@@ -34,9 +34,11 @@ type AcceptingStore {
   description: String!
   id: Int!
   name: String!
+  physicalStores: [PhysicalStore!]!
 }
 
 type Address {
+  id: Int!
   location: String!
   postalCode: String!
   state: String!

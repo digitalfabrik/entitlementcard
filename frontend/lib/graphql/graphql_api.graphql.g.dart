@@ -227,9 +227,26 @@ Map<String, dynamic> _$AcceptingStoresSearch$QueryToJson(
           instance.searchAcceptingStores?.map((e) => e?.toJson())?.toList(),
     };
 
+CoordinatesInput _$CoordinatesInputFromJson(Map<String, dynamic> json) {
+  return CoordinatesInput(
+    lat: (json['lat'] as num)?.toDouble(),
+    lng: (json['lng'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$CoordinatesInputToJson(CoordinatesInput instance) =>
+    <String, dynamic>{
+      'lat': instance.lat,
+      'lng': instance.lng,
+    };
+
 SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
   return SearchParamsInput(
     categoryIds: (json['categoryIds'] as List)?.map((e) => e as int)?.toList(),
+    coordinates: json['coordinates'] == null
+        ? null
+        : CoordinatesInput.fromJson(
+            json['coordinates'] as Map<String, dynamic>),
     searchText: json['searchText'] as String,
   );
 }
@@ -237,6 +254,7 @@ SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$SearchParamsInputToJson(SearchParamsInput instance) =>
     <String, dynamic>{
       'categoryIds': instance.categoryIds,
+      'coordinates': instance.coordinates?.toJson(),
       'searchText': instance.searchText,
     };
 
