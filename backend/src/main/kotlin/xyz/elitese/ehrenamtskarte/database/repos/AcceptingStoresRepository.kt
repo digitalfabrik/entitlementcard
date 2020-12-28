@@ -39,8 +39,9 @@ object AcceptingStoresRepository {
 
         val sortExpression = if (coordinates != null)
             DistanceFunction(
-                PhysicalStores.coordinates,
-                SetSRIDFucntion(MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)))
+                CastToGeographyFunction(PhysicalStores.coordinates),
+                CastToGeographyFunction(
+                    SetSRIDFucntion(MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))))
             )
         else
             AcceptingStores.name
@@ -69,3 +70,6 @@ class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
 
 class SetSRIDFucntion(expr1: Expression<Point>) :
     CustomFunction<Point>("ST_SetSRID", GeometryColumnType(), expr1, intParam(4326))
+
+class CastToGeographyFunction(expr1: Expression<Point>) :
+    CustomFunction<Point>("GEOGRAPHY", GeographyColumnType(), expr1)
