@@ -52,15 +52,15 @@ const List<CategoryAsset> categoryAssets = [
       id: 6,
       name: 'Wohnen/Haus/Garten',
       icon: "assets/category_icons/6.svg",
-      detailIcon: "assets/detail_headers/4_haus.svg"),
+      detailIcon: "assets/detail_headers/6_haus.svg"),
   const CategoryAsset(
       id: 7,
       name: 'Freizeit/Reise/Unterkünfte',
       icon: "assets/category_icons/7.svg",
-      detailIcon: "assets/detail_headers/4_freizeit.svg"),
+      detailIcon: "assets/detail_headers/7_freizeit.svg"),
   const CategoryAsset(
       id: 8,
       name: 'Essen/Trinken/Gastronomie',
       icon: "assets/category_icons/8.svg",
-      detailIcon: "assets/detail_headers/4_essen.svg"),
+      detailIcon: "assets/detail_headers/8_essen.svg"),
 ];
