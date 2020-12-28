@@ -7,7 +7,8 @@ import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 
 object AcceptingStoresRepository {
 
-    fun findByIds(ids: List<Int>) = ids.map { AcceptingStoreEntity.findById(it) }
+    fun findByIds(ids: List<Int>) =
+        AcceptingStoreEntity.find { AcceptingStores.id inList ids }.associateWithKeys({ it.id.value }, ids)
 
 
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
