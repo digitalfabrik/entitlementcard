@@ -14,7 +14,8 @@ val categoryLoader = DataLoader<Int, Category?> { ids ->
         runBlocking {
             transaction {
                 CategoriesRepository.findByIds(ids).map {
-                    Category(it.id.value, it.name)
+                    if (it == null) null
+                    else Category(it.id.value, it.name)
                 }
             }
         }

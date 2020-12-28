@@ -5,9 +5,7 @@ import xyz.elitese.ehrenamtskarte.database.CategoryEntity
 
 object CategoriesRepository {
 
-    fun findByIds(ids: List<Int>) = CategoryEntity.find {
-        Categories.id inList ids
-    }
-    
+    fun findByIds(ids: List<Int>) = ids.map { CategoryEntity.findById(it) }
+
     fun findAll() = CategoryEntity.all()
 }

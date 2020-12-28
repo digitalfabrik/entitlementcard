@@ -10,9 +10,9 @@ import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
-const val PHYSICAL_STORES_LOADER_NAME = "PHYSICAL_STORES_LOADER"
+const val PHYSICAL_STORE_BY_STORE_ID_LOADER_NAME = "PHYSICAL_STORE_BY_STORE_ID_LOADER"
 
-val physicalStoresLoader = DataLoader<Int, List<PhysicalStore>> { ids ->
+val physicalStoreByStoreIdLoader = DataLoader<Int, PhysicalStore?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {
@@ -26,7 +26,7 @@ val physicalStoresLoader = DataLoader<Int, List<PhysicalStore>> { ids ->
                                 Coordinates(it.coordinates.x, it.coordinates.y)
                             )
                         }
-                        .toList()
+                        .firstOrNull()
                 }.toList()
             }
         }

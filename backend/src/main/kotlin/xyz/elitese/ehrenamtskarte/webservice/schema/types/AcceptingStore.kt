@@ -3,7 +3,8 @@ package xyz.elitese.ehrenamtskarte.webservice.schema.types
 import graphql.schema.DataFetchingEnvironment
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.CATEGORY_LOADER_NAME
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.CONTACT_LOADER_NAME
-import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORES_LOADER_NAME
+import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORE_BY_STORE_ID_LOADER_NAME
+
 import java.util.concurrent.CompletableFuture
 
 
@@ -21,6 +22,6 @@ data class AcceptingStore(
     fun category(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<Category> =
         dataFetchingEnvironment.getDataLoader<Int, Category>(CATEGORY_LOADER_NAME).load(categoryId)
 
-    fun physicalStores(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<List<PhysicalStore>> =
-        dataFetchingEnvironment.getDataLoader<Int, List<PhysicalStore>>(PHYSICAL_STORES_LOADER_NAME).load(id)
+    fun physicalStore(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<PhysicalStore?> =
+        dataFetchingEnvironment.getDataLoader<Int, PhysicalStore?>(PHYSICAL_STORE_BY_STORE_ID_LOADER_NAME).load(id)
 }
