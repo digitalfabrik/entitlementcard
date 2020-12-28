@@ -1,4 +1,6 @@
 import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:flutter/material.dart';
 
@@ -51,9 +53,16 @@ class _SearchPageState extends State<SearchPage> {
             }
           });
         }),
-        ResultsLoader(
-            searchText: _searchFieldText,
-            categoryIds: _selectedCategories.map((e) => e.id).toList())
+        FutureBuilder(
+            future: determinePosition(),
+            builder: (context, snapshot) => ResultsLoader(
+                searchText: _searchFieldText,
+                categoryIds: _selectedCategories.map((e) => e.id).toList(),
+                coordinates: !snapshot.hasData
+                    ? null
+                    : CoordinatesInput(
+                        lat: snapshot.data.latitude,
+                        lng: snapshot.data.longitude)))
       ],
     );
   }
