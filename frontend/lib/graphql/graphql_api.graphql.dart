@@ -250,7 +250,12 @@ class CoordinatesInput with EquatableMixin {
 
 @JsonSerializable(explicitToJson: true)
 class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({this.categoryIds, this.coordinates, this.searchText});
+  SearchParamsInput(
+      {this.categoryIds,
+      this.coordinates,
+      this.limit,
+      this.offset,
+      this.searchText});
 
   factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
       _$SearchParamsInputFromJson(json);
@@ -259,10 +264,15 @@ class SearchParamsInput with EquatableMixin {
 
   CoordinatesInput coordinates;
 
+  int limit;
+
+  int offset;
+
   String searchText;
 
   @override
-  List<Object> get props => [categoryIds, coordinates, searchText];
+  List<Object> get props =>
+      [categoryIds, coordinates, limit, offset, searchText];
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 

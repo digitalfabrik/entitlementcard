@@ -38,7 +38,9 @@ class AcceptingStoreQueryService {
         AcceptingStoresRepository.findBySearch(
             params.searchText,
             params.categoryIds,
-            params.coordinates
+            params.coordinates,
+            params.limit ?: Int.MAX_VALUE,
+            params.offset ?: 0
         ).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
@@ -46,4 +48,10 @@ class AcceptingStoreQueryService {
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String?, val categoryIds: List<Int>?, val coordinates: Coordinates?)
+data class SearchParams(
+    val searchText: String?,
+    val categoryIds: List<Int>?,
+    val coordinates: Coordinates?,
+    val limit: Int?,
+    val offset: Long?
+)

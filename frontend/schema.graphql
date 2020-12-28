@@ -82,6 +82,9 @@ type Query {
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
+"Long type"
+scalar Long
+
 input CoordinatesInput {
   lat: Float!
   lng: Float!
@@ -94,5 +97,7 @@ input IdsParamsInput {
 input SearchParamsInput {
   categoryIds: [Int!]
   coordinates: CoordinatesInput
+  limit: Int
+  offset: Long
   searchText: String
 }

@@ -247,6 +247,8 @@ SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
         ? null
         : CoordinatesInput.fromJson(
             json['coordinates'] as Map<String, dynamic>),
+    limit: json['limit'] as int,
+    offset: json['offset'] as int,
     searchText: json['searchText'] as String,
   );
 }
@@ -255,6 +257,8 @@ Map<String, dynamic> _$SearchParamsInputToJson(SearchParamsInput instance) =>
     <String, dynamic>{
       'categoryIds': instance.categoryIds,
       'coordinates': instance.coordinates?.toJson(),
+      'limit': instance.limit,
+      'offset': instance.offset,
       'searchText': instance.searchText,
     };
 
