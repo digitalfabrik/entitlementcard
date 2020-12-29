@@ -1,3 +1,6 @@
+import 'package:ehrenamtskarte/identification/no_card_view.dart';
+
+import 'card_detail_view.dart';
 import 'card_details.dart';
 import 'qr_code_scanner.dart';
 import 'package:flutter/material.dart';
@@ -30,19 +33,18 @@ class _IdentificationPageState extends State<IdentificationPage> {
         ),
         // body is the majority of the screen.
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Center(
-              child: Text(cardDetails == null
-                  ? 'Noch keine EAK hinterlegt'
-                  : 'EAK von: ${cardDetails.firstName} ${cardDetails.lastName}'
-                      '\nAblaufdatum: ${cardDetails.expirationDate.toString()}'),
-            ),
-            OutlineButton(
-              onPressed: () {
-                openQRCodeScannerView(context);
-              },
-              child: Text('Code einscannen'),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              child: cardDetails == null
+                  ? NoCardView(
+                      onOpenQrScanner: () => openQRCodeScannerView(context),
+                    )
+                  : CardDetailView(
+                      cardDetails: cardDetails,
+                      onOpenQrScanner: () => openQRCodeScannerView(context),
+                    ),
             ),
           ],
         ));
