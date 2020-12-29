@@ -27,16 +27,17 @@ class CardDetailView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InkWell(
-                  child: Text(
-                    "Code einscannen",
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                    textAlign: TextAlign.end,
-                  ),
-                  onTap: onOpenQrScanner),
-              SizedBox(height: 5),
+              Container(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                    child: Text(
+                      "Code einscannen",
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                    onTap: onOpenQrScanner),
+              ),
+              SizedBox(height: 10),
               Text(
                   "Gültig bis ${DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)}"),
               SizedBox(height: 5),

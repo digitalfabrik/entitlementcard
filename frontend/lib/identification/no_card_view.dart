@@ -22,7 +22,7 @@ class NoCardView extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .headline6
-                    .merge(TextStyle(color: Colors.white54)),
+                    .merge(TextStyle(color: Colors.white70)),
               )),
         ),
         SizedBox(
