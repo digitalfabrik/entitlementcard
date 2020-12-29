@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../card_details.dart';
 import '../card_details_model.dart';
 import '../jwt/invalid_jwt_exception.dart';
-import '../jwt/parse_jwt.dart';
+import 'qr_code_parser.dart';
 
 const flashOn = 'Blitz an';
 const flashOff = 'Blitz aus';
@@ -175,27 +174,18 @@ class _QRViewState extends State<QRCodeScanner> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       if (scanData != null) {
-        _parseCodeContent(scanData.code);
+        _tryParseCodeContent(scanData.code);
       }
     });
   }
 
-  void _parseCodeContent(String codeContent) {
+  void _tryParseCodeContent(String codeContent) {
     print("Scan successful, reading payload...");
     try {
-      var payload = parseJwtPayLoad(codeContent);
-      String firstName = payload["firstName"];
-      String lastName = payload["lastName"];
-
-      if (firstName == null || lastName == null) {
-        throw Exception("Name konnte nicht aus QR Code gelesen werden.");
-      }
-
-      final expirationDate = DateTime.parse(payload["expirationDate"]);
-      String region = payload["region"] ?? "";
-
-      var cardDetails =
-          CardDetails(firstName, lastName, expirationDate, region);
+      final cardDetails = parseQRCodeContent(codeContent);
+      // TODO this method gets called multiple times in a row for some reason
+      // The following code should be exclusive, but dart does not natively
+      // support mutexes, synchronized, etc.
       if (isDone) {
         return;
       }
@@ -210,7 +200,7 @@ class _QRViewState extends State<QRCodeScanner> {
       String errorMessage;
       if (e is InvalidJwtException) {
         errorMessage =
-            "Der Inhalt des QR-Codes entspricht keinem bekannten Format.";
+            "Der Inhalt des QR-Codes kann von der App nicht verstanden werden.";
       } else {
         errorMessage = e.toString();
       }
