@@ -26,7 +26,7 @@ class App extends StatelessWidget {
                 create: (context) => CardDetailsModel()..initialize()),
           ],
           child: MaterialApp(
-            title: 'Digitale Ehrenamtskarte',
+            title: 'Ehrenamtskarte',
             theme: theme,
             home: HomePage(),
           )),
