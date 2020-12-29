@@ -21,50 +21,53 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          title: TextField(
-            onChanged: (text) {
-              _debouncer.run(() => setState(() {
-                    _searchFieldText = text;
-                  }));
-            },
-            controller: _textEditingController,
-            focusNode: _focusNode,
-            decoration: InputDecoration.collapsed(
-              hintText: "Tippen und schreiben, um zu suchen …",
-            ),
-          ),
-          pinned: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () => _focusNode.requestFocus(),
-            )
-          ],
-        ),
-        FilterBar(onCategoryPress: (asset, isSelected) {
-          setState(() {
-            if (isSelected) {
-              this._selectedCategories.add(asset);
-            } else {
-              this._selectedCategories.remove(asset);
-            }
-          });
-        }),
-        FutureBuilder(
-            future: determinePosition(),
-            builder: (context, snapshot) => ResultsLoader(
-                searchText: _searchFieldText,
-                categoryIds: _selectedCategories.map((e) => e.id).toList(),
-                coordinates: !snapshot.hasData
-                    ? null
-                    : CoordinatesInput(
-                        lat: snapshot.data.latitude,
-                        lng: snapshot.data.longitude)))
-      ],
-    );
+    return FutureBuilder(
+        future: determinePosition(),
+        builder: (context, snapshot) => CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  title: TextField(
+                    onChanged: (text) {
+                      _debouncer.run(() => setState(() {
+                            _searchFieldText = text;
+                          }));
+                    },
+                    controller: _textEditingController,
+                    focusNode: _focusNode,
+                    decoration: InputDecoration.collapsed(
+                      hintText: "Tippen und schreiben, um zu suchen …",
+                    ),
+                  ),
+                  pinned: true,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () => _focusNode.requestFocus(),
+                    )
+                  ],
+                ),
+                FilterBar(onCategoryPress: (asset, isSelected) {
+                  setState(() {
+                    if (isSelected) {
+                      this._selectedCategories.add(asset);
+                    } else {
+                      this._selectedCategories.remove(asset);
+                    }
+                  });
+                }),
+                (snapshot.hasData || snapshot.hasError)
+                    ? ResultsLoader(
+                        searchText: _searchFieldText,
+                        categoryIds:
+                            _selectedCategories.map((e) => e.id).toList(),
+                        coordinates: !snapshot.hasData
+                            ? null
+                            : CoordinatesInput(
+                                lat: snapshot.data.latitude,
+                                lng: snapshot.data.longitude))
+                    : null
+              ].where((element) => element != null).toList(),
+            ));
   }
 
   @override
