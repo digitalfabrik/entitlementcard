@@ -67,6 +67,3 @@ class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
     CustomFunction<Point>("ST_MakePoint", DoubleColumnType(), expr1, expr2)
 
-class SetSRIDFucntion(expr1: Expression<Point>) :
-    CustomFunction<Point>("ST_SetSRID", GeometryColumnType(), expr1, intParam(4326))
-
