@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
-import '../search/search_page.dart';
 import '../identification/identification_page.dart';
+import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

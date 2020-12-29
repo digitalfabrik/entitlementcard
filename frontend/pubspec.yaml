@@ -31,6 +31,7 @@ dependencies:
   maps_launcher: ^1.2.2+2
   flutter_svg: ^0.18.0
   qr_code_scanner: 0.2.1
+  shared_preferences: ^0.5.12+4
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
