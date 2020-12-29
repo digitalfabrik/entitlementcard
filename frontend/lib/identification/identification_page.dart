@@ -42,12 +42,12 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
                 child: _cardDetails == null
                     ? NoCardView(
-                  onOpenQrScanner: () => openQRCodeScannerView(context),
-                )
+                        onOpenQrScanner: () => openQRCodeScannerView(context),
+                      )
                     : CardDetailView(
-                  cardDetails: _cardDetails,
-                  onOpenQrScanner: () => openQRCodeScannerView(context),
-                ),
+                        cardDetails: _cardDetails,
+                        onOpenQrScanner: () => openQRCodeScannerView(context),
+                      ),
               ),
             ],
           ));
