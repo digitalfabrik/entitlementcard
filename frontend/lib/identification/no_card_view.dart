@@ -11,44 +11,37 @@ class NoCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         IdCard(
-            child: InkWell(
-                onTap: onOpenQrScanner,
-                child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Noch keine Ehrenamtskarte hinterlegt",
-                              textAlign: TextAlign.start,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .merge(TextStyle(color: Colors.white54)),
-                            )),
-                        RaisedButton(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 24),
-                            onPressed: () {},
-                            color: Theme.of(context).primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(32.0),
-                            ),
-                            child: Text(
-                              "Code einscannen",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .merge(TextStyle(
-                                      color: Colors.white, fontSize: 20)),
-                            ))
-                      ],
-                    )))),
+          child: Container(
+              padding: EdgeInsets.all(16),
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Noch keine Ehrenamtskarte hinterlegt",
+                textAlign: TextAlign.start,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .merge(TextStyle(color: Colors.white54)),
+              )),
+        ),
+        SizedBox(
+          height: 24,
+        ),
+        RaisedButton(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            onPressed: onOpenQrScanner,
+            color: Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32.0),
+            ),
+            child: Text(
+              "Code einscannen",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .merge(TextStyle(color: Colors.white, fontSize: 20)),
+            ))
       ],
     );
   }

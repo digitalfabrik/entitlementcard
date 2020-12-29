@@ -13,7 +13,7 @@ class IdCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: Colors.black54,
+        color: Colors.black26,
         child: AspectRatio(aspectRatio: 3 / 2, child: child));
   }
 }
