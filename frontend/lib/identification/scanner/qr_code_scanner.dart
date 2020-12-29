@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -135,10 +136,17 @@ class _QRViewExampleState extends State<QRCodeScanner> {
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final deviceWidth = MediaQuery.of(context).size.width;
+
+    // QR-Codes in the scan area can be smaller than the scan area itself
+    // If the scan area is too small big qr codes stop working on iOS
+    var scanArea = 300.0;
+    final smallestDimension = min(deviceWidth, deviceHeight);
+    if (smallestDimension < scanArea * 1.1) {
+      scanArea = smallestDimension * 0.9;
+    }
+    print("QR Code Scan area is: $scanArea");
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return NotificationListener<SizeChangedLayoutNotification>(
@@ -210,7 +218,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
       }
       isErrorDialogActive = true;
       _showMyDialog(errorMessage).then((value) {
-        Future.delayed(Duration(milliseconds: 1000)).then((onValue) {
+        Future.delayed(Duration(milliseconds: 500)).then((onValue) {
           isErrorDialogActive = false;
           controller.resumeCamera();
         });
