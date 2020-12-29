@@ -16,16 +16,18 @@ const flashOff = 'Blitz aus';
 const frontCamera = 'Frontkamera';
 const backCamera = 'Standard Kamera';
 
+const scanDelayAfterErrorMs = 500;
+
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({
     Key key,
   }) : super(key: key);
 
   @override
-  State<QRCodeScanner> createState() => _QRViewExampleState();
+  State<QRCodeScanner> createState() => _QRViewState();
 }
 
-class _QRViewExampleState extends State<QRCodeScanner> {
+class _QRViewState extends State<QRCodeScanner> {
   Barcode result;
   var flashState = flashOn;
   var cameraState = frontCamera;
@@ -135,7 +137,6 @@ class _QRViewExampleState extends State<QRCodeScanner> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
 
@@ -147,7 +148,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
       scanArea = smallestDimension * 0.9;
     }
     print("QR Code Scan area is: $scanArea");
-    // To ensure the Scanner view is properly sizes after rotation
+    // To ensure the Scanner view is properly sized after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return NotificationListener<SizeChangedLayoutNotification>(
         onNotification: (notification) {
@@ -217,8 +218,9 @@ class _QRViewExampleState extends State<QRCodeScanner> {
         return;
       }
       isErrorDialogActive = true;
-      _showMyDialog(errorMessage).then((value) {
-        Future.delayed(Duration(milliseconds: 500)).then((onValue) {
+      _showErrorDialog(errorMessage).then((value) {
+        Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
+            .then((onValue) {
           isErrorDialogActive = false;
           controller.resumeCamera();
         });
@@ -226,7 +228,7 @@ class _QRViewExampleState extends State<QRCodeScanner> {
     }
   }
 
-  Future<void> _showMyDialog(String message) async {
+  Future<void> _showErrorDialog(String message) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
