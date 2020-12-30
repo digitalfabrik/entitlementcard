@@ -2,6 +2,7 @@ package xyz.elitese.ehrenamtskarte.importer.lbe
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.File
 import xyz.elitese.ehrenamtskarte.importer.general.GenericImportAcceptingStore
 import xyz.elitese.ehrenamtskarte.importer.general.HttpDownloadHelper
@@ -16,6 +17,7 @@ object LbeDataImporter {
         val xml = HttpDownloadHelper.downloadData(url)
 
         val xmlMapper = XmlMapper()
+        xmlMapper.registerModule(KotlinModule())
         xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
         val lbeData = xmlMapper.readValue(xml, LbeData::class.java)
 
