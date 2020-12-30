@@ -180,7 +180,6 @@ class _QRViewState extends State<QRCodeScanner> {
   }
 
   void _tryParseCodeContent(String codeContent) {
-    print("Scan successful, reading payload...");
     try {
       final cardDetails = parseQRCodeContent(codeContent);
       // TODO this method gets called multiple times in a row for some reason
