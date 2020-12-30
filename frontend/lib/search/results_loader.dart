@@ -79,16 +79,20 @@ class ResultsLoaderState extends State<ResultsLoader> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedSliverList<int,
-          AcceptingStoresSearch$Query$AcceptingStore>.separated(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<
-                AcceptingStoresSearch$Query$AcceptingStore>(
-            itemBuilder: (context, item, index) =>
-                SearchResultItem(key: ValueKey(item.id), item: item)),
-        separatorBuilder: (context, index) =>
-            Divider(height: 0, color: Colors.grey),
-      );
+  Widget build(BuildContext context) {
+    return PagedSliverList<int,
+        AcceptingStoresSearch$Query$AcceptingStore>.separated(
+      pagingController: _pagingController,
+      builderDelegate:
+          PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
+              itemBuilder: (context, item, index) => SearchResultItem(
+                  key: ValueKey(item.id),
+                  item: item,
+                  coordinates: widget.coordinates)),
+      separatorBuilder: (context, index) =>
+          Divider(height: 0, color: Colors.grey),
+    );
+  }
 
   @override
   void dispose() {
