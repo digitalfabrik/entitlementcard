@@ -24,7 +24,11 @@ class _HomePageState extends State<HomePage> {
   _HomePageState._(this.mapPage, this.appFlows);
 
   factory _HomePageState() {
-    MapPage mapPage = MapPage();
+    _HomePageState state;
+    MapPage mapPage = MapPage(
+      onMapCreated: (controller) =>
+          state.setState(() => state.mapPageController = controller),
+    );
     List<AppFlow> appFlows = <AppFlow>[
       AppFlow(mapPage, Icons.map, "Karte",
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
@@ -33,7 +37,8 @@ class _HomePageState extends State<HomePage> {
       AppFlow(Container(), Icons.remove_red_eye, "Ausweisen",
           GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
     ];
-    return _HomePageState._(mapPage, appFlows);
+    state = _HomePageState._(mapPage, appFlows);
+    return state;
   }
 
   @override

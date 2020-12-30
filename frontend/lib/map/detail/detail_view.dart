@@ -12,7 +12,7 @@ class DetailView extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
 
-  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton});
+  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton = false});
 
   @override
   Widget build(BuildContext context) {
