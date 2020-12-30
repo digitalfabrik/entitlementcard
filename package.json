@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@blueprintjs/core": "^3.36.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "apollo-boost": "^0.4.9",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "react": "^17.0.1",
+    "react-apollo": "^3.1.5",
+    "react-dom": "^17.0.1"
+  }
+}
