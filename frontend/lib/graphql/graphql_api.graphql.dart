@@ -199,6 +199,66 @@ class AcceptingStoreSummaryById$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(
+          json);
+
+  String location;
+
+  @override
+  List<Object> get props => [location];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesFromJson(
+          json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreFromJson(json);
+
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address address;
+
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+      coordinates;
+
+  @override
+  List<Object> get props => [address, coordinates];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
   AcceptingStoresSearch$Query$AcceptingStore();
 
@@ -212,8 +272,10 @@ class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
 
   String description;
 
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore physicalStore;
+
   @override
-  List<Object> get props => [id, name, description];
+  List<Object> get props => [id, name, description, physicalStore];
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
 }
@@ -233,18 +295,46 @@ class AcceptingStoresSearch$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class CoordinatesInput with EquatableMixin {
+  CoordinatesInput({@required this.lat, @required this.lng});
+
+  factory CoordinatesInput.fromJson(Map<String, dynamic> json) =>
+      _$CoordinatesInputFromJson(json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({this.categoryIds, this.searchText});
+  SearchParamsInput(
+      {this.categoryIds,
+      this.coordinates,
+      this.limit,
+      this.offset,
+      this.searchText});
 
   factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
       _$SearchParamsInputFromJson(json);
 
   List<int> categoryIds;
 
+  CoordinatesInput coordinates;
+
+  int limit;
+
+  int offset;
+
   String searchText;
 
   @override
-  List<Object> get props => [categoryIds, searchText];
+  List<Object> get props =>
+      [categoryIds, coordinates, limit, offset, searchText];
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
@@ -563,7 +653,46 @@ class AcceptingStoresSearchQuery extends GraphQLQuery<
                     alias: null,
                     arguments: [],
                     directives: [],
-                    selectionSet: null)
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'physicalStore'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'address'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'location'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ])),
+                      FieldNode(
+                          name: NameNode(value: 'coordinates'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'lat'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'lng'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ]))
+                    ]))
               ]))
         ]))
   ]);

@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.16.1
   mapbox_gl: ^0.9.0
   provider: ^4.3.2+2
   graphql_flutter: ^3.1.0
@@ -32,6 +33,8 @@ dependencies:
   flutter_svg: ^0.18.0
   qr_code_scanner: 0.2.1
   shared_preferences: ^0.5.12+4
+  infinite_scroll_pagination: ^2.2.3
+  geolocator: ^6.1.13
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
@@ -63,7 +66,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
     - assets/category_icons/
     - assets/detail_headers/
 

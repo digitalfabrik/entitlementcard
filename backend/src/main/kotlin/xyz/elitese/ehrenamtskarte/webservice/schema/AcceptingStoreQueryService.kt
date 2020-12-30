@@ -7,6 +7,7 @@ import xyz.elitese.ehrenamtskarte.database.repos.AcceptingStoresRepository
 import xyz.elitese.ehrenamtskarte.database.repos.PhysicalStoresRepository
 import xyz.elitese.ehrenamtskarte.webservice.dataloader.PHYSICAL_STORE_LOADER_NAME
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.AcceptingStore
+import xyz.elitese.ehrenamtskarte.webservice.schema.types.Coordinates
 import xyz.elitese.ehrenamtskarte.webservice.schema.types.PhysicalStore
 import java.util.concurrent.CompletableFuture
 
@@ -16,7 +17,12 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Return list of all accepting stores.")
     fun physicalStores(): List<PhysicalStore> = transaction {
         PhysicalStoresRepository.findAll().map {
-            PhysicalStore(it.id.value, it.storeId.value, it.addressId.value)
+            PhysicalStore(
+                it.id.value,
+                it.storeId.value,
+                it.addressId.value,
+                Coordinates(it.coordinates.x, it.coordinates.y)
+            )
         }
     }
 
@@ -29,11 +35,23 @@ class AcceptingStoreQueryService {
 
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
     fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
-        AcceptingStoresRepository.findBySearch(params.searchText, params.categoryIds).map {
+        AcceptingStoresRepository.findBySearch(
+            params.searchText,
+            params.categoryIds,
+            params.coordinates,
+            params.limit ?: Int.MAX_VALUE,
+            params.offset ?: 0
+        ).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String?, val categoryIds: List<Int>?)
+data class SearchParams(
+    val searchText: String?,
+    val categoryIds: List<Int>?,
+    val coordinates: Coordinates?,
+    val limit: Int?,
+    val offset: Long?
+)
