@@ -30,15 +30,11 @@ class _SearchPageState extends State<SearchPage> {
       slivers: [
         SliverAppBar(
           title: TextField(
-            onChanged: (text) {
-              _debouncer.run(() => setState(() {
-                    _searchFieldText = text;
-                  }));
-            },
+            onChanged: _onSearchFieldTextChanged,
             controller: _textEditingController,
             focusNode: _focusNode,
             decoration: InputDecoration.collapsed(
-              hintText: "Tippen und schreiben, um zu suchen …",
+              hintText: "Tippen, um zu suchen …",
             ),
           ),
           pinned: true,
@@ -49,23 +45,30 @@ class _SearchPageState extends State<SearchPage> {
             )
           ],
         ),
-        FilterBar(onCategoryPress: (asset, isSelected) {
-          setState(() {
-            if (isSelected) {
-              this._selectedCategories.add(asset);
-            } else {
-              this._selectedCategories.remove(asset);
-            }
-          });
-        }),
-        (_locationStatus == LocationRequestStatus.RequestFinished)
-            ? ResultsLoader(
-                searchText: _searchFieldText,
-                categoryIds: _selectedCategories.map((e) => e.id).toList(),
-                coordinates: _coordinates)
-            : null
+        FilterBar(onCategoryPress: _onCategoryPress),
+        if (_locationStatus == LocationRequestStatus.RequestFinished)
+          ResultsLoader(
+              searchText: _searchFieldText,
+              categoryIds: _selectedCategories.map((e) => e.id).toList(),
+              coordinates: _coordinates)
       ].where((element) => element != null).toList(),
     );
+  }
+
+  _onCategoryPress(CategoryAsset asset, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        this._selectedCategories.add(asset);
+      } else {
+        this._selectedCategories.remove(asset);
+      }
+    });
+  }
+
+  _onSearchFieldTextChanged(String text) {
+    _debouncer.run(() => setState(() {
+          _searchFieldText = text;
+        }));
   }
 
   @override
