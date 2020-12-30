@@ -22,5 +22,5 @@ else
   exit 1
 fi
 ```
-Just paste this into the new file `.git/hooks/pre-commit`. 
+Just paste this into the new file `.git/hooks/pre-commit` and make it executable. 
 When committing and your files are not formatted correctly, they are fixed if possible and the commit will be aborted so that you can re-check your files.

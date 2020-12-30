@@ -20,7 +20,7 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final query = AcceptingStoreSummaryByIdQuery(
         variables: AcceptingStoreSummaryByIdArguments(
-            ids: ParamsInput(ids: [this.acceptingStoreId])));
+            ids: IdsParamsInput(ids: [this.acceptingStoreId])));
     return Query(
         options: QueryOptions(
             documentNode: query.document, variables: query.getVariablesMap()),

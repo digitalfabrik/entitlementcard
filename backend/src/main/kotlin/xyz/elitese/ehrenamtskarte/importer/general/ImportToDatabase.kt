@@ -1,6 +1,7 @@
 package xyz.elitese.ehrenamtskarte.importer.general
 
 import com.beust.klaxon.Klaxon
+import org.apache.commons.text.StringEscapeUtils
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
@@ -11,12 +12,21 @@ object ImportToDatabase {
 
     fun prepareCategories() {
         val categoriesJson = AcceptingStoresImporter::class.java
-                .getResource("/freinet_import/categories.json").readText()
+            .getResource("/freinet_import/categories.json").readText()
         val categories = Klaxon().parseArray<Category>(categoriesJson)!!
 
         transaction {
             categories.forEach { CategoryEntity.new(it.id) { name = it.name } }
         }
+    }
+
+    private fun decodeSpecialCharacters(text: String): String {
+        // We often get a double encoded string, i.e. &amp;amp;
+        return StringEscapeUtils.unescapeHtml4(
+            StringEscapeUtils.unescapeHtml4(
+                text
+            )
+        ).replace("<br/>", "\n")
     }
 
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
@@ -36,8 +46,8 @@ object ImportToDatabase {
                         website = acceptingStore.website
                     }
                     val store = AcceptingStoreEntity.new {
-                        name = acceptingStore.name
-                        description = acceptingStore.discount
+                        name = decodeSpecialCharacters(acceptingStore.name)
+                        description = decodeSpecialCharacters(acceptingStore.discount)
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
                     }

@@ -31,6 +31,7 @@ dependencies {
     implementation("io.javalin:javalin:3.12.0")
     implementation("com.google.code.gson", "gson", "2.8.6")
     implementation("org.slf4j", "slf4j-simple", "1.7.30")
+    implementation("org.apache.commons", "commons-text", "1.9")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
 
