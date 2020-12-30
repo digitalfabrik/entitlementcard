@@ -1,7 +1,7 @@
-package xyz.elitese.ehrenamtskarte.importer.dataqa
+package xyz.elitese.ehrenamtskarte.importer.freinet.dataqa
 
 import com.beust.klaxon.Klaxon
-import xyz.elitese.ehrenamtskarte.importer.types.FreinetAcceptingStore
+import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetAcceptingStore
 import java.io.File
 
 object FreinetDataFilter {

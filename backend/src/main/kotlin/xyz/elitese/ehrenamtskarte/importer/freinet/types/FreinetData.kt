@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.importer.types
+package xyz.elitese.ehrenamtskarte.importer.freinet.types
 
 import com.beust.klaxon.Json
 
