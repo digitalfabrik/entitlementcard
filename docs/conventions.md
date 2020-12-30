@@ -10,7 +10,7 @@ It is encouraged to add a pre-commit hook like this:
 ```sh
  #!/bin/bash
 
-output=$(flutter format --set-exit-if-changed frontend/lib)
+output=$(flutter format --set-exit-if-changed frontend/lib frontend/test)
 status=$?
 
 if [ $status -eq 0 ]; then
