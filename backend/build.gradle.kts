@@ -59,6 +59,7 @@ dependencies {
     implementation("com.beust:klaxon:5.0.1")
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
+    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+")
 }
 
 application {

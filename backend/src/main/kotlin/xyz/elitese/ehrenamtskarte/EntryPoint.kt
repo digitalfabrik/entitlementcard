@@ -15,6 +15,7 @@ import java.io.File
 class Entry : CliktCommand() {
     private val exportApi by option(help = "Export GraphQL schema. Given ")
     private val importFreinetData by option("--importFreinet").flag()
+    private val importLbeData by option("--importLbe").flag()
 
     override fun run() {
         val exportApi = exportApi
@@ -26,6 +27,10 @@ class Entry : CliktCommand() {
             Database.setup()
             if (importFreinetData) {
                 println("Importing data from Freinet...")
+                FreinetDataImporter.import()
+            }
+            if (importLbeData) {
+                println("Importing data from Lbe")
                 LbeDataImporter.import()
             }
             WebService().start()

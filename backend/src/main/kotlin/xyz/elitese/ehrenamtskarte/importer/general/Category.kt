@@ -1,8 +1,8 @@
-package xyz.elitese.ehrenamtskarte.importer.freinet.types
+package xyz.elitese.ehrenamtskarte.importer.general
 
 import com.beust.klaxon.Json
 
-data class  Category (
+data class Category (
         @Json("id")
         val id: Int,
         @Json("name")

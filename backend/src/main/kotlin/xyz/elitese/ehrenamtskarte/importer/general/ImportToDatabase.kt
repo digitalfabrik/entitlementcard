@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import xyz.elitese.ehrenamtskarte.database.*
 import xyz.elitese.ehrenamtskarte.importer.freinet.AcceptingStoresImporter
-import xyz.elitese.ehrenamtskarte.importer.freinet.types.Category
 
 object ImportToDatabase {
 
