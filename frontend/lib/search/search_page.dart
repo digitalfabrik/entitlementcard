@@ -55,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
               searchText: _searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
               coordinates: _coordinates)
-      ].where((element) => element != null).toList(),
+      ].toList(),
     );
   }
 
