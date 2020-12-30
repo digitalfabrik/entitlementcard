@@ -43,9 +43,8 @@ object AcceptingStoresRepository {
 
         val sortExpression = if (coordinates != null)
             DistanceFunction(
-                CastToGeographyFunction(PhysicalStores.coordinates),
-                CastToGeographyFunction(
-                    SetSRIDFucntion(MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))))
+                PhysicalStores.coordinates,
+                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
             )
         else
             AcceptingStores.name
@@ -68,13 +67,8 @@ infix fun <T : String?> Expression<T>.ilike(pattern: String): InsensitiveLikeOp 
     InsensitiveLikeOp(this, stringParam(pattern))
 
 class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
-    CustomFunction<Double>("ST_Distance", DoubleColumnType(), expr1, expr2)
+    CustomFunction<Double>("ST_DistanceSphere", DoubleColumnType(), expr1, expr2)
 
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
     CustomFunction<Point>("ST_MakePoint", DoubleColumnType(), expr1, expr2)
 
-class SetSRIDFucntion(expr1: Expression<Point>) :
-    CustomFunction<Point>("ST_SetSRID", GeometryColumnType(), expr1, intParam(4326))
-
-class CastToGeographyFunction(expr1: Expression<Point>) :
-    CustomFunction<Point>("GEOGRAPHY", GeographyColumnType(), expr1)
