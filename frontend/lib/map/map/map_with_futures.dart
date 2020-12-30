@@ -25,17 +25,16 @@ class MapWithFutures extends StatelessWidget {
           LocationPermissionLevel.locationWhenInUse),
       builder:
           (BuildContext context, AsyncSnapshot<PermissionStatus> snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData && !snapshot.hasError) {
           return Center(
-            child: Text(snapshot.hasError
-                ? "Failed to fetch MapBox API key"
-                : "Fetching MapBox API key …"),
+            child: Text("Erlaubnis zur Standortbestimmung wird abgerufen …"),
           );
         }
         return Map(
           onFeatureClick: this.onFeatureClick,
           onNoFeatureClick: this.onNoFeatureClick,
-          myLocationEnabled: snapshot.data == PermissionStatus.granted,
+          myLocationEnabled:
+              snapshot.hasData && snapshot.data == PermissionStatus.granted,
           onFeatureClickLayerFilter: this.onFeatureClickLayerFilter,
           onMapCreated: this.onMapCreated,
         );
