@@ -57,7 +57,12 @@ class _MapState extends State<Map> {
     return _mapboxMap;
   }
 
-  _onMapCreated(controller) => this._controller = controller;
+  _onMapCreated(controller) async {
+    this._controller = controller;
+    await _controller
+        .requestMyLocationLatLng()
+        .then((_) => _onUserLocationUpdated());
+  }
 
   Symbol _symbol;
 
@@ -109,6 +114,8 @@ class _MapState extends State<Map> {
   }
 
   void _onCameraTrackingDismissed() {
-    setState(() => _initialLocationUpdateStillPending = false);
+    if (_initialLocationUpdateStillPending) {
+      setState(() => _initialLocationUpdateStillPending = false);
+    }
   }
 }
