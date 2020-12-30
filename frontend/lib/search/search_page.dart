@@ -45,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () => _focusNode.requestFocus(),
+              onPressed: _onSearchPressed,
             )
           ],
         ),
@@ -73,6 +73,14 @@ class _SearchPageState extends State<SearchPage> {
     _debouncer.run(() => setState(() {
           _searchFieldText = text;
         }));
+  }
+
+  _onSearchPressed() {
+    if (_focusNode.hasPrimaryFocus) {
+      _focusNode.nextFocus();
+    } else {
+      _focusNode.requestFocus();
+    }
   }
 
   @override
