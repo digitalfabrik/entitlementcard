@@ -26,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBarTextStyle = TextStyle(color: Colors.white);
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -35,7 +36,10 @@ class _SearchPageState extends State<SearchPage> {
             focusNode: _focusNode,
             decoration: InputDecoration.collapsed(
               hintText: "Tippen, um zu suchen …",
+              hintStyle: appBarTextStyle,
             ),
+            cursorColor: Colors.white,
+            style: appBarTextStyle,
           ),
           pinned: true,
           actions: [
