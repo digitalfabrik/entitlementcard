@@ -81,7 +81,8 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   }
 
   Future<void> _onFeatureClick(dynamic feature) async =>
-      showAcceptingStore(_extractPhysicalStoreData(feature));
+      showAcceptingStore(_extractPhysicalStoreData(feature),
+          selectedAcceptingStoreInMap: true);
 
   PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) =>
       PhysicalStoreFeatureData(
