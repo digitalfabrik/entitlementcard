@@ -10,7 +10,6 @@ class SearchResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ListTile(
         title: Text(item.name),
         subtitle: Text(
