@@ -15,7 +15,11 @@ object AcceptingStoresRepository {
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
     // TODO Probably not relevant right now
     fun findBySearch(
-        searchText: String?, categoryIds: List<Int>?, coordinates: Coordinates?
+        searchText: String?,
+        categoryIds: List<Int>?,
+        coordinates: Coordinates?,
+        limit: Int,
+        offset: Long
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
             if (categoryIds == null)
@@ -50,6 +54,7 @@ object AcceptingStoresRepository {
             .select(categoryMatcher and textMatcher)
             .orderBy(sortExpression)
             .let { AcceptingStoreEntity.wrapRows(it) }
+            .limit(limit, offset)
     }
 }
 
