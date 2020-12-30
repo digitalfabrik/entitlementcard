@@ -233,18 +233,36 @@ class AcceptingStoresSearch$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class CoordinatesInput with EquatableMixin {
+  CoordinatesInput({@required this.lat, @required this.lng});
+
+  factory CoordinatesInput.fromJson(Map<String, dynamic> json) =>
+      _$CoordinatesInputFromJson(json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class SearchParamsInput with EquatableMixin {
-  SearchParamsInput({this.categoryIds, this.searchText});
+  SearchParamsInput({this.categoryIds, this.coordinates, this.searchText});
 
   factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
       _$SearchParamsInputFromJson(json);
 
   List<int> categoryIds;
 
+  CoordinatesInput coordinates;
+
   String searchText;
 
   @override
-  List<Object> get props => [categoryIds, searchText];
+  List<Object> get props => [categoryIds, coordinates, searchText];
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
