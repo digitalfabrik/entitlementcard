@@ -1,9 +1,9 @@
-package xyz.elitese.ehrenamtskarte.importer.types
+package xyz.elitese.ehrenamtskarte.importer.freinet.types
 
 import com.beust.klaxon.Json
-import xyz.elitese.ehrenamtskarte.importer.annotations.BooleanField
-import xyz.elitese.ehrenamtskarte.importer.annotations.DoubleField
-import xyz.elitese.ehrenamtskarte.importer.annotations.IntegerField
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.BooleanField
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.DoubleField
+import xyz.elitese.ehrenamtskarte.importer.freinet.annotations.IntegerField
 
 data class FreinetAcceptingStore (
         @IntegerField

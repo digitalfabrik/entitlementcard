@@ -1,4 +1,4 @@
-package xyz.elitese.ehrenamtskarte.importer.converters
+package xyz.elitese.ehrenamtskarte.importer.freinet.converters
 
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
