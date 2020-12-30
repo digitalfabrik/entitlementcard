@@ -88,11 +88,37 @@ class ResultsLoaderState extends State<ResultsLoader> {
               itemBuilder: (context, item, index) => SearchResultItem(
                   key: ValueKey(item.id),
                   item: item,
-                  coordinates: widget.coordinates)),
+                  coordinates: widget.coordinates),
+              noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
+              firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
+              newPageErrorIndicatorBuilder: _buildErrorWithRetry,
+              newPageProgressIndicatorBuilder: _buildProgressIndicator,
+              firstPageProgressIndicatorBuilder: _buildProgressIndicator),
       separatorBuilder: (context, index) =>
           Divider(height: 0, color: Colors.grey),
     );
   }
+
+  Widget _buildProgressIndicator(BuildContext context) => Center(
+      child: Padding(
+          padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+
+  Widget _buildErrorWithRetry(BuildContext context) => Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.warning, size: 60, color: Colors.orange),
+        Text("Bitte Internetverbindung prüfen."),
+        OutlineButton(
+          onPressed: () => _pagingController.retryLastFailedRequest(),
+          child: Text("Erneut versuchen"),
+        )
+      ]));
+
+  Widget _buildNoItemsFoundIndicator(BuildContext context) => Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.search_off,
+            size: 60, color: Theme.of(context).disabledColor),
+        Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
+      ]));
 
   @override
   void dispose() {
