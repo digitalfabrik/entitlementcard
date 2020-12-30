@@ -31,7 +31,6 @@ abstract class MapPageController {
 
 class _MapPageState extends State<MapPage> implements MapPageController {
   int _selectedAcceptingStoreId;
-  bool _selectedAcceptingStoreInMap;
   MapController _controller;
 
   @override
@@ -55,7 +54,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
               ? AcceptingStoreSummary(
                   _selectedAcceptingStoreId,
                   key: ValueKey(_selectedAcceptingStoreId),
-                  hideShowOnMapButton: this._selectedAcceptingStoreInMap,
+                  hideShowOnMapButton: true,
                 )
               : null),
     ].where((element) => element != null).toList(growable: false));
@@ -65,7 +64,6 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       {bool selectedAcceptingStoreInMap = false}) async {
     setState(() {
       this._selectedAcceptingStoreId = data.id;
-      this._selectedAcceptingStoreInMap = selectedAcceptingStoreInMap;
     });
     if (data.coordinates != null) {
       if (data.categoryId != null) {
