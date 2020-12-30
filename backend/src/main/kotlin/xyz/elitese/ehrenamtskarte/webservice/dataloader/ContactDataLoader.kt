@@ -14,7 +14,8 @@ val contactLoader = DataLoader<Int, Contact?> { ids ->
         runBlocking {
             transaction {
                 ContactsRepository.findByIds(ids).map {
-                    Contact(it.id.value, it.email, it.telephone, it.website)
+                    if (it == null) null
+                    else Contact(it.id.value, it.email, it.telephone, it.website)
                 }
             }
         }

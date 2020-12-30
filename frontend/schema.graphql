@@ -34,9 +34,11 @@ type AcceptingStore {
   description: String!
   id: Int!
   name: String!
+  physicalStore: PhysicalStore
 }
 
 type Address {
+  id: Int!
   location: String!
   postalCode: String!
   state: String!
@@ -80,11 +82,17 @@ type Query {
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
 input IdsParamsInput {
   ids: [Int!]!
 }
 
 input SearchParamsInput {
   categoryIds: [Int!]
+  coordinates: CoordinatesInput
   searchText: String
 }

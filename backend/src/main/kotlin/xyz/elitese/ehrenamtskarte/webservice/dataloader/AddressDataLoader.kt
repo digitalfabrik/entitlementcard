@@ -14,7 +14,8 @@ val addressLoader = DataLoader<Int, Address?> { ids ->
         runBlocking {
             transaction {
                 AddressRepository.findByIds(ids).map {
-                    Address(it.street, it.postalCode, it.locaction, it.countryCode)
+                    if (it == null) null
+                    else Address(it.id.value, it.street, it.postalCode, it.locaction, it.countryCode)
                 }
             }
         }

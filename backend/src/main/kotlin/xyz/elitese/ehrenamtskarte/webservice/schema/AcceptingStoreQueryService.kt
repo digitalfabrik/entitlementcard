@@ -17,7 +17,12 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Return list of all accepting stores.")
     fun physicalStores(): List<PhysicalStore> = transaction {
         PhysicalStoresRepository.findAll().map {
-            PhysicalStore(it.id.value, it.storeId.value, it.addressId.value, Coordinates.fromPoint(it.coordinates))
+            PhysicalStore(
+                it.id.value,
+                it.storeId.value,
+                it.addressId.value,
+                Coordinates(it.coordinates.x, it.coordinates.y)
+            )
         }
     }
 
@@ -30,11 +35,15 @@ class AcceptingStoreQueryService {
 
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
     fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
-        AcceptingStoresRepository.findBySearch(params.searchText, params.categoryIds).map {
+        AcceptingStoresRepository.findBySearch(
+            params.searchText,
+            params.categoryIds,
+            params.coordinates
+        ).map {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
 }
 
 data class IdsParams(val ids: List<Int>)
-data class SearchParams(val searchText: String?, val categoryIds: List<Int>?)
+data class SearchParams(val searchText: String?, val categoryIds: List<Int>?, val coordinates: Coordinates?)

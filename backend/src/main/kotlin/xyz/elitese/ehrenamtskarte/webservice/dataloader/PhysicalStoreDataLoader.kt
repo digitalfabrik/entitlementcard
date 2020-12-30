@@ -15,7 +15,13 @@ val physicalStoreLoader = DataLoader<Int, PhysicalStore?> { ids ->
         runBlocking {
             transaction {
                 PhysicalStoresRepository.findByIds(ids).map {
-                    PhysicalStore(it.id.value, it.storeId.value, it.addressId.value, Coordinates.fromPoint(it.coordinates))
+                    if (it == null) null
+                    else PhysicalStore(
+                        it.id.value,
+                        it.storeId.value,
+                        it.addressId.value,
+                        Coordinates(it.coordinates.x, it.coordinates.y)
+                    )
                 }
             }
         }
