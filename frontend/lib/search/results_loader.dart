@@ -85,10 +85,17 @@ class ResultsLoaderState extends State<ResultsLoader> {
       pagingController: _pagingController,
       builderDelegate:
           PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
-              itemBuilder: (context, item, index) => SearchResultItem(
-                  key: ValueKey(item.id),
-                  item: item,
-                  coordinates: widget.coordinates)),
+        itemBuilder: (context, item, index) => SearchResultItem(
+            key: ValueKey(item.id),
+            item: item,
+            coordinates: widget.coordinates),
+        noItemsFoundIndicatorBuilder: (context) => Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.search_off,
+              size: 75, color: Theme.of(context).disabledColor),
+          Text("Auf diese Suche trifft keine Akzeptanzstelle zu.")
+        ])),
+      ),
       separatorBuilder: (context, index) =>
           Divider(height: 0, color: Colors.grey),
     );
