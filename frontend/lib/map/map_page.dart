@@ -30,9 +30,9 @@ abstract class MapPageController {
 }
 
 class _MapPageState extends State<MapPage> implements MapPageController {
-  int selectedAcceptingStoreId;
-  bool selectedAcceptingStoreInMap;
-  MapController controller;
+  int _selectedAcceptingStoreId;
+  bool _selectedAcceptingStoreInMap;
+  MapController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
         onNoFeatureClick: stopShowingAcceptingStore,
         onFeatureClickLayerFilter: ["physical_stores"],
         onMapCreated: (controller) {
-          setState(() => this.controller = controller);
+          setState(() => this._controller = controller);
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
       ),
@@ -51,11 +51,11 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           duration: Duration(milliseconds: 200),
           transitionBuilder: (child, animation) =>
               FadeTransition(opacity: animation, child: child),
-          child: selectedAcceptingStoreId != null
+          child: _selectedAcceptingStoreId != null
               ? AcceptingStoreSummary(
-                  selectedAcceptingStoreId,
-                  key: ValueKey(selectedAcceptingStoreId),
-                  hideShowOnMapButton: this.selectedAcceptingStoreInMap,
+                  _selectedAcceptingStoreId,
+                  key: ValueKey(_selectedAcceptingStoreId),
+                  hideShowOnMapButton: this._selectedAcceptingStoreInMap,
                 )
               : null),
     ].where((element) => element != null).toList(growable: false));
@@ -64,20 +64,20 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
       {bool selectedAcceptingStoreInMap = false}) async {
     setState(() {
-      this.selectedAcceptingStoreId = data.id;
-      this.selectedAcceptingStoreInMap = selectedAcceptingStoreInMap;
+      this._selectedAcceptingStoreId = data.id;
+      this._selectedAcceptingStoreInMap = selectedAcceptingStoreInMap;
     });
     if (data.coordinates != null) {
       if (data.categoryId != null) {
-        await controller.setSymbol(data.coordinates, data.categoryId);
+        await _controller.setSymbol(data.coordinates, data.categoryId);
       }
-      await controller.bringCameraToLocation(data.coordinates);
+      await _controller.bringCameraToLocation(data.coordinates);
     }
   }
 
   Future<void> stopShowingAcceptingStore() async {
-    setState(() => this.selectedAcceptingStoreId = null);
-    await controller.removeSymbol();
+    setState(() => this._selectedAcceptingStoreId = null);
+    await _controller.removeSymbol();
   }
 
   Future<void> _onFeatureClick(dynamic feature) async =>
