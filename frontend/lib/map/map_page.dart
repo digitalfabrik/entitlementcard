@@ -71,7 +71,12 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       if (data.categoryId != null) {
         await _controller.setSymbol(data.coordinates, data.categoryId);
       }
-      await _controller.bringCameraToLocation(data.coordinates);
+      if (selectedAcceptingStoreInMap) {
+        await _controller.bringCameraToLocation(data.coordinates);
+      } else {
+        await _controller.bringCameraToLocation(data.coordinates,
+            zoomLevel: 13);
+      }
     }
   }
 
