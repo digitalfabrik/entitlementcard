@@ -80,10 +80,6 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.coordinates != null) {
-      print(widget.coordinates.lat);
-      print(widget.coordinates.lat);
-    }
     return PagedSliverList<int,
         AcceptingStoresSearch$Query$AcceptingStore>.separated(
       pagingController: _pagingController,
