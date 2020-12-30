@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MenuItem extends StatelessWidget {
-
-  const MenuItem({Key key, this.title, this.icon, this.callback}) : super(key: key);
+  const MenuItem({Key key, this.title, this.icon, this.callback})
+      : super(key: key);
 
   final String title;
 
@@ -14,21 +14,13 @@ class MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: Padding(
-          padding: EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(15.0),
             child: InkWell(
                 child: Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(icon, size: 90.0),
-                        Text(title)
-                      ],
-                    )
-                ),
-                onTap: callback
-            )
-        )
-    );
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(icon, size: 90.0), Text(title)],
+                )),
+                onTap: callback)));
   }
-
 }
