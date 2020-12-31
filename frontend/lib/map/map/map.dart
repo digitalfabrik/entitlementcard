@@ -31,14 +31,13 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
   MapboxMapController _controller;
   MapboxMap _mapboxMap;
-  bool _initialLocationUpdateStillPending = true;
 
   @override
   void didChangeDependencies() {
     final config = Configuration.of(context);
     _mapboxMap = new MapboxMap(
       initialCameraPosition: CameraPosition(
-          target: Map.initialLocation, zoom: Map.initialZoomLevel),
+          target: Map.initialLocation, zoom: Map.userLocationZoomLevel),
       styleString: config.mapStyleUrl,
       myLocationEnabled: widget.myLocationEnabled,
       myLocationTrackingMode: widget.myLocationEnabled
@@ -46,8 +45,6 @@ class _MapState extends State<Map> {
           : MyLocationTrackingMode.None,
       onMapCreated: _onMapCreated,
       onMapClick: _onMapClick,
-      onUserLocationUpdated: (location) => _onUserLocationUpdated(),
-      onCameraTrackingDismissed: _onCameraTrackingDismissed,
       compassViewPosition: CompassViewPosition.BottomRight,
     );
     super.didChangeDependencies();
@@ -58,23 +55,27 @@ class _MapState extends State<Map> {
     return _mapboxMap;
   }
 
-  _onMapCreated(controller) async {
+  Future<void> _onMapCreated(MapboxMapController controller) async {
     this._controller = controller;
+    // zoom out to initial zoom level if can not get location
     await _controller
         .requestMyLocationLatLng()
-        .then((_) => _onUserLocationUpdated());
+        .then((_) {}, // like catchError, but do not enforce return type
+            onError: (_) async {
+      await _controller.moveCamera(CameraUpdate.zoomTo(Map.initialZoomLevel));
+    });
   }
 
   Symbol _symbol;
 
-  _removeSymbol() async {
+  Future<void> _removeSymbol() async {
     if (_symbol != null) {
       await _controller.removeSymbol(_symbol);
       _symbol = null;
     }
   }
 
-  _addSymbol(LatLng location, int categoryId) async {
+  Future<void> _addSymbol(LatLng location, int categoryId) async {
     _symbol = await _controller.addSymbol(new SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
@@ -104,19 +105,5 @@ class _MapState extends State<Map> {
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
     await _controller.animateCamera(update);
-  }
-
-  Future<void> _onUserLocationUpdated() async {
-    if (_initialLocationUpdateStillPending) {
-      setState(() => _initialLocationUpdateStillPending = false);
-      await _controller
-          .animateCamera(CameraUpdate.zoomTo(Map.userLocationZoomLevel));
-    }
-  }
-
-  void _onCameraTrackingDismissed() {
-    if (_initialLocationUpdateStillPending) {
-      setState(() => _initialLocationUpdateStillPending = false);
-    }
   }
 }
