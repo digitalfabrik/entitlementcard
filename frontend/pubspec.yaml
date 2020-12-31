@@ -35,6 +35,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   infinite_scroll_pagination: ^2.2.3
   geolocator: ^6.1.13
+  flutter_launcher_icons: ^0.8.1
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
@@ -54,6 +55,15 @@ dev_dependencies:
   test: ^1.15.7
   build_runner: ^1.10.4
   json_serializable: ^3.5.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon.png"
+  image_path_android: "assets/icon/icon.png"
+  adaptive_icon_background: "#737373"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
