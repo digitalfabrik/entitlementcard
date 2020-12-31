@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class IdCard extends StatelessWidget {
   final Widget child;
@@ -8,12 +9,14 @@ class IdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: Colors.black26,
-        child: AspectRatio(aspectRatio: 3 / 2, child: child));
+    return IntrinsicHeight(
+        child: FittedBox(
+            child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                color: Colors.black26,
+                child: child)));
   }
 }
