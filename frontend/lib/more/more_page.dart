@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'menu_item.dart';
 
@@ -20,7 +21,11 @@ class MorePage extends StatelessWidget {
   void _showAboutDialog(context) {
     PackageInfo.fromPlatform().then((packageInfo) => showAboutDialog(
           context: context,
-          applicationIcon: FlutterLogo(),
+          applicationIcon: ClipRRect(
+            child: SvgPicture.asset("assets/app_icon/icon_ios.svg",
+                semanticsLabel: "App icon", width: 30),
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
           applicationName: packageInfo.appName,
           applicationVersion: packageInfo.version,
           applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
