@@ -9,7 +9,6 @@ import xyz.elitese.ehrenamtskarte.database.*
 import xyz.elitese.ehrenamtskarte.importer.freinet.AcceptingStoresImporter
 
 object ImportToDatabase {
-
     fun prepareCategories() {
         val categoriesJson = AcceptingStoresImporter::class.java
             .getResource("/freinet_import/categories.json").readText()
@@ -29,25 +28,36 @@ object ImportToDatabase {
         ).replace("<br/>", "\n")
     }
 
+    /**
+     * Replaces notes for unspecified entries with empty strings.
+     *
+     * Such a note consists of the letters "nA" (in that order), potentially with dots like "n.A." and/or stuffed with whitespace (e.g. " n A. ").
+     *
+     * @return empty string if `text` is a "unspecified note", `text` otherwise
+     */
+    private fun replaceUnspecifiedNote(text: String): String {
+        return if (Regex("""\s*n\.?\s*A\.?\s*""").matches(text)) "" else text
+    }
+
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
         println("Inserting data into db")
         try {
             for (acceptingStore in acceptingStores) {
                 transaction {
                     val address = AddressEntity.new {
-                        street = acceptingStore.street
-                        postalCode = acceptingStore.postalCode
-                        locaction = acceptingStore.location
+                        street = replaceUnspecifiedNote(acceptingStore.street)
+                        postalCode = replaceUnspecifiedNote(acceptingStore.postalCode)
+                        locaction = replaceUnspecifiedNote(acceptingStore.location)
                         countryCode = acceptingStore.countryCode
                     }
                     val contact = ContactEntity.new {
-                        email = acceptingStore.email
-                        telephone = acceptingStore.telephone
-                        website = acceptingStore.website
+                        email = replaceUnspecifiedNote(acceptingStore.email)
+                        telephone = replaceUnspecifiedNote(acceptingStore.telephone)
+                        website = replaceUnspecifiedNote(acceptingStore.website)
                     }
                     val store = AcceptingStoreEntity.new {
-                        name = decodeSpecialCharacters(acceptingStore.name)
-                        description = decodeSpecialCharacters(acceptingStore.discount)
+                        name = replaceUnspecifiedNote(decodeSpecialCharacters(acceptingStore.name))
+                        description = replaceUnspecifiedNote(decodeSpecialCharacters(acceptingStore.discount))
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
                     }
@@ -62,5 +72,4 @@ object ImportToDatabase {
             e.printStackTrace()
         }
     }
-
 }
