@@ -3,5 +3,14 @@ query AcceptingStoresSearch($params: SearchParamsInput!) {
         id
         name
         description
+        physicalStore {
+            address {
+                location
+            }
+            coordinates {
+                lat,
+                lng
+            }
+        }
     }
 }

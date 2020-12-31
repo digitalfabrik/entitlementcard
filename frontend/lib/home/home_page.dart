@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/more/more_page.dart';
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
+import '../identification/identification_page.dart';
 import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   List<_TabData> _tabs = [
     _TabData(MapPage(), Icons.map, "Karte"),
     _TabData(SearchPage(), Icons.search, "Suche"),
-    _TabData(Container(), Icons.remove_red_eye, "Ausweisen"),
+    _TabData(IdentificationPage(), Icons.remove_red_eye, "Ausweisen"),
     _TabData(MorePage(), Icons.more_horiz, "Mehr")
   ];
 
