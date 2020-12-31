@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:flutter/material.dart';
 
 import '../map/map_page.dart';
+import '../identification/identification_page.dart';
 import '../search/search_page.dart';
 import './app_flow.dart';
 
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
       AppFlow(SearchPage(), Icons.search, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
-      AppFlow(Container(), Icons.remove_red_eye, "Ausweisen",
+      AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
           GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
     ];
     state = _HomePageState._(mapPage, appFlows);

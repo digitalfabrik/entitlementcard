@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/util/sanitize_phone_number.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,8 @@ class DetailContent extends StatelessWidget {
                     Icons.phone,
                     contact.telephone,
                     "Telefon",
-                    onTap: () => launch("tel:${contact.telephone}"),
+                    onTap: () =>
+                        launch("tel:${sanitizePhoneNumber(contact.telephone)}"),
                   ),
                   ContactInfoRow(
                     Icons.alternate_email,

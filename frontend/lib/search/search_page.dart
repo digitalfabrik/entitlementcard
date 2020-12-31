@@ -26,46 +26,61 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBarTextStyle = TextStyle(color: Colors.white);
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           title: TextField(
-            onChanged: (text) {
-              _debouncer.run(() => setState(() {
-                    _searchFieldText = text;
-                  }));
-            },
+            onChanged: _onSearchFieldTextChanged,
             controller: _textEditingController,
             focusNode: _focusNode,
             decoration: InputDecoration.collapsed(
-              hintText: "Tippen und schreiben, um zu suchen …",
+              hintText: "Tippen, um zu suchen …",
+              hintStyle: appBarTextStyle,
             ),
+            cursorColor: Colors.white,
+            style: appBarTextStyle,
           ),
           pinned: true,
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () => _focusNode.requestFocus(),
+              onPressed: _onSearchPressed,
             )
           ],
         ),
-        FilterBar(onCategoryPress: (asset, isSelected) {
-          setState(() {
-            if (isSelected) {
-              this._selectedCategories.add(asset);
-            } else {
-              this._selectedCategories.remove(asset);
-            }
-          });
-        }),
-        (_locationStatus == LocationRequestStatus.RequestFinished)
-            ? ResultsLoader(
-                searchText: _searchFieldText,
-                categoryIds: _selectedCategories.map((e) => e.id).toList(),
-                coordinates: _coordinates)
-            : null
-      ].where((element) => element != null).toList(),
+        FilterBar(onCategoryPress: _onCategoryPress),
+        if (_locationStatus == LocationRequestStatus.RequestFinished)
+          ResultsLoader(
+              searchText: _searchFieldText,
+              categoryIds: _selectedCategories.map((e) => e.id).toList(),
+              coordinates: _coordinates)
+      ].toList(),
     );
+  }
+
+  _onCategoryPress(CategoryAsset asset, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        this._selectedCategories.add(asset);
+      } else {
+        this._selectedCategories.remove(asset);
+      }
+    });
+  }
+
+  _onSearchFieldTextChanged(String text) {
+    _debouncer.run(() => setState(() {
+          _searchFieldText = text;
+        }));
+  }
+
+  _onSearchPressed() {
+    if (_focusNode.hasPrimaryFocus) {
+      _focusNode.nextFocus();
+    } else {
+      _focusNode.requestFocus();
+    }
   }
 
   @override
