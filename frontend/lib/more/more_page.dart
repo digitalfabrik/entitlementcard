@@ -4,18 +4,15 @@ import 'menu_item.dart';
 class MorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
-      child: Expanded(
-        child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
-          Center(
-              child: MenuItem(
-            title: 'About',
-            icon: Icons.info_outline,
-            callback: () => _showAboutDialog(context),
-          ))
-        ]),
-      ),
+      child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
+        MenuItem(
+          title: 'Über diese App',
+          icon: Icons.info_outline,
+          callback: () => _showAboutDialog(context),
+        )
+      ]),
     );
   }
 
