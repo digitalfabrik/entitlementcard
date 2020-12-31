@@ -10,24 +10,20 @@ class MorePage extends StatelessWidget {
         child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
           Center(
               child: MenuItem(
-                  title: 'About',
-                  icon: Icons.info_outline,
-                  callback: () {
-                    showAboutDialog(
-                        context: context,
-                        applicationIcon: FlutterLogo(),
-                        applicationName: 'Ehrenamtskarte',
-                        applicationVersion: '1.0.0',
-                        applicationLegalese:
-                            'Copyright Ehrenamtskarten Kompetenzteam',
-                        children: <Widget>[
-                          SizedBox(height: 20),
-                          Text('Information about the app'),
-                          Text('More information')
-                        ]);
-                  }))
+            title: 'About',
+            icon: Icons.info_outline,
+            callback: () => _showAboutDialog(context),
+          ))
         ]),
       ),
     );
   }
+
+  void _showAboutDialog(context) => showAboutDialog(
+        context: context,
+        applicationIcon: FlutterLogo(),
+        applicationName: 'Ehrenamtskarte',
+        applicationVersion: '1.0.0',
+        applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
+      );
 }
