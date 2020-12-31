@@ -1602,7 +1602,7 @@
       "type": "symbol",
       "source": "physical_stores",
       "source-layer": "public.physical_stores",
-      "minzoom": 12,
+      "minzoom": 11,
       "maxzoom": 24,
       "filter": ["all"],
       "layout": {
@@ -1639,18 +1639,21 @@
       "type": "circle",
       "source": "physical_stores_clustered",
       "source-layer": "physical_stores_clustered",
-      "maxzoom": 12,
+      "maxzoom": 11,
       "layout": {"visibility": "visible"},
       "paint": {
         "circle-radius": [
           "max",
-          10,
-          ["*", 3.5, ["ln", ["get", "cluster_count"]]]
+          30,
+          ["*", 10, ["ln", ["get", "cluster_count"]]]
         ],
         "circle-pitch-scale": "map",
-        "circle-color": "rgba(80, 80, 80, 0.6)",
+        "circle-color": "rgb(33, 150, 243)",
         "circle-stroke-color": "rgba(50, 50, 50, 0.72)",
-        "circle-stroke-width": 1
+        "circle-stroke-width": 0,
+        "circle-stroke-opacity": 1,
+        "circle-blur": 0.3,
+        "circle-opacity": 0.7
       }
     },
     {
@@ -1659,16 +1662,27 @@
       "source": "physical_stores_clustered",
       "source-layer": "physical_stores_clustered",
       "minzoom": 0,
-      "maxzoom": 12,
+      "maxzoom": 11,
       "layout": {
         "visibility": "visible",
         "text-field": ["get", "cluster_count"],
         "text-anchor": "center",
         "text-offset": [0, 0],
-        "text-size": 12,
+        "text-size": ["+", 13, ["*", 1, ["ln", ["get", "cluster_count"]]]],
         "icon-size": 1,
         "text-justify": "center",
-        "text-font": ["Open Sans Bold", "Arial Unicode MS Regular"]
+        "text-font": [
+          "Roboto Medium",
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "text-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "rgba(255, 255, 255, 1)",
+        "text-halo-color": "rgba(15, 50, 80, 0.5)",
+        "text-halo-blur": 0,
+        "text-halo-width": 0.4
       }
     }
   ],
