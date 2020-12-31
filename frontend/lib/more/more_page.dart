@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'menu_item.dart';
 
 class MorePage extends StatelessWidget {
@@ -16,11 +17,13 @@ class MorePage extends StatelessWidget {
     );
   }
 
-  void _showAboutDialog(context) => showAboutDialog(
-        context: context,
-        applicationIcon: FlutterLogo(),
-        applicationName: 'Ehrenamtskarte',
-        applicationVersion: '1.0.0',
-        applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
-      );
+  void _showAboutDialog(context) {
+    PackageInfo.fromPlatform().then((packageInfo) => showAboutDialog(
+          context: context,
+          applicationIcon: FlutterLogo(),
+          applicationName: packageInfo.appName,
+          applicationVersion: packageInfo.version,
+          applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
+        ));
+  }
 }
