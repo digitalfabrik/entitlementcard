@@ -48,6 +48,7 @@ class _MapState extends State<Map> {
       onMapClick: _onMapClick,
       onUserLocationUpdated: (location) => _onUserLocationUpdated(),
       onCameraTrackingDismissed: _onCameraTrackingDismissed,
+      compassViewPosition: CompassViewPosition.BottomRight,
     );
     super.didChangeDependencies();
   }
