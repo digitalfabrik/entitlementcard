@@ -37,7 +37,10 @@ class _MapState extends State<Map> {
     final config = Configuration.of(context);
     _mapboxMap = new MapboxMap(
       initialCameraPosition: CameraPosition(
-          target: Map.initialLocation, zoom: Map.userLocationZoomLevel),
+          target: Map.initialLocation,
+          zoom: widget.myLocationEnabled
+              ? Map.userLocationZoomLevel
+              : Map.initialZoomLevel),
       styleString: config.mapStyleUrl,
       myLocationEnabled: widget.myLocationEnabled,
       myLocationTrackingMode: widget.myLocationEnabled
@@ -57,13 +60,15 @@ class _MapState extends State<Map> {
 
   Future<void> _onMapCreated(MapboxMapController controller) async {
     this._controller = controller;
-    // zoom out to initial zoom level if can not get location
-    await _controller
-        .requestMyLocationLatLng()
-        .then((_) {}, // like catchError, but do not enforce return type
-            onError: (_) async {
-      await _controller.moveCamera(CameraUpdate.zoomTo(Map.initialZoomLevel));
-    });
+    if (widget.myLocationEnabled) {
+      // zoom out to initial zoom level if can not get location
+      await _controller
+          .requestMyLocationLatLng()
+          .then((_) {}, // like catchError, but do not enforce return type
+              onError: (_) async {
+        await _controller.moveCamera(CameraUpdate.zoomTo(Map.initialZoomLevel));
+      });
+    }
   }
 
   Symbol _symbol;
