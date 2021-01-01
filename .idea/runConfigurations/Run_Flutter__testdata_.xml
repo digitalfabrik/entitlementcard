@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Flutter (testdata)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=graphql_url=https://api.ehrenamtskarte.app --dart-define=map_style_url=https://vector.ehrenamtskarte.app/style.json --dart-define=eak_test_data=true --dart-define=reset_eak=false" />
+    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main_local.dart" />
+    <method v="2" />
+  </configuration>
+</component>
