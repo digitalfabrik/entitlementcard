@@ -1,6 +1,7 @@
-import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
+
 import '../category_assets.dart';
+import 'filter_bar_button.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
@@ -16,8 +17,7 @@ class FilterBar extends StatelessWidget {
           itemCount: categoryAssets.length,
           itemBuilder: (context, index) {
             return FilterBarButton(
-                asset: categoryAssets[index],
-                onCategoryPress: this.onCategoryPress);
+                asset: categoryAssets[index], onCategoryPress: onCategoryPress);
           },
         ),
       ),

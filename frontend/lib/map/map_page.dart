@@ -1,6 +1,7 @@
-import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
-import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
+
+import 'map/map_with_futures.dart';
+import 'preview/accepting_store_summary.dart';
 
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
@@ -21,11 +22,9 @@ class _MapPageState extends State<MapPage> {
       MapWithFutures(
         onFeatureClick: (feature) {
           var id = feature["properties"]["id"];
-          setState(
-              () => this.selectedAcceptingStoreId = (id is int) ? id : null);
+          setState(() => selectedAcceptingStoreId = (id is int) ? id : null);
         },
-        onNoFeatureClick: () =>
-            setState(() => this.selectedAcceptingStoreId = null),
+        onNoFeatureClick: () => setState(() => selectedAcceptingStoreId = null),
         onFeatureClickLayerFilter: ["physical_stores"],
       ),
       AnimatedSwitcher(

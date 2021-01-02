@@ -28,15 +28,15 @@ class QRCodeScanner extends StatefulWidget {
 
 class _QRViewState extends State<QRCodeScanner> {
   Barcode result;
-  var flashState = flashOn;
-  var cameraState = frontCamera;
+  String _flashState = flashOn;
+  String _cameraState = frontCamera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isDone = false;
   bool isErrorDialogActive = false;
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
+  // In order to get hot reload to work we need to pause the camera if the
+  // platform is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
@@ -57,8 +57,8 @@ class _QRViewState extends State<QRCodeScanner> {
               flex: 4,
               child: Scaffold(
                 appBar: AppBar(
-                  leading: new IconButton(
-                    icon: new Icon(
+                  leading: IconButton(
+                    icon: Icon(
                       Icons.arrow_back_ios,
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
@@ -90,13 +90,14 @@ class _QRViewState extends State<QRCodeScanner> {
                             if (controller != null) {
                               controller.toggleFlash();
                               setState(() {
-                                flashState =
-                                    _isFlashOn(flashState) ? flashOff : flashOn;
+                                _flashState = _isFlashOn(_flashState)
+                                    ? flashOff
+                                    : flashOn;
                               });
                             }
                           },
                           child:
-                              Text(flashState, style: TextStyle(fontSize: 16)),
+                              Text(_flashState, style: TextStyle(fontSize: 16)),
                         ),
                       ),
                       Container(
@@ -106,14 +107,14 @@ class _QRViewState extends State<QRCodeScanner> {
                             if (controller != null) {
                               controller.flipCamera();
                               setState(() {
-                                cameraState = _isBackCamera(cameraState)
+                                _cameraState = _isBackCamera(_cameraState)
                                     ? frontCamera
                                     : backCamera;
                               });
                             }
                           },
-                          child:
-                              Text(cameraState, style: TextStyle(fontSize: 16)),
+                          child: Text(_cameraState,
+                              style: TextStyle(fontSize: 16)),
                         ),
                       )
                     ],
@@ -147,8 +148,8 @@ class _QRViewState extends State<QRCodeScanner> {
       scanArea = smallestDimension * 0.9;
     }
     print("QR Code Scan area is: $scanArea");
-    // To ensure the Scanner view is properly sized after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
+    // To ensure the Scanner view is properly sized after rotation we need to
+    // listen for Flutter SizeChanged notification and update controller
     return NotificationListener<SizeChangedLayoutNotification>(
         onNotification: (notification) {
           Future.microtask(
@@ -192,7 +193,7 @@ class _QRViewState extends State<QRCodeScanner> {
       Provider.of<CardDetailsModel>(context, listen: false)
           .setCardDetails(cardDetails);
       Navigator.of(context).maybePop();
-    } catch (e) {
+    } on Exception catch (e) {
       controller.pauseCamera();
       print("Failed to parse qr code content!");
       print(e);
@@ -221,7 +222,7 @@ class _QRViewState extends State<QRCodeScanner> {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: Text('Fehler beim Lesen des Codes'),
           content: SingleChildScrollView(

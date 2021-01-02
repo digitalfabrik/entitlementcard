@@ -6,8 +6,8 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
 
-typedef void OnFeatureClickCallback(dynamic feature);
-typedef void OnNoFeatureClickCallback();
+typedef OnFeatureClickCallback = void Function(dynamic feature);
+typedef OnNoFeatureClickCallback = void Function();
 
 class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
@@ -36,7 +36,7 @@ class _MapState extends State<Map> {
   @override
   void didChangeDependencies() {
     final config = Configuration.of(context);
-    _mapboxMap = new MapboxMap(
+    _mapboxMap = MapboxMap(
       initialCameraPosition: CameraPosition(
           target: Map.initialLocation, zoom: Map.initialZoomLevel),
       styleString: config.mapStyleUrl,
@@ -58,7 +58,7 @@ class _MapState extends State<Map> {
   }
 
   _onMapCreated(controller) async {
-    this._controller = controller;
+    _controller = controller;
     await _controller
         .requestMyLocationLatLng()
         .then((_) => _onUserLocationUpdated());
@@ -74,19 +74,19 @@ class _MapState extends State<Map> {
   }
 
   _addSymbol(LatLng location, int categoryId) async {
-    _symbol = await _controller.addSymbol(new SymbolOptions(
+    _symbol = await _controller.addSymbol(SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var features = await this._controller.queryRenderedFeatures(
+    var features = await _controller.queryRenderedFeatures(
         point, widget.onFeatureClickLayerFilter ?? [], null);
     if (features.isNotEmpty) {
       var featureInfo = json.decode(features[0]);
       if (featureInfo != null) {
         if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
         var coordinates = featureInfo["geometry"]["coordinates"];
-        var location = new LatLng(coordinates[1], coordinates[0]);
+        var location = LatLng(coordinates[1], coordinates[0]);
         await _removeSymbol();
         await _addSymbol(location, featureInfo["properties"]["categoryId"]);
         await _bringCameraToLocation(location);

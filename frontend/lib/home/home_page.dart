@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../map/map_page.dart';
 import '../identification/identification_page.dart';
+import '../map/map_page.dart';
 import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _TabData {
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
 
-  List<_TabData> _tabs = [
+  final List<_TabData> _tabs = [
     _TabData(MapPage(), Icons.map, "Karte"),
     _TabData(SearchPage(), Icons.search, "Suche"),
     _TabData(IdentificationPage(), Icons.remove_red_eye, "Ausweisen"),
