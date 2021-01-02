@@ -1,7 +1,7 @@
-import 'package:ehrenamtskarte/more/more_page.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
+import 'package:ehrenamtskarte/more/more_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 
