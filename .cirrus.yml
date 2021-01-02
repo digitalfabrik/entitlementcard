@@ -21,10 +21,10 @@ fe_task_template: &FE_TASK_TEMPLATE
   container:
     image: cirrusci/flutter:latest
 
-fe_lint_task:
+fe_analyze_task:
   name: "FE: analyze"
   << : *FE_TASK_TEMPLATE
-  lint_script:
+  analyze_script:
     - cd frontend
     - flutter analyze
 
@@ -40,7 +40,7 @@ fe_build_ios_task:
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   required_pr_labels: build-ios
   depends_on:
-    - "FE: lint"
+    - "FE: analyze"
     - "FE: test"
   osx_instance:
       image: catalina-flutter
@@ -54,7 +54,7 @@ fe_build_android_task:
   name: "FE: build (Android)"
   << : *FE_TASK_TEMPLATE
   depends_on:
-    - "FE: lint"
+    - "FE: analyze"
     - "FE: test"
   build_script:
     - cd frontend
