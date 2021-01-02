@@ -31,12 +31,13 @@ object ImportToDatabase {
     }
 
     /**
-     * Replaces notes for unspecified entries with `null`.
+     * Replaces notes for unspecified entries with `null` and trims the String otherwise.
      *
      * Such a note consists of the letters "nA" (in that order), potentially with dots like "n.A." and/or stuffed with
      * whitespace (e.g. " n A. "), or of whitespace only.
      *
-     * @return `null` if `text` is a "unspecified note", `text` otherwise
+     * @return `null` if `text` is a "unspecified note", trimmed `text` otherwise
+     * @see String.trim
      */
     private fun String.sanitizeForDb(): String? {
         return if (unspecifiedNoteRegex.matches(this)) null else this.trim()
