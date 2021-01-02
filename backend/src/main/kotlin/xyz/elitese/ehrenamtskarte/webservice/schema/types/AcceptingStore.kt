@@ -10,8 +10,8 @@ import java.util.concurrent.CompletableFuture
 
 data class AcceptingStore(
     val id: Int,
-    val name: String,
-    val description: String,
+    val name: String?,
+    val description: String?,
     val contactId: Int,
     val categoryId: Int
 ) {

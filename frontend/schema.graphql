@@ -31,18 +31,18 @@ type AcceptingStore {
   categoryId: Int!
   contact: Contact!
   contactId: Int!
-  description: String!
+  description: String
   id: Int!
-  name: String!
+  name: String
   physicalStore: PhysicalStore
 }
 
 type Address {
   id: Int!
-  location: String!
-  postalCode: String!
-  state: String!
-  street: String!
+  location: String
+  postalCode: String
+  state: String
+  street: String
 }
 
 type Category {
@@ -51,10 +51,10 @@ type Category {
 }
 
 type Contact {
-  email: String!
+  email: String
   id: Int!
-  telephone: String!
-  website: String!
+  telephone: String
+  website: String
 }
 
 type Coordinates {

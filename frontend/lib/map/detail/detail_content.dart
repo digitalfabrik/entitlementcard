@@ -21,14 +21,16 @@ class DetailContent extends StatelessWidget {
         child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                acceptingStore.store.description,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Divider(
-                  thickness: 0.7,
-                  height: 48,
-                  color: Theme.of(context).primaryColorLight),
+              if (acceptingStore.store.description != null) ...[
+                Text(
+                  acceptingStore.store.description,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Divider(
+                    thickness: 0.7,
+                    height: 48,
+                    color: Theme.of(context).primaryColorLight),
+              ],
               Column(
                 children: <Widget>[
                   ContactInfoRow(
