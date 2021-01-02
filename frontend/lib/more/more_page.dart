@@ -1,9 +1,13 @@
+import 'package:ehrenamtskarte/more/testing_data_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
 import 'menu_item.dart';
+
+const SHOW_TEST_DATA_OPTIONS =
+    bool.fromEnvironment("test_data_options", defaultValue: false);
 
 class MorePage extends StatelessWidget {
   @override
@@ -17,7 +21,8 @@ class MorePage extends StatelessWidget {
             title: 'Über diese App',
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
-          )
+          ),
+          SHOW_TEST_DATA_OPTIONS ? TestingDataItem() : SizedBox.shrink(),
         ]),
       ),
     );
