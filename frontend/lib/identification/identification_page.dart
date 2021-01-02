@@ -35,21 +35,18 @@ class _IdentificationPageState extends State<IdentificationPage> {
           appBar: AppBar(
             title: Text('Digitale Ehrenamtskarte'),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-                child: _cardDetails == null
-                    ? NoCardView(
-                        onOpenQrScanner: () => openQRCodeScannerView(context),
-                      )
-                    : CardDetailView(
-                        cardDetails: _cardDetails,
-                        onOpenQrScanner: () => openQRCodeScannerView(context),
-                      ),
-              ),
-            ],
+          body: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              child: _cardDetails == null
+                  ? NoCardView(
+                      onOpenQrScanner: () => openQRCodeScannerView(context),
+                    )
+                  : CardDetailView(
+                      cardDetails: _cardDetails,
+                      onOpenQrScanner: () => openQRCodeScannerView(context),
+                    ),
+            ),
           ));
     });
   }
