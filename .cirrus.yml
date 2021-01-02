@@ -22,9 +22,11 @@ fe_task_template: &FE_TASK_TEMPLATE
     image: cirrusci/flutter:latest
 
 fe_lint_task:
-  name: "FE: lint"
+  name: "FE: analyze"
   << : *FE_TASK_TEMPLATE
-  lint_script: scripts/enforceDartStyle.sh
+  lint_script:
+    - cd frontend
+    - flutter analyze
 
 fe_test_task:
   name: "FE: test"
