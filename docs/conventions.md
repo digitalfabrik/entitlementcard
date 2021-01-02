@@ -3,6 +3,7 @@
 ## Frontend
 
 We follow the official [effective dart guides](https://dart.dev/guides/language/effective-dart).
+A [linter](https://pub.dev/packages/effective_dart) checks them. To configure it, see [here](https://dart.dev/guides/language/analysis-options).
 
 ### Commit hook
 The pipeline will fail if dart files are not formatted correctly.
