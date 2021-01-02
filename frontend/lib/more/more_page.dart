@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
+
 import 'menu_item.dart';
 
 class MorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
-      child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
-        MenuItem(
-          title: 'Über diese App',
-          icon: Icons.info_outline,
-          callback: () => _showAboutDialog(context),
-        )
-      ]),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+        child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
+          MenuItem(
+            title: 'Über diese App',
+            icon: Icons.info_outline,
+            callback: () => _showAboutDialog(context),
+          )
+        ]),
+      ),
     );
   }
 
