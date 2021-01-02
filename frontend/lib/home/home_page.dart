@@ -1,9 +1,9 @@
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
+import 'package:ehrenamtskarte/identification/identification_page.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
+import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 
-import '../map/map_page.dart';
-import '../identification/identification_page.dart';
-import '../search/search_page.dart';
 import './app_flow.dart';
 
 class HomePage extends StatefulWidget {
