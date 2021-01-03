@@ -9,8 +9,9 @@ import 'detail_layout.dart';
 
 class DetailView extends StatelessWidget {
   final int _acceptingStoreId;
+  final bool hideShowOnMapButton;
 
-  DetailView(this._acceptingStoreId);
+  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class DetailView extends StatelessWidget {
         }
         return DetailLayout(
           title: matchingStores.first.store.name,
-          body: DetailContent(matchingStores.first),
+          body: DetailContent(matchingStores.first,
+              hideShowOnMapButton: this.hideShowOnMapButton),
           category: matchingStores.first.store.category.id,
         );
       },
