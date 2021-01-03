@@ -22,7 +22,7 @@ class MorePage extends StatelessWidget {
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
           ),
-          SHOW_TEST_DATA_OPTIONS ? TestingDataItem() : SizedBox.shrink(),
+          if (SHOW_TEST_DATA_OPTIONS) TestingDataItem(),
         ]),
       ),
     );
