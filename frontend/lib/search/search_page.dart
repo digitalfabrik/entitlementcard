@@ -1,28 +1,28 @@
-import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/location/determine_position.dart';
-import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:flutter/material.dart';
 
+import '../category_assets.dart';
 import '../debouncer.dart';
+import '../graphql/graphql_api.graphql.dart';
+import '../location/determine_position.dart';
 import 'filter_bar.dart';
+import 'results_loader.dart';
 
 class SearchPage extends StatefulWidget {
   @override
-  createState() => _SearchPageState();
+  State<StatefulWidget> createState() => _SearchPageState();
 }
 
-enum LocationRequestStatus { Requesting, RequestFinished }
+enum LocationRequestStatus { requesting, requestFinished }
 
 class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
-  List<CategoryAsset> _selectedCategories = new List();
+  final List<CategoryAsset> _selectedCategories = [];
   final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
   FocusNode _focusNode;
 
   CoordinatesInput _coordinates;
-  LocationRequestStatus _locationStatus = LocationRequestStatus.Requesting;
+  LocationRequestStatus _locationStatus = LocationRequestStatus.requesting;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
         FilterBar(onCategoryPress: _onCategoryPress),
-        if (_locationStatus == LocationRequestStatus.RequestFinished)
+        if (_locationStatus == LocationRequestStatus.requestFinished)
           ResultsLoader(
               searchText: _searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
@@ -62,9 +62,9 @@ class _SearchPageState extends State<SearchPage> {
   _onCategoryPress(CategoryAsset asset, bool isSelected) {
     setState(() {
       if (isSelected) {
-        this._selectedCategories.add(asset);
+        _selectedCategories.add(asset);
       } else {
-        this._selectedCategories.remove(asset);
+        _selectedCategories.remove(asset);
       }
     });
   }
@@ -92,8 +92,8 @@ class _SearchPageState extends State<SearchPage> {
               _coordinates =
                   CoordinatesInput(lat: value.latitude, lng: value.longitude)
             }))
-        .whenComplete(() => this.setState(() {
-              _locationStatus = LocationRequestStatus.RequestFinished;
+        .whenComplete(() => setState(() {
+              _locationStatus = LocationRequestStatus.requestFinished;
             }));
     super.initState();
   }

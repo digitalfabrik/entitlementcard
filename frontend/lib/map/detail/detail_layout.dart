@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -15,8 +14,8 @@ class DetailLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(
+          leading: IconButton(
+            icon: Icon(
               Icons.arrow_back_ios,
               color: Theme.of(context).textTheme.bodyText1.color,
             ),
