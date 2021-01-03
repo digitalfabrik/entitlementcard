@@ -1,9 +1,8 @@
-import 'package:ehrenamtskarte/identification/card_details.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import 'card_details.dart';
 import 'id_card.dart';
 
 class CardDetailView extends StatelessWidget {
@@ -12,6 +11,9 @@ class CardDetailView extends StatelessWidget {
 
   const CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
       : super(key: key);
+
+  get _formattedExpirationDate =>
+      DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,7 @@ class CardDetailView extends StatelessWidget {
                     onTap: onOpenQrScanner),
               ),
               SizedBox(height: 10),
-              Text(
-                  "Gültig bis ${DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)}"),
+              Text("Gültig bis $_formattedExpirationDate"),
               SizedBox(height: 5),
               Text(
                 "${cardDetails.firstName} ${cardDetails.lastName}",

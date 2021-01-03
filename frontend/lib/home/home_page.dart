@@ -1,11 +1,11 @@
-import 'package:ehrenamtskarte/home/app_flows_stack.dart';
-import 'package:ehrenamtskarte/identification/identification_page.dart';
-import 'package:ehrenamtskarte/map/map_page.dart';
-import 'package:ehrenamtskarte/more/more_page.dart';
-import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 
-import './app_flow.dart';
+import '../identification/identification_page.dart';
+import '../map/map_page.dart';
+import '../more/more_page.dart';
+import '../search/search_page.dart';
+import 'app_flow.dart';
+import 'app_flows_stack.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -27,11 +27,11 @@ class _HomePageState extends State<HomePage> {
 
   factory _HomePageState() {
     _HomePageState state;
-    MapPage mapPage = MapPage(
+    var mapPage = MapPage(
       onMapCreated: (controller) =>
           state.setState(() => state.mapPageController = controller),
     );
-    List<AppFlow> appFlows = <AppFlow>[
+    var appFlows = <AppFlow>[
       AppFlow(mapPage, Icons.map, "Karte",
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
       AppFlow(SearchPage(), Icons.search, "Suche",
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           appFlows: appFlows,
           currentIndex: _currentTabIndex,
         ),
-        bottomNavigationBar: this._buildBottomNavigationBar(context),
+        bottomNavigationBar: _buildBottomNavigationBar(context),
       ),
     );
   }
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
       _currentTabIndex = 0;
     });
     if (idWithCoordinates != null) {
-      this.mapPageController.showAcceptingStore(idWithCoordinates);
+      mapPageController.showAcceptingStore(idWithCoordinates);
     }
   }
 }

@@ -1,8 +1,9 @@
-import 'package:ehrenamtskarte/map/map/map_controller.dart';
-import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
-import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+
+import 'map/map_controller.dart';
+import 'map/map_with_futures.dart';
+import 'preview/accepting_store_summary.dart';
 
 class PhysicalStoreFeatureData {
   final int id;
@@ -11,7 +12,7 @@ class PhysicalStoreFeatureData {
   PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
 }
 
-typedef void OnMapCreatedCallback(MapPageController controller);
+typedef OnMapCreatedCallback = void Function(MapPageController controller);
 
 class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
@@ -42,7 +43,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
         onNoFeatureClick: stopShowingAcceptingStore,
         onFeatureClickLayerFilter: ["physical_stores"],
         onMapCreated: (controller) {
-          setState(() => this._controller = controller);
+          setState(() => _controller = controller);
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
       ),
@@ -63,7 +64,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
       {bool selectedAcceptingStoreInMap = false}) async {
     setState(() {
-      this._selectedAcceptingStoreId = data.id;
+      _selectedAcceptingStoreId = data.id;
     });
     if (data.coordinates != null) {
       if (data.categoryId != null) {
@@ -79,7 +80,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   }
 
   Future<void> stopShowingAcceptingStore() async {
-    setState(() => this._selectedAcceptingStoreId = null);
+    setState(() => _selectedAcceptingStoreId = null);
     await _controller.removeSymbol();
   }
 
