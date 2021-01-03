@@ -4,18 +4,18 @@ import xyz.elitese.ehrenamtskarte.importer.freinet.types.FreinetAcceptingStore
 import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeAcceptingStore
 
 data class GenericImportAcceptingStore(
-        val name: String,
-        val description: String,
-        val street: String,
-        val postalCode: String,
-        val location: String,
-        val countryCode: String,
+        val name: String?,
+        val description: String?,
+        val street: String?,
+        val postalCode: String?,
+        val location: String?,
+        val countryCode: String?,
         val longitude: Double,
         val latitude: Double,
-        val email: String,
-        val telephone: String,
-        val website: String,
-        val discount: String,
+        val email: String?,
+        val telephone: String?,
+        val website: String?,
+        val discount: String?,
         val categoryId: Int
 ) {
     constructor(data: LbeAcceptingStore) : this(
@@ -25,18 +25,18 @@ data class GenericImportAcceptingStore(
             data.postalCode,
             data.location,
             "de",
-            data.longitude.replace(",", ".").toDouble(),
-            data.latitude.replace(",", ".").toDouble(),
+            data.longitude!!.replace(",", ".").toDouble(),
+            data.latitude!!.replace(",", ".").toDouble(),
             data.email,
             data.telephone,
             data.homepage,
             data.discount,
-            data.category.toInt()
+            data.category!!.toInt()
     )
 
     constructor(data: FreinetAcceptingStore) : this(
             data.name,
-            "",
+            null,
             data.street,
             data.postalCode,
             data.location,

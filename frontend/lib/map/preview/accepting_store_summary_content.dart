@@ -14,9 +14,9 @@ class AcceptingStoreSummaryContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _space(8, [
-        Text(acceptingStore.name,
+        Text(acceptingStore.name ?? "Akzeptanzstelle",
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-        Text(acceptingStore.description)
+        if (acceptingStore.description != null) Text(acceptingStore.description)
       ]),
     );
   }

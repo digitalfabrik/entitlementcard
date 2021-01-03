@@ -5,8 +5,11 @@ import 'loading_accepting_store_summary.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final int acceptingStoreId;
+  final bool hideShowOnMapButton;
 
-  AcceptingStoreSummary(this.acceptingStoreId, {Key key}) : super(key: key);
+  AcceptingStoreSummary(this.acceptingStoreId,
+      {Key key, this.hideShowOnMapButton})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class AcceptingStoreSummary extends StatelessWidget {
           width: double.infinity,
           child: Card(
             margin: const EdgeInsets.all(10),
-            child: new InkWell(
+            child: InkWell(
                 onTap: () {
                   _openDetailView(context, acceptingStoreId);
                 },
@@ -42,7 +45,8 @@ class AcceptingStoreSummary extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailView(acceptingStoreId),
+          builder: (context) => DetailView(acceptingStoreId,
+              hideShowOnMapButton: hideShowOnMapButton),
         ));
   }
 }

@@ -1,14 +1,14 @@
-import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
+import '../../widgets/error_message.dart';
 import 'accepting_store_summary_content.dart';
 import 'models.dart';
 
-typedef void OnExecptionCallback(Exception exception);
+typedef OnExecptionCallback = void Function(Exception exception);
 
 class LoadingAcceptingStorySummary extends StatelessWidget {
   final int acceptingStoreId;
@@ -20,7 +20,7 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final query = AcceptingStoreSummaryByIdQuery(
         variables: AcceptingStoreSummaryByIdArguments(
-            ids: IdsParamsInput(ids: [this.acceptingStoreId])));
+            ids: IdsParamsInput(ids: [acceptingStoreId])));
     return Query(
         options: QueryOptions(
             documentNode: query.document, variables: query.getVariablesMap()),
