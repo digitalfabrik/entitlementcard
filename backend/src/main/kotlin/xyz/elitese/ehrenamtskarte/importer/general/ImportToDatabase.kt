@@ -9,6 +9,7 @@ import xyz.elitese.ehrenamtskarte.database.*
 import xyz.elitese.ehrenamtskarte.importer.freinet.AcceptingStoresImporter
 
 object ImportToDatabase {
+    private val unspecifiedNoteRegex = Regex("""^\s*(n\.?\s*A\.?|)\s*$""")
 
     fun prepareCategories() {
         val categoriesJson = AcceptingStoresImporter::class.java
@@ -20,13 +21,26 @@ object ImportToDatabase {
         }
     }
 
-    private fun decodeSpecialCharacters(text: String): String {
+    private fun String.decodeSpecialCharacters(): String {
         // We often get a double encoded string, i.e. &amp;amp;
         return StringEscapeUtils.unescapeHtml4(
             StringEscapeUtils.unescapeHtml4(
-                text
+                this
             )
         ).replace("<br/>", "\n")
+    }
+
+    /**
+     * Replaces notes for unspecified entries with `null` and trims the String otherwise.
+     *
+     * Such a note consists of the letters "nA" (in that order), potentially with dots like "n.A." and/or stuffed with
+     * whitespace (e.g. " n A. "), or of whitespace only.
+     *
+     * @return `null` if `text` is a "unspecified note", trimmed `text` otherwise
+     * @see String.trim
+     */
+    private fun String.sanitizeForDb(): String? {
+        return if (unspecifiedNoteRegex.matches(this)) null else this.trim()
     }
 
     fun import(acceptingStores: List<GenericImportAcceptingStore>) {
@@ -35,19 +49,19 @@ object ImportToDatabase {
             for (acceptingStore in acceptingStores) {
                 transaction {
                     val address = AddressEntity.new {
-                        street = acceptingStore.street
-                        postalCode = acceptingStore.postalCode
-                        locaction = acceptingStore.location
-                        countryCode = acceptingStore.countryCode
+                        street = acceptingStore.street?.sanitizeForDb()
+                        postalCode = acceptingStore.postalCode?.sanitizeForDb()
+                        locaction = acceptingStore.location?.sanitizeForDb()
+                        countryCode = acceptingStore.countryCode?.sanitizeForDb()
                     }
                     val contact = ContactEntity.new {
-                        email = acceptingStore.email
-                        telephone = acceptingStore.telephone
-                        website = acceptingStore.website
+                        email = acceptingStore.email?.sanitizeForDb()
+                        telephone = acceptingStore.telephone?.sanitizeForDb()
+                        website = acceptingStore.website?.sanitizeForDb()
                     }
                     val store = AcceptingStoreEntity.new {
-                        name = decodeSpecialCharacters(acceptingStore.name)
-                        description = decodeSpecialCharacters(acceptingStore.discount)
+                        name = acceptingStore.name?.decodeSpecialCharacters()?.sanitizeForDb()
+                        description = acceptingStore.discount?.decodeSpecialCharacters()?.sanitizeForDb()
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
                     }
@@ -62,5 +76,4 @@ object ImportToDatabase {
             e.printStackTrace()
         }
     }
-
 }

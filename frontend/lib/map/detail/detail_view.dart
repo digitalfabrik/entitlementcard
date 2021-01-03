@@ -36,7 +36,7 @@ class DetailView extends StatelessWidget {
           return _errorMessage("Akzeptanzstelle nicht gefunden");
         }
         return DetailLayout(
-          title: matchingStores.first.store.name,
+          title: matchingStores.first.store.name ?? "Akzeptanzstelle",
           body: DetailContent(matchingStores.first,
               hideShowOnMapButton: hideShowOnMapButton),
           category: matchingStores.first.store.category.id,

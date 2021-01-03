@@ -6,38 +6,38 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData
 data class LbeAcceptingStore(
         @JsonProperty("name")
         @JacksonXmlCData
-        var name: String = "",
+        var name: String?,
         @JsonProperty("strasse")
         @JacksonXmlCData
-        var street: String = "",
+        var street: String?,
         @JsonProperty("hausnummer")
         @JacksonXmlCData
-        var houseNumber: String = "",
+        var houseNumber: String?,
         @JsonProperty("plz")
         @JacksonXmlCData
-        var postalCode: String = "",
+        var postalCode: String?,
         @JsonProperty("ort")
         @JacksonXmlCData
-        var location: String = "",
+        var location: String?,
         @JsonProperty("breitengrad")
         @JacksonXmlCData
-        var latitude: String = "",
+        var latitude: String?,
         @JsonProperty("laengengrad")
         @JacksonXmlCData
-        var longitude: String = "",
+        var longitude: String?,
         @JsonProperty("telefon")
         @JacksonXmlCData
-        var telephone: String = "",
+        var telephone: String?,
         @JsonProperty("email")
         @JacksonXmlCData
-        var email: String = "",
+        var email: String?,
         @JsonProperty("homepage_url")
         @JacksonXmlCData
-        var homepage: String = "",
+        var homepage: String?,
         @JsonProperty("rabatt")
         @JacksonXmlCData
-        var discount: String = "",
+        var discount: String?,
         @JsonProperty("kategorie")
         @JacksonXmlCData
-        var category: String = ""
+        var category: String?
 )

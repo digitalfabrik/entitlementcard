@@ -3,12 +3,12 @@ package xyz.elitese.ehrenamtskarte.importer.lbe
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import java.io.File
 import xyz.elitese.ehrenamtskarte.importer.general.GenericImportAcceptingStore
 import xyz.elitese.ehrenamtskarte.importer.general.HttpDownloadHelper
 import xyz.elitese.ehrenamtskarte.importer.general.ImportToDatabase
 import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeAcceptingStore
 import xyz.elitese.ehrenamtskarte.importer.lbe.types.LbeData
+import java.io.File
 
 object LbeDataImporter {
 
@@ -25,18 +25,23 @@ object LbeDataImporter {
         val filteredStores = lbeData.acceptingStores.filter { filter(it, filterReport) }
 
         val acceptingStores = filteredStores
-                .map { GenericImportAcceptingStore(it) }
+            .map { GenericImportAcceptingStore(it) }
 
         ImportToDatabase.prepareCategories()
         ImportToDatabase.import(acceptingStores)
     }
 
     private fun filter(store: LbeAcceptingStore, filterReport: File): Boolean {
-        val filter = store.latitude.isNotEmpty()
-                && store.longitude.isNotEmpty()
-                && store.postalCode.length == 5
-                && store.category.toInt() >= 0
-                && store.category.toInt() <= 8
+        val category = store.category
+        val filter = !store.latitude.isNullOrBlank()
+                && !store.longitude.isNullOrBlank()
+                && (store.postalCode == null || store.postalCode?.trim()?.length == 5)
+                && !category.isNullOrBlank()
+                && try {
+                        !category.isNullOrBlank() && category.toInt() in 0..8
+                    } catch (nfe: NumberFormatException) {
+                        false
+                    }
 
         if (!filter)
             filterReport.appendText(store.toString() + '\n')
