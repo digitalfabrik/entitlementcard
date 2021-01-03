@@ -16,9 +16,9 @@ class CategoryEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object Contacts : IntIdTable() {
-    val email = varchar("email", 100)
-    val telephone = varchar("telephone", 50)
-    val website = varchar("website", 150)
+    val email = varchar("email", 100).nullable()
+    val telephone = varchar("telephone", 100).nullable()
+    val website = varchar("website", 150).nullable()
 }
 
 class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -30,8 +30,8 @@ class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object AcceptingStores : IntIdTable() {
-    val name = varchar("name", 150)
-    val description = varchar("description", 2500)
+    val name = varchar("name", 150).nullable()
+    val description = varchar("description", 2500).nullable()
     val contactId = reference("contactId", Contacts)
     val categoryId = reference("categoryId", Categories)
 }
@@ -60,10 +60,10 @@ class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object Addresses : IntIdTable() {
-    val street = varchar("street", 200)
-    val postalCode = varchar("postalCode", 10)
-    val location = varchar("location", 200)
-    val countryCode = varchar("countryCode", 2)
+    val street = varchar("street", 200).nullable()
+    val postalCode = varchar("postalCode", 10).nullable()
+    val location = varchar("location", 200).nullable()
+    val countryCode = varchar("countryCode", 2).nullable()
 }
 
 class AddressEntity(id: EntityID<Int>) : IntEntity(id) {

@@ -4,23 +4,4 @@
 
 We follow the official [effective dart guides](https://dart.dev/guides/language/effective-dart).
 
-### Commit hook
-The pipeline will fail if dart files are not formatted correctly.
-It is encouraged to add a pre-commit hook like this:
-```sh
- #!/bin/bash
-
-output=$(flutter format --set-exit-if-changed frontend/lib)
-status=$?
-
-if [ $status -eq 0 ]; then
-  echo "All Dart files formatted correctly."
-  exit 0
-else
-  echo "$output"
-  echo "Re-attempt commit."
-  exit 1
-fi
-```
-Just paste this into the new file `.git/hooks/pre-commit` and make it executable. 
-When committing and your files are not formatted correctly, they are fixed if possible and the commit will be aborted so that you can re-check your files.
+Our linting rules are checked in the pipeline as well as in most IDEs. To configure them, see the [official dart docs](https://dart.dev/guides/language/analysis-options) and the [effective_dart package](https://pub.dev/packages/effective_dart) docs on how to edit the [analysis_options.yaml](../frontend/analysis_options.yaml).
