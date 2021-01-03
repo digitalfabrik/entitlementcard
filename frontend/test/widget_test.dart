@@ -8,7 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Home screen smoke test', (WidgetTester tester) async {
+  testWidgets('Home screen smoke test', (tester) async {
     // Build our app and trigger a frame.
     //await tester.pumpWidget(App());
 

@@ -216,6 +216,24 @@ class IdsParamsInput with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class AcceptingStoreById$Query$PhysicalStore$Coordinates with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore$Coordinates();
+
+  factory AcceptingStoreById$Query$PhysicalStore$Coordinates.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreById$Query$PhysicalStore$CoordinatesFromJson(json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreById$Query$PhysicalStore$CoordinatesToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact
     with EquatableMixin {
   AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact();
@@ -314,12 +332,16 @@ class AcceptingStoreById$Query$PhysicalStore with EquatableMixin {
           Map<String, dynamic> json) =>
       _$AcceptingStoreById$Query$PhysicalStoreFromJson(json);
 
+  int id;
+
+  AcceptingStoreById$Query$PhysicalStore$Coordinates coordinates;
+
   AcceptingStoreById$Query$PhysicalStore$AcceptingStore store;
 
   AcceptingStoreById$Query$PhysicalStore$Address address;
 
   @override
-  List<Object> get props => [store, address];
+  List<Object> get props => [id, coordinates, store, address];
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreById$Query$PhysicalStoreToJson(this);
 }
@@ -593,6 +615,31 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
               ],
               directives: [],
               selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'coordinates'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'lat'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'lng'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
+                    ])),
                 FieldNode(
                     name: NameNode(value: 'store'),
                     alias: null,

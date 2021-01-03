@@ -199,6 +199,21 @@ Map<String, dynamic> _$IdsParamsInputToJson(IdsParamsInput instance) =>
       'ids': instance.ids,
     };
 
+AcceptingStoreById$Query$PhysicalStore$Coordinates
+    _$AcceptingStoreById$Query$PhysicalStore$CoordinatesFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreById$Query$PhysicalStore$Coordinates()
+    ..lat = (json['lat'] as num)?.toDouble()
+    ..lng = (json['lng'] as num)?.toDouble();
+}
+
+Map<String, dynamic> _$AcceptingStoreById$Query$PhysicalStore$CoordinatesToJson(
+        AcceptingStoreById$Query$PhysicalStore$Coordinates instance) =>
+    <String, dynamic>{
+      'lat': instance.lat,
+      'lng': instance.lng,
+    };
+
 AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact
     _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$ContactFromJson(
         Map<String, dynamic> json) {
@@ -286,6 +301,11 @@ AcceptingStoreById$Query$PhysicalStore
     _$AcceptingStoreById$Query$PhysicalStoreFromJson(
         Map<String, dynamic> json) {
   return AcceptingStoreById$Query$PhysicalStore()
+    ..id = json['id'] as int
+    ..coordinates = json['coordinates'] == null
+        ? null
+        : AcceptingStoreById$Query$PhysicalStore$Coordinates.fromJson(
+            json['coordinates'] as Map<String, dynamic>)
     ..store = json['store'] == null
         ? null
         : AcceptingStoreById$Query$PhysicalStore$AcceptingStore.fromJson(
@@ -299,6 +319,8 @@ AcceptingStoreById$Query$PhysicalStore
 Map<String, dynamic> _$AcceptingStoreById$Query$PhysicalStoreToJson(
         AcceptingStoreById$Query$PhysicalStore instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'coordinates': instance.coordinates?.toJson(),
       'store': instance.store?.toJson(),
       'address': instance.address?.toJson(),
     };

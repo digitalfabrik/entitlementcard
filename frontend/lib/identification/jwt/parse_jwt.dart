@@ -33,7 +33,7 @@ Map<String, dynamic> parseJwtHeader(String token) {
 }
 
 String _decodeBase64(String str) {
-  String output = str.replaceAll('-', '+').replaceAll('_', '/');
+  var output = str.replaceAll('-', '+').replaceAll('_', '/');
 
   switch (output.length % 4) {
     case 0:

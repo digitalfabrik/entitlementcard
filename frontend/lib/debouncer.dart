@@ -6,7 +6,7 @@ class Debouncer {
 
   Debouncer({this.delay});
 
-  run(Function action) {
+  void run(Function action) {
     _timer?.cancel();
     _timer = Timer(delay, action);
   }
