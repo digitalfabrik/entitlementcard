@@ -19,7 +19,7 @@ class AcceptingStoreSummary extends StatelessWidget {
           width: double.infinity,
           child: Card(
             margin: const EdgeInsets.all(10),
-            child: new InkWell(
+            child: InkWell(
                 onTap: () {
                   _openDetailView(context, acceptingStoreId);
                 },
