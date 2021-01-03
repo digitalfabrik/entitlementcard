@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/identification/card_details.dart';
 import 'package:ehrenamtskarte/identification/card_details_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
