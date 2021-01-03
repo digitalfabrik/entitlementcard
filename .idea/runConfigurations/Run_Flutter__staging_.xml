@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Flutter (staging)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main_prod.dart" />
+    <method v="2" />
+  </configuration>
+</component>

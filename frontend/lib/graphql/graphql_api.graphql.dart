@@ -8,52 +8,143 @@ import 'package:gql/ast.dart';
 part 'graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName$AcceptingStore
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
     with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName$AcceptingStore();
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address();
 
-  factory AcceptingStores$Query$AcceptingStoreName$AcceptingStore.fromJson(
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreFromJson(json);
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(
+          json);
 
-  String name;
+  String location;
 
   @override
-  List<Object> get props => [name];
+  List<Object> get props => [location];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreToJson(this);
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(
+          this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query$AcceptingStoreName with EquatableMixin {
-  AcceptingStores$Query$AcceptingStoreName();
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates();
 
-  factory AcceptingStores$Query$AcceptingStoreName.fromJson(
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates.fromJson(
           Map<String, dynamic> json) =>
-      _$AcceptingStores$Query$AcceptingStoreNameFromJson(json);
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesFromJson(
+          json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreFromJson(json);
+
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address address;
+
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+      coordinates;
+
+  @override
+  List<Object> get props => [address, coordinates];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStoreFromJson(json);
 
   int id;
 
-  AcceptingStores$Query$AcceptingStoreName$AcceptingStore store;
+  String name;
+
+  String description;
+
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore physicalStore;
 
   @override
-  List<Object> get props => [id, store];
+  List<Object> get props => [id, name, description, physicalStore];
   Map<String, dynamic> toJson() =>
-      _$AcceptingStores$Query$AcceptingStoreNameToJson(this);
+      _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStores$Query with EquatableMixin {
-  AcceptingStores$Query();
+class AcceptingStoresSearch$Query with EquatableMixin {
+  AcceptingStoresSearch$Query();
 
-  factory AcceptingStores$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStores$QueryFromJson(json);
+  factory AcceptingStoresSearch$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$QueryFromJson(json);
 
-  List<AcceptingStores$Query$AcceptingStoreName> acceptingStoreName;
+  List<AcceptingStoresSearch$Query$AcceptingStore> searchAcceptingStores;
 
   @override
-  List<Object> get props => [acceptingStoreName];
-  Map<String, dynamic> toJson() => _$AcceptingStores$QueryToJson(this);
+  List<Object> get props => [searchAcceptingStores];
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CoordinatesInput with EquatableMixin {
+  CoordinatesInput({@required this.lat, @required this.lng});
+
+  factory CoordinatesInput.fromJson(Map<String, dynamic> json) =>
+      _$CoordinatesInputFromJson(json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchParamsInput with EquatableMixin {
+  SearchParamsInput(
+      {this.categoryIds,
+      this.coordinates,
+      this.limit,
+      this.offset,
+      this.searchText});
+
+  factory SearchParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$SearchParamsInputFromJson(json);
+
+  List<int> categoryIds;
+
+  CoordinatesInput coordinates;
+
+  int limit;
+
+  int offset;
+
+  String searchText;
+
+  @override
+  List<Object> get props =>
+      [categoryIds, coordinates, limit, offset, searchText];
+  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -111,17 +202,35 @@ class AcceptingStoreSummaryById$Query with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class ParamsInput with EquatableMixin {
-  ParamsInput({@required this.ids});
+class IdsParamsInput with EquatableMixin {
+  IdsParamsInput({@required this.ids});
 
-  factory ParamsInput.fromJson(Map<String, dynamic> json) =>
-      _$ParamsInputFromJson(json);
+  factory IdsParamsInput.fromJson(Map<String, dynamic> json) =>
+      _$IdsParamsInputFromJson(json);
 
   List<int> ids;
 
   @override
   List<Object> get props => [ids];
-  Map<String, dynamic> toJson() => _$ParamsInputToJson(this);
+  Map<String, dynamic> toJson() => _$IdsParamsInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoreById$Query$PhysicalStore$Coordinates with EquatableMixin {
+  AcceptingStoreById$Query$PhysicalStore$Coordinates();
+
+  factory AcceptingStoreById$Query$PhysicalStore$Coordinates.fromJson(
+          Map<String, dynamic> json) =>
+      _$AcceptingStoreById$Query$PhysicalStore$CoordinatesFromJson(json);
+
+  double lat;
+
+  double lng;
+
+  @override
+  List<Object> get props => [lat, lng];
+  Map<String, dynamic> toJson() =>
+      _$AcceptingStoreById$Query$PhysicalStore$CoordinatesToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -223,12 +332,16 @@ class AcceptingStoreById$Query$PhysicalStore with EquatableMixin {
           Map<String, dynamic> json) =>
       _$AcceptingStoreById$Query$PhysicalStoreFromJson(json);
 
+  int id;
+
+  AcceptingStoreById$Query$PhysicalStore$Coordinates coordinates;
+
   AcceptingStoreById$Query$PhysicalStore$AcceptingStore store;
 
   AcceptingStoreById$Query$PhysicalStore$Address address;
 
   @override
-  List<Object> get props => [store, address];
+  List<Object> get props => [id, coordinates, store, address];
   Map<String, dynamic> toJson() =>
       _$AcceptingStoreById$Query$PhysicalStoreToJson(this);
 }
@@ -247,22 +360,50 @@ class AcceptingStoreById$Query with EquatableMixin {
   Map<String, dynamic> toJson() => _$AcceptingStoreById$QueryToJson(this);
 }
 
-class AcceptingStoresQuery
-    extends GraphQLQuery<AcceptingStores$Query, JsonSerializable> {
-  AcceptingStoresQuery();
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearchArguments extends JsonSerializable
+    with EquatableMixin {
+  AcceptingStoresSearchArguments({@required this.params});
+
+  @override
+  factory AcceptingStoresSearchArguments.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearchArgumentsFromJson(json);
+
+  final SearchParamsInput params;
+
+  @override
+  List<Object> get props => [params];
+  @override
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearchArgumentsToJson(this);
+}
+
+class AcceptingStoresSearchQuery extends GraphQLQuery<
+    AcceptingStoresSearch$Query, AcceptingStoresSearchArguments> {
+  AcceptingStoresSearchQuery({this.variables});
 
   @override
   final DocumentNode document = DocumentNode(definitions: [
     OperationDefinitionNode(
         type: OperationType.query,
-        name: NameNode(value: 'AcceptingStores'),
-        variableDefinitions: [],
+        name: NameNode(value: 'AcceptingStoresSearch'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'params')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'SearchParamsInput'), isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
         directives: [],
         selectionSet: SelectionSetNode(selections: [
           FieldNode(
-              name: NameNode(value: 'physicalStores'),
-              alias: NameNode(value: 'acceptingStoreName'),
-              arguments: [],
+              name: NameNode(value: 'searchAcceptingStores'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'params'),
+                    value: VariableNode(name: NameNode(value: 'params')))
+              ],
               directives: [],
               selectionSet: SelectionSetNode(selections: [
                 FieldNode(
@@ -272,30 +413,71 @@ class AcceptingStoresQuery
                     directives: [],
                     selectionSet: null),
                 FieldNode(
-                    name: NameNode(value: 'store'),
+                    name: NameNode(value: 'name'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'description'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'physicalStore'),
                     alias: null,
                     arguments: [],
                     directives: [],
                     selectionSet: SelectionSetNode(selections: [
                       FieldNode(
-                          name: NameNode(value: 'name'),
+                          name: NameNode(value: 'address'),
                           alias: null,
                           arguments: [],
                           directives: [],
-                          selectionSet: null)
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'location'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ])),
+                      FieldNode(
+                          name: NameNode(value: 'coordinates'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'lat'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'lng'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ]))
                     ]))
               ]))
         ]))
   ]);
 
   @override
-  final String operationName = 'AcceptingStores';
+  final String operationName = 'AcceptingStoresSearch';
 
   @override
-  List<Object> get props => [document, operationName];
+  final AcceptingStoresSearchArguments variables;
+
   @override
-  AcceptingStores$Query parse(Map<String, dynamic> json) =>
-      AcceptingStores$Query.fromJson(json);
+  List<Object> get props => [document, operationName, variables];
+  @override
+  AcceptingStoresSearch$Query parse(Map<String, dynamic> json) =>
+      AcceptingStoresSearch$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -308,7 +490,7 @@ class AcceptingStoreSummaryByIdArguments extends JsonSerializable
           Map<String, dynamic> json) =>
       _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
 
-  final ParamsInput ids;
+  final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
@@ -330,7 +512,7 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
           VariableDefinitionNode(
               variable: VariableNode(name: NameNode(value: 'ids')),
               type: NamedTypeNode(
-                  name: NameNode(value: 'ParamsInput'), isNonNull: true),
+                  name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
               defaultValue: DefaultValueNode(value: null),
               directives: [])
         ],
@@ -396,7 +578,7 @@ class AcceptingStoreByIdArguments extends JsonSerializable with EquatableMixin {
   factory AcceptingStoreByIdArguments.fromJson(Map<String, dynamic> json) =>
       _$AcceptingStoreByIdArgumentsFromJson(json);
 
-  final ParamsInput ids;
+  final IdsParamsInput ids;
 
   @override
   List<Object> get props => [ids];
@@ -417,7 +599,7 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
           VariableDefinitionNode(
               variable: VariableNode(name: NameNode(value: 'ids')),
               type: NamedTypeNode(
-                  name: NameNode(value: 'ParamsInput'), isNonNull: true),
+                  name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
               defaultValue: DefaultValueNode(value: null),
               directives: [])
         ],
@@ -433,6 +615,31 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query,
               ],
               directives: [],
               selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'coordinates'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'lat'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'lng'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
+                    ])),
                 FieldNode(
                     name: NameNode(value: 'store'),
                     alias: null,

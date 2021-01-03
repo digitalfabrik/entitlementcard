@@ -34,9 +34,11 @@ type AcceptingStore {
   description: String!
   id: Int!
   name: String!
+  physicalStore: PhysicalStore
 }
 
 type Address {
+  id: Int!
   location: String!
   postalCode: String!
   state: String!
@@ -55,21 +57,47 @@ type Contact {
   website: String!
 }
 
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
 type PhysicalStore {
   address: Address!
   addressId: Int!
+  coordinates: Coordinates!
   id: Int!
   store: AcceptingStore!
   storeId: Int!
 }
 
 type Query {
+  "Return list of all categories."
+  categories: [Category!]!
   "Return list of all accepting stores."
   physicalStores: [PhysicalStore!]!
   "Returns list of all accepting stores queried by ids."
-  physicalStoresById(params: ParamsInput!): [PhysicalStore!]!
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
+  "Search for accepting stores using searchText and categoryIds."
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
 }
 
-input ParamsInput {
+"Long type"
+scalar Long
+
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
+input IdsParamsInput {
   ids: [Int!]!
+}
+
+input SearchParamsInput {
+  categoryIds: [Int!]
+  coordinates: CoordinatesInput
+  limit: Int
+  offset: Long
+  searchText: String
 }

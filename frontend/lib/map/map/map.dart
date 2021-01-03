@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
+import 'map_controller.dart';
 
 typedef void OnFeatureClickCallback(dynamic feature);
 typedef void OnNoFeatureClickCallback();
+typedef void OnMapCreatedCallback(MapController controller);
 
 class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
@@ -16,6 +17,7 @@ class Map extends StatefulWidget {
   static const LatLng initialLocation = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
+  final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
   final bool myLocationEnabled;
 
@@ -23,63 +25,98 @@ class Map extends StatefulWidget {
       {this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
-      this.myLocationEnabled = false});
+      this.myLocationEnabled = true,
+      this.onMapCreated});
 
   @override
   State createState() => _MapState();
 }
 
-class _MapState extends State<Map> {
+class _MapState extends State<Map> implements MapController {
   MapboxMapController _controller;
+  MapboxMap _mapboxMap;
+  Symbol _symbol;
+  bool _initialLocationUpdateStillPending = true;
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     final config = Configuration.of(context);
-    return new MapboxMap(
-      initialCameraPosition: const CameraPosition(
+    _mapboxMap = new MapboxMap(
+      initialCameraPosition: CameraPosition(
           target: Map.initialLocation, zoom: Map.initialZoomLevel),
       styleString: config.mapStyleUrl,
       myLocationEnabled: widget.myLocationEnabled,
-      onMapCreated: (controller) {
-        setState(() {
-          this._controller = controller;
-        });
-        Future.delayed(Duration(milliseconds: 500), _bringCameraToUserLocation)
-            .timeout(Duration(seconds: 1));
-      },
-      onMapClick: this._onMapClick,
+      myLocationTrackingMode: widget.myLocationEnabled
+          ? MyLocationTrackingMode.Tracking
+          : MyLocationTrackingMode.None,
+      onMapCreated: _onMapCreated,
+      onMapClick: _onMapClick,
+      onUserLocationUpdated: (location) => _onUserLocationUpdated(),
+      onCameraTrackingDismissed: _onCameraTrackingDismissed,
     );
+    super.didChangeDependencies();
   }
 
-  void _onMapClick(Point<double> point, LatLng coordinates) {
-    this
-        ._controller
-        .queryRenderedFeatures(
-            point, widget.onFeatureClickLayerFilter ?? [], null)
-        .then((features) {
-      if (features.isNotEmpty) {
-        var featureInfo = json.decode(features[0]);
-        if (featureInfo != null) {
-          _bringCameraToLocation(coordinates, animate: false);
-          if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
-          return;
-        }
+  @override
+  Widget build(BuildContext context) {
+    return _mapboxMap;
+  }
+
+  _onMapCreated(controller) async {
+    this._controller = controller;
+    var updateLocation = _controller
+        .requestMyLocationLatLng()
+        .then((_) => _onUserLocationUpdated());
+    if (widget.onMapCreated != null) {
+      widget.onMapCreated(this);
+    }
+    await updateLocation;
+  }
+
+  removeSymbol() async {
+    if (_symbol == null) return;
+    await _controller.removeSymbol(_symbol);
+    _symbol = null;
+  }
+
+  setSymbol(LatLng location, int categoryId) async {
+    removeSymbol();
+    _symbol = await _controller.addSymbol(new SymbolOptions(
+        iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+  }
+
+  void _onMapClick(Point<double> point, clickCoordinates) async {
+    var features = await this._controller.queryRenderedFeatures(
+        point, widget.onFeatureClickLayerFilter ?? [], null);
+    if (features.isNotEmpty) {
+      var featureInfo = json.decode(features[0]);
+      if (featureInfo != null) {
+        if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
       }
-      if (widget.onNoFeatureClick != null) widget.onNoFeatureClick();
-    });
+    } else if (widget.onNoFeatureClick != null) {
+      widget.onNoFeatureClick();
+    }
   }
 
-  void _bringCameraToUserLocation() async => _controller
-      .requestMyLocationLatLng()
-      .then((location) => _bringCameraToLocation(location,
-          zoomLevel: Map.userLocationZoomLevel));
-
-  void _bringCameraToLocation(LatLng location,
-      {double zoomLevel, bool animate = true}) async {
-    final move = animate ? _controller.animateCamera : _controller.moveCamera;
+  Future<void> bringCameraToLocation(LatLng location,
+      {double zoomLevel}) async {
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
-    move(update);
+    await _controller.animateCamera(update);
+  }
+
+  Future<void> _onUserLocationUpdated() async {
+    if (_initialLocationUpdateStillPending) {
+      setState(() => _initialLocationUpdateStillPending = false);
+      await _controller
+          .animateCamera(CameraUpdate.zoomTo(Map.userLocationZoomLevel));
+    }
+  }
+
+  void _onCameraTrackingDismissed() {
+    if (_initialLocationUpdateStillPending) {
+      setState(() => _initialLocationUpdateStillPending = false);
+    }
   }
 }

@@ -10,7 +10,7 @@ It is encouraged to add a pre-commit hook like this:
 ```sh
  #!/bin/bash
 
-output=$(flutter format --set-exit-if-changed frontend/lib)
+output=$(flutter format --set-exit-if-changed frontend/lib frontend/test)
 status=$?
 
 if [ $status -eq 0 ]; then
@@ -22,5 +22,5 @@ else
   exit 1
 fi
 ```
-Just paste this into the new file `.git/hooks/pre-commit`. 
+Just paste this into the new file `.git/hooks/pre-commit` and make it executable. 
 When committing and your files are not formatted correctly, they are fixed if possible and the commit will be aborted so that you can re-check your files.

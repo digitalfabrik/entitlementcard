@@ -31,6 +31,7 @@ dependencies {
     implementation("io.javalin:javalin-openapi:3.12.0")
     implementation("com.google.code.gson", "gson", "2.8.6")
     implementation("org.slf4j", "slf4j-simple", "1.7.30")
+    implementation("org.apache.commons", "commons-text", "1.9")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
 
@@ -65,6 +66,9 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2") // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
 
     implementation ("com.github.kenglxn.QRGen:javase:2.6.0")
+
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
+    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+")
 }
 
 application {

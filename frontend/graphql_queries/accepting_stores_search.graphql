@@ -1,0 +1,16 @@
+query AcceptingStoresSearch($params: SearchParamsInput!) {
+    searchAcceptingStores(params: $params) {
+        id
+        name
+        description
+        physicalStore {
+            address {
+                location
+            }
+            coordinates {
+                lat,
+                lng
+            }
+        }
+    }
+}

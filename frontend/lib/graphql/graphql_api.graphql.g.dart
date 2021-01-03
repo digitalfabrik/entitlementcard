@@ -6,54 +6,133 @@ part of 'graphql_api.graphql.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AcceptingStores$Query$AcceptingStoreName$AcceptingStore
-    _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreFromJson(
+AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
+    _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(
         Map<String, dynamic> json) {
-  return AcceptingStores$Query$AcceptingStoreName$AcceptingStore()
-    ..name = json['name'] as String;
+  return AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address()
+    ..location = json['location'] as String;
 }
 
 Map<String, dynamic>
-    _$AcceptingStores$Query$AcceptingStoreName$AcceptingStoreToJson(
-            AcceptingStores$Query$AcceptingStoreName$AcceptingStore instance) =>
+    _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(
+            AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
+                instance) =>
         <String, dynamic>{
-          'name': instance.name,
+          'location': instance.location,
         };
 
-AcceptingStores$Query$AcceptingStoreName
-    _$AcceptingStores$Query$AcceptingStoreNameFromJson(
+AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+    _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesFromJson(
         Map<String, dynamic> json) {
-  return AcceptingStores$Query$AcceptingStoreName()
-    ..id = json['id'] as int
-    ..store = json['store'] == null
-        ? null
-        : AcceptingStores$Query$AcceptingStoreName$AcceptingStore.fromJson(
-            json['store'] as Map<String, dynamic>);
+  return AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates()
+    ..lat = (json['lat'] as num)?.toDouble()
+    ..lng = (json['lng'] as num)?.toDouble();
 }
 
-Map<String, dynamic> _$AcceptingStores$Query$AcceptingStoreNameToJson(
-        AcceptingStores$Query$AcceptingStoreName instance) =>
+Map<String, dynamic>
+    _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(
+            AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+                instance) =>
+        <String, dynamic>{
+          'lat': instance.lat,
+          'lng': instance.lng,
+        };
+
+AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore
+    _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore()
+    ..address = json['address'] == null
+        ? null
+        : AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
+            .fromJson(json['address'] as Map<String, dynamic>)
+    ..coordinates = json['coordinates'] == null
+        ? null
+        : AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
+            .fromJson(json['coordinates'] as Map<String, dynamic>);
+}
+
+Map<String,
+    dynamic> _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(
+        AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'store': instance.store?.toJson(),
+      'address': instance.address?.toJson(),
+      'coordinates': instance.coordinates?.toJson(),
     };
 
-AcceptingStores$Query _$AcceptingStores$QueryFromJson(
+AcceptingStoresSearch$Query$AcceptingStore
+    _$AcceptingStoresSearch$Query$AcceptingStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoresSearch$Query$AcceptingStore()
+    ..id = json['id'] as int
+    ..name = json['name'] as String
+    ..description = json['description'] as String
+    ..physicalStore = json['physicalStore'] == null
+        ? null
+        : AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(
+            json['physicalStore'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$AcceptingStoresSearch$Query$AcceptingStoreToJson(
+        AcceptingStoresSearch$Query$AcceptingStore instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'description': instance.description,
+      'physicalStore': instance.physicalStore?.toJson(),
+    };
+
+AcceptingStoresSearch$Query _$AcceptingStoresSearch$QueryFromJson(
     Map<String, dynamic> json) {
-  return AcceptingStores$Query()
-    ..acceptingStoreName = (json['acceptingStoreName'] as List)
+  return AcceptingStoresSearch$Query()
+    ..searchAcceptingStores = (json['searchAcceptingStores'] as List)
         ?.map((e) => e == null
             ? null
-            : AcceptingStores$Query$AcceptingStoreName.fromJson(
+            : AcceptingStoresSearch$Query$AcceptingStore.fromJson(
                 e as Map<String, dynamic>))
         ?.toList();
 }
 
-Map<String, dynamic> _$AcceptingStores$QueryToJson(
-        AcceptingStores$Query instance) =>
+Map<String, dynamic> _$AcceptingStoresSearch$QueryToJson(
+        AcceptingStoresSearch$Query instance) =>
     <String, dynamic>{
-      'acceptingStoreName':
-          instance.acceptingStoreName?.map((e) => e?.toJson())?.toList(),
+      'searchAcceptingStores':
+          instance.searchAcceptingStores?.map((e) => e?.toJson())?.toList(),
+    };
+
+CoordinatesInput _$CoordinatesInputFromJson(Map<String, dynamic> json) {
+  return CoordinatesInput(
+    lat: (json['lat'] as num)?.toDouble(),
+    lng: (json['lng'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$CoordinatesInputToJson(CoordinatesInput instance) =>
+    <String, dynamic>{
+      'lat': instance.lat,
+      'lng': instance.lng,
+    };
+
+SearchParamsInput _$SearchParamsInputFromJson(Map<String, dynamic> json) {
+  return SearchParamsInput(
+    categoryIds: (json['categoryIds'] as List)?.map((e) => e as int)?.toList(),
+    coordinates: json['coordinates'] == null
+        ? null
+        : CoordinatesInput.fromJson(
+            json['coordinates'] as Map<String, dynamic>),
+    limit: json['limit'] as int,
+    offset: json['offset'] as int,
+    searchText: json['searchText'] as String,
+  );
+}
+
+Map<String, dynamic> _$SearchParamsInputToJson(SearchParamsInput instance) =>
+    <String, dynamic>{
+      'categoryIds': instance.categoryIds,
+      'coordinates': instance.coordinates?.toJson(),
+      'limit': instance.limit,
+      'offset': instance.offset,
+      'searchText': instance.searchText,
     };
 
 AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
@@ -109,15 +188,30 @@ Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
           instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
-ParamsInput _$ParamsInputFromJson(Map<String, dynamic> json) {
-  return ParamsInput(
+IdsParamsInput _$IdsParamsInputFromJson(Map<String, dynamic> json) {
+  return IdsParamsInput(
     ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
   );
 }
 
-Map<String, dynamic> _$ParamsInputToJson(ParamsInput instance) =>
+Map<String, dynamic> _$IdsParamsInputToJson(IdsParamsInput instance) =>
     <String, dynamic>{
       'ids': instance.ids,
+    };
+
+AcceptingStoreById$Query$PhysicalStore$Coordinates
+    _$AcceptingStoreById$Query$PhysicalStore$CoordinatesFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreById$Query$PhysicalStore$Coordinates()
+    ..lat = (json['lat'] as num)?.toDouble()
+    ..lng = (json['lng'] as num)?.toDouble();
+}
+
+Map<String, dynamic> _$AcceptingStoreById$Query$PhysicalStore$CoordinatesToJson(
+        AcceptingStoreById$Query$PhysicalStore$Coordinates instance) =>
+    <String, dynamic>{
+      'lat': instance.lat,
+      'lng': instance.lng,
     };
 
 AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact
@@ -207,6 +301,11 @@ AcceptingStoreById$Query$PhysicalStore
     _$AcceptingStoreById$Query$PhysicalStoreFromJson(
         Map<String, dynamic> json) {
   return AcceptingStoreById$Query$PhysicalStore()
+    ..id = json['id'] as int
+    ..coordinates = json['coordinates'] == null
+        ? null
+        : AcceptingStoreById$Query$PhysicalStore$Coordinates.fromJson(
+            json['coordinates'] as Map<String, dynamic>)
     ..store = json['store'] == null
         ? null
         : AcceptingStoreById$Query$PhysicalStore$AcceptingStore.fromJson(
@@ -220,6 +319,8 @@ AcceptingStoreById$Query$PhysicalStore
 Map<String, dynamic> _$AcceptingStoreById$Query$PhysicalStoreToJson(
         AcceptingStoreById$Query$PhysicalStore instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'coordinates': instance.coordinates?.toJson(),
       'store': instance.store?.toJson(),
       'address': instance.address?.toJson(),
     };
@@ -242,12 +343,27 @@ Map<String, dynamic> _$AcceptingStoreById$QueryToJson(
           instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
+AcceptingStoresSearchArguments _$AcceptingStoresSearchArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoresSearchArguments(
+    params: json['params'] == null
+        ? null
+        : SearchParamsInput.fromJson(json['params'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$AcceptingStoresSearchArgumentsToJson(
+        AcceptingStoresSearchArguments instance) =>
+    <String, dynamic>{
+      'params': instance.params?.toJson(),
+    };
+
 AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
     Map<String, dynamic> json) {
   return AcceptingStoreSummaryByIdArguments(
     ids: json['ids'] == null
         ? null
-        : ParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
+        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 
@@ -262,7 +378,7 @@ AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(
   return AcceptingStoreByIdArguments(
     ids: json['ids'] == null
         ? null
-        : ParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
+        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 
