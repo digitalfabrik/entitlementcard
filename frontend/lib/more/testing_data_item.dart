@@ -1,7 +1,8 @@
-import 'package:ehrenamtskarte/identification/card_details.dart';
-import 'package:ehrenamtskarte/identification/card_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../identification/card_details.dart';
+import '../identification/card_details_model.dart';
 
 final validEakDetails =
     CardDetails("Jane", "Doe", DateTime.parse("2024-03-22"), "Augsburg Stadt");
@@ -38,12 +39,12 @@ class _TestingDataState extends State<TestingDataItem> {
   }
 
   Future<void> _resetEakData() async {
-    Provider.of<CardDetailsModel>(this.context, listen: false)
+    Provider.of<CardDetailsModel>(context, listen: false)
         .clearCardDetails();
   }
 
   Future<void> _setValidEakData() async {
-    Provider.of<CardDetailsModel>(this.context, listen: false)
+    Provider.of<CardDetailsModel>(context, listen: false)
         .setCardDetails(validEakDetails);
   }
 }
