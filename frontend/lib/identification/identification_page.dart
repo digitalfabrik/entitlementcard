@@ -1,10 +1,11 @@
-import 'no_card_view.dart';
-import 'card_detail_view.dart';
-import 'card_details_model.dart';
-import 'package:provider/provider.dart';
-import 'card_details.dart';
-import 'scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'card_detail_view.dart';
+import 'card_details.dart';
+import 'card_details_model.dart';
+import 'no_card_view.dart';
+import 'scanner/qr_code_scanner.dart';
 
 class IdentificationPage extends StatefulWidget {
   IdentificationPage({Key key, this.title}) : super(key: key);

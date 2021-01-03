@@ -1,12 +1,12 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/util/sanitize_phone_number.dart';
-import 'package:ehrenamtskarte/home/home_page.dart';
-import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../graphql/graphql_api.graphql.dart';
+import '../../home/home_page.dart';
+import '../../util/sanitize_phone_number.dart';
+import '../map_page.dart';
 import 'contact_info_row.dart';
 
 class DetailContent extends StatelessWidget {
@@ -21,7 +21,7 @@ class DetailContent extends StatelessWidget {
     final contact = acceptingStore.store.contact;
     return Container(
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
-        child: new Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
@@ -36,10 +36,12 @@ class DetailContent extends StatelessWidget {
                 children: <Widget>[
                   ContactInfoRow(
                       Icons.location_on,
-                      "${address.street}\n${address.postalCode} ${address.location}",
+                      "${address.street}\n"
+                          "${address.postalCode} ${address.location}",
                       "Adresse",
-                      onTap: () => MapsLauncher.launchQuery(
-                          "${address.street}, ${address.postalCode} ${address.location}")),
+                      onTap: () =>
+                          MapsLauncher.launchQuery("${address.street}, "
+                              "${address.postalCode} ${address.location}")),
                   ContactInfoRow(
                     Icons.language,
                     acceptingStore.store.contact.website,

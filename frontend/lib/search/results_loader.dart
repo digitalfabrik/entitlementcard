@@ -1,10 +1,10 @@
-import 'package:ehrenamtskarte/search/seach_result_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../graphql/graphql_api.dart';
+import 'seach_result_item.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput coordinates;
@@ -28,16 +28,14 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final GraphQLClient client = GraphQLProvider.of(context).value;
+    final client = GraphQLProvider.of(context).value;
     assert(client != null);
     if (client != _client) {
       _client = client;
@@ -45,7 +43,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
   }
 
   @override
-  didUpdateWidget(ResultsLoader oldWidget) {
+  void didUpdateWidget(ResultsLoader oldWidget) {
     _pagingController.refresh();
     super.didUpdateWidget(oldWidget);
   }
@@ -73,7 +71,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
-    } catch (error) {
+    } on Exception catch (error) {
       _pagingController.error = error;
     }
   }
@@ -108,7 +106,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
         Icon(Icons.warning, size: 60, color: Colors.orange),
         Text("Bitte Internetverbindung prüfen."),
         OutlineButton(
-          onPressed: () => _pagingController.retryLastFailedRequest(),
+          onPressed: _pagingController.retryLastFailedRequest,
           child: Text("Erneut versuchen"),
         )
       ]));

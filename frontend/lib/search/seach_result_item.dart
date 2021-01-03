@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/map/detail/detail_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../graphql/graphql_api.dart';
+import '../map/detail/detail_view.dart';
 
 class SearchResultItem extends StatelessWidget {
   final AcceptingStoresSearch$Query$AcceptingStore item;
@@ -16,15 +15,16 @@ class SearchResultItem extends StatelessWidget {
 
   _getDistanceString() {
     if (coordinates == null || item.physicalStore == null) return null;
-    double d = calcDistance(coordinates.lat, coordinates.lng,
+    var d = calcDistance(coordinates.lat, coordinates.lng,
         item.physicalStore.coordinates.lat, item.physicalStore.coordinates.lng);
 
-    if (d < 1)
-      return ((d * 100).round() * 10).toString() + "m";
-    else if (d < 10)
-      return NumberFormat("##.0", "de").format(d) + "km";
-    else
-      return NumberFormat("###,###", "de").format(d) + "km";
+    if (d < 1) {
+      return "${(d * 100).round() * 10}m";
+    } else if (d < 10) {
+      return "${NumberFormat("##.0", "de").format(d)}km";
+    } else {
+      return "${NumberFormat("###,###", "de").format(d)}km";
+    }
   }
 
   @override
@@ -46,7 +46,7 @@ class SearchResultItem extends StatelessWidget {
                 item.physicalStore.address.location +
                     (distanceString == null
                         ? ""
-                        : ", " + distanceString + " entfernt"),
+                        : ", $distanceString entfernt"),
                 maxLines: 1,
               ))
         ]),
@@ -69,7 +69,7 @@ class SearchResultItem extends StatelessWidget {
 }
 
 // from https://www.movable-type.co.uk/scripts/latlong.html
-calcDistance(lat1, lng1, lat2, lng2) {
+double calcDistance(double lat1, double lng1, double lat2, double lng2) {
   final R = 6371; // kilometers
   final phi1 = lat1 * pi / 180; // φ, λ in radians
   final phi2 = lat2 * pi / 180;

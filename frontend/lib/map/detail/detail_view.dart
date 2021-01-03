@@ -1,10 +1,9 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/widgets/error_message.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
+import '../../graphql/graphql_api.graphql.dart';
+import '../../widgets/error_message.dart';
 import 'detail_content.dart';
 import 'detail_layout.dart';
 
@@ -23,7 +22,7 @@ class DetailView extends StatelessWidget {
       options: QueryOptions(
           documentNode: byIdQuery.document,
           variables: byIdQuery.getVariablesMap()),
-      builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
+      builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
         }
@@ -39,7 +38,7 @@ class DetailView extends StatelessWidget {
         return DetailLayout(
           title: matchingStores.first.store.name,
           body: DetailContent(matchingStores.first,
-              hideShowOnMapButton: this.hideShowOnMapButton),
+              hideShowOnMapButton: hideShowOnMapButton),
           category: matchingStores.first.store.category.id,
         );
       },
