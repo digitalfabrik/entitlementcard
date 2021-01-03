@@ -9,7 +9,7 @@ import 'map_controller.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
-typedef void OnMapCreatedCallback(MapController controller);
+typedef OnMapCreatedCallback = void Function(MapController controller);
 
 class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
@@ -73,13 +73,13 @@ class _MapState extends State<Map> implements MapController {
     await updateLocation;
   }
 
-  removeSymbol() async {
+  Future<void> removeSymbol() async {
     if (_symbol == null) return;
     await _controller.removeSymbol(_symbol);
     _symbol = null;
   }
 
-  setSymbol(LatLng location, int categoryId) async {
+  Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
     _symbol = await _controller.addSymbol(SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));

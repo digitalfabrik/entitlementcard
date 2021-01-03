@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           appFlows: appFlows,
           currentIndex: _currentTabIndex,
         ),
-        bottomNavigationBar: this._buildBottomNavigationBar(context),
+        bottomNavigationBar: _buildBottomNavigationBar(context),
       ),
     );
   }
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
       _currentTabIndex = 0;
     });
     if (idWithCoordinates != null) {
-      this.mapPageController.showAcceptingStore(idWithCoordinates);
+      mapPageController.showAcceptingStore(idWithCoordinates);
     }
   }
 }

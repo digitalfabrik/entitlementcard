@@ -36,7 +36,7 @@ class MapWithFutures extends StatelessWidget {
           myLocationEnabled:
               snapshot.hasData && snapshot.data == PermissionStatus.granted,
           onFeatureClickLayerFilter: onFeatureClickLayerFilter,
-          onMapCreated: this.onMapCreated,
+          onMapCreated: onMapCreated,
         );
       },
     );

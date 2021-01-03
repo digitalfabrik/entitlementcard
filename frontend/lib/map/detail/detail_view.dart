@@ -38,7 +38,7 @@ class DetailView extends StatelessWidget {
         return DetailLayout(
           title: matchingStores.first.store.name,
           body: DetailContent(matchingStores.first,
-              hideShowOnMapButton: this.hideShowOnMapButton),
+              hideShowOnMapButton: hideShowOnMapButton),
           category: matchingStores.first.store.category.id,
         );
       },
