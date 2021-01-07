@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Generate GraphQL Client" type="ShConfigurationType">
+  <configuration default="false" name="Generate Flutter GraphQL Client" type="ShConfigurationType">
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="$PROJECT_DIR$/frontend/generate-graphql-client.sh" />
     <option name="SCRIPT_OPTIONS" value="" />
