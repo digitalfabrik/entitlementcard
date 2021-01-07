@@ -91,7 +91,7 @@ class _SearchPageState extends State<SearchPage> {
         .then((value) => setState(() => {
               _coordinates =
                   CoordinatesInput(lat: value.latitude, lng: value.longitude)
-            }))
+            }), onError: (e) => debugPrint(e.toString()))
         .whenComplete(() => setState(() {
               _locationStatus = LocationRequestStatus.requestFinished;
             }));

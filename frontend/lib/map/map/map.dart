@@ -63,24 +63,10 @@ class _MapState extends State<Map> implements MapController {
     return _mapboxMap;
   }
 
-  Future<void> _onMapCreated(MapboxMapController controller) async {
+  void _onMapCreated(MapboxMapController controller) {
     _controller = controller;
-    Future updateLocation;
-    if (widget.myLocationEnabled) {
-      updateLocation = _zoomOutIfLocationIsMissing();
-    }
     if (widget.onMapCreated != null) {
       widget.onMapCreated(this);
-    }
-    await updateLocation;
-  }
-
-  Future<void> _zoomOutIfLocationIsMissing() async {
-    try {
-      await _controller.requestMyLocationLatLng();
-    } on Exception catch (_) { // TODO find better type than Exception
-      await _controller.moveCamera(
-          CameraUpdate.zoomTo(Map.initialZoomLevel));
     }
   }
 
