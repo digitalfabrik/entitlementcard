@@ -11,7 +11,7 @@ import {
 const QUIET_ZONE_SIZE = 10
 
 // Adapted from https://github.com/zxing-js/library/blob/d1a270cb8ef3c4dba72966845991f5c876338aac/src/browser/BrowserQRCodeSvgWriter.ts#L91
-const renderPdf = (doc: any, data: string, hints?: Map<EncodeHintType, any>, width = 500, height = 500) => {
+const renderPdf = (doc: typeof PDFDocument, data: string, hints?: Map<EncodeHintType, any>, width = 500, height = 500) => {
     let errorCorrectionLevel = ErrorCorrectionLevel.L;
     let quietZone = QUIET_ZONE_SIZE;
 
@@ -49,15 +49,22 @@ const renderPdf = (doc: any, data: string, hints?: Map<EncodeHintType, any>, wid
     const leftPadding = Math.floor((outputWidth - (inputWidth * multiple)) / 2);
     const topPadding = Math.floor((outputHeight - (inputHeight * multiple)) / 2);
 
+    let pathData = ""
     for (let inputY = 0, outputY = topPadding; inputY < inputHeight; inputY++ , outputY += multiple) {
         // Write the contents of this row of the barcode
         for (let inputX = 0, outputX = leftPadding; inputX < inputWidth; inputX++ , outputX += multiple) {
             if (input.get(inputX, inputY) === 1) {
-                doc.rect(outputX, outputY, multiple, multiple)
-                doc.fill('black')
+                // doc.rect(outputX, outputY, multiple, multiple)
+                // doc.fill('black')
+                var w = multiple + outputX
+                var h = multiple + outputY
+                pathData += ('M' + outputX + ',' + outputY + ' V' + h + ' H' + w + ' V' + outputY + ' H' + outputX + ' Z ');
             }
         }
     }
+    doc.path(pathData)
+    doc.fill('black')
+    console.log(pathData)
 }
 
 export default () => {
