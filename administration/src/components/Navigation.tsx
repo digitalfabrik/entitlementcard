@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Navbar} from "@blueprintjs/core";
 
-export class Navigation extends React.Component<any, any> {
+export class Navigation extends React.Component<{}, {}> {
 
     render() {
         return (
