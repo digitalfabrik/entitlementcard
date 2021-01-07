@@ -4,6 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
 import 'menu_item.dart';
+import 'testing_data_item.dart';
+
+const showTestDataOptions =
+    bool.fromEnvironment("test_data_options", defaultValue: false);
 
 class MorePage extends StatelessWidget {
   @override
@@ -17,7 +21,8 @@ class MorePage extends StatelessWidget {
             title: 'Über diese App',
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
-          )
+          ),
+          if (showTestDataOptions) TestingDataItem(),
         ]),
       ),
     );
