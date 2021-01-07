@@ -13,43 +13,56 @@ class SearchResultItem extends StatelessWidget {
   const SearchResultItem({Key key, this.item, this.coordinates})
       : super(key: key);
 
-  _getDistanceString() {
+  /// Returns the distance between `coordinates` and the physical store,
+  /// or `null` if `coordinates` or `item.physicalStore` is `null`
+  double get _distance {
+    // ignore: avoid_returning_null
     if (coordinates == null || item.physicalStore == null) return null;
-    var d = calcDistance(coordinates.lat, coordinates.lng,
+    return calcDistance(coordinates.lat, coordinates.lng,
         item.physicalStore.coordinates.lat, item.physicalStore.coordinates.lng);
+  }
 
+  static String _formatDistance(double d) {
     if (d < 1) {
-      return "${(d * 100).round() * 10}m";
+      return "${(d * 100).round() * 10} m";
     } else if (d < 10) {
-      return "${NumberFormat("##.0", "de").format(d)}km";
+      return "${NumberFormat("##.0", "de").format(d)} km";
     } else {
-      return "${NumberFormat("###,###", "de").format(d)}km";
+      return "${NumberFormat("###,###", "de").format(d)} km";
     }
+  }
+
+  String get _locationWithDistanceString {
+    return [
+      item.physicalStore?.address?.location,
+      if (_distance != null) "${_formatDistance(_distance)} entfernt"
+    ]
+        .where((element) => element != null)
+        .join(", ");
   }
 
   @override
   Widget build(BuildContext context) {
-    String distanceString = _getDistanceString();
     return ListTile(
-        title: Text(item.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Column(children: [
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                item.description,
+        title: Text(
+            item.name ?? "Akzeptanzstelle",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis
+        ),
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                item.description ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              )),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                item.physicalStore.address.location +
-                    (distanceString == null
-                        ? ""
-                        : ", $distanceString entfernt"),
+              ),
+            Text(
+                _locationWithDistanceString,
                 maxLines: 1,
-              ))
-        ]),
+              ),
+          ]),
         isThreeLine: true,
         trailing: Container(
             child: Icon(Icons.keyboard_arrow_right, size: 30.0),
