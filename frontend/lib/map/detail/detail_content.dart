@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../graphql/graphql_api.graphql.dart';
 import '../../home/home_page.dart';
-import '../../util/sanitize_phone_number.dart';
+import '../../util/sanitize_contact_details.dart';
 import '../map_page.dart';
 import 'contact_info_row.dart';
 
@@ -36,7 +36,7 @@ class DetailContent extends StatelessWidget {
               ],
               Column(
                 children: <Widget>[
-                  ContactInfoRow(
+                  if (address != null) ContactInfoRow(
                       Icons.location_on,
                       "${address.street}\n"
                           "${address.postalCode} ${address.location}",
@@ -44,45 +44,44 @@ class DetailContent extends StatelessWidget {
                       onTap: () =>
                           MapsLauncher.launchQuery("${address.street}, "
                               "${address.postalCode} ${address.location}")),
-                  ContactInfoRow(
+                  if (contact.website != null) ContactInfoRow(
                     Icons.language,
-                    acceptingStore.store.contact.website,
+                    prepareWebsiteUrlForDisplay(contact.website),
                     "Website",
-                    onTap: () => launch(contact.website),
+                    onTap: () =>
+                        launch(prepareWebsiteUrlForLaunch(contact.website)),
                   ),
-                  ContactInfoRow(
+                  if (contact.telephone != null) ContactInfoRow(
                     Icons.phone,
                     contact.telephone,
                     "Telefon",
                     onTap: () =>
                         launch("tel:${sanitizePhoneNumber(contact.telephone)}"),
                   ),
-                  ContactInfoRow(
+                  if (contact.email != null) ContactInfoRow(
                     Icons.alternate_email,
                     contact.email,
                     "E-Mail",
-                    onTap: () => launch("mailto:${contact.email}"),
+                    onTap: () => launch("mailto:${contact.email.trim()}"),
                   ),
                 ],
               ),
-              ...hideShowOnMapButton
-                  ? []
-                  : [
-                      Divider(
-                        thickness: 0.7,
-                        height: 48,
-                        color: Theme.of(context).primaryColorLight,
-                      ),
-                      ButtonBar(
-                        children: [
-                          OutlineButton(
-                            child: Text("Auf Karte zeigen"),
-                            onPressed: () => _showOnMap(context),
-                          ),
-                        ],
-                        alignment: MainAxisAlignment.center,
-                      ),
-                    ]
+              if (!hideShowOnMapButton) ...[
+                Divider(
+                  thickness: 0.7,
+                  height: 48,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+                ButtonBar(
+                  children: [
+                    OutlineButton(
+                      child: Text("Auf Karte zeigen"),
+                      onPressed: () => _showOnMap(context),
+                    ),
+                  ],
+                  alignment: MainAxisAlignment.center,
+                ),
+              ]
             ]));
   }
 
