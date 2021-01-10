@@ -1,11 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
 
-final validEakDetails =
-    CardDetails("Jane", "Doe", DateTime.parse("2024-03-22"), "Augsburg Stadt");
+final validEakDetails = CardDetails(
+    fullName: "Jane Doe",
+    randomBytes: Uint8List.fromList([5, 4, 3, 2]),
+    expirationDate: 1610306137,
+    cardType: "Ehrenamtskarte",
+    totpSecret: Uint8List.fromList([0, 1, 2, 3]),
+    region: "Augsburg Land");
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
@@ -39,8 +46,7 @@ class _TestingDataState extends State<TestingDataItem> {
   }
 
   Future<void> _resetEakData() async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .clearCardDetails();
+    Provider.of<CardDetailsModel>(context, listen: false).clearCardDetails();
   }
 
   Future<void> _setValidEakData() async {

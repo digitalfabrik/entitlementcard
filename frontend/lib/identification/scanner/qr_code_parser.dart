@@ -3,15 +3,23 @@ import '../jwt/parse_jwt.dart';
 
 CardDetails parseQRCodeContent(String rawContent) {
   var payload = parseJwtPayLoad(rawContent);
-  String firstName = payload["firstName"];
-  String lastName = payload["lastName"];
+  String fullName = payload["fullName"];
 
-  if (firstName == null || lastName == null) {
+  if (fullName == null) {
     throw Exception("Name konnte nicht aus QR Code gelesen werden.");
   }
 
-  final expirationDate = DateTime.parse(payload["expirationDate"]);
-  String region = payload["region"] ?? "";
+  final randomBytes = payload["randomBytes"];
+  final expirationDate = payload["expirationDate"];
+  final cardType = payload["cardType"];
+  final totpSecret = payload["totpSecret"];
+  String region = payload["region"];
 
-  return CardDetails(firstName, lastName, expirationDate, region);
+  return CardDetails(
+      fullName: fullName,
+      randomBytes: randomBytes,
+      expirationDate: expirationDate,
+      cardType: cardType,
+      totpSecret: totpSecret,
+      region: region);
 }
