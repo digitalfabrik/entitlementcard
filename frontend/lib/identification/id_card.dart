@@ -8,14 +8,12 @@ class IdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-        child: FittedBox(
-            child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                color: Colors.black26,
-                child: child)));
+    return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        color: Colors.black26,
+        child: AspectRatio(aspectRatio: 3 / 2, child: child));
   }
 }

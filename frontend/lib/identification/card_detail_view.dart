@@ -21,40 +21,66 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    var isLandscape = MediaQuery.of(context).size.width >= 500;
+
+    return Flex(
+      direction: isLandscape ? Axis.horizontal : Axis.vertical,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        InkWell(
-            onTap: () => showDialog(context: context, builder: _createQrCode),
-            child: IdCard(
-                child: SvgPicture.asset("assets/card.svg",
-                    semanticsLabel: 'Ehrenamtskarte',
-                    alignment: Alignment.center,
-                    fit: BoxFit.fill))),
-        SizedBox(height: 10),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 4),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                    child: Text(
-                      "Code einscannen",
-                      style: TextStyle(color: Theme.of(context).accentColor),
-                    ),
-                    onTap: onOpenQrScanner),
-              ),
-              SizedBox(height: 10),
-              Text("Gültig bis $_formattedExpirationDate"),
-              SizedBox(height: 5),
               Text(
                 cardDetails.fullName ?? "",
                 style: Theme.of(context).textTheme.headline6,
               ),
+              SizedBox(height: 5),
+              Text("Gültig bis $_formattedExpirationDate"),
+              SizedBox(height: 5),
             ],
           ),
-        )
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            IdCard(
+              child: SvgPicture.asset("assets/card.svg",
+                  semanticsLabel: 'Ehrenamtskarte',
+                  alignment: Alignment.center,
+                  fit: BoxFit.fill),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                  child: Text(
+                    "Code neu einscannen",
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onTap: onOpenQrScanner),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 24,
+        ),
+        Center(
+            child: MaterialButton(
+          onPressed: () {
+            showDialog(context: context, builder: _createQrCode);
+          },
+          color: Colors.white,
+          textColor: Colors.black,
+          child: Icon(
+            Icons.qr_code,
+            size: 50,
+          ),
+          padding: EdgeInsets.all(16),
+          shape: CircleBorder(),
+        ))
       ],
     );
   }

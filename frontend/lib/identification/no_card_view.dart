@@ -9,7 +9,10 @@ class NoCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    var isLandscape = MediaQuery.of(context).size.width >= 500;
+    return Flex(
+      direction: isLandscape ? Axis.horizontal : Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IdCard(
           child: Container(
@@ -24,9 +27,7 @@ class NoCardView extends StatelessWidget {
                     .merge(TextStyle(color: Colors.white70)),
               )),
         ),
-        SizedBox(
-          height: 24,
-        ),
+        SizedBox(height: 24),
         RaisedButton(
             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             onPressed: onOpenQrScanner,
