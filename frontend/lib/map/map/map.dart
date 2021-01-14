@@ -36,14 +36,16 @@ class _MapState extends State<Map> implements MapController {
   MapboxMapController _controller;
   MapboxMap _mapboxMap;
   Symbol _symbol;
-  bool _initialLocationUpdateStillPending = true;
 
   @override
   void didChangeDependencies() {
     final config = Configuration.of(context);
     _mapboxMap = MapboxMap(
       initialCameraPosition: CameraPosition(
-          target: Map.initialLocation, zoom: Map.initialZoomLevel),
+          target: Map.initialLocation,
+          zoom: widget.myLocationEnabled
+              ? Map.userLocationZoomLevel
+              : Map.initialZoomLevel),
       styleString: config.mapStyleUrl,
       myLocationEnabled: widget.myLocationEnabled,
       myLocationTrackingMode: widget.myLocationEnabled
@@ -51,8 +53,7 @@ class _MapState extends State<Map> implements MapController {
           : MyLocationTrackingMode.None,
       onMapCreated: _onMapCreated,
       onMapClick: _onMapClick,
-      onUserLocationUpdated: (location) => _onUserLocationUpdated(),
-      onCameraTrackingDismissed: _onCameraTrackingDismissed,
+      compassViewPosition: CompassViewPosition.BottomRight,
     );
     super.didChangeDependencies();
   }
@@ -62,15 +63,11 @@ class _MapState extends State<Map> implements MapController {
     return _mapboxMap;
   }
 
-  _onMapCreated(controller) async {
+  void _onMapCreated(MapboxMapController controller) {
     _controller = controller;
-    var updateLocation = _controller
-        .requestMyLocationLatLng()
-        .then((_) => _onUserLocationUpdated());
     if (widget.onMapCreated != null) {
       widget.onMapCreated(this);
     }
-    await updateLocation;
   }
 
   Future<void> removeSymbol() async {
@@ -104,19 +101,5 @@ class _MapState extends State<Map> implements MapController {
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
     await _controller.animateCamera(update);
-  }
-
-  Future<void> _onUserLocationUpdated() async {
-    if (_initialLocationUpdateStillPending) {
-      setState(() => _initialLocationUpdateStillPending = false);
-      await _controller
-          .animateCamera(CameraUpdate.zoomTo(Map.userLocationZoomLevel));
-    }
-  }
-
-  void _onCameraTrackingDismissed() {
-    if (_initialLocationUpdateStillPending) {
-      setState(() => _initialLocationUpdateStillPending = false);
-    }
   }
 }

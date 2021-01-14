@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:location_permissions/location_permissions.dart';
 
-import '../../location/request_location_permission.dart'
-    show requestLocationPermissionIfNotYetGranted;
+import '../../location/determine_position.dart';
 import 'map.dart';
 
 class MapWithFutures extends StatelessWidget {
@@ -19,11 +17,20 @@ class MapWithFutures extends StatelessWidget {
       this.onMapCreated})
       : super(key: key);
 
+  Future<bool> _canDetermineLocation() async {
+    try {
+      await requestPermissionToDeterminePosition();
+      return true;
+    } on PositionNotAvailableException catch (e) {
+      debugPrint(e.reason);
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PermissionStatus>(
-      future: requestLocationPermissionIfNotYetGranted(
-          LocationPermissionLevel.locationWhenInUse),
+    return FutureBuilder<bool>(
+      future: _canDetermineLocation(),
       builder: (context, snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
           return Center(
@@ -33,8 +40,7 @@ class MapWithFutures extends StatelessWidget {
         return Map(
           onFeatureClick: onFeatureClick,
           onNoFeatureClick: onNoFeatureClick,
-          myLocationEnabled:
-              snapshot.hasData && snapshot.data == PermissionStatus.granted,
+          myLocationEnabled: snapshot.hasData && snapshot.data,
           onFeatureClickLayerFilter: onFeatureClickLayerFilter,
           onMapCreated: onMapCreated,
         );
