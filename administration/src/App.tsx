@@ -6,8 +6,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {HashRouter, Route} from "react-router-dom";
-import {EakForm} from "./components/generation/EakForm";
-import {EakGeneration} from "./components/generation/EakGeneration";
+import EakGeneration from "./components/generation/EakGeneration";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
