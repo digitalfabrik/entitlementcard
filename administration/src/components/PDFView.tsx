@@ -12,23 +12,23 @@ export default () => {
             unit: 'mm',
             format: 'a4'
         });
-        
+
         doc.setDocumentProperties({
             title: "Anmeldecode",
             subject: "Anmeldecode",
             author: "Bayern",
             creator: "Bayern"
         })
-        
+
         const pageSize = doc.internal.pageSize
         const {width, height} = {width: pageSize.getWidth(), height: pageSize.getHeight()}
         const pageMargin = 20;
         const pageBottom = height - pageMargin;
-        
+
         const logoSize = 25
         doc.addImage(logo, 'PNG', width / 2 - (logoSize / 2), pageMargin, logoSize, logoSize)
         doc.text("Ihre digitale Ehrenamtskarte ist da!", pageMargin, 60);
-        
+
         doc.setFontSize(12)
         let instructionsY = 100;
         doc.text([
@@ -38,7 +38,6 @@ export default () => {
             "3. Scannen Sie den Anmeldecode.",
         ], pageMargin, instructionsY);
 
-       
         const qrCodeSize = 100;
         const qrCodeY = pageBottom - qrCodeSize - 40;
         const qrCodeMarginTop = 5
@@ -46,16 +45,8 @@ export default () => {
         doc.text("Anmeldecode:", pageMargin, qrCodeY - qrCodeMarginTop);
         drawjsPDF("A".repeat(223), pageMargin, qrCodeY, qrCodeSize, doc)
 
-        const playStoreUrl = "https://play.google.com/store/apps/details?id=com.google.android.googlequicksearchbox";
-        const appStoreUrl = "https://apps.apple.com/de/app/apple-store/id375380948";
-        let storeQrCodeSize = 30;
-        drawjsPDF(playStoreUrl, width - pageMargin - storeQrCodeSize, pageBottom - storeQrCodeSize, storeQrCodeSize,  doc, false, 5)
-        drawjsPDF(appStoreUrl, width - pageMargin - 2 * storeQrCodeSize - 10, pageBottom - storeQrCodeSize, storeQrCodeSize, doc, false, 5)
-
         doc.setFontSize(12)
-        doc.text("Play Store:", width - pageMargin - storeQrCodeSize, pageBottom - storeQrCodeSize - 2);
-        doc.text("Apple Store:", width - pageMargin - 2 * storeQrCodeSize - 10, pageBottom - storeQrCodeSize - 2);
-
+        doc.textWithLink("https://ehrenamtskarte.app/download_app", width - pageMargin - 80, pageBottom, { url: "https://ehrenamtskarte.app/download_app" });
         setPDFBlob(doc.output('datauristring'))
     }, [])
 
