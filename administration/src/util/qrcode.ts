@@ -10,7 +10,10 @@ const DEFAULT_QUIET_ZONE_SIZE = 10
 
 
 // Adapted from https://github.com/zxing-js/library/blob/d1a270cb8ef3c4dba72966845991f5c876338aac/src/browser/BrowserQRCodeSvgWriter.ts#L91
-const createQRCode = (text: string, renderRect: (x: number, y: number, size: number) => void, size: number, hints?: Map<EncodeHintType, any>) => {
+const createQRCode = (text: string,
+                      renderRect: (x: number, y: number, size: number) => void,
+                      renderBoundary: (x: number, y: number, width: number, height: number) => void,
+                      size: number, hints?: Map<EncodeHintType, any>) => {
     let errorCorrectionLevel = ErrorCorrectionLevel.L;
     let quietZone = DEFAULT_QUIET_ZONE_SIZE;
     const {width, height} = {width: size, height: size}
@@ -20,7 +23,7 @@ const createQRCode = (text: string, renderRect: (x: number, y: number, size: num
             errorCorrectionLevel = ErrorCorrectionLevel.fromString(hints.get(EncodeHintType.ERROR_CORRECTION).toString());
         }
 
-        if (hints.get(EncodeHintType.MARGIN)) {
+        if (hints.get(EncodeHintType.MARGIN) !== undefined) {
             quietZone = Number.parseInt(hints.get(EncodeHintType.MARGIN).toString(), 10);
         }
     }
@@ -50,6 +53,8 @@ const createQRCode = (text: string, renderRect: (x: number, y: number, size: num
     const leftPadding = Math.floor((outputWidth - (inputWidth * multiple)) / 2);
     const topPadding = Math.floor((outputHeight - (inputHeight * multiple)) / 2);
 
+    renderBoundary(0, 0, outputWidth, outputHeight)
+
 
     for (let inputY = 0; inputY < inputHeight; inputY++) {
         // Write the contents of this row of the barcode
@@ -64,13 +69,21 @@ const createQRCode = (text: string, renderRect: (x: number, y: number, size: num
 }
 
 
-export const drawjsPDF = (text: string, size: number, pdfDocument: jsPDF) => {
+export const drawjsPDF = (text: string, x: number, y: number, size: number, pdfDocument: jsPDF, border: boolean = true, version = 7) => {
     const hints = new Map()
     hints.set(EncodeHintType.MARGIN, 0)
-    hints.set(EncodeHintType.QR_VERSION, 7) // 224 characters
-    createQRCode(text, (x: number, y: number, size: number) => pdfDocument.rect(x, y, size, size, "DF"), size, hints)
+    hints.set(EncodeHintType.QR_VERSION, version)
+    createQRCode(text, (rectX: number, rectY: number, rectSize: number) => {
+            pdfDocument.rect(x + rectX, y + rectY, rectSize, rectSize, "FD");
+        },
+        (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
+            if (border) {
+                pdfDocument.setLineWidth(.4)
+                pdfDocument.roundedRect(x + rectX, y + rectY, rectWidth, rectHeight, 10, 10, "D");
+                pdfDocument.setLineWidth(0)
+            }
+        }, size, hints)
 }
-
 
 export const drawSVGPath = (text: string, size: number, pdfDocument: jsPDF) => {
     const hints = new Map()
@@ -78,8 +91,11 @@ export const drawSVGPath = (text: string, size: number, pdfDocument: jsPDF) => {
     hints.set(EncodeHintType.QR_VERSION, 7) // 224 characters
 
     let pathData = ""
-    createQRCode(text, (x: number, y: number, size: number) => pathData += 'M' + x + ',' + y + ' V' + size + ' H' + size + ' V' + y + ' H' + x + ' Z '
-        , size,
-        hints)
+    createQRCode(text, (x: number, y: number, size: number) => {
+            return pathData += 'M' + x + ',' + y + ' V' + size + ' H' + size + ' V' + y + ' H' + x + ' Z ';
+        },
+        (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
+            // TODO
+        }, size, hints)
     return pathData
 }
