@@ -1,13 +1,12 @@
 import React from "react";
-import {FormGroup, InputGroup, Button, MenuItem, Card} from "@blueprintjs/core";
-import './EakForm.css';
+import {Button, Card, FormGroup, InputGroup, MenuItem} from "@blueprintjs/core";
 import {ItemRenderer, Select} from "@blueprintjs/select";
 import {CardType} from "../../models/CardType";
-import {CardCreationModel} from "../../models/CardCreationModel";
 
 const CardTypeSelect = Select.ofType<CardType>();
 
-const renderCardType: ItemRenderer<CardType> = (cardType, { handleClick, modifiers, query }) => {
+
+const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifiers, query}) => {
     if (!modifiers.matchesPredicate) {
         return null;
     }
@@ -27,25 +26,26 @@ export const EakForm = () => {
     const values = Object.values(CardType);
 
     return (
-        <div className="form">
+        <div>
             <Card>
                 <FormGroup label="Vorname">
-                    <InputGroup placeholder="Vorname" />
+                    <InputGroup placeholder="Vorname"/>
                 </FormGroup>
                 <FormGroup label="Nachname">
-                    <InputGroup placeholder="Nachname" />
+                    <InputGroup placeholder="Nachname"/>
                 </FormGroup>
                 <FormGroup label="Ablaufdatum">
-                    <InputGroup placeholder="Ablaufdatum" />
+                    <InputGroup placeholder="Ablaufdatum"/>
                 </FormGroup>
                 <FormGroup label="Typ der Karte">
                     <CardTypeSelect
                         items={values}
-                        onItemSelect={() => {}}
+                        onItemSelect={() => {
+                        }}
                         itemRenderer={renderCardType}
                         filterable={false}
                     >
-                        <Button className={"cardTypeSelect"} text={values[0]} rightIcon="caret-down" />
+                        <Button className={"cardTypeSelect"} text={values[0]} rightIcon="caret-down"/>
                     </CardTypeSelect>
                 </FormGroup>
             </Card>

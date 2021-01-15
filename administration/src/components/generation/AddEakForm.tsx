@@ -1,22 +1,32 @@
 import React from "react";
 import {Card, Icon} from "@blueprintjs/core";
-import './AddEakForm.css';
+import styled from 'styled-components';
 
 interface Props {
     onClick: () => void
 }
 
+const StyledCard = styled(Card)`
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  &  p {
+    text-align: center;
+    margin: 10px 0 0 0;
+  }
+  :hover {
+    background: #f0f0f0;
+  }
+`
+
 const AddEakForm = (props: Props) => (
-    <div className="add-eak-form">
-        <a onClick={props.onClick}>
-            <Card className="card" id="add-eak-form-card">
-                <div className="add-eak-form-label">
-                    <Icon icon="add" iconSize={20}/>
-                    <p>Hinzufügen</p>
-                </div>
-            </Card>
-        </a>
-    </div>
+    <StyledCard onClick={props.onClick}>
+        <Icon icon="add" iconSize={20}/>
+        <p>Hinzufügen</p>
+    </StyledCard>
 );
 
 export default AddEakForm;

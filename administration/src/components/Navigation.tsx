@@ -6,7 +6,7 @@ export class Navigation extends React.Component<{}, {}> {
 
     render() {
         return (
-            <Navbar fixedToTop={true}>
+            <Navbar>
                 <Navbar.Group>
                     <Navbar.Heading>Ehrenamtskarte Administration</Navbar.Heading>
                     <Navbar.Divider />

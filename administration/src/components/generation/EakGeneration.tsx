@@ -1,71 +1,94 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import {EakForm} from "./EakForm";
-import {Button} from "@blueprintjs/core";
+import {Button, Card} from "@blueprintjs/core";
 import {CardCreationModel} from "../../models/CardCreationModel";
 import {CardType} from "../../models/CardType";
-import "./EakGeneration.css";
 import AddEakForm from "./AddEakForm";
+import styled from "styled-components";
+import FlipMove from 'react-flip-move'
+
 
 interface State {
     cardCreationModels: CardCreationModel[];
 }
 
+let idCounter = 0;
+
 const createEmptyCard = () => ({
+    id: idCounter++,
     forename: "",
     surname: "",
     expirationDate: "",
     cardType: CardType.standard
 });
 
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
+
+const ButtonBar = styled(Card)<{ stickyTop: number }>`
+  width: 100%;
+  padding: 15px;
+  background: #fafafa;
+  position: sticky;
+  z-index: 1;
+  top: ${props => props.stickyTop}px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  & button {
+    margin: 5px;
+  }
+`
+
+const FormsWrapper = styled(FlipMove)`
+  padding: 10px;
+  width: 100%;
+  z-index: 0;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+`
+
+const FormColumn = styled.div`
+  width: 400px;
+  margin: 10px;
+  box-sizing: border-box;
+`
+
+
 const EakGeneration = () => {
 
     const [cardCreationModels, setCardCreationModels] = useState([createEmptyCard()]);
 
-    /*componentDidMount(): void {
-        const firstFormColumn = document.getElementsByClassName("form-column")[0];
-        const addEakBpCard = document.getElementById("add-eak-form-card")
-        if (addEakBpCard != null) {
-            addEakBpCard.style.height = firstFormColumn.clientHeight - 50 + "px"
-        }
-    }*/
-
     const addForm = useCallback(() => {
-        var updatedForms = cardCreationModels;
-        updatedForms.push(createEmptyCard());
-        setCardCreationModels(updatedForms);
+        setCardCreationModels([...cardCreationModels, createEmptyCard()]);
     }, [cardCreationModels, setCardCreationModels])
 
-    const reset = () => {
-        setCardCreationModels([createEmptyCard()]);
-    };
+    const reset = () => setCardCreationModels([createEmptyCard()]);
 
-    const forms = cardCreationModels.map(ccm => {
-        return (
-            <div className="form-column">
-                <div className="form-spacing">
-                    <EakForm />
-                </div>
-            </div>
-        )
-    });
+    const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm/></FormColumn>); // Todo!
 
     return (
-        <div>
-            <div className="button-bar">
-                <Button icon="export" text="QR-Codes generieren" intent="success" />
-                <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning" />
-            </div>
-            <div className="forms-wrapper">
-                <div className="forms">
-                    {forms}
-                    <div className="form-column">
-                        <div className="form-spacing">
-                            <AddEakForm onClick={addForm} />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Container>
+            <ButtonBar stickyTop={0}>
+                <Button icon="export" text="QR-Codes generieren" intent="success"/>
+                <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning"/>
+            </ButtonBar>
+
+            <FormsWrapper>
+                {forms}
+                <FormColumn key="AddButton">
+                    <AddEakForm onClick={addForm}/>
+                </FormColumn>
+            </FormsWrapper>
+        </Container>
     );
 };
 
