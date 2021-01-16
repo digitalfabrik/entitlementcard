@@ -34,7 +34,7 @@ export default () => {
         doc.text([
             'Anleitung:',
             "1. Laden Sie sich die App \"Ehrenamtskarte\" herunter.",
-            "2. Starten Sie die App und folgenn Sie den Hinweisen zum Scannen des Anmeldecodes.",
+            "2. Starten Sie die App und folgen Sie den Hinweisen zum Scannen des Anmeldecodes.",
             "3. Scannen Sie den Anmeldecode.",
         ], pageMargin, instructionsY);
 
