@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,10 +6,10 @@ import '../identification/card_details_model.dart';
 
 final validEakDetails = CardDetails(
     fullName: "Jane Doe",
-    randomBytes: Uint8List.fromList([5, 4, 3, 2]),
+    randomBytes: "sjdhb",
     expirationDate: 1610306137,
     cardType: "Ehrenamtskarte",
-    totpSecret: Uint8List.fromList([0, 1, 2, 3]),
+    totpSecret: "dfsbdfbskdfsjxdxgdxfgdydayfcgf",
     region: "Augsburg Land");
 
 class TestingDataItem extends StatefulWidget {

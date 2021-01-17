@@ -38,7 +38,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: _cardDetails == null
                   ? NoCardView(
                       onOpenQrScanner: () => openQRCodeScannerView(context),

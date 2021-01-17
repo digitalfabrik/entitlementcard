@@ -3,8 +3,9 @@ import 'package:flutter/rendering.dart';
 
 class IdCard extends StatelessWidget {
   final Widget child;
+  final double height;
 
-  const IdCard({Key key, this.child}) : super(key: key);
+  const IdCard({Key key, this.child, this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,8 @@ class IdCard extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         color: Colors.black26,
-        child: AspectRatio(aspectRatio: 3 / 2, child: child));
+        child: Container(
+            height: height,
+            child: AspectRatio(aspectRatio: 3 / 2, child: child)));
   }
 }
