@@ -1,12 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:meta/meta.dart';
 
 class CardDetails {
   final String fullName;
-  final Uint8List randomBytes;
+  final String randomBytes;
   final int expirationDate;
-  final Uint8List totpSecret;
+  final String totpSecret;
   final String cardType;
   final String region;
 

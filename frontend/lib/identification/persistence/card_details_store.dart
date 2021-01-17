@@ -14,11 +14,9 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
   var futures = <Future<bool>>[];
   if (cardDetails != null) {
     futures.add(store.setString(fullNameKey, cardDetails.fullName));
-    futures.add(store.setString(
-        randomBytesKey, String.fromCharCodes(cardDetails.randomBytes)));
+    futures.add(store.setString(randomBytesKey, cardDetails.randomBytes));
     futures.add(store.setInt(expirationDateKey, cardDetails.expirationDate));
-    futures.add(store.setString(
-        totpSecretKey, String.fromCharCodes(cardDetails.totpSecret)));
+    futures.add(store.setString(totpSecretKey, cardDetails.totpSecret));
     futures.add(store.setString(cardTypeKey, cardDetails.cardType));
     futures.add(store.setString(regionKey, cardDetails.region));
   } else {
