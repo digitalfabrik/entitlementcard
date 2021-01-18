@@ -5,6 +5,7 @@ import 'package:package_info/package_info.dart';
 
 import 'menu_item.dart';
 import 'testing_data_item.dart';
+import 'verification_page.dart';
 
 const showTestDataOptions =
     bool.fromEnvironment("test_data_options", defaultValue: false);
@@ -21,6 +22,11 @@ class MorePage extends StatelessWidget {
             title: 'Über diese App',
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
+          ),
+          MenuItem(
+            title: "Karten verifizieren",
+            icon: Icons.fact_check,
+            callback: () => _showVerificationPage(context),
           ),
           if (showTestDataOptions) TestingDataItem(),
         ]),
@@ -39,6 +45,14 @@ class MorePage extends StatelessWidget {
           applicationName: packageInfo.appName,
           applicationVersion: packageInfo.version,
           applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
+        ));
+  }
+
+  void _showVerificationPage(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationPage(),
         ));
   }
 }
