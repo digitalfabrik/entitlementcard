@@ -92,10 +92,10 @@ export const drawSVGPath = (text: string, size: number, pdfDocument: jsPDF) => {
 
     let pathData = ""
     createQRCode(text, (x: number, y: number, size: number) => {
-            return pathData += 'M' + x + ',' + y + ' V' + size + ' H' + size + ' V' + y + ' H' + x + ' Z ';
+            return pathData += 'M' + x + ',' + y + ' v' + size + ' h' + size + ' v' + (-size) + ' Z ';
         },
         (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
-            // TODO
+            return pathData += 'M' + rectX + ',' + rectY + ' v' + rectHeight + ' h' + rectWidth + ' v' + (-rectHeight) + ' Z ';
         }, size, hints)
     return pathData
 }
