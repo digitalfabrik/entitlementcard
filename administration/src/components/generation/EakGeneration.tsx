@@ -1,16 +1,10 @@
-import React, {useCallback, useState} from "react";
+import React, {useState} from "react";
 import {EakForm} from "./EakForm";
 import {Button, Card} from "@blueprintjs/core";
-import {CardCreationModel} from "../../models/CardCreationModel";
 import {CardType} from "../../models/CardType";
 import AddEakForm from "./AddEakForm";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
-
-
-interface State {
-    cardCreationModels: CardCreationModel[];
-}
 
 let idCounter = 0;
 
@@ -67,10 +61,7 @@ const EakGeneration = () => {
 
     const [cardCreationModels, setCardCreationModels] = useState([createEmptyCard()]);
 
-    const addForm = useCallback(() => {
-        setCardCreationModels([...cardCreationModels, createEmptyCard()]);
-    }, [cardCreationModels, setCardCreationModels])
-
+    const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()]);
     const reset = () => setCardCreationModels([createEmptyCard()]);
 
     const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm/></FormColumn>); // Todo!
