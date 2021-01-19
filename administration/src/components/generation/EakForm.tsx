@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {FormGroup, InputGroup, Button, MenuItem, Card, PopoverPosition} from "@blueprintjs/core";
+import {Button, Card, FormGroup, InputGroup, MenuItem} from "@blueprintjs/core";
 import {ItemRenderer, Select} from "@blueprintjs/select";
 import {CardType} from "../../models/CardType";
 import {DateInput} from "@blueprintjs/datetime";
@@ -24,11 +24,7 @@ const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifier
     );
 };
 
-interface Props {
-    datePickerPosition: PopoverPosition
-}
-
-const EakForm = (props: Props) => {
+const EakForm = () => {
     const values = Object.values(CardType);
     const [selected, setSelected] = useState(values[0]);
     const [expirationDate, setExpirationDate] = useState(new Date());
@@ -43,18 +39,18 @@ const EakForm = (props: Props) => {
                     <InputGroup placeholder="Nachname"/>
                 </FormGroup>
                 <FormGroup label="Ablaufdatum">
-                    <DateInput placeholder="Ablaufdatum"value={expirationDate}
-                        parseDate={str => new Date(str)}
-                        onChange={value => setExpirationDate(value)}
-                        formatDate={date => date.toLocaleDateString()}
-                        popoverProps={{position: props.datePickerPosition}}
-                        fill={true}
+                    <DateInput placeholder="Ablaufdatum" value={expirationDate}
+                               parseDate={str => new Date(str)}
+                               onChange={value => setExpirationDate(value)}
+                               formatDate={date => date.toLocaleDateString()}
+                               fill={true}
                     />
                 </FormGroup>
                 <FormGroup label="Typ der Karte">
                     <CardTypeSelect
                         items={values}
-                        onItemSelect={(value) => {setSelected(value)
+                        onItemSelect={(value) => {
+                            setSelected(value)
                         }}
                         itemRenderer={renderCardType}
                         filterable={false}
