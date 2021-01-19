@@ -69,7 +69,7 @@ const EakGeneration = () => {
     return (
         <Container>
             <ButtonBar stickyTop={0}>
-                <Button icon="export" text="QR-Codes generieren" intent="success"/>
+                <Button icon="export" text="QR-Codes drucken" intent="success"/>
                 <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning"/>
             </ButtonBar>
 
