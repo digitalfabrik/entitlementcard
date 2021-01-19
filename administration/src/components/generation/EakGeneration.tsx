@@ -1,14 +1,15 @@
 import React, {useState} from "react";
-import {EakForm} from "./EakForm";
+import EakForm from "./EakForm";
 import {Button, Card} from "@blueprintjs/core";
 import {CardType} from "../../models/CardType";
+import {CardCreationModel} from "../../models/CardCreationModel";
 import AddEakForm from "./AddEakForm";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
 
 let idCounter = 0;
 
-const createEmptyCard = () => ({
+const createEmptyCard = (): CardCreationModel => ({
     id: idCounter++,
     forename: "",
     surname: "",
