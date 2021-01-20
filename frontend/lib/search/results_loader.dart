@@ -93,7 +93,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               newPageProgressIndicatorBuilder: _buildProgressIndicator,
               firstPageProgressIndicatorBuilder: _buildProgressIndicator),
       separatorBuilder: (context, index) =>
-          Divider(height: 0, color: Colors.grey),
+          Divider(height: 0, thickness: 0.7),
     );
   }
 
