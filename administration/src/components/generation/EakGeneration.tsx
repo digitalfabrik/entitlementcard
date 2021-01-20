@@ -22,7 +22,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`
+`;
 
 const ButtonBar = styled(Card)<{ stickyTop: number }>`
   width: 100%;
@@ -38,7 +38,7 @@ const ButtonBar = styled(Card)<{ stickyTop: number }>`
   & button {
     margin: 5px;
   }
-`
+`;
 
 const FormsWrapper = styled(FlipMove)`
   padding: 10px;
@@ -49,13 +49,13 @@ const FormsWrapper = styled(FlipMove)`
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-`
+`;
 
 const FormColumn = styled.div`
   width: 400px;
   margin: 10px;
   box-sizing: border-box;
-`
+`;
 
 
 const EakGeneration = () => {
@@ -63,9 +63,10 @@ const EakGeneration = () => {
     const [cardCreationModels, setCardCreationModels] = useState([createEmptyCard()]);
 
     const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()]);
+    const removeForm = (id: number) => setCardCreationModels([...cardCreationModels].filter( model => model.id != id));
     const reset = () => setCardCreationModels([createEmptyCard()]);
 
-    const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm/></FormColumn>); // Todo!
+    const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm onRemove={() => removeForm(ccm.id)}/></FormColumn>); // Todo!
 
     return (
         <Container>

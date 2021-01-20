@@ -4,9 +4,17 @@ import {ItemRenderer, Select} from "@blueprintjs/select";
 import {CardType} from "../../models/CardType";
 import {DateInput} from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+import styled from "styled-components";
+
+const CardHeader = styled.div`
+  margin: -20px -20px 20px -20px;
+  padding: 1px;
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15);
+  display: flex;
+  justify-content: right;
+`;
 
 const CardTypeSelect = Select.ofType<CardType>();
-
 
 const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifiers, query}) => {
     if (!modifiers.matchesPredicate) {
@@ -24,7 +32,11 @@ const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifier
     );
 };
 
-const EakForm = () => {
+interface Props {
+    onRemove: () => void
+}
+
+const EakForm = (props: Props) => {
     const values = Object.values(CardType);
     const [selected, setSelected] = useState(values[0]);
     const [expirationDate, setExpirationDate] = useState(new Date());
@@ -32,6 +44,9 @@ const EakForm = () => {
     return (
         <div>
             <Card>
+                <CardHeader>
+                    <Button className="bp3-button bp3-minimal" icon="cross" onClick={props.onRemove} />
+                </CardHeader>
                 <FormGroup label="Vorname">
                     <InputGroup placeholder="Vorname"/>
                 </FormGroup>
