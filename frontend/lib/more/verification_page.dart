@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../identification/card_details.dart';
+import 'testing_data_item.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({
@@ -13,8 +17,11 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationViewState extends State<VerificationPage> {
+  Widget _bottomWidget;
+
   @override
   Widget build(BuildContext context) {
+    _bottomWidget = _buildPositiveVerificationResult(validEakDetails);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -29,15 +36,7 @@ class _VerificationViewState extends State<VerificationPage> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  margin: EdgeInsets.all(8.0),
-                  elevation: 5.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: RichText(text: _buildInfoText()),
-                  )),
+              _buildContentCard(child: RichText(text: _buildInfoText())),
               Center(
                 child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -53,7 +52,8 @@ class _VerificationViewState extends State<VerificationPage> {
                           .headline6
                           .merge(TextStyle(color: Colors.white, fontSize: 20)),
                     )),
-              )
+              ),
+              if (_bottomWidget != null) _bottomWidget,
             ],
           ),
         ));
@@ -83,5 +83,71 @@ class _VerificationViewState extends State<VerificationPage> {
             TextSpan(text: "Sie benötigen eine Internetverbindung."),
           ]),
     ]);
+  }
+
+  Widget _buildWaitingForVerificationResult() {
+    return _buildContentCard(
+        child: Column(children: [
+          RichText(
+              text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .apply(fontSizeFactor: 1.5, fontWeightDelta: 2),
+                  children: [
+                TextSpan(
+                    text:
+                        "Bitte warten Sie, während der Code überprüft wird..."),
+              ])),
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ]),
+        color: Colors.lime);
+  }
+
+  Widget _buildPositiveVerificationResult(CardDetails cardDetails) {
+    final dateFormat = DateFormat('dd.MM.yyyy');
+    return _buildContentCard(
+        child: RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 1.5),
+                children: [
+          WidgetSpan(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              child: Icon(
+                Icons.verified_user,
+                color: Colors.green,
+                size: 30,
+              ),
+            ),
+          ),
+          TextSpan(
+              text: "Die Ehrenamtskarte ist gültig\n\n",
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
+          TextSpan(
+              text: "Name: ${cardDetails.firstName} ${cardDetails.lastName}\n"),
+          TextSpan(
+              text: "Ablaufdatum: "
+                  "${dateFormat.format(cardDetails.expirationDate)}\n"),
+          TextSpan(text: "Landkreis: ${cardDetails.region}"),
+        ])));
+  }
+
+  Card _buildContentCard({Widget child, Color color = Colors.white}) {
+    return Card(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        margin: EdgeInsets.all(8.0),
+        elevation: 5.0,
+        color: color,
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: child,
+        ));
   }
 }
