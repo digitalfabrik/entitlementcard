@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import {FormGroup, InputGroup, Button, MenuItem, Card, PopoverPosition} from "@blueprintjs/core";
-import './EakForm.css';
+import {Button, Card, FormGroup, InputGroup, MenuItem} from "@blueprintjs/core";
 import {ItemRenderer, Select} from "@blueprintjs/select";
 import {CardType} from "../../models/CardType";
 import {DateInput} from "@blueprintjs/datetime";
@@ -8,7 +7,8 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 const CardTypeSelect = Select.ofType<CardType>();
 
-const renderCardType: ItemRenderer<CardType> = (cardType, { handleClick, modifiers, query }) => {
+
+const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifiers, query}) => {
     if (!modifiers.matchesPredicate) {
         return null;
     }
@@ -24,43 +24,38 @@ const renderCardType: ItemRenderer<CardType> = (cardType, { handleClick, modifie
     );
 };
 
-interface Props {
-    datePickerPosition: PopoverPosition
-}
-
-const EakForm = (props: Props) => {
+const EakForm = () => {
     const values = Object.values(CardType);
     const [selected, setSelected] = useState(values[0]);
     const [expirationDate, setExpirationDate] = useState(new Date());
 
     return (
-        <div className="form">
+        <div>
             <Card>
                 <FormGroup label="Vorname">
-                    <InputGroup placeholder="Vorname" />
+                    <InputGroup placeholder="Vorname"/>
                 </FormGroup>
                 <FormGroup label="Nachname">
-                    <InputGroup placeholder="Nachname" />
+                    <InputGroup placeholder="Nachname"/>
                 </FormGroup>
                 <FormGroup label="Ablaufdatum">
-                    <DateInput
-                        placeholder="Ablaufdatum"
-                        value={expirationDate}
-                        parseDate={str => new Date(str)}
-                        onChange={value => setExpirationDate(value)}
-                        formatDate={date => date.toLocaleDateString()}
-                        popoverProps={{position: props.datePickerPosition}}
-                        fill={true}
+                    <DateInput placeholder="Ablaufdatum" value={expirationDate}
+                               parseDate={str => new Date(str)}
+                               onChange={value => setExpirationDate(value)}
+                               formatDate={date => date.toLocaleDateString()}
+                               fill={true}
                     />
                 </FormGroup>
                 <FormGroup label="Typ der Karte">
                     <CardTypeSelect
                         items={values}
-                        onItemSelect={(value) => {setSelected(value)}}
+                        onItemSelect={(value) => {
+                            setSelected(value)
+                        }}
                         itemRenderer={renderCardType}
                         filterable={false}
                     >
-                        <Button className={"cardTypeSelect"} text={selected} rightIcon="caret-down" />
+                        <Button className={"cardTypeSelect"} text={selected} rightIcon="caret-down"/>
                     </CardTypeSelect>
                 </FormGroup>
             </Card>

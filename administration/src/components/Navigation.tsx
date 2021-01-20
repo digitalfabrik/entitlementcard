@@ -5,7 +5,7 @@ import {Alignment} from "@blueprintjs/core/lib/esm/common/alignment";
 
 const Navigation = () => {
     return (
-        <Navbar fixedToTop={true}>
+        <Navbar>
             <Navbar.Group>
                 <Navbar.Heading>Ehrenamtskarte Administration</Navbar.Heading>
                 <Navbar.Divider />

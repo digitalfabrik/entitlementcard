@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import Navigation from "./components/Navigation";
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
