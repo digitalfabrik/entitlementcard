@@ -20,7 +20,7 @@ class FilterBar extends StatelessWidget {
                   maxLines: 1, style: TextStyle(color: Colors.grey)),
               Expanded(
                   child: Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 8),
                       child: Divider(thickness: 0.7)))
             ])),
         Wrap(
