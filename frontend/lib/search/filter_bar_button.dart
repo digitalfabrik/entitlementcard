@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -49,35 +51,45 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   Widget build(BuildContext context) {
+    var paddingPerElement = 8;
+    var minNumberElements = 5;
+    var totalWidth = MediaQuery.of(context).size.width;
+    var width = min(
+        80.0, (totalWidth - minNumberElements * paddingPerElement) / 5);
+
     return AnimatedBuilder(
         animation: _colorTween,
-        builder: (context, child) => RawMaterialButton(
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
-            constraints: BoxConstraints(
-                minWidth: 80, maxWidth: 80, minHeight: 70, maxHeight: 70),
-            fillColor: _colorTween.value,
-            onPressed: () {
-              var isSelected = !_selected;
-              setState(() {
-                _selected = isSelected;
-                _animationController.animateTo(isSelected ? 1 : 0);
-                widget.onCategoryPress(widget.asset, isSelected);
-              });
-            },
-            child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Column(children: [
-                  SvgPicture.asset(widget.asset.icon,
-                      width: 40.0, semanticsLabel: widget.asset.name),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 3),
-                    child: Text(widget.asset.shortName,
-                        maxLines: 2,
-                        style: TextStyle(fontSize: 10),
-                        textAlign: TextAlign.center),
-                  ),
-                ]))));
+        builder: (context, child) =>
+            RawMaterialButton(
+                elevation: 0.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                constraints: BoxConstraints(
+                    minWidth: width,
+                    maxWidth: width,
+                    minHeight: 70,
+                    maxHeight: 70),
+                fillColor: _colorTween.value,
+                onPressed: () {
+                  var isSelected = !_selected;
+                  setState(() {
+                    _selected = isSelected;
+                    _animationController.animateTo(isSelected ? 1 : 0);
+                    widget.onCategoryPress(widget.asset, isSelected);
+                  });
+                },
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Column(children: [
+                      SvgPicture.asset(widget.asset.icon,
+                          width: 40.0, semanticsLabel: widget.asset.name),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Text(widget.asset.shortName,
+                            maxLines: 2,
+                            style: TextStyle(fontSize: 10),
+                            textAlign: TextAlign.center),
+                      ),
+                    ]))));
   }
 }
