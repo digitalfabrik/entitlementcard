@@ -52,7 +52,7 @@ void main() {
     test("should trim whitespace",
         () => expect(prepare("     \n$websiteHttp "), websiteHttp));
 
-    test("should add https prefix if missing",
-        () => expect(prepare("  $website\t"), websiteHttps));
+    test("should add http prefix if missing",
+        () => expect(prepare("  $website\t"), websiteHttp));
   });
 }
