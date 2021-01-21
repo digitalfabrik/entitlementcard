@@ -51,8 +51,8 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   Widget build(BuildContext context) {
-    var paddingPerElement = 8;
-    var minNumberElements = 5;
+    const paddingPerElement = 8;
+    const minNumberElements = 5;
     var totalWidth = MediaQuery.of(context).size.width;
     var width = min(
         80.0,
@@ -65,8 +65,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
             elevation: 0.0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
-            constraints: BoxConstraints(
-                minWidth: width, maxWidth: width, minHeight: 70, maxHeight: 70),
+            constraints: BoxConstraints.tightFor(width: width, height: 70),
             fillColor: _colorTween.value,
             onPressed: () {
               var isSelected = !_selected;
