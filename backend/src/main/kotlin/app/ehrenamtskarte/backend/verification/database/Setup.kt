@@ -1,5 +1,10 @@
 package app.ehrenamtskarte.backend.verification.database
 
-fun setupDatabase() {
+import org.jetbrains.exposed.sql.SchemaUtils
 
+@ExperimentalUnsignedTypes
+fun setupDatabase() {
+    SchemaUtils.create(
+        Card
+    )
 }
