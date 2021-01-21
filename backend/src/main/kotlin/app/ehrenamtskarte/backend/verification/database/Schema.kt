@@ -12,7 +12,7 @@ const val BCRYPT_HASH_LENGTH = 60
 const val TOTP_SECRET_LENGTH = 5
 
 @ExperimentalUnsignedTypes
-object Card : IntIdTable() {
+object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
     val expirationDate = ulong("expirationDate")
     val hashModel = char("hashModel", BCRYPT_HASH_LENGTH)
@@ -24,11 +24,11 @@ object Card : IntIdTable() {
 
 @ExperimentalUnsignedTypes
 class CardEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<CardEntity>(Card)
+    companion object : IntEntityClass<CardEntity>(Cards)
 
-    var totpSecret by Card.totpSecret
-    private var expirationDateEpochSeconds by Card.expirationDate
-    var hashModel by Card.hashModel
+    var totpSecret by Cards.totpSecret
+    private var expirationDateEpochSeconds by Cards.expirationDate
+    var hashModel by Cards.hashModel
 
     var expirationDate: LocalDateTime
     get() =

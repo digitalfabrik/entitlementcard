@@ -5,6 +5,6 @@ import org.jetbrains.exposed.sql.SchemaUtils
 @ExperimentalUnsignedTypes
 fun setupDatabase() {
     SchemaUtils.create(
-        Card
+        Cards
     )
 }
