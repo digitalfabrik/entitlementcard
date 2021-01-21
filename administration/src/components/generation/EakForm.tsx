@@ -45,7 +45,7 @@ const EakForm = (props: Props) => {
         <div>
             <Card>
                 <CardHeader>
-                    <Button className="bp3-button bp3-minimal" icon="cross" onClick={props.onRemove} />
+                    <Button minimal icon="cross" onClick={props.onRemove} />
                 </CardHeader>
                 <FormGroup label="Vorname">
                     <InputGroup placeholder="Vorname"/>
@@ -70,7 +70,7 @@ const EakForm = (props: Props) => {
                         itemRenderer={renderCardType}
                         filterable={false}
                     >
-                        <Button className={"cardTypeSelect"} text={selected} rightIcon="caret-down"/>
+                        <Button text={selected} rightIcon="caret-down"/>
                     </CardTypeSelect>
                 </FormGroup>
             </Card>
