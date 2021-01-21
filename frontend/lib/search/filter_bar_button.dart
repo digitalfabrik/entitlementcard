@@ -55,7 +55,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
     var minNumberElements = 5;
     var totalWidth = MediaQuery.of(context).size.width;
     var width = min(
-        80.0, (totalWidth - minNumberElements * paddingPerElement) / 5);
+        80.0, (totalWidth - minNumberElements * paddingPerElement) / minNumberElements);
 
     return AnimatedBuilder(
         animation: _colorTween,
@@ -79,17 +79,18 @@ class _FilterBarButtonState extends State<FilterBarButton>
                   });
                 },
                 child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.only(top: 4),
                     child: Column(children: [
                       SvgPicture.asset(widget.asset.icon,
                           width: 40.0, semanticsLabel: widget.asset.name),
-                      Padding(
+                      Expanded(child: Container(
+                        alignment: Alignment.center,
                         padding: const EdgeInsets.only(top: 3),
                         child: Text(widget.asset.shortName,
                             maxLines: 2,
                             style: TextStyle(fontSize: 10),
                             textAlign: TextAlign.center),
                       ),
-                    ]))));
+                      )]))));
   }
 }
