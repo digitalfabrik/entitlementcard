@@ -5,10 +5,11 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import xyz.elitese.ehrenamtskarte.stores.database.setupDatabase
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors
+import xyz.elitese.ehrenamtskarte.stores.database.setupDatabase as setupDatabaseForStores
+import xyz.elitese.ehrenamtskarte.verification.database.setupDatabase as setupDatabaseForVerification
 
 
 class Database {
@@ -32,7 +33,8 @@ class Database {
             transaction {
                 // print sql to std-out
                 addLogger(StdOutSqlLogger)
-                setupDatabase(Companion::executeScript)
+                setupDatabaseForStores(Companion::executeScript)
+                setupDatabaseForVerification()
             }
         }
     }
