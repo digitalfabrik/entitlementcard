@@ -34,7 +34,10 @@
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.7"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -59,9 +62,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.7"
   }
 }
