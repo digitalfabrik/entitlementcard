@@ -14,6 +14,6 @@ String prepareWebsiteUrlForLaunch(String website) {
   if (_httpRegex.hasMatch(trimmed)) {
     return trimmed;
   } else {
-    return "https://$trimmed";
+    return "http://$trimmed";
   }
 }
