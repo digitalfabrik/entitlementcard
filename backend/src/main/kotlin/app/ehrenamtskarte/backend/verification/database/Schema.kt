@@ -15,11 +15,7 @@ const val TOTP_SECRET_LENGTH = 5
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
     val expirationDate = ulong("expirationDate")
-    val hashModel = char("hashModel", BCRYPT_HASH_LENGTH)
-
-    init {
-        uniqueIndex(expirationDate, hashModel)
-    }
+    val hashModel = char("hashModel", BCRYPT_HASH_LENGTH).uniqueIndex()
 }
 
 @ExperimentalUnsignedTypes

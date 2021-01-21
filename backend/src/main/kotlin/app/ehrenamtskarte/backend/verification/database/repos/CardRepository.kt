@@ -1,14 +1,15 @@
 package app.ehrenamtskarte.backend.verification.database.repos
 
-import app.ehrenamtskarte.backend.stores.database.ContactEntity
-import app.ehrenamtskarte.backend.stores.database.Contacts
-import app.ehrenamtskarte.backend.stores.database.sortByKeys
 import app.ehrenamtskarte.backend.verification.database.CardEntity
+import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.domain.Card
 
 object CardRepository {
-    fun findByIds(ids: List<Int>) =
-        ContactEntity.find { Contacts.id inList ids }.sortByKeys({ it.id.value }, ids)
+    @ExperimentalUnsignedTypes
+    fun findByHashModel(hashModel: String) =
+        CardEntity.find { Cards.hashModel eq hashModel }
+            .map { Card(it.totpSecret, it.expirationDate, it.hashModel) }
+            .singleOrNull()
 
     @ExperimentalUnsignedTypes
     fun insert(card: Card) = CardEntity.new {
