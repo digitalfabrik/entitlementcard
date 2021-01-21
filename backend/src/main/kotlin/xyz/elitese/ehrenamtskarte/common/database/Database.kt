@@ -1,11 +1,11 @@
-package xyz.elitese.ehrenamtskarte.stores.database
+package xyz.elitese.ehrenamtskarte.common.database
 
 import org.jetbrains.exposed.sql.Database.Companion.connect
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import xyz.elitese.ehrenamtskarte.stores.database.setupDatabase
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors
@@ -32,18 +32,7 @@ class Database {
             transaction {
                 // print sql to std-out
                 addLogger(StdOutSqlLogger)
-
-                SchemaUtils.create(
-                        Categories,
-                        Contacts,
-                        AcceptingStores,
-                        PhysicalStores,
-                        Addresses
-                )
-
-                executeScript("sql/create_tilebbox.sql")
-                executeScript("sql/create_physical_stores_clustered.sql")
-                executeScript("sql/create_physical_stores.sql")
+                setupDatabase(Companion::executeScript)
             }
         }
     }

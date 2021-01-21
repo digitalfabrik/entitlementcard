@@ -2,7 +2,7 @@ package xyz.elitese.ehrenamtskarte.common.webservice
 
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
-import xyz.elitese.ehrenamtskarte.stores.webservice.hookInto
+import xyz.elitese.ehrenamtskarte.stores.webservice.setupApp
 
 const val PORT = 7000
 
@@ -17,6 +17,6 @@ class WebService {
         println("Server is running at http://localhost:${PORT}")
         println("Goto http://localhost:${PORT}/graphiql for a graphical editor")
 
-        hookInto(app)
+        setupApp(app)
     }
 }
