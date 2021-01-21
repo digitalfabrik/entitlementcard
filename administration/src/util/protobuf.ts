@@ -1,6 +1,7 @@
+import {add, Duration, getUnixTime, setHours} from "date-fns";
 import {CardActivateModel} from "../generated/compiled";
 
-const generateCardActivateModel = (fullName: string, region: number, expirationDate: Date, cardType: CardActivateModel.CardType) => {
+const generateCardActivateModel = (fullName: string, region: number, expireIn: Duration, cardType: CardActivateModel.CardType) => {
     const randomBytes = new Uint8Array(16); // 128 bit randomness
     crypto.getRandomValues(randomBytes)
 
@@ -10,11 +11,13 @@ const generateCardActivateModel = (fullName: string, region: number, expirationD
     const totpSecret = new Uint8Array(20);
     crypto.getRandomValues(totpSecret)
 
+    const now = new Date()
+
     return new CardActivateModel({
         fullName: fullName,
         randomBytes: randomBytes,
         totpSecret: totpSecret,
-        expirationDate: Math.round(expirationDate.getTime() / 1000),
+        expirationDate: getUnixTime(setHours(add(now, expireIn), 0)),
         cardType: cardType,
         region: region,
     })
@@ -24,8 +27,8 @@ const toBase64 = function (u8: Uint8Array) {
     return btoa(Array.from(u8.values()).map(value => String.fromCharCode(value)).join(''));
 }
 
-export const createBinaryData = (fullName: string, region: number, expirationDate: Date, cardType: CardActivateModel.CardType) => {
-    const model = generateCardActivateModel(fullName, region, expirationDate, cardType);
+export const createBinaryData = (fullName: string, region: number, expireIn: Duration, cardType: CardActivateModel.CardType) => {
+    const model = generateCardActivateModel(fullName, region, expireIn, cardType);
     const buffer = CardActivateModel.encode(model).finish();
     return toBase64(buffer)
 }

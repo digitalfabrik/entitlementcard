@@ -31,7 +31,7 @@ function App() {
                         <EakGeneration />
                         <PDFView />
                         
-                        <button onClick={() => console.log(createBinaryData("Max Mustermann", 1, new Date(), CardActivateModel.CardType.STANDARD))}>Binary</button>
+                        <button onClick={() => console.log(createBinaryData("Max Mustermann", 1, {months: 5}, CardActivateModel.CardType.STANDARD))}>Binary</button>
                     </Route>
                     <Route path={"/accepting-stores"}>
 
