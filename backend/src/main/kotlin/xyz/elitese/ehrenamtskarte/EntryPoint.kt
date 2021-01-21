@@ -13,6 +13,7 @@ import xyz.elitese.ehrenamtskarte.importer.freinet.FreinetDataImporter
 import xyz.elitese.ehrenamtskarte.importer.lbe.LbeDataImporter
 import xyz.elitese.ehrenamtskarte.webservice.GraphQLHandler
 import java.io.File
+import java.security.SecureRandom
 import javax.crypto.KeyGenerator
 
 
@@ -48,13 +49,16 @@ class Entry : CliktCommand() {
 
             val unixTime = System.currentTimeMillis() / 1000L
 
+            val random = SecureRandom()
+            val randomBytes = ByteArray(16) // 128 bits are converted to 16 bytes;
+            random.nextBytes(randomBytes)
+
             val testMessage = CardActivateModelOuterClass.CardActivateModel
                 .newBuilder()
-                .setFullName("This is ä very long name which might happen in søme country")
-                .setRandomString("A1DSDF")
+                .setFullName("Maximilian Mustermann")
+                .setRandomBytes(ByteString.copyFrom(randomBytes))
                 .setExpirationDate(unixTime)
                 .setTotpSecret(ByteString.copyFrom(key.encoded))
-                .setCardType("1")
                 .setRegion(55)
                 .build()
 

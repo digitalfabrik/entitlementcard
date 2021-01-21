@@ -1,10 +1,14 @@
-syntax = "proto2";
+syntax = "proto3";
 
 message CardActivateModel {
-  required string fullName = 1;
-  optional string randomString = 2;
-  optional uint64 expirationDate = 3;
-  required bytes totpSecret = 4;
-  optional string cardType = 5;
-  optional int32 region = 6;
+  string fullName = 1;
+  bytes randomBytes = 2;
+  uint64 expirationDate = 3;
+  bytes totpSecret = 4;
+  enum CardType {
+    STANDARD = 0;
+    GOLD = 1;
+  }
+  CardType cardType = 5;
+  int32 region = 6;
 }
