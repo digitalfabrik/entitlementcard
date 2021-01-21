@@ -1,11 +1,12 @@
 import React from 'react';
-import './App.css';
-import {Navigation} from "./components/Navigation";
+import Navigation from "./components/Navigation";
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import PDFView from "./components/PDFView";
+import {HashRouter, Route} from "react-router-dom";
+import EakGeneration from "./components/generation/EakGeneration";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
@@ -16,10 +17,23 @@ const client = new ApolloClient({
 function App() {
     return (
         <ApolloProvider client={client}>
-            <div className="App">
-                <Navigation/>
-                <PDFView />
-            </div>
+            <HashRouter>
+                <div className="App">
+                    <Navigation />
+                </div>
+                <div className="main">
+                    <Route exact path={"/"}>
+
+                    </Route>
+                    <Route path={"/eak-generation"}>
+                        <EakGeneration />
+                        <PDFView />
+                    </Route>
+                    <Route path={"/accepting-stores"}>
+
+                    </Route>
+                </div>
+            </HashRouter>
         </ApolloProvider>
     );
 }
