@@ -4,11 +4,11 @@ import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
-import xyz.elitese.ehrenamtskarte.database.Database
-import xyz.elitese.ehrenamtskarte.importer.freinet.FreinetDataImporter
-import xyz.elitese.ehrenamtskarte.importer.lbe.LbeDataImporter
-import xyz.elitese.ehrenamtskarte.webservice.GraphQLHandler
-import xyz.elitese.ehrenamtskarte.webservice.WebService
+import xyz.elitese.ehrenamtskarte.common.webservice.WebService
+import xyz.elitese.ehrenamtskarte.stores.database.Database
+import xyz.elitese.ehrenamtskarte.stores.importer.freinet.FreinetDataImporter
+import xyz.elitese.ehrenamtskarte.stores.importer.lbe.LbeDataImporter
+import xyz.elitese.ehrenamtskarte.stores.webservice.GraphQLHandler
 import java.io.File
 
 
