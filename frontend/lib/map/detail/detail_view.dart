@@ -28,7 +28,7 @@ class DetailView extends StatelessWidget {
         }
 
         if (result.loading) {
-          return DetailLayout(title: "", body: LinearProgressIndicator());
+          return DetailLayout(body: LinearProgressIndicator());
         }
         final matchingStores =
             AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
@@ -39,7 +39,8 @@ class DetailView extends StatelessWidget {
           title: matchingStores.first.store.name ?? "Akzeptanzstelle",
           body: DetailContent(matchingStores.first,
               hideShowOnMapButton: hideShowOnMapButton),
-          category: matchingStores.first.store.category.id,
+          categoryId: matchingStores.first.store.category.id,
+          categoryName: matchingStores.first.store.category.name,
         );
       },
     );

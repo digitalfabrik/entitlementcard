@@ -9,18 +9,33 @@ class FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var sortedCategories = [...categoryAssets];
+    sortedCategories.sort((a, b) => a.shortName.compareTo(b.shortName));
     return SliverToBoxAdapter(
-      child: Container(
-        height: 70.0,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: categoryAssets.length,
-          itemBuilder: (context, index) {
-            return FilterBarButton(
-                asset: categoryAssets[index], onCategoryPress: onCategoryPress);
-          },
-        ),
-      ),
-    );
+        child: Column(children: [
+      Padding(
+          padding: EdgeInsets.all(8),
+          child: Row(children: [
+            Text("Nach Kategorien filtern".toUpperCase(),
+                maxLines: 1, style: TextStyle(color: Colors.grey)),
+            Expanded(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Divider(thickness: 0.7)))
+          ])),
+      Row(children: [
+        Expanded(
+            child: Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                runSpacing: 8,
+                spacing: 4,
+                children: sortedCategories
+                    .map((e) => FilterBarButton(
+                        key: ValueKey(e.id),
+                        asset: e,
+                        onCategoryPress: onCategoryPress))
+                    .toList()))
+      ])
+    ]));
   }
 }
