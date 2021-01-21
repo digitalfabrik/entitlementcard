@@ -1748,5 +1748,12 @@
     "width": 21,
     "x": 231,
     "y": 198
+  },
+  "knappo": {
+    "height": 39,
+    "pixelRatio": 1,
+    "width": 39,
+    "x": 64,
+    "y": 25
   }
 }

@@ -1684,6 +1684,15 @@
         "text-halo-blur": 0,
         "text-halo-width": 0.4
       }
+    },
+    {
+      "id": "easteregg",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 19,
+      "filter": ["all", ["==", "name_de", "Wien"], ["==", "class", "city"]],
+      "layout": {"icon-image": "knappo", "icon-allow-overlap": true}
     }
   ],
   "id": "osm-liberty"
