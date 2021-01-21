@@ -3,6 +3,9 @@ package app.ehrenamtskarte.backend.verification.domain
 import java.time.LocalDateTime
 
 data class Card(val totpSecret: ByteArray, val expirationDate: LocalDateTime, val hashModel: String) {
+    val hasExpired: Boolean
+    get() = expirationDate.isAfter(LocalDateTime.now())
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
