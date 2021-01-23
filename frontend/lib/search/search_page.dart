@@ -50,6 +50,19 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
         FilterBar(onCategoryPress: _onCategoryPress),
+        SliverToBoxAdapter(
+            child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Row(children: [
+                  Text(
+                    "Suchresultate".toUpperCase(),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Expanded(
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Divider(thickness: 0.7)))
+                ]))),
         if (_locationStatus == LocationRequestStatus.requestFinished)
           ResultsLoader(
               searchText: _searchFieldText,

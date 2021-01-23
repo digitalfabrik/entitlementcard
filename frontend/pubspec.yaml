@@ -37,6 +37,7 @@ dependencies:
   geolocator: ^6.1.13
   flutter_launcher_icons: ^0.8.1
   mutex: ^1.1.0
+  protobuf: ^1.1.0
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!
