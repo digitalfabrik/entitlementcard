@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../identification/card_details.dart';
-import '../identification/card_details_model.dart';
+import '../identification/personal_card_details.dart';
+import '../identification/personal_card_details_model.dart';
 
-final validEakDetails = CardDetails("Jane Doe", 1677542400, "STANDARD", 42);
+final validEakDetails = PersonalCardDetails("base32TotpSecret",
+    CardDetails("Jane Doe", null, 1677542400, "STANDARD", 42));
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
@@ -38,11 +40,12 @@ class _TestingDataState extends State<TestingDataItem> {
   }
 
   Future<void> _resetEakData() async {
-    Provider.of<CardDetailsModel>(context, listen: false).clearCardDetails();
+    Provider.of<PersonalCardDetailsModel>(context, listen: false)
+        .clearPersonalCardDetails();
   }
 
   Future<void> _setValidEakData() async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .setCardDetails(validEakDetails);
+    Provider.of<PersonalCardDetailsModel>(context, listen: false)
+        .setPersonalCardDetails(validEakDetails);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../card_details.dart';
+import '../personal_card_details.dart';
 
 const dataVersionKey = "dataVersion";
 const fullNameKey = "fullName";
@@ -10,10 +11,11 @@ const cardTypeKey = "cardType";
 
 const currentDataVersion = 1;
 
-Future<void> saveCardDetails(CardDetails cardDetails) async {
+Future<void> saveCardDetails(PersonalCardDetails personalCardDetails) async {
   final storage = FlutterSecureStorage();
   var futures = <Future<void>>[];
-  if (cardDetails != null) {
+  if (personalCardDetails != null) {
+    final cardDetails = personalCardDetails.cardDetails;
     futures.add(storage.write(
         key: dataVersionKey, value: currentDataVersion.toString()));
     futures.add(storage.write(key: fullNameKey, value: cardDetails.fullName));
@@ -33,7 +35,7 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
   await Future.wait(futures);
 }
 
-Future<CardDetails> loadCardDetails() async {
+Future<PersonalCardDetails> loadCardDetails() async {
   final storage = FlutterSecureStorage();
   final hasDataVersionKey = await storage.containsKey(key: dataVersionKey);
   if (hasDataVersionKey) {
@@ -52,7 +54,8 @@ Future<CardDetails> loadCardDetails() async {
     final regionId = int.parse(await storage.read(key: regionKey));
     final cardType = await storage.read(key: cardTypeKey);
 
-    return CardDetails(fullName, unixExpirationDate, cardType, regionId);
+    return PersonalCardDetails("",
+        CardDetails(fullName, null, unixExpirationDate, cardType, regionId));
   } else {
     return null;
   }

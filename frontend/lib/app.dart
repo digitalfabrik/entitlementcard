@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'graphql/configured_graphql_provider.dart';
 import 'home/home_page.dart';
-import 'identification/card_details_model.dart';
+import 'identification/personal_card_details_model.dart';
 
 class App extends StatelessWidget {
   const App({Key key}) : super(key: key);
@@ -11,8 +11,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.from(
-        colorScheme: ColorScheme.light(
-            primary: Colors.blue, secondary: Colors.blue),
+        colorScheme:
+            ColorScheme.light(primary: Colors.blue, secondary: Colors.blue),
         textTheme: TextTheme(
           headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
           bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
@@ -22,7 +22,7 @@ class App extends StatelessWidget {
       child: MultiProvider(
           providers: [
             ChangeNotifierProvider(
-                create: (context) => CardDetailsModel()..initialize()),
+                create: (context) => PersonalCardDetailsModel()..initialize()),
           ],
           child: MaterialApp(
             title: 'Ehrenamtskarte',

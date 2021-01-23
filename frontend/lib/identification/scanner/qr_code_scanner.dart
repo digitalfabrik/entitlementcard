@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../card_details_model.dart';
+import '../personal_card_details_model.dart';
 import 'qr_code_parser.dart';
 
 const flashOn = 'Blitz an';
@@ -189,8 +189,8 @@ class _QRViewState extends State<QRCodeScanner> {
         return;
       }
       isDone = true;
-      Provider.of<CardDetailsModel>(context, listen: false)
-          .setCardDetails(cardDetails);
+      Provider.of<PersonalCardDetailsModel>(context, listen: false)
+          .setPersonalCardDetails(cardDetails);
       Navigator.of(context).maybePop();
     } on Exception catch (e) {
       controller.pauseCamera();
