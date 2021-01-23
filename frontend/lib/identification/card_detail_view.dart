@@ -43,7 +43,7 @@ class CardDetailView extends StatelessWidget {
               Text("Gültig bis $_formattedExpirationDate"),
               SizedBox(height: 5),
               Text(
-                "${cardDetails.firstName} ${cardDetails.lastName}",
+                "${cardDetails.fullName}",
                 style: Theme.of(context).textTheme.headline6,
               ),
             ],

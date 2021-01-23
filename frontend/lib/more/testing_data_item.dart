@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
 
-final validEakDetails =
-    CardDetails("Jane", "Doe", DateTime.parse("2024-03-22"), "Augsburg Stadt");
+final validEakDetails = CardDetails("Jane Doe", 1677542400, "STANDARD", 42);
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
@@ -39,8 +38,7 @@ class _TestingDataState extends State<TestingDataItem> {
   }
 
   Future<void> _resetEakData() async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .clearCardDetails();
+    Provider.of<CardDetailsModel>(context, listen: false).clearCardDetails();
   }
 
   Future<void> _setValidEakData() async {

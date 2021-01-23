@@ -32,7 +32,7 @@ dependencies:
   flutter_svg: ^0.18.0
   package_info: ^0.4.3 # for about dialog
   qr_code_scanner: 0.2.1
-  shared_preferences: ^0.5.12+4
+  flutter_secure_storage: ^3.3.5
   infinite_scroll_pagination: ^2.2.3
   geolocator: ^6.1.13
   flutter_launcher_icons: ^0.8.1

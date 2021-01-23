@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../card_details_model.dart';
-import '../jwt/invalid_jwt_exception.dart';
 import 'qr_code_parser.dart';
 
 const flashOn = 'Blitz an';
@@ -197,13 +196,7 @@ class _QRViewState extends State<QRCodeScanner> {
       controller.pauseCamera();
       print("Failed to parse qr code content!");
       print(e);
-      String errorMessage;
-      if (e is InvalidJwtException) {
-        errorMessage =
-            "Der Inhalt des QR-Codes kann von der App nicht verstanden werden.";
-      } else {
-        errorMessage = e.toString();
-      }
+      final errorMessage = e.toString();
       if (isErrorDialogActive) {
         return;
       }

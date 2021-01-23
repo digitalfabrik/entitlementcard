@@ -1,17 +1,21 @@
+import 'dart:convert';
+
 import '../card_details.dart';
-import '../jwt/parse_jwt.dart';
+import '../protobuf/card_activate_model.pb.dart';
 
 CardDetails parseQRCodeContent(String rawContent) {
-  var payload = parseJwtPayLoad(rawContent);
-  String firstName = payload["firstName"];
-  String lastName = payload["lastName"];
+  final decoder = Base64Decoder();
 
-  if (firstName == null || lastName == null) {
-    throw Exception("Name konnte nicht aus QR Code gelesen werden.");
-  }
+  var cardActivateModel =
+      CardActivateModel.fromBuffer(decoder.convert(rawContent));
 
-  final expirationDate = DateTime.parse(payload["expirationDate"]);
-  String region = payload["region"] ?? "";
+  final fullName = cardActivateModel.fullName;
 
-  return CardDetails(firstName, lastName, expirationDate, region);
+  final unixExpirationTime = cardActivateModel.expirationDate.toInt();
+
+  final cardType = cardActivateModel.cardType.toString();
+
+  final regionId = cardActivateModel.region;
+
+  return CardDetails(fullName, unixExpirationTime, cardType, regionId);
 }

@@ -129,12 +129,11 @@ class _VerificationViewState extends State<VerificationPage> {
               style: DefaultTextStyle.of(context)
                   .style
                   .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
-          TextSpan(
-              text: "Name: ${cardDetails.firstName} ${cardDetails.lastName}\n"),
+          TextSpan(text: "Name: ${cardDetails.fullName}\n"),
           TextSpan(
               text: "Ablaufdatum: "
                   "${dateFormat.format(cardDetails.expirationDate)}\n"),
-          TextSpan(text: "Landkreis: ${cardDetails.region}"),
+          TextSpan(text: "Landkreis: ${cardDetails.regionId}"),
         ])));
   }
 

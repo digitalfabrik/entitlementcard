@@ -1,8 +1,12 @@
 class CardDetails {
-  final String firstName;
-  final String lastName;
+  final String fullName;
+  final int unixExpirationDate;
+  final String cardType;
+  final int regionId;
   final DateTime expirationDate;
-  final String region;
 
-  CardDetails(this.firstName, this.lastName, this.expirationDate, this.region);
+  CardDetails(
+      this.fullName, this.unixExpirationDate, this.cardType, this.regionId)
+      : expirationDate =
+            DateTime.fromMillisecondsSinceEpoch(unixExpirationDate * 1000);
 }
