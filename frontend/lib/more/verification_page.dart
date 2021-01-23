@@ -21,7 +21,8 @@ class _VerificationViewState extends State<VerificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bottomWidget = _buildPositiveVerificationResult(validEakDetails);
+    _bottomWidget = _buildNegativeVerificationResult(
+        VerificationError(TextSpan(text: "Test"), "#123"));
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -138,10 +139,49 @@ class _VerificationViewState extends State<VerificationPage> {
         ])));
   }
 
-  Card _buildContentCard({Widget child, Color color = Colors.white}) {
+  Widget _buildNegativeVerificationResult(VerificationError verificationError) {
+    return _buildContentCard(
+      borderSide: BorderSide(color: Colors.red, width: 4.0),
+      child: Column(children: [
+        RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 1.3),
+                children: [
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                      text: "Die Ehrenamtskarte konnte nicht"
+                          " validiert werden!\n\n",
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
+                  verificationError.errorTextSpan,
+                  TextSpan(
+                      text: "\nFehlercode: ${verificationError.errorCode}"),
+                ])),
+      ]),
+    );
+  }
+
+  Card _buildContentCard(
+      {Widget child,
+      Color color = Colors.white,
+      BorderSide borderSide =
+          const BorderSide(width: 1.0, color: Colors.black12)}) {
     return Card(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0), side: borderSide),
         margin: EdgeInsets.all(8.0),
         elevation: 5.0,
         color: color,
@@ -150,4 +190,11 @@ class _VerificationViewState extends State<VerificationPage> {
           child: child,
         ));
   }
+}
+
+class VerificationError {
+  final TextSpan errorTextSpan;
+  final String errorCode;
+
+  VerificationError(this.errorTextSpan, this.errorCode);
 }
