@@ -39,6 +39,7 @@ dependencies:
   mutex: ^1.1.0
   protobuf: ^1.1.0
   base32: ^1.1.2
+  qr_flutter: ^3.2.0
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!

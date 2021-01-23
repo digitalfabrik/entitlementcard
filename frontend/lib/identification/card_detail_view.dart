@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import 'card_details.dart';
+import 'card_details_model.dart';
 import 'id_card.dart';
 
 class CardDetailView extends StatelessWidget {
@@ -12,44 +16,93 @@ class CardDetailView extends StatelessWidget {
   const CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
       : super(key: key);
 
-  get _formattedExpirationDate =>
-      DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
+  get _formattedExpirationDate => DateFormat('dd.MM.yyyy').format(
+      DateTime.fromMillisecondsSinceEpoch(cardDetails.expirationDate * 1000));
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    var isLandscape = MediaQuery.of(context).size.width >= 500;
+
+    return Flex(
+      direction: isLandscape ? Axis.horizontal : Axis.vertical,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        IdCard(
-            child: SvgPicture.asset("assets/card.svg",
-                semanticsLabel: 'Ehrenamtskarte',
-                alignment: Alignment.center,
-                fit: BoxFit.fill)),
-        SizedBox(height: 10),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                    child: Text(
-                      "Code einscannen",
-                      style: TextStyle(color: Theme.of(context).accentColor),
+        Column(
+          crossAxisAlignment: isLandscape
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.stretch,
+          children: [
+            IdCard(
+              height: isLandscape ? 200 : null,
+              child: SvgPicture.asset("assets/card.svg",
+                  semanticsLabel: 'Ehrenamtskarte',
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                  child: Text(
+                    "Code neu einscannen",
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onTap: onOpenQrScanner),
+            ),
+          ],
+        ),
+        SizedBox(height: 15, width: 15),
+        Flexible(
+          fit: FlexFit.loose,
+          child: Padding(
+              padding: EdgeInsets.all(4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    cardDetails.fullName ?? "",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(height: 5),
+                  Text("Gültig bis $_formattedExpirationDate"),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Center(
+                      child: MaterialButton(
+                    onPressed: () {
+                      showDialog(context: context, builder: _createQrCode);
+                    },
+                    color: Colors.white,
+                    textColor: Colors.black,
+                    child: Icon(
+                      Icons.qr_code,
+                      size: 50,
                     ),
-                    onTap: onOpenQrScanner),
-              ),
-              SizedBox(height: 10),
-              Text("Gültig bis $_formattedExpirationDate"),
-              SizedBox(height: 5),
-              Text(
-                "${cardDetails.fullName}",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ],
-          ),
+                    padding: EdgeInsets.all(16),
+                    shape: CircleBorder(),
+                  ))
+                ],
+              )),
         )
       ],
     );
+  }
+
+  Widget _createQrCode(BuildContext context) {
+    return Consumer<CardDetailsModel>(
+        builder: (context, cardDetailsModel, child) {
+      return Dialog(
+          insetPadding: EdgeInsets.all(16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          //this right here
+          child: QrImage(
+              data: cardDetailsModel.cardDetails.toString(),
+              version: QrVersions.auto,
+              padding: const EdgeInsets.all(24.0)));
+    });
   }
 }
