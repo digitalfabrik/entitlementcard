@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import 'persistence/personal_card_details_store.dart';
-import 'personal_card_details.dart';
+import 'card_details.dart';
+import 'persistence/card_details_store.dart';
 
-class PersonalCardDetailsModel extends ChangeNotifier {
-  PersonalCardDetails _cardDetails;
+class CardDetailsModel extends ChangeNotifier {
+  CardDetails _cardDetails;
   bool _isInitialized = false;
 
-  PersonalCardDetails get cardDetails {
+  CardDetails get cardDetails {
     return _cardDetails;
   }
 
@@ -20,13 +20,13 @@ class PersonalCardDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPersonalCardDetails(PersonalCardDetails details) {
+  void setCardDetails(CardDetails details) {
     _cardDetails = details;
     saveCardDetails(details);
     notifyListeners();
   }
 
-  void clearPersonalCardDetails() {
+  void clearCardDetails() {
     _cardDetails = null;
     saveCardDetails(null);
     notifyListeners();

@@ -16,8 +16,8 @@ class CardDetailView extends StatelessWidget {
   const CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
       : super(key: key);
 
-  get _formattedExpirationDate => DateFormat('dd.MM.yyyy').format(
-      DateTime.fromMillisecondsSinceEpoch(cardDetails.expirationDate * 1000));
+  get _formattedExpirationDate =>
+      DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
 
   @override
   Widget build(BuildContext context) {

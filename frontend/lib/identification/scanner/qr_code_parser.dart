@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:base32/base32.dart';
 
 import '../card_details.dart';
-import '../personal_card_details.dart';
 import '../protobuf/card_activate_model.pb.dart';
 
-PersonalCardDetails parseQRCodeContent(String rawContent) {
+CardDetails parseQRCodeContent(String rawContent) {
   final base64Decoder = Base64Decoder();
 
   final cardActivateModel =
@@ -19,8 +18,8 @@ PersonalCardDetails parseQRCodeContent(String rawContent) {
   final regionId = cardActivateModel.region;
   final base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
 
-  final cardDetails = CardDetails(
-      fullName, randomBytes, unixExpirationTime, cardType, regionId);
+  final cardDetails = CardDetails(fullName, randomBytes, unixExpirationTime,
+      cardType, regionId, base32TotpSecret);
 
-  return PersonalCardDetails(base32TotpSecret, cardDetails);
+  return cardDetails;
 }

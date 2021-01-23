@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'graphql/configured_graphql_provider.dart';
 import 'home/home_page.dart';
-import 'identification/personal_card_details_model.dart';
+import 'identification/card_details_model.dart';
 
 class App extends StatelessWidget {
   const App({Key key}) : super(key: key);
@@ -22,7 +22,7 @@ class App extends StatelessWidget {
       child: MultiProvider(
           providers: [
             ChangeNotifierProvider(
-                create: (context) => PersonalCardDetailsModel()..initialize()),
+                create: (context) => CardDetailsModel()..initialize()),
           ],
           child: MaterialApp(
             title: 'Ehrenamtskarte',
