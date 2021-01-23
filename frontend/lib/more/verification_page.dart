@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../identification/card_details.dart';
-import 'testing_data_item.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({
