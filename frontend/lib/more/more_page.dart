@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
-import '../identification/verification_page.dart';
+import '../verification/verification_page.dart';
 import 'menu_item.dart';
 import 'testing_data_item.dart';
 
