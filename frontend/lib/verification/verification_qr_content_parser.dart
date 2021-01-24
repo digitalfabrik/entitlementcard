@@ -107,12 +107,16 @@ class VerificationQrContentParser {
                 "otpMissing"));
         return QRCodeParseResult();
       }
+      _verificationCardDetailsModel.setWaitingForVerificationResult();
+
       final baseCardDetails = BaseCardDetails(
           fullName, randomBytes, unixExpirationDate, cardType, regionId);
       final verificationCardDetails =
           VerificationCardDetails(baseCardDetails, otp);
-      _verificationCardDetailsModel
-          .setVerificationSuccessful(verificationCardDetails);
+      Future.delayed(
+          const Duration(seconds: 2),
+          () => _verificationCardDetailsModel
+              .setVerificationSuccessful(verificationCardDetails));
     } on Exception catch (e) {
       return QRCodeParseResult(
           hasError: true,
