@@ -3,10 +3,9 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mutex/mutex.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../card_details_model.dart';
 import 'qr_code_parser.dart';
 
 const flashOn = 'Blitz an';
@@ -17,9 +16,10 @@ const backCamera = 'Standard Kamera';
 const scanDelayAfterErrorMs = 500;
 
 class QRCodeScanner extends StatefulWidget {
-  const QRCodeScanner({
-    Key key,
-  }) : super(key: key);
+  final QRCodeContentParser qrCodeContentParser;
+
+  const QRCodeScanner({Key key, @required this.qrCodeContentParser})
+      : super(key: key);
 
   @override
   State<QRCodeScanner> createState() => _QRViewState();
@@ -32,7 +32,8 @@ class _QRViewState extends State<QRCodeScanner> {
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isDone = false;
-  bool isErrorDialogActive = false;
+
+  final qrCodeParsingMutex = Mutex();
 
   // In order to get hot reload to work we need to pause the camera if the
   // platform is android, or resume the camera if the platform is iOS.
@@ -179,35 +180,34 @@ class _QRViewState extends State<QRCodeScanner> {
     });
   }
 
-  void _tryParseCodeContent(String codeContent) {
-    try {
-      final cardDetails = parseQRCodeContent(codeContent);
-      // TODO this method gets called multiple times in a row for some reason
-      // The following code should be exclusive, but dart does not natively
-      // support mutexes, synchronized, etc.
-      if (isDone) {
-        return;
-      }
-      isDone = true;
-      Provider.of<CardDetailsModel>(context, listen: false)
-          .setCardDetails(cardDetails);
-      Navigator.of(context).maybePop();
-    } on Exception catch (e) {
-      controller.pauseCamera();
-      print("Failed to parse qr code content!");
-      print(e);
-      final errorMessage = e.toString();
-      if (isErrorDialogActive) {
-        return;
-      }
-      isErrorDialogActive = true;
-      _showErrorDialog(errorMessage).then((value) {
-        Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
-            .then((onValue) {
-          isErrorDialogActive = false;
-          controller.resumeCamera();
+  void _tryParseCodeContent(String codeContent) async {
+    var wasSuccessful = false;
+    // needed because this method gets called multiple times in a row after one
+    // qr code gets detected, therefore we need to protect it
+    if (isDone) {
+      return;
+    }
+    isDone = true;
+    await qrCodeParsingMutex.protect(() async {
+      final parseResult = widget.qrCodeContentParser(codeContent);
+      if (parseResult.hasError) {
+        controller.pauseCamera();
+        print("Failed to parse qr code content!");
+        print(parseResult.internalErrorMessage);
+        final errorMessage = parseResult.userErrorMessage;
+        _showErrorDialog(errorMessage).then((value) {
+          Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
+              .then((onValue) {
+            controller.resumeCamera();
+            isDone = false;
+          });
         });
-      });
+      } else {
+        wasSuccessful = true;
+      }
+    });
+    if (wasSuccessful) {
+      Navigator.of(context).maybePop();
     }
   }
 
