@@ -33,7 +33,7 @@ class VerificationCardDetailsModel extends ChangeNotifier {
   }
 
   void setWaitingForVerificationResult() {
-    _verificationState = VerificationState.waitingForScan;
+    _verificationState = VerificationState.verificationInProgress;
     notifyListeners();
   }
 
