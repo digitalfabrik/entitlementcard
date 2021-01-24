@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:otp/otp.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../verification/verification_card_details.dart';
+import '../verification/verification_encoder.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'id_card.dart';
@@ -83,7 +86,7 @@ class CardDetailView extends StatelessWidget {
                     ),
                     padding: EdgeInsets.all(16),
                     shape: CircleBorder(),
-                  ))
+                  )),
                 ],
               )),
         )
@@ -100,9 +103,16 @@ class CardDetailView extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           //this right here
           child: QrImage(
-              data: cardDetailsModel.cardDetails.toString(),
+              data: encodeVerificationCardDetails(
+                  VerificationCardDetails(cardDetails, _generateOTP())),
               version: QrVersions.auto,
               padding: const EdgeInsets.all(24.0)));
     });
+  }
+
+  String _generateOTP() {
+    return OTP.generateTOTPCodeString(
+        cardDetails.base32TotpSecret, DateTime.now().millisecondsSinceEpoch,
+        algorithm: Algorithm.SHA1);
   }
 }

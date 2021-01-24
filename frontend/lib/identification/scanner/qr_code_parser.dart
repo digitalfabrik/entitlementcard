@@ -5,6 +5,20 @@ import 'package:base32/base32.dart';
 import '../card_details.dart';
 import '../protobuf/card_activate_model.pb.dart';
 
+class QRCodeParseResult {
+  final bool hasError;
+  final String internalErrorMessage;
+  final String userErrorMessage;
+
+  QRCodeParseResult(
+      {this.hasError = false,
+      this.internalErrorMessage = "",
+      this.userErrorMessage = ""});
+}
+
+typedef QRCodeContentParser = QRCodeParseResult Function(
+    String rawBase64Content);
+
 CardDetails parseQRCodeContent(String rawContent) {
   final base64Decoder = Base64Decoder();
 

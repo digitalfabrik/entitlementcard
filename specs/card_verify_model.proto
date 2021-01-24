@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message CardVerifyModel {
+  string fullName = 1;
+  bytes randomBytes = 2;
+  uint64 expirationDate = 3;
+  enum CardType {
+    STANDARD = 0;
+    GOLD = 1;
+  }
+  CardType cardType = 5;
+  int32 region = 6;
+  string otp = 7;
+}

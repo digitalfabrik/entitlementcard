@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
+import '../verification/verification_page.dart';
 import 'menu_item.dart';
 import 'testing_data_item.dart';
-import 'verification_page.dart';
 
 const showTestDataOptions =
     bool.fromEnvironment("test_data_options", defaultValue: false);

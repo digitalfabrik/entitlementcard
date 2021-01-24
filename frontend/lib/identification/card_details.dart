@@ -1,14 +1,9 @@
-class CardDetails {
-  final String fullName;
-  final List<int> randomBytes;
-  final int unixExpirationDate;
-  final String cardType;
-  final int regionId;
-  final String base32TotpSecret;
-  final DateTime expirationDate;
+import 'base_card_details.dart';
 
-  CardDetails(this.fullName, this.randomBytes, this.unixExpirationDate,
-      this.cardType, this.regionId, this.base32TotpSecret)
-      : expirationDate =
-            DateTime.fromMillisecondsSinceEpoch(unixExpirationDate * 1000);
+class CardDetails extends BaseCardDetails {
+  final String base32TotpSecret;
+
+  CardDetails(fullName, randomBytes, unixExpirationDate, cardType, regionId,
+      this.base32TotpSecret)
+      : super(fullName, randomBytes, unixExpirationDate, cardType, regionId);
 }
