@@ -189,9 +189,9 @@ class _QRViewState extends State<QRCodeScanner> {
     }
     isDone = true;
     await qrCodeParsingMutex.protect(() async {
+      controller.pauseCamera();
       final parseResult = widget.qrCodeContentParser(codeContent);
       if (parseResult.hasError) {
-        controller.pauseCamera();
         print("Failed to parse qr code content!");
         print(parseResult.internalErrorMessage);
         final errorMessage = parseResult.userErrorMessage;

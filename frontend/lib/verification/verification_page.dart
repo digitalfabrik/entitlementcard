@@ -3,25 +3,26 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-import '../identification/card_details.dart';
+import '../identification/base_card_details.dart';
+import '../qr_code_scanner/qr_code_scanner.dart';
+import 'verification_card_details_model.dart';
+import 'verification_error.dart';
+import 'verification_qr_content_parser.dart';
 
-class VerificationPage extends StatefulWidget {
-  const VerificationPage({
+class VerificationView extends StatefulWidget {
+  const VerificationView({
     Key key,
   }) : super(key: key);
 
   @override
-  State<VerificationPage> createState() => _VerificationViewState();
+  State<VerificationView> createState() => _VerificationViewState();
 }
 
-class _VerificationViewState extends State<VerificationPage> {
-  Widget _bottomWidget;
-
+class _VerificationViewState extends State<VerificationView> {
   @override
   Widget build(BuildContext context) {
-    _bottomWidget = _buildNegativeVerificationResult(
-        VerificationError(TextSpan(text: "Test"), "#123"));
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -40,7 +41,7 @@ class _VerificationViewState extends State<VerificationPage> {
               Center(
                 child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    onPressed: () => print("Pressed!"),
+                    onPressed: _onScanCodePressed,
                     color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0),
@@ -53,10 +54,28 @@ class _VerificationViewState extends State<VerificationPage> {
                           .merge(TextStyle(color: Colors.white, fontSize: 20)),
                     )),
               ),
-              if (_bottomWidget != null) _bottomWidget,
+              Consumer<VerificationCardDetailsModel>(
+                  builder: (context, verCardDetailsModel, child) {
+                return _buildVerificationResult(verCardDetailsModel);
+              }),
             ],
           ),
         ));
+  }
+
+  Widget _buildVerificationResult(VerificationCardDetailsModel model) {
+    switch (model.verificationState) {
+      case VerificationState.waitingForScan:
+        return Container(width: 0.0, height: 0.0);
+      case VerificationState.verificationInProgress:
+        return _buildWaitingForVerificationResult();
+      case VerificationState.verificationSuccess:
+        return _buildPositiveVerificationResult(
+            model.verificationCardDetails.cardDetails);
+      case VerificationState.verificationFailure:
+        return _buildNegativeVerificationResult(model.verificationError);
+    }
+    return Container(width: 0.0, height: 0.0);
   }
 
   TextSpan _buildInfoText() {
@@ -85,6 +104,20 @@ class _VerificationViewState extends State<VerificationPage> {
     ]);
   }
 
+  void _onScanCodePressed() {
+    final provider =
+        Provider.of<VerificationCardDetailsModel>(context, listen: false);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QRCodeScanner(
+            qrCodeContentParser:
+                VerificationQrContentParser(provider).processQrCodeContent,
+          ),
+        ));
+  }
+
   Widget _buildWaitingForVerificationResult() {
     return _buildContentCard(
         child: Column(children: [
@@ -105,7 +138,7 @@ class _VerificationViewState extends State<VerificationPage> {
         color: Colors.lime);
   }
 
-  Widget _buildPositiveVerificationResult(CardDetails cardDetails) {
+  Widget _buildPositiveVerificationResult(BaseCardDetails cardDetails) {
     final dateFormat = DateFormat('dd.MM.yyyy');
     return _buildContentCard(
         child: RichText(
@@ -188,11 +221,4 @@ class _VerificationViewState extends State<VerificationPage> {
           child: child,
         ));
   }
-}
-
-class VerificationError {
-  final TextSpan errorTextSpan;
-  final String errorCode;
-
-  VerificationError(this.errorTextSpan, this.errorCode);
 }

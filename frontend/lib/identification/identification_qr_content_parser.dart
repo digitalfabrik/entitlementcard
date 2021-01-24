@@ -8,7 +8,7 @@ import 'card_details.dart';
 import 'card_details_model.dart';
 import 'protobuf/card_activate_model.pb.dart';
 
-QRCodeParseResult createfieldMissingError(
+QRCodeParseResult createFieldMissingError(
     String missingFieldName, String publicErrorCode) {
   return QRCodeParseResult(
       hasError: true,
@@ -59,11 +59,11 @@ class IdentificationQrContentParser {
 
       final fullName = cardActivateModel.fullName;
       if (fullName == null) {
-        return createfieldMissingError("fullName", "fullNameMissing");
+        return createFieldMissingError("fullName", "fullNameMissing");
       }
       final randomBytes = cardActivateModel.randomBytes;
       if (randomBytes == null) {
-        return createfieldMissingError("randomBytes", "randomBytesMissing");
+        return createFieldMissingError("randomBytes", "randomBytesMissing");
       }
       final unixInt64ExpirationDate = cardActivateModel.expirationDate;
       int unixExpirationDate;
