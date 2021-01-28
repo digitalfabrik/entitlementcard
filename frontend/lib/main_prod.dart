@@ -7,6 +7,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(Configuration(
       mapStyleUrl: "https://vector.ehrenamtskarte.app/style.json",
-      graphqlUrl: "https://api.ehrenamtskarte.app/stores",
+      graphqlStoresUrl: "https://api.ehrenamtskarte.app/stores",
+      graphqlVerificationUrl: "https://api.ehrenamtskarte.app/verification",
       child: App()));
 }

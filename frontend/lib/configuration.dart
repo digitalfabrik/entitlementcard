@@ -2,21 +2,23 @@ import 'package:flutter/widgets.dart';
 
 class Configuration extends InheritedWidget {
   final String mapStyleUrl;
-  final String graphqlUrl;
+  final String graphqlStoresUrl;
+  final String graphqlVerificationUrl;
 
   const Configuration({
     Key key,
     @required this.mapStyleUrl,
-    @required this.graphqlUrl,
+    @required this.graphqlStoresUrl,
+    @required this.graphqlVerificationUrl,
     @required Widget child,
   })  : assert(mapStyleUrl != null),
-        assert(graphqlUrl != null),
+        assert(graphqlStoresUrl != null),
         super(key: key, child: child);
 
   @override
   bool updateShouldNotify(covariant Configuration oldWidget) =>
       mapStyleUrl != oldWidget.mapStyleUrl ||
-      graphqlUrl != oldWidget.graphqlUrl;
+      graphqlStoresUrl != oldWidget.graphqlStoresUrl;
 
   static Configuration of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Configuration>();

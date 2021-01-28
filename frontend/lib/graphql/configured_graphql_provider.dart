@@ -16,7 +16,7 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
         cache: InMemoryCache(),
         link: Link.from([
           HttpLink(
-            uri: config.graphqlUrl,
+            uri: config.graphqlStoresUrl,
           )
         ]),
       ),
