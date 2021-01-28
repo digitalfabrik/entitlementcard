@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'graphql_api.graphql.dart';
+part of 'stores_graphql_api.graphql.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

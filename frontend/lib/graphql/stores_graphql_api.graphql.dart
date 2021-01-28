@@ -6,7 +6,7 @@ import 'package:gql/ast.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-part 'graphql_api.graphql.g.dart';
+part 'stores_graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
