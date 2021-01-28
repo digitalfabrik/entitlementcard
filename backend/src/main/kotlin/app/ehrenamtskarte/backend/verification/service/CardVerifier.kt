@@ -19,12 +19,17 @@ object CardVerifier {
 
     fun verifyCard(card: Card, totp: Int): Boolean = !card.hasExpired && isTotpValid(totp, card.totpSecret)
 
-    private fun isTotpValid(totp: Int, secret: ByteArray): Boolean = generateTotp(secret) == totp
+    private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
+        if (generateTotp(secret) == totp) return true
+        // current TOTP is invalid, but we are also happy with the previous one
+        val previousValidTotp = generateTotp(secret, Instant.now().minus(TIME_STEP))
+        return previousValidTotp == totp
+    }
 
     private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
         val totpGenerator = TimeBasedOneTimePasswordGenerator(TIME_STEP, TOTP_LENGTH,
             TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256)
-        val key = SecretKeySpec(secret, totpGenerator.algorithm);
+        val key = SecretKeySpec(secret, totpGenerator.algorithm)
         return totpGenerator.generateOneTimePassword(key, timestamp)
     }
 }
