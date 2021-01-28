@@ -7,15 +7,14 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-// TODO recheck these constants when we know the technologies we use
-const val BCRYPT_HASH_LENGTH = 60
-const val TOTP_SECRET_LENGTH = 5
+const val HASH_LENGTH = 32 // TODO check this once the frontend implementation is done
+const val TOTP_SECRET_LENGTH = 20
 
 @ExperimentalUnsignedTypes
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
     val expirationDate = ulong("expirationDate")
-    val hashModel = char("hashModel", BCRYPT_HASH_LENGTH).uniqueIndex()
+    val hashModel = char("hashModel", HASH_LENGTH).uniqueIndex()
 }
 
 @ExperimentalUnsignedTypes

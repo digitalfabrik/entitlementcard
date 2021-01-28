@@ -9,7 +9,7 @@ import java.time.Instant
 import javax.crypto.spec.SecretKeySpec
 
 val TIME_STEP: Duration = Duration.ofMinutes(5)
-const val TOTP_LENGTH = 6
+const val TOTP_LENGTH = 10
 
 object CardVerifier {
     fun verifyCardHash(cardHash: String, totp: Int): Boolean {
