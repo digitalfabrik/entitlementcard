@@ -9,7 +9,16 @@
             overflow: hidden;
         }
         #graphiql {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
+        }
+
+        #graphiql > button,
+        #graphiql > h4 {
+            margin: 10px;
         }
     </style>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
