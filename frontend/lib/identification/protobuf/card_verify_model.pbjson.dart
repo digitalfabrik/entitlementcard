@@ -13,7 +13,7 @@ const CardVerifyModel$json = const {
     const {'1': 'expirationDate', '3': 3, '4': 1, '5': 4, '10': 'expirationDate'},
     const {'1': 'cardType', '3': 5, '4': 1, '5': 14, '6': '.CardVerifyModel.CardType', '10': 'cardType'},
     const {'1': 'region', '3': 6, '4': 1, '5': 5, '10': 'region'},
-    const {'1': 'otp', '3': 7, '4': 1, '5': 9, '10': 'otp'},
+    const {'1': 'otp', '3': 7, '4': 1, '5': 5, '10': 'otp'},
   ],
   '4': const [CardVerifyModel_CardType$json],
 };

@@ -10,5 +10,5 @@ message CardVerifyModel {
   }
   CardType cardType = 5;
   int32 region = 6;
-  string otp = 7;
+  int32 otp = 7;
 }

@@ -21,7 +21,7 @@ class CardVerifyModel extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expirationDate', $pb.PbFieldType.OU6, protoName: 'expirationDate', defaultOrMaker: $fixnum.Int64.ZERO)
     ..e<CardVerifyModel_CardType>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cardType', $pb.PbFieldType.OE, protoName: 'cardType', defaultOrMaker: CardVerifyModel_CardType.STANDARD, valueOf: CardVerifyModel_CardType.valueOf, enumValues: CardVerifyModel_CardType.values)
     ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'region', $pb.PbFieldType.O3)
-    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'otp')
+    ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'otp', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -32,7 +32,7 @@ class CardVerifyModel extends $pb.GeneratedMessage {
     $fixnum.Int64 expirationDate,
     CardVerifyModel_CardType cardType,
     $core.int region,
-    $core.String otp,
+    $core.int otp,
   }) {
     final _result = create();
     if (fullName != null) {
@@ -122,9 +122,9 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   void clearRegion() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get otp => $_getSZ(5);
+  $core.int get otp => $_getIZ(5);
   @$pb.TagNumber(7)
-  set otp($core.String v) { $_setString(5, v); }
+  set otp($core.int v) { $_setSignedInt32(5, v); }
   @$pb.TagNumber(7)
   $core.bool hasOtp() => $_has(5);
   @$pb.TagNumber(7)

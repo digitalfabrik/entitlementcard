@@ -11,13 +11,17 @@ import '../verification/verification_encoder.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'id_card.dart';
+import 'otp_generator.dart';
 
 class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;
   final VoidCallback onOpenQrScanner;
+  final OTPGenerator _otpGenerator;
 
-  const CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
-      : super(key: key);
+  CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
+      : _otpGenerator = OTPGenerator(
+            cardDetails.base32TotpSecret, 60 * 5, 10, Algorithm.SHA256),
+        super(key: key);
 
   get _formattedExpirationDate =>
       DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
@@ -110,9 +114,7 @@ class CardDetailView extends StatelessWidget {
     });
   }
 
-  String _generateOTP() {
-    return OTP.generateTOTPCodeString(
-        cardDetails.base32TotpSecret, DateTime.now().millisecondsSinceEpoch,
-        algorithm: Algorithm.SHA1);
+  int _generateOTP() {
+    return _otpGenerator.generateOTP();
   }
 }

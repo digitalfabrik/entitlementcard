@@ -100,7 +100,7 @@ class VerificationQrContentParser {
       final cardType = cardVerifyModel.cardType.toString();
       final regionId = cardVerifyModel.region;
       final otp = cardVerifyModel.otp;
-      if (otp == null || otp.isEmpty) {
+      if (otp == null) {
         _verificationCardDetailsModel.setVerificationFailure(
             VerificationError.fromStrings(
                 "Eine zur Verifikation erforderliche Information fehlt.",
