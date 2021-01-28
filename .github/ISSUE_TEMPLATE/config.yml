@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Bug report
+    url: https://github.com/ehrenamtskarte/ehrenamtskarte/issues/new?template=bug_report.md&projects=ehrenamtskarte%2Fehrenamtskarte%2F1
+    about: Create a report to help us improve 
+  - name: Technical Task
+    url: https://github.com/ehrenamtskarte/ehrenamtskarte/issues/new?template=technical-task.md&projects=ehrenamtskarte%2Fehrenamtskarte%2F1
+    about: Suggest an idea for this project 
+  - name: User Story
+    url: https://github.com/ehrenamtskarte/ehrenamtskarte/issues/new?template=user+story&projects=ehrenamtskarte%2Fehrenamtskarte%2F1
+    about: This a user story 
