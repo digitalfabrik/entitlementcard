@@ -21,9 +21,14 @@ object CardVerifier {
 
     private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
         if (generateTotp(secret) == totp) return true
-        // current TOTP is invalid, but we are also happy with the previous one
+
+        // current TOTP is invalid, but we are also happy with the previous/next one
         val previousValidTotp = generateTotp(secret, Instant.now().minus(TIME_STEP))
-        return previousValidTotp == totp
+        if (previousValidTotp == totp) return true
+        val nextValidTotp = generateTotp(secret, Instant.now().plus(TIME_STEP))
+        if (nextValidTotp == totp) return true
+
+        return false
     }
 
     private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
