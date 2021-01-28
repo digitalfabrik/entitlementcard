@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.stores.importer.freinet.FreinetDataImporter
 import app.ehrenamtskarte.backend.stores.importer.lbe.LbeDataImporter
-import app.ehrenamtskarte.backend.stores.webservice.GraphQLHandler
+import app.ehrenamtskarte.backend.stores.webservice.StoresGraphQLHandler
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
@@ -20,7 +20,7 @@ class Entry : CliktCommand() {
     override fun run() {
         val exportApi = exportApi
         if (exportApi != null) {
-            val schema = GraphQLHandler.graphQLSchema.print()
+            val schema = StoresGraphQLHandler.graphQLSchema.print()
             val file = File(exportApi)
             file.writeText(schema)
         } else {

@@ -1,10 +1,5 @@
-package app.ehrenamtskarte.backend.stores.webservice
+package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.stores.webservice.schema.AcceptingStoreQueryService
-import app.ehrenamtskarte.backend.stores.webservice.schema.CategoriesQueryService
-import com.expediagroup.graphql.SchemaGeneratorConfig
-import com.expediagroup.graphql.TopLevelObject
-import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import graphql.ExceptionWhileDataFetching
@@ -15,30 +10,15 @@ import io.javalin.http.Context
 import org.dataloader.DataLoaderRegistry
 import java.io.IOException
 
-class GraphQLHandler {
-    companion object {
-        private val config =
-            SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.stores.webservice.schema"))
-        private val queries = listOf(
-            TopLevelObject(AcceptingStoreQueryService()),
-                TopLevelObject(CategoriesQueryService())
-        )
-
-        private val mutations = listOf<TopLevelObject>(
-            // TopLevelObject(LoginMutationService())
-        )
-
-        val graphQLSchema = toSchema(config, queries, mutations)
-
-        val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
-
-    }
-
+open class GraphQLHandler(
+    dataLoaderRegistryInitializer: (DataLoaderRegistry) -> Unit = {},
+    private val graphQL: GraphQL
+) {
     private val mapper = jacksonObjectMapper()
     private val dataLoaderRegistry = DataLoaderRegistry()
 
     init {
-        initializeDataLoaderRegistry(this.dataLoaderRegistry)
+        dataLoaderRegistryInitializer(dataLoaderRegistry)
     }
 
     /**
