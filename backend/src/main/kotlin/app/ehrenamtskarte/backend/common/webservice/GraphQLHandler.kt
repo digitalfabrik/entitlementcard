@@ -11,8 +11,8 @@ import org.dataloader.DataLoaderRegistry
 import java.io.IOException
 
 open class GraphQLHandler(
-    dataLoaderRegistryInitializer: (DataLoaderRegistry) -> Unit = {},
-    private val graphQL: GraphQL
+    private val graphQL: GraphQL,
+    dataLoaderRegistryInitializer: (DataLoaderRegistry) -> Unit = {}
 ) {
     private val mapper = jacksonObjectMapper()
     private val dataLoaderRegistry = DataLoaderRegistry()

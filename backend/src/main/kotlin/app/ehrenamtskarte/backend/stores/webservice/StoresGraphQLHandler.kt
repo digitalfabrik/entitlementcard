@@ -9,8 +9,8 @@ import com.expediagroup.graphql.toSchema
 import graphql.GraphQL
 
 class StoresGraphQLHandler : GraphQLHandler(
-    ::initializeDataLoaderRegistry,
-    graphQL
+    graphQL,
+    ::initializeDataLoaderRegistry
 ) {
     companion object {
         private val config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.stores.webservice.schema"))
