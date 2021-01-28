@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../category_assets.dart';
 import '../debouncer.dart';
-import '../graphql/graphql_api.graphql.dart';
+import '../graphql/stores_graphql_api.dart';
 import '../location/determine_position.dart';
 import 'filter_bar.dart';
 import 'results_loader.dart';
@@ -43,6 +43,10 @@ class _SearchPageState extends State<SearchPage> {
           ),
           pinned: true,
           actions: [
+            if (_textEditingController.value.text.isNotEmpty)
+              IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: _clearInput),
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: _onSearchPressed,
@@ -86,6 +90,11 @@ class _SearchPageState extends State<SearchPage> {
     _debouncer.run(() => setState(() {
           _searchFieldText = text;
         }));
+  }
+
+  _clearInput() {
+    _textEditingController.clear();
+    _onSearchFieldTextChanged(_textEditingController.value.text);
   }
 
   _onSearchPressed() {
