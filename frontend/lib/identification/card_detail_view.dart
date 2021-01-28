@@ -1,27 +1,18 @@
+import 'package:ehrenamtskarte/identification/verification_qr_code_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:otp/otp.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
-import '../verification/verification_card_details.dart';
-import '../verification/verification_encoder.dart';
 import 'card_details.dart';
-import 'card_details_model.dart';
 import 'id_card.dart';
-import 'otp_generator.dart';
 
 class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;
   final VoidCallback onOpenQrScanner;
-  final OTPGenerator _otpGenerator;
 
   CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
-      : _otpGenerator = OTPGenerator(
-            cardDetails.base32TotpSecret, 60 * 5, 10, Algorithm.SHA256),
-        super(key: key);
+      : super(key: key);
 
   get _formattedExpirationDate =>
       DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
@@ -80,7 +71,11 @@ class CardDetailView extends StatelessWidget {
                   Center(
                       child: MaterialButton(
                     onPressed: () {
-                      showDialog(context: context, builder: _createQrCode);
+                      showDialog(
+                          context: context,
+                          builder: (_) => VerificationQrCodeView(
+                                cardDetails: cardDetails,
+                              ));
                     },
                     color: Colors.white,
                     textColor: Colors.black,
@@ -96,25 +91,5 @@ class CardDetailView extends StatelessWidget {
         )
       ],
     );
-  }
-
-  Widget _createQrCode(BuildContext context) {
-    return Consumer<CardDetailsModel>(
-        builder: (context, cardDetailsModel, child) {
-      return Dialog(
-          insetPadding: EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          //this right here
-          child: QrImage(
-              data: encodeVerificationCardDetails(
-                  VerificationCardDetails(cardDetails, _generateOTP())),
-              version: QrVersions.auto,
-              padding: const EdgeInsets.all(24.0)));
-    });
-  }
-
-  int _generateOTP() {
-    return _otpGenerator.generateOTP();
   }
 }
