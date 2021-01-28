@@ -4,7 +4,7 @@ import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
-import PDFView from "./components/PDFView";
+import PDFView from "./components/generation/PDFView";
 import {HashRouter, Route} from "react-router-dom";
 import EakGeneration from "./components/generation/EakGeneration";
 import {createBinaryData} from "./util/protobuf";
@@ -29,9 +29,6 @@ function App() {
                     </Route>
                     <Route path={"/eak-generation"}>
                         <EakGeneration />
-                        <PDFView />
-                        
-                        <button onClick={() => console.log(createBinaryData("Max Mustermann", 1, {months: 5}, CardActivateModel.CardType.STANDARD))}>Binary</button>
                     </Route>
                     <Route path={"/accepting-stores"}>
 
