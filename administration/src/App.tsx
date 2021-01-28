@@ -7,6 +7,8 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import PDFView from "./components/PDFView";
 import {HashRouter, Route} from "react-router-dom";
 import EakGeneration from "./components/generation/EakGeneration";
+import {createBinaryData} from "./util/protobuf";
+import {CardActivateModel} from "./generated/compiled";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
@@ -28,6 +30,8 @@ function App() {
                     <Route path={"/eak-generation"}>
                         <EakGeneration />
                         <PDFView />
+                        
+                        <button onClick={() => console.log(createBinaryData("Max Mustermann", 1, {months: 5}, CardActivateModel.CardType.STANDARD))}>Binary</button>
                     </Route>
                     <Route path={"/accepting-stores"}>
 

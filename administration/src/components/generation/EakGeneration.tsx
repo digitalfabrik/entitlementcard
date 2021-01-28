@@ -24,7 +24,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const ButtonBar = styled(Card)<{ stickyTop: number }>`
+const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
   padding: 15px;
   background: #fafafa;
@@ -63,7 +63,7 @@ const EakGeneration = () => {
     const [cardCreationModels, setCardCreationModels] = useState([createEmptyCard()]);
 
     const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()]);
-    const removeForm = (id: number) => setCardCreationModels([...cardCreationModels].filter( model => model.id != id));
+    const removeForm = (id: number) => setCardCreationModels([...cardCreationModels].filter( model => model.id !== id));
     const reset = () => setCardCreationModels([createEmptyCard()]);
 
     const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm onRemove={() => removeForm(ccm.id)}/></FormColumn>); // Todo!

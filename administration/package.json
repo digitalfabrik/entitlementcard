@@ -13,16 +13,18 @@
     "@types/blob-stream": "^0.1.30",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.17",
-    "@types/pdfkit": "^0.10.6",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@zxing/library": "^0.18.3",
     "@types/react-flip-move": "^2.9.12",
+    "@zxing/library": "^0.18.3",
     "apollo": "^2.32.0",
     "apollo-boost": "^0.4.9",
+    "date-fns": "^2.16.1",
+    "detect-browser": "^5.2.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "jspdf": "^2.2.0",
+    "protobufjs": "^6.10.2",
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^17.0.1",
@@ -34,19 +36,26 @@
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.7"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-graphql": "apollo client:codegen --target=typescript"
+    "lint": "eslint .",
+    "generate-graphql": "apollo client:codegen --target=typescript",
+    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
+    "postinstall": "npm run generate-protobuf"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "ignorePatterns": "src/generated/**"
   },
   "browserslist": {
     "production": [
@@ -59,9 +68,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.7"
   }
 }
