@@ -8,13 +8,13 @@ object CardRepository {
     @ExperimentalUnsignedTypes
     fun findByHashModel(hashModel: String) =
         CardEntity.find { Cards.hashModel eq hashModel }
-            .map { Card(it.totpSecret, it.expirationDate, it.hashModel) }
+            .map { Card(it.totpSecret.asList(), it.expirationDate, it.hashModel) }
             .singleOrNull()
 
     @ExperimentalUnsignedTypes
     fun insert(card: Card) = CardEntity.new {
         hashModel = card.hashModel
-        totpSecret = card.totpSecret
+        totpSecret = card.totpSecret.toByteArray()
         expirationDate = card.expirationDate
     }
 }
