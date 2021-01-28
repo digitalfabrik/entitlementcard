@@ -3,7 +3,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../graphql/graphql_api.graphql.dart';
+import '../../graphql/stores_graphql_api.dart';
 import '../../home/home_page.dart';
 import '../../util/sanitize_contact_details.dart';
 import '../map_page.dart';

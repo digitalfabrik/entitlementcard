@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../category_assets.dart';
 import '../debouncer.dart';
-import '../graphql/graphql_api.graphql.dart';
+import '../graphql/stores_graphql_api.dart';
 import '../location/determine_position.dart';
 import 'filter_bar.dart';
 import 'results_loader.dart';

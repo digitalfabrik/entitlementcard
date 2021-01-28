@@ -1,2 +1,2 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-export 'graphql_api.graphql.dart';
+export 'stores_graphql_api.graphql.dart';
