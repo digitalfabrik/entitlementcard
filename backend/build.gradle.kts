@@ -65,7 +65,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "xyz.elitese.ehrenamtskarte.EntryPointKt"
+    mainClassName = "app.ehrenamtskarte.backend.EntryPointKt"
 }
 
 tasks.withType<JavaExec>().configureEach {
