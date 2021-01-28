@@ -16,7 +16,7 @@ class CardMutationService {
         transaction {
             CardRepository.insert(
                 Card(
-                    card.totpSecret.map { it.toByte() }.toByteArray(),
+                    card.totpSecret.map { it.toByte() },
                     LocalDateTime.ofEpochSecond(card.expirationDate, 0, ZoneOffset.UTC),
                     card.hashModel
                 )
