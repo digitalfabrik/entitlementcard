@@ -7,6 +7,8 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import PDFView from "./components/generation/PDFView";
 import {HashRouter, Route} from "react-router-dom";
 import EakGeneration from "./components/generation/EakGeneration";
+import {createBinaryData} from "./util/protobuf";
+import {CardActivateModel} from "./generated/compiled";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
