@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 "Directs the executor to include this field or fragment only when the `if` argument is true"
@@ -26,9 +27,26 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+type Mutation {
+  "Stores a new digital EAK"
+  addCard(card: CardInput!): Boolean!
+}
+
 type Query {
   "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
   verifyCard(card: CardVerificationModelInput!): Boolean!
+}
+
+"Long type"
+scalar Long
+
+"Built-in Short as Int"
+scalar Short
+
+input CardInput {
+  expirationDate: Long!
+  hashModel: String!
+  totpSecret: [Short!]!
 }
 
 input CardVerificationModelInput {

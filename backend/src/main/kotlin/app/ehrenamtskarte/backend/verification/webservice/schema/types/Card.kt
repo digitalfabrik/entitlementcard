@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema.types
 
 data class Card constructor(
-    val totpSecret: ByteArray,
-    val expirationDate: ULong,
+    val totpSecret: ShortArray,
+    val expirationDate: Long,
     val hashModel: String
 ) {
     override fun equals(other: Any?): Boolean {

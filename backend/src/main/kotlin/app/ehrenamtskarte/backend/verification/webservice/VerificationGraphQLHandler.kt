@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.webservice
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
+import app.ehrenamtskarte.backend.verification.webservice.schema.CardMutationService
 import app.ehrenamtskarte.backend.verification.webservice.schema.CardQueryService
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
@@ -14,8 +15,8 @@ class VerificationGraphQLHandler : GraphQLHandler(graphQL) {
         private val queries = listOf(
             TopLevelObject(CardQueryService())
         )
-        private val mutations = listOf<TopLevelObject>(
-            // TODO add addCard mutation
+        private val mutations = listOf(
+            TopLevelObject(CardMutationService())
         )
         val graphQLSchema = toSchema(config, queries, mutations)
         val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
