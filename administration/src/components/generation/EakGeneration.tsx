@@ -7,6 +7,8 @@ import AddEakForm from "./AddEakForm";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
 import PDFView from "./PDFView";
+import {Route, Switch} from "react-router";
+import {NavLink} from "react-router-dom";
 
 let idCounter = 0;
 
@@ -79,35 +81,28 @@ const EakGeneration = () => {
 
     const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm onRemove={() => removeForm(ccm.id)}/></FormColumn>); // Todo!
 
-    const view = pdfView ? (
-        <PdfWrapper>
-            <PDFView ccModels={cardCreationModels} />
-        </PdfWrapper>
-    ) : (
-        <FormsWrapper>
-            {forms}
-            <FormColumn key="AddButton">
-                <AddEakForm onClick={addForm}/>
-            </FormColumn>
-        </FormsWrapper>
-    );
-
-    const buttonBar = pdfView ? (
-        <ButtonBar stickyTop={0}>
-          <Button icon="undo" text="Zurück" onClick={switchView} intent="primary"/>
-        </ButtonBar>
-
-    ) : (
-        <ButtonBar stickyTop={0}>
-            <Button icon="export" text="QR-Codes drucken" onClick={switchView} intent="success"/>
-            <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning"/>
-        </ButtonBar>
-    );
-
     return (
         <Container>
-            {buttonBar}
-            {view}
+            <Route exact path={"/eak-generation"}>
+                <ButtonBar stickyTop={0}>
+                    <NavLink to={"/eak-generation/pdf-viewer"}><Button icon="export" text="QR-Codes drucken" onClick={switchView} intent="success"/></NavLink>
+                    <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning"/>
+                </ButtonBar>
+                <FormsWrapper>
+                    {forms}
+                    <FormColumn key="AddButton">
+                        <AddEakForm onClick={addForm}/>
+                    </FormColumn>
+                </FormsWrapper>
+            </Route>
+            <Route path={"/eak-generation/pdf-viewer"}>
+                <ButtonBar stickyTop={0}>
+                    <NavLink to={"/eak-generation"}><Button icon="undo" text="Zurück" onClick={switchView} intent="primary"/></NavLink>
+                </ButtonBar>
+                <PdfWrapper>
+                    <PDFView ccModels={cardCreationModels} />
+                </PdfWrapper>
+            </Route>
         </Container>
     );
 };
