@@ -21,26 +21,26 @@ class Entry : CliktCommand() {
     private val importLbeData by option("--importLbe").flag()
 
     override fun run() {
-        val didExportApi = maybeExportApis()
-        if (didExportApi) return
+        val didExportSchema = maybeExportGraphQLSchemas()
+        if (didExportSchema) return
 
         Database.setup()
         maybeImportStoreData()
         WebService().start()
     }
 
-    private fun maybeExportApis(): Boolean =
-        maybeExportApi(exportStoresApi, StoresGraphQLHandler.graphQLSchema, "stores").or(
-        maybeExportApi(exportVerificationApi, VerificationGraphQLHandler.graphQLSchema, "verification"))
+    private fun maybeExportGraphQLSchemas(): Boolean =
+        maybeExportGraphQLSchema(exportStoresApi, StoresGraphQLHandler.graphQLSchema, "stores").or(
+        maybeExportGraphQLSchema(exportVerificationApi, VerificationGraphQLHandler.graphQLSchema, "verification"))
 
-    private fun maybeExportApi(fileName: String?, schema: GraphQLSchema, apiName: String = "a"): Boolean {
+    private fun maybeExportGraphQLSchema(fileName: String?, schema: GraphQLSchema, apiName: String = "a"): Boolean {
         if (fileName == null) return false
         println("Exporting $apiName GraphQL API to $fileName")
-        exportApi(fileName, schema)
+        exportGraphQLSchema(fileName, schema)
         return true
     }
 
-    private fun exportApi(fileName: String, schema: GraphQLSchema) = File(fileName).writeText(schema.print())
+    private fun exportGraphQLSchema(fileName: String, schema: GraphQLSchema) = File(fileName).writeText(schema.print())
 
     private fun maybeImportStoreData() {
         if (importFreinetData) {
