@@ -44,6 +44,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint .",
     "generate-graphql": "apollo client:codegen --target=typescript",
     "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
     "postinstall": "npm run generate-protobuf"
@@ -52,7 +53,8 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "ignorePatterns": "src/generated/**"
   },
   "browserslist": {
     "production": [
