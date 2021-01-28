@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/identification/verification_qr_code_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'card_details.dart';
 import 'id_card.dart';
+import 'verification_qr_code_view.dart';
 
 class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;

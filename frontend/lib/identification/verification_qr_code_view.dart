@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/identification/animated_progressbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:otp/otp.dart';
@@ -7,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../verification/verification_card_details.dart';
 import '../verification/verification_encoder.dart';
+import 'animated_progressbar.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'otp_generator.dart';
