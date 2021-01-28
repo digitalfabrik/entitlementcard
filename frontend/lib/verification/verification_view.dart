@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_scanner.dart';
+import 'remote_verification.dart';
 import 'verification_card_details_model.dart';
 import 'verification_error.dart';
 import 'verification_qr_content_parser.dart';
@@ -68,6 +69,7 @@ class _VerificationViewState extends State<VerificationView> {
       case VerificationState.waitingForScan:
         return Container(width: 0.0, height: 0.0);
       case VerificationState.verificationInProgress:
+        verifyCardValidWithRemote(model);
         return _buildWaitingForVerificationResult();
       case VerificationState.verificationSuccess:
         return _buildPositiveVerificationResult(
