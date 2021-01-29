@@ -40,13 +40,10 @@ type Query {
 "Long type"
 scalar Long
 
-"Built-in Short as Int"
-scalar Short
-
 input CardInput {
   expirationDate: Long!
   hashModel: String!
-  totpSecret: [Short!]!
+  totpSecretBase64: String!
 }
 
 input CardVerificationModelInput {
