@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../graphql/stores_graphql_api.dart';
+import '../../graphql/graphql_api.dart';
+import '../../graphql/graphql_api.graphql.dart';
 import '../../widgets/error_message.dart';
 import 'detail_content.dart';
 import 'detail_layout.dart';

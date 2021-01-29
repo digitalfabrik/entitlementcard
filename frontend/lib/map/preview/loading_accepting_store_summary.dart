@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../graphql/stores_graphql_api.dart';
+import '../../graphql/graphql_api.dart';
 import '../../widgets/error_message.dart';
 import 'accepting_store_summary_content.dart';
 import 'models.dart';

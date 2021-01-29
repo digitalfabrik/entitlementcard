@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../graphql/stores_graphql_api.dart';
+import '../graphql/graphql_api.dart';
 import '../map/detail/detail_view.dart';
 
 class SearchResultItem extends StatelessWidget {
