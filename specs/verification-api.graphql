@@ -42,11 +42,11 @@ scalar Long
 
 input CardInput {
   expirationDate: Long!
-  hashModel: String!
+  hashModelBase64: String!
   totpSecretBase64: String!
 }
 
 input CardVerificationModelInput {
-  hashModel: String!
+  hashModelBase64: String!
   totp: Int!
 }

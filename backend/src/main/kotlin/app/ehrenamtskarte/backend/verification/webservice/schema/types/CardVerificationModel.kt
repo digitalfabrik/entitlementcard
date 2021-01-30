@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema.types
 
 data class CardVerificationModel(
-    val hashModel: String,
+    val hashModelBase64: String,
     val totp: Int
 )
