@@ -4,11 +4,8 @@ import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
-import PDFView from "./components/generation/PDFView";
 import {HashRouter, Route} from "react-router-dom";
-import EakGeneration from "./components/generation/EakGeneration";
-import {createBinaryData} from "./util/protobuf";
-import {CardActivateModel} from "./generated/compiled";
+import GenerationController from "./components/generation/GenerationController";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
@@ -21,14 +18,14 @@ function App() {
         <ApolloProvider client={client}>
             <HashRouter>
                 <div className="App">
-                    <Navigation />
+                    <Navigation/>
                 </div>
                 <div className="main">
                     <Route exact path={"/"}>
 
                     </Route>
                     <Route path={"/eak-generation"}>
-                        <EakGeneration />
+                        <GenerationController/>
                     </Route>
                     <Route path={"/accepting-stores"}>
 

@@ -5,7 +5,7 @@ import {CardType} from "../../models/CardType";
 import {DateInput} from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import styled from "styled-components";
-import {CardCreationModel} from "../../models/CardCreationModel";
+import {CardCreationModel} from "./CardCreationModel";
 import {add} from "date-fns";
 
 const CardHeader = styled.div`

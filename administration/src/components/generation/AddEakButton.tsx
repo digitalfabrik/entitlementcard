@@ -23,10 +23,10 @@ const StyledButton = styled(Button)`
   }
 `
 
-const AddEakForm = (props: Props) => (
+const AddEakButton = (props: Props) => (
     <StyledButton icon={<Icon style={{margin: 10}} icon={"add"} iconSize={20}/>} onClick={props.onClick}>
         Hinzufügen
     </StyledButton>
 );
 
-export default AddEakForm;
+export default AddEakButton;

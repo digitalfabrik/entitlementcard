@@ -1,7 +1,7 @@
 import {jsPDF} from "jspdf";
 import logo from "./logo";
 import {drawjsPDF} from "../../util/qrcode";
-import {CardCreationModel} from "../../models/CardCreationModel";
+import {CardCreationModel} from "./CardCreationModel";
 
 function addLetter(doc: jsPDF) {
     const pageSize = doc.internal.pageSize
