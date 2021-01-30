@@ -13,7 +13,7 @@ const val TOTP_LENGTH = 10
 
 @ExperimentalUnsignedTypes
 object CardVerifier {
-    fun verifyCardHash(cardHash: String, totp: Int): Boolean {
+    fun verifyCardHash(cardHash: ByteArray, totp: Int): Boolean {
         val card = transaction { CardRepository.findByHashModel(cardHash) } ?: return false
         return verifyCard(card, totp)
     }
