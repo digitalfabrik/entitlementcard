@@ -88,7 +88,7 @@ const EakGeneration = () => {
 
     const forms = cardCreationModels.map(model => <FormColumn key={model.id}>
         <EakForm model={model} onUpdate={newModel => updateModel(model, newModel)}/>
-    </FormColumn>); // Todo!
+    </FormColumn>);
 
     return (
         <Container>
