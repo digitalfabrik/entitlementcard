@@ -7,8 +7,10 @@
 // START Enums and Input Objects
 //==============================================================
 
-export interface IdsParamsInput {
-  ids: number[];
+export interface CardInput {
+  expirationDate: any;
+  hashModel: string;
+  totpSecret: any[];
 }
 
 //==============================================================
