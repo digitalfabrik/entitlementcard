@@ -15,6 +15,8 @@ import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {AppToaster} from "../AppToaster";
 import GenerationFinished from "./GenerationFinished";
 import {generatePdf} from "./PdfFactory";
+import {CardInput} from "../../../__generated__/globalTypes";
+import downloadDataUri from "./downloadDataUri";
 
 let idCounter = 0;
 
@@ -35,7 +37,6 @@ const Container = styled.div`
 enum Mode {
     input,
     loading,
-    error,
     finished
 }
 
@@ -57,27 +58,24 @@ const GenerationController = () => {
                     cardType)
             })
             setMode(Mode.loading)
+            const cardInputs: CardInput[] = await Promise.all(
+                activateModels.map(async (model) => {
+                    const hashModel = await generateHashFromHashModel(model)
+                    return {
+                        expirationDate: model.expirationDate,
+                        hashModelBase64: uint8ArrayToBase64(hashModel),
+                        totpSecretBase64: uint8ArrayToBase64(model.totpSecret)
+                    }
+                }))
             const results = await Promise.all(
-                activateModels.map(model =>
-                    client.mutate<addCard, addCardVariables>({
-                        mutation: ADD_CARD, variables: {
-                            card: {
-                                expirationDate: model.expirationDate,
-                                hashModel: uint8ArrayToBase64(
-                                    generateHashFromHashModel({
-                                        cardType: model.cardType,
-                                        fullName: model.fullName,
-                                        region: model.region
-                                    })),
-                                totpSecretBase64: uint8ArrayToBase64(model.totpSecret)
-                            }
-                        }
-                    })))
+                cardInputs.map(card =>
+                    client.mutate<addCard, addCardVariables>({mutation: ADD_CARD, variables: {card}}))
+            )
             const fail = results.find(result => result.errors || !result.data?.success)
             if (fail) throw Error(JSON.stringify(fail))
 
             const pdfDataUri = generatePdf(cardCreationModels)
-            window.open(pdfDataUri)
+            downloadDataUri(pdfDataUri, "ehrenamtskarten.pdf")
 
             setMode(Mode.finished)
         } catch (e) {
