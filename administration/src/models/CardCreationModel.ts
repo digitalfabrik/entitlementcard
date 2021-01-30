@@ -4,6 +4,6 @@ export interface CardCreationModel {
     id: number,
     forename: string,
     surname: string,
-    expirationDate: string,
+    expirationDate: Date,
     cardType: CardType
 }

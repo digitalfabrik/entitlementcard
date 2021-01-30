@@ -7,7 +7,8 @@ import AddEakForm from "./AddEakForm";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
 import PDFView from "./PDFView";
-import {Route, Switch} from "react-router";
+import { add } from 'date-fns';
+import {Route} from "react-router";
 import {NavLink} from "react-router-dom";
 
 let idCounter = 0;
@@ -16,7 +17,7 @@ const createEmptyCard = (): CardCreationModel => ({
     id: idCounter++,
     forename: "",
     surname: "",
-    expirationDate: "",
+    expirationDate: add(Date.now(), { years: 2 }),
     cardType: CardType.standard
 });
 
@@ -26,7 +27,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
+const ButtonBar = styled(({stickyTop: number, ...rest}) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
   padding: 15px;
   background: #fafafa;
@@ -75,17 +76,27 @@ const EakGeneration = () => {
     const [pdfView, setPdfView] = useState(false);
 
     const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()]);
-    const removeForm = (id: number) => setCardCreationModels([...cardCreationModels].filter( model => model.id !== id));
+    const updateModel = (oldModel: CardCreationModel, newModel: CardCreationModel | null) => {
+        if (newModel === null)
+            setCardCreationModels(cardCreationModels.filter(model => model !== oldModel));
+        else
+            setCardCreationModels(cardCreationModels.map(model => model === oldModel ? newModel : model))
+    }
+
     const reset = () => setCardCreationModels([createEmptyCard()]);
     const switchView = () => setPdfView(!pdfView);
 
-    const forms = cardCreationModels.map(ccm => <FormColumn key={ccm.id}><EakForm onRemove={() => removeForm(ccm.id)}/></FormColumn>); // Todo!
+    const forms = cardCreationModels.map(model => <FormColumn key={model.id}>
+        <EakForm model={model} onUpdate={newModel => updateModel(model, newModel)}/>
+    </FormColumn>); // Todo!
 
     return (
         <Container>
             <Route exact path={"/eak-generation"}>
                 <ButtonBar stickyTop={0}>
-                    <NavLink to={"/eak-generation/pdf-viewer"}><Button icon="export" text="QR-Codes drucken" onClick={switchView} intent="success"/></NavLink>
+                    <NavLink to={"/eak-generation/pdf-viewer"}>
+                        <Button icon="export" text="QR-Codes drucken" onClick={switchView} intent="success"/>
+                    </NavLink>
                     <Button icon="reset" text="Zurücksetzen" onClick={reset} intent="warning"/>
                 </ButtonBar>
                 <FormsWrapper>
@@ -97,10 +108,11 @@ const EakGeneration = () => {
             </Route>
             <Route path={"/eak-generation/pdf-viewer"}>
                 <ButtonBar stickyTop={0}>
-                    <NavLink to={"/eak-generation"}><Button icon="undo" text="Zurück" onClick={switchView} intent="primary"/></NavLink>
+                    <NavLink to={"/eak-generation"}><Button icon="undo" text="Zurück" onClick={switchView}
+                                                            intent="primary"/></NavLink>
                 </ButtonBar>
                 <PdfWrapper>
-                    <PDFView ccModels={cardCreationModels} />
+                    <PDFView ccModels={cardCreationModels}/>
                 </PdfWrapper>
             </Route>
         </Container>
