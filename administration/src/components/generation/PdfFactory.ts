@@ -42,7 +42,7 @@ export function generatePdf(models: CardCreationModel[]) {
 
     for (let k = 0; k < models.length; k++) {
         addLetter(doc)
-        if (k != models.length - 1)
+        if (k !== models.length - 1)
             doc.addPage()
     }
 

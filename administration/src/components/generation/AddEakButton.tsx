@@ -25,7 +25,7 @@ const StyledButton = styled(Button)`
 
 const AddEakButton = (props: Props) => (
     <StyledButton icon={<Icon style={{margin: 10}} icon={"add"} iconSize={20}/>} onClick={props.onClick}>
-        Hinzufügen
+        Karte Hinzufügen
     </StyledButton>
 );
 

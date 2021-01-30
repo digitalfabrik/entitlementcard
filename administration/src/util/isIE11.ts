@@ -1,5 +1,3 @@
-import {getUnixTime} from "date-fns";
-import {CardActivateModel} from "../generated/compiled";
 import {detect} from "detect-browser";
 
 const isIE11 = () => {
