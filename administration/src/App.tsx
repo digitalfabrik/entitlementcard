@@ -8,7 +8,7 @@ import {HashRouter, Route} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 
 const client = new ApolloClient({
-    uri: 'https://api.ehrenamtskarte.app',
+    uri: 'https://api.ehrenamtskarte.app/verification',
     cache: new InMemoryCache()
 });
 
