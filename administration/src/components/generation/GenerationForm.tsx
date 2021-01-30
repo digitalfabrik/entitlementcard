@@ -72,7 +72,7 @@ const GenerationForm = (props: Props) => {
         <>
             <Prompt message={"Die Eingaben werden verworfen, falls Sie fortfahren."} when={cardCreationModels.length !== 0} />
             <ButtonBar stickyTop={0}>
-                <Button icon="export" text="QR-Codes drucken" intent="success"/>
+                <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}/>
             </ButtonBar>
             <FormsWrapper>
                 {cardCreationModels.map(model => <FormColumn key={model.id}>

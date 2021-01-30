@@ -33,16 +33,16 @@ function addLetter(doc: jsPDF) {
     doc.textWithLink("https://ehrenamtskarte.app/download_app", width - pageMargin - 80, pageBottom, { url: "https://ehrenamtskarte.app/download_app" });
 }
 
-export function generatePdf(ccmodels: CardCreationModel[]) {
+export function generatePdf(models: CardCreationModel[]) {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
     });
 
-    for (let k = 0; k < ccmodels.length; k++) {
+    for (let k = 0; k < models.length; k++) {
         addLetter(doc)
-        if (k != ccmodels.length - 1)
+        if (k != models.length - 1)
             doc.addPage()
     }
 
