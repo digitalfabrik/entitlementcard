@@ -1,8 +1,8 @@
 import React from "react";
 import EakForm from "./EakForm";
-import {Button, Card} from "@blueprintjs/core";
+import {Button, Card, Tooltip} from "@blueprintjs/core";
 import {CardType} from "../../models/CardType";
-import {CardCreationModel} from "./CardCreationModel";
+import {CardCreationModel, isValid} from "./CardCreationModel";
 import AddEakButton from "./AddEakButton";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
@@ -68,11 +68,19 @@ const GenerationForm = (props: Props) => {
             setCardCreationModels(cardCreationModels.map(model => model === oldModel ? newModel : model))
     }
 
+    const allCardsValid = cardCreationModels.reduce((acc, model) => acc && isValid(model), true)
+
     return (
         <>
-            <Prompt message={"Die Eingaben werden verworfen, falls Sie fortfahren."} when={cardCreationModels.length !== 0} />
+            <Prompt message={"Die Eingaben werden verworfen, falls Sie fortfahren."}
+                    when={cardCreationModels.length !== 0}/>
             <ButtonBar stickyTop={0}>
-                <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}/>
+                <Tooltip>
+                <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}
+                        disabled={!allCardsValid || cardCreationModels.length === 0} />
+                    {!allCardsValid && "Mindestens eine Karte enthält ungültige Eingaben."}
+                    {cardCreationModels.length === 0 && "Legen Sie zunächst eine Karte an."}
+                </Tooltip>
             </ButtonBar>
             <FormsWrapper>
                 {cardCreationModels.map(model => <FormColumn key={model.id}>
