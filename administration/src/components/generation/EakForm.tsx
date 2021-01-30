@@ -47,6 +47,7 @@ const EakForm = (props: Props) => {
                 </CardHeader>
                 <FormGroup label="Vorname">
                     <InputGroup placeholder="Vorname"
+                                autoFocus
                                 value={props.model.forename}
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => props.onUpdate({
                                     ...props.model,
