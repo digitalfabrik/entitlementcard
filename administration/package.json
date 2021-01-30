@@ -19,6 +19,7 @@
     "@zxing/library": "^0.18.3",
     "apollo": "^2.32.0",
     "apollo-boost": "^0.4.9",
+    "core-js": "^3.8.3",
     "date-fns": "^2.16.1",
     "detect-browser": "^5.2.0",
     "graphql": "^15.4.0",
@@ -27,6 +28,7 @@
     "protobufjs": "^6.10.2",
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.1",
     "react-flip-move": "^3.0.4",
     "react-router": "^5.2.0",
@@ -34,7 +36,8 @@
     "react-scripts": "4.0.1",
     "styled-components": "^5.2.1",
     "typescript": "^4.1.3",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "whatwg-fetch": "^3.5.0"
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
@@ -60,13 +63,14 @@
   "browserslist": {
     "production": [
       ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie >= 11"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie >= 11"
     ]
   }
 }
