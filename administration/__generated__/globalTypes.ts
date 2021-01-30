@@ -9,7 +9,7 @@
 
 export interface CardInput {
   expirationDate: any;
-  hashModel: string;
+  hashModelBase64: string;
   totpSecretBase64: string;
 }
 
