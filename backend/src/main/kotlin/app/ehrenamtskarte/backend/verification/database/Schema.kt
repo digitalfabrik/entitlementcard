@@ -36,6 +36,6 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var issueDate: LocalDateTime
         get() = LocalDateTime.ofEpochSecond(expirationDateEpochSeconds, 0, ZoneOffset.UTC)
         set(value) {
-            expirationDateEpochSeconds = value.toEpochSecond(ZoneOffset.UTC)
+            issueDateEpochSeconds = value.toEpochSecond(ZoneOffset.UTC)
         }
 }

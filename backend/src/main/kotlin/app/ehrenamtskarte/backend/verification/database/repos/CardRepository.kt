@@ -2,21 +2,19 @@ package app.ehrenamtskarte.backend.verification.database.repos
 
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
-import app.ehrenamtskarte.backend.verification.domain.Card
 import java.time.LocalDateTime
 
 object CardRepository {
 
     fun findByHashModel(hashModel: ByteArray) =
         CardEntity.find { Cards.cardDetailsHash eq hashModel }
-            .map { Card(it.totpSecret.asList(), it.expirationDate, it.cardDetailsHash.asList()) }
             .singleOrNull()
 
-    fun insert(card: Card) = CardEntity.new {
-        cardDetailsHash = card.cardDetailsHash.toByteArray()
-        totpSecret = card.totpSecret.toByteArray()
-        expirationDate = card.expirationDate
-        issueDate = LocalDateTime.now()
-        revoked = false
+    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime) = CardEntity.new {
+        this.cardDetailsHash = cardDetailsHash
+        this.totpSecret = totpSecret
+        this.expirationDate = expirationDate
+        this.issueDate = LocalDateTime.now()
+        this.revoked = false
     }
 }

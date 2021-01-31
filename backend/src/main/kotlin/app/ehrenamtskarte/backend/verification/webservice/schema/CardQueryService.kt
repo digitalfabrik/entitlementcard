@@ -9,6 +9,6 @@ import org.postgresql.util.Base64
 class CardQueryService {
     @GraphQLDescription("Returns whether there is a card with that hash registered for that this TOTP is currently valid")
     fun verifyCard(card: CardVerificationModel): Boolean {
-        return CardVerifier.verifyCardHash(Base64.decode(card.hashModelBase64), card.totp)
+        return CardVerifier.verifyCardHash(Base64.decode(card.cardDetailsHashBase64), card.totp)
     }
 }

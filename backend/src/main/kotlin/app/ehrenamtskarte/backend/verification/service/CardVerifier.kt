@@ -1,11 +1,12 @@
 package app.ehrenamtskarte.backend.verification.service
 
+import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
-import app.ehrenamtskarte.backend.verification.domain.Card
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import javax.crypto.spec.SecretKeySpec
 
 val TIME_STEP: Duration = Duration.ofSeconds(30)
@@ -17,7 +18,10 @@ object CardVerifier {
         return verifyCard(card, totp)
     }
 
-    private fun verifyCard(card: Card, totp: Int): Boolean = !card.hasExpired && isTotpValid(totp, card.totpSecret.toByteArray())
+    private fun verifyCard(card: CardEntity, totp: Int): Boolean =
+        !card.expirationDate.isAfter(LocalDateTime.now())
+                && !card.revoked
+                && isTotpValid(totp, card.totpSecret)
 
     private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
         if (generateTotp(secret) == totp) return true
@@ -32,8 +36,10 @@ object CardVerifier {
     }
 
     private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
-        val totpGenerator = TimeBasedOneTimePasswordGenerator(TIME_STEP, TOTP_LENGTH,
-            TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256)
+        val totpGenerator = TimeBasedOneTimePasswordGenerator(
+            TIME_STEP, TOTP_LENGTH,
+            TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256
+        )
         val key = SecretKeySpec(secret, totpGenerator.algorithm)
         return totpGenerator.generateOneTimePassword(key, timestamp)
     }
