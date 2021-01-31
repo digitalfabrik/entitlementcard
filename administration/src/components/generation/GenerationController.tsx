@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {Spinner} from "@blueprintjs/core";
 import {CardType} from "../../models/CardType";
 import {CardCreationModel} from "./CardCreationModel";
-import styled from "styled-components";
 import {add} from 'date-fns';
 import GenerationForm from "./GenerationForm";
 import {useApolloClient} from "@apollo/client";
@@ -20,12 +19,6 @@ const createEmptyCard = (): CardCreationModel => ({
     expirationDate: add(Date.now(), {years: 2}),
     cardType: CardType.standard
 });
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
 
 enum Mode {
     input,
@@ -50,18 +43,16 @@ const GenerationController = () => {
         }
     }
 
-    return (
-        <Container>
-            {mode === Mode.input &&
-            <GenerationForm cardCreationModels={cardCreationModels} setCardCreationModels={setCardCreationModels}
-                            confirm={confirm}/>}
-            {mode === Mode.loading && <Spinner/>}
-            {mode === Mode.finished && <GenerationFinished reset={() => {
-                setCardCreationModels([]);
-                setMode(Mode.input);
-            }}/>}
-        </Container>
-    );
+    if (mode === Mode.input)
+        return <GenerationForm cardCreationModels={cardCreationModels} setCardCreationModels={setCardCreationModels}
+                               confirm={confirm}/>
+    else if (mode === Mode.loading)
+        return <Spinner/>
+    else // (mode === Mode.finished)
+        return <GenerationFinished reset={() => {
+            setCardCreationModels([]);
+            setMode(Mode.input);
+        }}/>
 };
 
 export default GenerationController;

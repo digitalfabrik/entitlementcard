@@ -39,7 +39,7 @@ const FormsWrapper = styled(FlipMove)`
   padding: 10px;
   width: 100%;
   z-index: 0;
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
