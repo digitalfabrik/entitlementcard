@@ -10,23 +10,26 @@ export interface HashModel {
 
 const generateHashFromHashModel = async (hashModel: HashModel) => {
     // todo: replace this routine with e.g. a protobuf hashModel for reliable hashes
-    // todo: (also don't use TextEncoder for IE11)
-    const encoder = new TextEncoder()
-    const binary = encoder.encode(JSON.stringify(hashModel))
+    // Encode without TextEncoder because of IE11
+    const utf8 = unescape(encodeURIComponent(JSON.stringify(hashModel)));
+    const encoded = new Uint8Array(utf8.length);
+    for (let i = 0; i < utf8.length; i++) {
+        encoded[i] = utf8.charCodeAt(i);
+    }
 
     // In IE11, this returns CryptoOperation,
     // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
     let hashArrayBuffer: ArrayBuffer
     if (isIE11()) { // This still needs to be tested
-        hashArrayBuffer = await new Promise((resolve) => {
-            // @ts-ignore
-            window.msCrypto.subtle.digest("SHA-128", binary).oncomplete = data => resolve(data)
-        })
         // @ts-ignore
+        hashArrayBuffer = await new Promise((resolve, reject) => { // @ts-ignore
+            const operation = window.msCrypto.subtle.digest({ name: "SHA-256", hash: "SHA-256" }, encoded.buffer) // @ts-ignore
+            operation.oncomplete = (event) => resolve(event.target.result) // @ts-ignore
+            operation.onerror = (e) => reject(e)
+        })
     } else {
-        hashArrayBuffer = await crypto.subtle.digest("SHA-512", binary)
+        hashArrayBuffer = await crypto.subtle.digest("SHA-256", encoded)
     }
-
     return new Uint8Array(hashArrayBuffer)
 }
 
