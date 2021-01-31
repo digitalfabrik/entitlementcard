@@ -11,14 +11,14 @@ import {generatePdf} from "./PdfFactory";
 import {ApolloClient} from "@apollo/client";
 
 const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[]) => {
-    const region = 0; // TODO: Add correct region
+    const regionId = 0; // TODO: Add correct regionId
     const activateModels = cardCreationModels.map(model => {
         const cardType = model.cardType === CardType.gold
             ? CardActivateModel.CardType.GOLD
             : CardActivateModel.CardType.STANDARD
         return generateCardActivateModel(
             `${model.forename} ${model.surname}`,
-            region,
+            regionId,
             model.expirationDate,
             cardType)
     })
