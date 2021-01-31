@@ -21,25 +21,22 @@ const Main = styled.div`
 `
 
 
-function App() {
-    return (
-        <ApolloProvider client={client}>
-            <HashRouter>
-                <Navigation/>
-                <Main>
-                    <Route exact path={"/"}>
+const App = () =>
+    <ApolloProvider client={client}>
+        <HashRouter>
+            <Navigation/>
+            <Main>
+                <Route exact path={"/"}>
 
-                    </Route>
-                    <Route path={"/eak-generation"}>
-                        <GenerationController/>
-                    </Route>
-                    <Route path={"/accepting-stores"}>
+                </Route>
+                <Route path={"/eak-generation"}>
+                    <GenerationController/>
+                </Route>
+                <Route path={"/accepting-stores"}>
 
-                    </Route>
-                </Main>
-            </HashRouter>
-        </ApolloProvider>
-    );
-}
+                </Route>
+            </Main>
+        </HashRouter>
+    </ApolloProvider>
 
 export default App;
