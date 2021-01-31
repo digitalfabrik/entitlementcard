@@ -53,5 +53,5 @@ export function generatePdf(models: CardCreationModel[]) {
         creator: "Bayern"
     });
 
-    return doc.output('datauristring')
+    return doc.output('blob')
 }
