@@ -20,7 +20,7 @@ const generateHashFromHashModel = async (hashModel: HashModel) => {
     // In IE11, this returns CryptoOperation,
     // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
     let hashArrayBuffer: ArrayBuffer
-    if (isIE11()) { // This still needs to be tested
+    if (isIE11()) {
         // @ts-ignore
         hashArrayBuffer = await new Promise((resolve, reject) => { // @ts-ignore
             const operation = window.msCrypto.subtle.digest({ name: "SHA-256", hash: "SHA-256" }, encoded.buffer) // @ts-ignore
