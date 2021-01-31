@@ -10,20 +10,13 @@ export interface CardCreationModel {
     cardType: CardType
 }
 
-export function isForenameValid(value: string) {
-    return value.length > 0 && value.length < MAX_NAME_LENGTH
-}
+export const isForenameValid = (value: string) => value.length > 0 && value.length < MAX_NAME_LENGTH
 
-export function isSurnameValid(value: string) {
-    return value.length > 0 && value.length < MAX_NAME_LENGTH
-}
+export const isSurnameValid = (value: string) => value.length > 0 && value.length < MAX_NAME_LENGTH
 
-export function isExpirationDateValid(value: Date) {
-    return value > new Date();
-}
+export const isExpirationDateValid = (value: Date) => value > new Date()
 
-export function isValid(cardCreationModel: CardCreationModel) {
-    return isForenameValid(cardCreationModel.forename)
-        && isSurnameValid(cardCreationModel.surname)
-        && isExpirationDateValid(cardCreationModel.expirationDate);
-}
+export const isValid = (cardCreationModel: CardCreationModel) =>
+    isForenameValid(cardCreationModel.forename)
+    && isSurnameValid(cardCreationModel.surname)
+    && isExpirationDateValid(cardCreationModel.expirationDate)
