@@ -26,7 +26,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
         activateModels.map(async (model) => {
             const cardDetailsHash = await generateHashFromCardDetails(model.hashSecret, model)
             return {
-                expirationDate: model.expirationDate,
+                expirationDate: model.expirationDate.toNumber(),
                 cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
                 totpSecretBase64: uint8ArrayToBase64(model.totpSecret)
             }
