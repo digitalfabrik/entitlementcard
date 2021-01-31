@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.verification.database.repos
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.domain.Card
+import java.time.LocalDateTime
 
 object CardRepository {
 
@@ -15,5 +16,7 @@ object CardRepository {
         cardDetailsHash = card.cardDetailsHash.toByteArray()
         totpSecret = card.totpSecret.toByteArray()
         expirationDate = card.expirationDate
+        issueDate = LocalDateTime.now()
+        revoked = false
     }
 }
