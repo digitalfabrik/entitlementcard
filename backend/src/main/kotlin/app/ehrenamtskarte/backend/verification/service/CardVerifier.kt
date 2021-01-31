@@ -11,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec
 val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 10
 
-@ExperimentalUnsignedTypes
 object CardVerifier {
     fun verifyCardHash(cardHash: ByteArray, totp: Int): Boolean {
         val card = transaction { CardRepository.findByHashModel(cardHash) } ?: return false

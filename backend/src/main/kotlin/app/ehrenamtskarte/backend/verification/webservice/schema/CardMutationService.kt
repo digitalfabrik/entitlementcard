@@ -11,7 +11,6 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.Card as C
 
 
 @Suppress("unused")
-@ExperimentalUnsignedTypes
 class CardMutationService {
     @GraphQLDescription("Stores a new digital EAK")
     fun addCard(card: CardTO): Boolean {

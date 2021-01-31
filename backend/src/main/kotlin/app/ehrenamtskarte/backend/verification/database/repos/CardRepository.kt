@@ -5,15 +5,14 @@ import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.domain.Card
 
 object CardRepository {
-    @ExperimentalUnsignedTypes
+
     fun findByHashModel(hashModel: ByteArray) =
-        CardEntity.find { Cards.hashModel eq hashModel }
-            .map { Card(it.totpSecret.asList(), it.expirationDate, it.hashModel.asList()) }
+        CardEntity.find { Cards.cardDetailsHash eq hashModel }
+            .map { Card(it.totpSecret.asList(), it.expirationDate, it.cardDetailsHash.asList()) }
             .singleOrNull()
 
-    @ExperimentalUnsignedTypes
     fun insert(card: Card) = CardEntity.new {
-        hashModel = card.hashModel.toByteArray()
+        cardDetailsHash = card.cardDetailsHash.toByteArray()
         totpSecret = card.totpSecret.toByteArray()
         expirationDate = card.expirationDate
     }
