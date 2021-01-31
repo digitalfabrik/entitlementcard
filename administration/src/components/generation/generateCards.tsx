@@ -2,8 +2,8 @@ import {CardCreationModel} from "./CardCreationModel";
 import {CardType} from "../../models/CardType";
 import {CardActivateModel} from "../../generated/compiled";
 import generateCardActivateModel from "../../util/generateCardActivateModel";
-import {CardInput} from "../../../__generated__/globalTypes";
-import generateHashFromHashModel from "../../util/generateHashFromHashModel";
+import {CardGenerationModelInput} from "../../../__generated__/globalTypes";
+import generateHashFromCardDetails from "../../util/generateHashFromCardDetails";
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {addCard, addCardVariables} from "../../graphql/verification/__generated__/addCard";
 import {ADD_CARD} from "../../graphql/verification/mutations";
@@ -22,12 +22,12 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
             model.expirationDate,
             cardType)
     })
-    const cardInputs: CardInput[] = await Promise.all(
+    const cardInputs: CardGenerationModelInput[] = await Promise.all(
         activateModels.map(async (model) => {
-            const hashModel = await generateHashFromHashModel(model)
+            const cardDetailsHash = await generateHashFromCardDetails(model.hashSecret, model)
             return {
                 expirationDate: model.expirationDate,
-                hashModelBase64: uint8ArrayToBase64(hashModel),
+                cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
                 totpSecretBase64: uint8ArrayToBase64(model.totpSecret)
             }
         }))

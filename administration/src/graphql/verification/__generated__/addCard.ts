@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CardInput } from "./../../../../__generated__/globalTypes";
+import { CardGenerationModelInput } from "./../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: addCard
@@ -17,5 +17,5 @@ export interface addCard {
 }
 
 export interface addCardVariables {
-  card: CardInput;
+  card: CardGenerationModelInput;
 }

@@ -7,9 +7,9 @@
 // START Enums and Input Objects
 //==============================================================
 
-export interface CardInput {
+export interface CardGenerationModelInput {
+  cardDetailsHashBase64: string;
   expirationDate: any;
-  hashModelBase64: string;
   totpSecretBase64: string;
 }
 

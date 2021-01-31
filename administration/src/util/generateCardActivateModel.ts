@@ -2,14 +2,15 @@ import {getUnixTime} from "date-fns";
 import {CardActivateModel} from "../generated/compiled";
 import isIE11 from "./isIE11";
 import getRandomValues from "./getRandomValues";
+import Long from "long";
 
 const generateCardActivateModel = (
-    fullName: string, region: number, expirationDate: Date, cardType: CardActivateModel.CardType
+    fullName: string, regionId: number, expirationDate: Date, cardType: CardActivateModel.CardType
 ) => {
     if (!window.isSecureContext && !isIE11()) // localhost is considered secure.
         throw Error("Environment is not considered secure nor are we using Internet Explorer.")
-    const randomBytes = new Uint8Array(16); // 128 bit randomness
-    getRandomValues(randomBytes)
+    const hashSecret = new Uint8Array(16); // 128 bit randomness
+    getRandomValues(hashSecret)
 
     // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
     // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be? -> 160bit)
@@ -19,11 +20,11 @@ const generateCardActivateModel = (
 
     return new CardActivateModel({
         fullName: fullName,
-        randomBytes: randomBytes,
+        hashSecret: hashSecret,
         totpSecret: totpSecret,
-        expirationDate: getUnixTime(expirationDate),
+        expirationDate: Long.fromNumber(getUnixTime(expirationDate), false),
         cardType: cardType,
-        region: region,
+        regionId: regionId,
     })
 }
 

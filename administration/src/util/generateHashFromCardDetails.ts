@@ -1,17 +1,17 @@
 import {CardActivateModel} from "../generated/compiled";
 import isIE11 from "./isIE11";
 
-export interface HashModel {
+export interface CardDetails {
     fullName: string,
-    region: number,
-    randomBytes: Uint8Array,
+    regionId: number,
+    expirationDate: Long,
     cardType: CardActivateModel.CardType,
 }
 
-const generateHashFromHashModel = async (hashModel: HashModel) => {
+const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: CardDetails) => {
     // todo: replace this routine with a custom encoding for reliable hashes
     // Encode without TextEncoder because of IE11
-    const utf8 = unescape(encodeURIComponent(JSON.stringify(hashModel)));
+    const utf8 = unescape(encodeURIComponent(JSON.stringify(cardDetails)));
     const encoded = new Uint8Array(utf8.length);
     for (let i = 0; i < utf8.length; i++) {
         encoded[i] = utf8.charCodeAt(i);
@@ -32,4 +32,4 @@ const generateHashFromHashModel = async (hashModel: HashModel) => {
     return new Uint8Array(hashArrayBuffer)
 }
 
-export default generateHashFromHashModel
+export default generateHashFromCardDetails

@@ -25,6 +25,7 @@
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "jspdf": "^2.2.0",
+    "long": "^4.0.0",
     "protobufjs": "^6.10.2",
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
@@ -49,7 +50,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "generate-graphql": "apollo client:codegen --target=typescript",
-    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
+    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
     "postinstall": "npm run generate-protobuf"
   },
   "eslintConfig": {
