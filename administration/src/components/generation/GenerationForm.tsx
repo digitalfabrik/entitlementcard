@@ -63,7 +63,7 @@ const GenerationForm = (props: Props) => {
     const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()]);
     const updateModel = (oldModel: CardCreationModel, newModel: CardCreationModel | null) => {
         if (newModel === null)
-            props.setCardCreationModels(cardCreationModels.filter(model => model !== oldModel));
+            setCardCreationModels(cardCreationModels.filter(model => model !== oldModel));
         else
             setCardCreationModels(cardCreationModels.map(model => model === oldModel ? newModel : model))
     }
