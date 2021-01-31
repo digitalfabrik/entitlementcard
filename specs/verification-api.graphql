@@ -29,7 +29,7 @@ directive @specifiedBy(
 
 type Mutation {
   "Stores a new digital EAK"
-  addCard(card: CardInput!): Boolean!
+  addCard(card: CardGenerationModelInput!): Boolean!
 }
 
 type Query {
@@ -40,13 +40,13 @@ type Query {
 "Long type"
 scalar Long
 
-input CardInput {
+input CardGenerationModelInput {
+  cardDetailsHashBase64: String!
   expirationDate: Long!
-  hashModelBase64: String!
   totpSecretBase64: String!
 }
 
 input CardVerificationModelInput {
-  hashModelBase64: String!
+  cardDetailsHashBase64: String!
   totp: Int!
 }
