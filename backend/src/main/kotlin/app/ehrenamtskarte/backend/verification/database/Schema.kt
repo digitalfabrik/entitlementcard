@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-const val HASH_LENGTH = 64 // Using SHA-512 for now
+const val HASH_LENGTH = 32 // Using SHA-256 for now
 const val TOTP_SECRET_LENGTH = 20
 
 @ExperimentalUnsignedTypes
