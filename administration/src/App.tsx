@@ -9,11 +9,11 @@ import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 
 const client = new ApolloClient({
-    uri: 'https://api.ehrenamtskarte.app/verification',
+    uri: 'http://localhost:7000/verification',
     cache: new InMemoryCache()
 });
 
-const Main = styled.main`
+const Main = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
