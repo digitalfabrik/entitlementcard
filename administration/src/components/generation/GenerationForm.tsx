@@ -72,7 +72,7 @@ const GenerationForm = (props: Props) => {
 
     return (
         <>
-            <Prompt message={"Die Eingaben werden verworfen, falls Sie fortfahren."}
+            <Prompt message={"Falls Sie fortfahren, werden alle Eingaben verworfen."}
                     when={cardCreationModels.length !== 0}/>
             <ButtonBar stickyTop={0}>
                 <Tooltip>
