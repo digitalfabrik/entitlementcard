@@ -9,7 +9,7 @@ export interface HashModel {
 }
 
 const generateHashFromHashModel = async (hashModel: HashModel) => {
-    // todo: replace this routine with e.g. a protobuf hashModel for reliable hashes
+    // todo: replace this routine with a custom encoding for reliable hashes
     // Encode without TextEncoder because of IE11
     const utf8 = unescape(encodeURIComponent(JSON.stringify(hashModel)));
     const encoded = new Uint8Array(utf8.length);
