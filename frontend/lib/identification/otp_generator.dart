@@ -12,7 +12,7 @@ class OTPGenerator {
   OTPCode generateOTP() {
     final time = DateTime.now().millisecondsSinceEpoch;
     final validUntilSeconds =
-        ((((time ~/ 1000).round()) ~/ _otpIntervalSeconds).floor() + 2) *
+        ((((time ~/ 1000).round()) ~/ _otpIntervalSeconds).floor() + 1) *
             _otpIntervalSeconds;
     return OTPCode(
         int.parse(OTP.generateTOTPCodeString(
