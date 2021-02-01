@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cp ../specs/stores-api.graphql stores.schema.graphql
-cp ../specs/verification-api.graphql verification.schema.graphql
+cp ../specs/backend-api.graphql schema.graphql
 flutter pub run build_runner build --delete-conflicting-outputs
-rm ./*.schema.graphql
+rm schema.graphql

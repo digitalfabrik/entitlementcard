@@ -1,5 +1,8 @@
 package app.ehrenamtskarte.backend.common.webservice
 
+import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
+import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
+import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import graphql.ExceptionWhileDataFetching
@@ -7,19 +10,20 @@ import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
 import io.javalin.http.Context
-import org.dataloader.DataLoaderRegistry
 import java.io.IOException
 
-open class GraphQLHandler(
-    private val graphQL: GraphQL,
-    dataLoaderRegistryInitializer: (DataLoaderRegistry) -> Unit = {}
+class GraphQLHandler(
+    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch verificationGraphQlParams
 ) {
-    private val mapper = jacksonObjectMapper()
-    private val dataLoaderRegistry = DataLoaderRegistry()
+    val graphQLSchema = toSchema(
+        graphQLParams.config,
+        graphQLParams.queries,
+        graphQLParams.mutations,
+        graphQLParams.subscriptions
+    )
+    private val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
 
-    init {
-        dataLoaderRegistryInitializer(dataLoaderRegistry)
-    }
+    private val mapper = jacksonObjectMapper()
 
     /**
      * Get payload from the request.
@@ -75,7 +79,7 @@ open class GraphQLHandler(
                 ExecutionInput.Builder()
                     .query(payload["query"].toString())
                     .variables(getVariables(payload))
-                    .dataLoaderRegistry(dataLoaderRegistry)
+                    .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
             ).get()
             val result = getResult(executionResult)
 
