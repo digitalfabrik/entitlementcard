@@ -10,17 +10,25 @@ export interface CardDetails {
 
 const cardDetailsToBinary = (cardDetails: CardDetails) => {
     const fullNameWithoutZero = new TextEncoder().encode(cardDetails.fullName)
-    const binary = new Uint8Array(
-        8 // int64 expirationDate
-        + 4 // int32 cardType
-        + 4 // int32 regionId
-        + fullNameWithoutZero.byteLength + 1 // zero terminated fullName
-    )
+    const expirationDateBytes = 8 // int64
+    const cardTypeBytes = 4 // int32
+    const regionIdBytes = 4 // int32
+    const fullNameBytes = fullNameWithoutZero.byteLength + 1 // zero terminated string
+    const binary = new Uint8Array(expirationDateBytes + cardTypeBytes + regionIdBytes + fullNameBytes)
     const binaryView = new DataView(binary.buffer)
-    binary.set(cardDetails.expirationDate.toBytesLE(), 0)
-    binaryView.setInt32(8, cardDetails.cardType, true)
-    binaryView.setInt32(12, cardDetails.regionId, true)
-    binary.set(fullNameWithoutZero, 16)
+
+    let offset = 0
+
+    binary.set(cardDetails.expirationDate.toBytesLE(), offset)
+    offset += expirationDateBytes
+
+    binaryView.setInt32(offset, cardDetails.cardType, true)
+    offset += cardTypeBytes
+
+    binaryView.setInt32(offset, cardDetails.regionId, true)
+    offset += regionIdBytes
+
+    binary.set(fullNameWithoutZero, offset)
     return binary;
 }
 
@@ -38,7 +46,7 @@ const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: 
         })
 
         hashArrayBuffer = await new Promise((resolve, reject) => { // @ts-ignore
-            const op = msCrypto.subtle.sign({ name: "HMAC", hash: "SHA-256" }, key, binary.buffer) // @ts-ignore
+            const op = msCrypto.subtle.sign({name: "HMAC", hash: "SHA-256"}, key, binary.buffer) // @ts-ignore
             op.oncomplete = (event) => resolve(event.target.result) // @ts-ignore
             op.onerror = (e) => reject(e)
         })
