@@ -50,7 +50,6 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
           insetPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          //this right here
           child: Padding(
               padding: EdgeInsets.all(24),
               child: Column(
