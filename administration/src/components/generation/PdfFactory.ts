@@ -21,7 +21,7 @@ function addLetter(doc: jsPDF, model: CardActivateModel) {
 Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
 
 
-    const qrCodeSize = 100;
+    const qrCodeSize = 110;
     const qrCodeY = pageBottom - qrCodeSize - 40;
     const qrCodeX = (width - qrCodeSize) / 2;
     const qrCodeMargin = 5
@@ -46,7 +46,7 @@ Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
         `KarteninhaberIn: ${model.fullName}
 Karte ausgestellt am: ${format(new Date(), "dd.MM.yyyy")}
 Karte gültig bis: ${format(fromUnixTime(model.expirationDate.toNumber()), "dd.MM.yyyy")}`,
-        width / 2, DetailsY, undefined, "center")
+        width / 2, DetailsY, { align: "center", baseline: "top" })
 
     doc.setFontSize(12)
     doc.textWithLink("Öffnen Sie den folgenden Link, um die App herunterzuladen:\nhttps://ehrenamtskarte.app/download_app", width / 2, pageBottom, {url: "https://ehrenamtskarte.app/download_app", align: "center"});
