@@ -6,6 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gql/ast.dart';
 part 'graphql_api.graphql.g.dart';
+
 @JsonSerializable(explicitToJson: true)
 class AcceptingStoreById$Query$PhysicalStore$Coordinates with EquatableMixin {
   AcceptingStoreById$Query$PhysicalStore$Coordinates();

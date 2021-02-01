@@ -9,7 +9,7 @@ import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 
 const client = new ApolloClient({
-    uri: 'https://api.ehrenamtskarte.app/verification',
+    uri: 'https://api.ehrenamtskarte.app',
     cache: new InMemoryCache()
 });
 
