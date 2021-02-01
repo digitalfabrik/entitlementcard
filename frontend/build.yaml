@@ -14,5 +14,3 @@ targets:
           scalar_mapping:
             - graphql_type: Long
               dart_type: int
-            - graphql_type: Short
-              dart_type: int

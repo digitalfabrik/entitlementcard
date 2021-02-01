@@ -65,7 +65,7 @@ type Coordinates {
 
 type Mutation {
   "Stores a new digital EAK"
-  addCard(card: CardInput!): Boolean!
+  addCard(card: CardGenerationModelInput!): Boolean!
 }
 
 type PhysicalStore {
@@ -93,17 +93,14 @@ type Query {
 "Long type"
 scalar Long
 
-"Built-in Short as Int"
-scalar Short
-
-input CardInput {
+input CardGenerationModelInput {
+  cardDetailsHashBase64: String!
   expirationDate: Long!
-  hashModel: String!
-  totpSecret: [Short!]!
+  totpSecretBase64: String!
 }
 
 input CardVerificationModelInput {
-  hashModel: String!
+  cardDetailsHashBase64: String!
   totp: Int!
 }
 
