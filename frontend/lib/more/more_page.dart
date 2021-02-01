@@ -14,8 +14,8 @@ class MorePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 14),
         child: GridView.count(crossAxisCount: 2, shrinkWrap: true, children: [
           MenuItem(
             title: 'Über diese App',
