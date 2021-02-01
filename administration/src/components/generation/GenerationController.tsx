@@ -38,7 +38,7 @@ const GenerationController = () => {
             setMode(Mode.finished)
         } catch (e) {
             console.error(e)
-            AppToaster.show({message: "Something went wrong.", intent: "danger"})
+            AppToaster.show({message: "Etwas ist schiefgegangen.", intent: "danger"})
             setMode(Mode.input)
         }
     }
