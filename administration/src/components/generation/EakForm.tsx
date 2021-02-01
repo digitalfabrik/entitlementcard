@@ -20,7 +20,6 @@ const renderCardType: ItemRenderer<CardType> = (cardType, {handleClick, modifier
     if (!modifiers.matchesPredicate) {
         return null;
     }
-    const text = `${cardType}`;
     return (
         <MenuItem
             active={modifiers.active}
