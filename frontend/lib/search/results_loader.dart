@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../graphql/stores_graphql_api.dart';
+import '../graphql/graphql_api.dart';
 import 'seach_result_item.dart';
 
 class ResultsLoader extends StatefulWidget {
