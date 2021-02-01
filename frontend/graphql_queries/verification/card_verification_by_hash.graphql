@@ -1,3 +1,0 @@
-query CardVerificationByHash($card: CardVerificationModelInput!) {
-    verifyCard(card: $card)
-}

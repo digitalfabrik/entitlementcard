@@ -2,11 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../configuration.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_scanner.dart';
 import 'remote_verification.dart';
@@ -24,20 +22,8 @@ class VerificationView extends StatefulWidget {
 }
 
 class _VerificationViewState extends State<VerificationView> {
-  GraphQLClient client;
-
   @override
   Widget build(BuildContext context) {
-    final config = Configuration.of(context);
-    client = GraphQLClient(
-      cache: InMemoryCache(),
-      link: Link.from([
-        HttpLink(
-          uri: config.graphqlVerificationUrl,
-        )
-      ]),
-    );
-    requestValidityFromBackend(client, "123", 1234567890);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -83,7 +69,7 @@ class _VerificationViewState extends State<VerificationView> {
       case VerificationState.waitingForScan:
         return Container(width: 0.0, height: 0.0);
       case VerificationState.verificationInProgress:
-        verifyCardValidWithRemote(model, client);
+        verifyCardValidWithRemote(model);
         return _buildWaitingForVerificationResult();
       case VerificationState.verificationSuccess:
         return _buildPositiveVerificationResult(
