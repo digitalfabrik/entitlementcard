@@ -9,7 +9,7 @@
 
 export interface CardGenerationModelInput {
   cardDetailsHashBase64: string;
-  expirationDate: any;
+  expirationDate: GQL_Long;
   totpSecretBase64: string;
 }
 
