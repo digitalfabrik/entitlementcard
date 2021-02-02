@@ -28,7 +28,8 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape = MediaQuery.of(context).size.width >= 500;
+    var isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Flex(
       direction: isLandscape ? Axis.horizontal : Axis.vertical,
