@@ -3,19 +3,14 @@ targets:
     sources:
       - lib/**
       - graphql_queries/**
-      - ./*.schema.graphql
+      - schema.graphql
     builders:
       artemis:
         options:
           schema_mapping:
-            - schema: stores.schema.graphql
-              queries_glob: graphql_queries/stores/*.graphql
-              output: lib/graphql/stores_graphql_api.dart
-            - schema: verification.schema.graphql
-              queries_glob: graphql_queries/verification/*.graphql
-              output: lib/graphql/verification_graphql_api.dart
+            - schema: schema.graphql
+              queries_glob: graphql_queries/**.graphql
+              output: lib/graphql/graphql_api.dart
           scalar_mapping:
             - graphql_type: Long
-              dart_type: int
-            - graphql_type: Short
               dart_type: int

@@ -21,6 +21,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "src/graphql/customScalarTypes.d.ts"
   ]
 }

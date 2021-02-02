@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema.types
 
-data class CardVerificationModel(
+data class CardGenerationModel constructor(
     val cardDetailsHashBase64: String,
-    val totp: Int
+    val totpSecretBase64: String,
+    val expirationDate: Long
 )
+

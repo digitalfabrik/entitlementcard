@@ -2,13 +2,13 @@ syntax = "proto3";
 
 message CardActivateModel {
   string fullName = 1;
-  bytes randomBytes = 2;
-  uint64 expirationDate = 3;
-  bytes totpSecret = 4;
+  int64 expirationDate = 2;
   enum CardType {
     STANDARD = 0;
     GOLD = 1;
   }
-  CardType cardType = 5;
-  int32 region = 6;
+  CardType cardType = 3;
+  int32 regionId = 4;
+  bytes hashSecret = 6;
+  bytes totpSecret = 5;
 }
