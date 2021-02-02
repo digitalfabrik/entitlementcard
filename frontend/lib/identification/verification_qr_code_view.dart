@@ -32,19 +32,19 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
   @override
   void initState() {
     super.initState();
-    _otpCode = widget._otpGenerator.generateOTP();
+    _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
   }
 
   _resetQrCode() {
     setState(() {
-      _otpCode = widget._otpGenerator.generateOTP();
+      _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final animationDuration = _otpCode.validUntilSeconds * 1000 -
-        DateTime.now().millisecondsSinceEpoch;
+    final animationDuration =
+        _otpCode.validUntilMilliSeconds - DateTime.now().millisecondsSinceEpoch;
     return Consumer<CardDetailsModel>(
         builder: (context, cardDetailsModel, child) {
       return Dialog(
@@ -70,7 +70,6 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
                       child: AnimatedProgressbar(
                         key: UniqueKey(),
                         duration: animationDuration,
-                        onCompleted: _resetQrCode,
                       )),
                 ],
               )));

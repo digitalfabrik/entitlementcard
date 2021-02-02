@@ -21,7 +21,9 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration), vsync: this);
+        duration: Duration(
+            milliseconds: widget.duration > 0 ? widget.duration : 1 << 63),
+        vsync: this);
     animation = Tween(begin: 1.0, end: 0.0).animate(controller)
       ..addListener(() {
         setState(() {});
@@ -33,6 +35,12 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
         ;
       });
     controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
