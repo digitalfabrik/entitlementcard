@@ -95,7 +95,7 @@ class _VerificationViewState extends State<VerificationView> {
           children: [
             TextSpan(text: "Scannen Sie den QR Code, der auf der "),
             TextSpan(
-                text: "\"Ausweisen\"-Seite ",
+                text: "„Ausweisen“-Seite ",
                 style: TextStyle(fontStyle: FontStyle.italic)),
             TextSpan(text: "Ihres Gegenübers angezeigt wird.\n"),
             TextSpan(
