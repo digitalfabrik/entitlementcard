@@ -38,7 +38,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
     const fail = results.find(result => result.errors || !result.data?.success)
     if (fail) throw Error(JSON.stringify(fail))
 
-    return generatePdf(cardCreationModels)
+    return generatePdf(activateModels)
 }
 
 export default generateCards
