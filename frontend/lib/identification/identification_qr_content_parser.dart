@@ -61,8 +61,8 @@ class IdentificationQrContentParser {
       if (fullName == null) {
         return createFieldMissingError("fullName", "fullNameMissing");
       }
-      final randomBytes = cardActivateModel.randomBytes;
-      if (randomBytes == null) {
+      final hashSecret = cardActivateModel.hashSecret;
+      if (hashSecret == null) {
         return createFieldMissingError("randomBytes", "randomBytesMissing");
       }
       final unixInt64ExpirationDate = cardActivateModel.expirationDate;
@@ -95,7 +95,7 @@ class IdentificationQrContentParser {
                 "digitalen Ehrenamtskarte ein Fehler passiert.");
       }
       final cardType = cardActivateModel.cardType.toString();
-      final regionId = cardActivateModel.region;
+      final regionId = cardActivateModel.regionId;
       String base32TotpSecret;
       try {
         base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
@@ -108,8 +108,13 @@ class IdentificationQrContentParser {
                 "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
       }
 
-      final cardDetails = CardDetails(fullName, randomBytes, unixExpirationDate,
-          cardType, regionId, base32TotpSecret);
+      final cardDetails = CardDetails(
+          fullName,
+          Base64Encoder().convert(hashSecret),
+          unixExpirationDate,
+          cardType,
+          regionId,
+          base32TotpSecret);
       _cardDetailsModel.setCardDetails(cardDetails);
     } on Exception catch (e) {
       return QRCodeParseResult(

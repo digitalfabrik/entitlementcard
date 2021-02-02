@@ -64,7 +64,7 @@ class VerificationQrContentParser {
         return QRCodeParseResult();
       }
       final hashSecretBase64 =
-          Base64Encoder().convert(cardVerifyModel.randomBytes);
+          Base64Encoder().convert(cardVerifyModel.hashSecret);
       if (hashSecretBase64 == null) {
         _verificationCardDetailsModel.setVerificationFailure(
             createFieldMissingError("randomBytes", "randomBytesMissing"));
@@ -99,7 +99,7 @@ class VerificationQrContentParser {
         return QRCodeParseResult();
       }
       final cardType = cardVerifyModel.cardType.toString();
-      final regionId = cardVerifyModel.region;
+      final regionId = cardVerifyModel.regionId;
       final otp = cardVerifyModel.otp;
       if (otp == null) {
         _verificationCardDetailsModel.setVerificationFailure(

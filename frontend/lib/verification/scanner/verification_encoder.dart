@@ -13,7 +13,7 @@ String encodeVerificationCardDetails(
   final cardVerifyModel = CardVerifyModel();
 
   cardVerifyModel.fullName = cardDetails.fullName;
-  cardVerifyModel.randomBytes =
+  cardVerifyModel.hashSecret =
       Base64Decoder().convert(cardDetails.hashSecretBase64);
   cardVerifyModel.expirationDate = Int64(cardDetails.unixExpirationDate);
   switch (cardDetails.cardType) {
@@ -27,7 +27,7 @@ String encodeVerificationCardDetails(
       throw Exception(
           "The provided card type ${cardDetails.cardType} is unknown!");
   }
-  cardVerifyModel.region = cardDetails.regionId;
+  cardVerifyModel.regionId = cardDetails.regionId;
   cardVerifyModel.otp = verificationCardDetails.otp;
   final base64Encoder = Base64Encoder();
 
@@ -43,10 +43,10 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
       CardVerifyModel.fromBuffer(base64Decoder.convert(base64Data));
 
   final fullName = cardVerifyModel.fullName;
-  final randomBytes = Base64Encoder().convert(cardVerifyModel.randomBytes);
+  final randomBytes = Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixExpirationTime = cardVerifyModel.expirationDate.toInt();
   final cardType = cardVerifyModel.cardType.toString();
-  final regionId = cardVerifyModel.region;
+  final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
 
   return VerificationCardDetails(
