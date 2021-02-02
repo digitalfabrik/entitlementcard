@@ -32,7 +32,6 @@ String encodeVerificationCardDetails(
   final base64Encoder = Base64Encoder();
 
   final encodedResult = base64Encoder.convert(cardVerifyModel.writeToBuffer());
-  print(encodedResult);
 
   return encodedResult;
 }
