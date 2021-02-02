@@ -15,10 +15,11 @@ class VerificationQrCodeView extends StatefulWidget {
   final CardDetails cardDetails;
   final OTPGenerator _otpGenerator;
   static const otpResetIntervalSeconds = 30;
+  static const otpLength = 10;
 
   VerificationQrCodeView({Key key, this.cardDetails})
       : _otpGenerator = OTPGenerator(cardDetails.base32TotpSecret,
-            otpResetIntervalSeconds, 10, Algorithm.SHA256),
+            otpResetIntervalSeconds, otpLength, Algorithm.SHA256),
         super(key: key);
 
   @override
@@ -52,24 +53,25 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           child: Padding(
               padding: EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              child: Stack(
+                overflow: Overflow.visible,
                 children: [
-                  AnimatedProgressbar(
-                    key: UniqueKey(),
-                    duration: animationDuration,
-                    onCompleted: _resetQrCode,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
                   QrImage(
                       key: UniqueKey(),
                       data: encodeVerificationCardDetails(
                           VerificationCardDetails(
                               widget.cardDetails, _otpCode.code)),
                       version: QrVersions.auto,
-                      padding: const EdgeInsets.all(0.0))
+                      padding: const EdgeInsets.all(0.0)),
+                  Positioned(
+                      bottom: -12,
+                      left: 0,
+                      right: 0,
+                      child: AnimatedProgressbar(
+                        key: UniqueKey(),
+                        duration: animationDuration,
+                        onCompleted: _resetQrCode,
+                      )),
                 ],
               )));
     });
