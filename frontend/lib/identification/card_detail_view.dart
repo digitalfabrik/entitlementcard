@@ -6,8 +6,8 @@ import 'package:otp/otp.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../verification/scanner/verification_encoder.dart';
 import '../verification/verification_card_details.dart';
-import '../verification/verification_encoder.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'id_card.dart';

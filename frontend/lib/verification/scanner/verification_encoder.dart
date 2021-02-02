@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:fixnum/fixnum.dart';
 
-import '../identification/base_card_details.dart';
-import '../identification/protobuf/card_verify_model.pb.dart';
-import 'verification_card_details.dart';
+import '../../identification/base_card_details.dart';
+import '../../identification/protobuf/card_verify_model.pb.dart';
+import '../verification_card_details.dart';
 
 String encodeVerificationCardDetails(
     VerificationCardDetails verificationCardDetails) {

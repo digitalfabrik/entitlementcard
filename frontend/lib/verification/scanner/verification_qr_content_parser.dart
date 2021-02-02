@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../identification/base_card_details.dart';
-import '../identification/protobuf/card_verify_model.pb.dart';
-import '../qr_code_scanner/qr_code_parser.dart';
-import 'verification_card_details.dart';
-import 'verification_card_details_model.dart';
-import 'verification_error.dart';
+import '../../identification/base_card_details.dart';
+import '../../identification/protobuf/card_verify_model.pb.dart';
+import '../../qr_code_scanner/qr_code_parser.dart';
+import '../verification_card_details.dart';
+import '../verification_card_details_model.dart';
+import '../verification_error.dart';
 
 VerificationError createFieldMissingError(
     String missingFieldName, String publicErrorCode) {

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../identification/base_card_details.dart';
-import '../qr_code_scanner/qr_code_scanner.dart';
-import 'remote_verification.dart';
-import 'verification_card_details_model.dart';
-import 'verification_error.dart';
+import '../../identification/base_card_details.dart';
+import '../../qr_code_scanner/qr_code_scanner.dart';
+import '../remote_verification.dart';
+import '../scanner/verification_qr_content_parser.dart';
+import '../verification_card_details_model.dart';
+import '../verification_error.dart';
+import 'content_card.dart';
 import 'verification_info_text.dart';
-import 'verification_qr_content_parser.dart';
 
 class VerificationView extends StatefulWidget {
   const VerificationView({
@@ -38,7 +39,7 @@ class _VerificationViewState extends State<VerificationView> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _buildContentCard(child: VerificationInfoText()),
+              ContentCard(child: VerificationInfoText()),
               Center(
                 child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -95,7 +96,7 @@ class _VerificationViewState extends State<VerificationView> {
   }
 
   Widget _buildWaitingForVerificationResult() {
-    return _buildContentCard(
+    return ContentCard(
         child: Column(children: [
           RichText(
               text: TextSpan(
@@ -116,7 +117,7 @@ class _VerificationViewState extends State<VerificationView> {
 
   Widget _buildPositiveVerificationResult(BaseCardDetails cardDetails) {
     final dateFormat = DateFormat('dd.MM.yyyy');
-    return _buildContentCard(
+    return ContentCard(
         child: RichText(
             text: TextSpan(
                 style: DefaultTextStyle.of(context)
@@ -147,7 +148,7 @@ class _VerificationViewState extends State<VerificationView> {
   }
 
   Widget _buildNegativeVerificationResult(VerificationError verificationError) {
-    return _buildContentCard(
+    return ContentCard(
       borderSide: BorderSide(color: Colors.red, width: 4.0),
       child: Column(children: [
         RichText(
@@ -179,22 +180,5 @@ class _VerificationViewState extends State<VerificationView> {
                 ])),
       ]),
     );
-  }
-
-  Card _buildContentCard(
-      {Widget child,
-      Color color = Colors.white,
-      BorderSide borderSide =
-          const BorderSide(width: 1.0, color: Colors.black12)}) {
-    return Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), side: borderSide),
-        margin: EdgeInsets.all(8.0),
-        elevation: 5.0,
-        color: color,
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: child,
-        ));
   }
 }
