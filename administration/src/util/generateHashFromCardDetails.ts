@@ -8,26 +8,51 @@ export interface CardDetails {
     cardType: CardActivateModel.CardType,
 }
 
-const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: CardDetails) => {
-    // todo: replace this routine with a custom encoding for reliable hashes
-    // Encode without TextEncoder because of IE11
-    const utf8 = unescape(encodeURIComponent(JSON.stringify(cardDetails)));
-    const encoded = new Uint8Array(utf8.length);
-    for (let i = 0; i < utf8.length; i++) {
-        encoded[i] = utf8.charCodeAt(i);
-    }
+const cardDetailsToBinary = (cardDetails: CardDetails) => {
+    const fullNameWithoutZero = new TextEncoder().encode(cardDetails.fullName)
+    const expirationDateBytes = 8 // int64
+    const cardTypeBytes = 4 // int32
+    const regionIdBytes = 4 // int32
+    const fullNameBytes = fullNameWithoutZero.byteLength + 1 // zero terminated string
+    const binary = new Uint8Array(expirationDateBytes + cardTypeBytes + regionIdBytes + fullNameBytes)
+    const binaryView = new DataView(binary.buffer)
 
-    // In IE11, this returns CryptoOperation,
+    let offset = 0
+
+    binary.set(cardDetails.expirationDate.toBytesLE(), offset)
+    offset += expirationDateBytes
+
+    binaryView.setInt32(offset, cardDetails.cardType, true)
+    offset += cardTypeBytes
+
+    binaryView.setInt32(offset, cardDetails.regionId, true)
+    offset += regionIdBytes
+
+    binary.set(fullNameWithoutZero, offset)
+    return binary;
+}
+
+const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: CardDetails) => {
+    const binary = cardDetailsToBinary(cardDetails)
+
+    // In IE11, this returns KeyOperation / CryptoOperation,
     // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
     let hashArrayBuffer: ArrayBuffer
-    if (isIE11()) { // @ts-ignore
+    if (isIE11()) {
+        const key = await new Promise((resolve, reject) => { // @ts-ignore
+            const op = msCrypto.subtle.importKey("raw", hashSecret, {name: "HMAC", hash: "SHA-256"}, false, ["sign"]) // @ts-ignore
+            op.oncomplete = (event) => resolve(event.target.result) // @ts-ignore
+            op.onerror = (e) => reject(e)
+        })
+
         hashArrayBuffer = await new Promise((resolve, reject) => { // @ts-ignore
-            const operation = window.msCrypto.subtle.digest({ name: "SHA-256", hash: "SHA-256" }, encoded.buffer) // @ts-ignore
-            operation.oncomplete = (event) => resolve(event.target.result) // @ts-ignore
-            operation.onerror = (e) => reject(e)
+            const op = msCrypto.subtle.sign({name: "HMAC", hash: "SHA-256"}, key, binary.buffer) // @ts-ignore
+            op.oncomplete = (event) => resolve(event.target.result) // @ts-ignore
+            op.onerror = (e) => reject(e)
         })
     } else {
-        hashArrayBuffer = await crypto.subtle.digest("SHA-256", encoded)
+        const key = await crypto.subtle.importKey("raw", hashSecret, {name: 'HMAC', hash: 'SHA-256'}, false, ["sign"])
+        hashArrayBuffer = await crypto.subtle.sign("HMAC", key, binary.buffer)
     }
     return new Uint8Array(hashArrayBuffer)
 }

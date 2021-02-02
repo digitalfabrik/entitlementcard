@@ -22,6 +22,7 @@
     "core-js": "^3.8.3",
     "date-fns": "^2.16.1",
     "detect-browser": "^5.2.0",
+    "fast-text-encoding": "^1.0.3",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "jspdf": "^2.2.0",
@@ -49,7 +50,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "generate-graphql": "apollo client:codegen --target=typescript",
+    "generate-graphql": "apollo client:codegen --target=typescript --passthroughCustomScalars --customScalarsPrefix=GQL_",
     "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
     "postinstall": "npm run generate-protobuf"
   },
