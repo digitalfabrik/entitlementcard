@@ -24,8 +24,8 @@ String encodeVerificationCardDetails(
       cardVerifyModel.cardType = CardVerifyModel_CardType.GOLD;
       break;
     default:
-      cardVerifyModel.cardType = CardVerifyModel_CardType.STANDARD;
-      break;
+      throw Exception(
+          "The provided card type ${cardDetails.cardType} is unknown!");
   }
   cardVerifyModel.region = cardDetails.regionId;
   cardVerifyModel.otp = verificationCardDetails.otp;
