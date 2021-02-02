@@ -97,7 +97,7 @@ class _VerificationViewState extends State<VerificationView> {
             TextSpan(
                 text: "\"Ausweisen\"-Seite ",
                 style: TextStyle(fontStyle: FontStyle.italic)),
-            TextSpan(text: "ihres Gegenübers angezeigt wird.\n"),
+            TextSpan(text: "Ihres Gegenübers angezeigt wird.\n"),
             TextSpan(
                 text: "Daraufhin wird durch eine Server-Anfrage geprüft, "
                     "ob die gescannte Ehrenamtskarte gültig ist.\n"),
