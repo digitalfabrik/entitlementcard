@@ -9,7 +9,11 @@ String hashVerificationCardDetails(
   final fullNameBytes =
       utf8.encode(verificationCardDetails.cardDetails.fullName);
 
-  final hasher = Hmac(sha256, verificationCardDetails.cardDetails.randomBytes);
+  // TODO proper hashing like in #219
+  final hasher = Hmac(
+      sha256,
+      Base64Decoder()
+          .convert(verificationCardDetails.cardDetails.hashSecretBase64));
 
   final result = hasher.convert(fullNameBytes);
   return Base64Encoder().convert(result.bytes);

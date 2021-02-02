@@ -63,8 +63,9 @@ class VerificationQrContentParser {
             createFieldMissingError("fullName", "fullNameMissing"));
         return QRCodeParseResult();
       }
-      final randomBytes = cardVerifyModel.randomBytes;
-      if (randomBytes == null) {
+      final hashSecretBase64 =
+          Base64Encoder().convert(cardVerifyModel.randomBytes);
+      if (hashSecretBase64 == null) {
         _verificationCardDetailsModel.setVerificationFailure(
             createFieldMissingError("randomBytes", "randomBytesMissing"));
         return QRCodeParseResult();
@@ -109,7 +110,7 @@ class VerificationQrContentParser {
       }
 
       final baseCardDetails = BaseCardDetails(
-          fullName, randomBytes, unixExpirationDate, cardType, regionId);
+          fullName, hashSecretBase64, unixExpirationDate, cardType, regionId);
       final verificationCardDetails =
           VerificationCardDetails(baseCardDetails, otp);
       _verificationCardDetailsModel

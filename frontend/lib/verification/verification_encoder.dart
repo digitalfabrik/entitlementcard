@@ -13,7 +13,8 @@ String encodeVerificationCardDetails(
   final cardVerifyModel = CardVerifyModel();
 
   cardVerifyModel.fullName = cardDetails.fullName;
-  cardVerifyModel.randomBytes = List<int>.from(cardDetails.randomBytes);
+  cardVerifyModel.randomBytes =
+      Base64Decoder().convert(cardDetails.hashSecretBase64);
   cardVerifyModel.expirationDate = Int64(cardDetails.unixExpirationDate);
   switch (cardDetails.cardType) {
     case "STANDARD":
@@ -43,7 +44,7 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
       CardVerifyModel.fromBuffer(base64Decoder.convert(base64Data));
 
   final fullName = cardVerifyModel.fullName;
-  final randomBytes = cardVerifyModel.randomBytes;
+  final randomBytes = Base64Encoder().convert(cardVerifyModel.randomBytes);
   final unixExpirationTime = cardVerifyModel.expirationDate.toInt();
   final cardType = cardVerifyModel.cardType.toString();
   final regionId = cardVerifyModel.region;
