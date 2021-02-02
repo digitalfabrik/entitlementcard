@@ -1,17 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../identification/base_card_details.dart';
 import '../../qr_code_scanner/qr_code_scanner.dart';
 import '../remote_verification.dart';
 import '../scanner/verification_qr_content_parser.dart';
 import '../verification_card_details_model.dart';
-import '../verification_error.dart';
 import 'content_card.dart';
+import 'negative_verification_result.dart';
+import 'positive_verification_result.dart';
 import 'verification_info_text.dart';
+import 'waiting_for_verification.dart';
 
 class VerificationView extends StatefulWidget {
   const VerificationView({
@@ -71,12 +71,12 @@ class _VerificationViewState extends State<VerificationView> {
         return Container(width: 0.0, height: 0.0);
       case VerificationState.verificationInProgress:
         verifyCardValidWithRemote(model);
-        return _buildWaitingForVerificationResult();
+        return WaitingForVerification();
       case VerificationState.verificationSuccess:
-        return _buildPositiveVerificationResult(
+        return PositiveVerificationResult(
             model.verificationCardDetails.cardDetails);
       case VerificationState.verificationFailure:
-        return _buildNegativeVerificationResult(model.verificationError);
+        return NegativeVerificationResult(model.verificationError);
     }
     return Container(width: 0.0, height: 0.0);
   }
@@ -93,92 +93,5 @@ class _VerificationViewState extends State<VerificationView> {
                 VerificationQrContentParser(provider).processQrCodeContent,
           ),
         ));
-  }
-
-  Widget _buildWaitingForVerificationResult() {
-    return ContentCard(
-        child: Column(children: [
-          RichText(
-              text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 1.5, fontWeightDelta: 2),
-                  children: [
-                TextSpan(
-                    text:
-                        "Bitte warten Sie, während der Code überprüft wird …"),
-              ])),
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ]),
-        color: Colors.lime);
-  }
-
-  Widget _buildPositiveVerificationResult(BaseCardDetails cardDetails) {
-    final dateFormat = DateFormat('dd.MM.yyyy');
-    return ContentCard(
-        child: RichText(
-            text: TextSpan(
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 1.5),
-                children: [
-          WidgetSpan(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2.0),
-              child: Icon(
-                Icons.verified_user,
-                color: Colors.green,
-                size: 30,
-              ),
-            ),
-          ),
-          TextSpan(
-              text: "Die Ehrenamtskarte ist gültig\n\n",
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
-          TextSpan(text: "Name: ${cardDetails.fullName}\n"),
-          TextSpan(
-              text: "Ablaufdatum: "
-                  "${dateFormat.format(cardDetails.expirationDate)}\n"),
-          TextSpan(text: "Landkreis: ${cardDetails.regionId}"),
-        ])));
-  }
-
-  Widget _buildNegativeVerificationResult(VerificationError verificationError) {
-    return ContentCard(
-      borderSide: BorderSide(color: Colors.red, width: 4.0),
-      child: Column(children: [
-        RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 1.3),
-                children: [
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Icon(
-                        Icons.error,
-                        color: Colors.red,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  TextSpan(
-                      text: "Die Ehrenamtskarte konnte nicht"
-                          " validiert werden!\n\n",
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
-                  verificationError.errorTextSpan,
-                  TextSpan(
-                      text: "\nFehlercode: ${verificationError.errorCode}"),
-                ])),
-      ]),
-    );
   }
 }
