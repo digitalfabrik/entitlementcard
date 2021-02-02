@@ -9,6 +9,7 @@ import '../qr_code_scanner/qr_code_scanner.dart';
 import 'remote_verification.dart';
 import 'verification_card_details_model.dart';
 import 'verification_error.dart';
+import 'verification_info_text.dart';
 import 'verification_qr_content_parser.dart';
 
 class VerificationView extends StatefulWidget {
@@ -37,7 +38,7 @@ class _VerificationViewState extends State<VerificationView> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _buildContentCard(child: RichText(text: _buildInfoText())),
+              _buildContentCard(child: VerificationInfoText()),
               Center(
                 child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -77,32 +78,6 @@ class _VerificationViewState extends State<VerificationView> {
         return _buildNegativeVerificationResult(model.verificationError);
     }
     return Container(width: 0.0, height: 0.0);
-  }
-
-  TextSpan _buildInfoText() {
-    return TextSpan(style: DefaultTextStyle.of(context).style, children: [
-      TextSpan(
-          text: "So prüfen Sie die Echtheit einer Ehrenamtskarte:\n\n",
-          style: DefaultTextStyle.of(context)
-              .style
-              .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
-      TextSpan(
-          style: DefaultTextStyle.of(context)
-              .style
-              .copyWith(height: 1.2)
-              .apply(fontSizeFactor: 1.4),
-          children: [
-            TextSpan(text: "Scannen Sie den QR Code, der auf der "),
-            TextSpan(
-                text: "„Ausweisen“-Seite ",
-                style: TextStyle(fontStyle: FontStyle.italic)),
-            TextSpan(text: "Ihres Gegenübers angezeigt wird.\n"),
-            TextSpan(
-                text: "Daraufhin wird durch eine Server-Anfrage geprüft, "
-                    "ob die gescannte Ehrenamtskarte gültig ist.\n"),
-            TextSpan(text: "Sie benötigen eine Internetverbindung."),
-          ]),
-    ]);
   }
 
   void _onScanCodePressed() {
