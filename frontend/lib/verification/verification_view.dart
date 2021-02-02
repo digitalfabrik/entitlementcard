@@ -131,7 +131,7 @@ class _VerificationViewState extends State<VerificationView> {
                   children: [
                 TextSpan(
                     text:
-                        "Bitte warten Sie, während der Code überprüft wird..."),
+                        "Bitte warten Sie, während der Code überprüft wird …"),
               ])),
           Center(
             child: CircularProgressIndicator(),
