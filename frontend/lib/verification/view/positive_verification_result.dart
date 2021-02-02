@@ -1,7 +1,7 @@
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../identification/base_card_details.dart';
 import 'content_card.dart';
 
 class PositiveVerificationResult extends StatelessWidget {
