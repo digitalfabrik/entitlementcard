@@ -31,7 +31,7 @@ class _QRViewState extends State<QRCodeScanner> {
   String _cameraState = frontCamera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool isDone = false;
+  bool isProcessingCode = false;
 
   final qrCodeParsingMutex = Mutex();
 
@@ -49,7 +49,7 @@ class _QRViewState extends State<QRCodeScanner> {
 
   @override
   Widget build(BuildContext context) {
-    isDone = false;
+    isProcessingCode = false;
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -184,10 +184,10 @@ class _QRViewState extends State<QRCodeScanner> {
     var wasSuccessful = false;
     // needed because this method gets called multiple times in a row after one
     // qr code gets detected, therefore we need to protect it
-    if (isDone) {
+    if (isProcessingCode) {
       return;
     }
-    isDone = true;
+    isProcessingCode = true;
     await qrCodeParsingMutex.protect(() async {
       controller.pauseCamera();
       final parseResult = widget.qrCodeContentParser(codeContent);
@@ -199,7 +199,7 @@ class _QRViewState extends State<QRCodeScanner> {
           Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
               .then((onValue) {
             controller.resumeCamera();
-            isDone = false;
+            isProcessingCode = false;
           });
         });
       } else {
