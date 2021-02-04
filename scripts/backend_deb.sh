@@ -10,7 +10,7 @@ maintainer="The Ehrenamtskarte Team <info@ehrenamtskarte.app>"
 description="Backend server for the Ehrenamtskarte app"
 
 # read input
-while getopts v:r:a:n:t:h flag
+while getopts v:r:a:n:t:s:h flag
 do
     case "${flag}" in
         v) version=${OPTARG};;
@@ -18,16 +18,12 @@ do
         a) architecture=${OPTARG};;
         n) name=${OPTARG};;
         t) tarfile=${OPTARG};;
+        s) servicefile=${OPTARG};;
         h) 
-            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] -t backend_tar"
+            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file]"
             exit 0;;
     esac
 done
-
-if [[ -z "$tarfile" ]]; then
-    echo "Must provide input tar file using -t file" 1>&2
-    exit 1
-fi
 
 debworkdir=$(mktemp -d)
 fullname=${name}_${version}-${revision}_${architecture}
@@ -45,9 +41,17 @@ echo "Maintainer: $maintainer" >> $ctrlfile
 echo "Description: $description" >> $ctrlfile
 
 # copy files to deb workdir
-echo "Copying $tarfile …"
-mkdir -p ${debworkdir}/var/ehrenamtskarte/backend
-tar -xf $tarfile -C ${debworkdir}/var/ehrenamtskarte
+if [[ -n "$tarfile" ]]; then
+    echo "Copying $tarfile …"
+    mkdir -p ${debworkdir}/opt/ehrenamtskarte/backend
+    tar -xf $tarfile -C ${debworkdir}/opt/ehrenamtskarte
+fi
+if [[ -n "$servicefile" ]]; then
+    echo "Copying $servicefile …"
+    mkdir -p ${debworkdir}/etc/systemd/system
+    cp $servicefile ${debworkdir}/etc/systemd/system/${name}.service
+fi
+
 
 # build the deb
 dpkg-deb --build --root-owner-group $debworkdir $debfile

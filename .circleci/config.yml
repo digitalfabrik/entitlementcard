@@ -62,7 +62,7 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/backend_deb.sh -v 0.1 -t /tmp/workspace/build/distributions/*.tar
+      - run: ../scripts/backend_deb.sh -v 0.1 -t /tmp/workspace/build/distributions/*.tar -s ../scripts/eak-backend.service
       - run: |
           mkdir -p /tmp/artifacts
           cp *.deb /tmp/artifacts

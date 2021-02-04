@@ -1,0 +1,13 @@
+[Unit]
+Description=Backend for the ehrenamtskarte app
+After=postgresql.service network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/opt/ehrenamtskarte/backend/bin/backend
+Restart=on-failure
+RestartSec=5s
