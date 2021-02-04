@@ -1,9 +1,9 @@
+import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import 'map/map_controller.dart';
 import 'map/map_with_futures.dart';
-import 'preview/accepting_store_summary.dart';
 
 class PhysicalStoreFeatureData {
   final int id;
@@ -32,7 +32,9 @@ abstract class MapPageController {
   Future<void> stopShowingAcceptingStore();
 }
 
-class _MapPageState extends State<MapPage> implements MapPageController {
+class _MapPageState extends State<MapPage>
+    with TickerProviderStateMixin
+    implements MapPageController {
   int _selectedAcceptingStoreId;
   MapController _controller;
 
@@ -48,28 +50,29 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
       ),
-      CustomMultiChildLayout(delegate: YourLayoutDelegate(), children: [
-        LayoutId(
-            id: "LocationButton",
-            child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: FloatingActionButton(
-                      child: Icon(Icons.my_location, color: Colors.white),
-                      key: ValueKey("LocationButton"),
-                      onPressed: () => {},
-                    )))),
-        if (_selectedAcceptingStoreId != null)
-          LayoutId(
-              id: "StoreSummary",
-              child: IntrinsicHeight(
-                child: AcceptingStoreSummary(
-                  _selectedAcceptingStoreId,
-                  hideShowOnMapButton: true,
-                ),
-              ))
-      ]),
+      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+        Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: FloatingActionButton(
+                  child: Icon(Icons.my_location, color: Colors.white),
+                  key: ValueKey("LocationButton"),
+                  onPressed: () => {},
+                ))),
+        AnimatedSize(
+            duration: Duration(milliseconds: 200),
+            vsync: this,
+            child: IntrinsicHeight(
+                child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: _selectedAcceptingStoreId != null
+                        ? AcceptingStoreSummary(
+                            _selectedAcceptingStoreId,
+                            hideShowOnMapButton: true,
+                          )
+                        : null)))
+      ])
     ]);
   }
 
@@ -113,33 +116,5 @@ class _MapPageState extends State<MapPage> implements MapPageController {
     if (!(coordinates is List)) return null;
     if (!(coordinates[0] is double && coordinates[1] is double)) return null;
     return LatLng(coordinates[1], coordinates[0]);
-  }
-}
-
-class YourLayoutDelegate extends MultiChildLayoutDelegate {
-  YourLayoutDelegate({this.position});
-
-  final Offset position;
-
-  @override
-  void performLayout(Size size) {
-    var summarySize = Size.zero;
-    if (hasChild("StoreSummary")) {
-      summarySize = layoutChild("StoreSummary", BoxConstraints.loose(size));
-      positionChild(
-          "StoreSummary", Offset(0, size.height - summarySize.height));
-    }
-
-    if (hasChild("LocationButton")) {
-      final buttonSize =
-          layoutChild("LocationButton", BoxConstraints.loose(size));
-      positionChild("LocationButton",
-          Offset(0, size.height - summarySize.height - buttonSize.height));
-    }
-  }
-
-  @override
-  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
-    return true;
   }
 }
