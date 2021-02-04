@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -32,7 +33,8 @@ abstract class MapPageController {
   Future<void> stopShowingAcceptingStore();
 }
 
-class _MapPageState extends State<MapPage> with TickerProviderStateMixin
+class _MapPageState extends State<MapPage>
+    with TickerProviderStateMixin
     implements MapPageController {
   int _selectedAcceptingStoreId;
   MapController _controller;
@@ -57,7 +59,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin
                 child: FloatingActionButton(
                   child: Icon(Icons.my_location, color: Colors.white),
                   key: ValueKey("LocationButton"),
-                  onPressed: () => _controller.bringCameraToUser(),
+                  onPressed: onPressLocationButton,
                 ))),
         AnimatedSize(
             duration: Duration(milliseconds: 200),
@@ -91,6 +93,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin
             zoomLevel: 13);
       }
     }
+  }
+
+  Future<void> onPressLocationButton() async {
+    await requestPermissionToDeterminePosition(userInteract: true);
+    await _controller.bringCameraToUser();
   }
 
   Future<void> stopShowingAcceptingStore() async {

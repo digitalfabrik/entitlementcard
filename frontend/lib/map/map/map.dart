@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
@@ -105,10 +106,21 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Future<void> bringCameraToUser() async {
-    var target = await _controller.requestMyLocationLatLng();
-    var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
-        target: target, bearing: 0, tilt: 0, zoom: Map.userLocationZoomLevel));
-    await _controller.animateCamera(cameraUpdate);
+    try {
+      var position = await Geolocator.getLastKnownPosition();
+      if (position == null) position = await Geolocator.getCurrentPosition();
+      if (position != null) {
+        var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            bearing: 0,
+            tilt: 0,
+            zoom: Map.userLocationZoomLevel));
+        await _controller.animateCamera(cameraUpdate);
+      }
+    } on Exception catch (e) {
+      print("Could not find position.");
+      print(e);
+    }
     await _controller
         .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
   }

@@ -109,7 +109,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     _textEditingController = TextEditingController();
     _focusNode = FocusNode();
-    determinePosition()
+    determinePosition(userInteract: false)
         .then((value) => setState(() => {
               _coordinates =
                   CoordinatesInput(lat: value.latitude, lng: value.longitude)

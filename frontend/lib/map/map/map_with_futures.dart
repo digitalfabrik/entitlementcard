@@ -19,7 +19,7 @@ class MapWithFutures extends StatelessWidget {
 
   Future<bool> _canDetermineLocation() async {
     try {
-      await requestPermissionToDeterminePosition();
+      await requestPermissionToDeterminePosition(userInteract: false);
       return true;
     } on PositionNotAvailableException catch (e) {
       debugPrint(e.reason);
@@ -33,9 +33,7 @@ class MapWithFutures extends StatelessWidget {
       future: _canDetermineLocation(),
       builder: (context, snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
-          return Center(
-            child: Text("Erlaubnis zur Standortbestimmung wird abgerufen …"),
-          );
+          return Center();
         }
         return Map(
           onFeatureClick: onFeatureClick,

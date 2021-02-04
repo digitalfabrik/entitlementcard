@@ -1,15 +1,11 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:mutex/mutex.dart';
-
-Mutex _mutex = Mutex();
-bool _doNotAskForPermissionAgain = false;
 
 /// Determine the current position of the device.
 ///
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return an `PositionNotAvailableException`.
-Future<Position> determinePosition() async {
-  await requestPermissionToDeterminePosition();
+Future<Position> determinePosition({bool userInteract}) async {
+  await requestPermissionToDeterminePosition(userInteract: userInteract);
   return await Geolocator.getCurrentPosition();
 }
 
@@ -19,36 +15,44 @@ Future<Position> determinePosition() async {
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return with an `PositionNotAvailableException`.
 /// Else it will complete without a value.
-Future<void> requestPermissionToDeterminePosition() async {
+Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    throw PositionNotAvailableException('Location services are disabled.');
+    if (userInteract) {
+      await Geolocator.openLocationSettings();
+    } else {
+      throw PositionNotAvailableException('Location services are disabled.');
+    }
   }
 
-  // Geolocator will fail if permissions are requested again before previous
-  // request was finished.
-  await _mutex.protect(() async {
-    var permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever ||
-        _doNotAskForPermissionAgain) {
+  var permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.deniedForever) {
+    if (userInteract) {
+      Geolocator.openAppSettings();
+    } else {
       throw PositionNotAvailableException(
           'Location permissions are permantly denied.');
     }
+  }
 
-    if (permission == LocationPermission.denied) {
+  if (permission == LocationPermission.denied) {
+    if (userInteract) {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        _doNotAskForPermissionAgain = true;
         throw PositionNotAvailableException(
             'Location permissions are denied (actual value: $permission).');
       }
+    } else {
+      throw PositionNotAvailableException("Location permissions are denied");
     }
-  });
+  }
 }
 
 class PositionNotAvailableException implements Exception {
   final String reason;
+
   PositionNotAvailableException(this.reason);
+
   String toString() => "PositionNotAvailableException: $reason";
 }
