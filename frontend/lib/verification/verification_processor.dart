@@ -35,7 +35,7 @@ class VerificationProcessor {
 
     if (checkIfCardDetailsConsistent(cardDetails)) {
       final hash = hashVerificationCardDetails(cardDetails);
-      model.setWaitingForRemoteVerification(cardDetails, hash);
+      model.setReadyForRemoteVerification(cardDetails, hash);
     }
 
     return QRCodeParseResult();

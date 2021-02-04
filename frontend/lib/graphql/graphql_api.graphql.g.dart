@@ -343,6 +343,33 @@ Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
           instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
+CardVerificationByHash$Query _$CardVerificationByHash$QueryFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationByHash$Query()
+    ..verifyCard = json['verifyCard'] as bool;
+}
+
+Map<String, dynamic> _$CardVerificationByHash$QueryToJson(
+        CardVerificationByHash$Query instance) =>
+    <String, dynamic>{
+      'verifyCard': instance.verifyCard,
+    };
+
+CardVerificationModelInput _$CardVerificationModelInputFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationModelInput(
+    cardDetailsHashBase64: json['cardDetailsHashBase64'] as String,
+    totp: json['totp'] as int,
+  );
+}
+
+Map<String, dynamic> _$CardVerificationModelInputToJson(
+        CardVerificationModelInput instance) =>
+    <String, dynamic>{
+      'cardDetailsHashBase64': instance.cardDetailsHashBase64,
+      'totp': instance.totp,
+    };
+
 AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(
     Map<String, dynamic> json) {
   return AcceptingStoreByIdArguments(
@@ -386,4 +413,20 @@ Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
         AcceptingStoreSummaryByIdArguments instance) =>
     <String, dynamic>{
       'ids': instance.ids?.toJson(),
+    };
+
+CardVerificationByHashArguments _$CardVerificationByHashArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationByHashArguments(
+    card: json['card'] == null
+        ? null
+        : CardVerificationModelInput.fromJson(
+            json['card'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$CardVerificationByHashArgumentsToJson(
+        CardVerificationByHashArguments instance) =>
+    <String, dynamic>{
+      'card': instance.card?.toJson(),
     };
