@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 "Directs the executor to include this field or fragment only when the `if` argument is true"
@@ -62,6 +63,11 @@ type Coordinates {
   lng: Float!
 }
 
+type Mutation {
+  "Stores a new digital EAK"
+  addCard(card: CardGenerationModelInput!): Boolean!
+}
+
 type PhysicalStore {
   address: Address!
   addressId: Int!
@@ -80,10 +86,23 @@ type Query {
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
   "Search for accepting stores using searchText and categoryIds."
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
+  "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
+  verifyCard(card: CardVerificationModelInput!): Boolean!
 }
 
 "Long type"
 scalar Long
+
+input CardGenerationModelInput {
+  cardDetailsHashBase64: String!
+  expirationDate: Long!
+  totpSecretBase64: String!
+}
+
+input CardVerificationModelInput {
+  cardDetailsHashBase64: String!
+  totp: Int!
+}
 
 input CoordinatesInput {
   lat: Float!

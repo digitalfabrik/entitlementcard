@@ -1,44 +1,42 @@
-import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../card_details.dart';
 
 const dataVersionKey = "dataVersion";
 const fullNameKey = "fullName";
-const randomBytesKey = "randomBytes";
-const regionKey = "regionId";
+const hashSecretBase64Key = "hashSecretBase64";
+const regionIdKey = "regionId";
 const unixExpirationDateKey = "unixExpirationDate";
 const cardTypeKey = "cardType";
-const base32TotpSecretKey = "totpSecret";
+const totpSecretBase32Key = "totpSecretBase32";
 
-const currentDataVersion = 1;
+const currentDataVersion = 3;
 
 Future<void> saveCardDetails(CardDetails cardDetails) async {
   final storage = FlutterSecureStorage();
-  var futures = <Future<void>>[];
   if (cardDetails != null) {
-    futures.add(storage.write(
-        key: dataVersionKey, value: currentDataVersion.toString()));
-    futures.add(storage.write(key: fullNameKey, value: cardDetails.fullName));
-    final base64RandomBytes = Base64Encoder().convert(cardDetails.randomBytes);
-    futures.add(storage.write(key: randomBytesKey, value: base64RandomBytes));
-    futures.add(
-        storage.write(key: regionKey, value: cardDetails.regionId.toString()));
-    futures.add(storage.write(
-        key: unixExpirationDateKey,
-        value: cardDetails.unixExpirationDate.toString()));
-    futures.add(storage.write(key: cardTypeKey, value: cardDetails.cardType));
-    futures.add(storage.write(
-        key: base32TotpSecretKey, value: cardDetails.base32TotpSecret));
+    await Future.wait([
+      storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
+      storage.write(key: fullNameKey, value: cardDetails.fullName),
+      storage.write(
+          key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
+      storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
+      storage.write(
+          key: unixExpirationDateKey,
+          value: cardDetails.unixExpirationDate.toString()),
+      storage.write(key: cardTypeKey, value: cardDetails.cardType),
+      storage.write(
+          key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
+    ]);
   } else {
-    futures.add(storage.delete(key: dataVersionKey));
-    futures.add(storage.delete(key: fullNameKey));
-    futures.add(storage.delete(key: unixExpirationDateKey));
-    futures.add(storage.delete(key: regionKey));
-    futures.add(storage.delete(key: cardTypeKey));
+    await Future.wait([
+      storage.delete(key: dataVersionKey),
+      storage.delete(key: fullNameKey),
+      storage.delete(key: unixExpirationDateKey),
+      storage.delete(key: regionIdKey),
+      storage.delete(key: cardTypeKey),
+    ]);
   }
-  await Future.wait(futures);
 }
 
 Future<CardDetails> loadCardDetails() async {
@@ -48,23 +46,20 @@ Future<CardDetails> loadCardDetails() async {
     final storedDataVersionStr = await storage.read(key: dataVersionKey);
     final storedDataVersion = int.parse(storedDataVersionStr);
     if (storedDataVersion != currentDataVersion) {
-      print("Can't load data because the versions don't match. "
+      throw Exception(("Can't load data because the versions don't match. "
           "Stored version: $storedDataVersion, "
-          "current version $currentDataVersion");
-      storage.delete(key: dataVersionKey);
-      return null;
+          "current version $currentDataVersion"));
     }
     final fullName = await storage.read(key: fullNameKey);
-    final base64RandomBytes = await storage.read(key: randomBytesKey);
-    final randomBytes = Base64Decoder().convert(base64RandomBytes);
+    final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
     final unixExpirationDate =
         int.parse(await storage.read(key: unixExpirationDateKey));
-    final regionId = int.parse(await storage.read(key: regionKey));
+    final regionId = int.parse(await storage.read(key: regionIdKey));
     final cardType = await storage.read(key: cardTypeKey);
-    final totpSecret = await storage.read(key: base32TotpSecretKey);
+    final totpSecret = await storage.read(key: totpSecretBase32Key);
 
-    return CardDetails(fullName, randomBytes.toList(), unixExpirationDate,
-        cardType, regionId, totpSecret);
+    return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
+        regionId, totpSecret);
   } else {
     return null;
   }

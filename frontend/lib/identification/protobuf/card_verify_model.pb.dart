@@ -17,10 +17,10 @@ export 'card_verify_model.pbenum.dart';
 class CardVerifyModel extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CardVerifyModel', createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fullName', protoName: 'fullName')
-    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'randomBytes', $pb.PbFieldType.OY, protoName: 'randomBytes')
-    ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expirationDate', $pb.PbFieldType.OU6, protoName: 'expirationDate', defaultOrMaker: $fixnum.Int64.ZERO)
-    ..e<CardVerifyModel_CardType>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cardType', $pb.PbFieldType.OE, protoName: 'cardType', defaultOrMaker: CardVerifyModel_CardType.STANDARD, valueOf: CardVerifyModel_CardType.valueOf, enumValues: CardVerifyModel_CardType.values)
-    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'region', $pb.PbFieldType.O3)
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expirationDate', protoName: 'expirationDate')
+    ..e<CardVerifyModel_CardType>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cardType', $pb.PbFieldType.OE, protoName: 'cardType', defaultOrMaker: CardVerifyModel_CardType.STANDARD, valueOf: CardVerifyModel_CardType.valueOf, enumValues: CardVerifyModel_CardType.values)
+    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'regionId', $pb.PbFieldType.O3, protoName: 'regionId')
+    ..a<$core.List<$core.int>>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hashSecret', $pb.PbFieldType.OY, protoName: 'hashSecret')
     ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'otp', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
@@ -28,18 +28,15 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   CardVerifyModel._() : super();
   factory CardVerifyModel({
     $core.String fullName,
-    $core.List<$core.int> randomBytes,
     $fixnum.Int64 expirationDate,
     CardVerifyModel_CardType cardType,
-    $core.int region,
+    $core.int regionId,
+    $core.List<$core.int> hashSecret,
     $core.int otp,
   }) {
     final _result = create();
     if (fullName != null) {
       _result.fullName = fullName;
-    }
-    if (randomBytes != null) {
-      _result.randomBytes = randomBytes;
     }
     if (expirationDate != null) {
       _result.expirationDate = expirationDate;
@@ -47,8 +44,11 @@ class CardVerifyModel extends $pb.GeneratedMessage {
     if (cardType != null) {
       _result.cardType = cardType;
     }
-    if (region != null) {
-      _result.region = region;
+    if (regionId != null) {
+      _result.regionId = regionId;
+    }
+    if (hashSecret != null) {
+      _result.hashSecret = hashSecret;
     }
     if (otp != null) {
       _result.otp = otp;
@@ -86,40 +86,40 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   void clearFullName() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<$core.int> get randomBytes => $_getN(1);
+  $fixnum.Int64 get expirationDate => $_getI64(1);
   @$pb.TagNumber(2)
-  set randomBytes($core.List<$core.int> v) { $_setBytes(1, v); }
+  set expirationDate($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasRandomBytes() => $_has(1);
+  $core.bool hasExpirationDate() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRandomBytes() => clearField(2);
+  void clearExpirationDate() => clearField(2);
 
   @$pb.TagNumber(3)
-  $fixnum.Int64 get expirationDate => $_getI64(2);
+  CardVerifyModel_CardType get cardType => $_getN(2);
   @$pb.TagNumber(3)
-  set expirationDate($fixnum.Int64 v) { $_setInt64(2, v); }
+  set cardType(CardVerifyModel_CardType v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasExpirationDate() => $_has(2);
+  $core.bool hasCardType() => $_has(2);
   @$pb.TagNumber(3)
-  void clearExpirationDate() => clearField(3);
+  void clearCardType() => clearField(3);
 
-  @$pb.TagNumber(5)
-  CardVerifyModel_CardType get cardType => $_getN(3);
-  @$pb.TagNumber(5)
-  set cardType(CardVerifyModel_CardType v) { setField(5, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasCardType() => $_has(3);
-  @$pb.TagNumber(5)
-  void clearCardType() => clearField(5);
+  @$pb.TagNumber(4)
+  $core.int get regionId => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set regionId($core.int v) { $_setSignedInt32(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasRegionId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRegionId() => clearField(4);
 
   @$pb.TagNumber(6)
-  $core.int get region => $_getIZ(4);
+  $core.List<$core.int> get hashSecret => $_getN(4);
   @$pb.TagNumber(6)
-  set region($core.int v) { $_setSignedInt32(4, v); }
+  set hashSecret($core.List<$core.int> v) { $_setBytes(4, v); }
   @$pb.TagNumber(6)
-  $core.bool hasRegion() => $_has(4);
+  $core.bool hasHashSecret() => $_has(4);
   @$pb.TagNumber(6)
-  void clearRegion() => clearField(6);
+  void clearHashSecret() => clearField(6);
 
   @$pb.TagNumber(7)
   $core.int get otp => $_getIZ(5);

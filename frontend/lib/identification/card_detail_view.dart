@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import '../verification/scanner/verification_encoder.dart';
+import '../verification/verification_card_details.dart';
 import 'card_details.dart';
 import 'id_card.dart';
 import 'verification_qr_code_view.dart';
@@ -19,7 +21,8 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape = MediaQuery.of(context).size.width >= 500;
+    var isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Flex(
       direction: isLandscape ? Axis.horizontal : Axis.vertical,

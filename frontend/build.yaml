@@ -9,7 +9,7 @@ targets:
         options:
           schema_mapping:
             - schema: schema.graphql
-              queries_glob: graphql_queries/*.graphql
+              queries_glob: graphql_queries/**.graphql
               output: lib/graphql/graphql_api.dart
           scalar_mapping:
             - graphql_type: Long

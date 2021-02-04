@@ -32,8 +32,9 @@ class VerificationCardDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setWaitingForVerificationResult() {
+  void setWaitingForRemoteVerification(VerificationCardDetails details) {
     _verificationState = VerificationState.verificationInProgress;
+    _verificationCardDetails = details;
     notifyListeners();
   }
 
@@ -43,9 +44,8 @@ class VerificationCardDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVerificationSuccessful(VerificationCardDetails details) {
+  void setVerificationSuccessful() {
     _verificationState = VerificationState.verificationSuccess;
-    _verificationCardDetails = details;
     notifyListeners();
   }
 }

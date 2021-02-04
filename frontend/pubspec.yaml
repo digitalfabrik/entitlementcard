@@ -41,6 +41,7 @@ dependencies:
   base32: ^1.1.2
   qr_flutter: ^3.2.0
   otp: ^2.2.3
+  crypto: ^2.1.5
 
   # graphQL type generation
   artemis: '>=6.0.0 <7.0.0' # only if you're using ArtemisClient!

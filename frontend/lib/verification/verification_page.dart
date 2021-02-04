@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'verification_card_details_model.dart';
-import 'verification_view.dart';
+import 'view/verification_view.dart';
 
 class VerificationPage extends StatelessWidget {
   @override

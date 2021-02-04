@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mutex/mutex.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'qr_code_parser.dart';
@@ -31,9 +30,7 @@ class _QRViewState extends State<QRCodeScanner> {
   String _cameraState = frontCamera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool isDone = false;
-
-  final qrCodeParsingMutex = Mutex();
+  bool isProcessingCode = false;
 
   // In order to get hot reload to work we need to pause the camera if the
   // platform is android, or resume the camera if the platform is iOS.
@@ -49,7 +46,7 @@ class _QRViewState extends State<QRCodeScanner> {
 
   @override
   Widget build(BuildContext context) {
-    isDone = false;
+    isProcessingCode = false;
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -184,28 +181,28 @@ class _QRViewState extends State<QRCodeScanner> {
     var wasSuccessful = false;
     // needed because this method gets called multiple times in a row after one
     // qr code gets detected, therefore we need to protect it
-    if (isDone) {
+    if (isProcessingCode) {
       return;
     }
-    isDone = true;
-    await qrCodeParsingMutex.protect(() async {
-      controller.pauseCamera();
-      final parseResult = widget.qrCodeContentParser(codeContent);
-      if (parseResult.hasError) {
-        print("Failed to parse qr code content!");
-        print(parseResult.internalErrorMessage);
-        final errorMessage = parseResult.userErrorMessage;
-        _showErrorDialog(errorMessage).then((value) {
-          Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
-              .then((onValue) {
-            controller.resumeCamera();
-            isDone = false;
-          });
+    isProcessingCode = true;
+    controller.pauseCamera();
+    final parseResult = widget.qrCodeContentParser(codeContent);
+    if (parseResult.hasError) {
+      print("Failed to parse qr code content!");
+      print(parseResult.internalErrorMessage);
+      final errorMessage = parseResult.userErrorMessage;
+      _showErrorDialog(errorMessage).then((value) {
+        // give the user time to move the camara away from the qr code
+        // that caused the error
+        Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
+            .then((onValue) {
+          controller.resumeCamera();
+          isProcessingCode = false;
         });
-      } else {
-        wasSuccessful = true;
-      }
-    });
+      });
+    } else {
+      wasSuccessful = true;
+    }
     if (wasSuccessful) {
       Navigator.of(context).maybePop();
     }
