@@ -9,6 +9,7 @@ class PhysicalStoreFeatureData {
   final int id;
   final LatLng coordinates;
   final int categoryId;
+
   PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
 }
 
@@ -27,6 +28,7 @@ class MapPage extends StatefulWidget {
 
 abstract class MapPageController {
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data);
+
   Future<void> stopShowingAcceptingStore();
 }
 
@@ -36,8 +38,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: [
+    return Stack(children: [
       MapWithFutures(
         onFeatureClick: _onFeatureClick,
         onNoFeatureClick: stopShowingAcceptingStore,
@@ -47,18 +48,29 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
       ),
-      AnimatedSwitcher(
-          duration: Duration(milliseconds: 200),
-          transitionBuilder: (child, animation) =>
-              FadeTransition(opacity: animation, child: child),
-          child: _selectedAcceptingStoreId != null
-              ? AcceptingStoreSummary(
+      CustomMultiChildLayout(delegate: YourLayoutDelegate(), children: [
+        LayoutId(
+            id: "LocationButton",
+            child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.my_location, color: Colors.white),
+                      key: ValueKey("LocationButton"),
+                      onPressed: () => {},
+                    )))),
+        if (_selectedAcceptingStoreId != null)
+          LayoutId(
+              id: "StoreSummary",
+              child: IntrinsicHeight(
+                child: AcceptingStoreSummary(
                   _selectedAcceptingStoreId,
-                  key: ValueKey(_selectedAcceptingStoreId),
                   hideShowOnMapButton: true,
-                )
-              : null),
-    ].where((element) => element != null).toList(growable: false));
+                ),
+              ))
+      ]),
+    ]);
   }
 
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
@@ -101,5 +113,33 @@ class _MapPageState extends State<MapPage> implements MapPageController {
     if (!(coordinates is List)) return null;
     if (!(coordinates[0] is double && coordinates[1] is double)) return null;
     return LatLng(coordinates[1], coordinates[0]);
+  }
+}
+
+class YourLayoutDelegate extends MultiChildLayoutDelegate {
+  YourLayoutDelegate({this.position});
+
+  final Offset position;
+
+  @override
+  void performLayout(Size size) {
+    var summarySize = Size.zero;
+    if (hasChild("StoreSummary")) {
+      summarySize = layoutChild("StoreSummary", BoxConstraints.loose(size));
+      positionChild(
+          "StoreSummary", Offset(0, size.height - summarySize.height));
+    }
+
+    if (hasChild("LocationButton")) {
+      final buttonSize =
+          layoutChild("LocationButton", BoxConstraints.loose(size));
+      positionChild("LocationButton",
+          Offset(0, size.height - summarySize.height - buttonSize.height));
+    }
+  }
+
+  @override
+  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
+    return true;
   }
 }
