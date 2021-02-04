@@ -10,7 +10,7 @@ const unixExpirationDateKey = "unixExpirationDate";
 const cardTypeKey = "cardType";
 const totpSecretBase32Key = "totpSecretBase32";
 
-const currentDataVersion = 2;
+const currentDataVersion = 3;
 
 Future<void> saveCardDetails(CardDetails cardDetails) async {
   final storage = FlutterSecureStorage();
@@ -46,11 +46,9 @@ Future<CardDetails> loadCardDetails() async {
     final storedDataVersionStr = await storage.read(key: dataVersionKey);
     final storedDataVersion = int.parse(storedDataVersionStr);
     if (storedDataVersion != currentDataVersion) {
-      print("Can't load data because the versions don't match. "
+      throw Exception(("Can't load data because the versions don't match. "
           "Stored version: $storedDataVersion, "
-          "current version $currentDataVersion");
-      storage.delete(key: dataVersionKey);
-      return null;
+          "current version $currentDataVersion"));
     }
     final fullName = await storage.read(key: fullNameKey);
     final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);

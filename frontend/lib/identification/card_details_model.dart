@@ -15,9 +15,14 @@ class CardDetailsModel extends ChangeNotifier {
     if (_isInitialized) {
       return;
     }
-    _cardDetails = await loadCardDetails();
-    _isInitialized = true;
-    notifyListeners();
+    try {
+      _cardDetails = await loadCardDetails();
+      _isInitialized = true;
+      notifyListeners();
+    } on Exception catch (e) {
+      print("Failed to initialize stored card details");
+      print(e.toString());
+    }
   }
 
   void setCardDetails(CardDetails details) {
