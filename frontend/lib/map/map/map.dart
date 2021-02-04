@@ -47,13 +47,13 @@ class _MapState extends State<Map> implements MapController {
               ? Map.userLocationZoomLevel
               : Map.initialZoomLevel),
       styleString: config.mapStyleUrl,
-      myLocationEnabled: widget.myLocationEnabled,
+      myLocationEnabled: true,
       myLocationTrackingMode: widget.myLocationEnabled
           ? MyLocationTrackingMode.Tracking
           : MyLocationTrackingMode.None,
       onMapCreated: _onMapCreated,
       onMapClick: _onMapClick,
-      compassViewPosition: CompassViewPosition.BottomRight,
+      compassEnabled: false,
     );
     super.didChangeDependencies();
   }
@@ -101,5 +101,15 @@ class _MapState extends State<Map> implements MapController {
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
     await _controller.animateCamera(update);
+  }
+
+  @override
+  Future<void> bringCameraToUser() async {
+    var target = await _controller.requestMyLocationLatLng();
+    var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
+        target: target, bearing: 0, tilt: 0, zoom: Map.userLocationZoomLevel));
+    await _controller.animateCamera(cameraUpdate);
+    await _controller
+        .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
   }
 }

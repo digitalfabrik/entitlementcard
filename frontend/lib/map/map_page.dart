@@ -32,8 +32,7 @@ abstract class MapPageController {
   Future<void> stopShowingAcceptingStore();
 }
 
-class _MapPageState extends State<MapPage>
-    with TickerProviderStateMixin
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin
     implements MapPageController {
   int _selectedAcceptingStoreId;
   MapController _controller;
@@ -58,7 +57,7 @@ class _MapPageState extends State<MapPage>
                 child: FloatingActionButton(
                   child: Icon(Icons.my_location, color: Colors.white),
                   key: ValueKey("LocationButton"),
-                  onPressed: () => {},
+                  onPressed: () => _controller.bringCameraToUser(),
                 ))),
         AnimatedSize(
             duration: Duration(milliseconds: 200),
