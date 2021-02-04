@@ -5,6 +5,13 @@ workflows:
   backend:
     jobs:
       - build
+      - pack:
+          requires:
+            - build
+      - hold:
+          requires:
+            - pack
+          type: approval
       
 jobs:
   build:
@@ -14,22 +21,36 @@ jobs:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker:
       - image: circleci/openjdk:11.0.3-jdk-stretch
-    working_directory: ~/root/backend
+    working_directory: ~/project/backend
     steps:
       - checkout:
-          path: ~/root
+          path: ~/project
       - restore_cache:
-          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
-          key: v1-gradle-cache-{{ checksum "build.gradle.kts" }}
+          key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
       - run: ./gradlew build
       - save_cache:
           paths:
             - .gradle/wrapper
-          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - save_cache:
           paths:
             - .gradle/caches
-          key: v1-gradle-cache-{{ checksum "build.gradle.kts" }}
+          key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
       - store_artifacts:
           path: build/libs
+      - persist_to_workspace:
+          root: . # why is this not an optional parameter? :shaking_head:
+          paths:
+            - build/distributions/*
+  pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/backend
+    steps:
+      - checkout:
+          path: ~/project
+      - run: ../scripts/backend_deb.sh
+      - store_artifacts:
+          path: build/*.deb
