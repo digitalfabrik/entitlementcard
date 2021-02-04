@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -eo pipefail
 
 # deb constants
 version=1.0
@@ -12,9 +12,6 @@ fullname=${name}_${version}-${revision}_${architecture}
 debworkdir=build/$fullname
 debfile=build/${fullname}.deb
 ctrlfile=${debworkdir}/DEBIAN/control
-
-# build backend
-./gradlew build
 
 # init deb workdir
 mkdir -p $debworkdir
