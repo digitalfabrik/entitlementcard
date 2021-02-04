@@ -12,9 +12,6 @@ QRCodeParseResult createFieldMissingError(
     String missingFieldName, String publicErrorCode) {
   return QRCodeParseResult(
       hasError: true,
-      internalErrorMessage: "IdentificationQrContentParser."
-          "processQrCodeContent(String rawBase64Content) failed to parse "
-          "qr code because the field '$missingFieldName' was null",
       userErrorMessage: "Beim Verarbeiten des eingescannten Codes ist ein"
           "Fehler aufgetreten. Fehlercode: $publicErrorCode");
 }
@@ -34,9 +31,6 @@ class IdentificationQrContentParser {
       } on Exception catch (e) {
         return QRCodeParseResult(
             hasError: true,
-            internalErrorMessage:
-                "Failed to decode base64 string from qr code, "
-                "probably not base64 encoded. Message: ${e.toString()}",
             userErrorMessage:
                 "Der Inhalt des eingescannten Codes kann nicht verstanden "
                 "werden. Vermutlich handelt es sich um einen QR Code, "
@@ -48,9 +42,6 @@ class IdentificationQrContentParser {
       } on Exception catch (e) {
         return QRCodeParseResult(
             hasError: true,
-            internalErrorMessage:
-                "Failed to parse CardActivateModel from base64 encoded data. "
-                "Message: ${e.toString()}",
             userErrorMessage:
                 "Der Inhalt des eingescannten Codes kann nicht verstanden "
                 "werden. Vermutlich handelt es sich um einen QR Code, "
@@ -76,8 +67,6 @@ class IdentificationQrContentParser {
         } on Exception catch (e) {
           return QRCodeParseResult(
               hasError: true,
-              internalErrorMessage: "Failed to parse unixExpirationDate, "
-                  "Message: ${e.toString()}",
               userErrorMessage: "Beim Verarbeiten des Ablaufdatums ist ein "
                   "unerwarteter Fehler aufgetreten.");
         }
@@ -86,9 +75,6 @@ class IdentificationQrContentParser {
           unixExpirationDate == null) {
         return QRCodeParseResult(
             hasError: true,
-            internalErrorMessage: "Got card type "
-                "${cardActivateModel.cardType.toString()} but "
-                "unixExpirationDate was not set",
             userErrorMessage: "Die eingescannte Karte enthält kein Ablauf-"
                 "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
                 " ist. Vermutlich ist beim Erstellen der "
@@ -102,8 +88,6 @@ class IdentificationQrContentParser {
       } on Exception catch (e) {
         return QRCodeParseResult(
             hasError: true,
-            internalErrorMessage: "Failed to parse base32TotpSecret, "
-                "Message: ${e.toString()}",
             userErrorMessage: "Beim Verarbeiten des eingescannten Codes ist ein"
                 "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
       }
@@ -119,7 +103,6 @@ class IdentificationQrContentParser {
     } on Exception catch (e) {
       return QRCodeParseResult(
           hasError: true,
-          internalErrorMessage: e.toString(),
           userErrorMessage: "Ein unerwarteter Fehler ist aufgetreten.");
     }
     return QRCodeParseResult(hasError: false);
