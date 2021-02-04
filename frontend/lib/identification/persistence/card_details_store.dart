@@ -8,7 +8,7 @@ const hashSecretBase64Key = "hashSecretBase64";
 const regionIdKey = "regionId";
 const unixExpirationDateKey = "unixExpirationDate";
 const cardTypeKey = "cardType";
-const base32TotpSecretKey = "base32TotpSecret";
+const totpSecretBase32Key = "totpSecretBase32";
 
 const currentDataVersion = 2;
 
@@ -26,7 +26,7 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
           value: cardDetails.unixExpirationDate.toString()),
       storage.write(key: cardTypeKey, value: cardDetails.cardType),
       storage.write(
-          key: base32TotpSecretKey, value: cardDetails.base32TotpSecret),
+          key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
     ]);
   } else {
     await Future.wait([
@@ -58,7 +58,7 @@ Future<CardDetails> loadCardDetails() async {
         int.parse(await storage.read(key: unixExpirationDateKey));
     final regionId = int.parse(await storage.read(key: regionIdKey));
     final cardType = await storage.read(key: cardTypeKey);
-    final totpSecret = await storage.read(key: base32TotpSecretKey);
+    final totpSecret = await storage.read(key: totpSecretBase32Key);
 
     return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
         regionId, totpSecret);

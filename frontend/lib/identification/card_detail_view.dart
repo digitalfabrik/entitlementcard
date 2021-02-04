@@ -20,7 +20,7 @@ class CardDetailView extends StatelessWidget {
 
   CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
       : _otpGenerator = OTPGenerator(
-            cardDetails.base32TotpSecret, 60 * 5, 10, Algorithm.SHA256),
+            cardDetails.totpSecretBase32, 60 * 5, 10, Algorithm.SHA256),
         super(key: key);
 
   get _formattedExpirationDate =>
