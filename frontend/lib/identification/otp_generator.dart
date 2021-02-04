@@ -5,12 +5,11 @@ import 'package:otp/otp.dart';
 
 class OTPGenerator {
   final String _base32TotpSecret;
-  final int _otpIntervalSeconds;
-  final int _otpLength;
-  final Algorithm _algorithm;
+  static const int _otpIntervalSeconds = 30;
+  static const int _otpLength = 6;
+  static const Algorithm _algorithm = Algorithm.SHA256;
 
-  OTPGenerator(this._base32TotpSecret, this._otpIntervalSeconds,
-      this._otpLength, this._algorithm);
+  OTPGenerator(this._base32TotpSecret);
 
   OTPCode generateOTP([VoidCallback onTimeout]) {
     final time = DateTime.now().millisecondsSinceEpoch;
