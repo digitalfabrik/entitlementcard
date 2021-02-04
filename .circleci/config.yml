@@ -77,8 +77,6 @@ jobs:
       - image: cimg/base:2020.01
     working_directory: ~/project/backend
     steps:
-      - checkout:
-          path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: echo "TODO put to ftp folder"
+      - run: scp /tmp/workspace/*.deb circleci@apt.ehrenamtskarte.app:/srv/local-apt-repository/
