@@ -189,7 +189,6 @@ class _QRViewState extends State<QRCodeScanner> {
     final parseResult = widget.qrCodeContentParser(codeContent);
     if (parseResult.hasError) {
       print("Failed to parse qr code content!");
-      print(parseResult.internalErrorMessage);
       final errorMessage = parseResult.userErrorMessage;
       _showErrorDialog(errorMessage).then((value) {
         // give the user time to move the camara away from the qr code

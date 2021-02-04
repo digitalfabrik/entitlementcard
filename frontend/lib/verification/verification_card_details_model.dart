@@ -14,6 +14,7 @@ class VerificationCardDetailsModel extends ChangeNotifier {
   VerificationCardDetails _verificationCardDetails;
   VerificationState _verificationState = VerificationState.waitingForScan;
   VerificationError _verificationError;
+  String _verificationHash;
 
   VerificationState get verificationState {
     return _verificationState;
@@ -32,9 +33,11 @@ class VerificationCardDetailsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setWaitingForRemoteVerification(VerificationCardDetails details) {
+  void setWaitingForRemoteVerification(
+      VerificationCardDetails details, String verificationHash) {
     _verificationState = VerificationState.verificationInProgress;
     _verificationCardDetails = details;
+    _verificationHash = verificationHash;
     notifyListeners();
   }
 

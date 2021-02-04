@@ -7,7 +7,7 @@ import '../identification/card_details_model.dart';
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
 final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
-    1677542400, "STANDARD", 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+    1677542400, 0, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
