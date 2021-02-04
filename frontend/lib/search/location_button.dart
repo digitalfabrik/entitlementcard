@@ -19,6 +19,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     if (_locationStatus == LocationRequestStatus.requestSuccessful) {
       return Container();
     }
@@ -36,8 +37,12 @@ class _LocationButtonState extends State<LocationButton> {
         padding: EdgeInsets.all(10),
         child: FloatingActionButton.extended(
             backgroundColor: Colors.white,
+            elevation: 1,
             onPressed: () => _initCoordinates(userInteract: true),
-            label: Text("In meiner Nähe suchen")));
+            label: Text(
+              "In meiner Nähe suchen",
+              style: TextStyle(color: theme.accentColor),
+            )));
   }
 
   Future<void> _initCoordinates({bool userInteract}) async {
