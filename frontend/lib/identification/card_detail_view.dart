@@ -3,8 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import '../verification/scanner/verification_encoder.dart';
-import '../verification/verification_card_details.dart';
 import 'card_details.dart';
 import 'id_card.dart';
 import 'verification_qr_code_view.dart';

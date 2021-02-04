@@ -1,9 +1,9 @@
-import 'package:ehrenamtskarte/verification/scanner/verification_encoder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../verification/scanner/verification_encoder.dart';
 import '../verification/verification_card_details.dart';
 import 'animated_progressbar.dart';
 import 'card_details.dart';
