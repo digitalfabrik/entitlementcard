@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/map/location_button.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -52,15 +52,7 @@ class _MapPageState extends State<MapPage>
         },
       ),
       Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-        Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: EdgeInsets.all(10),
-                child: FloatingActionButton(
-                  child: Icon(Icons.my_location, color: Colors.white),
-                  key: ValueKey("LocationButton"),
-                  onPressed: onPressLocationButton,
-                ))),
+        LocationButton(mapController: _controller),
         AnimatedSize(
             duration: Duration(milliseconds: 200),
             vsync: this,
@@ -93,11 +85,6 @@ class _MapPageState extends State<MapPage>
             zoomLevel: 13);
       }
     }
-  }
-
-  Future<void> onPressLocationButton() async {
-    await requestPermissionToDeterminePosition(userInteract: true);
-    await _controller.bringCameraToUser();
   }
 
   Future<void> stopShowingAcceptingStore() async {
