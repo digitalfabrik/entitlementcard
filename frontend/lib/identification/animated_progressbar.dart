@@ -20,33 +20,33 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        duration: Duration(
-            milliseconds: widget.duration > 0 ? widget.duration : 1 << 63),
-        vsync: this);
-    animation = Tween(begin: 1.0, end: 0.0).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          if (widget.onCompleted != null) widget.onCompleted();
-        }
-        ;
-      });
-    controller.forward();
+    if (widget.duration > 0) {
+      controller = AnimationController(
+          duration: Duration(milliseconds: widget.duration), vsync: this);
+      animation = Tween(begin: 1.0, end: 0.0).animate(controller)
+        ..addListener(() {
+          setState(() {});
+        })
+        ..addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            if (widget.onCompleted != null) widget.onCompleted();
+          }
+          ;
+        });
+      controller.forward();
+    }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
-      value: animation.value,
+      value: animation?.value ?? 0,
     );
   }
 }

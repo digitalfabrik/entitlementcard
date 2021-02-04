@@ -14,7 +14,8 @@ class OTPGenerator {
   OTPCode generateOTP([VoidCallback onTimeout]) {
     final time = DateTime.now().millisecondsSinceEpoch;
     final intervalMilliSeconds = _otpIntervalSeconds * 1000;
-    final validUntilMilliSeconds = (time ~/ intervalMilliseconds + 1) * intervalMilliSeconds;
+    final validUntilMilliSeconds =
+        (time ~/ intervalMilliSeconds + 1) * intervalMilliSeconds;
     if (onTimeout != null) {
       Timer(Duration(milliseconds: validUntilMilliSeconds - time), onTimeout);
     }
