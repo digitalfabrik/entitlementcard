@@ -11,8 +11,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.from(
-        colorScheme: ColorScheme.light(
-            primary: Colors.blue, secondary: Colors.blue),
+        colorScheme:
+            ColorScheme.light(primary: Colors.blue, secondary: Colors.blue),
         textTheme: TextTheme(
           headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
           bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),

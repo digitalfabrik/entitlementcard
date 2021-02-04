@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../identification/identification_page.dart';
+import '../identification/identification_view.dart';
 import '../map/map_page.dart';
 import '../more/more_page.dart';
 import '../search/search_page.dart';
