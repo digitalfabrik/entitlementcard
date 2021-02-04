@@ -14,13 +14,17 @@ workflows:
           type: approval
           filters:
             branches:
-              only: main
+              only: 
+                - main
+                - 227-deb-packages
       - deploy:
           requires:
             - hold
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - 227-deb-packages
       
 jobs:
   build:
@@ -79,4 +83,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - run: scp /tmp/workspace/*.deb circleci@apt.ehrenamtskarte.app:/srv/local-apt-repository/
+      - add_ssh_keys:
+          fingerprints:
+            - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
+      - run: scp /tmp/workspace/*.deb ci@apt.ehrenamtskarte.app:/srv/local-apt-repository/
