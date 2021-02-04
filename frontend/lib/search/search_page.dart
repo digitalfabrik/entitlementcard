@@ -1,9 +1,9 @@
+import 'package:ehrenamtskarte/search/location_button.dart';
 import 'package:flutter/material.dart';
 
 import '../category_assets.dart';
 import '../debouncer.dart';
 import '../graphql/graphql_api.graphql.dart';
-import '../location/determine_position.dart';
 import 'filter_bar.dart';
 import 'results_loader.dart';
 
@@ -20,9 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   final List<CategoryAsset> _selectedCategories = [];
   final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
   FocusNode _focusNode;
-
   CoordinatesInput _coordinates;
-  LocationRequestStatus _locationStatus = LocationRequestStatus.requesting;
 
   @override
   Widget build(BuildContext context) {
@@ -73,18 +71,10 @@ class _SearchPageState extends State<SearchPage> {
               coordinates: _coordinates)
         ],
       ),
-      if (_locationStatus != LocationRequestStatus.requestSuccessful)
-        Container(
-            alignment: Alignment.bottomCenter,
-            padding: EdgeInsets.all(10),
-            child: Stack(children: [
-              FloatingActionButton.extended(
-                  onPressed: _locationStatus == LocationRequestStatus.requesting
-                      ? null : () => initCoordinates(userInteract: true),
-                  label: _locationStatus == LocationRequestStatus.requesting
-                      ? Text("Ermittle Position…")
-                      : Text("In der Nähe suchen"))
-            ]))
+      LocationButton(
+        setCoordinates: (position) => setState(() => _coordinates =
+            CoordinatesInput(lat: position.latitude, lng: position.longitude)),
+      )
     ]);
   }
 
@@ -117,26 +107,10 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<void> initCoordinates({bool userInteract}) async {
-    try {
-      setState(() => _locationStatus = LocationRequestStatus.requesting);
-      var position = await determinePosition(userInteract: userInteract);
-      setState(() => {
-            _coordinates = CoordinatesInput(
-                lat: position.latitude, lng: position.longitude)
-          });
-      setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);
-    } on Exception catch (e) {
-      debugPrint(e.toString());
-      setState(() => _locationStatus = LocationRequestStatus.requestFailed);
-    }
-  }
-
   @override
   void initState() {
     _textEditingController = TextEditingController();
     _focusNode = FocusNode();
-    initCoordinates(userInteract: false);
     super.initState();
   }
 
