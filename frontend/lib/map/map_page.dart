@@ -1,10 +1,10 @@
-import 'package:ehrenamtskarte/map/location_button.dart';
-import 'package:ehrenamtskarte/map/preview/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
+import 'location_button.dart';
 import 'map/map_controller.dart';
 import 'map/map_with_futures.dart';
+import 'preview/accepting_store_summary.dart';
 
 class PhysicalStoreFeatureData {
   final int id;

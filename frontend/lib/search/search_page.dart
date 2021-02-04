@@ -1,10 +1,10 @@
-import 'package:ehrenamtskarte/search/location_button.dart';
 import 'package:flutter/material.dart';
 
 import '../category_assets.dart';
 import '../debouncer.dart';
 import '../graphql/graphql_api.graphql.dart';
 import 'filter_bar.dart';
+import 'location_button.dart';
 import 'results_loader.dart';
 
 class SearchPage extends StatefulWidget {

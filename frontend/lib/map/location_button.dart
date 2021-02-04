@@ -1,6 +1,7 @@
-import 'package:ehrenamtskarte/location/determine_position.dart';
-import 'package:ehrenamtskarte/map/map/map_controller.dart';
 import 'package:flutter/material.dart';
+
+import '../location/determine_position.dart';
+import 'map/map_controller.dart';
 
 class LocationButton extends StatefulWidget {
   final MapController mapController;
