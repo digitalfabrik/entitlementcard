@@ -17,20 +17,10 @@ class MapWithFutures extends StatelessWidget {
       this.onMapCreated})
       : super(key: key);
 
-  Future<bool> _canDetermineLocation() async {
-    try {
-      await requestPermissionToDeterminePosition(userInteract: false);
-      return true;
-    } on PositionNotAvailableException catch (e) {
-      debugPrint(e.reason);
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: _canDetermineLocation(),
+      future: canDetermineLocation(userInteract: false),
       builder: (context, snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
           return Center();

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
 /// Determine the current position of the device.
@@ -6,7 +7,14 @@ import 'package:geolocator/geolocator.dart';
 /// are denied the `Future` will return an `PositionNotAvailableException`.
 Future<Position> determinePosition({bool userInteract}) async {
   await requestPermissionToDeterminePosition(userInteract: userInteract);
-  return await Geolocator.getCurrentPosition();
+  var position = await Geolocator.getLastKnownPosition();
+  if (position == null) {
+    position = await Geolocator.getCurrentPosition();
+  }
+  if (position == null) {
+    throw PositionNotAvailableException("Could not determine position.");
+  }
+  return position;
 }
 
 /// Ensures all preconditions needed to determine the current position.
@@ -48,6 +56,17 @@ Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
     }
   }
 }
+
+Future<bool> canDetermineLocation({ bool userInteract }) async {
+  try {
+    await requestPermissionToDeterminePosition(userInteract: userInteract);
+    return true;
+  } on PositionNotAvailableException catch (e) {
+    debugPrint(e.reason);
+    return false;
+  }
+}
+
 
 class PositionNotAvailableException implements Exception {
   final String reason;
