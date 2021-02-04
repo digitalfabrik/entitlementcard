@@ -86,4 +86,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
-      - run: scp /tmp/workspace/*.deb ci@apt.ehrenamtskarte.app:/srv/local-apt-repository/
+      - run: |
+          echo $APT_HOST_FINGERPRINT > known_hosts
+          scp -o UserKnownHostsFile=known_hosts /tmp/workspace/*.deb ci@apt.ehrenamtskarte.app:/srv/local-apt-repository
