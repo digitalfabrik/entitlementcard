@@ -1,4 +1,4 @@
-#!/bin/bash -eo pipefail
+#!/bin/bash -e
 
 # deb constants
 version=1.0

@@ -12,6 +12,15 @@ workflows:
           requires:
             - pack
           type: approval
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: main
       
 jobs:
   build:
@@ -45,6 +54,23 @@ jobs:
           paths:
             - build/distributions/*
   pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/backend
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cp -r /tmp/workspace/** .
+      - run: ../scripts/backend_deb.sh
+      - store_artifacts:
+          path: build/*.deb
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/*.deb
+  deploy:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/backend
