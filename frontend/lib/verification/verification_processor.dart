@@ -77,6 +77,11 @@ class VerificationProcessor {
         return false;
       }
     }
+    if (verCardDetails.otp == null || verCardDetails.otp <= 0) {
+      model
+          .setVerificationFailure(createFieldMissingError("otp", "otpMissing"));
+      return false;
+    }
     return true;
   }
 }
