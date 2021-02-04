@@ -80,7 +80,7 @@ class IdentificationQrContentParser {
                 " ist. Vermutlich ist beim Erstellen der "
                 "digitalen Ehrenamtskarte ein Fehler passiert.");
       }
-      final cardType = cardActivateModel.cardType.toString();
+      final cardType = cardActivateModel.cardType.value;
       final regionId = cardActivateModel.regionId;
       String base32TotpSecret;
       try {
