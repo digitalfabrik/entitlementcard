@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedProgressbar extends StatefulWidget {
-  final int duration;
+  final Duration duration;
   final VoidCallback onCompleted;
 
   const AnimatedProgressbar({Key key, this.duration, this.onCompleted})
@@ -20,9 +20,8 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   @override
   void initState() {
     super.initState();
-    if (widget.duration > 0) {
-      controller = AnimationController(
-          duration: Duration(milliseconds: widget.duration), vsync: this);
+    if (widget.duration.inSeconds > 0) {
+      controller = AnimationController(duration: widget.duration, vsync: this);
       animation = Tween(begin: 1.0, end: 0.0).animate(controller)
         ..addListener(() {
           setState(() {});
