@@ -63,8 +63,11 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run: ../scripts/backend_deb.sh -v 0.1 -t /tmp/workspace/build/distributions/*.tar
+      - run: |
+          mkdir -p /tmp/artifacts
+          cp *.deb /tmp/artifacts
       - store_artifacts:
-          path: ./*.deb
+          path: /tmp/artifacts
       - persist_to_workspace:
           root: .
           paths:
