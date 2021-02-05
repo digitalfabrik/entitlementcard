@@ -7,13 +7,15 @@ const val DEFAULT_PORT = "7000"
 
 class WebService {
     fun start() {
+        val production = System.getProperty("app.production", "").isNotEmpty()
         val host = System.getProperty("app.host", "0.0.0.0")
         val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
         val app = Javalin.create { cfg ->
-
-            cfg.enableDevLogging() // FIXME: Disable in dev
-            cfg.enableCorsForAllOrigins()
-            cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
+            if (!production) {
+                cfg.enableDevLogging()
+                cfg.enableCorsForAllOrigins()
+                cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
+            }
         }.start(host, port)
 
         println("Server is running at http://${host}:${port}")
