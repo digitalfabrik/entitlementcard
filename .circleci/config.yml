@@ -15,7 +15,6 @@ workflows:
             branches:
               only:
                 - main
-                - 227-deb-packages
       
 jobs:
   build:
