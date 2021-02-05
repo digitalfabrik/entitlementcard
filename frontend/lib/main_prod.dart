@@ -6,7 +6,7 @@ import 'configuration.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(Configuration(
-      mapStyleUrl: "https://vector.ehrenamtskarte.app/style.json",
-      graphqlUrl: "https://api.ehrenamtskarte.app",
+      mapStyleUrl: "https://tiles.staging.ehrenamtskarte.app/style.json",
+      graphqlUrl: "https://api.staging.ehrenamtskarte.app",
       child: App()));
 }

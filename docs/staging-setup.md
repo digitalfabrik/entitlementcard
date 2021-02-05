@@ -4,7 +4,7 @@ If you want o make the staging environment available on (api|vector).ehrenamtska
 
 ```nginx configuration
 server {
-    server_name vector.ehrenamtskarte.app;
+    server_name tiles.staging.ehrenamtskarte.app;
 
     location / {
         proxy_set_header Host $http_host;
@@ -19,7 +19,7 @@ server {
 }
 
 server {
-    server_name api.ehrenamtskarte.app;
+    server_name tiles.staging.ehrenamtskarte.app;
 
     location / {
         proxy_set_header Host $http_host;
@@ -34,7 +34,7 @@ server {
 }
 
 server {
-    server_name ehrenamtskarte.app;
+    server_name staging.ehrenamtskarte.app;
 	root /var/www/html;
 
 
@@ -48,32 +48,32 @@ server {
 }
 
 server {
-    if ($host = ehrenamtskarte.app) {
+    if ($host = staging.ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name ehrenamtskarte.app;
+    server_name staging.ehrenamtskarte.app;
     return 404;
 }
 
 server {
-    if ($host = api.ehrenamtskarte.app) {
+    if ($host = api.staging.ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name api.ehrenamtskarte.app;
+    server_name api.staging.ehrenamtskarte.app;
     return 404;
 }
 
 server {
-    if ($host = vector.ehrenamtskarte.app) {
+    if ($host = tiles.staging..ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name vector.ehrenamtskarte.app;
+    server_name tiles.staging..ehrenamtskarte.app;
     return 404;
 }
 ```
