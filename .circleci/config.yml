@@ -16,6 +16,7 @@ workflows:
             branches:
               only: 
                 - main
+                - 227-deb-packages
       - deploy:
           requires:
             - hold
@@ -23,6 +24,7 @@ workflows:
             branches:
               only:
                 - main
+                - 227-deb-packages
       
 jobs:
   build:
