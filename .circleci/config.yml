@@ -88,4 +88,4 @@ jobs:
             - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
       - run: |
           echo $APT_HOST_FINGERPRINT > known_hosts
-          sftp -b - -v -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/ \<<< "put -r /tmp/workspace/*.deb"
+          sftp -b - -v -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/*.deb"
