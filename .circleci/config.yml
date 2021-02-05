@@ -8,18 +8,9 @@ workflows:
       - pack:
           requires:
             - build
-      - hold:
-          requires:
-            - pack
-          type: approval
-          filters:
-            branches:
-              only: 
-                - main
-                - 227-deb-packages
       - deploy:
           requires:
-            - hold
+            - pack
           filters:
             branches:
               only:
