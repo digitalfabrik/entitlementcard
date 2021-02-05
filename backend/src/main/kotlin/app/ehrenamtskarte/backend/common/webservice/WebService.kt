@@ -11,7 +11,7 @@ class WebService {
         val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
         val app = Javalin.create { cfg ->
 
-            cfg.enableDevLogging()
+            cfg.enableDevLogging() // FIXME: Disable in dev
             cfg.enableCorsForAllOrigins()
             cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
         }.start(host, port)
