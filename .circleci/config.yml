@@ -148,6 +148,9 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
-      - run: |
-          echo $APT_HOST_FINGERPRINT > known_hosts
-          sftp -b - -v -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+      - run:
+          name: "SFTP upload"
+          command: |
+            echo $APT_HOST_FINGERPRINT > known_hosts
+            echo "Uploading: " /tmp/workspace/debs/*.deb
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
