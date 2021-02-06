@@ -65,7 +65,7 @@ jobs:
           path: ~/project
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "package-lock.json" }}
+            - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
@@ -73,7 +73,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-node-modules-{{ checksum "package-lock.json" }}
+          key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
       - store_artifacts:
           path: build
       - persist_to_workspace:
