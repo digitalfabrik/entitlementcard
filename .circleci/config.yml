@@ -66,10 +66,10 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package-lock.json" }}
-            - v1-node-modules-
-      - run: |
-          npm install
-          npm run-script build
+      - run:
+          name: Install node dependencies
+          command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
+      - run: npm run-script build
       - save_cache:
           paths:
             - node_modules
