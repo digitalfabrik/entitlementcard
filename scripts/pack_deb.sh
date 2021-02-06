@@ -7,8 +7,6 @@ revision=1
 name=eak
 architecture=amd64
 maintainer="The Ehrenamtskarte Team <info@ehrenamtskarte.app>"
-description=""
-dependencies=""
 
 # read input
 while getopts v:r:a:n:t:s:d:f:c:h flag
@@ -45,8 +43,12 @@ echo "Package: $name" >> "$ctrlfile"
 echo "Version: $version" >> "$ctrlfile"
 echo "Architecture: $architecture" >> "$ctrlfile"
 echo "Maintainer: $maintainer" >> "$ctrlfile"
-echo "Description: $description" >> "$ctrlfile"
-echo "Depends: $dependencies" >> "$ctrlfile"
+if [[ -n "$description" ]]; then
+    echo "Description: $description" >> "$ctrlfile"
+fi
+if [[ -n "$dependencies" ]]; then
+    echo "Depends: $dependencies" >> "$ctrlfile"
+fi
 
 # copy files to deb workdir
 if [[ -n "$tarfile" ]]; then
