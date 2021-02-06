@@ -62,7 +62,7 @@ fi
 if [[ -n "$adminfolder" ]]; then
     echo "Copying $adminfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
-    cp "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
+    cp -r "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
 fi
 
 # build the deb
