@@ -2,22 +2,29 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
 workflows:
-  backend:
+  default:
     jobs:
-      - build
-      - pack:
+      - be-build
+      - ad-build
+      - be-pack:
           requires:
-            - build
+            - be-build
+      - ad-pack:
+          requires:
+            - ad-build
+      - meta-pack
       - deploy:
           requires:
-            - pack
+            - be-pack
+            - ad-pack
+            - meta-pack
           filters:
             branches:
               only:
                 - main
       
 jobs:
-  build:
+  be-build:
     environment:
       # Configure the JVM and Gradle to avoid OOM errors
       _JAVA_OPTIONS: "-Xmx3g"
@@ -44,10 +51,36 @@ jobs:
       - store_artifacts:
           path: build/libs
       - persist_to_workspace:
-          root: . # why is this not an optional parameter? :shaking_head:
+          root: ~/project
           paths:
-            - build/distributions/*
-  pack:
+            - backend/build/distributions/*
+
+  ad-build:
+    docker:
+      - image: cimg/node:15.8.0
+    working_directory: ~/project/administration
+    steps:
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "package-lock.json" }}
+            - v1-node-modules-
+      - run: |
+          npm install
+          npm run-script build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-node-modules-{{ checksum "package-lock.json" }}
+      - store_artifacts:
+          path: build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - administration/build
+
+  be-pack:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/backend
@@ -56,20 +89,58 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/backend_deb.sh -v 0.1 -t /tmp/workspace/build/distributions/*.tar -s ../scripts/eak-backend.service
+      - run: ../scripts/pack_deb.sh -v 0.1 -t /tmp/workspace/backend/build/distributions/*.tar -s ../scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
       - run: |
-          mkdir -p /tmp/artifacts
-          cp *.deb /tmp/artifacts
+          mkdir -p /tmp/artifacts/debs
+          cp *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
-          root: .
+          root: /tmp/artifacts
           paths:
-            - ./*.deb
+            - debs/*.deb
+    
+  ad-pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/administration
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: ../scripts/pack_deb.sh -v 0.1 -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+      - run: |
+          mkdir -p /tmp/artifacts/debs
+          cp *.deb /tmp/artifacts/debs
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - debs/*.deb
+
+  meta-pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/administration
+    steps:
+      - checkout:
+          path: ~/project
+      - run: ../scripts/pack_deb.sh -v 0.1 -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration"
+      - run: |
+          mkdir -p /tmp/artifacts/debs
+          cp *.deb /tmp/artifacts/debs
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - debs/*.deb
+
   deploy:
     docker:
       - image: cimg/base:2020.01
-    working_directory: ~/project/backend
     steps:
       - attach_workspace:
           at: /tmp/workspace
@@ -78,4 +149,4 @@ jobs:
             - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
       - run: |
           echo $APT_HOST_FINGERPRINT > known_hosts
-          sftp -b - -v -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/*.deb"
+          sftp -b - -v -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"

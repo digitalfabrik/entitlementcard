@@ -4,24 +4,27 @@ set -eo pipefail
 # deb constants
 version=1.0
 revision=1
-name=eak-backend
+name=eak
 architecture=amd64
 maintainer="The Ehrenamtskarte Team <info@ehrenamtskarte.app>"
-description="Backend server for the Ehrenamtskarte app"
-dependencies="default-jre"
+description=""
+dependencies=""
 
 # read input
-while getopts v:r:a:n:t:s:h flag
+while getopts v:r:a:n:t:s:d:f:c:h flag
 do
     case "${flag}" in
         v) version=${OPTARG};;
         r) revision=${OPTARG};;
         a) architecture=${OPTARG};;
         n) name=${OPTARG};;
+        d) description=${OPTARG};;
         t) tarfile=${OPTARG};;
+        f) adminfolder=${OPTARG};;
         s) servicefile=${OPTARG};;
+        c) dependencies=${OPTARG};;
         h) 
-            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file]"
+            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies]"
             exit 0;;
         *)
             echo "Unknown flag"
@@ -56,7 +59,11 @@ if [[ -n "$servicefile" ]]; then
     mkdir -p "${debworkdir}/etc/systemd/system"
     cp "$servicefile" "${debworkdir}/etc/systemd/system/${name}.service"
 fi
-
+if [[ -n "$adminfolder" ]]; then
+    echo "Copying $adminfolder …"
+    mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
+    cp "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
+fi
 
 # build the deb
 dpkg-deb --build --root-owner-group "$debworkdir" "$debfile"
