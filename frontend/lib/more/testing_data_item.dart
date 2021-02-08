@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
 
-final validEakDetails =
-    CardDetails("Jane", "Doe", DateTime.parse("2024-03-22"), "Augsburg Stadt");
+// this data includes a Base32 encoded random key created with openssl
+// for testing, so this is intended
+final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
+    1677542400, "STANDARD", 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
@@ -39,8 +41,7 @@ class _TestingDataState extends State<TestingDataItem> {
   }
 
   Future<void> _resetEakData() async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .clearCardDetails();
+    Provider.of<CardDetailsModel>(context, listen: false).clearCardDetails();
   }
 
   Future<void> _setValidEakData() async {
