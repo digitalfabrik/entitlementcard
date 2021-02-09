@@ -14,8 +14,8 @@ class WebService {
             if (!production) {
                 cfg.enableDevLogging()
                 cfg.enableCorsForAllOrigins()
-                cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
             }
+            cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
         }.start(host, port)
 
         println("Server is running at http://${host}:${port}")
