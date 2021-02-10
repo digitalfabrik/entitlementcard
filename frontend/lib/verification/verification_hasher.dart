@@ -8,7 +8,6 @@ import 'verification_card_details.dart';
 
 String hashVerificationCardDetails(
     VerificationCardDetails verificationCardDetails) {
-  // TODO proper hashing like in #219
   final hasher = Hmac(
       sha256,
       Base64Decoder()
