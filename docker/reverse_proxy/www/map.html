@@ -1,14 +1,13 @@
 <html lang="en">
 <head>
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://cdn.skypack.dev/maplibre-gl/dist/mapbox-gl.css' rel='stylesheet' />
     <title>Ehrenamtskarte Preview Map</title>
 </head>
 <body>
 <div id='map' style='width: 100%; height: 100%;'></div>
-<script>
-  mapboxgl.accessToken = 'pk.eyJ1IjoibWF4YW1tYW5uIiwiYSI6ImNraHlzdGNmejBkaGsycm9hNjJjcWZzdmwifQ.3NaekT5CjDsBnBNdUr1F7g';
-  var map = new mapboxgl.Map({
+<script type="module">
+  import { Map } from 'https://cdn.skypack.dev/maplibre-gl'
+  var map = new Map({
     container: 'map',
     style: '/style.json',
     center: [11.576124, 48.137154],
