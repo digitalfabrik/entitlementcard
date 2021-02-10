@@ -9,7 +9,7 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=zOWlRyA7SQOSf0eOTmmm"
+      "url": "https://maps.tuerantuer.org/europe_germany/tiles.json"
     },
     "natural_earth_shaded_relief": {
       "maxzoom": 6,
@@ -37,7 +37,7 @@
     }
   },
   "sprite": "https://tiles.staging.ehrenamtskarte.app/sprites/osm-liberty",
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=zOWlRyA7SQOSf0eOTmmm",
+  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
@@ -1672,9 +1672,7 @@
         "icon-size": 1,
         "text-justify": "center",
         "text-font": [
-          "Roboto Medium",
-          "Open Sans Bold",
-          "Arial Unicode MS Regular"
+          "Roboto Medium"
         ],
         "text-allow-overlap": true
       },
