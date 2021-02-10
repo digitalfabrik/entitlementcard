@@ -20,13 +20,10 @@ String hashVerificationCardDetails(
 }
 
 List<int> cardDetailsToBinary(CardDetails cardDetails) {
-  //TODO: Get cardType from cardDetails
-  final cardType = 0;
-
   var buffer = Uint8List(16).buffer;
   var data = ByteData.view(buffer);
   data.setInt64(0, cardDetails.unixExpirationDate, Endian.little);
-  data.setInt32(8, cardType, Endian.little);
+  data.setInt32(8, cardDetails.cardType, Endian.little);
   data.setInt32(12, cardDetails.regionId, Endian.little);
 
   final fullNameBytes = utf8.encode(cardDetails.fullName);
