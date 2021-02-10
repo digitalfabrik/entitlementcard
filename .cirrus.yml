@@ -88,3 +88,25 @@ be_build_task:
     - cd backend
     - ./gradlew build
   << : *BE_CLEAN_CACHE_TEMPLATE
+
+
+##################
+# ADMINISTRATION #
+##################
+
+ad_task_template: &AD_TASK_TEMPLATE
+  container:
+    image: node:latest
+  node_modules_cache:
+    folder: administration/node_modules
+    fingerprint_script: cat administration/package-lock.json
+    populate_script:
+      - cd administration
+      - npm install
+
+ad_build_task:
+  name: "AD: build"
+  << : *AD_TASK_TEMPLATE
+  build_script:
+    - cd administration
+    - npm run-script build

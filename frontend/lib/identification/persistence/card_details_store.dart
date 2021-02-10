@@ -1,42 +1,66 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../card_details.dart';
 
-const firstNameKey = "firstName";
-const lastNameKey = "lastName";
-const regionKey = "region";
-const expirationDateKey = "expirationDate";
+const dataVersionKey = "dataVersion";
+const fullNameKey = "fullName";
+const hashSecretBase64Key = "hashSecretBase64";
+const regionIdKey = "regionId";
+const unixExpirationDateKey = "unixExpirationDate";
+const cardTypeKey = "cardType";
+const totpSecretBase32Key = "totpSecretBase32";
+
+const currentDataVersion = 3;
 
 Future<void> saveCardDetails(CardDetails cardDetails) async {
-  final store = await SharedPreferences.getInstance();
-  var futures = <Future<bool>>[];
+  final storage = FlutterSecureStorage();
   if (cardDetails != null) {
-    futures.add(store.setString(firstNameKey, cardDetails.firstName));
-    futures.add(store.setString(lastNameKey, cardDetails.lastName));
-    futures.add(store.setString(regionKey, cardDetails.region));
-    futures.add(store.setString(
-        expirationDateKey, cardDetails.expirationDate.toIso8601String()));
+    await Future.wait([
+      storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
+      storage.write(key: fullNameKey, value: cardDetails.fullName),
+      storage.write(
+          key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
+      storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
+      storage.write(
+          key: unixExpirationDateKey,
+          value: cardDetails.unixExpirationDate.toString()),
+      storage.write(key: cardTypeKey, value: cardDetails.cardType),
+      storage.write(
+          key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
+    ]);
   } else {
-    futures.add(store.remove(firstNameKey));
-    futures.add(store.remove(lastNameKey));
-    futures.add(store.remove(regionKey));
-    futures.add(store.remove(expirationDateKey));
+    await Future.wait([
+      storage.delete(key: dataVersionKey),
+      storage.delete(key: fullNameKey),
+      storage.delete(key: unixExpirationDateKey),
+      storage.delete(key: regionIdKey),
+      storage.delete(key: cardTypeKey),
+    ]);
   }
-  await Future.wait(futures);
 }
 
 Future<CardDetails> loadCardDetails() async {
-  final store = await SharedPreferences.getInstance();
-  if (!(store.containsKey(firstNameKey) &&
-      store.containsKey(lastNameKey) &&
-      store.containsKey(regionKey) &&
-      store.containsKey(expirationDateKey))) {
-    print("loadCardDetails(): Store does not contain card details!");
+  final storage = FlutterSecureStorage();
+  final hasDataVersionKey = await storage.containsKey(key: dataVersionKey);
+  if (hasDataVersionKey) {
+    final storedDataVersionStr = await storage.read(key: dataVersionKey);
+    final storedDataVersion = int.parse(storedDataVersionStr);
+    if (storedDataVersion != currentDataVersion) {
+      throw Exception(("Can't load data because the versions don't match. "
+          "Stored version: $storedDataVersion, "
+          "current version $currentDataVersion"));
+    }
+    final fullName = await storage.read(key: fullNameKey);
+    final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+    final unixExpirationDate =
+        int.parse(await storage.read(key: unixExpirationDateKey));
+    final regionId = int.parse(await storage.read(key: regionIdKey));
+    final cardType = await storage.read(key: cardTypeKey);
+    final totpSecret = await storage.read(key: totpSecretBase32Key);
+
+    return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
+        regionId, totpSecret);
+  } else {
     return null;
   }
-  final firstName = store.getString(firstNameKey);
-  final lastName = store.getString(lastNameKey);
-  final region = store.getString(regionKey);
-  final expirationDate = DateTime.parse(store.getString(expirationDateKey));
-  return CardDetails(firstName, lastName, expirationDate, region);
 }
