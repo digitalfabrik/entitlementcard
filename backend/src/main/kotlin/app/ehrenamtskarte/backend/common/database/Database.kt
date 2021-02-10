@@ -40,9 +40,9 @@ class Database {
     }
 
     val db by lazy {
-        connect("jdbc:postgresql://" +
-                "${System.getProperty("app.postgres.host")}:${System.getProperty("app.postgres.port")}" +
-                "/${System.getProperty("app.postgres.database")}", driver = "org.postgresql.Driver",
-                user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password"))
+        connect(
+            System.getProperty("app.postgres.url"), driver = "org.postgresql.Driver",
+            user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password")
+        )
     }
 }
