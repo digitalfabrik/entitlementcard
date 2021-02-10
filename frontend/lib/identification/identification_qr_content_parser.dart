@@ -28,7 +28,7 @@ class IdentificationQrContentParser {
       Uint8List rawProtobufData;
       try {
         rawProtobufData = base64Decoder.convert(rawBase64Content);
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         return QRCodeParseResult(
             hasError: true,
             userErrorMessage:
@@ -39,7 +39,7 @@ class IdentificationQrContentParser {
       CardActivateModel cardActivateModel;
       try {
         cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         return QRCodeParseResult(
             hasError: true,
             userErrorMessage:
@@ -64,7 +64,7 @@ class IdentificationQrContentParser {
           if (unixExpirationDate == null) {
             throw Exception(["unixExpirationDate was null"]);
           }
-        } on Exception catch (e) {
+        } on Exception catch (_) {
           return QRCodeParseResult(
               hasError: true,
               userErrorMessage: "Beim Verarbeiten des Ablaufdatums ist ein "
@@ -85,7 +85,7 @@ class IdentificationQrContentParser {
       String base32TotpSecret;
       try {
         base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         return QRCodeParseResult(
             hasError: true,
             userErrorMessage: "Beim Verarbeiten des eingescannten Codes ist ein"
@@ -100,7 +100,7 @@ class IdentificationQrContentParser {
           regionId,
           base32TotpSecret);
       _cardDetailsModel.setCardDetails(cardDetails);
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return QRCodeParseResult(
           hasError: true,
           userErrorMessage: "Ein unerwarteter Fehler ist aufgetreten.");
