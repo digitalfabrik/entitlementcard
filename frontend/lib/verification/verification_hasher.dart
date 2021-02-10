@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
-import '../identification/card_details.dart';
+import '../identification/base_card_details.dart';
 import 'verification_card_details.dart';
 
 String hashVerificationCardDetails(
@@ -18,7 +18,7 @@ String hashVerificationCardDetails(
   return Base64Encoder().convert(result.bytes);
 }
 
-List<int> cardDetailsToBinary(CardDetails cardDetails) {
+List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
   var buffer = Uint8List(16).buffer;
   var data = ByteData.view(buffer);
   data.setInt64(0, cardDetails.unixExpirationDate, Endian.little);
