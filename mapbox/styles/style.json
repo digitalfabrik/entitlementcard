@@ -37,7 +37,7 @@
     }
   },
   "sprite": "https://tiles.staging.ehrenamtskarte.app/sprites/osm-liberty",
-  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "glyphs": "https://tiles.staging.ehrenamtskarte.app/font-glyphs/glyphs/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",

@@ -94,7 +94,7 @@ jobs:
       - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ../scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
       - run: |
           mkdir -p /tmp/artifacts/debs
-          cp *.deb /tmp/artifacts/debs
+          mv *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
@@ -114,7 +114,7 @@ jobs:
       - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
       - run: |
           mkdir -p /tmp/artifacts/debs
-          cp *.deb /tmp/artifacts/debs
+          mv *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
@@ -129,10 +129,20 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m ./styles -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-styles"
-      - run: |
-          mkdir -p /tmp/artifacts/debs
-          cp *.deb /tmp/artifacts/debs
+      - run:
+          name: "Download glyphs"
+          command: |
+            wget -O /tmp/glyphs.zip https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
+            unzip -d ./styles /tmp/glyphs.zip
+            mv ./styles/font-glyphs* ./styles/font-glyphs
+      - run:
+          name: "Build .deb"
+          command: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m ./styles -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-styles"
+      - run:
+          name: "Move .deb to artifacts folder"
+          command: |
+            mkdir -p /tmp/artifacts/debs
+            mv *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
