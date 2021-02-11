@@ -5,7 +5,7 @@ import getRandomValues from "./getRandomValues";
 import Long from "long";
 
 const generateCardActivateModel = (
-    fullName: string, regionId: number, expirationDate: Date, cardType: CardActivateModel.CardType
+    fullName: string, regionId: number, expirationDate: Date | null, cardType: CardActivateModel.CardType
 ) => {
     if (!window.isSecureContext && !isIE11()) // localhost is considered secure.
         throw Error("Environment is not considered secure nor are we using Internet Explorer.")
@@ -22,7 +22,8 @@ const generateCardActivateModel = (
         fullName: fullName,
         hashSecret: hashSecret,
         totpSecret: totpSecret,
-        expirationDate: Long.fromNumber(getUnixTime(expirationDate), false),
+        expirationDate: expirationDate !== null ? Long.fromNumber(getUnixTime(expirationDate), false) :
+            Long.fromNumber(0, false),
         cardType: cardType,
         regionId: regionId,
     })
