@@ -10,7 +10,7 @@ object CardRepository {
         CardEntity.find { Cards.cardDetailsHash eq hashModel }
             .singleOrNull()
 
-    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime) = CardEntity.new {
+    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime?) = CardEntity.new {
         this.cardDetailsHash = cardDetailsHash
         this.totpSecret = totpSecret
         this.expirationDate = expirationDate

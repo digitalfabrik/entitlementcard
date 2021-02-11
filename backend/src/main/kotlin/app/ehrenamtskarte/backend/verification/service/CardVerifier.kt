@@ -19,7 +19,7 @@ object CardVerifier {
     }
 
     private fun verifyCard(card: CardEntity, totp: Int): Boolean =
-        card.expirationDate.isAfter(LocalDateTime.now())
+        card.expirationDate?.isAfter(LocalDateTime.now()) ?: true
                 && !card.revoked
                 && isTotpValid(totp, card.totpSecret)
 

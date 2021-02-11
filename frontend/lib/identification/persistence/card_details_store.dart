@@ -23,7 +23,9 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
           key: unixExpirationDateKey,
-          value: cardDetails.unixExpirationDate.toString()),
+          value: cardDetails.unixExpirationDate != null
+              ? cardDetails.unixExpirationDate.toString()
+              : "0"),
       storage.write(key: cardTypeKey, value: cardDetails.cardType.toString()),
       storage.write(
           key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
@@ -57,7 +59,8 @@ Future<CardDetails> loadCardDetails() async {
     final regionId = int.parse(await storage.read(key: regionIdKey));
     final cardType = int.parse(await storage.read(key: cardTypeKey));
     final totpSecret = await storage.read(key: totpSecretBase32Key);
-
+    print(
+        "name: $fullName hash: $hashSecretBase64 expDate: $unixExpirationDate cardType: $cardType");
     return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
         regionId, totpSecret);
   } else {

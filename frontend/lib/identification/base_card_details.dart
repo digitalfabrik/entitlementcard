@@ -8,7 +8,7 @@ class BaseCardDetails {
 
   BaseCardDetails(this.fullName, this.hashSecretBase64, this.unixExpirationDate,
       this.cardType, this.regionId)
-      : expirationDate = unixExpirationDate != null
+      : expirationDate = unixExpirationDate != null && unixExpirationDate > 0
             ? DateTime.fromMillisecondsSinceEpoch(unixExpirationDate * 1000)
             : null;
 }

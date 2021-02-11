@@ -12,6 +12,12 @@ class PositiveVerificationResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd.MM.yyyy');
+    var expirationDateString;
+    if (cardDetails.expirationDate == null) {
+      expirationDateString = "unbegrenzt";
+    } else {
+      expirationDateString = dateFormat.format(cardDetails.expirationDate);
+    }
     return ContentCard(
         child: RichText(
             text: TextSpan(
@@ -35,9 +41,7 @@ class PositiveVerificationResult extends StatelessWidget {
                   .style
                   .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
           TextSpan(text: "Name: ${cardDetails.fullName}\n"),
-          TextSpan(
-              text: "Ablaufdatum: "
-                  "${dateFormat.format(cardDetails.expirationDate)}\n"),
+          TextSpan(text: "Ablaufdatum: $expirationDateString\n"),
           TextSpan(text: "Landkreis: ${cardDetails.regionId}"),
         ])));
   }
