@@ -5,11 +5,11 @@ set -eo pipefail
 version=1.0
 revision=1
 name=eak
-architecture=amd64
+architecture=all
 maintainer="The Ehrenamtskarte Team <info@ehrenamtskarte.app>"
 
 # read input
-while getopts v:r:a:n:t:s:d:f:c:m:h flag
+while getopts v:r:a:n:t:s:d:f:c:m:M:h flag
 do
     case "${flag}" in
         v) version=${OPTARG};;
@@ -22,8 +22,9 @@ do
         s) servicefile=${OPTARG};;
         c) dependencies=${OPTARG};;
         m) stylesfolder=${OPTARG};;
+        M) martinfolder=${OPTARG};;
         h)
-            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-m mapboxstylesfolder]"
+            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-m mapboxstylesfolder] [-M martinfolder}"
             exit 0;;
         *)
             echo "Unknown flag"
@@ -71,6 +72,11 @@ if [[ -n "$stylesfolder" ]]; then
     echo "Copying $stylesfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/styles"
     cp -r "$stylesfolder/"* "${debworkdir}/opt/ehrenamtskarte/styles"
+fi
+if [[ -n "$martinfolder" ]]; then
+    echo "Copying $martinfolder …"
+    mkdir -p "${debworkdir}/opt/ehrenamtskarte/martin"
+    cp -r "$martinfolder/"* "${debworkdir}/opt/ehrenamtskarte/martin"
 fi
 
 # build the deb
