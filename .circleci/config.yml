@@ -168,7 +168,7 @@ jobs:
             wget -q -O- "$downloadUrl" | tar -xz
       - run:
           name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service
+          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -M .
       - run:
           name: "Move .deb to artifacts folder"
           command: |
