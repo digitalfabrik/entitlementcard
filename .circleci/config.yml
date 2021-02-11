@@ -13,10 +13,12 @@ workflows:
           requires:
             - ad-build
       - meta-pack
+      - styles-pack
       - deploy:
           requires:
             - be-pack
             - ad-pack
+            - styles-pack
             - meta-pack
           filters:
             branches:
@@ -89,7 +91,7 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/pack_deb.sh -v 0.1 -t /tmp/workspace/backend/build/distributions/*.tar -s ../scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
+      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ../scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs
@@ -109,7 +111,25 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/pack_deb.sh -v 0.1 -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+      - run: |
+          mkdir -p /tmp/artifacts/debs
+          cp *.deb /tmp/artifacts/debs
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - debs/*.deb
+
+  styles-pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/mapbox/
+    steps:
+      - checkout:
+          path: ~/project
+      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m ./styles -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-styles"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs
@@ -127,7 +147,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ../scripts/pack_deb.sh -v 0.1 -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration"
+      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-styles"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs
