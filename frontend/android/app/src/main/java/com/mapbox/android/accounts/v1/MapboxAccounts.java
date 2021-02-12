@@ -6,6 +6,7 @@ import java.util.UUID;
 
 /**
  * This class is used from within the Mapbox library
+ * From https://forum.f-droid.org/t/updated-distribution-license-for-mapbox-mobile-maps-sdk/10201/5
  */
 @Keep
 @SuppressWarnings("unused")
