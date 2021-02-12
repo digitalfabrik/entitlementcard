@@ -22,7 +22,7 @@ class AcceptingStoreSummaryContent extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
         if (acceptingStore.description != null)
           Text(
-            acceptingStore.description ?? "",
+            acceptingStore.description,
             maxLines: 4,
             overflow: TextOverflow.ellipsis,
           )
