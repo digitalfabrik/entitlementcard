@@ -41,6 +41,9 @@ class _MapState extends State<Map> implements MapController {
   @override
   void didChangeDependencies() {
     final config = Configuration.of(context);
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    var compassMargin = statusBarHeight * pixelRatio;
     _mapboxMap = MapboxMap(
       initialCameraPosition: CameraPosition(
           target: Map.initialLocation,
@@ -54,7 +57,8 @@ class _MapState extends State<Map> implements MapController {
           : MyLocationTrackingMode.None,
       onMapCreated: _onMapCreated,
       onMapClick: _onMapClick,
-      compassEnabled: false,
+      compassViewMargins: Point(0, compassMargin),
+      compassViewPosition: CompassViewPosition.TopRight,
     );
     super.didChangeDependencies();
   }
