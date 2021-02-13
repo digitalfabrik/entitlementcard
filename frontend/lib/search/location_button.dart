@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../location/determine_position.dart';
+import '../widgets/small_button_spinner.dart';
 
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
@@ -23,25 +24,28 @@ class _LocationButtonState extends State<LocationButton> {
     if (_locationStatus == LocationRequestStatus.requestSuccessful) {
       return Container();
     }
-    if (_locationStatus == LocationRequestStatus.requesting) {
-      return Container(
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.all(10),
-          child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              onPressed: null,
-              child: CircularProgressIndicator()));
-    }
+    var onPressed = _locationStatus == LocationRequestStatus.requesting
+        ? null
+        : () => _initCoordinates(userInteract: context);
+    var icon = _locationStatus == LocationRequestStatus.requesting
+        ? SmallButtonSpinner()
+        : Icon(
+            Icons.my_location,
+            size: 24,
+            color: theme.accentColor,
+          );
     return Container(
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.all(10),
         child: FloatingActionButton.extended(
             backgroundColor: Colors.white,
             elevation: 1,
-            onPressed: () => _initCoordinates(userInteract: context),
+            onPressed: onPressed,
+            icon: AnimatedSwitcher(
+                child: icon, duration: Duration(milliseconds: 200)),
             label: Text(
               "In meiner Nähe suchen",
-              style: TextStyle(color: theme.accentColor),
+              style: TextStyle(color: theme.hintColor),
             )));
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../location/determine_position.dart';
+import '../widgets/small_button_spinner.dart';
 import 'map/map_controller.dart';
 
 class LocationButton extends StatefulWidget {
@@ -29,9 +30,12 @@ class _LocationButtonState extends State<LocationButton> {
             child: FloatingActionButton(
               elevation: 1,
               backgroundColor: Colors.white,
-              child: _status == LocationPermissionStatus.requestFinished
-                  ? Icon(Icons.my_location, color: theme.accentColor)
-                  : CircularProgressIndicator(),
+              child: AnimatedSwitcher(
+                child: _status == LocationPermissionStatus.requestFinished
+                    ? Icon(Icons.my_location, color: theme.accentColor)
+                    : SmallButtonSpinner(),
+                duration: Duration(milliseconds: 200),
+              ),
               onPressed: _status == LocationPermissionStatus.requestFinished
                   ? _onPressed
                   : null,
@@ -44,7 +48,7 @@ class _LocationButtonState extends State<LocationButton> {
       await determinePosition(userInteract: context);
       setState(() => _status = LocationPermissionStatus.requestFinished);
       await widget.mapController.bringCameraToUser();
-    }  on Exception catch(e) {
+    } on Exception catch (e) {
       print(e);
     } finally {
       setState(() => _status = LocationPermissionStatus.requestFinished);
