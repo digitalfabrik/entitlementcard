@@ -20,14 +20,13 @@ class Map extends StatefulWidget {
   final OnNoFeatureClickCallback onNoFeatureClick;
   final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
-  final bool myLocationEnabled;
+  final bool locationAvailable;
 
-  const Map(
-      {this.onFeatureClick,
-      this.onNoFeatureClick,
-      this.onFeatureClickLayerFilter,
-      this.myLocationEnabled = true,
-      this.onMapCreated});
+  const Map({this.onFeatureClick,
+    this.onNoFeatureClick,
+    this.onFeatureClickLayerFilter,
+    this.locationAvailable,
+    this.onMapCreated});
 
   @override
   State createState() => _MapState();
@@ -35,36 +34,46 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> implements MapController {
   MapboxMapController _controller;
-  MapboxMap _mapboxMap;
   Symbol _symbol;
+  bool _permissionGiven;
+  MapboxMap _mapboxMap;
+  bool _isAnimating = false;
 
   @override
   void didChangeDependencies() {
-    final config = Configuration.of(context);
-    var statusBarHeight = MediaQuery.of(context).padding.top;
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var compassMargin = statusBarHeight * pixelRatio;
-    _mapboxMap = MapboxMap(
-      initialCameraPosition: CameraPosition(
-          target: Map.initialLocation,
-          zoom: widget.myLocationEnabled
-              ? Map.userLocationZoomLevel
-              : Map.initialZoomLevel),
-      styleString: config.mapStyleUrl,
-      myLocationEnabled: true,
-      myLocationTrackingMode: widget.myLocationEnabled
-          ? MyLocationTrackingMode.Tracking
-          : MyLocationTrackingMode.None,
-      onMapCreated: _onMapCreated,
-      onMapClick: _onMapClick,
-      compassViewMargins: Point(0, compassMargin),
-      compassViewPosition: CompassViewPosition.TopRight,
-    );
     super.didChangeDependencies();
+    _permissionGiven = widget.locationAvailable;
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = Configuration.of(context);
+    var statusBarHeight = MediaQuery
+        .of(context)
+        .padding
+        .top;
+    var pixelRatio = MediaQuery
+        .of(context)
+        .devicePixelRatio;
+    var compassMargin = statusBarHeight * pixelRatio;
+    if (_mapboxMap == null || !_isAnimating) {
+      _mapboxMap = MapboxMap(
+        initialCameraPosition: CameraPosition(
+            target: Map.initialLocation,
+            zoom: widget.locationAvailable
+                ? Map.userLocationZoomLevel
+                : Map.initialZoomLevel),
+        styleString: config.mapStyleUrl,
+        myLocationEnabled: _permissionGiven,
+        myLocationTrackingMode: _permissionGiven
+            ? MyLocationTrackingMode.Tracking
+            : MyLocationTrackingMode.None,
+        onMapCreated: _onMapCreated,
+        onMapClick: _onMapClick,
+        compassViewMargins: Point(0, compassMargin),
+        compassViewPosition: CompassViewPosition.TopRight,
+      );
+    }
     return _mapboxMap;
   }
 
@@ -100,13 +109,20 @@ class _MapState extends State<Map> implements MapController {
     }
   }
 
+  Future<void> _animate(Future F) async {
+    _isAnimating = true;
+    await F;
+    _isAnimating = false;
+  }
+
   Future<void> bringCameraToLocation(LatLng location,
       {double zoomLevel}) async {
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
-    await _controller.animateCamera(update);
+    await _animate(_controller.animateCamera(update));
   }
+
 
   @override
   Future<void> bringCameraToUser() async {
@@ -119,13 +135,16 @@ class _MapState extends State<Map> implements MapController {
             bearing: 0,
             tilt: 0,
             zoom: Map.userLocationZoomLevel));
-        await _controller.animateCamera(cameraUpdate);
+        await _animate(_controller.animateCamera(cameraUpdate));
+        await _controller
+            .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+        if (!_permissionGiven) {
+          setState(() => _permissionGiven = true);
+        }
       }
     } on Exception catch (e) {
       print("Could not find position.");
       print(e);
     }
-    await _controller
-        .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
   }
 }
