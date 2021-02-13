@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -64,7 +66,10 @@ class _MapPageState extends State<MapPage>
                             _selectedAcceptingStoreId,
                             hideShowOnMapButton: true,
                           )
-                        : null)))
+                        : null))),
+        if (Platform.isIOS)
+          // Add Padding as MapBox has its attributionButton on the right on iOS
+          Container(height: 24)
       ])
     ]);
   }
