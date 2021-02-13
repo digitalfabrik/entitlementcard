@@ -22,11 +22,12 @@ class Map extends StatefulWidget {
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
 
-  const Map({this.onFeatureClick,
-    this.onNoFeatureClick,
-    this.onFeatureClickLayerFilter,
-    this.locationAvailable,
-    this.onMapCreated});
+  const Map(
+      {this.onFeatureClick,
+      this.onNoFeatureClick,
+      this.onFeatureClickLayerFilter,
+      this.locationAvailable,
+      this.onMapCreated});
 
   @override
   State createState() => _MapState();
@@ -48,13 +49,8 @@ class _MapState extends State<Map> implements MapController {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-    var statusBarHeight = MediaQuery
-        .of(context)
-        .padding
-        .top;
-    var pixelRatio = MediaQuery
-        .of(context)
-        .devicePixelRatio;
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = statusBarHeight * pixelRatio;
     if (_mapboxMap == null || !_isAnimating) {
       _mapboxMap = MapboxMap(
@@ -122,7 +118,6 @@ class _MapState extends State<Map> implements MapController {
         : CameraUpdate.newLatLng(location);
     await _animate(_controller.animateCamera(update));
   }
-
 
   @override
   Future<void> bringCameraToUser() async {

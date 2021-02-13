@@ -28,7 +28,7 @@ class MapWithFutures extends StatelessWidget {
         return Map(
           onFeatureClick: onFeatureClick,
           onNoFeatureClick: onNoFeatureClick,
-          locationAvailable: snapshot.data,
+          locationAvailable: snapshot.hasData && snapshot.data,
           onFeatureClickLayerFilter: onFeatureClickLayerFilter,
           onMapCreated: onMapCreated,
         );
