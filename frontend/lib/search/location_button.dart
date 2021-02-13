@@ -38,14 +38,14 @@ class _LocationButtonState extends State<LocationButton> {
         child: FloatingActionButton.extended(
             backgroundColor: Colors.white,
             elevation: 1,
-            onPressed: () => _initCoordinates(userInteract: true),
+            onPressed: () => _initCoordinates(userInteract: context),
             label: Text(
               "In meiner Nähe suchen",
               style: TextStyle(color: theme.accentColor),
             )));
   }
 
-  Future<void> _initCoordinates({bool userInteract}) async {
+  Future<void> _initCoordinates({BuildContext userInteract}) async {
     try {
       setState(() => _locationStatus = LocationRequestStatus.requesting);
       var position = await determinePosition(userInteract: userInteract);
@@ -59,7 +59,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   void initState() {
-    _initCoordinates(userInteract: false);
+    _initCoordinates();
     super.initState();
   }
 }

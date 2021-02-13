@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -5,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 ///
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return an `PositionNotAvailableException`.
-Future<Position> determinePosition({bool userInteract}) async {
+Future<Position> determinePosition({BuildContext userInteract}) async {
   await requestPermissionToDeterminePosition(userInteract: userInteract);
   var position = await Geolocator.getLastKnownPosition();
   if (position == null) {
@@ -23,10 +24,11 @@ Future<Position> determinePosition({bool userInteract}) async {
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return with an `PositionNotAvailableException`.
 /// Else it will complete without a value.
-Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
+Future<void> requestPermissionToDeterminePosition(
+    {BuildContext userInteract}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    if (userInteract) {
+    if (userInteract != null) {
       await Geolocator.openLocationSettings();
     } else {
       throw PositionNotAvailableException('Location services are disabled.');
@@ -35,8 +37,25 @@ Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
 
   var permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.deniedForever) {
-    if (userInteract) {
-      Geolocator.openAppSettings();
+    if (userInteract != null) {
+      var result = await showDialog(
+          context: userInteract,
+          builder: (context) => AlertDialog(
+                title: Text("Standortberechtigung freigeben"),
+                content: Text(
+                    "Geben Sie in den App-Einstellungen die Standordberechtigung frei."),
+                actions: [
+                  TextButton(
+                      child: Text("Abbrechen"),
+                      onPressed: () => Navigator.of(context).pop(false)),
+                  TextButton(
+                      child: Text("Okay"),
+                      onPressed: () => Navigator.of(context).pop(true))
+                ],
+              ));
+      if (result == true) {
+        Geolocator.openAppSettings();
+      }
     } else {
       throw PositionNotAvailableException(
           'Location permissions are permantly denied.');
@@ -44,7 +63,7 @@ Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
   }
 
   if (permission == LocationPermission.denied) {
-    if (userInteract) {
+    if (userInteract != null) {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
@@ -57,7 +76,7 @@ Future<void> requestPermissionToDeterminePosition({bool userInteract}) async {
   }
 }
 
-Future<bool> canDetermineLocation({ bool userInteract }) async {
+Future<bool> canDetermineLocation({BuildContext userInteract}) async {
   try {
     await requestPermissionToDeterminePosition(userInteract: userInteract);
     return true;
@@ -66,7 +85,6 @@ Future<bool> canDetermineLocation({ bool userInteract }) async {
     return false;
   }
 }
-
 
 class PositionNotAvailableException implements Exception {
   final String reason;

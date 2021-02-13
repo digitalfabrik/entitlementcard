@@ -20,7 +20,7 @@ class MapWithFutures extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: canDetermineLocation(userInteract: false),
+      future: canDetermineLocation(),
       builder: (context, snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
           return Center();
