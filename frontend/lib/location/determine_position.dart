@@ -43,7 +43,8 @@ Future<void> requestPermissionToDeterminePosition(
           builder: (context) => AlertDialog(
                 title: Text("Standortberechtigung freigeben"),
                 content: Text(
-                    "Geben Sie in den App-Einstellungen die Standordberechtigung frei."),
+                    "Geben Sie in den App-Einstellungen die"
+                    " Standordberechtigung frei."),
                 actions: [
                   TextButton(
                       child: Text("Abbrechen"),
