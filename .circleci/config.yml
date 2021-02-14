@@ -6,15 +6,18 @@ workflows:
     jobs:
       - be-build
       - ad-build
+      - martin-build
       - be-pack:
           requires:
             - be-build
       - ad-pack:
           requires:
             - ad-build
+      - martin-pack:
+          requires:
+            - martin-build
       - meta-pack
       - styles-pack
-      - martin-pack
       - deploy:
           requires:
             - be-pack
@@ -86,6 +89,38 @@ jobs:
           root: ~/project
           paths:
             - administration/build
+
+  martin-build:
+    docker:
+      - image: cimg/rust:1.50.0
+    working_directory: ~/martin
+    steps:
+      - run:
+          name: "Checkout"
+          command: git clone git@github.com:urbica/martin.git ~/martin
+      - restore_cache:
+          keys:
+            - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: "Build"
+          command: |
+            cargo build --release --target x86_64-unknown-linux-gnu
+      - save_cache:
+          paths:
+            - "~/.cargo"
+            - "target"
+          key: v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: "Prepare storing"
+          command: |
+            mkdir -p /tmp/artifacts/martin
+            cp target/x86_64-unknown-linux-gnu/release/martin /tmp/artifacts/martin
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - martin/martin
 
   be-pack:
     docker:
@@ -163,15 +198,13 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: "Download martin"
-          command: |
-            downloadUrl=$(curl -sH "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/urbica/martin/releases/latest" | grep -o "http.*martin-Linux.*.tar.gz")
-            echo "Downloding and extracting $downloadUrl …"
-            wget -q -O- "$downloadUrl" | tar -xz
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -M .
+          command: |
+            cp /tmp/workspace/martin/martin .
+            ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -M .
       - run:
           name: "Move .deb to artifacts folder"
           command: |
