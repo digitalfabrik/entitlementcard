@@ -1,13 +1,12 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-data class ImportPipeline<In, Out>(val filter: ImportFilter<In, Out>, val successor: ImportPipeline<Out, Any>) {
+interface PipelineStep<In, Out> {
 
-    val monitor = ImportMonitor()
-
-    fun execute() = execute(emptyList(), monitor)
-
-    fun execute(input: List<In>, monitor: ImportMonitor): List<Any> = successor.execute(filter.execute(input, monitor), monitor)
+    fun execute(input: In): Out
 
 }
 
-fun <Out>ImportPipeline(filter: ImportFilter<Unit, Out>, successor: ImportPipeline<Out, Any>) = ImportPipeline<Unit, Out>(filter, successor)
+fun <In, Out> In.addStep(step: PipelineStep<In, Out>, message: String): Out {
+    println(message)
+    return step.execute( this)
+}

@@ -1,13 +1,13 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-data class ImportMonitor(val messages: List<String>) {
+import java.time.LocalDateTime
 
-    fun addMessages(message: String) = ImportMonitor({
-        val currentMessages = messages.toMutableList()
-        currentMessages.add(message)
-        currentMessages
-    }())
+class ImportMonitor {
+
+    val messages = ArrayList<String>()
+
+    fun addMessage(message: String) = messages.add("[" + LocalDateTime.now() + "]" + message.prependIndent("\n\n"))
+
+    fun addMessage(message: String, e: Exception) = addMessage("$message:\n$e")
 
 }
-
-fun ImportMonitor() = ImportMonitor(emptyList())
