@@ -137,7 +137,7 @@ jobs:
             mv ./styles/font-glyphs* ./styles/font-glyphs
       - run:
           name: "Build .deb"
-          command: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m ./styles -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-styles"
+          command: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m ./styles -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
       - run:
           name: "Move .deb to artifacts folder"
           command: |
@@ -157,7 +157,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-styles"
+      - run: ../scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-map-styles"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs
