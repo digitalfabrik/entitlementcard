@@ -50,7 +50,7 @@ Future<void> requestPermissionToDeterminePosition(
                       child: Text("Abbrechen"),
                       onPressed: () => Navigator.of(context).pop(false)),
                   TextButton(
-                      child: Text("Okay"),
+                      child: Text("Einstellungen öffnen"),
                       onPressed: () => Navigator.of(context).pop(true))
                 ],
               ));
