@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
+import '../../location/determine_position.dart';
 import 'map_controller.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
@@ -122,8 +122,7 @@ class _MapState extends State<Map> implements MapController {
   @override
   Future<void> bringCameraToUser() async {
     try {
-      var position = await Geolocator.getLastKnownPosition();
-      if (position == null) position = await Geolocator.getCurrentPosition();
+      var position = await determinePosition();
       if (position != null) {
         var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
             target: LatLng(position.latitude, position.longitude),
@@ -131,11 +130,11 @@ class _MapState extends State<Map> implements MapController {
             tilt: 0,
             zoom: Map.userLocationZoomLevel));
         await _animate(_controller.animateCamera(cameraUpdate));
-        await _controller
-            .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
-        if (!_permissionGiven) {
-          setState(() => _permissionGiven = true);
-        }
+      }
+      await _controller
+          .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+      if (!_permissionGiven) {
+        setState(() => _permissionGiven = true);
       }
     } on Exception catch (e) {
       print("Could not find position.");

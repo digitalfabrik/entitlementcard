@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'location_permission_dialog.dart';
+import 'location_service_dialog.dart';
+
 /// Determine the current position of the device.
 ///
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return an `PositionNotAvailableException`.
-Future<Position> determinePosition({BuildContext userInteract}) async {
-  await requestPermissionToDeterminePosition(userInteract: userInteract);
+Future<Position> determinePosition({BuildContext userInteractContext}) async {
+  await requestPermissionToDeterminePosition(
+      userInteractContext: userInteractContext);
   var position = await Geolocator.getLastKnownPosition();
   if (position == null) {
     position = await Geolocator.getCurrentPosition();
@@ -25,46 +29,36 @@ Future<Position> determinePosition({BuildContext userInteract}) async {
 /// are denied the `Future` will return with an `PositionNotAvailableException`.
 /// Else it will complete without a value.
 Future<void> requestPermissionToDeterminePosition(
-    {BuildContext userInteract}) async {
+    {BuildContext userInteractContext}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    if (userInteract != null) {
-      await Geolocator.openLocationSettings();
-    } else {
-      throw PositionNotAvailableException('Location services are disabled.');
+    if (userInteractContext != null) {
+      var result = await showDialog(
+          context: userInteractContext,
+          builder: (context) => LocationServiceDialog());
+      if (result == true) {
+        await Geolocator.openLocationSettings();
+      }
     }
+    throw PositionNotAvailableException('Location service was disabled.');
   }
 
   var permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.deniedForever) {
-    if (userInteract != null) {
+    if (userInteractContext != null) {
       var result = await showDialog(
-          context: userInteract,
-          builder: (context) => AlertDialog(
-                title: Text("Standortberechtigung freigeben"),
-                content: Text(
-                    "Geben Sie in den App-Einstellungen die"
-                    " Standordberechtigung frei."),
-                actions: [
-                  TextButton(
-                      child: Text("Abbrechen"),
-                      onPressed: () => Navigator.of(context).pop(false)),
-                  TextButton(
-                      child: Text("Einstellungen öffnen"),
-                      onPressed: () => Navigator.of(context).pop(true))
-                ],
-              ));
+          context: userInteractContext,
+          builder: (context) => LocationPermissionDialog());
       if (result == true) {
-        Geolocator.openAppSettings();
+        return await Geolocator.openAppSettings();
       }
-    } else {
-      throw PositionNotAvailableException(
-          'Location permissions are permantly denied.');
     }
+    throw PositionNotAvailableException(
+        'Location permissions were permantly denied.');
   }
 
   if (permission == LocationPermission.denied) {
-    if (userInteract != null) {
+    if (userInteractContext != null) {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
@@ -72,14 +66,15 @@ Future<void> requestPermissionToDeterminePosition(
             'Location permissions are denied (actual value: $permission).');
       }
     } else {
-      throw PositionNotAvailableException("Location permissions are denied");
+      throw PositionNotAvailableException("Location permissions were denied");
     }
   }
 }
 
-Future<bool> canDetermineLocation({BuildContext userInteract}) async {
+Future<bool> canDetermineLocation({BuildContext userInteractContext}) async {
   try {
-    await requestPermissionToDeterminePosition(userInteract: userInteract);
+    await requestPermissionToDeterminePosition(
+        userInteractContext: userInteractContext);
     return true;
   } on PositionNotAvailableException catch (e) {
     debugPrint(e.reason);

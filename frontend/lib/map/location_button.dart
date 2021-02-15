@@ -45,7 +45,7 @@ class _LocationButtonState extends State<LocationButton> {
   _onPressed() async {
     setState(() => _status = LocationPermissionStatus.requesting);
     try {
-      await determinePosition(userInteract: context);
+      await determinePosition(userInteractContext: context);
       setState(() => _status = LocationPermissionStatus.requestFinished);
       await widget.mapController.bringCameraToUser();
     } on Exception catch (e) {

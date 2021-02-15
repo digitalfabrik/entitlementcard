@@ -26,7 +26,7 @@ class _LocationButtonState extends State<LocationButton> {
     }
     var onPressed = _locationStatus == LocationRequestStatus.requesting
         ? null
-        : () => _initCoordinates(userInteract: context);
+        : () => _initCoordinates(true);
     var icon = _locationStatus == LocationRequestStatus.requesting
         ? SmallButtonSpinner()
         : Icon(
@@ -49,10 +49,11 @@ class _LocationButtonState extends State<LocationButton> {
             )));
   }
 
-  Future<void> _initCoordinates({BuildContext userInteract}) async {
+  Future<void> _initCoordinates(bool userInteract) async {
     try {
       setState(() => _locationStatus = LocationRequestStatus.requesting);
-      var position = await determinePosition(userInteract: userInteract);
+      var position = await determinePosition(
+          userInteractContext: userInteract ? context : null);
       widget.setCoordinates(position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);
     } on Exception catch (e) {
@@ -63,7 +64,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   void initState() {
-    _initCoordinates();
+    _initCoordinates(false);
     super.initState();
   }
 }
