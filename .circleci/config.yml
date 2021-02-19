@@ -128,7 +128,7 @@ jobs:
   styles-pack:
     docker:
       - image: cimg/base:2020.01
-    working_directory: ~/project/mapbox/
+    working_directory: ~/project/map-tiles/
     steps:
       - checkout:
           path: ~/project
