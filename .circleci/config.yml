@@ -174,7 +174,7 @@ jobs:
   styles-pack:
     docker:
       - image: cimg/base:2020.01
-    working_directory: ~/project/mapbox/styles
+    working_directory: ~/project/map-tiles/styles
     steps:
       - checkout:
           path: ~/project
@@ -187,7 +187,7 @@ jobs:
             rm -f /tmp/glyphs.zip
       - run:
           name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-styles"
+          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
       - run:
           name: "Move .deb to artifacts folder"
           command: |
@@ -203,7 +203,7 @@ jobs:
   martin-pack:
     docker:
       - image: cimg/base:2020.01
-    working_directory: ~/project/mapbox/martin
+    working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
           path: ~/project
@@ -233,7 +233,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-styles, eak-martin"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-map-styles, eak-martin"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs

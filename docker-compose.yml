@@ -3,7 +3,7 @@ services:
   martin:
     build: ./docker/martin
     volumes:
-      - ./mapbox/martin/config.yaml:/app/config.yaml
+      - ./map-tiles/martin/config.yaml:/app/config.yaml
     depends_on:
       - db-postgis
     networks:
@@ -29,7 +29,7 @@ services:
     ports:
       - 127.0.0.1:5002:80
     volumes:
-      - ./mapbox/styles:/usr/share/nginx/html
+      - ./map-tiles/styles:/usr/share/nginx/html
       - ./docker/reverse_proxy/nginx-development.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - martin
