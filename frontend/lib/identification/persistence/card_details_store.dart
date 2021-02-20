@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../base_card_details.dart';
 import '../card_details.dart';
 
 const dataVersionKey = "dataVersion";
@@ -24,7 +25,8 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
       storage.write(
           key: unixExpirationDateKey,
           value: cardDetails.unixExpirationDate.toString()),
-      storage.write(key: cardTypeKey, value: cardDetails.cardType.toString()),
+      storage.write(
+          key: cardTypeKey, value: cardDetails.cardType.index.toString()),
       storage.write(
           key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
     ]);
@@ -55,7 +57,8 @@ Future<CardDetails> loadCardDetails() async {
     final unixExpirationDate =
         int.parse(await storage.read(key: unixExpirationDateKey));
     final regionId = int.parse(await storage.read(key: regionIdKey));
-    final cardType = int.parse(await storage.read(key: cardTypeKey));
+    final cardType =
+        CardType.values[int.parse(await storage.read(key: cardTypeKey))];
     final totpSecret = await storage.read(key: totpSecretBase32Key);
 
     return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,

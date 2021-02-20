@@ -13,7 +13,7 @@ String encodeVerificationCardDetails(
   final cardVerifyModel = CardVerifyModel(
     fullName: cardDetails.fullName,
     expirationDate: Int64(cardDetails.unixExpirationDate),
-    cardType: CardVerifyModel_CardType.valueOf(cardDetails.cardType),
+    cardType: CardVerifyModel_CardType.valueOf(cardDetails.cardType.index),
     regionId: cardDetails.regionId,
     hashSecret: Base64Decoder().convert(cardDetails.hashSecretBase64),
     otp: verificationCardDetails.otp,
@@ -31,7 +31,7 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
   final fullName = cardVerifyModel.fullName;
   final randomBytes = Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixExpirationTime = cardVerifyModel.expirationDate.toInt();
-  final cardType = cardVerifyModel.cardType.value;
+  final cardType = CardType.values[cardVerifyModel.cardType.value];
   final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
 
