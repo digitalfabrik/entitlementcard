@@ -50,6 +50,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
+      var oldWidget = widget;
       var arguments = AcceptingStoresSearchArguments(
           params: SearchParamsInput(
               categoryIds:
@@ -61,8 +62,15 @@ class ResultsLoaderState extends State<ResultsLoader> {
       var query = AcceptingStoresSearchQuery(variables: arguments);
       final result = await _client.query(QueryOptions(
           documentNode: query.document, variables: query.getVariablesMap()));
-      if (result.hasException) throw GraphQLError.fromJSON(result);
+      if (result.hasException) throw result.exception;
 
+      if (widget != oldWidget) {
+        // Params are outdated.
+        // If we're still at the first key, we must manually retrigger fetching.
+        if (pageKey == _pagingController.firstPageKey) {
+          return await _fetchPage(pageKey);
+        }
+      }
       var newItems = query.parse(result.data).searchAcceptingStores;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
