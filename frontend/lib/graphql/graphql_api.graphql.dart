@@ -367,10 +367,10 @@ class CardVerificationByHash$Query with EquatableMixin {
   factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
       _$CardVerificationByHash$QueryFromJson(json);
 
-  bool verifyCard;
+  bool cardValid;
 
   @override
-  List<Object> get props => [verifyCard];
+  List<Object> get props => [cardValid];
   Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
 }
 
@@ -828,7 +828,7 @@ class CardVerificationByHashQuery extends GraphQLQuery<
         selectionSet: SelectionSetNode(selections: [
           FieldNode(
               name: NameNode(value: 'verifyCard'),
-              alias: null,
+              alias: NameNode(value: 'cardValid'),
               arguments: [
                 ArgumentNode(
                     name: NameNode(value: 'card'),

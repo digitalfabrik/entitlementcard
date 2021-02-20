@@ -47,7 +47,7 @@ class VerificationResult extends StatelessWidget {
           return WaitingForVerification();
         }
         final isCardValid =
-            CardVerificationByHashQuery().parse(result.data).verifyCard;
+            CardVerificationByHashQuery().parse(result.data).cardValid;
         if (isCardValid) {
           return PositiveVerificationResult(
               model.verificationCardDetails.cardDetails);
