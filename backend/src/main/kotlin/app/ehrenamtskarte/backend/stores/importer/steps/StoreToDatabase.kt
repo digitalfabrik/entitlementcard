@@ -19,7 +19,7 @@ class StoreToDatabase(val monitor: ImportMonitor) : PipelineStep<List<ImportAcce
                 Contacts.deleteAll()
                 Addresses.deleteAll()
 
-                for (acceptingStore in acceptingStores) {
+                for ((done, acceptingStore) in acceptingStores.withIndex()) {
                     val address = AddressEntity.new {
                         street = acceptingStore.street
                         postalCode = acceptingStore.postalCode
@@ -42,12 +42,23 @@ class StoreToDatabase(val monitor: ImportMonitor) : PipelineStep<List<ImportAcce
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
                     }
+                    drawSuccessBar(done, acceptingStores.size)
                 }
             } catch (e: Exception) {
                 monitor.addMessage("Unknown exception while storing to db", e)
                 rollback()
                 throw e
             }
+        }
+    }
+
+    private fun drawSuccessBar(done: Int, of: Int) {
+        if (done % 200 == 0) {
+            var bar = ""
+            repeat(done / 200) { bar += "##" }
+            var remaining = ""
+            repeat((of - done) / 200) { remaining += "__" }
+            println("[$bar$remaining]")
         }
     }
 

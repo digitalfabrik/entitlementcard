@@ -6,7 +6,7 @@ interface PipelineStep<In, Out> {
 
 }
 
-fun <In, Out> In.addStep(step: PipelineStep<In, Out>, message: String): Out {
-    println(message)
+fun <In, Out> In.addStep(step: PipelineStep<In, Out>, callback: () -> Unit): Out {
+    callback()
     return step.execute( this)
 }
