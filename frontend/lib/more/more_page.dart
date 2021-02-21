@@ -38,7 +38,7 @@ class MorePage extends StatelessWidget {
     PackageInfo.fromPlatform().then((packageInfo) => showAboutDialog(
           context: context,
           applicationIcon: ClipRRect(
-            child: SvgPicture.asset("assets/app_icon/icon_ios.svg",
+            child: SvgPicture.asset("assets/app_icon/icon.svg",
                 semanticsLabel: "App icon", width: 30),
             borderRadius: BorderRadius.all(Radius.circular(5)),
           ),

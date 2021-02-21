@@ -1,10 +1,13 @@
 # Setup of staging environment
 
-If you want o make the staging environment available on (api|vector).ehrenamtskarte.app, then the following nginx config can be used on the host:
+If you want o make the staging environment available on (api|tiles).ehrenamtskarte.app, then the following nginx config can be used on the host:
 
 ```nginx configuration
+# Nginx config which tls support for staging environment. Forwards requests to reverse proxy inside the docker network.
+# The config used in that reverse proxy can be nginx-development.conf or nginx-staging.conf.
+
 server {
-    server_name vector.ehrenamtskarte.app;
+    server_name tiles.staging.ehrenamtskarte.app;
 
     location / {
         proxy_set_header Host $http_host;
@@ -12,14 +15,14 @@ server {
     }
 
     listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/ehrenamtskarte.app/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ehrenamtskarte.app/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/staging.ehrenamtskarte.app/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/staging.ehrenamtskarte.app/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
 
 server {
-    server_name api.ehrenamtskarte.app;
+    server_name api.staging.ehrenamtskarte.app;
 
     location / {
         proxy_set_header Host $http_host;
@@ -27,53 +30,53 @@ server {
     }
 
     listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/ehrenamtskarte.app/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ehrenamtskarte.app/privkey.pem; 
+    ssl_certificate /etc/letsencrypt/live/staging.ehrenamtskarte.app/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/staging.ehrenamtskarte.app/privkey.pem; 
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
 
 server {
-    server_name ehrenamtskarte.app;
+    server_name staging.ehrenamtskarte.app;
 	root /var/www/html;
 
 
 	index index.html index.htm index.nginx-debian.html;
 	
 	listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/ehrenamtskarte.app/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ehrenamtskarte.app/privkey.pem; 
+    ssl_certificate /etc/letsencrypt/live/staging.ehrenamtskarte.app/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/staging.ehrenamtskarte.app/privkey.pem; 
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
 
 server {
-    if ($host = ehrenamtskarte.app) {
+    if ($host = staging.ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name ehrenamtskarte.app;
+    server_name staging.ehrenamtskarte.app;
     return 404;
 }
 
 server {
-    if ($host = api.ehrenamtskarte.app) {
+    if ($host = api.staging.ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name api.ehrenamtskarte.app;
+    server_name api.staging.ehrenamtskarte.app;
     return 404;
 }
 
 server {
-    if ($host = vector.ehrenamtskarte.app) {
+    if ($host = tiles.staging.ehrenamtskarte.app) {
         return 301 https://$host$request_uri;
     }
 
     listen 80;
-    server_name vector.ehrenamtskarte.app;
+    server_name tiles.staging.ehrenamtskarte.app;
     return 404;
 }
 ```

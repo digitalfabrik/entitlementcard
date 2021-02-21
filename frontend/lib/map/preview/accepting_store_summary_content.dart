@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'models.dart';
 
 class AcceptingStoreSummaryContent extends StatelessWidget {
@@ -15,8 +16,15 @@ class AcceptingStoreSummaryContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _space(8, [
         Text(acceptingStore.name ?? "Akzeptanzstelle",
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-        if (acceptingStore.description != null) Text(acceptingStore.description)
+        if (acceptingStore.description != null)
+          Text(
+            acceptingStore.description,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+          )
       ]),
     );
   }
