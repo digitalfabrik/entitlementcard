@@ -67,6 +67,7 @@ class _MapState extends State<Map> implements MapController {
         myLocationTrackingMode: _permissionGiven
             ? MyLocationTrackingMode.Tracking
             : MyLocationTrackingMode.None,
+        myLocationRenderMode: MyLocationRenderMode.NORMAL,
         onMapCreated: _onMapCreated,
         onMapClick: _onMapClick,
         compassViewMargins:
@@ -79,6 +80,9 @@ class _MapState extends State<Map> implements MapController {
 
   void _onMapCreated(MapboxMapController controller) {
     _controller = controller;
+    if (widget.locationAvailable) {
+      _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    }
     if (widget.onMapCreated != null) {
       widget.onMapCreated(this);
     }
