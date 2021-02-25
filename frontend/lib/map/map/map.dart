@@ -6,6 +6,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../configuration.dart';
 import '../../location/determine_position.dart';
+import 'attribution_dialog.dart';
 import 'map_controller.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
@@ -22,22 +23,23 @@ class Map extends StatefulWidget {
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
 
-  const Map(
-      {this.onFeatureClick,
-      this.onNoFeatureClick,
-      this.onFeatureClickLayerFilter,
-      this.locationAvailable,
-      this.onMapCreated});
+  const Map({this.onFeatureClick,
+    this.onNoFeatureClick,
+    this.onFeatureClickLayerFilter,
+    this.locationAvailable,
+    this.onMapCreated});
 
   @override
   State createState() => _MapState();
 }
 
+const mapboxColor = Color(0xFF979897);
+
 class _MapState extends State<Map> implements MapController {
   MapboxMapController _controller;
   Symbol _symbol;
   bool _permissionGiven;
-  MapboxMap _mapboxMap;
+  Stack _mapboxView;
   bool _isAnimating = false;
 
   @override
@@ -52,25 +54,53 @@ class _MapState extends State<Map> implements MapController {
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = statusBarHeight * pixelRatio;
-    if (_mapboxMap == null || !_isAnimating) {
-      _mapboxMap = MapboxMap(
-        initialCameraPosition: CameraPosition(
-            target: Map.initialLocation,
-            zoom: widget.locationAvailable
-                ? Map.userLocationZoomLevel
-                : Map.initialZoomLevel),
-        styleString: config.mapStyleUrl,
-        myLocationEnabled: _permissionGiven,
-        myLocationTrackingMode: _permissionGiven
-            ? MyLocationTrackingMode.Tracking
-            : MyLocationTrackingMode.None,
-        onMapCreated: _onMapCreated,
-        onMapClick: _onMapClick,
-        compassViewMargins: Point(0, compassMargin),
-        compassViewPosition: CompassViewPosition.TopRight,
+    if (_mapboxView == null || !_isAnimating) {
+      _mapboxView = Stack(
+          children: [
+            MapboxMap(
+              initialCameraPosition: CameraPosition(
+                  target: Map.initialLocation,
+                  zoom: widget.locationAvailable
+                      ? Map.userLocationZoomLevel
+                      : Map.initialZoomLevel),
+              styleString: config.mapStyleUrl,
+              // We provide our own attribution menu
+              attributionButtonMargins: Point(-100, -100),
+              // The Mapbox wordmark must be shown because of legal weirdness
+              logoViewMargins: Point(30 * pixelRatio, 5 * pixelRatio),
+              myLocationEnabled: _permissionGiven,
+              myLocationTrackingMode: _permissionGiven
+                  ? MyLocationTrackingMode.Tracking
+                  : MyLocationTrackingMode.None,
+              onMapCreated: _onMapCreated,
+              onMapClick: _onMapClick,
+              compassViewMargins: Point(0, compassMargin),
+              compassViewPosition: CompassViewPosition.TopRight,
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: IconButton(
+                color: mapboxColor,
+                padding: EdgeInsets.all(5),
+                constraints: BoxConstraints(),
+                iconSize: 20,
+                icon: Icon(Icons.info_outline),
+                tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context){
+                      return AttributionDialog();
+                    },
+                  );
+                },
+              ),
+            ),
+          ]
       );
     }
-    return _mapboxMap;
+    return _mapboxView;
   }
 
   void _onMapCreated(MapboxMapController controller) {
@@ -78,6 +108,10 @@ class _MapState extends State<Map> implements MapController {
     if (widget.onMapCreated != null) {
       widget.onMapCreated(this);
     }
+  }
+
+  Future<void> setTelemetryEnabled({bool enabled}) async {
+    await _controller.setTelemetryEnabled(enabled);
   }
 
   Future<void> removeSymbol() async {
