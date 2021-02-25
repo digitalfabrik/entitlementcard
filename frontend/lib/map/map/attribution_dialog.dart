@@ -26,6 +26,22 @@ class AttributionDialog extends StatelessWidget {
           text: 'OpenMapTiles',
           onPressed: () {
             launch("https://openmaptiles.org/");
+          },     
+        ),
+        AttributionDialogItem(
+          icon: Icons.copyright,
+          color: Colors.blue,
+          text: 'Natural Earth',
+          onPressed: () {
+            launch("https://naturalearthdata.com/");
+          },
+        ),
+        AttributionDialogItem(
+          icon: Icons.copyright,
+          color: Colors.blue,
+          text: 'LBE Bayern',
+          onPressed: () {
+            launch("https://www.lbe.bayern.de/");
           },
         )
       ],
