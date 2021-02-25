@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:base32/base32.dart';
 
 import '../qr_code_scanner/qr_code_parser.dart';
+import 'base_card_details.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'protobuf/card_activate_model.pb.dart';
@@ -80,7 +81,7 @@ class IdentificationQrContentParser {
                 " ist. Vermutlich ist beim Erstellen der "
                 "digitalen Ehrenamtskarte ein Fehler passiert.");
       }
-      final cardType = cardActivateModel.cardType.value;
+      final cardType = CardType.values[cardActivateModel.cardType.value];
       final regionId = cardActivateModel.regionId;
       String base32TotpSecret;
       try {

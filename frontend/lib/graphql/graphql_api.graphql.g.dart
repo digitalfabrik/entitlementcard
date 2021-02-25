@@ -345,14 +345,13 @@ Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
 
 CardVerificationByHash$Query _$CardVerificationByHash$QueryFromJson(
     Map<String, dynamic> json) {
-  return CardVerificationByHash$Query()
-    ..verifyCard = json['verifyCard'] as bool;
+  return CardVerificationByHash$Query()..cardValid = json['cardValid'] as bool;
 }
 
 Map<String, dynamic> _$CardVerificationByHash$QueryToJson(
         CardVerificationByHash$Query instance) =>
     <String, dynamic>{
-      'verifyCard': instance.verifyCard,
+      'cardValid': instance.cardValid,
     };
 
 CardVerificationModelInput _$CardVerificationModelInputFromJson(

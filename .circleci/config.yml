@@ -6,23 +6,30 @@ workflows:
     jobs:
       - be-build
       - ad-build
+      - martin-build
       - be-pack:
           requires:
             - be-build
       - ad-pack:
           requires:
             - ad-build
+      - martin-pack:
+          requires:
+            - martin-build
       - meta-pack
+      - styles-pack
       - deploy:
           requires:
             - be-pack
             - ad-pack
+            - styles-pack
+            - martin-pack
             - meta-pack
           filters:
             branches:
               only:
                 - main
-      
+
 jobs:
   be-build:
     environment:
@@ -68,7 +75,10 @@ jobs:
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
-      - run: npm run-script build
+      - run: |
+          npm run generate-graphql
+          npm run generate-protobuf
+          npm run-script build
       - save_cache:
           paths:
             - node_modules
@@ -80,6 +90,49 @@ jobs:
           paths:
             - administration/build
 
+  martin-build:
+    docker:
+      - image: cimg/rust:1.50.0
+    working_directory: ~/martin
+    steps:
+      - run:
+          name: "Checkout"
+          command: |
+            mkdir -p ~/.ssh
+            touch ~/.ssh/known_hosts
+            echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
+            git clone git@github.com:urbica/martin.git ~/martin
+            git config advice.detachedHead false
+            git checkout ed14582a8f5c3e11bfb165f3b012edccd929b479
+      - restore_cache:
+          keys:
+            - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: "Install OpenSSL"
+          command: |
+            sudo apt-get update
+            sudo apt-get install openssl libssl-dev
+      - run:
+          name: "Build"
+          command: |
+            cargo build --release --target x86_64-unknown-linux-gnu
+      - save_cache:
+          paths:
+            - "~/.cargo"
+            - "target"
+          key: v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: "Prepare storing"
+          command: |
+            mkdir -p /tmp/artifacts/martin
+            cp target/x86_64-unknown-linux-gnu/release/martin /tmp/artifacts/martin
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - martin/martin
+
   be-pack:
     docker:
       - image: cimg/base:2020.01
@@ -89,17 +142,17 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/pack_deb.sh -v 0.1 -t /tmp/workspace/backend/build/distributions/*.tar -s ../scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
       - run: |
           mkdir -p /tmp/artifacts/debs
-          cp *.deb /tmp/artifacts/debs
+          mv *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
           root: /tmp/artifacts
           paths:
             - debs/*.deb
-    
+
   ad-pack:
     docker:
       - image: cimg/base:2020.01
@@ -109,10 +162,65 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ../scripts/pack_deb.sh -v 0.1 -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
       - run: |
           mkdir -p /tmp/artifacts/debs
-          cp *.deb /tmp/artifacts/debs
+          mv *.deb /tmp/artifacts/debs
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - debs/*.deb
+
+  styles-pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/map-tiles/styles
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: "Download glyphs"
+          command: |
+            wget -O /tmp/glyphs.zip https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
+            unzip /tmp/glyphs.zip
+            mv font-glyphs* font-glyphs
+            rm -f /tmp/glyphs.zip
+      - run:
+          name: "Build .deb"
+          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
+      - run:
+          name: "Move .deb to artifacts folder"
+          command: |
+            mkdir -p /tmp/artifacts/debs
+            mv *.deb /tmp/artifacts/debs
+      - store_artifacts:
+          path: /tmp/artifacts
+      - persist_to_workspace:
+          root: /tmp/artifacts
+          paths:
+            - debs/*.deb
+
+  martin-pack:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/project/map-tiles/martin
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: "Build .deb"
+          command: |
+            cp /tmp/workspace/martin/martin .
+            ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -M .
+      - run:
+          name: "Move .deb to artifacts folder"
+          command: |
+            mkdir -p /tmp/artifacts/debs
+            mv *.deb /tmp/artifacts/debs
       - store_artifacts:
           path: /tmp/artifacts
       - persist_to_workspace:
@@ -127,7 +235,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ../scripts/pack_deb.sh -v 0.1 -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-map-styles, eak-martin"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs

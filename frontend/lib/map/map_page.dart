@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
+import 'location_button.dart';
 import 'map/map_controller.dart';
 import 'map/map_with_futures.dart';
 import 'preview/accepting_store_summary.dart';
@@ -9,6 +12,7 @@ class PhysicalStoreFeatureData {
   final int id;
   final LatLng coordinates;
   final int categoryId;
+
   PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
 }
 
@@ -27,17 +31,19 @@ class MapPage extends StatefulWidget {
 
 abstract class MapPageController {
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data);
+
   Future<void> stopShowingAcceptingStore();
 }
 
-class _MapPageState extends State<MapPage> implements MapPageController {
+class _MapPageState extends State<MapPage>
+    with TickerProviderStateMixin
+    implements MapPageController {
   int _selectedAcceptingStoreId;
   MapController _controller;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: [
+    return Stack(children: [
       MapWithFutures(
         onFeatureClick: _onFeatureClick,
         onNoFeatureClick: stopShowingAcceptingStore,
@@ -47,18 +53,25 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
       ),
-      AnimatedSwitcher(
-          duration: Duration(milliseconds: 200),
-          transitionBuilder: (child, animation) =>
-              FadeTransition(opacity: animation, child: child),
-          child: _selectedAcceptingStoreId != null
-              ? AcceptingStoreSummary(
-                  _selectedAcceptingStoreId,
-                  key: ValueKey(_selectedAcceptingStoreId),
-                  hideShowOnMapButton: true,
-                )
-              : null),
-    ].where((element) => element != null).toList(growable: false));
+      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+        LocationButton(mapController: _controller),
+        AnimatedSize(
+            duration: Duration(milliseconds: 200),
+            vsync: this,
+            child: IntrinsicHeight(
+                child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: _selectedAcceptingStoreId != null
+                        ? AcceptingStoreSummary(
+                            _selectedAcceptingStoreId,
+                            hideShowOnMapButton: true,
+                          )
+                        : null))),
+        if (Platform.isIOS)
+          // Add Padding as MapBox has its attributionButton on the right on iOS
+          Container(height: 24)
+      ])
+    ]);
   }
 
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,

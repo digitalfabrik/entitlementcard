@@ -1,8 +1,10 @@
+enum CardType { standard, gold }
+
 class BaseCardDetails {
   final String fullName;
   final String hashSecretBase64;
   final int unixExpirationDate;
-  final int cardType;
+  final CardType cardType;
   final int regionId;
   final DateTime expirationDate;
 

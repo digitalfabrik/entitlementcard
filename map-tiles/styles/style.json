@@ -14,9 +14,7 @@
     "natural_earth_shaded_relief": {
       "maxzoom": 6,
       "tileSize": 256,
-      "tiles": [
-        "https://klokantech.github.io/naturalearthtiles/tiles/natural_earth_2_shaded_relief.raster/{z}/{x}/{y}.png"
-      ],
+      "url": "https://maps.tuerantuer.org/natural_earth/tiles.json",
       "type": "raster"
     },
     "physical_stores": {
@@ -37,7 +35,7 @@
     }
   },
   "sprite": "https://tiles.staging.ehrenamtskarte.app/sprites/osm-liberty",
-  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "glyphs": "https://tiles.staging.ehrenamtskarte.app/font-glyphs/glyphs/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
