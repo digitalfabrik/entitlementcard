@@ -15,9 +15,9 @@ class AttributionDialog extends StatelessWidget {
         AttributionDialogItem(
           icon: Icons.copyright,
           color: Colors.blue,
-          text: 'OpenStreetMap',
+          text: 'OpenStreetMap Mitwirkende',
           onPressed: () {
-            launch("https://www.openstreetmap.org/about/");
+            launch("https://www.openstreetmap.org/copyright");
           },
         ),
         AttributionDialogItem(

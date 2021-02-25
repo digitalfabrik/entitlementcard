@@ -19,9 +19,10 @@ class AttributionDialogItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(icon, size: 24.0, color: color),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(start: 8.0),
-            child: Text(text, style: TextStyle(color: color)),
+          Flexible(
+            child: Container(
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
+                child: Text(text, style: TextStyle(color: color))),
           ),
         ],
       ),
