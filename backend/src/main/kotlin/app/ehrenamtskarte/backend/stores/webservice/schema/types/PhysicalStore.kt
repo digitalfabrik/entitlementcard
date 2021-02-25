@@ -14,11 +14,11 @@ data class PhysicalStore(
 ) {
 
     fun store(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
-        dataFetchingEnvironment.getDataLoader<Int, AcceptingStore?>(ACCEPTING_STORE_LOADER_NAME).load(id)
+        dataFetchingEnvironment.getDataLoader<Int, AcceptingStore?>(ACCEPTING_STORE_LOADER_NAME).load(storeId)
             .thenApply { it!! }
 
     fun address(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<Address> =
-        dataFetchingEnvironment.getDataLoader<Int, Address?>(ADDRESS_LOADER_NAME).load(id).thenApply { it!! }
+        dataFetchingEnvironment.getDataLoader<Int, Address?>(ADDRESS_LOADER_NAME).load(addressId).thenApply { it!! }
 
 }
 
