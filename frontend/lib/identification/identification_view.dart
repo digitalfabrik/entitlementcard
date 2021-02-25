@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/identification/testing_data_item.dart';
 import 'package:ehrenamtskarte/verification/verification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,9 @@ import 'card_details.dart';
 import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
 import 'no_card_view.dart';
+
+const showTestDataOptions = 
+  bool.fromEnvironment("test_data_options", defaultValue: false);
 
 class IdentificationPage extends StatefulWidget {
   IdentificationPage({Key key, this.title}) : super(key: key);
@@ -49,6 +53,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                           .merge(TextStyle(color: Colors.white, fontSize: 20)),
                     )),
               ),
+              if (showTestDataOptions) TestingDataItem(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: _cardDetails == null
