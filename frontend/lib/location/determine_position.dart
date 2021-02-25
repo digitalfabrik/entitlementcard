@@ -54,7 +54,7 @@ Future<void> requestPermissionToDeterminePosition(
       }
     }
     throw PositionNotAvailableException(
-        'Location permissions were permantly denied.');
+        'Location permissions were permanently denied.');
   }
 
   if (permission == LocationPermission.denied) {
