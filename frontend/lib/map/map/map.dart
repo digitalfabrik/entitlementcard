@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -51,7 +52,9 @@ class _MapState extends State<Map> implements MapController {
     final config = Configuration.of(context);
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var compassMargin = statusBarHeight * pixelRatio;
+    var compassMargin = Platform.isIOS
+        ? statusBarHeight / pixelRatio
+        : statusBarHeight * pixelRatio;
     if (_mapboxMap == null || !_isAnimating) {
       _mapboxMap = MapboxMap(
         initialCameraPosition: CameraPosition(
@@ -66,7 +69,8 @@ class _MapState extends State<Map> implements MapController {
             : MyLocationTrackingMode.None,
         onMapCreated: _onMapCreated,
         onMapClick: _onMapClick,
-        compassViewMargins: Point(0, compassMargin),
+        compassViewMargins:
+            Point(Platform.isIOS ? compassMargin : 0, compassMargin),
         compassViewPosition: CompassViewPosition.TopRight,
       );
     }
