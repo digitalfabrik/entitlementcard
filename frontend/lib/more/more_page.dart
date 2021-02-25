@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
+import '../configuration.dart';
 import '../verification/verification_page.dart';
 import 'menu_item.dart';
 import 'testing_data_item.dart';
@@ -23,11 +24,12 @@ class MorePage extends StatelessWidget {
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
           ),
-          MenuItem(
-            title: "Karten verifizieren",
-            icon: Icons.fact_check,
-            callback: () => _showVerificationPage(context),
-          ),
+          if (Configuration.of(context).showVerification)
+            MenuItem(
+              title: "Karten verifizieren",
+              icon: Icons.fact_check,
+              callback: () => _showVerificationPage(context),
+            ),
           if (showTestDataOptions) TestingDataItem(),
         ]),
       ),

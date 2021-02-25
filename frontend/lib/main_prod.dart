@@ -8,5 +8,6 @@ Future<void> main() async {
   runApp(Configuration(
       mapStyleUrl: "https://tiles.ehrenamtskarte.app/style.json",
       graphqlUrl: "https://api.ehrenamtskarte.app",
+      showVerification: false,
       child: App()));
 }
