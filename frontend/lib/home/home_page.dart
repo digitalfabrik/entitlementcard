@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../identification/identification_view.dart';
 import '../map/map_page.dart';
-import '../more/more_page.dart';
+import '../more/about_page.dart';
 import '../search/search_page.dart';
 import 'app_flow.dart';
 import 'app_flows_stack.dart';
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       if (showVerification)
         AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
             GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
-      AppFlow(MorePage(), Icons.more_horiz, "Mehr",
+      AppFlow(AboutPage(), Icons.more_horiz, "Mehr",
           GlobalKey<NavigatorState>(debugLabel: "More tab key")),
     ];
     state = _HomePageState._(mapPage, appFlows);

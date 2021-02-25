@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
-
-import '../configuration.dart';
-import '../verification/verification_page.dart';
 import 'menu_item.dart';
 import 'testing_data_item.dart';
 
 const showTestDataOptions =
     bool.fromEnvironment("test_data_options", defaultValue: false);
 
-class MorePage extends StatelessWidget {
+class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -24,12 +21,6 @@ class MorePage extends StatelessWidget {
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
           ),
-          if (Configuration.of(context).showVerification)
-            MenuItem(
-              title: "Karten verifizieren",
-              icon: Icons.fact_check,
-              callback: () => _showVerificationPage(context),
-            ),
           if (showTestDataOptions) TestingDataItem(),
         ]),
       ),
@@ -47,14 +38,6 @@ class MorePage extends StatelessWidget {
           applicationName: packageInfo.appName,
           applicationVersion: packageInfo.version,
           applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
-        ));
-  }
-
-  void _showVerificationPage(context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerificationPage(),
         ));
   }
 }

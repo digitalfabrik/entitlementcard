@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/verification/verification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,21 +31,48 @@ class _IdentificationPageState extends State<IdentificationPage> {
             title: Text('Digitale Ehrenamtskarte'),
           ),
           body: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: _cardDetails == null
-                  ? NoCardView(
-                      onOpenQrScanner: () => openQRCodeScannerView(context),
-                    )
-                  : CardDetailView(
-                      cardDetails: _cardDetails,
-                      onOpenQrScanner: () => openQRCodeScannerView(context),
+              child: Column(
+            children: [
+              Center(
+                child: RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                    onPressed: () => _showVerificationPage(context),
+                    color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
                     ),
-            ),
-          ));
+                    child: Text(
+                      "Karte verifizieren",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
+                    )),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: _cardDetails == null
+                    ? NoCardView(
+                        onOpenQrScanner: () => openQRCodeScannerView(context),
+                      )
+                    : CardDetailView(
+                        cardDetails: _cardDetails,
+                        onOpenQrScanner: () => openQRCodeScannerView(context),
+                      ),
+              )
+            ],
+          )));
     });
   }
 
+  void _showVerificationPage(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationPage(),
+        ));
+  }
+  
   void openQRCodeScannerView(BuildContext context) {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
 
