@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AttributionDialogItem extends StatelessWidget {
-  const AttributionDialogItem({Key key, this.icon, this.color, this.text, this.onPressed})
+  const AttributionDialogItem(
+      {Key key, this.icon, this.color, this.text, this.onPressed})
       : super(key: key);
 
   final IconData icon;
