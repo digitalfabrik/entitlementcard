@@ -51,13 +51,8 @@ class _MapState extends State<Map> implements MapController {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-    var statusBarHeight = MediaQuery
-        .of(context)
-        .padding
-        .top;
-    var pixelRatio = MediaQuery
-        .of(context)
-        .devicePixelRatio;
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = statusBarHeight * pixelRatio;
     if (_mapboxView == null || !_isAnimating) {
       _mapboxView = Stack(
@@ -71,7 +66,7 @@ class _MapState extends State<Map> implements MapController {
               styleString: config.mapStyleUrl,
               // We provide our own attribution menu
               attributionButtonMargins: Point(-100, -100),
-              // The Mapbox wordmark must be shown
+              // The Mapbox wordmark must be shown because of legal weirdness
               logoViewMargins: Point(30 * pixelRatio, 5 * pixelRatio),
               myLocationEnabled: _permissionGiven,
               myLocationTrackingMode: _permissionGiven
