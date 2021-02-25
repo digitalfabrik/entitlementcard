@@ -53,9 +53,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // android
-      statusBarColor: Theme.of(context).primaryColor,
-      statusBarIconBrightness: Brightness.light,
       // ios
       statusBarBrightness: Brightness.light,
     ));
