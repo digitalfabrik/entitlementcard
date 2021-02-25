@@ -28,13 +28,13 @@ Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
 
 
     doc.setFontSize(12)
-    const instructionsY = (qrCodeY-qrCodeMargin-16 + greetingY) / 2;
+    const instructionsY = (qrCodeY - qrCodeMargin - 16 + greetingY) / 2;
     doc.text([
         'Anleitung:',
         "1. Laden Sie sich die App \"Ehrenamtskarte\" herunter.",
         "2. Starten Sie die App und folgen Sie den Hinweisen zum Scannen des Anmeldecodes.",
         "3. Scannen Sie den Anmeldecode.",
-    ], pageMargin, instructionsY, { baseline: "middle" });
+    ], pageMargin, instructionsY, {baseline: "middle"});
 
     doc.setFontSize(16)
     doc.text("Anmeldecode", width / 2, qrCodeY - qrCodeMargin, undefined, "center");
@@ -42,14 +42,19 @@ Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
     drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
     doc.setFontSize(12);
     const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
+    const expirationDate = model.optionalExpirationDate !== undefined ? format(fromUnixTime(model.expirationDate.toNumber()),
+        "dd.MM.yyyy") : "unbegrenzt"
     doc.text(
         `KarteninhaberIn: ${model.fullName}
 Karte ausgestellt am: ${format(new Date(), "dd.MM.yyyy")}
-Karte gültig bis: ${format(fromUnixTime(model.expirationDate.toNumber()), "dd.MM.yyyy")}`,
-        width / 2, DetailsY, { align: "center", baseline: "top" })
+Karte gültig bis: ${expirationDate}`,
+        width / 2, DetailsY, {align: "center", baseline: "top"})
 
     doc.setFontSize(12)
-    doc.textWithLink("Öffnen Sie den folgenden Link, um die App herunterzuladen:\nhttps://ehrenamtskarte.app/download_app", width / 2, pageBottom, {url: "https://ehrenamtskarte.app/download_app", align: "center"});
+    doc.textWithLink("Öffnen Sie den folgenden Link, um die App herunterzuladen:\nhttps://ehrenamtskarte.app/download_app", width / 2, pageBottom, {
+        url: "https://ehrenamtskarte.app/download_app",
+        align: "center"
+    });
 }
 
 export function generatePdf(models: CardActivateModel[]) {
