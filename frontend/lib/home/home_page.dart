@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../identification/identification_view.dart';
 import '../map/map_page.dart';
@@ -51,6 +52,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // android
+      statusBarColor: Theme.of(context).primaryColor,
+      statusBarIconBrightness: Brightness.light,
+      // ios
+      statusBarBrightness: Brightness.light,
+    ));
     return _HomePageData(
       goToMap: _goToMap,
       child: Scaffold(
