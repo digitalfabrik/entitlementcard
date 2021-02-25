@@ -67,10 +67,9 @@ class _MapPageState extends State<MapPage>
                             _selectedAcceptingStoreId,
                             hideShowOnMapButton: true,
                           )
-                        : null))),
-        if (Platform.isIOS)
-          // Add Padding as MapBox has its attributionButton on the right on iOS
-          Container(height: 24)
+                        : null)
+            )
+        ),
       ])
     ]);
   }
