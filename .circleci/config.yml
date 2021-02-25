@@ -92,7 +92,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: cimg/rust:1.50.0
+      - image: rust:1.50.0
     working_directory: ~/martin
     steps:
       - run:
@@ -110,8 +110,8 @@ jobs:
       - run:
           name: "Install OpenSSL"
           command: |
-            sudo apt-get update
-            sudo apt-get install openssl libssl-dev
+            apt update
+            apt install -y openssl libssl-dev
       - run:
           name: "Build"
           command: |
