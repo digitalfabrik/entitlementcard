@@ -49,6 +49,7 @@ class _MapPageState extends State<MapPage>
         onNoFeatureClick: stopShowingAcceptingStore,
         onFeatureClickLayerFilter: ["physical_stores"],
         onMapCreated: (controller) {
+          controller.setTelemetryEnabled(enabled: false);
           setState(() => _controller = controller);
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
