@@ -92,7 +92,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: cimg/rust:1.50.0
+      - image: rust:1.50.0
     working_directory: ~/martin
     steps:
       - run:
