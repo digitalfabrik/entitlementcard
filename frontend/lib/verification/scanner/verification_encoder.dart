@@ -10,24 +10,10 @@ String encodeVerificationCardDetails(
     VerificationCardDetails verificationCardDetails) {
   final cardDetails = verificationCardDetails.cardDetails;
 
-  CardVerifyModel_CardType cardType;
-
-  switch (cardDetails.cardType) {
-    case "STANDARD":
-      cardType = CardVerifyModel_CardType.STANDARD;
-      break;
-    case "GOLD":
-      cardType = CardVerifyModel_CardType.GOLD;
-      break;
-    default:
-      throw Exception(
-          "The provided card type ${cardDetails.cardType} is unknown!");
-  }
-
   final cardVerifyModel = CardVerifyModel(
     fullName: cardDetails.fullName,
     expirationDate: Int64(cardDetails.unixExpirationDate),
-    cardType: cardType,
+    cardType: CardVerifyModel_CardType.valueOf(cardDetails.cardType.index),
     regionId: cardDetails.regionId,
     hashSecret: Base64Decoder().convert(cardDetails.hashSecretBase64),
     otp: verificationCardDetails.otp,
@@ -45,7 +31,7 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
   final fullName = cardVerifyModel.fullName;
   final randomBytes = Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixExpirationTime = cardVerifyModel.expirationDate.toInt();
-  final cardType = cardVerifyModel.cardType.toString();
+  final cardType = CardType.values[cardVerifyModel.cardType.value];
   final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
 
