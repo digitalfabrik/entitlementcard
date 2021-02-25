@@ -71,7 +71,7 @@ class _MapState extends State<Map> implements MapController {
               styleString: config.mapStyleUrl,
               // We provide our own attribution menu
               attributionButtonMargins: Point(-100, -100),
-              // Logo must be shown: https://docs.mapbox.com/help/how-mapbox-works/attribution/#mapbox-wordmark
+              // The Mapbox wordmark must be shown
               logoViewMargins: Point(40, 7),
               myLocationEnabled: _permissionGiven,
               myLocationTrackingMode: _permissionGiven
