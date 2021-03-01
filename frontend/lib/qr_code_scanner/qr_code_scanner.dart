@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'qr_code_parser.dart';
+import 'qr_code_scanner_controls.dart';
 
 const scanDelayAfterErrorMs = 500;
 
