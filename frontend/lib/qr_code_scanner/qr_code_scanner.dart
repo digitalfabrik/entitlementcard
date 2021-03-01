@@ -48,13 +48,6 @@ class _QRViewState extends State<QRCodeScanner> {
               flex: 4,
               child: Scaffold(
                 appBar: AppBar(
-                  leading: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Theme.of(context).textTheme.bodyText1.color,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
                   title: Text("Ehrenamtskarte hinzufügen"),
                 ),
                 body: _buildQrView(context),
