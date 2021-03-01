@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../qr_code_scanner/qr_code_scanner.dart';
+import '../qr_code_scanner/qr_code_scanner_page.dart';
 import 'card_detail_view.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
@@ -51,7 +51,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QRCodeScanner(
+          builder: (context) => QRCodeScannerPage(
+            title: "Ehrenamtskarte hinzufügen",
             qrCodeContentParser:
                 IdentificationQrContentParser(provider).processQrCodeContent,
           ),

@@ -4,15 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import 'qr_code_parser.dart';
 import 'qr_code_scanner_controls.dart';
 
 const scanDelayAfterErrorMs = 500;
 
-class QRCodeScanner extends StatefulWidget {
-  final QRCodeContentParser qrCodeContentParser;
+typedef OnCodeScannedCallback = Future<void> Function(String code);
 
-  const QRCodeScanner({Key key, @required this.qrCodeContentParser})
+class QRCodeScanner extends StatefulWidget {
+  final OnCodeScannedCallback onCodeScanned;
+
+  const QRCodeScanner({Key key, this.onCodeScanned})
       : super(key: key);
 
   @override
@@ -20,19 +21,13 @@ class QRCodeScanner extends StatefulWidget {
 }
 
 class _QRViewState extends State<QRCodeScanner> {
-  Barcode result;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
 
   @override
   Widget build(BuildContext context) {
-    isProcessingCode = false;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Ehrenamtskarte hinzufügen"),
-      ),
-      body: Column(
+    return Column(
         children: <Widget>[
           Expanded(
               flex: 4,
@@ -66,8 +61,7 @@ class _QRViewState extends State<QRCodeScanner> {
             )
           )
         ],
-      ),
-    );
+      );
   }
 
   double _calculateScanArea(BuildContext context) {
@@ -88,15 +82,12 @@ class _QRViewState extends State<QRCodeScanner> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
-      if (scanData != null) {
-        _tryParseCodeContent(scanData.code);
-      }
-    });
+    controller.scannedDataStream.listen(_onCodeScanned);
   }
 
-  void _tryParseCodeContent(String codeContent) async {
-    var wasSuccessful = false;
+  void _onCodeScanned(Barcode scanData) async {
+    if (scanData.code == null) return;
+
     // needed because this method gets called multiple times in a row after one
     // qr code gets detected, therefore we need to protect it
     if (isProcessingCode) {
@@ -104,52 +95,18 @@ class _QRViewState extends State<QRCodeScanner> {
     }
     isProcessingCode = true;
     controller.pauseCamera();
-    final parseResult = widget.qrCodeContentParser(codeContent);
-    if (parseResult.hasError) {
-      print("Failed to parse qr code content!");
-      final errorMessage = parseResult.userErrorMessage;
-      _showErrorDialog(errorMessage).then((value) {
-        // give the user time to move the camara away from the qr code
-        // that caused the error
-        Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs))
-            .then((onValue) {
-          controller.resumeCamera();
-          isProcessingCode = false;
-        });
-      });
-    } else {
-      wasSuccessful = true;
-    }
-    if (wasSuccessful) {
-      Navigator.of(context).maybePop();
-    }
-  }
 
-  Future<void> _showErrorDialog(String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Fehler beim Lesen des Codes'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    if (widget.onCodeScanned != null) {
+      await widget.onCodeScanned(scanData.code);
+    }
+
+    // give the user time to move the camara away from the qr code
+    await Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs));
+
+    if (mounted) {
+      controller.resumeCamera();
+    }
+    isProcessingCode = false;
   }
 
   @override

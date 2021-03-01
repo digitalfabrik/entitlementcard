@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../qr_code_scanner/qr_code_scanner.dart';
+import '../../qr_code_scanner/qr_code_scanner_page.dart';
 import '../verification_card_details_model.dart';
 import '../verification_processor.dart';
 import 'content_card.dart';
@@ -69,7 +69,8 @@ class _VerificationViewState extends State<VerificationView> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QRCodeScanner(
+          builder: (context) => QRCodeScannerPage(
+            title: "Karte verifizieren",
             qrCodeContentParser:
                 VerificationProcessor(provider).processQrCodeContent,
           ),
