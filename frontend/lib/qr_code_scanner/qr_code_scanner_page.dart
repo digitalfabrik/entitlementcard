@@ -25,47 +25,18 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
           title: Text(widget.title),
       ),
       body: QRCodeScanner(
-        onCodeScanned: _onCodeScanned,
+        onCodeScanned: (code) => _onCodeScanned(context, code),
       )
     );
   }
 
-  Future<void> _onCodeScanned(String code) async {
-    final parseResult = widget.qrCodeContentParser(code);
-    if (parseResult.hasError) {
-      print("Failed to parse qr code content!");
-      final errorMessage = parseResult.userErrorMessage;
-      await _showErrorDialog(errorMessage);
-    } else {
-      Navigator.of(context).maybePop();
+  Future<void> _onCodeScanned(BuildContext context, String code) async {
+    try {
+      widget.qrCodeContentParser(code);
+    } on QRCodeParseException catch (e) {
+      print(e);
     }
-  }
 
-  Future<void> _showErrorDialog(String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Fehler beim Lesen des Codes'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    Navigator.of(context).maybePop();
   }
-
 }

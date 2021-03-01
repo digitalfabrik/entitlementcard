@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:base32/base32.dart';
 
@@ -9,12 +8,20 @@ import 'card_details.dart';
 import 'card_details_model.dart';
 import 'protobuf/card_activate_model.pb.dart';
 
-QRCodeParseResult createFieldMissingError(
-    String missingFieldName, String publicErrorCode) {
-  return QRCodeParseResult(
-      hasError: true,
-      userErrorMessage: "Beim Verarbeiten des eingescannten Codes ist ein"
-          "Fehler aufgetreten. Fehlercode: $publicErrorCode");
+class QRCodeInvalidTotpSecretException extends QRCodeParseException {
+  QRCodeInvalidTotpSecretException() : super("invalid totp secret");
+}
+
+class QRCodeInvalidExpiryException extends QRCodeParseException {
+  QRCodeInvalidExpiryException() : super("invalid expiry date");
+}
+
+class QRCodeMissingExpiryException extends QRCodeFieldMissingException {
+  QRCodeMissingExpiryException() : super("expirationDate");
+}
+
+class QRCodeInvalidFormatException extends QRCodeParseException {
+  QRCodeInvalidFormatException() : super("invalid format");
 }
 
 class IdentificationQrContentParser {
@@ -22,75 +29,50 @@ class IdentificationQrContentParser {
 
   IdentificationQrContentParser(this._cardDetailsModel);
 
-  QRCodeParseResult processQrCodeContent(String rawBase64Content) {
+  void processQrCodeContent(String rawBase64Content) {
     try {
       final base64Decoder = Base64Decoder();
 
-      Uint8List rawProtobufData;
-      try {
-        rawProtobufData = base64Decoder.convert(rawBase64Content);
-      } on Exception catch (_) {
-        return QRCodeParseResult(
-            hasError: true,
-            userErrorMessage:
-                "Der Inhalt des eingescannten Codes kann nicht verstanden "
-                "werden. Vermutlich handelt es sich um einen QR Code, "
-                "der nicht für die Ehrenamtskarte App generiert wurde.");
-      }
       CardActivateModel cardActivateModel;
       try {
+        var rawProtobufData = base64Decoder.convert(rawBase64Content);
         cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
       } on Exception catch (_) {
-        return QRCodeParseResult(
-            hasError: true,
-            userErrorMessage:
-                "Der Inhalt des eingescannten Codes kann nicht verstanden "
-                "werden. Vermutlich handelt es sich um einen QR Code, "
-                "der nicht für die Ehrenamtskarte App generiert wurde.");
+        throw QRCodeInvalidFormatException();
       }
 
       final fullName = cardActivateModel.fullName;
       if (fullName == null) {
-        return createFieldMissingError("fullName", "fullNameMissing");
+        throw QRCodeFieldMissingException("fullName");
       }
       final hashSecret = cardActivateModel.hashSecret;
       if (hashSecret == null) {
-        return createFieldMissingError("randomBytes", "randomBytesMissing");
+        throw QRCodeFieldMissingException("randomBytes");
       }
+
       final unixInt64ExpirationDate = cardActivateModel.expirationDate;
       int unixExpirationDate;
       if (unixInt64ExpirationDate != null && unixInt64ExpirationDate > 0) {
         try {
           unixExpirationDate = unixInt64ExpirationDate.toInt();
-          if (unixExpirationDate == null) {
-            throw Exception(["unixExpirationDate was null"]);
-          }
         } on Exception catch (_) {
-          return QRCodeParseResult(
-              hasError: true,
-              userErrorMessage: "Beim Verarbeiten des Ablaufdatums ist ein "
-                  "unerwarteter Fehler aufgetreten.");
+          throw QRCodeInvalidExpiryException();
         }
       }
+
       if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD &&
           unixExpirationDate == null) {
-        return QRCodeParseResult(
-            hasError: true,
-            userErrorMessage: "Die eingescannte Karte enthält kein Ablauf-"
-                "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
-                " ist. Vermutlich ist beim Erstellen der "
-                "digitalen Ehrenamtskarte ein Fehler passiert.");
+        throw QRCodeMissingExpiryException();
       }
+
       final cardType = CardType.values[cardActivateModel.cardType.value];
       final regionId = cardActivateModel.regionId;
+
       String base32TotpSecret;
       try {
         base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
       } on Exception catch (_) {
-        return QRCodeParseResult(
-            hasError: true,
-            userErrorMessage: "Beim Verarbeiten des eingescannten Codes ist ein"
-                "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
+        throw QRCodeInvalidTotpSecretException();
       }
 
       final cardDetails = CardDetails(
@@ -101,11 +83,8 @@ class IdentificationQrContentParser {
           regionId,
           base32TotpSecret);
       _cardDetailsModel.setCardDetails(cardDetails);
-    } on Exception catch (_) {
-      return QRCodeParseResult(
-          hasError: true,
-          userErrorMessage: "Ein unerwarteter Fehler ist aufgetreten.");
+    } on Exception catch (e) {
+      throw QRCodeParseException(e.toString());
     }
-    return QRCodeParseResult(hasError: false);
   }
 }

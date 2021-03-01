@@ -1,8 +1,6 @@
 import 'package:intl/intl.dart';
 
 import '../identification/protobuf/card_activate_model.pb.dart';
-
-import '../qr_code_scanner/qr_code_parser.dart';
 import 'scanner/verification_qr_content_parser.dart';
 import 'verification_card_details.dart';
 import 'verification_card_details_model.dart';
@@ -14,7 +12,7 @@ class VerificationProcessor {
 
   VerificationProcessor(this.model);
 
-  QRCodeParseResult processQrCodeContent(String rawBase64Content) {
+  void processQrCodeContent(String rawBase64Content) {
     VerificationCardDetails cardDetails;
     try {
       cardDetails = parseQRCodeContent(rawBase64Content);
@@ -33,15 +31,12 @@ class VerificationProcessor {
               "ist aufgetreten.");
     }
 
-    if (checkIfCardDetailsConsistent(cardDetails)) {
-      final hash = hashVerificationCardDetails(cardDetails);
-      model.setReadyForRemoteVerification(cardDetails, hash);
-    }
-
-    return QRCodeParseResult();
+    _assertConsistentCardDetails(cardDetails);
+    final hash = hashVerificationCardDetails(cardDetails);
+    model.setReadyForRemoteVerification(cardDetails, hash);
   }
 
-  bool checkIfCardDetailsConsistent(VerificationCardDetails verCardDetails) {
+  bool _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
     final baseCardDetails = verCardDetails.cardDetails;
     if (baseCardDetails.fullName == null || baseCardDetails.fullName.isEmpty) {
       model.setVerificationFailure(
