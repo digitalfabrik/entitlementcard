@@ -1,12 +1,11 @@
-import 'dart:io';
 import 'dart:math';
 
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'qr_code_parser.dart';
+import 'qr_code_scanner_controls.dart';
 
 const scanDelayAfterErrorMs = 500;
 
@@ -26,32 +25,29 @@ class _QRViewState extends State<QRCodeScanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
 
-  // In order to get hot reload to work we need to pause the camera if the
-  // platform is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller.resumeCamera();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     isProcessingCode = false;
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Ehrenamtskarte hinzufügen"),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
               flex: 4,
-              child: Scaffold(
-                appBar: AppBar(
-                  title: Text("Ehrenamtskarte hinzufügen"),
+              child: QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+                overlay: QrScannerOverlayShape(
+                  borderColor: Theme.of(context).accentColor,
+                  borderRadius: 10,
+                  borderLength: 30,
+                  borderWidth: 10,
+                  cutOutSize: _calculateScanArea(context),
                 ),
-                body: _buildQrView(context),
-              )),
+              ),
+          ),
           Expanded(
             flex: 1,
             child: FittedBox(
@@ -74,7 +70,7 @@ class _QRViewState extends State<QRCodeScanner> {
     );
   }
 
-  Widget _buildQrView(BuildContext context) {
+  double _calculateScanArea(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
 
@@ -83,19 +79,9 @@ class _QRViewState extends State<QRCodeScanner> {
     var scanArea = 300.0;
     final smallestDimension = min(deviceWidth, deviceHeight);
     if (smallestDimension < scanArea * 1.1) {
-      scanArea = smallestDimension * 0.9;
+      return smallestDimension * 0.9;
     }
-    return QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-        overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea,
-        ),
-      );
+    return scanArea;
   }
 
   void _onQRViewCreated(QRViewController controller) {

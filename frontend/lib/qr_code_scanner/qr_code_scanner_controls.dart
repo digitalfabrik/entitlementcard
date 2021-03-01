@@ -32,7 +32,7 @@ class QRCodeScannerControls extends StatelessWidget {
     return FutureBuilder<SystemFeatures>(
         future: controller.getSystemFeatures(),
         builder: (context, snapshot) =>
-      Row(
+      snapshot.hasData ? Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -70,6 +70,8 @@ class QRCodeScannerControls extends StatelessWidget {
               )
           ]
       )
+          : Text(snapshot.hasError
+              ? "Kein Zugriff auf Systemeigenschaften." : "Lade …")
     );
   }
 }
