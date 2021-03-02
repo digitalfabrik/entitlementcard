@@ -30,7 +30,7 @@ class QRCodeScannerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SystemFeatures>(
-        future: controller.getSystemFeatures(),
+        future: _tryToGetSystemFeatures(),
         builder: (context, snapshot) =>
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,5 +71,16 @@ class QRCodeScannerControls extends StatelessWidget {
           ]
       )
     );
+  }
+
+  Future<SystemFeatures> _tryToGetSystemFeatures() async {
+    for (var i = 0; i < 10; i++) {
+      try {
+        return await controller.getSystemFeatures();
+      } on CameraException {
+        await Future.delayed(Duration(milliseconds: 50));
+      }
+    }
+    return SystemFeatures(true, true, true);
   }
 }
