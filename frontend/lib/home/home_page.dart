@@ -51,11 +51,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       // ios
       statusBarBrightness: Brightness.light,
     ));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return _HomePageData(
       goToMap: _goToMap,
       child: Scaffold(
