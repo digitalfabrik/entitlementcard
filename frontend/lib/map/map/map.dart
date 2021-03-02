@@ -67,6 +67,8 @@ class _MapState extends State<Map> implements MapController {
         myLocationTrackingMode: _permissionGiven
             ? MyLocationTrackingMode.Tracking
             : MyLocationTrackingMode.None,
+        // required to prevent mapbox iOS from requesting location permissions
+        // on startup, as discussed in #249
         myLocationRenderMode: MyLocationRenderMode.NORMAL,
         onMapCreated: _onMapCreated,
         onMapClick: _onMapClick,
