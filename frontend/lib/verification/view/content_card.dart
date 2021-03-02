@@ -7,7 +7,7 @@ class ContentCard extends StatelessWidget {
 
   ContentCard({
     this.child,
-    this.color = Colors.white,
+    this.color,
     this.borderSide = const BorderSide(width: 1.0, color: Colors.black12),
   });
 
