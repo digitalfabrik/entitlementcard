@@ -70,7 +70,9 @@ class _MapState extends State<Map> implements MapController {
           // We provide our own attribution menu
           attributionButtonMargins: Point(-100, -100),
           // The Mapbox wordmark must be shown because of legal weirdness
-          logoViewMargins: Point(30 * pixelRatio, 5 * pixelRatio),
+          logoViewMargins: Platform.isIOS
+              ? Point(30, 5)
+              : Point(30 * pixelRatio, 5 * pixelRatio),
           myLocationEnabled: _permissionGiven,
           myLocationTrackingMode: _permissionGiven
               ? MyLocationTrackingMode.Tracking
