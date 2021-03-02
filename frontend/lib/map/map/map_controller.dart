@@ -5,4 +5,5 @@ abstract class MapController {
   Future<void> setSymbol(LatLng location, int categoryId);
   Future<void> removeSymbol();
   Future<void> bringCameraToUser();
+  Future<void> setTelemetryEnabled({bool enabled});
 }
