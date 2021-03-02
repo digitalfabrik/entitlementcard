@@ -24,11 +24,12 @@ class Map extends StatefulWidget {
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
 
-  const Map({this.onFeatureClick,
-    this.onNoFeatureClick,
-    this.onFeatureClickLayerFilter,
-    this.locationAvailable,
-    this.onMapCreated});
+  const Map(
+      {this.onFeatureClick,
+      this.onNoFeatureClick,
+      this.onFeatureClickLayerFilter,
+      this.locationAvailable,
+      this.onMapCreated});
 
   @override
   State createState() => _MapState();
@@ -58,54 +59,52 @@ class _MapState extends State<Map> implements MapController {
         ? statusBarHeight / pixelRatio
         : statusBarHeight * pixelRatio;
     if (_mapboxView == null || !_isAnimating) {
-      _mapboxView = Stack(
-          children: [
-            MapboxMap(
-              initialCameraPosition: CameraPosition(
-                  target: Map.initialLocation,
-                  zoom: widget.locationAvailable
-                      ? Map.userLocationZoomLevel
-                      : Map.initialZoomLevel),
-              styleString: config.mapStyleUrl,
-              // We provide our own attribution menu
-              attributionButtonMargins: Point(-100, -100),
-              // The Mapbox wordmark must be shown because of legal weirdness
-              logoViewMargins: Point(30 * pixelRatio, 5 * pixelRatio),
-              myLocationEnabled: _permissionGiven,
-              myLocationTrackingMode: _permissionGiven
-                  ? MyLocationTrackingMode.Tracking
-                  : MyLocationTrackingMode.None,
-              // required to prevent mapbox iOS from requesting location
-              // permissions on startup, as discussed in #249
-              myLocationRenderMode: MyLocationRenderMode.NORMAL,
-              onMapCreated: _onMapCreated,
-              onMapClick: _onMapClick,
-              compassViewMargins:
-                  Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-              compassViewPosition: CompassViewPosition.TopRight,
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: IconButton(
-                color: mapboxColor,
-                padding: EdgeInsets.all(5),
-                constraints: BoxConstraints(),
-                iconSize: 20,
-                icon: Icon(Icons.info_outline),
-                tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context){
-                      return AttributionDialog();
-                    },
-                  );
+      _mapboxView = Stack(children: [
+        MapboxMap(
+          initialCameraPosition: CameraPosition(
+              target: Map.initialLocation,
+              zoom: widget.locationAvailable
+                  ? Map.userLocationZoomLevel
+                  : Map.initialZoomLevel),
+          styleString: config.mapStyleUrl,
+          // We provide our own attribution menu
+          attributionButtonMargins: Point(-100, -100),
+          // The Mapbox wordmark must be shown because of legal weirdness
+          logoViewMargins: Point(30 * pixelRatio, 5 * pixelRatio),
+          myLocationEnabled: _permissionGiven,
+          myLocationTrackingMode: _permissionGiven
+              ? MyLocationTrackingMode.Tracking
+              : MyLocationTrackingMode.None,
+          // required to prevent mapbox iOS from requesting location
+          // permissions on startup, as discussed in #249
+          myLocationRenderMode: MyLocationRenderMode.NORMAL,
+          onMapCreated: _onMapCreated,
+          onMapClick: _onMapClick,
+          compassViewMargins:
+              Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+          compassViewPosition: CompassViewPosition.TopRight,
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: IconButton(
+            color: mapboxColor,
+            padding: EdgeInsets.all(5),
+            constraints: BoxConstraints(),
+            iconSize: 20,
+            icon: Icon(Icons.info_outline),
+            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AttributionDialog();
                 },
-              ),
-            ),
-          ]
-      );
+              );
+            },
+          ),
+        ),
+      ]);
     }
     return _mapboxView;
   }
