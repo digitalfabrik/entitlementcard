@@ -42,11 +42,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>Display location on the world map</string>
+    <string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
     <key>io.flutter.embedded_views_preview</key>
     <true/>
     <key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to scan QR codes</string>
+    <string>Einlesen von QR-Codes (Feature aktuell deaktiviert).</string>
 
 </dict>
 </plist>
