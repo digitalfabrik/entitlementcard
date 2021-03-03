@@ -12,12 +12,10 @@ class QRCodeScannerControls extends StatelessWidget {
   // state and just call setState({}) to trigger redrawing of whole widget.
   final StreamController<bool> flashStreamController = StreamController();
   final StreamController<CameraFacing> cameraStreamController =
-    StreamController<CameraFacing>();
+      StreamController<CameraFacing>();
 
-  QRCodeScannerControls({
-    @required this.controller,
-    Key key
-  }) : super(key: key) {
+  QRCodeScannerControls({@required this.controller, Key key})
+      : super(key: key) {
     updateFlashStream();
     updateCameraStream();
   }
@@ -31,46 +29,45 @@ class QRCodeScannerControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<SystemFeatures>(
         future: _tryToGetSystemFeatures(),
-        builder: (context, snapshot) =>
-      Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            if (snapshot.data.hasFlash)
-              Container(
-                margin: EdgeInsets.all(8),
-                child: OutlineButton(
-                    onPressed: () =>
-                        controller.toggleFlash()
-                            .whenComplete(updateFlashStream),
-                    child: StreamBuilder<bool>(
-                      stream: flashStreamController.stream,
-                      builder: (ctx, snapshot) =>
-                          Text(snapshot.data ?? false
-                              ? "Blitz aus" : "Blitz an",
-                              style: TextStyle(fontSize: 16)),
+        builder: (context, snapshot) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  if (snapshot.data != null && snapshot.data.hasFlash)
+                    Container(
+                      margin: EdgeInsets.all(8),
+                      child: OutlineButton(
+                          onPressed: () => controller
+                              .toggleFlash()
+                              .whenComplete(updateFlashStream),
+                          child: StreamBuilder<bool>(
+                            stream: flashStreamController.stream,
+                            builder: (ctx, snapshot) => Text(
+                                snapshot.data ?? false
+                                    ? "Blitz aus"
+                                    : "Blitz an",
+                                style: TextStyle(fontSize: 16)),
+                          )),
+                    ),
+                  if (snapshot.data != null &&
+                      snapshot.data.hasBackCamera &&
+                      snapshot.data.hasFrontCamera)
+                    Container(
+                      margin: EdgeInsets.all(8),
+                      child: OutlineButton(
+                          onPressed: () => controller
+                              .flipCamera()
+                              .whenComplete(updateCameraStream),
+                          child: StreamBuilder<CameraFacing>(
+                            stream: cameraStreamController.stream,
+                            builder: (ctx, snapshot) => Text(
+                                snapshot.data == CameraFacing.back
+                                    ? "Frontkamera"
+                                    : "Standard-Kamera",
+                                style: TextStyle(fontSize: 16)),
+                          )),
                     )
-                ),
-              ),
-            if (snapshot.data.hasBackCamera && snapshot.data.hasFrontCamera)
-              Container(
-                margin: EdgeInsets.all(8),
-                child: OutlineButton(
-                    onPressed: () =>
-                        controller.flipCamera()
-                            .whenComplete(updateCameraStream),
-                    child: StreamBuilder<CameraFacing>(
-                      stream: cameraStreamController.stream,
-                      builder: (ctx, snapshot) =>
-                          Text(snapshot.data == CameraFacing.back ?
-                          "Frontkamera" : "Standard-Kamera",
-                              style: TextStyle(fontSize: 16)),
-                    )
-                ),
-              )
-          ]
-      )
-    );
+                ]));
   }
 
   Future<SystemFeatures> _tryToGetSystemFeatures() async {
