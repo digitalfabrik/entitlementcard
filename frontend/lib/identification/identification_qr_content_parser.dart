@@ -67,7 +67,9 @@ class IdentificationQrContentParser {
 
       final cardType = CardType.values[cardActivateModel.cardType.value];
       final regionId = cardActivateModel.regionId;
-
+      if (!cardActivateModel.hasTotpSecret()) {
+        throw QRCodeFieldMissingException("totpSecret");
+      }
       String base32TotpSecret;
       try {
         base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
