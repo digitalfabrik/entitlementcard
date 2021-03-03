@@ -35,7 +35,7 @@ class VerificationResult extends StatelessWidget {
                 totp: model.verificationCardDetails.otp)));
     return Query(
       options: QueryOptions(
-          documentNode: byCardDetailsHash.document,
+          document: byCardDetailsHash.document,
           variables: byCardDetailsHash.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
@@ -43,7 +43,7 @@ class VerificationResult extends StatelessWidget {
               result.exception.toString(), "verifyRequestError"));
         }
 
-        if (result.loading) {
+        if (result.isLoading) {
           return WaitingForVerification();
         }
         final isCardValid =

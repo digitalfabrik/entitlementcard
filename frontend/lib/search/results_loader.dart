@@ -61,7 +61,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               offset: pageKey));
       var query = AcceptingStoresSearchQuery(variables: arguments);
       final result = await _client.query(QueryOptions(
-          documentNode: query.document, variables: query.getVariablesMap()));
+          document: query.document, variables: query.getVariablesMap()));
       if (result.hasException) throw result.exception;
 
       if (widget != oldWidget) {
