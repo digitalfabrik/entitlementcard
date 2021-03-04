@@ -22,7 +22,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
 
     fun filterCategory(): Boolean {
         val category = store.category
-        val valid = category?.toIntOrNull() in 0..8
+        val valid = category?.toIntOrNull() in 0..8 || category?.toIntOrNull() == 99
 
         if (!valid)
             logger.info("$store was filtered out because category was invalid")
