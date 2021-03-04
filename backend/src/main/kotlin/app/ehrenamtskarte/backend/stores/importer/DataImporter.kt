@@ -1,29 +1,27 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-import app.ehrenamtskarte.backend.stores.importer.ImportMonitor
-import app.ehrenamtskarte.backend.stores.importer.addStep
 import app.ehrenamtskarte.backend.stores.importer.steps.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 object DataImporter {
 
-    fun import(): ImportMonitor {
-        val monitor = ImportMonitor(true)
+    fun import(manualImport: Boolean) {
+        val logger = LoggerFactory.getLogger(DataImporter::class.java)
         val pipe = {
-            Unit.addStep(Download(monitor)) { monitor.addMessage("== Download raw data ==" )}
-                .addStep(FilterRawData(monitor)) { monitor.addMessage("== Filter raw data ==") }
-                .addStep(RawToImportAcceptingStore(monitor)) { monitor.addMessage("== Map raw to internal data ==") }
-                .addStep(Encoding(monitor)) { monitor.addMessage("== Handle encoding issues ==") }
-                .addStep(StoreToDatabase(monitor)) { monitor.addMessage("== Store remaining data to db ==") }
+            Unit.addStep(Download(logger)) { logger.info("== Download raw data ==" )}
+                .addStep(FilterRawData(logger)) { logger.info("== Filter raw data ==") }
+                .addStep(RawToImportAcceptingStore(logger)) { logger.info("== Map raw to internal data ==") }
+                .addStep(Encoding(logger)) { logger.info("== Handle encoding issues ==") }
+                .addStep(StoreToDatabase(logger, manualImport)) { logger.info("== Store remaining data to db ==") }
         }
 
         try {
             pipe()
-            monitor.addMessage("== Pipeline successfully finished ==")
+            logger.info("== Pipeline successfully finished ==")
         } catch (e : Exception) {
-            monitor.addMessage("== Pipeline was aborted without altering the database ==")
+            logger.info("== Pipeline was aborted without altering the database ==", e)
         }
-
-        return monitor
     }
 
 }

@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.stores.importer.ImportMonitor
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeData
@@ -12,8 +11,9 @@ import io.ktor.client.request.request
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
+import org.slf4j.Logger
 
-class Download(val monitor: ImportMonitor) : PipelineStep<Unit, List<LbeAcceptingStore>> {
+class Download(val logger: Logger) : PipelineStep<Unit, List<LbeAcceptingStore>> {
 
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {
@@ -35,7 +35,7 @@ class Download(val monitor: ImportMonitor) : PipelineStep<Unit, List<LbeAcceptin
 
             return lbeData.acceptingStores
         } catch (e: Exception) {
-            monitor.addMessage("Unknown exception while downloading data from lbe", e)
+            logger.info("Unknown exception while downloading data from lbe", e)
             throw e
         }
     }

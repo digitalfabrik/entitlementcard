@@ -1,12 +1,13 @@
 package app.ehrenamtskarte.backend.stores.importer
 
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
+import org.slf4j.Logger
 
-data class FilterBuilder(val store: LbeAcceptingStore, val monitor: ImportMonitor) {
+data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
 
     fun filterLongitudeAndLatitude()
             = if (store.longitude.isNullOrBlank() || store.latitude.isNullOrBlank()) {
-        monitor.addMessage("$store was filtered out because longitude or latitude were invalid")
+        logger.info("$store was filtered out because longitude or latitude were invalid")
         false
     } else {
         true
@@ -15,21 +16,16 @@ data class FilterBuilder(val store: LbeAcceptingStore, val monitor: ImportMonito
     fun filterPostalCode() = if(store.postalCode == null || store.postalCode?.trim()?.length == 5) {
         true
     } else {
-        monitor.addMessage("$store was filtered out because postal code is invalid")
+        logger.info("$store was filtered out because postal code is invalid")
         false
     }
 
     fun filterCategory(): Boolean {
         val category = store.category
-        val valid = !category.isNullOrBlank()
-                && try {
-            category.toInt() in 0..8
-        } catch (nfe: NumberFormatException) {
-            false
-        }
+        val valid = category?.toIntOrNull() in 0..8
 
         if (!valid)
-            monitor.addMessage("$store was filtered out because category was invlaid")
+            logger.info("$store was filtered out because category was invalid")
 
         return valid
     }

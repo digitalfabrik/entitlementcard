@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.stores.importer.ImportMonitor
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.ImportAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
+import org.slf4j.Logger
 
-class RawToImportAcceptingStore(val monitor: ImportMonitor) : PipelineStep<List<LbeAcceptingStore>, List<ImportAcceptingStore>> {
+class RawToImportAcceptingStore(val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<ImportAcceptingStore>> {
 
     override fun execute(input: List<LbeAcceptingStore>) = input.map {
         try {
@@ -24,10 +24,10 @@ class RawToImportAcceptingStore(val monitor: ImportMonitor) : PipelineStep<List<
                 it.category!!.toInt()
             )
         } catch (e: NumberFormatException) {
-            monitor.addMessage("Number format exception occurred while mapping $it from raw", e)
+            logger.info("Number format exception occurred while mapping $it from raw", e)
             null
         } catch (e: Exception) {
-            monitor.addMessage("Unknown exception occurred while mapping $it from raw", e)
+            logger.info("Unknown exception occurred while mapping $it from raw", e)
             null
         }
     }.filterNotNull()

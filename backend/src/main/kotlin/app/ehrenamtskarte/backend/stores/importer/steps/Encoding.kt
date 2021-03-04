@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.stores.importer.ImportMonitor
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.ImportAcceptingStore
 import org.apache.commons.text.StringEscapeUtils
+import org.slf4j.Logger
 
-class Encoding(val monitor: ImportMonitor) : PipelineStep<List<ImportAcceptingStore>, List<ImportAcceptingStore>> {
+class Encoding(val logger: Logger) : PipelineStep<List<ImportAcceptingStore>, List<ImportAcceptingStore>> {
 
     override fun execute(input: List<ImportAcceptingStore>) = input.map {
         try {
@@ -24,7 +24,7 @@ class Encoding(val monitor: ImportMonitor) : PipelineStep<List<ImportAcceptingSt
                 it.categoryId
             )
         } catch (e: Exception) {
-            monitor.addMessage("Exception while encoding $it for database import:\n$e.message")
+            logger.info("Exception while encoding $it for database import:\n$e.message")
             null
         }
     }.filterNotNull()

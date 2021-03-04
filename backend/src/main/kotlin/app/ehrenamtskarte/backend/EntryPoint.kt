@@ -25,7 +25,7 @@ class Entry : CliktCommand() {
             Database.setup()
             if (importFlag) {
                 println("Importing data from Lbe")
-                DataImporter.import()
+                DataImporter.import(importFlag)
             }
             WebService().start()
         }
