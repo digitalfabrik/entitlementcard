@@ -1,14 +1,14 @@
-import 'testing_data_item.dart';
-import '../verification/verification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../qr_code_scanner/qr_code_scanner.dart';
+import '../verification/verification_page.dart';
 import 'card_detail_view.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
 import 'no_card_view.dart';
+import 'testing_data_item.dart';
 
 const showTestDataOptions = 
   bool.fromEnvironment("test_data_options", defaultValue: false);

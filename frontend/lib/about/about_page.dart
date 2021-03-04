@@ -1,31 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
+
+import 'copyright.dart';
 
 class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      Container(child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.zero),
-        child: SvgPicture.asset("assets/app_icon/icon.svg",
-            semanticsLabel: "App icon", width: 120)
-      )),
-    ]);
+    return SafeArea(
+        child: FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder:
+                (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+              List<Widget> children;
+              if (snapshot.hasData) {
+                children = [
+                  Center(
+                      child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: Image(
+                                image: AssetImage("assets/icon/icon.png"),
+                                height: 100.0,
+                                width: 100.0,
+                                fit: BoxFit.cover,
+                              )))),
+                  Center(
+                      child: Text(snapshot.data.appName,
+                          style: Theme.of(context).textTheme.headline5)),
+                  Center(
+                      child: Text(snapshot.data.version,
+                          style: Theme.of(context).textTheme.bodyText2)),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                  ),
+                  Center(
+                      child: Text("Herausgeber",
+                          style: Theme.of(context).textTheme.subtitle2)),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                          'Bayerisches Staatsministerium für Familie, Arbeit und Soziales\nWinzererstraße 7\n80797 München',
+                          style: Theme.of(context).textTheme.bodyText1)),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                  ),
+                  ListTile(leading: Icon(Icons.copyright),
+                      title: Text("sdf"), onTap: () => _showCopyright(context))
+                ];
+              } else {
+                children = [];
+              }
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children);
+            }));
   }
 
-  void _showAboutDialog(context) {
-    PackageInfo.fromPlatform().then((packageInfo) =>
-        showAboutDialog(
-          context: context,
-          applicationIcon: ClipRRect(
-            child: SvgPicture.asset("assets/app_icon/icon.svg",
-                semanticsLabel: "App icon", width: 30),
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-          ),
-          applicationName: packageInfo.appName,
-          applicationVersion: packageInfo.version,
-          applicationLegalese: 'Copyright Ehrenamtskarten Kompetenzteam',
+  void _showCopyright(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Copyright(),
         ));
   }
 }
