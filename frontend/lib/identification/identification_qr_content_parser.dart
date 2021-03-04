@@ -83,6 +83,9 @@ class IdentificationQrContentParser {
       }
       final cardType = CardType.values[cardActivateModel.cardType.value];
       final regionId = cardActivateModel.regionId;
+      if (!cardActivateModel.hasTotpSecret()) {
+        return createFieldMissingError("totpSecret", "totpSecretMissing");
+      }
       String base32TotpSecret;
       try {
         base32TotpSecret = base32.encode(cardActivateModel.totpSecret);

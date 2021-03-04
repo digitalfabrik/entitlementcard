@@ -49,8 +49,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
+    var oldWidget = widget;
     try {
-      var oldWidget = widget;
       var arguments = AcceptingStoresSearchArguments(
           params: SearchParamsInput(
               categoryIds:
@@ -61,7 +61,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               offset: pageKey));
       var query = AcceptingStoresSearchQuery(variables: arguments);
       final result = await _client.query(QueryOptions(
-          documentNode: query.document, variables: query.getVariablesMap()));
+          document: query.document, variables: query.getVariablesMap()));
       if (result.hasException) throw result.exception;
 
       if (widget != oldWidget) {
@@ -80,6 +80,13 @@ class ResultsLoaderState extends State<ResultsLoader> {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } on Exception catch (error) {
+      if (widget != oldWidget) {
+        // Params are outdated.
+        // If we're still at the first key, we must manually retrigger fetching.
+        if (pageKey == _pagingController.firstPageKey) {
+          return await _fetchPage(pageKey);
+        }
+      }
       _pagingController.error = error;
     }
   }

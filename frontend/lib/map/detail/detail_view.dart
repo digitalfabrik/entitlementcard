@@ -20,14 +20,14 @@ class DetailView extends StatelessWidget {
             ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
       options: QueryOptions(
-          documentNode: byIdQuery.document,
+          document: byIdQuery.document,
           variables: byIdQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
         }
 
-        if (result.loading) {
+        if (result.isLoading) {
           return DetailLayout(body: LinearProgressIndicator());
         }
         final matchingStores =
