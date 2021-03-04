@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../qr_code_scanner/qr_code_parser.dart';
+import '../../qr_code_scanner/qr_code_processor.dart';
 import '../../qr_code_scanner/qr_code_scanner_page.dart';
 import '../verification_card_details.dart';
 import '../verification_card_details_model.dart';
@@ -67,14 +67,14 @@ class _VerificationViewState extends State<VerificationView> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QRCodeScannerPage(
+          builder: (context) => QrCodeScannerPage(
             title: "Karte verifizieren",
-            qrCodeContentParser: _handleQrCode,
+            onCodeScanned: _handleQrCode,
           ),
         ));
   }
 
-  void _handleQrCode(String rawQRContent) {
+  Future<void> _handleQrCode(String rawQRContent) async {
     // TODO still no beautiful function
     final provider =
     Provider.of<VerificationCardDetailsModel>(context, listen: false);
@@ -87,14 +87,14 @@ class _VerificationViewState extends State<VerificationView> {
       var cardDetails = processQrCodeContent(rawQRContent);
       final hash = hashVerificationCardDetails(cardDetails);
       provider.setReadyForRemoteVerification(cardDetails, hash);
-    } on QRCodeFieldMissingException catch (e) {
+    } on QrCodeFieldMissingException catch (e) {
       handleError("Die eingescannte Ehrenamtskarte ist nicht gültig, da "
           "erforderliche Daten fehlen.", "${e.missingFieldName}Missing", e);
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat("dd.MM.yyyy");
       handleError("Die eingescannte Karte ist bereits am "
           "${dateFormat.format(e.expiry)} abgelaufen.", "cardExpired", e);
-    } on QRCodeParseException catch (e) {
+    } on QrCodeParseException catch (e) {
       handleError("Der Inhalt des eingescannten Codes kann nicht verstanden "
       "werden. Vermutlich handelt es sich um einen QR Code, der nicht für die "
       "Ehrenamtskarte-App generiert wurde.", "invalidFormat", e);

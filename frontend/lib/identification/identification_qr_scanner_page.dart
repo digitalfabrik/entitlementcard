@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../qr_code_scanner/qr_code_parser.dart';
-import '../qr_code_scanner/qr_code_scanner.dart';
+import '../qr_code_scanner/qr_code_processor.dart';
+import '../qr_code_scanner/qr_code_scanner_page.dart';
 import '../qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
@@ -13,13 +13,9 @@ class IdentificationQrScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Ehrenamtskarte hinzufügen"),
-      ),
-      body: QRCodeScanner(
+    return QrCodeScannerPage(
+        title: "Ehrenamtskarte hinzufügen",
         onCodeScanned: (code) async => _onCodeScanned(context, code),
-      )
     );
   }
 
@@ -44,13 +40,12 @@ class IdentificationQrScannerPage extends StatelessWidget {
       await showError("Der Inhalt des eingescannten Codes kann nicht "
           "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
           "der nicht für die Ehrenamtskarte-App generiert wurde.");
-    } on QRCodeFieldMissingException catch (e) {
+    } on QrCodeFieldMissingException catch (e) {
       await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
           "(Fehlercode: ${e.missingFieldName}Missing)");
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError("Ein unerwarteter Fehler ist aufgetreten.");
     }
-    Navigator.pop(context);
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class QRCodeScannerControls extends StatelessWidget {
+class QrCodeScannerControls extends StatelessWidget {
   final QRViewController controller;
 
   // Not really nice. We need to update the button texts after we pressed them.
@@ -14,7 +14,7 @@ class QRCodeScannerControls extends StatelessWidget {
   final StreamController<CameraFacing> cameraStreamController =
       StreamController<CameraFacing>();
 
-  QRCodeScannerControls({@required this.controller, Key key})
+  QrCodeScannerControls({@required this.controller, Key key})
       : super(key: key) {
     updateFlashStream();
     updateCameraStream();

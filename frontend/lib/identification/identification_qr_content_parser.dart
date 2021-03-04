@@ -2,25 +2,25 @@ import 'dart:convert';
 
 import 'package:base32/base32.dart';
 
-import '../qr_code_scanner/qr_code_parser.dart';
+import '../qr_code_scanner/qr_code_processor.dart';
 import 'base_card_details.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'protobuf/card_activate_model.pb.dart';
 
-class QRCodeInvalidTotpSecretException extends QRCodeParseException {
+class QRCodeInvalidTotpSecretException extends QrCodeParseException {
   QRCodeInvalidTotpSecretException() : super("invalid totp secret");
 }
 
-class QRCodeInvalidExpiryException extends QRCodeParseException {
+class QRCodeInvalidExpiryException extends QrCodeParseException {
   QRCodeInvalidExpiryException() : super("invalid expiry date");
 }
 
-class QRCodeMissingExpiryException extends QRCodeFieldMissingException {
+class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
   QRCodeMissingExpiryException() : super("expirationDate");
 }
 
-class QRCodeInvalidFormatException extends QRCodeParseException {
+class QRCodeInvalidFormatException extends QrCodeParseException {
   QRCodeInvalidFormatException() : super("invalid format");
 }
 
@@ -42,11 +42,11 @@ class IdentificationQrContentParser {
 
     final fullName = cardActivateModel.fullName;
     if (fullName == null) {
-      throw QRCodeFieldMissingException("fullName");
+      throw QrCodeFieldMissingException("fullName");
     }
     final hashSecret = cardActivateModel.hashSecret;
     if (hashSecret == null) {
-      throw QRCodeFieldMissingException("randomBytes");
+      throw QrCodeFieldMissingException("randomBytes");
     }
 
     final unixInt64ExpirationDate = cardActivateModel.expirationDate;
@@ -67,7 +67,7 @@ class IdentificationQrContentParser {
     final cardType = CardType.values[cardActivateModel.cardType.value];
     final regionId = cardActivateModel.regionId;
     if (!cardActivateModel.hasTotpSecret()) {
-      throw QRCodeFieldMissingException("totpSecret");
+      throw QrCodeFieldMissingException("totpSecret");
     }
     String base32TotpSecret;
     try {

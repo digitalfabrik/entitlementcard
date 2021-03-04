@@ -1,5 +1,5 @@
 import '../identification/protobuf/card_activate_model.pb.dart';
-import '../qr_code_scanner/qr_code_parser.dart';
+import '../qr_code_scanner/qr_code_processor.dart';
 import 'scanner/verification_qr_content_parser.dart';
 import 'verification_card_details.dart';
 
@@ -13,18 +13,18 @@ VerificationCardDetails processQrCodeContent(String rawBase64Content) {
 void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
   final baseCardDetails = verCardDetails.cardDetails;
   if (baseCardDetails.fullName == null || baseCardDetails.fullName.isEmpty) {
-    throw QRCodeFieldMissingException("fullName");
+    throw QrCodeFieldMissingException("fullName");
   }
   if (baseCardDetails.regionId == null) {
-    throw QRCodeFieldMissingException("regionId");
+    throw QrCodeFieldMissingException("regionId");
   }
   if (baseCardDetails.unixExpirationDate == null &&
       baseCardDetails.cardType == CardActivateModel_CardType.STANDARD.value) {
-    throw QRCodeFieldMissingException("expirationDate");
+    throw QrCodeFieldMissingException("expirationDate");
   }
   if (baseCardDetails.hashSecretBase64 == null ||
       baseCardDetails.hashSecretBase64.isEmpty) {
-    throw QRCodeFieldMissingException("hashSecretBase64");
+    throw QrCodeFieldMissingException("hashSecretBase64");
   }
   if (baseCardDetails.expirationDate != null) {
     var now = DateTime.now();
@@ -33,11 +33,11 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
     }
   }
   if (verCardDetails.otp == null || verCardDetails.otp <= 0) {
-    throw QRCodeFieldMissingException("otp");
+    throw QrCodeFieldMissingException("otp");
   }
 }
 
-class CardExpiredException extends QRCodeParseException {
+class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
   CardExpiredException(this.expiry) : super("card already expired");
 }

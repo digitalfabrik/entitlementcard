@@ -10,17 +10,17 @@ const scanDelayAfterErrorMs = 500;
 
 typedef OnCodeScannedCallback = Future<void> Function(String code);
 
-class QRCodeScanner extends StatefulWidget {
+class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
 
-  const QRCodeScanner({Key key, this.onCodeScanned})
+  const QrCodeScanner({Key key, this.onCodeScanned})
       : super(key: key);
 
   @override
-  State<QRCodeScanner> createState() => _QRViewState();
+  State<QrCodeScanner> createState() => _QRViewState();
 }
 
-class _QRViewState extends State<QRCodeScanner> {
+class _QRViewState extends State<QrCodeScanner> {
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
@@ -33,7 +33,7 @@ class _QRViewState extends State<QRCodeScanner> {
               flex: 4,
               child: QRView(
                 key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
+                onQRViewCreated: _onQrViewCreated,
                 overlay: QrScannerOverlayShape(
                   borderColor: Theme.of(context).accentColor,
                   borderRadius: 10,
@@ -55,7 +55,7 @@ class _QRViewState extends State<QRCodeScanner> {
                       child: Text('Halten Sie die Kamera auf den QR Code.'),
                     ),
                     if (controller != null)
-                      QRCodeScannerControls(controller: controller)
+                      QrCodeScannerControls(controller: controller)
                   ],
               ),
             )
@@ -78,7 +78,7 @@ class _QRViewState extends State<QRCodeScanner> {
     return scanArea;
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQrViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
     });

@@ -3,10 +3,10 @@ import 'dart:typed_data';
 
 import '../../identification/base_card_details.dart';
 import '../../identification/protobuf/card_verify_model.pb.dart';
-import '../../qr_code_scanner/qr_code_parser.dart';
+import '../../qr_code_scanner/qr_code_processor.dart';
 import '../verification_card_details.dart';
 
-class VerificationParseException extends QRCodeParseException {
+class VerificationParseException extends QrCodeParseException {
   final String internalMessage;
   final Exception cause;
   final StackTrace stackTrace;

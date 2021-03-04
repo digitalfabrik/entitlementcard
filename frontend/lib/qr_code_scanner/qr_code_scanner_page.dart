@@ -1,40 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'qr_code_parser.dart';
+import 'qr_code_processor.dart';
 import 'qr_code_scanner.dart';
 
-class QRCodeScannerPage extends StatefulWidget {
-  final QRCodeContentParser qrCodeContentParser;
+class QrCodeScannerPage extends StatelessWidget {
+  final OnCodeScannedCallback onCodeScanned;
   final String title;
 
-  QRCodeScannerPage({Key key, @required this.qrCodeContentParser,
+  QrCodeScannerPage({Key key, @required this.onCodeScanned,
     @required this.title})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      _QRCodeScannerPageState();
-}
-
-class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(title),
       ),
-      body: QRCodeScanner(
-        onCodeScanned: (code) => _onCodeScanned(context, code),
+      body: QrCodeScanner(
+        onCodeScanned: (code) async => await _onCodeScanned(context, code),
       )
     );
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
     try {
-      widget.qrCodeContentParser(code);
-    } on QRCodeParseException catch (e) {
-      print(e);
+      if (onCodeScanned != null) {
+        await onCodeScanned(code);
+      }
+    } on QrCodeParseException catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace, label: e?.toString());
     }
 
     Navigator.of(context).maybePop();
