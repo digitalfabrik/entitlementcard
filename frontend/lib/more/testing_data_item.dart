@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
+import '../intro_slides/intro_screen.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
@@ -33,6 +34,10 @@ class _TestingDataState extends State<TestingDataItem> {
                 onPressed: _setValidEakData,
                 child: Text('Set valid EAK data'),
               ),
+              RaisedButton(
+                onPressed: _showInfoSlides,
+                child: Text('Info Slides'),
+              )
             ],
           ),
         ),
@@ -47,5 +52,13 @@ class _TestingDataState extends State<TestingDataItem> {
   Future<void> _setValidEakData() async {
     Provider.of<CardDetailsModel>(context, listen: false)
         .setCardDetails(validEakDetails);
+  }
+
+  void _showInfoSlides() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => IntroScreen(),
+        ));
   }
 }
