@@ -88,7 +88,7 @@ class _VerificationViewState extends State<VerificationView> {
     Provider.of<VerificationCardDetailsModel>(context, listen: false);
     void handleError(String message, String errorCode, Exception e) {
       print("Verification failed: ${e.toString()}");
-      provider.setVerificationFailure(VerificationError.fromStrings(message,
+      provider.setVerificationFailure(VerificationError(message,
           errorCode));
     }
     try {

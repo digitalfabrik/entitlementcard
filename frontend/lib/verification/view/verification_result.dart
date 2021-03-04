@@ -39,7 +39,7 @@ class VerificationResult extends StatelessWidget {
           variables: byCardDetailsHash.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
-          return NegativeVerificationResult(VerificationError.fromStrings(
+          return NegativeVerificationResult(VerificationError(
               result.exception.toString(), "verifyRequestError"));
         }
 
@@ -52,7 +52,7 @@ class VerificationResult extends StatelessWidget {
           return PositiveVerificationResult(
               model.verificationCardDetails.cardDetails);
         } else {
-          return NegativeVerificationResult(VerificationError.fromStrings(
+          return NegativeVerificationResult(VerificationError(
               "Die zu prüfende Karte konnte vom Server nicht verifiziert "
                   "werden!",
               "cardRejected"));
