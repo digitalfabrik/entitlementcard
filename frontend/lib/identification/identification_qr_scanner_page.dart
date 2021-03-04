@@ -18,36 +18,39 @@ class IdentificationQrScannerPage extends StatelessWidget {
         title: Text("Ehrenamtskarte hinzufügen"),
       ),
       body: QRCodeScanner(
-        onCodeScanned: (code) => _onCodeScanned(context, code),
+        onCodeScanned: (code) async => _onCodeScanned(context, code),
       )
     );
   }
 
-  _onCodeScanned(BuildContext context, String code) {
+  void _onCodeScanned(BuildContext context, String code) async {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
-    void showError(msg) => QrParsingErrorDialog.showErrorDialog(context, msg);
+    void showError(msg) async =>
+        await QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
-      showError("Die eingescannte Karte enthält kein Ablauf-"
+      await showError("Die eingescannte Karte enthält kein Ablauf-"
           "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
           " ist. Vermutlich ist beim Erstellen der "
           "digitalen Ehrenamtskarte ein Fehler passiert.");
     } on QRCodeInvalidTotpSecretException catch (_) {
-      showError("Beim Verarbeiten des eingescannten Codes ist ein"
+      await showError("Beim Verarbeiten des eingescannten Codes ist ein"
           "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
     } on QRCodeInvalidExpiryException catch (_) {
-      showError("Beim Verarbeiten des Ablaufdatums ist ein "
+      await showError("Beim Verarbeiten des Ablaufdatums ist ein "
           "unerwarteter Fehler aufgetreten.");
     } on QRCodeInvalidFormatException catch (_) {
-      showError("Der Inhalt des eingescannten Codes kann nicht verstanden "
-          "werden. Vermutlich handelt es sich um einen QR Code, "
-          "der nicht für die Ehrenamtskarte App generiert wurde.");
+      await showError("Der Inhalt des eingescannten Codes kann nicht "
+          "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
+          "der nicht für die Ehrenamtskarte-App generiert wurde.");
     } on QRCodeFieldMissingException catch (e) {
-      showError("Der Inhalt des eingescannten Codes ist unvollständig. "
+      await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
           "(Fehlercode: ${e.missingFieldName}Missing)");
-    } on QRCodeParseException catch (_) {
-      showError("Ein unerwarteter Fehler ist aufgetreten.");
+    } on QRCodeParseException catch (e, stacktrace) {
+      debugPrintStack(stackTrace: stacktrace, label: e.toString());
+      await showError("Ein unerwarteter Fehler ist aufgetreten.");
     }
+    Navigator.pop(context);
   }
 }

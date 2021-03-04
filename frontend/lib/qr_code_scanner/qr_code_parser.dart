@@ -1,7 +1,7 @@
 class QRCodeParseException implements Exception {
   final String reason;
   QRCodeParseException(this.reason);
-  String toString() => "Failed to parse QR code: $reason";
+  String toString() => "${runtimeType.toString()}: $reason";
 }
 
 class QRCodeFieldMissingException extends QRCodeParseException {
