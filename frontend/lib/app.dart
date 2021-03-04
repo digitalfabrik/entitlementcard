@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'configuration.dart';
 import 'graphql/configured_graphql_provider.dart';
 import 'home/home_page.dart';
 import 'identification/card_details_model.dart';
@@ -27,7 +28,9 @@ class App extends StatelessWidget {
           child: MaterialApp(
             title: 'Ehrenamtskarte',
             theme: theme,
-            home: HomePage(),
+            home: HomePage(
+              showVerification: Configuration.of(context).showVerification,
+            ),
           )),
     );
   }

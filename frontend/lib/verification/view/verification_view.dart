@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../qr_code_scanner/qr_code_scanner.dart';
-import '../remote_verification.dart';
-import '../scanner/verification_qr_content_parser.dart';
 import '../verification_card_details_model.dart';
+import '../verification_processor.dart';
 import 'content_card.dart';
-import 'negative_verification_result.dart';
-import 'positive_verification_result.dart';
 import 'verification_info_text.dart';
-import 'waiting_for_verification.dart';
+import 'verification_result.dart';
 
 class VerificationView extends StatefulWidget {
   const VerificationView({
@@ -58,27 +55,11 @@ class _VerificationViewState extends State<VerificationView> {
               ),
               Consumer<VerificationCardDetailsModel>(
                   builder: (context, verCardDetailsModel, child) {
-                return _buildVerificationResult(verCardDetailsModel);
+                return VerificationResult(verCardDetailsModel);
               }),
             ],
           ),
         ));
-  }
-
-  Widget _buildVerificationResult(VerificationCardDetailsModel model) {
-    switch (model.verificationState) {
-      case VerificationState.waitingForScan:
-        return Container(width: 0.0, height: 0.0);
-      case VerificationState.verificationInProgress:
-        verifyCardValidWithRemote(model);
-        return WaitingForVerification();
-      case VerificationState.verificationSuccess:
-        return PositiveVerificationResult(
-            model.verificationCardDetails.cardDetails);
-      case VerificationState.verificationFailure:
-        return NegativeVerificationResult(model.verificationError);
-    }
-    return Container(width: 0.0, height: 0.0);
   }
 
   void _onScanCodePressed() {
@@ -90,7 +71,7 @@ class _VerificationViewState extends State<VerificationView> {
         MaterialPageRoute(
           builder: (context) => QRCodeScanner(
             qrCodeContentParser:
-                VerificationQrContentParser(provider).processQrCodeContent,
+                VerificationProcessor(provider).processQrCodeContent,
           ),
         ));
   }

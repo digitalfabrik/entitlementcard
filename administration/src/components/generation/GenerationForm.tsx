@@ -64,8 +64,10 @@ const GenerationForm = (props: Props) => {
     const updateModel = (oldModel: CardCreationModel, newModel: CardCreationModel | null) => {
         if (newModel === null)
             setCardCreationModels(cardCreationModels.filter(model => model !== oldModel));
-        else
-            setCardCreationModels(cardCreationModels.map(model => model === oldModel ? newModel : model))
+        else {
+            if (newModel.cardType === CardType.gold) newModel.expirationDate = null;
+            setCardCreationModels(cardCreationModels.map(model => model === oldModel ? newModel : model));
+        }
     }
 
     const allCardsValid = cardCreationModels.reduce((acc, model) => acc && isValid(model), true)
@@ -76,8 +78,8 @@ const GenerationForm = (props: Props) => {
                     when={cardCreationModels.length !== 0}/>
             <ButtonBar stickyTop={0}>
                 <Tooltip>
-                <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}
-                        disabled={!allCardsValid || cardCreationModels.length === 0} />
+                    <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}
+                            disabled={!allCardsValid || cardCreationModels.length === 0}/>
                     {!allCardsValid && "Mindestens eine Karte enthält ungültige Eingaben."}
                     {cardCreationModels.length === 0 && "Legen Sie zunächst eine Karte an."}
                 </Tooltip>

@@ -6,11 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'qr_code_parser.dart';
-
-const flashOn = 'Blitz an';
-const flashOff = 'Blitz aus';
-const frontCamera = 'Frontkamera';
-const backCamera = 'Standard Kamera';
+import 'qr_code_scanner_controls.dart';
 
 const scanDelayAfterErrorMs = 500;
 
@@ -26,8 +22,6 @@ class QRCodeScanner extends StatefulWidget {
 
 class _QRViewState extends State<QRCodeScanner> {
   Barcode result;
-  String _flashState = flashOn;
-  String _cameraState = frontCamera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
@@ -70,67 +64,21 @@ class _QRViewState extends State<QRCodeScanner> {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    child: Text('Halten Sie die Kamera auf den QR Code.'),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: OutlineButton(
-                          onPressed: () {
-                            if (controller != null) {
-                              controller.toggleFlash();
-                              setState(() {
-                                _flashState = _isFlashOn(_flashState)
-                                    ? flashOff
-                                    : flashOn;
-                              });
-                            }
-                          },
-                          child:
-                              Text(_flashState, style: TextStyle(fontSize: 16)),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: OutlineButton(
-                          onPressed: () {
-                            if (controller != null) {
-                              controller.flipCamera();
-                              setState(() {
-                                _cameraState = _isBackCamera(_cameraState)
-                                    ? frontCamera
-                                    : backCamera;
-                              });
-                            }
-                          },
-                          child: Text(_cameraState,
-                              style: TextStyle(fontSize: 16)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(8),
+                      child: Text('Halten Sie die Kamera auf den QR Code.'),
+                    ),
+                    if (controller != null)
+                      QRCodeScannerControls(controller: controller)
+                  ],
               ),
-            ),
+            )
           )
         ],
       ),
     );
-  }
-
-  bool _isFlashOn(String current) {
-    return flashOn == current;
-  }
-
-  bool _isBackCamera(String current) {
-    return backCamera == current;
   }
 
   Widget _buildQrView(BuildContext context) {
@@ -144,32 +92,23 @@ class _QRViewState extends State<QRCodeScanner> {
     if (smallestDimension < scanArea * 1.1) {
       scanArea = smallestDimension * 0.9;
     }
-    print("QR Code Scan area is: $scanArea");
-    // To ensure the Scanner view is properly sized after rotation we need to
-    // listen for Flutter SizeChanged notification and update controller
-    return NotificationListener<SizeChangedLayoutNotification>(
-        onNotification: (notification) {
-          Future.microtask(
-              () => controller?.updateDimensions(qrKey, scanArea: scanArea));
-          return false;
-        },
-        child: SizeChangedLayoutNotifier(
-            key: const Key('qr-size-notifier'),
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: Colors.red,
-                borderRadius: 10,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: scanArea,
-              ),
-            )));
+    return QRView(
+        key: qrKey,
+        onQRViewCreated: _onQRViewCreated,
+        overlay: QrScannerOverlayShape(
+          borderColor: Colors.red,
+          borderRadius: 10,
+          borderLength: 30,
+          borderWidth: 10,
+          cutOutSize: scanArea,
+        ),
+      );
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
+    setState(() {
+      this.controller = controller;
+    });
     controller.scannedDataStream.listen((scanData) {
       if (scanData != null) {
         _tryParseCodeContent(scanData.code);
@@ -189,7 +128,6 @@ class _QRViewState extends State<QRCodeScanner> {
     final parseResult = widget.qrCodeContentParser(codeContent);
     if (parseResult.hasError) {
       print("Failed to parse qr code content!");
-      print(parseResult.internalErrorMessage);
       final errorMessage = parseResult.userErrorMessage;
       _showErrorDialog(errorMessage).then((value) {
         // give the user time to move the camara away from the qr code

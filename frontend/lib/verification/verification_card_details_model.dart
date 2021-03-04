@@ -3,19 +3,20 @@ import 'package:flutter/foundation.dart';
 import 'verification_card_details.dart';
 import 'verification_error.dart';
 
-enum VerificationState {
+enum LocalVerificationState {
   waitingForScan,
-  verificationInProgress,
-  verificationSuccess,
-  verificationFailure
+  failure,
+  readyForRemoteVerification,
 }
 
 class VerificationCardDetailsModel extends ChangeNotifier {
   VerificationCardDetails _verificationCardDetails;
-  VerificationState _verificationState = VerificationState.waitingForScan;
+  LocalVerificationState _verificationState =
+      LocalVerificationState.waitingForScan;
   VerificationError _verificationError;
+  String _verificationHash;
 
-  VerificationState get verificationState {
+  LocalVerificationState get verificationState {
     return _verificationState;
   }
 
@@ -27,25 +28,26 @@ class VerificationCardDetailsModel extends ChangeNotifier {
     return _verificationError;
   }
 
+  String get verificationHash {
+    return _verificationHash;
+  }
+
   void setWaitingForScan() {
-    _verificationState = VerificationState.waitingForScan;
+    _verificationState = LocalVerificationState.waitingForScan;
     notifyListeners();
   }
 
-  void setWaitingForRemoteVerification(VerificationCardDetails details) {
-    _verificationState = VerificationState.verificationInProgress;
+  void setReadyForRemoteVerification(
+      VerificationCardDetails details, String verificationHash) {
+    _verificationState = LocalVerificationState.readyForRemoteVerification;
     _verificationCardDetails = details;
+    _verificationHash = verificationHash;
     notifyListeners();
   }
 
   void setVerificationFailure(VerificationError verificationError) {
-    _verificationState = VerificationState.verificationFailure;
+    _verificationState = LocalVerificationState.failure;
     _verificationError = verificationError;
-    notifyListeners();
-  }
-
-  void setVerificationSuccessful() {
-    _verificationState = VerificationState.verificationSuccess;
     notifyListeners();
   }
 }

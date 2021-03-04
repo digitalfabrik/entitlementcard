@@ -1,0 +1,13 @@
+[Unit]
+Description=Martin tile server for Ehrenamtskarte
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=martin
+ExecStart=/opt/ehrenamtskarte/martin/martin --config /opt/ehrenamtskarte/martin/config.yaml
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

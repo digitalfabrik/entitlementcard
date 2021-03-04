@@ -64,6 +64,7 @@ const EakForm = (props: Props) => {
                 </FormGroup>
                 <FormGroup label="Ablaufdatum">
                     <DateInput placeholder="Ablaufdatum"
+                               disabled={props.model.cardType === CardType.gold}
                                value={props.model.expirationDate}
                                parseDate={str => new Date(str)}
                                onChange={value => props.onUpdate({...props.model, expirationDate: value})}

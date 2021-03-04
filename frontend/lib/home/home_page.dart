@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../identification/identification_view.dart';
 import '../map/map_page.dart';
@@ -8,12 +9,15 @@ import 'app_flow.dart';
 import 'app_flows_stack.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  final bool showVerification;
+
+  HomePage({Key key, this.showVerification}) : super(key: key);
 
   static _HomePageData of(BuildContext context) => _HomePageData.of(context);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() =>
+      _HomePageState(showVerification: showVerification);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -25,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   _HomePageState._(this.mapPage, this.appFlows);
 
-  factory _HomePageState() {
+  factory _HomePageState({bool showVerification}) {
     _HomePageState state;
     var mapPage = MapPage(
       onMapCreated: (controller) =>
@@ -36,13 +40,23 @@ class _HomePageState extends State<HomePage> {
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
       AppFlow(SearchPage(), Icons.search, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
-      AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
-          GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+      if (showVerification)
+        AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
+            GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
       AppFlow(MorePage(), Icons.more_horiz, "Mehr",
           GlobalKey<NavigatorState>(debugLabel: "More tab key")),
     ];
     state = _HomePageState._(mapPage, appFlows);
     return state;
+  }
+
+  @override
+  void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // ios
+      statusBarBrightness: Brightness.light,
+    ));
+    super.initState();
   }
 
   @override

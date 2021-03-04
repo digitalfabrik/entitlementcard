@@ -27,10 +27,14 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var revoked by Cards.revoked
     var cardDetailsHash by Cards.cardDetailsHash
 
-    var expirationDate: LocalDateTime
-        get() = LocalDateTime.ofEpochSecond(expirationDateEpochSeconds, 0, ZoneOffset.UTC)
+    var expirationDate: LocalDateTime?
+        get() = if (expirationDateEpochSeconds > 0) LocalDateTime.ofEpochSecond(
+            expirationDateEpochSeconds,
+            0,
+            ZoneOffset.UTC
+        ) else null
         set(value) {
-            expirationDateEpochSeconds = value.toEpochSecond(ZoneOffset.UTC)
+            expirationDateEpochSeconds = value?.toEpochSecond(ZoneOffset.UTC) ?: 0
         }
 
     var issueDate: LocalDateTime

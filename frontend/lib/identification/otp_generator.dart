@@ -24,7 +24,8 @@ class OTPGenerator {
             _base32TotpSecret, DateTime.now().millisecondsSinceEpoch,
             algorithm: _algorithm,
             length: _otpLength,
-            interval: _otpIntervalSeconds)),
+            interval: _otpIntervalSeconds,
+            isGoogle: true)),
         validUntilMilliSeconds);
   }
 }

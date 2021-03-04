@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -49,6 +47,7 @@ class _MapPageState extends State<MapPage>
         onNoFeatureClick: stopShowingAcceptingStore,
         onFeatureClickLayerFilter: ["physical_stores"],
         onMapCreated: (controller) {
+          controller.setTelemetryEnabled(enabled: false);
           setState(() => _controller = controller);
           if (widget.onMapCreated != null) widget.onMapCreated(this);
         },
@@ -66,10 +65,9 @@ class _MapPageState extends State<MapPage>
                             _selectedAcceptingStoreId,
                             hideShowOnMapButton: true,
                           )
-                        : null))),
-        if (Platform.isIOS)
-          // Add Padding as MapBox has its attributionButton on the right on iOS
-          Container(height: 24)
+                        : null)
+            )
+        ),
       ])
     ]);
   }

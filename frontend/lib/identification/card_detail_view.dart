@@ -14,8 +14,9 @@ class CardDetailView extends StatelessWidget {
   CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
       : super(key: key);
 
-  get _formattedExpirationDate =>
-      DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate);
+  get _formattedExpirationDate => cardDetails.expirationDate != null
+      ? DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)
+      : "unbegrenzt";
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class CardDetailView extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(height: 5),
-                  Text("Gültig bis $_formattedExpirationDate"),
+                  Text("Gültig bis: $_formattedExpirationDate"),
                   SizedBox(
                     height: 24,
                   ),
