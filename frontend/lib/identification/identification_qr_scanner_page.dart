@@ -47,7 +47,7 @@ class IdentificationQrScannerPage extends StatelessWidget {
     } on QRCodeFieldMissingException catch (e) {
       await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
           "(Fehlercode: ${e.missingFieldName}Missing)");
-    } on QRCodeParseException catch (e, stacktrace) {
+    } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError("Ein unerwarteter Fehler ist aufgetreten.");
     }
