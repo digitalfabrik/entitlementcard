@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
-import '../identification/testing_data_item.dart';
 
 class AboutPage extends StatelessWidget {
   @override

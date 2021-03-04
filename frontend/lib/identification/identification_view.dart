@@ -1,5 +1,5 @@
-import 'package:ehrenamtskarte/identification/testing_data_item.dart';
-import 'package:ehrenamtskarte/verification/verification_page.dart';
+import 'testing_data_item.dart';
+import '../verification/verification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
