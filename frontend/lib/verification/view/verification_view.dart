@@ -32,14 +32,6 @@ class _VerificationViewState extends State<VerificationView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
-            // TODO the scaffold usually should add this by default already
-            onPressed: () => Navigator.of(context).pop(),
-          ),
           title: Text("Karte verifizieren"),
         ),
         body: SingleChildScrollView(
