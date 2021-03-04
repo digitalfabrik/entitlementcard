@@ -3,7 +3,7 @@ import 'package:flutter/painting.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
-  final String content;
+  final Widget content;
   final IconData icon;
 
   ContentTile({Key key, this.title, this.content, this.icon}) : super(key: key);
@@ -27,7 +27,7 @@ class ContentTile extends StatelessWidget {
 
 class ContentPage extends StatelessWidget {
   final String title;
-  final String content;
+  final Widget content;
 
   ContentPage({Key key, this.title, this.content}) : super(key: key);
 
@@ -40,7 +40,7 @@ class ContentPage extends StatelessWidget {
           child: Text(title, style: Theme.of(context).textTheme.headline6)),
       Padding(
           padding: EdgeInsets.all(10),
-          child: Text(content, style: Theme.of(context).textTheme.bodyText1)),
+          child: content),
     ]));
   }
 }
