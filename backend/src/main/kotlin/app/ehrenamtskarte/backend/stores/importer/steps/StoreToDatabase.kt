@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import org.slf4j.Logger
 
-class StoreToDatabase(val logger: Logger, val manualImport: Boolean) : PipelineStep<List<ImportAcceptingStore>, Unit> {
+class StoreToDatabase(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<ImportAcceptingStore>, Unit>() {
 
     override fun execute(acceptingStores: List<ImportAcceptingStore>) {
         transaction {

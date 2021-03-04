@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.types.ImportAcceptingStore
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
 
-class Encoding(val logger: Logger) : PipelineStep<List<ImportAcceptingStore>, List<ImportAcceptingStore>> {
+class Encoding(private val logger: Logger) : PipelineStep<List<ImportAcceptingStore>, List<ImportAcceptingStore>>() {
 
     override fun execute(input: List<ImportAcceptingStore>) = input.map {
         try {
@@ -25,6 +25,7 @@ class Encoding(val logger: Logger) : PipelineStep<List<ImportAcceptingStore>, Li
             )
         } catch (e: Exception) {
             logger.info("Exception while encoding $it for database import:\n$e.message")
+
             null
         }
     }.filterNotNull()

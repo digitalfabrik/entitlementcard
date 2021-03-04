@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
-class FilterRawData(val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>> {
+class FilterRawData(private val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>() {
 
     override fun execute(acceptingStores: List<LbeAcceptingStore>): List<LbeAcceptingStore> = acceptingStores.filter { filterLbe(it) }
 
