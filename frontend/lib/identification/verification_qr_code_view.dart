@@ -45,12 +45,13 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
         builder: (context, cardDetailsModel, child) {
       return Dialog(
           insetPadding: EdgeInsets.all(16),
+          clipBehavior: Clip.antiAlias,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           child: Padding(
               padding: EdgeInsets.all(24),
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: [
                   QrImage(
                       key: UniqueKey(),
@@ -60,9 +61,10 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
                       version: QrVersions.auto,
                       padding: const EdgeInsets.all(0.0)),
                   Positioned(
-                      bottom: -12,
-                      left: 0,
-                      right: 0,
+                      bottom: -24,
+                      left: -24,
+                      right: -24,
+                      top: -24,
                       child: AnimatedProgressbar(
                         key: UniqueKey(),
                         duration: Duration(milliseconds: animationDuration),
