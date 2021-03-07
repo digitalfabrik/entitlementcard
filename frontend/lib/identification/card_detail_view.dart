@@ -83,7 +83,8 @@ class CardDetailView extends StatelessWidget {
                         Text("Gültig bis: $_formattedExpirationDate"),
                         Text(region == null
                             ? ""
-                            : "Ausgestellt von: ${region.prefix} ${region.name}"),
+                            : "Ausgestellt von: "
+                                "${region.prefix} ${region.name}"),
                         SizedBox(
                           height: 24,
                         ),
