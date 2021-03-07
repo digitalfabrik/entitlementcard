@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../graphql/graphql_api.dart';
 import '../../identification/base_card_details.dart';
 import 'content_card.dart';
 
 class PositiveVerificationResult extends StatelessWidget {
   final BaseCardDetails cardDetails;
+  final GetRegions$Query$Region region;
 
-  PositiveVerificationResult(this.cardDetails);
+  PositiveVerificationResult(this.cardDetails, this.region);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class PositiveVerificationResult extends StatelessWidget {
                   .apply(fontSizeFactor: 1.5, fontWeightDelta: 2)),
           TextSpan(text: "Name: ${cardDetails.fullName}\n"),
           TextSpan(text: "Ablaufdatum: $expirationDateString\n"),
-          TextSpan(text: "Landkreis: ${cardDetails.regionId}"),
+          TextSpan(text: "Ausgestellt von: ${region.prefix} ${region.name}"),
         ])));
   }
 }
