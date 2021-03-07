@@ -9,15 +9,16 @@ import {addCard, addCardVariables} from "../../graphql/verification/__generated_
 import {ADD_CARD} from "../../graphql/verification/mutations";
 import {generatePdf} from "./PdfFactory";
 import {ApolloClient} from "@apollo/client";
+import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 
-const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], regionId: number) => {
+const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], region: Region) => {
     const activateModels = cardCreationModels.map(model => {
         const cardType = model.cardType === CardType.gold
             ? CardActivateModel.CardType.GOLD
             : CardActivateModel.CardType.STANDARD
         return generateCardActivateModel(
             `${model.forename} ${model.surname}`,
-            regionId,
+            region.id,
             model.expirationDate,
             cardType)
     })
@@ -28,7 +29,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
                 expirationDate: model.expirationDate.toNumber(),
                 cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
                 totpSecretBase64: uint8ArrayToBase64(model.totpSecret),
-                regionId
+                regionId: region.id
             }
         }))
     const results = await Promise.all(

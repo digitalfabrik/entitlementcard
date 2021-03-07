@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {Button, Menu, MenuItem, PopoverPosition, Spinner} from "@blueprintjs/core";
-import {RegionIdContext} from "../RegionIdProvider";
+import {RegionContext} from "../RegionProvider";
 import {useQuery} from "@apollo/client";
 import {GET_REGIONS} from "../graphql/regions/queries";
 import {ItemListRenderer, ItemRenderer, Select} from "@blueprintjs/select";
@@ -28,19 +28,19 @@ const itemRenderer: ItemRenderer<Region> = (region, {handleClick, modifiers}) =>
 };
 
 const RegionSelector = () => {
-    const [regionId, setRegionId] = useContext(RegionIdContext)
+    const [region, setRegion] = useContext(RegionContext)
     const {loading, error, data, refetch} = useQuery(GET_REGIONS)
     if (loading) return <Spinner/>
     if (error || !data) return <Button icon="repeat" onClick={refetch}/>
     const regions = data.regions
-    const activeItem = regions.find((region: Region) => region.id === regionId)
+    const activeItem = regions.find((other: Region) => region?.id === other.id)
     return <RegionSelect activeItem={activeItem}
                          items={regions}
                          itemRenderer={itemRenderer}
                          filterable={false}
                          popoverProps={{placement: PopoverPosition.TOP}}
                          itemListRenderer={renderMenu}
-                         onItemSelect={item => setRegionId(item.id)}>
+                         onItemSelect={setRegion}>
         <span>Region: <Button text={activeItem ? getTitle(activeItem) : 'Auswählen...'}
                               rightIcon="double-caret-vertical"/></span>
     </RegionSelect>

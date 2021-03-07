@@ -7,7 +7,7 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {HashRouter, Route} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
-import RegionIdProvider from "./RegionIdProvider";
+import RegionProvider from "./RegionProvider";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
@@ -24,7 +24,7 @@ const Main = styled.div`
 
 const App = () =>
     <ApolloProvider client={client}>
-        <RegionIdProvider>
+        <RegionProvider>
             <HashRouter>
                 <Navigation/>
                 <Main>
@@ -39,7 +39,7 @@ const App = () =>
                     </Route>
                 </Main>
             </HashRouter>
-        </RegionIdProvider>
+        </RegionProvider>
     </ApolloProvider>
 
 export default App;

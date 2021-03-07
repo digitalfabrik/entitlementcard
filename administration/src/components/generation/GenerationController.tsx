@@ -8,7 +8,7 @@ import GenerationFinished from "./GenerationFinished";
 import downloadDataUri from "./downloadDataUri";
 import generateCards from "./generateCards";
 import RegionSelector from "../RegionSelector";
-import {RegionIdContext} from "../../RegionIdProvider";
+import {RegionContext} from "../../RegionProvider";
 
 enum Mode {
     input,
@@ -19,10 +19,10 @@ enum Mode {
 const GenerationController = () => {
     const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([]);
     const client = useApolloClient();
-    const [regionId] = useContext(RegionIdContext)
+    const [region] = useContext(RegionContext)
     const [mode, setMode] = useState(Mode.input);
 
-    if (regionId === null) {
+    if (region === null) {
         return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <p>Bitte wählen Sie zunächst Ihre Region aus:</p>
             <RegionSelector/>
@@ -32,7 +32,7 @@ const GenerationController = () => {
     const confirm = async () => {
         try {
             setMode(Mode.loading)
-            const pdfDataUri = await generateCards(client, cardCreationModels, regionId)
+            const pdfDataUri = await generateCards(client, cardCreationModels, region)
             downloadDataUri(pdfDataUri, "ehrenamtskarten.pdf")
             setMode(Mode.finished)
         } catch (e) {
