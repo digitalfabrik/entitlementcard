@@ -1,24 +1,14 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Spinner} from "@blueprintjs/core";
-import {CardType} from "../../models/CardType";
 import {CardCreationModel} from "./CardCreationModel";
-import {add} from 'date-fns';
 import GenerationForm from "./GenerationForm";
 import {useApolloClient} from "@apollo/client";
 import {AppToaster} from "../AppToaster";
 import GenerationFinished from "./GenerationFinished";
 import downloadDataUri from "./downloadDataUri";
 import generateCards from "./generateCards";
-
-let idCounter = 0;
-
-const createEmptyCard = (): CardCreationModel => ({
-    id: idCounter++,
-    forename: "",
-    surname: "",
-    expirationDate: add(Date.now(), {years: 2}),
-    cardType: CardType.standard
-});
+import RegionSelector from "../RegionSelector";
+import {RegionIdContext} from "../../RegionIdProvider";
 
 enum Mode {
     input,
@@ -27,13 +17,22 @@ enum Mode {
 }
 
 const GenerationController = () => {
-    const [cardCreationModels, setCardCreationModels] = useState([createEmptyCard()]);
+    const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([]);
     const client = useApolloClient();
+    const [regionId] = useContext(RegionIdContext)
     const [mode, setMode] = useState(Mode.input);
+
+    if (regionId === null) {
+        return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <p>Bitte wählen Sie zunächst Ihre Region aus:</p>
+            <RegionSelector/>
+        </div>
+    }
+
     const confirm = async () => {
         try {
             setMode(Mode.loading)
-            const pdfDataUri = await generateCards(client, cardCreationModels)
+            const pdfDataUri = await generateCards(client, cardCreationModels, regionId)
             downloadDataUri(pdfDataUri, "ehrenamtskarten.pdf")
             setMode(Mode.finished)
         } catch (e) {
@@ -42,7 +41,6 @@ const GenerationController = () => {
             setMode(Mode.input)
         }
     }
-
     if (mode === Mode.input)
         return <GenerationForm cardCreationModels={cardCreationModels} setCardCreationModels={setCardCreationModels}
                                confirm={confirm}/>

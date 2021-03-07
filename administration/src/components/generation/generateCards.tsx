@@ -10,8 +10,7 @@ import {ADD_CARD} from "../../graphql/verification/mutations";
 import {generatePdf} from "./PdfFactory";
 import {ApolloClient} from "@apollo/client";
 
-const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[]) => {
-    const regionId = 0; // TODO: Add correct regionId
+const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], regionId: number) => {
     const activateModels = cardCreationModels.map(model => {
         const cardType = model.cardType === CardType.gold
             ? CardActivateModel.CardType.GOLD
@@ -28,7 +27,8 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
             return {
                 expirationDate: model.expirationDate.toNumber(),
                 cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
-                totpSecretBase64: uint8ArrayToBase64(model.totpSecret)
+                totpSecretBase64: uint8ArrayToBase64(model.totpSecret),
+                regionId
             }
         }))
     const results = await Promise.all(

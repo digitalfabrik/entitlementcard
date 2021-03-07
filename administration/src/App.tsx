@@ -7,6 +7,7 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {HashRouter, Route} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
+import RegionIdProvider from "./RegionIdProvider";
 
 const client = new ApolloClient({
     uri: 'https://api.ehrenamtskarte.app',
@@ -23,20 +24,22 @@ const Main = styled.div`
 
 const App = () =>
     <ApolloProvider client={client}>
-        <HashRouter>
-            <Navigation/>
-            <Main>
-                <Route exact path={"/"}>
+        <RegionIdProvider>
+            <HashRouter>
+                <Navigation/>
+                <Main>
+                    <Route exact path={"/"}>
 
-                </Route>
-                <Route path={"/eak-generation"}>
-                    <GenerationController/>
-                </Route>
-                <Route path={"/accepting-stores"}>
+                    </Route>
+                    <Route path={"/eak-generation"}>
+                        <GenerationController/>
+                    </Route>
+                    <Route path={"/accepting-stores"}>
 
-                </Route>
-            </Main>
-        </HashRouter>
+                    </Route>
+                </Main>
+            </HashRouter>
+        </RegionIdProvider>
     </ApolloProvider>
 
 export default App;
