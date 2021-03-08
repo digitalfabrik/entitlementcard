@@ -58,7 +58,7 @@ class VerificationResult extends StatelessWidget {
                 ? verifyResult.exception.toString()
                 : regionsResult.exception.toString();
             return NegativeVerificationResult(
-                VerificationError.fromStrings(exception, "verifyRequestError"));
+                VerificationError(exception, "verifyRequestError"));
           }
           final isCardValid =
               byCardDetailsHash.parse(verifyResult.data).cardValid;
