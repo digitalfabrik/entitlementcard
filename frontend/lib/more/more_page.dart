@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 
 import '../configuration.dart';
-import '../verification/verification_page.dart';
+import '../verification/verification_workflow.dart';
 import 'menu_item.dart';
 import 'testing_data_item.dart';
 
@@ -28,7 +28,7 @@ class MorePage extends StatelessWidget {
             MenuItem(
               title: "Karten verifizieren",
               icon: Icons.fact_check,
-              callback: () => _showVerificationPage(context),
+              callback: () => _showVerificationDialog(context),
             ),
           if (showTestDataOptions) TestingDataItem(),
         ]),
@@ -50,11 +50,7 @@ class MorePage extends StatelessWidget {
         ));
   }
 
-  void _showVerificationPage(context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerificationPage(),
-        ));
+  void _showVerificationDialog(context) async {
+    await VerificationWorkflow.startWorkflow(context);
   }
 }
