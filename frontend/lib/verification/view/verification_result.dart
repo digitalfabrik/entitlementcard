@@ -5,9 +5,9 @@ import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
 import '../verification_card_details_model.dart';
 import '../verification_error.dart';
-import 'negative_verification_result.dart';
-import 'positive_verification_result.dart';
-import 'waiting_for_verification.dart';
+import 'result_card/negative_verification_result.dart';
+import 'result_card/positive_verification_result.dart';
+import 'result_card/waiting_for_verification.dart';
 
 class VerificationResult extends StatelessWidget {
   final VerificationCardDetailsModel model;
@@ -48,7 +48,7 @@ class VerificationResult extends StatelessWidget {
             return WaitingForVerification();
           }
           if (snapshot.hasError) {
-            return NegativeVerificationResult(VerificationError.fromStrings(
+            return NegativeVerificationResult(VerificationError(
                 "Verbindung zum Server fehlgeschlagen.", "connectionError"));
           }
           QueryResult verifyResult = snapshot.data[0];
@@ -72,7 +72,7 @@ class VerificationResult extends StatelessWidget {
             return PositiveVerificationResult(
                 model.verificationCardDetails.cardDetails, region);
           } else {
-            return NegativeVerificationResult(VerificationError.fromStrings(
+            return NegativeVerificationResult(VerificationError(
                 "Die zu prüfende Karte ist ungültig!", "cardRejected"));
           }
         });
