@@ -43,12 +43,10 @@ class IdentificationQrContentParser {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
 
-    final fullName = cardActivateModel.fullName;
-    if (fullName == null) {
+    if (!cardActivateModel.hasFullName()) {
       throw QrCodeFieldMissingException("fullName");
     }
-    final hashSecret = cardActivateModel.hashSecret;
-    if (hashSecret == null) {
+    if (!cardActivateModel.hasHashSecret()) {
       throw QrCodeFieldMissingException("hashSecret");
     }
 
@@ -68,7 +66,6 @@ class IdentificationQrContentParser {
     }
 
     final cardType = CardType.values[cardActivateModel.cardType.value];
-    final regionId = cardActivateModel.regionId;
     if (!cardActivateModel.hasTotpSecret()) {
       throw QrCodeFieldMissingException("totpSecret");
     }
@@ -80,11 +77,11 @@ class IdentificationQrContentParser {
     }
 
     final cardDetails = CardDetails(
-        fullName,
-        Base64Encoder().convert(hashSecret),
+        cardActivateModel.fullName,
+        Base64Encoder().convert(cardActivateModel.hashSecret),
         unixExpirationDate,
         cardType,
-        regionId,
+        cardActivateModel.regionId,
         base32TotpSecret);
     _cardDetailsModel.setCardDetails(cardDetails);
   }
