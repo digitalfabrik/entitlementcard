@@ -32,6 +32,6 @@ class QrCodeScannerPage extends StatelessWidget {
       debugPrintStack(stackTrace: stackTrace, label: e?.toString());
     }
 
-    Navigator.of(context).maybePop();
+    if (Navigator.canPop(context)) Navigator.maybePop(context);
   }
 }

@@ -13,6 +13,7 @@ import 'verification_qr_code_processor.dart';
 class VerificationWorkflow {
   BuildContext _waitingDialogContext;
   BuildContext _qrScannerContext;
+  bool _userCancelled = false;
 
   VerificationWorkflow._(); // hide the constructor
 
@@ -78,12 +79,14 @@ class VerificationWorkflow {
     if (exception != null) {
       print("Verification failed: ${exception.toString()}");
     }
+    if (_userCancelled) return;
     _closeWaitingDialog();
     await VerificationResultDialog.showFailure(_qrScannerContext, message,
         errorCode);
   }
 
   Future<void> _onSuccess(BaseCardDetails cardDetails) async {
+    if (_userCancelled) return;
     _closeWaitingDialog();
     await VerificationResultDialog.showSuccess(_qrScannerContext, cardDetails);
   }
@@ -99,7 +102,17 @@ class VerificationWorkflow {
             Text("Wir überprüfen den gescannten Code für Sie."),
             SizedBox(height: 12),
             CircularProgressIndicator()
-      ]));
+        ]),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Abbrechen"))
+        ],
+      );
+    }).whenComplete(() {
+      _userCancelled = true;
+      Navigator.pop(_qrScannerContext);
+      _waitingDialogContext = null;
     });
   }
 
