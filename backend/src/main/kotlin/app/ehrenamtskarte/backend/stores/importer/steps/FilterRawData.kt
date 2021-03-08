@@ -16,10 +16,9 @@ class FilterRawData(private val logger: Logger): PipelineStep<List<LbeAcceptingS
                 && builder.filterCategory()
 
     } catch (e: Exception) {
-        logger.info("$store was filtered out because of unknown exception while filtering", e)
+        logger.info("$store was filtered out because of an unknown exception while filtering", e)
         false
     }
 
 }
-
 
