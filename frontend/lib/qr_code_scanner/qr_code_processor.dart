@@ -5,7 +5,7 @@ class QrCodeParseException implements Exception {
 }
 
 class QrCodeFieldMissingException extends QrCodeParseException {
-  String missingFieldName;
+  final String missingFieldName;
   QrCodeFieldMissingException(this.missingFieldName) :
         super("field missing: $missingFieldName");
 }
