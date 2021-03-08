@@ -1,7 +1,7 @@
 # Data for participating regions
 
 The data about participating regions is currently stored in the backend under `backend/src/main/resources/sql/create_regions.sql`.
-This json file can be created with the following steps:
+This sql file can be created with the following steps:
 * Open the following link in your favorite browser (not IE!):
   [https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/antraege/index.php#landkreise](https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/antraege/index.php#landkreise)
 * Open the developer console
