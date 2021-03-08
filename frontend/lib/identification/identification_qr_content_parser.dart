@@ -21,7 +21,10 @@ class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
 }
 
 class QRCodeInvalidFormatException extends QrCodeParseException {
-  QRCodeInvalidFormatException() : super("invalid format");
+  final Exception cause;
+  final StackTrace stackTrace;
+  QRCodeInvalidFormatException([this.cause, this.stackTrace]) :
+        super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
 }
 
 class IdentificationQrContentParser {
@@ -36,8 +39,8 @@ class IdentificationQrContentParser {
     try {
       var rawProtobufData = base64Decoder.convert(rawBase64Content);
       cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
-    } on Exception catch (_) {
-      throw QRCodeInvalidFormatException();
+    } on Exception catch (e, stackTrace) {
+      throw QRCodeInvalidFormatException(e, stackTrace);
     }
 
     final fullName = cardActivateModel.fullName;

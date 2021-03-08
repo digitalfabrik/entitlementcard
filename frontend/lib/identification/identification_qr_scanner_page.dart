@@ -35,10 +35,15 @@ class IdentificationQrScannerPage extends StatelessWidget {
     } on QRCodeInvalidExpiryException catch (_) {
       await showError("Beim Verarbeiten des Ablaufdatums ist ein "
           "unerwarteter Fehler aufgetreten.");
-    } on QRCodeInvalidFormatException catch (_) {
+    } on QRCodeInvalidFormatException catch (e, s) {
       await showError("Der Inhalt des eingescannten Codes kann nicht "
           "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
           "der nicht für die Ehrenamtskarte-App generiert wurde.");
+      debugPrintStack(stackTrace: s, label: e.toString());
+      if (e.cause != null && e.stackTrace != null) {
+        debugPrint("Caused by:");
+        debugPrintStack(stackTrace: e.stackTrace, label: e.cause.toString());
+      }
     } on QrCodeFieldMissingException catch (e) {
       await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
           "(Fehlercode: ${e.missingFieldName}Missing)");
