@@ -11,7 +11,6 @@ import '../verification_card_details_model.dart';
 import '../verification_error.dart';
 import '../verification_hasher.dart';
 import '../verification_processor.dart';
-import 'content_card.dart';
 import 'verification_info_text.dart';
 import 'verification_result.dart';
 
@@ -35,9 +34,10 @@ class _VerificationViewState extends State<VerificationView> {
           title: Text("Karte verifizieren"),
         ),
         body: SingleChildScrollView(
+          padding: EdgeInsets.all(8),
           child: Column(
             children: <Widget>[
-              ContentCard(child: VerificationInfoText()),
+              VerificationInfoText(),
               Center(
                 child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -96,7 +96,7 @@ class _VerificationViewState extends State<VerificationView> {
           "${dateFormat.format(e.expiry)} abgelaufen.", "cardExpired", e);
     } on QrCodeParseException catch (e) {
       handleError("Der Inhalt des eingescannten Codes kann nicht verstanden "
-      "werden. Vermutlich handelt es sich um einen QR Code, der nicht für die "
+      "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für die "
       "Ehrenamtskarte-App generiert wurde.", "invalidFormat", e);
     } on Exception catch (e) {
       handleError("Ein unbekannter Fehler beim Einlesen des QR-Codes ist "

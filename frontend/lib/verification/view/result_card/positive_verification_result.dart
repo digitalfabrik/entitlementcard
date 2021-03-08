@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../identification/base_card_details.dart';
+import '../../../identification/base_card_details.dart';
 import 'verification_result_card.dart';
 
 class PositiveVerificationResult extends StatelessWidget {
@@ -19,8 +19,8 @@ class PositiveVerificationResult extends StatelessWidget {
       expirationDateString = dateFormat.format(cardDetails.expirationDate);
     }
     return VerificationResultCard(
-        title: "Die Ehrenamtskarte ist gültig",
-        isPositive: true,
+        title: "Die Ehrenamtskarte ist gültig.",
+        style: VerificationResultCardStyle.positive,
         child: Column(
           children: [
             Text("Name: ${cardDetails.fullName}"),
