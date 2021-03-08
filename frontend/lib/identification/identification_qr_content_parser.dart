@@ -46,7 +46,7 @@ class IdentificationQrContentParser {
     }
     final hashSecret = cardActivateModel.hashSecret;
     if (hashSecret == null) {
-      throw QrCodeFieldMissingException("randomBytes");
+      throw QrCodeFieldMissingException("hashSecret");
     }
 
     final unixInt64ExpirationDate = cardActivateModel.expirationDate;
