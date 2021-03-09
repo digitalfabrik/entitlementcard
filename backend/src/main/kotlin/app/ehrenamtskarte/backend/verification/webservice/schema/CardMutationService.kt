@@ -24,7 +24,8 @@ class CardMutationService {
                     card.expirationDate,
                     0,
                     ZoneOffset.UTC
-                ) else null
+                ) else null,
+                card.regionId
             )
         }
         return true
