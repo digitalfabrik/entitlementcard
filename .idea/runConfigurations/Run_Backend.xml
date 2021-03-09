@@ -1,6 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Backend" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
+      <option name="env">
+        <map>
+          <entry key="JWT_SECRET" value="&quot;Hello world!&quot;" />
+        </map>
+      </option>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
       <option name="externalSystemIdString" value="GRADLE" />
@@ -15,7 +20,9 @@
       </option>
       <option name="vmOptions" value="" />
     </ExternalSystemSettings>
-    <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2" />
   </configuration>
 </component>

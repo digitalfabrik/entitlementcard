@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.AuthData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.SignInPayload
@@ -17,7 +18,7 @@ class SignInMutationService {
             AdministratorsRepository.findByAuthData(authData)
         } ?: throw GraphQLKotlinException("Invalid credentials")
         val administrator = Administrator(administratorEntity.id.value, administratorEntity.username)
-        val token = "TODO" // TODO generate a token for login
+        val token = JwtService.create(administrator)
         return SignInPayload(administrator, token)
     }
 }

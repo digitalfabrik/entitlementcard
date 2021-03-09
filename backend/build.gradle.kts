@@ -62,7 +62,8 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
     implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+")
 
-    implementation("com.eatthepath:java-otp:0.2.0")
+    implementation("com.eatthepath:java-otp:0.2.0") // eak verification
+    implementation("com.auth0:java-jwt:3.4.0") // Java web tokens
 }
 
 application {
