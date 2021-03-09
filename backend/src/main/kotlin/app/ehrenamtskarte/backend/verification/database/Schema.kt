@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.verification.database
 
+import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -15,6 +16,7 @@ object Cards : IntIdTable() {
     val expirationDate = long("expirationDate") // Seconds since 1970
     val issueDate = long("issueDate")
     val revoked = bool("revoked")
+    val regionId = reference("regionId", Regions)
     val cardDetailsHash = binary("cardDetailsHash", CARD_DETAILS_HASH_LENGTH).uniqueIndex()
 }
 
@@ -26,6 +28,7 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     private var issueDateEpochSeconds by Cards.issueDate
     var revoked by Cards.revoked
     var cardDetailsHash by Cards.cardDetailsHash
+    var regionId by Cards.regionId
 
     var expirationDate: LocalDateTime?
         get() = if (expirationDateEpochSeconds > 0) LocalDateTime.ofEpochSecond(

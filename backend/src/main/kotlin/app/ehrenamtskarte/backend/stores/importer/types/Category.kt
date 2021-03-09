@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.general
+package app.ehrenamtskarte.backend.stores.importer.types
 
 import com.beust.klaxon.Json
 
