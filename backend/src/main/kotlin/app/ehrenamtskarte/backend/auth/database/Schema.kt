@@ -7,10 +7,12 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object Administrators : IntIdTable() {
     val username = varchar("username", 100).uniqueIndex()
+    val passwordHash = binary("passwordHash")
 }
 
 class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<AdministratorEntity>(Administrators)
 
     var username by Administrators.username
+    var passwordHash by Administrators.passwordHash
 }

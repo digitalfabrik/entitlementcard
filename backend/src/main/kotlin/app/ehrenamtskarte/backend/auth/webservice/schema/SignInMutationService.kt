@@ -15,7 +15,7 @@ class SignInMutationService {
     @GraphQLDescription("Signs in an administrator")
     fun signIn(authData: AuthData): SignInPayload? {
         val administratorEntity = transaction {
-            AdministratorsRepository.findByAuthData(authData)
+            AdministratorsRepository.findByAuthData(authData.username, authData.password)
         } ?: throw GraphQLKotlinException("Invalid credentials")
         val administrator = Administrator(administratorEntity.id.value, administratorEntity.username)
         val token = JwtService.create(administrator)

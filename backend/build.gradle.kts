@@ -64,6 +64,7 @@ dependencies {
 
     implementation("com.eatthepath:java-otp:0.2.0") // eak verification
     implementation("com.auth0:java-jwt:3.4.0") // Java web tokens
+    implementation("at.favre.lib:bcrypt:0.9.0")
 }
 
 application {
