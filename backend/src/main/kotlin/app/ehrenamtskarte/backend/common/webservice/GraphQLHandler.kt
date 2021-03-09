@@ -1,8 +1,9 @@
 package app.ehrenamtskarte.backend.common.webservice
 
+import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
+import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
-import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -14,7 +15,8 @@ import io.javalin.http.Context
 import java.io.IOException
 
 class GraphQLHandler(
-    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch verificationGraphQlParams stitch regionsGraphQlParams
+    private val graphQLParams: GraphQLParams =
+        storesGraphQlParams stitch verificationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config,
