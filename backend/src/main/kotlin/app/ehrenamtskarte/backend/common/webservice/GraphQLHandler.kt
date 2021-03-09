@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.common.webservice
 
+import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
 import com.expediagroup.graphql.toSchema
@@ -13,7 +14,7 @@ import io.javalin.http.Context
 import java.io.IOException
 
 class GraphQLHandler(
-    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch verificationGraphQlParams
+    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch verificationGraphQlParams stitch applicationGraphQlParams
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config,
@@ -63,7 +64,8 @@ class GraphQLHandler(
         try {
             // if data is null, get data will fail exceptionally
             result["data"] = executionResult.getData<Any>()
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
 
         return result
     }
