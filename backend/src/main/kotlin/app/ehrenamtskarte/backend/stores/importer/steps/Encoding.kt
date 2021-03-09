@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.matchesNa
 import app.ehrenamtskarte.backend.stores.importer.types.ImportAcceptingStore
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
@@ -51,7 +52,7 @@ class Encoding(private val logger: Logger) : PipelineStep<List<ImportAcceptingSt
      * @see String.trim
      */
     private fun String.sanitizeForDb(): String? {
-        return if (unspecifiedNoteRegex.matches(this)) null else this.trim()
+        return if (matchesNa(this)) null else this.trim()
     }
 
 }

@@ -13,16 +13,24 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
         true
     }
 
-    fun filterPostalCode() = if(store.postalCode == null || store.postalCode?.trim()?.length == 5) {
-        true
-    } else {
-        logger.info("$store was filtered out because postal code is invalid")
-        false
+    fun filterPostalCode(): Boolean {
+        val pc = store.postalCode
+        val valid = store.postalCode == null
+                || store.postalCode?.trim()?.length == 5
+                || store.postalCode?.trim()?.length == 0 // must be 5 symbols or completely empty!
+                || pc != null && matchesNa(pc)
+
+        if (!valid)
+            logger.info("$store was filtered out because postal code is invalid")
+
+        return valid
     }
 
     fun filterCategory(): Boolean {
         val category = store.category
-        val valid = category?.toIntOrNull() in 0..8 || category?.toIntOrNull() == 99
+        val valid = category?.toIntOrNull() in 0..8 // expected categories
+                || category?.toIntOrNull() == 99
+                || category?.toIntOrNull() == 9
 
         if (!valid)
             logger.info("$store was filtered out because category was invalid")
