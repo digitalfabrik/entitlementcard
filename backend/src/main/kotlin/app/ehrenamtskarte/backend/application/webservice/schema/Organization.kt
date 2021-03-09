@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema
 
-data class EakOrganisation(
+data class Organization(
     val name: String,
-    val contact: OrganisationContact
+    val contact: OrganizationContact
 )

@@ -1,7 +1,5 @@
 package app.ehrenamtskarte.backend.application.webservice.schema
 
-import java.util.*
-
 data class PersonalDetails(
     val title: String?,
     val forenames: String,

@@ -27,6 +27,12 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+union BlueCardEntitlement = BlueCardJuleicaEntitlement | BlueCardServiceEntitlement | BlueCardStandardEntitlement
+
+union GoldenCardEntitlement = GoldenCardHonorByMinisterPresidentEntitlement | GoldenCardServiceAwardEntitlement | GoldenCardStandardEntitlement
+
+union PersonalApplicationDetails = BlueCardApplicationDetails | GoldenCardApplicationDetails
+
 type AcceptingStore {
   category: Category!
   categoryId: Int!
@@ -46,6 +52,30 @@ type Address {
   street: String
 }
 
+type Attachment {
+  fileName: String!
+}
+
+type BlueCardApplicationDetails {
+  applicationType: ApplicationType!
+  entitlement: BlueCardEntitlement!
+}
+
+type BlueCardJuleicaEntitlement {
+  cardExpirationDate: String!
+  cardNumber: String!
+  copyOfCard: Attachment!
+}
+
+type BlueCardServiceEntitlement {
+  activity: BlueCardServiceEntitlementActivity!
+  certificate: Attachment!
+}
+
+type BlueCardStandardEntitlement {
+  workAtOrganizations: [WorkAtOrganization!]!
+}
+
 type Category {
   id: Int!
   name: String!
@@ -63,9 +93,41 @@ type Coordinates {
   lng: Float!
 }
 
+type GoldenCardApplicationDetails {
+  entitlement: GoldenCardEntitlement!
+}
+
+"Inhaber:in des Ehrenzeichens des Bayerischen Ministerpräsidenten"
+type GoldenCardHonorByMinisterPresidentEntitlement {
+  certificate: Attachment!
+}
+
+"Inhaber:in einer Dienstauszeichnung des Freistaats Bayern nach Feuer- und Hilfsorganisationen-Ehrenzeichengesetz"
+type GoldenCardServiceAwardEntitlement {
+  certificate: Attachment!
+}
+
+type GoldenCardStandardEntitlement {
+  workAtOrganizations: [WorkAtOrganization!]!
+}
+
 type Mutation {
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
+  "Stores a new digital EAK"
+  addEakApplication(eakApplication: PersonalEakApplicationInput!): Boolean!
+}
+
+type Organization {
+  contact: OrganizationContact!
+  name: String!
+}
+
+type OrganizationContact {
+  email: String!
+  hasGivenPermission: Boolean!
+  name: String!
+  telephone: String!
 }
 
 type PhysicalStore {
@@ -90,6 +152,29 @@ type Query {
   verifyCard(card: CardVerificationModelInput!): Boolean!
 }
 
+type WorkAtOrganization {
+  amountOfWork: Float!
+  amountOfWorkUnit: AmountOfWorkUnit!
+  certificate: Attachment!
+  organization: Organization!
+}
+
+enum AmountOfWorkUnit {
+  hoursPerWeek
+  hoursPerYear
+}
+
+enum ApplicationType {
+  firstApplication
+  renewalApplication
+}
+
+enum BlueCardServiceEntitlementActivity {
+  disasterControl
+  fireDeparment
+  rescueService
+}
+
 "Long type"
 scalar Long
 
@@ -111,6 +196,29 @@ input CoordinatesInput {
 
 input IdsParamsInput {
   ids: [Int!]!
+}
+
+input PersonalDetailsInput {
+  addressSupplement: String
+  dateOfBirth: String!
+  emailAddress: String!
+  forenames: String!
+  gender: String
+  houseNumber: String!
+  location: String!
+  nationality: String
+  postalCode: String!
+  street: String!
+  surname: String!
+  telephone: String
+  title: String
+}
+
+input PersonalEakApplicationInput {
+  applicationDetails: PersonalApplicationDetails!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalDetails: PersonalDetailsInput!
 }
 
 input SearchParamsInput {
