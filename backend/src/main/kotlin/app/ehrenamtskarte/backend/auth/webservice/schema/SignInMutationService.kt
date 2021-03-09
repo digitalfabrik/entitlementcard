@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.AuthData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.SignInPayload
 import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.exceptions.GraphQLKotlinException
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -14,7 +15,7 @@ class SignInMutationService {
     fun signIn(authData: AuthData): SignInPayload? {
         val administratorEntity = transaction {
             AdministratorsRepository.findByAuthData(authData)
-        } ?: return null
+        } ?: throw GraphQLKotlinException("Invalid credentials")
         val administrator = Administrator(administratorEntity.id.value, administratorEntity.username)
         val token = "TODO" // TODO generate a token for login
         return SignInPayload(administrator, token)
