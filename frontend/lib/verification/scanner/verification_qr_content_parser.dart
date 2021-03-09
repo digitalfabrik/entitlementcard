@@ -3,24 +3,18 @@ import 'dart:typed_data';
 
 import '../../identification/base_card_details.dart';
 import '../../identification/protobuf/card_verify_model.pb.dart';
+import '../../qr_code_scanner/qr_code_processor.dart';
 import '../verification_card_details.dart';
 
-const String genericExternalFailureMessage =
-    "Der Inhalt des eingescannten Codes kann nicht verstanden "
-    "werden. Vermutlich handelt es sich um einen QR Code, "
-    "der nicht für die Ehrenamtskarte App generiert wurde.";
-
-class VerificationParseException implements Exception {
+class VerificationParseException extends QrCodeParseException {
   final String internalMessage;
-  final String externalMessage;
   final Exception cause;
   final StackTrace stackTrace;
 
   VerificationParseException(
       {this.internalMessage,
-      this.externalMessage,
       this.cause,
-      this.stackTrace});
+      this.stackTrace}) : super(internalMessage);
 }
 
 VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
@@ -33,7 +27,6 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     throw VerificationParseException(
         internalMessage: "Failed to decode base64 string from qr code, "
             "probably not base64 encoded. Message: ${e.toString()}",
-        externalMessage: genericExternalFailureMessage,
         cause: e);
   }
   CardVerifyModel cardVerifyModel;
@@ -44,7 +37,6 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
         internalMessage:
             "Failed to parse CardVerifyModel from base64 encoded data. "
             "Message: ${e.toString()}",
-        externalMessage: genericExternalFailureMessage,
         cause: e,
         stackTrace: stacktrace);
   }
