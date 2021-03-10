@@ -3,8 +3,7 @@ package app.ehrenamtskarte.backend
 import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
-import app.ehrenamtskarte.backend.stores.importer.freinet.FreinetDataImporter
-import app.ehrenamtskarte.backend.stores.importer.lbe.LbeDataImporter
+import app.ehrenamtskarte.backend.stores.importer.DataImporter
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
@@ -14,8 +13,7 @@ import java.io.File
 
 class Entry : CliktCommand() {
     private val exportApi by option(help = "Export GraphQL schema. Given ")
-    private val importFreinetData by option("--importFreinet").flag()
-    private val importLbeData by option("--importLbe").flag()
+    private val importFlag by option("--import").flag()
 
     override fun run() {
         val exportApi = exportApi
@@ -25,13 +23,9 @@ class Entry : CliktCommand() {
             file.writeText(schema)
         } else {
             Database.setup()
-            if (importFreinetData) {
-                println("Importing data from Freinet...")
-                FreinetDataImporter.import()
-            }
-            if (importLbeData) {
+            if (importFlag) {
                 println("Importing data from Lbe")
-                LbeDataImporter.import()
+                DataImporter.import(importFlag)
             }
             WebService().start()
         }

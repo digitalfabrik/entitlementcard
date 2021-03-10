@@ -13,11 +13,9 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
     final config = Configuration.of(context);
     final client = ValueNotifier(
       GraphQLClient(
-        cache: InMemoryCache(),
+        cache: GraphQLCache(),
         link: Link.from([
-          HttpLink(
-            uri: config.graphqlUrl,
-          )
+          HttpLink(config.graphqlUrl)
         ]),
       ),
     );

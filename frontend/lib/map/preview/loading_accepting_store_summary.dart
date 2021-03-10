@@ -22,13 +22,13 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
             ids: IdsParamsInput(ids: [acceptingStoreId])));
     return Query(
         options: QueryOptions(
-            documentNode: query.document, variables: query.getVariablesMap()),
+            document: query.document, variables: query.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           try {
             if (result.hasException) {
               throw result.exception;
             }
-            if (result.loading) {
+            if (result.isLoading) {
               return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: const LinearProgressIndicator());

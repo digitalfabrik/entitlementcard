@@ -34,13 +34,14 @@ class NoCardView extends StatelessWidget {
         Flexible(
             fit: FlexFit.loose,
             child: Center(
-                child: RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    onPressed: onOpenQrScanner,
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0)),
+                      padding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                     ),
+                    onPressed: onOpenQrScanner,
                     child: Text(
                       "Code einscannen",
                       style: Theme.of(context)
