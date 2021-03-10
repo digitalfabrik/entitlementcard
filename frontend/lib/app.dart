@@ -14,7 +14,6 @@ class App extends StatelessWidget {
     final theme = ThemeData.from(
         colorScheme:
             ColorScheme.light(primary: Colors.blue, secondary: Colors.blue),
-        // primary: Color(0xff8377A9), secondary: Color(0xff8377A9)
         textTheme: TextTheme(
           headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
           bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
