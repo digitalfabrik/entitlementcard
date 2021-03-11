@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 
+import '../location/determine_position.dart';
+
 class IntroScreen extends StatefulWidget {
   IntroScreen({Key key}) : super(key: key);
 
@@ -21,9 +23,9 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       Slide(
         title: "Willkommen!",
-        description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-            "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-            "aliquyam",
+        description: "Danke für Ihr ehrenamtliches Engagement! Nutzen Sie Ihre "
+            "Vorteile als InhaberIn der bayerischen Ehrenamtskarte "
+            "bestmöglich mit den Funktionen dieser App.",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff8377A9),
         maxLineTitle: 3,
@@ -31,10 +33,11 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Akzeptanzstellen finden",
-        description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-            "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-            "aliquyam",
+        title: "Wo kann ich meine Ehrenamtskarte nutzen?",
+        description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
+            " finden. Durch Vergrößern der Karte mit zwei Fingern bekommen Sie"
+            " einen genaueren Blick auf die Standorte. Tippen Sie auf einen"
+            " Standort, um mehr Informationen sehen zu können.",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff203152),
         maxLineTitle: 3,
@@ -42,10 +45,10 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Bewerbung für die EAK",
-        description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-            "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-            "aliquyam",
+        title: "Sie haben noch keine Ehrenamtskarte?",
+        description: "Wenn Sie ehrenamtlich tätig sind und alle Voraussetzungen"
+            " erfüllen, können Sie sich bequem über diese App für eine"
+            " Ehrenamtskarte in Bayern bewerben.",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff9932CC),
         maxLineTitle: 3,
@@ -53,15 +56,25 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Datenschutz und Location Permission",
-        description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-            "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-            "aliquyam",
-        pathImage: "assets/icon/icon.png",
-        backgroundColor: Color(0xff1c8fc2),
-        maxLineTitle: 3,
-      ),
+          title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
+          description:
+              "Wir können Ihren Standort für Sie auf der Karte anzeigen"
+              " und Suchergebnisse nach der Entfernung zu Ihnen sortieren. "
+              "Wenn Sie diese optionalen Hilfen benutzen möchten, "
+              "dann benötigen wir Ihre Zustimmung.",
+          backgroundColor: Color(0xff1c8fc2),
+          maxLineTitle: 3,
+          centerWidget: Center(
+            child: ElevatedButton(
+              onPressed: _onLocationButtonClicked,
+              child: Text("Ich möchte meinen Standort freigeben."),
+            ),
+          )),
     );
+  }
+
+  void _onLocationButtonClicked() {
+    requestPermissionToDeterminePosition(userInteractContext: context);
   }
 
   void onDonePress() {
