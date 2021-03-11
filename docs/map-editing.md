@@ -4,10 +4,7 @@ We are using the [osm-liberty](https://github.com/maputnik/osm-liberty ) base st
 
 ## Adding icons
 
-See the [Modify Icons](https://github.com/maputnik/osm-liberty/blob/gh-pages/README.md#modify-icons) guide to integrate the icons.
-
-The current icons are in [iconset-osm_libery.json](../map-icons/iconset-osm_liberty.json).
-With this file a new sprite can be generated. The current sprites are in [docker/reverse_proxy/www/sprites](../docker/reverse_proxy/www/sprites).
+See [here](../map-icons/README.md)
 
 # Styling the Map
 
