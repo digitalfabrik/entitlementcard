@@ -45,6 +45,7 @@ fe_build_ios_task:
   osx_instance:
       image: catalina-flutter
   build_script:
+    - flutter upgrade
     - cd frontend
     - flutter build ios --release --no-codesign -t lib/main_prod.dart
   iOS_app_artifacts:
