@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../identification/card_details.dart';
-import '../identification/card_details_model.dart';
+import 'card_details.dart';
+import 'card_details_model.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
