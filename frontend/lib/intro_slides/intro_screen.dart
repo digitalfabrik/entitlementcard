@@ -25,7 +25,8 @@ class IntroScreenState extends State<IntroScreen> {
             "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
             "aliquyam",
         pathImage: "assets/icon/icon.png",
-        backgroundColor: Color(0xfff5a623),
+        backgroundColor: Color(0xff8377A9),
+        maxLineTitle: 3,
       ),
     );
     slides.add(
@@ -36,6 +37,7 @@ class IntroScreenState extends State<IntroScreen> {
             "aliquyam",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff203152),
+        maxLineTitle: 3,
       ),
     );
     slides.add(
@@ -46,6 +48,7 @@ class IntroScreenState extends State<IntroScreen> {
             "aliquyam",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff9932CC),
+        maxLineTitle: 3,
       ),
     );
     slides.add(
@@ -56,6 +59,7 @@ class IntroScreenState extends State<IntroScreen> {
             "aliquyam",
         pathImage: "assets/icon/icon.png",
         backgroundColor: Color(0xff1c8fc2),
+        maxLineTitle: 3,
       ),
     );
   }
