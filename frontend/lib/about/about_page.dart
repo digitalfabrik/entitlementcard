@@ -32,7 +32,7 @@ class AboutPage extends StatelessWidget {
                       child: Text(snapshot.data.version,
                           style: Theme.of(context).textTheme.bodyText2)),
                   const Divider(
-                    height: 20,
+                    height: 60,
                     thickness: 1,
                   ),
                   InkWell(
@@ -63,7 +63,7 @@ class AboutPage extends StatelessWidget {
                     },
                   ),
                   const Divider(
-                    height: 20,
+                    height: 60,
                     thickness: 1,
                   ),
                   ContentTile(
