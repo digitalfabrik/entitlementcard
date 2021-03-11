@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema
 
-data class PersonalDetails(
+data class PersonalData(
     val title: String?,
     val forenames: String,
     val surname: String,

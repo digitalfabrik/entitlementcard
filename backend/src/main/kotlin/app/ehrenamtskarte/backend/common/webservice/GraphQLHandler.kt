@@ -98,7 +98,6 @@ class GraphQLHandler(
     private fun getVariables(payload: Map<String, *>) =
         payload.getOrElse("variables") { emptyMap<String, Any>() } as Map<String, Any>
 
-
     /**
      * Get any errors and data from [executionResult].
      */
