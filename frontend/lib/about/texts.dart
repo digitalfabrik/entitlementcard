@@ -5,7 +5,7 @@ Der Quelltext dieser App ist unter der MIT Lizenz veröfferntlicht und kann auf 
 
 MIT License
 
-Copyright (c) 2020 The Digitale Ehrenamtskarte contributors
+Copyright (c) 2021 The Digitale Ehrenamtskarte contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
