@@ -33,11 +33,11 @@ class ContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: ListView(children: [
-      Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(title, style: Theme.of(context).textTheme.headline6)),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: ListView(children: [
       Padding(
           padding: EdgeInsets.all(10),
           child: content),
