@@ -39,20 +39,21 @@ class _VerificationViewState extends State<VerificationView> {
             children: <Widget>[
               VerificationInfoText(),
               Center(
-                child: RaisedButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    onPressed: _onScanCodePressed,
-                    color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0),
                     ),
-                    child: Text(
-                      "Code einscannen",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
-                    )),
+                  ),
+                  onPressed: _onScanCodePressed,
+                  child: Text(
+                    "Code einscannen",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .merge(TextStyle(color: Colors.white, fontSize: 20)),
+                  )),
               ),
               Consumer<VerificationCardDetailsModel>(
                   builder: (context, verCardDetailsModel, child) {

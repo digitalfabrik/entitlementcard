@@ -49,7 +49,7 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
           child: Padding(
               padding: EdgeInsets.all(24),
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: [
                   QrImage(
                       key: UniqueKey(),
