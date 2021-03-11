@@ -36,22 +36,6 @@ class _IdentificationPageState extends State<IdentificationPage> {
           body: SingleChildScrollView(
               child: Column(
             children: [
-              Center(
-                child: RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    onPressed: () => _showVerificationPage(context),
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                    child: Text(
-                      "Karte verifizieren",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
-                    )),
-              ),
               if (showTestDataOptions) TestingDataItem(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -63,7 +47,24 @@ class _IdentificationPageState extends State<IdentificationPage> {
                         cardDetails: _cardDetails,
                         onOpenQrScanner: () => openQRCodeScannerView(context),
                       ),
-              )
+              ),
+              Center(
+                child: ElevatedButton(
+                    onPressed: () => _showVerificationPage(context),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32.0)),
+                      padding:
+                      EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                    ),
+                    child: Text(
+                      "Karte verifizieren",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
+                    )),
+              ),
             ],
           )));
     });
