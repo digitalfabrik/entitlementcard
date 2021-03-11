@@ -6,8 +6,10 @@ Future<bool> isFirstStart() async {
     if (sharedPreferences.containsKey("firstStart")) {
       return false;
     } else {
-      sharedPreferences.setBool("firstStart", false).catchError(
-          (e) => print("Failed to save firstStart, error message: $e"));
+      sharedPreferences.setBool("firstStart", false).catchError((e) {
+        print("Failed to save firstStart, error message: $e");
+        return false;
+      });
       return true;
     }
   } on Exception catch (e) {

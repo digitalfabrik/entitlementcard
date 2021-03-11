@@ -34,7 +34,7 @@ class _TestingDataState extends State<TestingDataItem> {
                 onPressed: _setValidEakData,
                 child: Text('Set valid EAK data'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _showInfoSlides,
                 child: Text('Info Slides'),
               )
