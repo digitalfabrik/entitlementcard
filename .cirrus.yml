@@ -10,6 +10,7 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
       - echo $CIRRUS_OS
       - flutter --version
       - cat frontend/pubspec.lock
+      - echo v2
     populate_script:
       - flutter upgrade
       - cd frontend
