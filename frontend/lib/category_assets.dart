@@ -50,7 +50,7 @@ const List<CategoryAsset> categoryAssets = [
   CategoryAsset(
       id: 4,
       name: 'Dienstleistungen/Finanzen',
-      shortName: "Dienstleistungen",
+      shortName: "Dienstleistung",
       icon: "assets/category_icons/4.svg",
       detailIcon: "assets/detail_headers/4_finanzen.svg"),
   CategoryAsset(
