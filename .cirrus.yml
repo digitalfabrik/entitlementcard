@@ -3,8 +3,8 @@
 ############
 
 fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
-  container:
-    image: cirrusci/flutter:latest
+  flutter_upgrade_script:
+    - flutter upgrade
   pub_cache:
     folder: ~/.pub-cache
     reupload_on_changes: false # since there is a fingerprint script
@@ -13,7 +13,6 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
       - flutter --version
       - cat frontend/pubspec.lock
     populate_script:
-      - flutter upgrade
       - cd frontend
       - flutter pub get
 
