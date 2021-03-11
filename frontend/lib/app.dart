@@ -22,6 +22,7 @@ class App extends StatelessWidget {
             title: 'Ehrenamtskarte',
             theme: lightTheme,
             darkTheme: darkTheme,
+            themeMode: ThemeMode.system,
             home: HomePage(
               showVerification: Configuration.of(context).showVerification,
             ),
