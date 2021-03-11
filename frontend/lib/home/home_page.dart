@@ -36,14 +36,14 @@ class _HomePageState extends State<HomePage> {
           state.setState(() => state.mapPageController = controller),
     );
     var appFlows = <AppFlow>[
-      AppFlow(mapPage, Icons.map, "Karte",
+      AppFlow(mapPage, Icons.map_outlined, "Karte",
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
-      AppFlow(SearchPage(), Icons.search, "Suche",
+      AppFlow(SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
       if (showVerification)
-        AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
+        AppFlow(IdentificationPage(), Icons.remove_red_eye_outlined, "Ausweisen",
             GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
-      AppFlow(AboutPage(), Icons.more_horiz, "Über",
+      AppFlow(AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
     state = _HomePageState._(mapPage, appFlows);
