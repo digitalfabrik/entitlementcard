@@ -74,7 +74,7 @@ class DetailContent extends StatelessWidget {
                 ),
                 ButtonBar(
                   children: [
-                    OutlineButton(
+                    OutlinedButton(
                       child: Text("Auf Karte zeigen"),
                       onPressed: () => _showOnMap(context),
                     ),

@@ -1,5 +1,7 @@
 # Setup of staging environment
 
+## Setup of host nginx and HTTPs
+
 If you want o make the staging environment available on (api|tiles).ehrenamtskarte.app, then the following nginx config can be used on the host:
 
 ```nginx configuration
@@ -86,4 +88,17 @@ The certificates can be created by using a wildcard certificate:
 certbot certonly --manual  --preferred-challenges=dns -d "*.ehrenamtskarte.app" -d "ehrenamtskarte.app"
 ```
 
-After starting `docker-compose` with the stagin configuration, the setup should be available at port 80: `docker-compose -f docker-compose.yml -f docker-compose.staging.yml up`.
+## Download Font Glyphs
+
+The font glyphs are not part of this repository and need to be downloaded manually:
+
+```bash
+cd map-tiles/styles
+wget https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
+unzip gh-pages.zip
+mv font-glyphs-gh-pages font-glyphs
+```
+
+## Starting the Services
+
+After starting `docker-compose` with the staging configuration, the setup should be available at port 80: `docker-compose -f docker-compose.yml -f docker-compose.staging.yml up`.

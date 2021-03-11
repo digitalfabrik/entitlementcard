@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../qr_code_scanner/qr_code_scanner.dart';
 import '../verification/verification_page.dart';
 import 'card_detail_view.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
-import 'identification_qr_content_parser.dart';
+import 'identification_qr_scanner_page.dart';
 import 'no_card_view.dart';
 import 'testing_data_item.dart';
 
@@ -79,15 +78,11 @@ class _IdentificationPageState extends State<IdentificationPage> {
   }
   
   void openQRCodeScannerView(BuildContext context) {
-    final provider = Provider.of<CardDetailsModel>(context, listen: false);
-
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QRCodeScanner(
-            qrCodeContentParser:
-                IdentificationQrContentParser(provider).processQrCodeContent,
-          ),
-        ));
+          builder: (context) => IdentificationQrScannerPage()
+        )
+    );
   }
 }

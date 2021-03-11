@@ -84,10 +84,19 @@ type Query {
   physicalStores: [PhysicalStore!]!
   "Returns list of all accepting stores queried by ids."
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
+  "Return list of all regions."
+  regions: [Region!]!
   "Search for accepting stores using searchText and categoryIds."
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
   "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
   verifyCard(card: CardVerificationModelInput!): Boolean!
+}
+
+type Region {
+  id: Int!
+  name: String!
+  prefix: String!
+  regionIdentifier: String!
 }
 
 "Long type"
@@ -96,6 +105,7 @@ scalar Long
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
   expirationDate: Long!
+  regionId: Int!
   totpSecretBase64: String!
 }
 
