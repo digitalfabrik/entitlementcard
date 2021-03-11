@@ -53,6 +53,7 @@ type Address {
 }
 
 type Attachment {
+  data: Upload!
   fileName: String!
 }
 
@@ -116,6 +117,8 @@ type Mutation {
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new digital EAK"
   addEakApplication(eakApplication: PersonalEakApplicationInput!): Boolean!
+  testUpload(upload: AttachmentInput!): Boolean!
+  testUploadMany(uploads: [AttachmentInput!]!): Boolean!
 }
 
 type Organization {
@@ -154,6 +157,13 @@ type Query {
   verifyCard(card: CardVerificationModelInput!): Boolean!
 }
 
+type Region {
+  id: Int!
+  name: String!
+  prefix: String!
+  regionIdentifier: String!
+}
+
 type WorkAtOrganization {
   amountOfWork: Float!
   amountOfWorkUnit: AmountOfWorkUnit!
@@ -177,15 +187,16 @@ enum BlueCardServiceEntitlementActivity {
   rescueService
 }
 
-type Region {
-  id: Int!
-  name: String!
-  prefix: String!
-  regionIdentifier: String!
-}
-
 "Long type"
 scalar Long
+
+"A file part in a multipart request"
+scalar Upload
+
+input AttachmentInput {
+  data: Upload!
+  fileName: String!
+}
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
