@@ -32,8 +32,7 @@ class AcceptingStoreSummary extends StatelessWidget {
                       Expanded(
                           child:
                               LoadingAcceptingStorySummary(acceptingStoreId)),
-                      Icon(Icons.arrow_forward,
-                          color: Theme.of(context).primaryColor),
+                      Icon(Icons.arrow_forward),
                     ],
                   ),
                 )),

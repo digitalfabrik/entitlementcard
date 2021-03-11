@@ -9,6 +9,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors
 import app.ehrenamtskarte.backend.stores.database.setupDatabase as setupDatabaseForStores
+import app.ehrenamtskarte.backend.regions.database.setupDatabase as setupDatabaseForRegions
 import app.ehrenamtskarte.backend.verification.database.setupDatabase as setupDatabaseForVerification
 
 
@@ -33,6 +34,7 @@ class Database {
             transaction {
                 // print sql to std-out
                 addLogger(StdOutSqlLogger)
+                setupDatabaseForRegions(Companion::executeScript)
                 setupDatabaseForStores(Companion::executeScript)
                 setupDatabaseForVerification()
             }

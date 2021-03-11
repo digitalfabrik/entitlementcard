@@ -4,8 +4,9 @@ import {drawjsPDF} from "../../util/qrcode";
 import {CardActivateModel} from "../../generated/compiled";
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {format, fromUnixTime} from "date-fns";
+import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 
-function addLetter(doc: jsPDF, model: CardActivateModel) {
+function addLetter(doc: jsPDF, model: CardActivateModel, region: Region) {
     const pageSize = doc.internal.pageSize
     const {width, height} = {width: pageSize.getWidth(), height: pageSize.getHeight()}
     const pageMargin = 20;
@@ -47,7 +48,8 @@ Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
     doc.text(
         `KarteninhaberIn: ${model.fullName}
 Karte ausgestellt am: ${format(new Date(), "dd.MM.yyyy")}
-Karte gültig bis: ${expirationDate}`,
+Karte gültig bis: ${expirationDate}
+Ausgestellt durch: ${region.prefix} ${region.name}`,
         width / 2, DetailsY, {align: "center", baseline: "top"})
 
     doc.setFontSize(12)
@@ -57,7 +59,7 @@ Karte gültig bis: ${expirationDate}`,
     });
 }
 
-export function generatePdf(models: CardActivateModel[]) {
+export function generatePdf(models: CardActivateModel[], region: Region) {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -65,7 +67,7 @@ export function generatePdf(models: CardActivateModel[]) {
     });
 
     for (let k = 0; k < models.length; k++) {
-        addLetter(doc, models[k])
+        addLetter(doc, models[k], region)
         if (k !== models.length - 1)
             doc.addPage()
     }
