@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'card_type_step.dart';
 import 'entitlement_step.dart';
@@ -12,8 +13,10 @@ class ApplicationForm extends StatefulWidget {
 }
 
 class _ApplicationFormState extends State<ApplicationForm> {
+  static final _lastStep = 4;
   int _currentStep = 0;
-  final _lastStep = 4;
+  final _formKeys = List<GlobalKey<FormBuilderState>>.generate(
+      _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
 
   @override
   Widget build(BuildContext context) {
@@ -59,38 +62,46 @@ class _ApplicationFormState extends State<ApplicationForm> {
           steps: [
             Step(
               title: Text('Kartentyp'),
-              content: CardTypeStep(),
+              content: CardTypeStep(
+                formKey: _formKeys[0],
+              ),
               isActive: _currentStep >= 0,
               state:
-                  _currentStep >= 1 ? StepState.complete : StepState.disabled,
+              _currentStep >= 1 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: Text('Voraussetzungen'),
-              content: EntitlementStep(),
+              content: EntitlementStep(
+                formKey: _formKeys[1],
+              ),
               isActive: _currentStep >= 0,
               state:
-                  _currentStep >= 2 ? StepState.complete : StepState.disabled,
+              _currentStep >= 2 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: Text('Persönliche Daten'),
-              content: PersonalDataStep(),
+              content: PersonalDataStep(
+                formKey: _formKeys[2],
+              ),
               isActive: _currentStep >= 0,
               state:
-                  _currentStep >= 3 ? StepState.complete : StepState.disabled,
+              _currentStep >= 3 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: Text('Organisation'),
-              content: OrganizationStep(),
+              content: OrganizationStep(
+                formKey: _formKeys[3],
+              ),
               isActive: _currentStep >= 0,
               state:
-                  _currentStep >= 4 ? StepState.complete : StepState.disabled,
+              _currentStep >= 4 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: Text('Zusammenfassung'),
-              content: SummaryStep(),
+              content: SummaryStep(formKey: _formKeys[4]),
               isActive: _currentStep >= 0,
               state:
-                  _currentStep >= 5 ? StepState.complete : StepState.disabled,
+              _currentStep >= 5 ? StepState.complete : StepState.disabled,
             ),
           ]),
     );
@@ -101,10 +112,12 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   _onStepContinued() {
-    if (_currentStep < _lastStep) {
-      setState(() => _currentStep += 1);
-    } else {
-      Navigator.of(context).pop();
+    if (_formKeys[_currentStep].currentState.validate()) {
+      if (_currentStep < _lastStep) {
+        setState(() => _currentStep++);
+      } else {
+        Navigator.of(context).pop();
+      }
     }
   }
 

@@ -1,49 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class CardTypeStep extends StatefulWidget {
+  final GlobalKey<FormBuilderState> formKey;
+
+  const CardTypeStep({Key key, this.formKey}) : super(key: key);
+
   @override
   _CardTypeStepState createState() => _CardTypeStepState();
 }
 
 class _CardTypeStepState extends State<CardTypeStep> {
-  String _cardType;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        RadioListTile<String>(
-          title: const Text('Blau Erstbeantragung'),
-          value: "1",
-          groupValue: _cardType,
-          onChanged: (value) {
-            setState(() {
-              _cardType = value;
-            });
-          },
-        ),
-        RadioListTile<String>(
-          title: const Text('Blau erneute Ausstellung'),
-          value: "2",
-          groupValue: _cardType,
-          onChanged: (value) {
-            setState(() {
-              _cardType = value;
-            });
-          },
-        ),
-        RadioListTile<String>(
-          title: const Text('Gold Erstbeantragung'),
-          value: "3",
-          groupValue: _cardType,
-          onChanged: (value) {
-            setState(() {
-              _cardType = value;
-            });
-          },
-        ),
-      ],
-    );
+    return FormBuilder(
+        key: widget.formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FormBuilderRadioGroup(
+              decoration: InputDecoration(labelText: 'My chosen language'),
+              name: 'best_language',
+              validator: FormBuilderValidators.compose(
+                  [FormBuilderValidators.required(context)]),
+              options: [
+                'Blaue Ehrenamtskarte\nErstbeantragung',
+                'Blaue Ehrenamtskarte\nerneute Ausstellung',
+                'Goldene Ehrenamtskarte'
+              ]
+                  .map((lang) => FormBuilderFieldOption(
+                        value: lang,
+                        child: Text('$lang'),
+                      ))
+                  .toList(growable: false),
+            ),
+          ],
+        ));
   }
 }
