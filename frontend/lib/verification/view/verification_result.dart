@@ -52,13 +52,18 @@ class VerificationResult extends StatelessWidget {
                 "Verbindung zum Server fehlgeschlagen.", "connectionError"));
           }
           QueryResult verifyResult = snapshot.data[0];
-          QueryResult regionsResult = snapshot.data[1];
-          if (verifyResult.hasException || regionsResult.hasException) {
-            var exception = verifyResult.hasException
-                ? verifyResult.exception.toString()
-                : regionsResult.exception.toString();
+          if (verifyResult.hasException) {
+            debugPrint(verifyResult.exception.toString());
             return NegativeVerificationResult(
-                VerificationError(exception, "verifyRequestError"));
+                VerificationError("Fehler bei der Kommunikation mit dem "
+                    "Server.", "verifyRequestError"));
+          }
+          QueryResult regionsResult = snapshot.data[1];
+          if (regionsResult.hasException) {
+            debugPrint(regionsResult.exception.toString());
+            return NegativeVerificationResult(
+                VerificationError("Fehler bei der Kommunikation mit dem "
+                    "Server.", "queryRegionsError"));
           }
           final isCardValid =
               byCardDetailsHash.parse(verifyResult.data).cardValid;
@@ -67,7 +72,8 @@ class VerificationResult extends StatelessWidget {
               .regions
               .firstWhere((region) =>
                   region.id ==
-                  model.verificationCardDetails.cardDetails.regionId);
+                  model.verificationCardDetails.cardDetails.regionId,
+                    orElse: () => null);
           if (isCardValid) {
             return PositiveVerificationResult(
                 model.verificationCardDetails.cardDetails, region);
