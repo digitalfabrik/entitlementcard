@@ -36,7 +36,7 @@ class _TestingDataState extends State<TestingDataItem> {
               ),
               ElevatedButton(
                 onPressed: _showInfoSlides,
-                child: Text('Info Slides'),
+                child: Text('Intro Slides'),
               )
             ],
           ),
