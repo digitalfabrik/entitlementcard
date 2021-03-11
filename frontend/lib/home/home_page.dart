@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
       AppFlow(SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
       if (showVerification)
-        AppFlow(IdentificationPage(), Icons.remove_red_eye_outlined, "Ausweisen",
+        AppFlow(IdentificationPage(), 
+            Icons.remove_red_eye_outlined, "Ausweisen",
             GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
       AppFlow(AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
