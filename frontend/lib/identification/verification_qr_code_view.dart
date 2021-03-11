@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -50,7 +49,7 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
           child: Padding(
               padding: EdgeInsets.all(24),
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: [
                   QrImage(
                       key: UniqueKey(),

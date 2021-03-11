@@ -26,11 +26,11 @@ class _TestingDataState extends State<TestingDataItem> {
         child: InkWell(
           child: Column(
             children: [
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _resetEakData,
                 child: Text('Reset EAK'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _setValidEakData,
                 child: Text('Set valid EAK data'),
               ),

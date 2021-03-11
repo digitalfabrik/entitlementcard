@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../graphql/graphql_api.dart';
 import 'card_details.dart';
 import 'id_card.dart';
 import 'verification_qr_code_view.dart';
@@ -20,78 +22,95 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-
-    return Flex(
-      direction: isLandscape ? Axis.horizontal : Axis.vertical,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Column(
-          crossAxisAlignment: isLandscape
-              ? CrossAxisAlignment.start
-              : CrossAxisAlignment.stretch,
-          children: [
-            IdCard(
-              height: isLandscape ? 200 : null,
-              child: SvgPicture.asset("assets/card.svg",
-                  semanticsLabel: 'Ehrenamtskarte',
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 4),
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                  child: Text(
-                    "Code neu einscannen",
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
-                  onTap: onOpenQrScanner),
-            ),
-          ],
-        ),
-        SizedBox(height: 15, width: 15),
-        Flexible(
-          fit: FlexFit.loose,
-          child: Padding(
-              padding: EdgeInsets.all(4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+    final getRegions = GetRegionsQuery();
+    return Query(
+        options: QueryOptions(
+            document: getRegions.document,
+            variables: getRegions.getVariablesMap()),
+        builder: (result, {fetchMore, refetch}) {
+          var isLandscape =
+              MediaQuery.of(context).orientation == Orientation.landscape;
+          var region = result.hasException || result.isLoading
+              ? null
+              : getRegions
+                  .parse(result.data)
+                  .regions
+                  .firstWhere((element) => element.id == cardDetails.regionId);
+          return Flex(
+            direction: isLandscape ? Axis.horizontal : Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                crossAxisAlignment: isLandscape
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    cardDetails.fullName ?? "",
-                    style: Theme.of(context).textTheme.headline6,
+                  IdCard(
+                    height: isLandscape ? 200 : null,
+                    child: SvgPicture.asset("assets/card.svg",
+                        semanticsLabel: 'Ehrenamtskarte',
+                        alignment: Alignment.center,
+                        fit: BoxFit.contain),
                   ),
-                  SizedBox(height: 5),
-                  Text("Gültig bis: $_formattedExpirationDate"),
-                  SizedBox(
-                    height: 24,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                        child: Text(
+                          "Code neu einscannen",
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        onTap: onOpenQrScanner),
                   ),
-                  Center(
-                      child: MaterialButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) => VerificationQrCodeView(
-                                cardDetails: cardDetails,
-                              ));
-                    },
-                    color: Colors.white,
-                    textColor: Colors.black,
-                    child: Icon(
-                      Icons.qr_code,
-                      size: 50,
-                    ),
-                    padding: EdgeInsets.all(16),
-                    shape: CircleBorder(),
-                  )),
                 ],
-              )),
-        )
-      ],
-    );
+              ),
+              SizedBox(height: 15, width: 15),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          cardDetails.fullName ?? "",
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        SizedBox(height: 5),
+                        Text("Gültig bis: $_formattedExpirationDate"),
+                        Text(region == null
+                            ? ""
+                            : "Ausgestellt von: "
+                                "${region.prefix} ${region.name}"),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Center(
+                            child: MaterialButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => VerificationQrCodeView(
+                                      cardDetails: cardDetails,
+                                    ));
+                          },
+                          color: Colors.white,
+                          textColor: Colors.black,
+                          child: Icon(
+                            Icons.qr_code,
+                            size: 50,
+                          ),
+                          padding: EdgeInsets.all(16),
+                          shape: CircleBorder(),
+                        )),
+                      ],
+                    )),
+              )
+            ],
+          );
+        });
   }
 }
