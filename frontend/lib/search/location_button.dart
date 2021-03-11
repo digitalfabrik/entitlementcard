@@ -38,7 +38,7 @@ class _LocationButtonState extends State<LocationButton> {
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.all(10),
         child: FloatingActionButton.extended(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).backgroundColor,
             elevation: 1,
             onPressed: onPressed,
             icon: AnimatedSwitcher(
