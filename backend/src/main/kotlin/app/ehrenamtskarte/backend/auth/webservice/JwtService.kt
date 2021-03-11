@@ -17,14 +17,14 @@ object JwtService {
 
     fun create(administrator: Administrator): String =
         JWT.create()
-            .withClaim(JwtPayload::username.name, administrator.username)
+            .withClaim(JwtPayload::email.name, administrator.email)
             .withClaim(JwtPayload::userId.name, administrator.id)
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
     fun verify(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
-        JwtPayload(it[JwtPayload::username.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
+        JwtPayload(it[JwtPayload::email.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
     }
 }
 
-data class JwtPayload(val username: String, val userId: Int)
+data class JwtPayload(val email: String, val userId: Int)

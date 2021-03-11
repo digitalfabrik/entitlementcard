@@ -15,7 +15,7 @@ val administratorLoader = DataLoader<Int, Administrator?> { ids ->
             transaction {
                 AdministratorsRepository.findByIds(ids).map {
                     if (it == null) null
-                    else Administrator(it.id.value, it.username)
+                    else Administrator(it.id.value, it.email)
                 }
             }
         }

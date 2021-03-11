@@ -10,13 +10,13 @@ object AdministratorsRepository {
     fun findByIds(ids: List<Int>) =
         AdministratorEntity.find { Administrators.id inList ids }.sortByKeys({ it.id.value }, ids)
 
-    fun findByAuthData(username: String, password: String) =
-        AdministratorEntity.find { Administrators.username eq username }
+    fun findByAuthData(email: String, password: String) =
+        AdministratorEntity.find { Administrators.email eq email }
             .singleOrNull { PasswordCrypto.verifyPassword(password, it.passwordHash) }
 
-    fun insert(username: String, password: String) =
+    fun insert(email: String, password: String) =
         AdministratorEntity.new {
-            this.username = username
+            this.email = email
             this.passwordHash = PasswordCrypto.hashPasswort(password)
         }
 }
