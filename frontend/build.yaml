@@ -14,3 +14,9 @@ targets:
           scalar_mapping:
             - graphql_type: Long
               dart_type: int
+            - graphql_type: Upload
+              custom_parser_import: 'upload_parser.dart'
+              dart_type:
+                name: MultipartFile
+                imports:
+                  - 'package:http/http.dart'
