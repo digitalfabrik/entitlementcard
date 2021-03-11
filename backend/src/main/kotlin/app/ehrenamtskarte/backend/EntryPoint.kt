@@ -26,8 +26,9 @@ class Entry : CliktCommand() {
             if (importFlag) {
                 println("Importing data from Lbe")
                 DataImporter.import(importFlag)
+            } else {
+                WebService().start()
             }
-            WebService().start()
         }
     }
 }
