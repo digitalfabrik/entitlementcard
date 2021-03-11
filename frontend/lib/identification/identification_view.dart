@@ -9,8 +9,8 @@ import 'identification_qr_scanner_page.dart';
 import 'no_card_view.dart';
 import 'testing_data_item.dart';
 
-const showTestDataOptions = 
-  bool.fromEnvironment("test_data_options", defaultValue: false);
+const showTestDataOptions =
+    bool.fromEnvironment("test_data_options", defaultValue: false);
 
 class IdentificationPage extends StatefulWidget {
   IdentificationPage({Key key, this.title}) : super(key: key);
@@ -36,7 +36,6 @@ class _IdentificationPageState extends State<IdentificationPage> {
           body: SingleChildScrollView(
               child: Column(
             children: [
-              if (showTestDataOptions) TestingDataItem(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: _cardDetails == null
@@ -55,7 +54,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
                       padding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                     ),
                     child: Text(
                       "Karte verifizieren",
@@ -65,6 +64,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                           .merge(TextStyle(color: Colors.white, fontSize: 20)),
                     )),
               ),
+              if (showTestDataOptions) TestingDataItem(),
             ],
           )));
     });
@@ -77,13 +77,9 @@ class _IdentificationPageState extends State<IdentificationPage> {
           builder: (context) => VerificationPage(),
         ));
   }
-  
+
   void openQRCodeScannerView(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => IdentificationQrScannerPage()
-        )
-    );
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => IdentificationQrScannerPage()));
   }
 }
