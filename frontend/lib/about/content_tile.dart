@@ -3,10 +3,11 @@ import 'package:flutter/painting.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
-  final Widget content;
+  final List<Widget> children;
   final IconData icon;
 
-  ContentTile({Key key, this.title, this.content, this.icon}) : super(key: key);
+  ContentTile({Key key, this.title, this.children, this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +21,16 @@ class ContentTile extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ContentPage(title: title, content: content),
+          builder: (context) => ContentPage(title: title, children: children),
         ));
   }
 }
 
 class ContentPage extends StatelessWidget {
   final String title;
-  final Widget content;
+  final List<Widget> children;
 
-  ContentPage({Key key, this.title, this.content}) : super(key: key);
+  ContentPage({Key key, this.title, this.children}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +38,9 @@ class ContentPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: ListView(children: [
-      Padding(
+        body: Padding(
           padding: EdgeInsets.all(10),
-          child: content),
-    ]));
+          child: ListView(children: children),
+        ));
   }
 }

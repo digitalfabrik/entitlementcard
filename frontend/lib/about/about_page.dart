@@ -42,9 +42,14 @@ class AboutPage extends StatelessWidget {
                             child: Text("Herausgeber",
                                 style: Theme.of(context).textTheme.subtitle2)),
                         Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(publisherAdress,
+                            padding:
+                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                            child: Text(publisherAddress,
                                 style: Theme.of(context).textTheme.bodyText1)),
+                        Text("Mehr Informationen",
+                            style: Theme.of(context).textTheme.bodyText2.merge(
+                                TextStyle(
+                                    color: Theme.of(context).primaryColor))),
                       ],
                     ),
                     onTap: () {
@@ -52,7 +57,8 @@ class AboutPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ContentPage(
-                                title: "Herausgeber", content: Text(publisher)),
+                                title: "Herausgeber",
+                                children: getPublisherText(context)),
                           ));
                     },
                   ),
@@ -63,15 +69,15 @@ class AboutPage extends StatelessWidget {
                   ContentTile(
                       icon: Icons.copyright,
                       title: "Lizenz",
-                      content: Text(copyright)),
+                      children: getCopyrightText(context)),
                   ContentTile(
                       icon: Icons.privacy_tip_outlined,
                       title: "Datenschutzerklärung",
-                      content: dataPrivacy(context)),
+                      children: getDataPrivacyText(context)),
                   ContentTile(
                       icon: Icons.info_outline,
                       title: "Haftung, Haftungsausschluss und Disclaimer",
-                      content: Text(disclaimer)),
+                      children: getDisclaimerText(context)),
                   ListTile(
                       leading: Icon(Icons.book_outlined),
                       title: Text("Software Bibliotheken"),
