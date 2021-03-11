@@ -77,6 +77,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
             Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
         path.relativeArcToPoint(dest,
             radius: Radius.circular(strokeRadius), clockwise: false);
+        remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
         // Vertical line right
