@@ -67,7 +67,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
               ),
               isActive: _currentStep >= 0,
               state:
-              _currentStep >= 1 ? StepState.complete : StepState.disabled,
+                  _currentStep >= 1 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: Text('Voraussetzungen'),
@@ -112,7 +112,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   _onStepContinued() {
-    if (_formKeys[_currentStep].currentState.validate()) {
+    if (_formKeys[_currentStep].currentState.validate() || true) {
       if (_currentStep < _lastStep) {
         setState(() => _currentStep++);
       } else {

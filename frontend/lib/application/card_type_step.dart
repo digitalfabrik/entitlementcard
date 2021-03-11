@@ -11,7 +11,6 @@ class CardTypeStep extends StatefulWidget {
 }
 
 class _CardTypeStepState extends State<CardTypeStep> {
-
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -20,8 +19,8 @@ class _CardTypeStepState extends State<CardTypeStep> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
-              decoration: InputDecoration(labelText: 'My chosen language'),
-              name: 'best_language',
+              decoration: InputDecoration(labelText: 'Beantragung'),
+              name: 'card_type',
               validator: FormBuilderValidators.compose(
                   [FormBuilderValidators.required(context)]),
               options: [
