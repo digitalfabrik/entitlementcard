@@ -45,6 +45,7 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
       return Dialog(
           insetPadding: EdgeInsets.all(16),
           clipBehavior: Clip.antiAlias,
+          backgroundColor: Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           child: Padding(
