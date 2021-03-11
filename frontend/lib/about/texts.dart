@@ -32,7 +32,7 @@ RichText dataPrivacy(BuildContext context) {
           style: DefaultTextStyle.of(context).style,
           children: <TextSpan>[
         TextSpan(text: '''
-Bei der Nutzung der App "Ehrenamtskarte" für Smartphones und der Web-Application (zusammen „Apps„) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir„) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
+Bei der Nutzung der App "Ehrenamtskarte" für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
 
 '''),
         TextSpan(style: Theme.of(context).textTheme.headline6, text: '''
@@ -123,7 +123,7 @@ Kontaktdaten des Verantwortlichen
 '''),
         TextSpan(text: '''
 
-Wenn Sie uns kontaktieren möchte, etwa um eine datenschutzrechtliche Anfrage zu stellen oder Ihre Rechte geltend zu machen, können Sie uns per E-Mail, Telefon oder postalisch erreichen unter:
+Wenn Sie uns kontaktieren möchten, etwa um eine datenschutzrechtliche Anfrage zu stellen oder Ihre Rechte geltend zu machen, können Sie uns per E-Mail, Telefon oder postalisch erreichen unter:
 
 Tür an Tür – Digitalfabrik gGmbH
 Wertachstrasse 29
