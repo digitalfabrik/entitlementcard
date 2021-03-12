@@ -61,18 +61,29 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       Slide(
           title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-          description:
-              "Wir können Ihren Standort für Sie auf der Karte anzeigen"
-              " und Suchergebnisse nach der Entfernung zu Ihnen sortieren. "
-              "Wenn Sie diese optionalen Hilfen benutzen möchten, "
-              "dann benötigen wir Ihre Zustimmung.",
           backgroundColor: Color(0xff1c8fc2),
           maxLineTitle: 3,
-          centerWidget: Center(
-            child: ElevatedButton(
-              onPressed: _onLocationButtonClicked,
-              child: Text("Ich möchte meinen Standort freigeben."),
-            ),
+          pathImage: "assets/icon/icon.png",
+          widgetDescription: Center(
+            child: Column(children: [
+              Text(
+                "Wir können Ihren Standort für Sie auf der Karte anzeigen"
+                " und Suchergebnisse nach der Entfernung zu Ihnen "
+                "sortieren. Wenn Sie diese optionalen Hilfen benutzen "
+                "möchten, dann benötigen wir Ihre Zustimmung.",
+                style: TextStyle(color: Colors.white, fontSize: 18.0),
+                textAlign: TextAlign.center,
+                maxLines: 100,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Padding(
+                padding: EdgeInsets.all(15),
+                child: ElevatedButton(
+                  onPressed: _onLocationButtonClicked,
+                  child: Text("Ich möchte meinen Standort freigeben."),
+                ),
+              )
+            ]),
           )),
     );
   }
@@ -96,7 +107,6 @@ class IntroScreenState extends State<IntroScreen> {
       nameDoneBtn: "Fertig",
       nameNextBtn: "Weiter",
       nameSkipBtn: "Überspringen",
-      widthSkipBtn: 120,
     );
   }
 }
