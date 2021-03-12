@@ -1,0 +1,7 @@
+query getRegionsById($ids: IdsParamsInput!) {
+    regionsById(params: $ids) {
+        id,
+        prefix,
+        name
+    }
+}

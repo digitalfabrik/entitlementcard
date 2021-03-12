@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../../graphql/graphql_api.dart';
 import '../../identification/base_card_details.dart';
 
 class VerificationResultDialog extends StatelessWidget {
@@ -65,12 +67,39 @@ class VerificationResultDialog extends StatelessWidget {
                 Table(
                   children: [
                     toTableRow("Name: ", cardDetails.fullName),
-                    toTableRow("Ablaufdatum: ", expirationDateString),
-                    toTableRow("Landkreis: ", cardDetails.regionId.toString()),
+                    toTableRow("Gültig bis: ", expirationDateString),
+                    TableRow(children: [
+                      Text("Ausgestellt von: "),
+                      _buildLoadingRegionName(context, cardDetails.regionId)
+                    ]),
                     toTableRow("Typ: ", cardDetails.cardType == CardType.gold
                       ? "Gold" : "Standard"),
                 ],)
               ])),
+    );
+  }
+
+  static Widget _buildLoadingRegionName(BuildContext context, int regionId) {
+    final regionsQuery = GetRegionsByIdQuery(variables:
+      GetRegionsByIdArguments(ids: IdsParamsInput(ids: [regionId])));
+    return Query(
+      options: QueryOptions(
+          document: regionsQuery.document,
+          variables: regionsQuery.getVariablesMap()),
+      builder: (result, {refetch, fetchMore}) {
+        if (result.hasException) {
+          return Text("konnte nicht geladen werden");
+        }
+        if (result.isLoading) {
+          return Text("wird geladen …");
+        }
+        final regions = GetRegionsByIdQuery().parse(result.data).regionsById;
+        if (regions.isEmpty) {
+          return Text("unbekannt");
+        }
+        final region = regions.first;
+        return Text("${region.prefix} ${region.name}");
+      },
     );
   }
 
