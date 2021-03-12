@@ -4,7 +4,7 @@ Future<bool> isFirstStart() async {
   try {
     final sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.containsKey("firstStart")) {
-      return false;
+      return sharedPreferences.getBool("firstStart");
     } else {
       sharedPreferences.setBool("firstStart", false).catchError((e) {
         print("Failed to save firstStart, error message: $e");
