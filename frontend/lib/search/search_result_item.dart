@@ -83,7 +83,7 @@ class SearchResultItem extends StatelessWidget {
                           child: VerticalDivider(
                             color: iconColor ??
                                 Theme.of(context).colorScheme.primary,
-                            thickness: 1,
+                            thickness: 3,
                           ),
                         )
                       : Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
