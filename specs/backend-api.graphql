@@ -27,12 +27,6 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
-union BlueCardEntitlement = BlueCardJuleicaEntitlement | BlueCardServiceEntitlement | BlueCardStandardEntitlement
-
-union GoldenCardEntitlement = GoldenCardHonorByMinisterPresidentEntitlement | GoldenCardServiceAwardEntitlement | GoldenCardStandardEntitlement
-
-union PersonalApplicationDetails = BlueCardApplicationDetails | GoldenCardApplicationDetails
-
 type AcceptingStore {
   category: Category!
   categoryId: Int!
@@ -52,30 +46,6 @@ type Address {
   street: String
 }
 
-type Attachment {
-  fileName: String!
-}
-
-type BlueCardApplicationDetails {
-  applicationType: ApplicationType!
-  entitlement: BlueCardEntitlement!
-}
-
-type BlueCardJuleicaEntitlement {
-  cardExpirationDate: String!
-  cardNumber: String!
-  copyOfCard: Attachment!
-}
-
-type BlueCardServiceEntitlement {
-  activity: BlueCardServiceEntitlementActivity!
-  certificate: Attachment!
-}
-
-type BlueCardStandardEntitlement {
-  workAtOrganizations: [WorkAtOrganization!]!
-}
-
 type Category {
   id: Int!
   name: String!
@@ -93,41 +63,13 @@ type Coordinates {
   lng: Float!
 }
 
-type GoldenCardApplicationDetails {
-  entitlement: GoldenCardEntitlement!
-}
-
-"Inhaber:in des Ehrenzeichens des Bayerischen Ministerpräsidenten"
-type GoldenCardHonorByMinisterPresidentEntitlement {
-  certificate: Attachment!
-}
-
-"Inhaber:in einer Dienstauszeichnung des Freistaats Bayern nach Feuer- und Hilfsorganisationen-Ehrenzeichengesetz"
-type GoldenCardServiceAwardEntitlement {
-  certificate: Attachment!
-}
-
-type GoldenCardStandardEntitlement {
-  workAtOrganizations: [WorkAtOrganization!]!
-}
-
 type Mutation {
+  "Stores a new blue digital EAK"
+  addBlueEakApplication(application: BlueEakCardApplicationInput!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
-  "Stores a new digital EAK"
-  addEakApplication(eakApplication: PersonalEakApplicationInput!): Boolean!
-}
-
-type Organization {
-  contact: OrganizationContact!
-  name: String!
-}
-
-type OrganizationContact {
-  email: String!
-  hasGivenPermission: Boolean!
-  name: String!
-  telephone: String!
+  "Stores a new golden digital EAK"
+  addGoldenEakApplication(application: GoldenEakCardApplicationInput!): Boolean!
 }
 
 type PhysicalStore {
@@ -154,29 +96,6 @@ type Query {
   verifyCard(card: CardVerificationModelInput!): Boolean!
 }
 
-type WorkAtOrganization {
-  amountOfWork: Float!
-  amountOfWorkUnit: AmountOfWorkUnit!
-  certificate: Attachment!
-  organization: Organization!
-}
-
-enum AmountOfWorkUnit {
-  hoursPerWeek
-  hoursPerYear
-}
-
-enum ApplicationType {
-  firstApplication
-  renewalApplication
-}
-
-enum BlueCardServiceEntitlementActivity {
-  disasterControl
-  fireDeparment
-  rescueService
-}
-
 type Region {
   id: Int!
   name: String!
@@ -184,8 +103,58 @@ type Region {
   regionIdentifier: String!
 }
 
+enum AmountOfWorkUnit {
+  HOURS_PER_WEEK
+  HOURS_PER_YEAR
+}
+
+enum ApplicationType {
+  FIRST_APPLICATION
+  RENEWAL_APPLICATION
+}
+
+enum BlueCardEntitlementType {
+  JULEICA
+  SERVICE
+  STANDARD
+}
+
+enum BlueCardServiceEntitlementActivity {
+  DISASTER_CONTROL
+  FIRE_DEPARTMENT
+  RESCUE_SERVICE
+}
+
+enum GoldenCardEntitlementType {
+  HONOR_BY_MINISTER_PRESIDENT
+  SERVICE_AWARD
+  STANDARD
+}
+
 "Long type"
 scalar Long
+
+input AttachmentInput {
+  fileName: String!
+}
+
+input BlueCardEntitlementInput {
+  blueEntitlementType: BlueCardEntitlementType!
+  copyOfJuleica: AttachmentInput
+  juleicaExpirationDate: String
+  juleicaNumber: String
+  serviceActivity: BlueCardServiceEntitlementActivity
+  serviceCertificate: AttachmentInput
+  workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input BlueEakCardApplicationInput {
+  applicationType: ApplicationType!
+  entitlement: BlueCardEntitlementInput!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
@@ -204,11 +173,36 @@ input CoordinatesInput {
   lng: Float!
 }
 
+input GoldenCardEntitlementInput {
+  certificate: AttachmentInput
+  goldenEntitlementType: GoldenCardEntitlementType!
+  workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input GoldenEakCardApplicationInput {
+  entitlement: GoldenCardEntitlementInput!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
+
 input IdsParamsInput {
   ids: [Int!]!
 }
 
-input PersonalDetailsInput {
+input OrganizationContactInput {
+  email: String!
+  hasGivenPermission: Boolean!
+  name: String!
+  telephone: String!
+}
+
+input OrganizationInput {
+  contact: OrganizationContactInput!
+  name: String!
+}
+
+input PersonalDataInput {
   addressSupplement: String
   dateOfBirth: String!
   emailAddress: String!
@@ -224,17 +218,17 @@ input PersonalDetailsInput {
   title: String
 }
 
-input PersonalEakApplicationInput {
-  applicationDetails: PersonalApplicationDetails!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalDetails: PersonalDetailsInput!
-}
-
 input SearchParamsInput {
   categoryIds: [Int!]
   coordinates: CoordinatesInput
   limit: Int
   offset: Long
   searchText: String
+}
+
+input WorkAtOrganizationInput {
+  amountOfWork: Float!
+  amountOfWorkUnit: AmountOfWorkUnit!
+  certificate: AttachmentInput!
+  organization: OrganizationInput!
 }

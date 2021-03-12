@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.common.webservice
 
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
+import com.expediagroup.graphql.hooks.NoopSchemaGeneratorHooks
 import org.dataloader.DataLoaderRegistry
 
 data class GraphQLParams(
@@ -23,7 +24,12 @@ data class GraphQLParams(
 }
 
 // Stitch together schemeGeneratorConfigs. Everything except supportedPackages is ignored.
-infix operator fun SchemaGeneratorConfig.plus (other: SchemaGeneratorConfig): SchemaGeneratorConfig {
-    return SchemaGeneratorConfig(this.supportedPackages + other.supportedPackages
+infix operator fun SchemaGeneratorConfig.plus(other: SchemaGeneratorConfig): SchemaGeneratorConfig {
+    // This is quite hacky, but we can migrate to graphql-kotlin-federation once we need more than one custom hook
+    // https://github.com/ExpediaGroup/graphql-kotlin/tree/master/generator/graphql-kotlin-federation
+    val hooks = if (hooks == NoopSchemaGeneratorHooks) other.hooks else hooks
+    return SchemaGeneratorConfig(
+        this.supportedPackages + other.supportedPackages,
+        hooks = hooks
     )
 }
