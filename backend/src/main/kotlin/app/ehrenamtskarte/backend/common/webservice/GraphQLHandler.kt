@@ -86,8 +86,8 @@ class GraphQLHandler(
      * Execute a query against schema
      */
     fun handle(context: Context) {
-        try {
-            val graphQLContext = getGraphQLContext(context)
+        val graphQLContext = try {
+            getGraphQLContext(context)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
@@ -100,7 +100,6 @@ class GraphQLHandler(
             }
         }
 
-        val graphQLContext = getGraphQLContext(context)
         val payload = getPayload(context)
         payload?.let {
             // Execute the query against the schema
