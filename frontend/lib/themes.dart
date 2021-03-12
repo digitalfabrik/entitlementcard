@@ -14,8 +14,8 @@ final lightTheme = ThemeData.from(
 ThemeData get darkTheme {
   var theme = ThemeData.from(
       colorScheme: ColorScheme.dark(
-        primary: Color(0xff5f5384),
-        secondary: Color(0xff5f5384),
+        primary: Color(0xff8377A9),
+        secondary: Color(0xff8377A9),
       ),
       textTheme: TextTheme(
         headline6: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
