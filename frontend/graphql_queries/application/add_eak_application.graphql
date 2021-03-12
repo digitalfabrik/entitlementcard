@@ -1,0 +1,7 @@
+mutation AddBlueEakApplication($application: BlueEakCardApplicationInput!) {
+    addBlueEakApplication(application: $application)
+}
+
+mutation AddGoldenEakApplication($application: GoldenEakCardApplicationInput!) {
+    addGoldenEakApplication(application: $application)
+}
