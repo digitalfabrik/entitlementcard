@@ -74,25 +74,12 @@ class VerificationResultDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> showFailure(BuildContext context,
-      String reason, String errorCode) {
-    final theme = Theme.of(context);
-    return showDialog(context: context, builder: (_) =>
+  static Future<void> showFailure(BuildContext context, String reason) =>
+      showDialog(context: context, builder: (_) =>
         VerificationResultDialog(
             title: "Nicht validiert",
             icon: Icons.error,
             iconColor: Colors.red,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(reason),
-                if (errorCode != null) ...[
-                  SizedBox(height: 8),
-                  Text(
-                    "Fehlercode: $errorCode",
-                    textScaleFactor: 0.5,
-                    style: TextStyle(color: theme.disabledColor),
-                  ),
-            ]])));
-  }
+            child: Text(reason)
+        ));
 }

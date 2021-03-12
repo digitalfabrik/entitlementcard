@@ -45,28 +45,27 @@ class VerificationWorkflow {
       final valid = await queryServerVerification(client, card);
       if (!valid) {
         await _onError("Die zu prüfende Karte konnte vom Server nicht "
-            "verifiziert werden!", "cardRejected");
+            "verifiziert werden!");
       } else {
         await _onSuccess(card.cardDetails);
       }
     } on ServerVerificationException catch (e) {
       await _onError("Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
-        "werden, da die Kommunikation mit dem Server fehlschlug.",
-        "verifyRequestError", e);
+        "werden, da die Kommunikation mit dem Server fehlschlug.", e);
     } on QrCodeFieldMissingException catch (e) {
       await _onError("Die eingescannte Ehrenamtskarte ist nicht gültig, "
-          "da erforderliche Daten fehlen.", "${e.missingFieldName}Missing", e);
+          "da erforderliche Daten fehlen.", e);
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat("dd.MM.yyyy");
       await _onError("Die eingescannte Karte ist bereits am "
-        "${dateFormat.format(e.expiry)} abgelaufen.", "cardExpired", e);
+        "${dateFormat.format(e.expiry)} abgelaufen.", e);
     } on QrCodeParseException catch (e) {
       await _onError("Der Inhalt des eingescannten Codes kann nicht verstanden "
         "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für "
-        "die Ehrenamtskarte-App generiert wurde.", "invalidFormat", e);
+        "die Ehrenamtskarte-App generiert wurde.", e);
     } on Exception catch (e) {
       await _onError("Ein unbekannter Fehler beim Einlesen des QR-Codes ist "
-        "aufgetreten.", "unknownError", e);
+        "aufgetreten.", e);
     } finally {
       // Should already be closed in any case, but we want to really be sure the
       // dialog eventually is closed.
@@ -74,15 +73,13 @@ class VerificationWorkflow {
     }
   }
 
-  Future<void> _onError(String message,
-      [String errorCode, Exception exception]) async {
+  Future<void> _onError(String message, [Exception exception]) async {
     if (exception != null) {
       print("Verification failed: ${exception.toString()}");
     }
     if (_userCancelled) return;
     _closeWaitingDialog();
-    await VerificationResultDialog.showFailure(_qrScannerContext, message,
-        errorCode);
+    await VerificationResultDialog.showFailure(_qrScannerContext, message);
   }
 
   Future<void> _onSuccess(BaseCardDetails cardDetails) async {
