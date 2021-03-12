@@ -7,4 +7,8 @@ data class GraphQLContext(
     val jwtPayload: JwtPayload?
 ) : GraphQLContext {
     val isSignedIn get() = jwtPayload != null
+
+    fun enforceSignedIn() {
+        if (!isSignedIn) throw UnauthorizedException()
+    }
 }

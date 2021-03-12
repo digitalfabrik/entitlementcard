@@ -15,6 +15,7 @@ import graphql.ExecutionResult
 import graphql.GraphQL
 import io.javalin.http.Context
 import java.io.IOException
+import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
     private val graphQLParams: GraphQLParams =
@@ -33,9 +34,9 @@ class GraphQLHandler(
     /**
      * Get payload from the request.
      */
-    private fun getPayload(context: Context): Map<String, Any>? {
+    private fun getPayload(context: Context): Map<String, Any> {
         return try {
-            mapper.readValue<Map<String, Any>>(context.body())
+            mapper.readValue(context.body())
         } catch (e: IOException) {
             throw IOException("Unable to parse GraphQL payload.")
         }
@@ -63,6 +64,12 @@ class GraphQLHandler(
                     it
                 }
             }
+            // if we encounter a UnauthorizedException, rethrow it
+            executionResult.errors
+                .filterIsInstance<ExceptionWhileDataFetching>()
+                .map { it.exception }
+                .firstOrNull { it is UnauthorizedException }
+                ?.let { throw it }
         }
 
         try {
@@ -80,29 +87,25 @@ class GraphQLHandler(
     }
 
     private fun getGraphQLContext(context: Context) =
-        GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken))
+        try {
+            GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken))
+        } catch (e: Exception) {
+            when (e) {
+                is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
+                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(null)
+                else -> throw e
+            }
+        }
 
     /**
      * Execute a query against schema
      */
     fun handle(context: Context) {
-        val graphQLContext = try {
-            getGraphQLContext(context)
-        } catch (e: Exception) {
-            when (e) {
-                is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException -> {
-                    context.status(401)
-                    context.result("JWT invalid")
-                    return
-                }
-                else -> throw e
-            }
-        }
-
         val payload = getPayload(context)
-        payload?.let {
-            // Execute the query against the schema
+        val graphQLContext = getGraphQLContext(context)
+
+        // Execute the query against the schema
+        try {
             val executionResult = graphQL.executeAsync(
                 ExecutionInput.Builder()
                     .context(graphQLContext)
@@ -114,10 +117,11 @@ class GraphQLHandler(
 
             // write response as json
             context.json(result)
-        }
-        if (payload == null) {
-            context.status(400)
-            context.result("Something went wrong.")
+        } catch (e: UnauthorizedException) {
+            context.res.sendError(401)
+        } catch (e: ExecutionException) {
+            e.printStackTrace()
+            context.res.sendError(500)
         }
     }
 }

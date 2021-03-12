@@ -4,7 +4,6 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGenerationModel
 import com.expediagroup.graphql.annotations.GraphQLDescription
-import graphql.GraphQLException
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.util.Base64
 import java.time.LocalDateTime
@@ -15,7 +14,7 @@ import java.time.ZoneOffset
 class CardMutationService {
     @GraphQLDescription("Stores a new digital EAK")
     fun addCard(context: GraphQLContext, card: CardGenerationModel): Boolean {
-        if (!context.isSignedIn) throw GraphQLException("Unauthorized")
+        context.enforceSignedIn()
         transaction {
             CardRepository.insert(
                 Base64.decode(card.cardDetailsHashBase64),
