@@ -39,7 +39,7 @@ class _CardTypeStepState extends State<CardTypeStep> {
                     child: Text('Blaue Ehrenamtskarte\nerneute Ausstellung'),
                   ),
                   FormBuilderFieldOption(
-                    value: null,
+                    value: ApplicationType.artemisUnknown,
                     child: Text('Goldene Ehrenamtskarte'),
                   ),
                 ]),
@@ -50,7 +50,8 @@ class _CardTypeStepState extends State<CardTypeStep> {
   _onSaved(value) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
-    if (value != null) {
+    if (value == ApplicationType.firstApplication ||
+        value == ApplicationType.renewalApplication) {
       final blueCardApplication = BlueEakCardApplicationInput(
           applicationType: null,
           entitlement: null,

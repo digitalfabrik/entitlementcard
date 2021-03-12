@@ -14,6 +14,8 @@ class ApplicationModel extends ChangeNotifier {
     return _goldenCardApplication;
   }
 
+  bool hasBlueCardApplication() => _blueCardApplication != null;
+
   void setBlueCardApplication(BlueEakCardApplicationInput blueCardApplication) {
     _blueCardApplication = blueCardApplication;
     _goldenCardApplication = null;
@@ -36,4 +38,6 @@ class ApplicationModel extends ChangeNotifier {
     _goldenCardApplication = null;
     notifyListeners();
   }
+
+  void updateListeners() => notifyListeners();
 }
