@@ -49,17 +49,6 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Sie haben noch keine Ehrenamtskarte?",
-        description: "Wenn Sie ehrenamtlich tätig sind und alle Voraussetzungen"
-            " erfüllen, können Sie sich bequem über diese App für eine"
-            " Ehrenamtskarte in Bayern bewerben.",
-        pathImage: "assets/icon/icon.png",
-        backgroundColor: Color(0xff9932CC),
-        maxLineTitle: 3,
-      ),
-    );
-    slides.add(
-      Slide(
           title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
           backgroundColor: Color(0xff1c8fc2),
           maxLineTitle: 3,
