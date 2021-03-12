@@ -12,5 +12,8 @@ query AcceptingStoresSearch($params: SearchParamsInput!) {
                 lng
             }
         }
+        category {
+            id
+        }
     }
 }
