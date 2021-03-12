@@ -11,7 +11,7 @@ class VerificationInfoDialog extends StatelessWidget {
               "Gegenübers angezeigt wird. "
               "Daraufhin wird durch eine Server-Anfrage geprüft, ob die "
               "gescannte Ehrenamtskarte gültig ist. "
-              "Sie benötigen eine Internetverbindung."),
+              "Dazu wird eine Internetverbindung benötigt."),
         ]),
       ),
       actions: [
