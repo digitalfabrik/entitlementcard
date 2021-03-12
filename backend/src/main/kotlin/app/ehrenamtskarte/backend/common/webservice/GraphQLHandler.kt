@@ -80,7 +80,7 @@ class GraphQLHandler(
     }
 
     private fun getGraphQLContext(context: Context) =
-        GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verify))
+        GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken))
 
     /**
      * Execute a query against schema

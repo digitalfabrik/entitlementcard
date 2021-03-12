@@ -15,14 +15,14 @@ object JwtService {
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
 
-    fun create(administrator: Administrator): String =
+    fun createToken(administrator: Administrator): String =
         JWT.create()
             .withClaim(JwtPayload::email.name, administrator.email)
             .withClaim(JwtPayload::userId.name, administrator.id)
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
-    fun verify(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
+    fun verifyToken(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
         JwtPayload(it[JwtPayload::email.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
     }
 }
