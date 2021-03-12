@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'application_model.dart';
 
 class PersonalDataStep extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -15,19 +18,30 @@ class PersonalDataStep extends StatefulWidget {
 class _PersonalDataStepState extends State<PersonalDataStep> {
   @override
   Widget build(BuildContext context) {
+    var personalData =
+        Provider.of<ApplicationModel>(context, listen: false).personalData;
     return FormBuilder(
         key: widget.formKey,
         child: Column(children: <Widget>[
           TextFormField(
             decoration: InputDecoration(labelText: 'Titel'),
+            onSaved: (value) {
+              personalData.title = value;
+            },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
-            decoration: InputDecoration(labelText: 'Nachname*'),
+            decoration: InputDecoration(labelText: 'Nachname *'),
+            onSaved: (value) {
+              personalData.surname = value;
+            },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Vorname(n) *'),
+            onSaved: (value) {
+              personalData.forenames = value;
+            },
           ),
           FormBuilderDateTimePicker(
             name: 'date',
@@ -38,6 +52,9 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             decoration: InputDecoration(
               labelText: 'Geburtsdatum *',
             ),
+            onSaved: (value) {
+              personalData.dateOfBirth = DateFormat('dd.MM.yyyy').format(value);
+            },
           ),
           FormBuilderDropdown(
             name: 'gender',
@@ -46,24 +63,37 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             ),
             allowClear: true,
             items: ['weiblich', 'männlich', 'divers']
-                .map((gender) => DropdownMenuItem(
-                      value: gender,
-                      child: Text('$gender'),
-                    ))
+                .map((gender) =>
+                DropdownMenuItem(
+                  value: gender,
+                  child: Text('$gender'),
+                ))
                 .toList(),
+            onSaved: (value) {
+              personalData.gender = value;
+            },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'Nationalität'),
+            onSaved: (value) {
+              personalData.nationality = value;
+            },
           ),
           SizedBox(
             height: 16,
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'Adresszusatz'),
+            onSaved: (value) {
+              personalData.addressSupplement = value;
+            },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
+            onSaved: (value) {
+              personalData.street = value;
+            },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Hausnummer *"),
@@ -72,6 +102,9 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
               FormBuilderValidators.numeric(context),
             ]),
             keyboardType: TextInputType.number,
+            onSaved: (value) {
+              personalData.houseNumber = value;
+            },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "PLZ *"),
@@ -83,10 +116,16 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             ]),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onSaved: (value) {
+              personalData.postalCode = value;
+            },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Ort *'),
+            onSaved: (value) {
+              personalData.location = value;
+            },
           ),
           SizedBox(
             height: 16,
@@ -98,10 +137,16 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             ]),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(labelText: 'E-Mail *'),
+            onSaved: (value) {
+              personalData.emailAddress = value;
+            },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Telefon"),
             keyboardType: TextInputType.phone,
+            onSaved: (value) {
+              personalData.telephone = value;
+            },
           ),
         ]));
   }
