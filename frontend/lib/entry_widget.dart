@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'configuration/first_start.dart';
 import 'configuration.dart';
+import 'configuration/first_start.dart';
 import 'home/home_page.dart';
 import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
