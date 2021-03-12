@@ -50,28 +50,17 @@ class _CardTypeStepState extends State<CardTypeStep> {
   _onSaved(value) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
-    if (value == ApplicationType.firstApplication ||
-        value == ApplicationType.renewalApplication) {
-      final blueCardApplication = BlueEakCardApplicationInput(
-          applicationType: null,
-          entitlement: null,
-          givenInformationIsCorrectAndComplete: null,
-          hasAcceptedPrivacyPolicy: null,
-          personalData: null);
-      if (value == ApplicationType.firstApplication) {
-        blueCardApplication.applicationType = ApplicationType.firstApplication;
-      } else if (value == ApplicationType.firstApplication) {
-        blueCardApplication.applicationType =
-            ApplicationType.renewalApplication;
-      }
-      applicationModel.setBlueCardApplication(blueCardApplication);
+    if (value == ApplicationType.firstApplication) {
+      applicationModel.initializeBlueCardApplication();
+      applicationModel.blueCardApplication.applicationType =
+          ApplicationType.firstApplication;
+    } else if (value == ApplicationType.renewalApplication) {
+      applicationModel.initializeBlueCardApplication();
+      applicationModel.blueCardApplication.applicationType =
+          ApplicationType.renewalApplication;
     } else {
-      final goldenCardApplication = GoldenEakCardApplicationInput(
-          entitlement: null,
-          givenInformationIsCorrectAndComplete: null,
-          hasAcceptedPrivacyPolicy: null,
-          personalData: null);
-      applicationModel.setGoldenCardApplication(goldenCardApplication);
+      applicationModel.initializeGoldenCardApplication();
     }
+    applicationModel.updateListeners();
   }
 }
