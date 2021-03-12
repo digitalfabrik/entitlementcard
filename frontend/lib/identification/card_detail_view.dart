@@ -35,7 +35,8 @@ class CardDetailView extends StatelessWidget {
               : getRegions
                   .parse(result.data)
                   .regions
-                  .firstWhere((element) => element.id == cardDetails.regionId);
+                  .firstWhere((element) => element.id == cardDetails.regionId,
+                    orElse: () => null);
           return Flex(
             direction: isLandscape ? Axis.horizontal : Axis.vertical,
             crossAxisAlignment: CrossAxisAlignment.start,
