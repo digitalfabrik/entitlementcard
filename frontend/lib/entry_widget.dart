@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'configuration.dart';
 import 'configuration/first_start.dart';
+import 'configuration.dart';
 import 'home/home_page.dart';
 import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
@@ -20,7 +20,9 @@ class EntryWidget extends StatelessWidget {
           String initialRoute;
           if (!snapshot.hasError && snapshot.hasData && snapshot.data) {
             routes.addAll(<String, WidgetBuilder>{
-              '/intro': (context) => IntroScreen(),
+              '/intro': (context) => IntroScreen(
+                    onFinishedCallback: setFirstStart,
+                  ),
             });
             initialRoute = '/intro';
           }

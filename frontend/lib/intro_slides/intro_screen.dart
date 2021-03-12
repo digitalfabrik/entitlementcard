@@ -6,8 +6,12 @@ import 'package:intro_slider/slide_object.dart';
 
 import '../location/determine_position.dart';
 
+typedef OnFinishedCallback = void Function();
+
 class IntroScreen extends StatefulWidget {
-  IntroScreen({Key key}) : super(key: key);
+  final OnFinishedCallback onFinishedCallback;
+
+  const IntroScreen({Key key, this.onFinishedCallback}) : super(key: key);
 
   @override
   IntroScreenState createState() => IntroScreenState();
@@ -78,6 +82,9 @@ class IntroScreenState extends State<IntroScreen> {
   }
 
   void onDonePress() {
+    if (widget.onFinishedCallback != null) {
+      widget.onFinishedCallback();
+    }
     Navigator.of(context).pop();
   }
 
