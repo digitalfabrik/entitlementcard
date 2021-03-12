@@ -92,19 +92,11 @@ class VerificationWorkflow {
     showDialog(context: _qrScannerContext, builder: (context) {
       _waitingDialogContext = context;
       return AlertDialog(
-        title: Text("Einen Moment bitte …"),
-        content: Column(
+        title: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Wir überprüfen den gescannten Code für Sie."),
-            SizedBox(height: 12),
             CircularProgressIndicator()
-        ]),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Abbrechen"))
-        ],
+        ])
       );
     }).whenComplete(() {
       _userCancelled = true;
