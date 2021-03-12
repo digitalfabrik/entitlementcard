@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'application/application_model.dart';
 import 'configuration.dart';
 import 'graphql/configured_graphql_provider.dart';
 import 'home/home_page.dart';
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(
                 create: (context) => CardDetailsModel()..initialize()),
+            ChangeNotifierProvider(create: (context) => ApplicationModel()),
           ],
           child: MaterialApp(
             title: 'Ehrenamtskarte',

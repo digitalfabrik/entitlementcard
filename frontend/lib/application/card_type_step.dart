@@ -1,5 +1,10 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
+
+import 'application_model.dart';
 
 class CardTypeStep extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -19,22 +24,53 @@ class _CardTypeStepState extends State<CardTypeStep> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
-              decoration: InputDecoration(labelText: 'Beantragung'),
-              name: 'card_type',
-              validator: FormBuilderValidators.compose(
-                  [FormBuilderValidators.required(context)]),
-              options: [
-                'Blaue Ehrenamtskarte\nErstbeantragung',
-                'Blaue Ehrenamtskarte\nerneute Ausstellung',
-                'Goldene Ehrenamtskarte'
-              ]
-                  .map((lang) => FormBuilderFieldOption(
-                        value: lang,
-                        child: Text('$lang'),
-                      ))
-                  .toList(growable: false),
-            ),
+                decoration: InputDecoration(labelText: 'Beantragung'),
+                name: 'card_type',
+                onSaved: _onSaved,
+                validator: FormBuilderValidators.compose(
+                    [FormBuilderValidators.required(context)]),
+                options: [
+                  FormBuilderFieldOption(
+                    value: ApplicationType.firstApplication,
+                    child: Text('Blaue Ehrenamtskarte\nErstbeantragung'),
+                  ),
+                  FormBuilderFieldOption(
+                    value: ApplicationType.renewalApplication,
+                    child: Text('Blaue Ehrenamtskarte\nerneute Ausstellung'),
+                  ),
+                  FormBuilderFieldOption(
+                    value: null,
+                    child: Text('Goldene Ehrenamtskarte'),
+                  ),
+                ]),
           ],
         ));
+  }
+
+  _onSaved(value) {
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
+    if (value != null) {
+      final blueCardApplication = BlueEakCardApplicationInput(
+          applicationType: null,
+          entitlement: null,
+          givenInformationIsCorrectAndComplete: null,
+          hasAcceptedPrivacyPolicy: null,
+          personalData: null);
+      if (value == ApplicationType.firstApplication) {
+        blueCardApplication.applicationType = ApplicationType.firstApplication;
+      } else if (value == ApplicationType.firstApplication) {
+        blueCardApplication.applicationType =
+            ApplicationType.renewalApplication;
+      }
+      applicationModel.setBlueCardApplication(blueCardApplication);
+    } else {
+      final goldenCardApplication = GoldenEakCardApplicationInput(
+          entitlement: null,
+          givenInformationIsCorrectAndComplete: null,
+          hasAcceptedPrivacyPolicy: null,
+          personalData: null);
+      applicationModel.setGoldenCardApplication(goldenCardApplication);
+    }
   }
 }
