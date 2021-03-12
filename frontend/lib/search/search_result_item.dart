@@ -77,13 +77,16 @@ class SearchResultItem extends StatelessWidget {
                                 ),
                         )
                       : Container(),
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: VerticalDivider(
-                      color: iconColor ?? Theme.of(context).colorScheme.primary,
-                      thickness: 1,
-                    ),
-                  ),
+                  MediaQuery.of(context).size.width <= 400
+                      ? Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: VerticalDivider(
+                            color: iconColor ??
+                                Theme.of(context).colorScheme.primary,
+                            thickness: 1,
+                          ),
+                        )
+                      : Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
                   Expanded(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
