@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
+import 'dialogs/negative_verification_result_dialog.dart';
+import 'dialogs/positive_verification_result_dialog.dart';
 import 'dialogs/verification_info_dialog.dart';
-import 'dialogs/verification_result_dialog.dart';
 import 'query_server_verification.dart';
 import 'verification_qr_code_processor.dart';
 
@@ -79,13 +80,13 @@ class VerificationWorkflow {
     }
     if (_userCancelled) return;
     _closeWaitingDialog();
-    await VerificationResultDialog.showFailure(_qrScannerContext, message);
+    await NegativeVerificationResultDialog.show(_qrScannerContext, message);
   }
 
   Future<void> _onSuccess(BaseCardDetails cardDetails) async {
     if (_userCancelled) return;
     _closeWaitingDialog();
-    await VerificationResultDialog.showSuccess(_qrScannerContext, cardDetails);
+    await PositiveVerificationResultDialog.show(_qrScannerContext, cardDetails);
   }
 
   void _openWaitingDialog() {
