@@ -34,14 +34,6 @@ class SearchResultItem extends StatelessWidget {
     }
   }
 
-  String get _locationWithDistanceString {
-    if (_distance != null) {
-      return _formatDistance(_distance);
-    } else {
-      return "?";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var assets = [...categoryAssets];
@@ -96,19 +88,26 @@ class SearchResultItem extends StatelessWidget {
                             item.name ?? "Akzeptanzstelle",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                .apply(fontSizeFactor: 1.1),
                           ),
                           Text(
                             item.description ?? "",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          if (item.physicalStore?.address?.location != null &&
+                              _distance == null)
+                            Text(item.physicalStore?.address?.location,
+                                maxLines: 1, overflow: TextOverflow.ellipsis)
                         ]),
                   ),
                   if (_distance != null)
                     Center(
                       child: Text(
-                        _locationWithDistanceString,
+                        _formatDistance(_distance),
                         maxLines: 1,
                         style: DefaultTextStyle.of(context)
                             .style
