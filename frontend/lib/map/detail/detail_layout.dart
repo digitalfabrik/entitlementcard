@@ -8,11 +8,25 @@ class DetailLayout extends StatelessWidget {
   final Widget body;
   final int categoryId;
   final String categoryName;
+  final Color accentColor;
 
-  DetailLayout({this.title, this.body, this.categoryId, this.categoryName});
+  DetailLayout(
+      {this.title,
+      this.body,
+      this.categoryId,
+      this.categoryName,
+      this.accentColor});
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor =
+        accentColor ?? Theme.of(context).colorScheme.primary;
+    final textColor =
+        backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    final textColorGrey = backgroundColor.computeLuminance() > 0.5
+        ? Colors.black54
+        : Colors.white54;
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -33,18 +47,24 @@ class DetailLayout extends StatelessWidget {
                       children: [
                         Text(
                           categoryName ?? "",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              .apply(color: textColorGrey),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           title ?? "",
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .apply(color: textColor),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         )
                       ]))),
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: accentColor,
           elevation: 0.0, //No shadow
         ),
         body: SingleChildScrollView(

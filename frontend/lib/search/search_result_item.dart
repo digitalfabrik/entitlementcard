@@ -43,14 +43,14 @@ class SearchResultItem extends StatelessWidget {
         matchedAssets.isNotEmpty ? matchedAssets.first : null;
     final iconPath = itemCategoryAsset?.icon;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
-    final iconColor = itemCategoryAsset?.color;
+    final categoryColor = itemCategoryAsset?.color;
 
     return SafeArea(
       bottom: false,
       top: false,
       child: InkWell(
         onTap: () {
-          _openDetailView(context, item.id);
+          _openDetailView(context, item.id, categoryColor);
         },
         child: Padding(
             padding: EdgeInsets.all(10),
@@ -73,7 +73,7 @@ class SearchResultItem extends StatelessWidget {
                       ? Padding(
                           padding: EdgeInsets.only(right: 10),
                           child: VerticalDivider(
-                            color: iconColor ??
+                            color: categoryColor ??
                                 Theme.of(context).colorScheme.primary,
                             thickness: 3,
                           ),
@@ -124,11 +124,13 @@ class SearchResultItem extends StatelessWidget {
     );
   }
 
-  void _openDetailView(BuildContext context, int acceptingStoreId) {
+  void _openDetailView(
+      BuildContext context, int acceptingStoreId, Color accentColor) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailView(acceptingStoreId),
+          builder: (context) =>
+              DetailView(acceptingStoreId, accentColor: accentColor),
         ));
   }
 }

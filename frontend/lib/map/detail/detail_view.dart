@@ -10,8 +10,10 @@ import 'detail_layout.dart';
 class DetailView extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
+  final Color accentColor;
 
-  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton = false});
+  DetailView(this._acceptingStoreId,
+      {this.hideShowOnMapButton = false, this.accentColor});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,7 @@ class DetailView extends StatelessWidget {
             ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
       options: QueryOptions(
-          document: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()),
+          document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
@@ -37,10 +38,14 @@ class DetailView extends StatelessWidget {
         }
         return DetailLayout(
           title: matchingStores.first.store.name ?? "Akzeptanzstelle",
-          body: DetailContent(matchingStores.first,
-              hideShowOnMapButton: hideShowOnMapButton),
+          body: DetailContent(
+            matchingStores.first,
+            hideShowOnMapButton: hideShowOnMapButton,
+            accentColor: accentColor,
+          ),
           categoryId: matchingStores.first.store.category.id,
           categoryName: matchingStores.first.store.category.name,
+          accentColor: accentColor,
         );
       },
     );
