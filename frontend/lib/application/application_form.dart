@@ -6,11 +6,10 @@ import 'package:provider/provider.dart';
 
 import 'application_model.dart';
 import 'card_type_step.dart';
-import 'entitlement_step.dart';
-import 'organization_step.dart';
+import 'entitlement_data_step.dart';
+import 'entitlement_type_step.dart';
 import 'personal_data_step.dart';
 import 'summary_step.dart';
-import '../graphql/graphql_api.dart';
 
 class ApplicationForm extends StatefulWidget {
   @override
@@ -65,7 +64,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                 TextButton(
                     onPressed: onStepContinue,
                     child:
-                    Text(_currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
+                        Text(_currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
                     style: TextButton.styleFrom(
                       primary: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).primaryColor,
@@ -88,7 +87,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
             ),
             Step(
               title: Text('Voraussetzungen'),
-              content: EntitlementStep(
+              content: EntitlementTypeStep(
                 formKey: _formKeys[1],
               ),
               isActive: _currentStep >= 0,
@@ -106,7 +105,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
             ),
             Step(
               title: Text('Organisation'),
-              content: OrganizationStep(
+              content: EntitlementDataStep(
                 formKey: _formKeys[3],
               ),
               isActive: _currentStep >= 0,
@@ -129,8 +128,14 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   _onStepContinued() {
-    if (_formKeys[_currentStep].currentState.validate() || true) {
+    if (_formKeys[_currentStep].currentState.validate()) {
       _formKeys[_currentStep].currentState.save();
+      if (_currentStep < _lastStep) {
+        setState(() => _currentStep++);
+      } else {
+        _sendApplication();
+      }
+    } else {
       if (_currentStep < _lastStep) {
         setState(() => _currentStep++);
       } else {

@@ -5,16 +5,16 @@ import 'package:provider/provider.dart';
 
 import 'application_model.dart';
 
-class EntitlementBlue extends StatefulWidget {
+class EntitlementTypeBlue extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementBlue({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeBlue({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementBlueState createState() => _EntitlementBlueState();
+  _EntitlementTypeBlueState createState() => _EntitlementTypeBlueState();
 }
 
-class _EntitlementBlueState extends State<EntitlementBlue> {
+class _EntitlementTypeBlueState extends State<EntitlementTypeBlue> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(

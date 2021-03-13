@@ -1,31 +1,31 @@
-import 'package:ehrenamtskarte/application/entitlement_blue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'application_model.dart';
-import 'entitlement_gold.dart';
+import 'entitlement_type_blue.dart';
+import 'entitlement_type_gold.dart';
 
-class EntitlementStep extends StatefulWidget {
+class EntitlementTypeStep extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementStep({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeStep({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementStepState createState() => _EntitlementStepState();
+  _EntitlementTypeStepState createState() => _EntitlementTypeStepState();
 }
 
-class _EntitlementStepState extends State<EntitlementStep> {
+class _EntitlementTypeStepState extends State<EntitlementTypeStep> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationModel>(
         builder: (context, applicationModel, child) {
       if (applicationModel.hasBlueCardApplication()) {
-        return EntitlementBlue(
+        return EntitlementTypeBlue(
           formKey: widget.formKey,
         );
       } else {
-        return EntitlementGold(
+        return EntitlementTypeGold(
           formKey: widget.formKey,
         );
       }

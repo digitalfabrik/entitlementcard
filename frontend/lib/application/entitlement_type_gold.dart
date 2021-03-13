@@ -5,16 +5,16 @@ import 'package:provider/provider.dart';
 
 import 'application_model.dart';
 
-class EntitlementGold extends StatefulWidget {
+class EntitlementTypeGold extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementGold({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeGold({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementGoldState createState() => _EntitlementGoldState();
+  _EntitlementTypeGoldState createState() => _EntitlementTypeGoldState();
 }
 
-class _EntitlementGoldState extends State<EntitlementGold> {
+class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(

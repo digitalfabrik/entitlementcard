@@ -27,7 +27,9 @@ class ApplicationModel extends ChangeNotifier {
         postalCode: null,
         street: null,
         surname: null);
-    final entitlement = BlueCardEntitlementInput(blueEntitlementType: null);
+    final entitlement = BlueCardEntitlementInput(
+        blueEntitlementType: null,
+        workAtOrganizations: <WorkAtOrganizationInput>[]);
     _blueCardApplication = BlueEakCardApplicationInput(
         applicationType: null,
         entitlement: entitlement,
@@ -69,6 +71,8 @@ class ApplicationModel extends ChangeNotifier {
   }
 
   bool hasBlueCardApplication() => _blueCardApplication != null;
+
+  bool hasGoldCardApplication() => _goldenCardApplication != null;
 
   void setBlueCardApplication(BlueEakCardApplicationInput blueCardApplication) {
     _blueCardApplication = blueCardApplication;
