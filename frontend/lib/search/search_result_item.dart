@@ -46,7 +46,7 @@ class SearchResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var assets = [...categoryAssets];
     final matchedAssets =
-        assets.where((element) => element.id == item.category.id);
+        assets.where((element) => element.id == item.categoryId);
     final itemCategoryAsset =
         matchedAssets.isNotEmpty ? matchedAssets.first : null;
     final iconPath = itemCategoryAsset?.icon;
