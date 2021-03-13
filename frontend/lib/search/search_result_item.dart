@@ -105,12 +105,16 @@ class SearchResultItem extends StatelessWidget {
                           ),
                         ]),
                   ),
-                  Center(
-                    child: Text(
-                      _locationWithDistanceString,
-                      maxLines: 1,
+                  if (_distance != null)
+                    Center(
+                      child: Text(
+                        _locationWithDistanceString,
+                        maxLines: 1,
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontWeightDelta: 3),
+                      ),
                     ),
-                  ),
                   Container(
                       child: Icon(Icons.keyboard_arrow_right, size: 30.0),
                       height: double.infinity),
