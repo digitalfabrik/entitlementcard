@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
-import app.ehrenamtskarte.backend.application.webservice.schema.BlueEakCardApplication
-import app.ehrenamtskarte.backend.application.webservice.schema.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule

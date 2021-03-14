@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.application.webservice.schema
+package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 data class PersonalData(
     val title: String?,

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.application.webservice.schema
+package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 import com.expediagroup.graphql.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment

@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
-import app.ehrenamtskarte.backend.application.webservice.schema.BlueEakCardApplication
-import app.ehrenamtskarte.backend.application.webservice.schema.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
 import com.expediagroup.graphql.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
 

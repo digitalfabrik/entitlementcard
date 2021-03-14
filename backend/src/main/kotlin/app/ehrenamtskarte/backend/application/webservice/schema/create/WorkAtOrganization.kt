@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.application.webservice.schema
+package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 enum class AmountOfWorkUnit {
     HOURS_PER_WEEK,

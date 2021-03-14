@@ -1,10 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.schema.UploadKey
+import app.ehrenamtskarte.backend.application.webservice.schema.create.UploadKey
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.*
-import app.ehrenamtskarte.backend.stores.webservice.schema.AcceptingStoreQueryService
-import app.ehrenamtskarte.backend.stores.webservice.schema.CategoriesQueryService
 import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.TopLevelObject
 import com.expediagroup.graphql.hooks.SchemaGeneratorHooks
