@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:tinycolor/tinycolor.dart';
 
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
@@ -43,7 +44,10 @@ class SearchResultItem extends StatelessWidget {
         matchedAssets.isNotEmpty ? matchedAssets.first : null;
     final iconPath = itemCategoryAsset?.icon;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
-    final categoryColor = itemCategoryAsset?.color;
+    var categoryColor = itemCategoryAsset?.color;
+    if (categoryColor != null) {
+      categoryColor = TinyColor(categoryColor).darken().color;
+    }
 
     return SafeArea(
       bottom: false,
