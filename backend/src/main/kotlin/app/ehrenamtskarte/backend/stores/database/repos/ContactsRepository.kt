@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
+import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.Contacts
-import app.ehrenamtskarte.backend.stores.database.sortByKeys
 
 object ContactsRepository {
 

@@ -1,8 +1,11 @@
 package app.ehrenamtskarte.backend.common.webservice
 
+import app.ehrenamtskarte.backend.auth.webservice.JwtService
+import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
+import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
-import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
+import com.auth0.jwt.exceptions.*
 import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -12,9 +15,11 @@ import graphql.ExecutionResult
 import graphql.GraphQL
 import io.javalin.http.Context
 import java.io.IOException
+import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
-    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch verificationGraphQlParams stitch regionsGraphQlParams
+    private val graphQLParams: GraphQLParams =
+        storesGraphQlParams stitch verificationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config,
@@ -29,9 +34,9 @@ class GraphQLHandler(
     /**
      * Get payload from the request.
      */
-    private fun getPayload(context: Context): Map<String, Any>? {
+    private fun getPayload(context: Context): Map<String, Any> {
         return try {
-            mapper.readValue<Map<String, Any>>(context.body())
+            mapper.readValue(context.body())
         } catch (e: IOException) {
             throw IOException("Unable to parse GraphQL payload.")
         }
@@ -59,6 +64,12 @@ class GraphQLHandler(
                     it
                 }
             }
+            // if we encounter a UnauthorizedException, rethrow it
+            executionResult.errors
+                .filterIsInstance<ExceptionWhileDataFetching>()
+                .map { it.exception }
+                .firstOrNull { it is UnauthorizedException }
+                ?.let { throw it }
         }
 
         try {
@@ -69,15 +80,35 @@ class GraphQLHandler(
         return result
     }
 
+    private fun getJwtTokenFromHeader(context: Context): String? {
+        val header = context.header("Authorization") ?: return null
+        val split = header.split(" ")
+        return if (split.size != 2 || split[0] != "Bearer") null else split[1]
+    }
+
+    private fun getGraphQLContext(context: Context) =
+        try {
+            GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken))
+        } catch (e: Exception) {
+            when (e) {
+                is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
+                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(null)
+                else -> throw e
+            }
+        }
+
     /**
      * Execute a query against schema
      */
     fun handle(context: Context) {
         val payload = getPayload(context)
-        payload?.let {
-            // Execute the query against the schema
+        val graphQLContext = getGraphQLContext(context)
+
+        // Execute the query against the schema
+        try {
             val executionResult = graphQL.executeAsync(
                 ExecutionInput.Builder()
+                    .context(graphQLContext)
                     .query(payload["query"].toString())
                     .variables(getVariables(payload))
                     .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
@@ -86,10 +117,11 @@ class GraphQLHandler(
 
             // write response as json
             context.json(result)
-        }
-        if (payload == null) {
-            context.status(400)
-            context.result("Something went wrong.")
+        } catch (e: UnauthorizedException) {
+            context.res.sendError(401)
+        } catch (e: ExecutionException) {
+            e.printStackTrace()
+            context.res.sendError(500)
         }
     }
 }
