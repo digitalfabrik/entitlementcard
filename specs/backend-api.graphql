@@ -134,7 +134,11 @@ enum GoldenCardEntitlementType {
 "Long type"
 scalar Long
 
+"A file part in a multipart request"
+scalar Upload
+
 input AttachmentInput {
+  data: Upload!
   fileName: String!
 }
 
