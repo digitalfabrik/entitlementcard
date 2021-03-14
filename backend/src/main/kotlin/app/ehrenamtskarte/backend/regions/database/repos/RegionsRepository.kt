@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.regions.database.repos
 
+import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
-import app.ehrenamtskarte.backend.stores.database.sortByKeys
 
 object RegionsRepository {
 
