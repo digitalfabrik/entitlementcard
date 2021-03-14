@@ -25,7 +25,8 @@ class DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final contact = acceptingStore.store.contact;
-    final readableOnAccentColor = getReadableOnColor(accentColor);
+    final readableOnAccentColor =
+        accentColor != null ? getReadableOnColor(accentColor) : null;
     return Container(
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
