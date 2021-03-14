@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../configuration/hide_verification_info.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
@@ -22,8 +23,10 @@ class VerificationWorkflow {
       VerificationWorkflow._().showInfoAndQrScanner(context);
 
   Future<void> showInfoAndQrScanner(BuildContext rootContext) async {
-    // show info dialog and cancel if it is not accepted
-    if (await VerificationInfoDialog.show(rootContext) != true) return;
+    if (await hideVerificationInfo() != true) {
+      // show info dialog and cancel if it is not accepted
+      if (await VerificationInfoDialog.show(rootContext) != true) return;
+    }
 
     // show the QR scanner that will handle the rest
     await Navigator.push(rootContext,

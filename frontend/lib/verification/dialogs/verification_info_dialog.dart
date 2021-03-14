@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../configuration/hide_verification_info.dart';
+
 class VerificationInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,14 +17,22 @@ class VerificationInfoDialog extends StatelessWidget {
         ]),
       ),
       actions: [
-        // TODO add "do not show again" button
+        TextButton(
+          child: Text("Nicht mehr anzeigen"),
+          onPressed: () async {
+            await setHideVerificationInfo();
+            _onDone(context);
+          },
+        ),
         TextButton(
           child: Text("OK"),
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () => _onDone(context),
         )
       ],
     );
   }
+
+  void _onDone(BuildContext context) => Navigator.of(context).pop(true);
 
   /// Shows a [VerificationInfoDialog].
   /// Returns a future that resolves to true if the user accepted the info,
