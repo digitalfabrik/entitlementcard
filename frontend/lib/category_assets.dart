@@ -34,13 +34,12 @@ class CategoryAsset {
 
 const List<CategoryAsset> categoryAssets = [
   CategoryAsset(
-    id: 0,
-    name: "Auto/Zweirad",
-    shortName: "Mobilität",
-    icon: "assets/category_icons/0.svg",
-    detailIcon: "assets/detail_headers/0_auto.svg",
-    color: Color(0xffE89600),
-  ),
+      id: 0,
+      name: "Auto/Zweirad",
+      shortName: "Mobilität",
+      icon: "assets/category_icons/0.svg",
+      detailIcon: "assets/detail_headers/0_auto.svg",
+      color: Color(0xffE89600)),
   CategoryAsset(
       id: 1,
       name: 'Multimedia',
