@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../graphql/graphql_api.graphql.dart';
 import '../../home/home_page.dart';
+import '../../util/color_utils.dart';
 import '../../util/sanitize_contact_details.dart';
 import '../map_page.dart';
 import 'contact_info_row.dart';
@@ -13,14 +14,18 @@ class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
   final bool hideShowOnMapButton;
   final Color accentColor;
+  final Color readableOnAccentColor;
 
   DetailContent(this.acceptingStore,
-      {this.hideShowOnMapButton = false, this.accentColor});
+      {this.hideShowOnMapButton = false,
+      this.accentColor,
+      this.readableOnAccentColor});
 
   @override
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final contact = acceptingStore.store.contact;
+    final readableOnAccentColor = getReadableOnColor(accentColor);
     return Container(
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
@@ -45,7 +50,8 @@ class DetailContent extends StatelessWidget {
                   "Adresse",
                   onTap: () => MapsLauncher.launchQuery("${address.street}, "
                       "${address.postalCode} ${address.location}"),
-                  iconColor: accentColor,
+                  iconColor: readableOnAccentColor,
+                  iconFillColor: accentColor,
                 ),
               if (contact.website != null)
                 ContactInfoRow(
@@ -54,7 +60,8 @@ class DetailContent extends StatelessWidget {
                   "Website",
                   onTap: () =>
                       launch(prepareWebsiteUrlForLaunch(contact.website)),
-                  iconColor: accentColor,
+                  iconColor: readableOnAccentColor,
+                  iconFillColor: accentColor,
                 ),
               if (contact.telephone != null)
                 ContactInfoRow(
@@ -63,7 +70,8 @@ class DetailContent extends StatelessWidget {
                   "Telefon",
                   onTap: () =>
                       launch("tel:${sanitizePhoneNumber(contact.telephone)}"),
-                  iconColor: accentColor,
+                  iconColor: readableOnAccentColor,
+                  iconFillColor: accentColor,
                 ),
               if (contact.email != null)
                 ContactInfoRow(
@@ -71,7 +79,8 @@ class DetailContent extends StatelessWidget {
                   contact.email,
                   "E-Mail",
                   onTap: () => launch("mailto:${contact.email.trim()}"),
-                  iconColor: accentColor,
+                  iconColor: readableOnAccentColor,
+                  iconFillColor: accentColor,
                 ),
             ],
           ),

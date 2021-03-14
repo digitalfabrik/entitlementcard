@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../category_assets.dart';
+import '../../util/color_utils.dart';
 
 class DetailLayout extends StatelessWidget {
   final String title;
@@ -21,11 +22,8 @@ class DetailLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final backgroundColor =
         accentColor ?? Theme.of(context).colorScheme.primary;
-    final textColor =
-        backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    final textColorGrey = backgroundColor.computeLuminance() > 0.5
-        ? Colors.black54
-        : Colors.white54;
+    final textColor = getReadableOnColor(backgroundColor);
+    final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
     return Scaffold(
         appBar: AppBar(
