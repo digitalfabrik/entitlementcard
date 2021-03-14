@@ -12,8 +12,10 @@ import '../map/detail/detail_view.dart';
 class SearchResultItem extends StatelessWidget {
   final AcceptingStoresSearch$Query$AcceptingStore item;
   final CoordinatesInput coordinates;
+  final double wideDepictionThreshold;
 
-  const SearchResultItem({Key key, this.item, this.coordinates})
+  const SearchResultItem(
+      {Key key, this.item, this.coordinates, this.wideDepictionThreshold = 400})
       : super(key: key);
 
   /// Returns the distance between `coordinates` and the physical store,
@@ -25,99 +27,46 @@ class SearchResultItem extends StatelessWidget {
         item.physicalStore.coordinates.lat, item.physicalStore.coordinates.lng);
   }
 
-  static String _formatDistance(double d) {
-    if (d < 1) {
-      return "${(d * 100).round() * 10} m";
-    } else if (d < 10) {
-      return "${NumberFormat("##.0", "de").format(d)} km";
-    } else {
-      return "${NumberFormat("###,###", "de").format(d)} km";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var assets = [...categoryAssets];
-    final matchedAssets =
-        assets.where((element) => element.id == item.categoryId);
-    final itemCategoryAsset =
-        matchedAssets.isNotEmpty ? matchedAssets.first : null;
-    final iconPath = itemCategoryAsset?.icon;
+    final itemCategoryAsset = item.categoryId < categoryAssets.length
+        ? categoryAssets[item.categoryId]
+        : null;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
-    var categoryColor = itemCategoryAsset?.color;
+    final categoryColor = itemCategoryAsset?.color;
+    Color categoryColorDark;
     if (categoryColor != null) {
-      categoryColor = TinyColor(categoryColor).darken().color;
+      categoryColorDark = TinyColor(categoryColor).darken().color;
     }
+
+    final useWideDepiction = MediaQuery.of(context).size.width > 400;
 
     return SafeArea(
       bottom: false,
       top: false,
       child: InkWell(
         onTap: () {
-          _openDetailView(context, item.id, categoryColor);
+          _openDetailView(context, item.id, categoryColorDark);
         },
         child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
             child: IntrinsicHeight(
               child: Row(
                 children: [
-                  MediaQuery.of(context).size.width > 400
-                      ? Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: itemCategoryAsset != null
-                              ? SvgPicture.asset(iconPath,
-                                  width: 40.0, semanticsLabel: categoryName)
-                              : Icon(
-                                  Icons.info,
-                                  size: 40,
-                                ),
-                        )
-                      : Container(),
-                  MediaQuery.of(context).size.width <= 400
-                      ? Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: VerticalDivider(
-                            color: categoryColor ??
-                                Theme.of(context).colorScheme.primary,
-                            thickness: 3,
-                          ),
-                        )
-                      : Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  Expanded(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.name ?? "Akzeptanzstelle",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle2
-                                .apply(fontSizeFactor: 1.1),
-                          ),
-                          Text(
-                            item.description ?? "",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (item.physicalStore?.address?.location != null &&
-                              _distance == null)
-                            Text(item.physicalStore?.address?.location,
-                                maxLines: 1, overflow: TextOverflow.ellipsis)
-                        ]),
-                  ),
-                  if (_distance != null)
-                    Center(
-                      child: Text(
-                        _formatDistance(_distance),
-                        maxLines: 1,
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .apply(fontWeightDelta: 3),
-                      ),
+                  if (useWideDepiction)
+                    CategoryIconIndicator(
+                      svgIconPath: itemCategoryAsset?.icon,
+                      categoryName: categoryName,
+                    )
+                  else
+                    CategoryColorIndicator(
+                      categoryColor: categoryColor,
                     ),
+                  StoreTextOverview(
+                    item: item,
+                    showTownName: _distance == null,
+                  ),
+                  if (_distance != null) DistanceText(distance: _distance),
                   Container(
                       child: Icon(Icons.keyboard_arrow_right, size: 30.0),
                       height: double.infinity),
@@ -136,6 +85,110 @@ class SearchResultItem extends StatelessWidget {
           builder: (context) =>
               DetailView(acceptingStoreId, accentColor: accentColor),
         ));
+  }
+}
+
+class CategoryIconIndicator extends StatelessWidget {
+  final String svgIconPath;
+  final String categoryName;
+
+  const CategoryIconIndicator({Key key, this.svgIconPath, this.categoryName})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 5, right: 10),
+      child: svgIconPath != null
+          ? SvgPicture.asset(svgIconPath,
+              width: 40.0,
+              semanticsLabel: categoryName ?? "Unbekannte Kategorie")
+          : Icon(
+              Icons.info,
+              size: 40,
+            ),
+    );
+  }
+}
+
+class CategoryColorIndicator extends StatelessWidget {
+  final Color categoryColor;
+
+  const CategoryColorIndicator({Key key, this.categoryColor}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 5),
+      child: VerticalDivider(
+        color: categoryColor ?? Theme.of(context).colorScheme.primary,
+        thickness: 3,
+      ),
+    );
+  }
+}
+
+class StoreTextOverview extends StatelessWidget {
+  final AcceptingStoresSearch$Query$AcceptingStore item;
+  final bool showTownName;
+
+  const StoreTextOverview(
+      {Key key, @required this.item, this.showTownName = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.name ?? "Akzeptanzstelle",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  .apply(fontSizeFactor: 1.1),
+            ),
+            Text(
+              item.description ?? "",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (showTownName && item.physicalStore?.address?.location != null)
+              Text(item.physicalStore?.address?.location,
+                  maxLines: 1, overflow: TextOverflow.ellipsis)
+          ]),
+    );
+  }
+}
+
+class DistanceText extends StatelessWidget {
+  final double distance;
+
+  const DistanceText({Key key, @required this.distance}) : super(key: key);
+
+  static String _formatDistance(double d) {
+    if (d < 1) {
+      return "${(d * 100).round() * 10} m";
+    } else if (d < 10) {
+      return "${NumberFormat("##.0", "de").format(d)} km";
+    } else {
+      return "${NumberFormat("###,###", "de").format(d)} km";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        _formatDistance(distance),
+        maxLines: 1,
+        style: DefaultTextStyle.of(context).style.apply(fontWeightDelta: 3),
+      ),
+    );
   }
 }
 
