@@ -18,7 +18,7 @@ object EakApplicationRepository {
 
         EakApplicationEntity.new {
             this.regionId = EntityID(1, Regions)
-            this.valueBlob = ExposedBlob(toBytes(application))
+            this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
         }
     }
 
@@ -33,7 +33,7 @@ object EakApplicationRepository {
 
         EakApplicationEntity.new {
             this.regionId = EntityID(0, Regions)
-            this.valueBlob = ExposedBlob(toBytes(application))
+            this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
         }
     }
 
@@ -41,11 +41,10 @@ object EakApplicationRepository {
         return true
     }
 
-    private fun toBytes(obj: Any): ByteArray {
+    private fun toString(obj: Any): String? {
         val mapper = JsonMapper()
         mapper.registerModule(KotlinModule())
-        mapper.writeValueAsBytes(obj)
-        return mapper.writeValueAsBytes(obj)
+        return mapper.writeValueAsString(obj)
     }
 
 }

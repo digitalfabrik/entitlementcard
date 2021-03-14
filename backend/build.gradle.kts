@@ -49,6 +49,7 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
+    implementation("org.jetbrains.exposed", "exposed-java-time", exposed_version)
     implementation("org.postgresql", "postgresql", "42.2.18")
     implementation("com.kohlschutter.junixsocket", "junixsocket-core", "2.3.2")
     implementation("com.kohlschutter.junixsocket", "junixsocket-common", "2.3.2")
