@@ -10,10 +10,10 @@ enum class Type {
     Attachment
 }
 
-data class AttachmentView(val fileName: String, val fileKey: String) {
+data class AttachmentView(val fileName: String, val fileIndex: Int) {
     @GraphQLIgnore
     companion object {
-        fun from(attachment: Attachment) = AttachmentView(attachment.fileName, attachment.data.key)
+        fun from(attachment: Attachment) = AttachmentView(attachment.fileName, attachment.data.index)
     }
 }
 

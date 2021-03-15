@@ -1,11 +1,12 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import com.expediagroup.graphql.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
 import java.lang.IllegalArgumentException
 import javax.servlet.http.Part
 
-data class UploadKey (val key: String)
+data class UploadKey (val index: Int)
 
 data class Attachment(
     val fileName: String,
@@ -13,8 +14,8 @@ data class Attachment(
 ) {
     @GraphQLIgnore
     fun getPart(dataFetchingEnvironment: DataFetchingEnvironment) : Part {
-        val parts = dataFetchingEnvironment.getLocalContext<Map<String, Part>?>()
+        val context = dataFetchingEnvironment.getContext<GraphQLContext>()
             ?: throw IllegalArgumentException("No files attached!")
-        return parts[data.key] ?: throw IllegalArgumentException("Could not find attachment!")
+        return context.files[data.index]
     }
 }
