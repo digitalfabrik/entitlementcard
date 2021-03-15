@@ -14,6 +14,7 @@ class AboutPage extends StatelessWidget {
               List<Widget> children;
               if (snapshot.hasData) {
                 children = [
+                  Container(height: 20),
                   Center(
                       child: Padding(
                           padding: EdgeInsets.all(10),
@@ -32,25 +33,32 @@ class AboutPage extends StatelessWidget {
                       child: Text(snapshot.data.version,
                           style: Theme.of(context).textTheme.bodyText2)),
                   const Divider(
-                    height: 60,
+                    height: 40,
                     thickness: 1,
                   ),
                   InkWell(
-                    child: Column(
-                      children: [
-                        Center(
-                            child: Text("Herausgeber",
-                                style: Theme.of(context).textTheme.subtitle2)),
-                        Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
-                            child: Text(publisherAddress,
-                                style: Theme.of(context).textTheme.bodyText1)),
-                        Text("Mehr Informationen",
-                            style: Theme.of(context).textTheme.bodyText2.merge(
-                                TextStyle(
-                                    color: Theme.of(context).primaryColor))),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          Center(
+                              child: Text("Herausgeber",
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2)),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
+                              child: Text(publisherAddress,
+                                  style:
+                                      Theme.of(context).textTheme.bodyText1)),
+                          Text("Mehr Informationen",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .merge(TextStyle(
+                                      color: Theme.of(context).primaryColor))),
+                        ],
+                      ),
                     ),
                     onTap: () {
                       Navigator.push(
@@ -63,7 +71,7 @@ class AboutPage extends StatelessWidget {
                     },
                   ),
                   const Divider(
-                    height: 60,
+                    height: 40,
                     thickness: 1,
                   ),
                   ContentTile(
