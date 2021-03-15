@@ -1,50 +1,22 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-import 'card_details.dart';
-
-class CardLogo extends StatelessWidget {
-  final String title;
-  final Image logo;
-  final double scaleFactor;
-
-  const CardLogo({Key key, this.title, this.logo, this.scaleFactor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(4.0 * scaleFactor),
-      child: Column(children: [
-        Flexible(
-            child: Padding(
-          padding: EdgeInsets.all(2 * scaleFactor),
-          child: logo != null ? logo : Container(),
-        )),
-        Text(title,
-            maxLines: 1,
-            style:
-                TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
-      ]),
-    );
-  }
-}
+import '../../graphql/graphql_api.graphql.dart';
+import '../base_card_details.dart';
+import '../card_details.dart';
+import 'eak_card_header_logo.dart';
 
 final blueCardColor = Color(0xffcfeaff);
 final goldenCardColor = Color(0xffcab374);
-final bavariaFontColor = Color(0xff008dc9);
 final textColor = Color(0xff172c82);
 
-class CardSvg extends StatelessWidget {
+class EakCard extends StatelessWidget {
   final CardDetails cardDetails;
   final GetRegions$Query$Region region;
 
-  const CardSvg({Key key, this.cardDetails,  this.region})
-      : super(key: key);
+  const EakCard({Key key, this.cardDetails, this.region}) : super(key: key);
 
   get _formattedExpirationDate => cardDetails.expirationDate != null
       ? DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)
@@ -68,11 +40,12 @@ class CardSvg extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CardLogo(
+                        EakCardHeaderLogo(
                             title: region != null
-                                ? "${region.prefix} ${region.name}" : "",
+                                ? "${region.prefix} ${region.name}"
+                                : "",
                             scaleFactor: scaleFactor),
-                        CardLogo(
+                        EakCardHeaderLogo(
                           title: "Freistaat Bayern",
                           scaleFactor: scaleFactor,
                           logo: Image(

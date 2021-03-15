@@ -3,9 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../graphql/graphql_api.dart';
+import 'card/eak_card.dart';
+import 'card/id_card.dart';
 import 'card_details.dart';
-import 'card_svg.dart';
-import 'id_card.dart';
 import 'verification_qr_code_view.dart';
 
 class CardDetailView extends StatelessWidget {
@@ -47,7 +47,7 @@ class CardDetailView extends StatelessWidget {
                     child: IdCard(
                         height: isLandscape ? 200 : null,
                         child:
-                            CardSvg(cardDetails: cardDetails, region: region)),
+                            EakCard(cardDetails: cardDetails, region: region)),
                   ),
                 ],
               ),
