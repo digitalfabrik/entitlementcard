@@ -35,7 +35,7 @@ class QrCodeScannerControls extends StatelessWidget {
                   if (snapshot.data != null && snapshot.data.hasFlash)
                     Container(
                       margin: EdgeInsets.all(8),
-                      child: OutlineButton(
+                      child: OutlinedButton(
                           onPressed: () => controller
                               .toggleFlash()
                               .whenComplete(updateFlashStream),
@@ -53,7 +53,7 @@ class QrCodeScannerControls extends StatelessWidget {
                       snapshot.data.hasFrontCamera)
                     Container(
                       margin: EdgeInsets.all(8),
-                      child: OutlineButton(
+                      child: OutlinedButton(
                           onPressed: () => controller
                               .flipCamera()
                               .whenComplete(updateCameraStream),

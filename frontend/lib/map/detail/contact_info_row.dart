@@ -30,7 +30,7 @@ class ContactInfoRow extends StatelessWidget {
                 size: 28,
                 semanticLabel: _semanticLabel,
               ),
-              color: Theme.of(context).primaryColorLight,
+              color: Theme.of(context).colorScheme.primary,
             ),
           )),
       Expanded(

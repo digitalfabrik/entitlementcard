@@ -8,8 +8,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors
-import app.ehrenamtskarte.backend.stores.database.setupDatabase as setupDatabaseForStores
+import app.ehrenamtskarte.backend.auth.database.setupDatabase as setupDatabaseForAuth
 import app.ehrenamtskarte.backend.regions.database.setupDatabase as setupDatabaseForRegions
+import app.ehrenamtskarte.backend.stores.database.setupDatabase as setupDatabaseForStores
 import app.ehrenamtskarte.backend.verification.database.setupDatabase as setupDatabaseForVerification
 import app.ehrenamtskarte.backend.application.database.setupDatabase as setupDatabaseForApplication
 
@@ -39,6 +40,7 @@ class Database {
                 setupDatabaseForStores(Companion::executeScript)
                 setupDatabaseForVerification()
                 setupDatabaseForApplication()
+                setupDatabaseForAuth()
             }
         }
     }

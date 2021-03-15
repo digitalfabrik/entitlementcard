@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../identification/card_details.dart';
-import '../identification/card_details_model.dart';
+import '../intro_slides/intro_screen.dart';
+import 'base_card_details.dart';
+import 'card_details.dart';
+import 'card_details_model.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
 final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
-    1677542400, 0, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+    1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class TestingDataItem extends StatefulWidget {
   TestingDataItem({Key key}) : super(key: key);
@@ -25,14 +27,18 @@ class _TestingDataState extends State<TestingDataItem> {
         child: InkWell(
           child: Column(
             children: [
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _resetEakData,
                 child: Text('Reset EAK'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _setValidEakData,
                 child: Text('Set valid EAK data'),
               ),
+              ElevatedButton(
+                onPressed: _showInfoSlides,
+                child: Text('Intro Slides'),
+              )
             ],
           ),
         ),
@@ -47,5 +53,13 @@ class _TestingDataState extends State<TestingDataItem> {
   Future<void> _setValidEakData() async {
     Provider.of<CardDetailsModel>(context, listen: false)
         .setCardDetails(validEakDetails);
+  }
+
+  void _showInfoSlides() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => IntroScreen(),
+        ));
   }
 }

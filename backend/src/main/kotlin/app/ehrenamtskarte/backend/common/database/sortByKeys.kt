@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.database
+package app.ehrenamtskarte.backend.common.database
 
 
 fun <TValue, TKey> Iterable<TValue>.sortByKeys(keyFetcher: (TValue) -> TKey, keys: Iterable<TKey>): List<TValue?> {

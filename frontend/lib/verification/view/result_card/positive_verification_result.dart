@@ -26,8 +26,9 @@ class PositiveVerificationResult extends StatelessWidget {
         child: Column(
           children: [
             Text("Name: ${cardDetails.fullName}"),
-            Text("Ablaufdatum: $expirationDateString"),
-            Text("Landkreis: ${region.prefix} ${region.name}"),
+            Text("Gültig bis: $expirationDateString"),
+            if (region != null)
+              Text("Ausgestellt von: ${region.prefix} ${region.name}"),
         ]));
   }
 }

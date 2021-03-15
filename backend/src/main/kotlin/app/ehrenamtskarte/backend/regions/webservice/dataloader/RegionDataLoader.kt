@@ -7,7 +7,7 @@ import org.dataloader.DataLoader
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.CompletableFuture
 
-const val REGION_LOADER_NAME = "CATEGORY_LOADER"
+const val REGION_LOADER_NAME = "REGION_LOADER"
 
 val regionLoader = DataLoader<Int, Region?> { ids ->
     CompletableFuture.supplyAsync {
