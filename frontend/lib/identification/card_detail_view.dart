@@ -63,7 +63,7 @@ class CardDetailView extends StatelessWidget {
                                 vertical: 5, horizontal: 30),
                             child: Text(
                               "Mit diesem QR-Code können Sie sich"
-                              " bei Akzeptstellen ausweisen:",
+                              " bei Akzeptanzstellen ausweisen:",
                               textAlign: TextAlign.center,
                             )),
                         VerificationQrCodeView(
