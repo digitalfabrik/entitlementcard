@@ -46,6 +46,11 @@ type Address {
   street: String
 }
 
+type Administrator {
+  email: String!
+  id: Int!
+}
+
 type Category {
   id: Int!
   name: String!
@@ -70,6 +75,8 @@ type Mutation {
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new golden digital EAK"
   addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
+  "Signs in an administrator"
+  signIn(authData: AuthDataInput!): SignInPayload!
 }
 
 type PhysicalStore {
@@ -101,6 +108,11 @@ type Region {
   name: String!
   prefix: String!
   regionIdentifier: String!
+}
+
+type SignInPayload {
+  token: String!
+  user: Administrator!
 }
 
 enum AmountOfWorkUnit {
@@ -140,6 +152,11 @@ scalar Upload
 input AttachmentInput {
   data: Upload!
   fileName: String!
+}
+
+input AuthDataInput {
+  email: String!
+  password: String!
 }
 
 input BlueCardApplicationInput {

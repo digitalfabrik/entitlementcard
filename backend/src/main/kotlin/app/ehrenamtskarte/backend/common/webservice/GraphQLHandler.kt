@@ -43,9 +43,9 @@ class GraphQLHandler(
     /**
      * Get payload from the request.
      */
-    private fun getPayload(context: Context): Map<String, Any>? = try {
+    private fun getPayload(context: Context): Map<String, Any> = try {
         if (!context.isMultipart()) {
-            mapper.readValue<Map<String, Any>>(context.body())
+            mapper.readValue(context.body())
         } else {
             val servlet = context.req
             MultipartUtil.preUploadFunction(servlet)
