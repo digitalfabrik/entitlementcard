@@ -42,34 +42,33 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
         _otpCode.validUntilMilliSeconds - DateTime.now().millisecondsSinceEpoch;
     return Consumer<CardDetailsModel>(
         builder: (context, cardDetailsModel, child) {
-      return Dialog(
-          insetPadding: EdgeInsets.all(16),
+      return Material(
           clipBehavior: Clip.antiAlias,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  QrImage(
-                      key: UniqueKey(),
-                      data: encodeVerificationCardDetails(
-                          VerificationCardDetails(
-                              widget.cardDetails, _otpCode.code)),
-                      version: QrVersions.auto,
-                      padding: const EdgeInsets.all(0.0)),
-                  Positioned(
-                      bottom: -24,
-                      left: -24,
-                      right: -24,
-                      top: -24,
-                      child: AnimatedProgressbar(
-                        key: UniqueKey(),
-                        duration: Duration(milliseconds: animationDuration),
-                      )),
-                ],
-              )));
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: QrImage(
+                    key: UniqueKey(),
+                    data: encodeVerificationCardDetails(VerificationCardDetails(
+                        widget.cardDetails, _otpCode.code)),
+                    version: QrVersions.auto,
+                    foregroundColor:
+                        Theme.of(context).textTheme.bodyText2.color,
+                    gapless: false,
+                    padding: EdgeInsets.zero),
+              ),
+              Positioned.fill(
+                child: AnimatedProgressbar(
+                  key: UniqueKey(),
+                  duration: Duration(milliseconds: animationDuration),
+                ),
+              ),
+            ],
+          ));
     });
   }
 }

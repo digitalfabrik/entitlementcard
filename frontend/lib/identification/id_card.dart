@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+final creditCardAspectRatio = 86 / 54;
+
 class IdCard extends StatelessWidget {
   final Widget child;
   final double height;
@@ -10,13 +12,14 @@ class IdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+        elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: Colors.black26,
+        clipBehavior: Clip.antiAlias,
         child: Container(
             height: height,
-            child: AspectRatio(aspectRatio: 3 / 2, child: child)));
+            child:
+                AspectRatio(aspectRatio: creditCardAspectRatio, child: child)));
   }
 }

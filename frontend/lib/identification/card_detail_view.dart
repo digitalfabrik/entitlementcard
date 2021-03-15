@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
 
 import '../graphql/graphql_api.dart';
 import 'card_details.dart';
+import 'card_svg.dart';
 import 'id_card.dart';
 import 'verification_qr_code_view.dart';
 
 class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;
-  final VoidCallback onOpenQrScanner;
+  final VoidCallback openQrScanner;
+  final VoidCallback startVerification;
 
-  CardDetailView({Key key, this.cardDetails, this.onOpenQrScanner})
+  CardDetailView(
+      {Key key, this.cardDetails, this.openQrScanner, this.startVerification})
       : super(key: key);
-
-  get _formattedExpirationDate => cardDetails.expirationDate != null
-      ? DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)
-      : "unbegrenzt";
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +29,11 @@ class CardDetailView extends StatelessWidget {
               MediaQuery.of(context).orientation == Orientation.landscape;
           var region = result.hasException || result.isLoading
               ? null
-              : getRegions
-                  .parse(result.data)
-                  .regions
-                  .firstWhere((element) => element.id == cardDetails.regionId,
-                    orElse: () => null);
+              : getRegions.parse(result.data).regions.firstWhere(
+                  (element) => element.id == cardDetails.regionId,
+                  orElse: () => null);
           return Flex(
             direction: isLandscape ? Axis.horizontal : Axis.vertical,
-            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -48,70 +42,90 @@ class CardDetailView extends StatelessWidget {
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.stretch,
                 children: [
-                  IdCard(
-                    height: isLandscape ? 200 : null,
-                    child: SvgPicture.asset("assets/card.svg",
-                        semanticsLabel: 'Ehrenamtskarte',
-                        alignment: Alignment.center,
-                        fit: BoxFit.contain),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                        child: Text(
-                          "Code neu einscannen",
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
-                        onTap: onOpenQrScanner),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: IdCard(
+                        height: isLandscape ? 200 : null,
+                        child:
+                            CardSvg(cardDetails: cardDetails, region: region)),
                   ),
                 ],
               ),
               SizedBox(height: 15, width: 15),
               Flexible(
-                fit: FlexFit.loose,
                 child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          cardDetails.fullName ?? "",
-                          style: Theme.of(context).textTheme.headline6,
+                        Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 30),
+                            child: Text(
+                              "Mit diesem QR-Code können Sie sich"
+                              " bei Akzeptstellen ausweisen:",
+                              textAlign: TextAlign.center,
+                            )),
+                        VerificationQrCodeView(
+                          cardDetails: cardDetails,
                         ),
-                        SizedBox(height: 5),
-                        Text("Gültig bis: $_formattedExpirationDate"),
-                        Text(region == null
-                            ? ""
-                            : "Ausgestellt von: "
-                                "${region.prefix} ${region.name}"),
-                        SizedBox(
-                          height: 24,
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          alignment: Alignment.center,
+                          child: TextButton(
+                              child: Text(
+                                "Weitere Aktionen",
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
+                              ),
+                              onPressed: () => _onMoreActionsPressed(context)),
                         ),
-                        Center(
-                            child: MaterialButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (_) => VerificationQrCodeView(
-                                      cardDetails: cardDetails,
-                                    ));
-                          },
-                          color: Colors.white,
-                          textColor: Colors.black,
-                          child: Icon(
-                            Icons.qr_code,
-                            size: 50,
-                          ),
-                          padding: EdgeInsets.all(16),
-                          shape: CircleBorder(),
-                        )),
                       ],
                     )),
               )
             ],
           );
         });
+  }
+
+  void _onMoreActionsPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          contentPadding: EdgeInsets.only(top: 8),
+          title: Text("Weitere Aktionen"),
+          children: [
+            ListTile(
+              title: Text("Anderen Aktivierungscode einscannen"),
+              subtitle:
+                  Text("Dadurch wird die bestehende Karte vom Gerät gelöscht."),
+              leading: Icon(Icons.qr_code_scanner, size: 36),
+              onTap: () {
+                Navigator.pop(context);
+                openQrScanner();
+              },
+            ),
+            ListTile(
+                title: Text("Eine digitale Ehrenamtskarte prüfen"),
+                subtitle:
+                    Text("Verfizieren Sie die Echtheit einer Ehrenamtskarte."),
+                leading: Icon(Icons.check_circle_outline, size: 36),
+                onTap: () {
+                  Navigator.pop(context);
+                  startVerification();
+                }),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Abbrechen"))
+              ]),
+            )
+          ],
+        );
+      },
+    );
   }
 }

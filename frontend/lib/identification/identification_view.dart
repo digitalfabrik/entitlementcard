@@ -30,43 +30,23 @@ class _IdentificationPageState extends State<IdentificationPage> {
         builder: (context, cardDetailsModel, child) {
       _cardDetails = cardDetailsModel.cardDetails;
       return Scaffold(
-          appBar: AppBar(
-            title: Text('Digitale Ehrenamtskarte'),
-          ),
           body: SingleChildScrollView(
-              child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: _cardDetails == null
-                    ? NoCardView(
-                        onOpenQrScanner: () => openQRCodeScannerView(context),
-                      )
-                    : CardDetailView(
-                        cardDetails: _cardDetails,
-                        onOpenQrScanner: () => openQRCodeScannerView(context),
-                      ),
-              ),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () => _showVerificationDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32.0)),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    ),
-                    child: Text(
-                      "Karte verifizieren",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
-                    )),
-              ),
-              if (showTestDataOptions) TestingDataItem(),
-            ],
-          )));
+              child: SafeArea(
+                  child: Column(children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: _cardDetails == null
+              ? NoCardView(
+                  startVerification: () => _showVerificationDialog(context),
+                  startActivateQrCode: () => _showActivateQrCode(context))
+              : CardDetailView(
+                  cardDetails: _cardDetails,
+                  openQrScanner: () => _showActivateQrCode(context),
+                  startVerification: () => _showVerificationDialog(context),
+                ),
+        ),
+        if (showTestDataOptions) TestingDataItem(),
+      ]))));
     });
   }
 
@@ -74,7 +54,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
     await VerificationWorkflow.startWorkflow(context);
   }
 
-  void openQRCodeScannerView(BuildContext context) {
+  void _showActivateQrCode(BuildContext context) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => IdentificationQrScannerPage()));
   }
