@@ -1,33 +1,36 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
-data class BlueEakCardApplication(
+import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
+import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+
+data class BlueCardApplication(
     val personalData: PersonalData,
     val applicationType: ApplicationType,
     val entitlement: BlueCardEntitlement,
     val hasAcceptedPrivacyPolicy: Boolean,
     val givenInformationIsCorrectAndComplete: Boolean
-)
-
-enum class BlueCardEntitlementType {
-    JULEICA,
-    SERVICE,
-    STANDARD
-}
-
-data class BlueCardEntitlement(
-    val blueEntitlementType: BlueCardEntitlementType,
-    val juleicaNumber: String?,
-    val juleicaExpirationDate: String?,
-    val copyOfJuleica: Attachment?,
-    val serviceActivity: BlueCardServiceEntitlementActivity?,
-    val serviceCertificate: Attachment?,
-    val workAtOrganizations: List<WorkAtOrganization>?
-)
-
-enum class BlueCardServiceEntitlementActivity {
-    FIRE_DEPARTMENT,
-    DISASTER_CONTROL,
-    RESCUE_SERVICE
+) : JsonFieldSerializable {
+    override fun toJsonField(): JsonField {
+        return JsonField(
+            name = "blue-card-application",
+            translations = mapOf("de" to "Antrag für blaue Ehrenamtskarte"),
+            type = Type.Array,
+            value = listOf(
+                personalData.toJsonField(),
+                JsonField(
+                    name = "applicationType",
+                    translations = mapOf("de" to "Antragstyp"),
+                    type = Type.String,
+                    value = when (applicationType) {
+                        ApplicationType.FIRST_APPLICATION -> "Erstantrag"
+                        ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
+                    }
+                ),
+                entitlement.toJsonField()
+            )
+        )
+    }
 }
 
 enum class ApplicationType {

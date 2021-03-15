@@ -65,11 +65,11 @@ type Coordinates {
 
 type Mutation {
   "Stores a new blue digital EAK"
-  addBlueEakApplication(application: BlueEakCardApplicationInput!): Boolean!
+  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenEakCardApplicationInput!): Boolean!
+  addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
 }
 
 type PhysicalStore {
@@ -114,15 +114,15 @@ enum ApplicationType {
 }
 
 enum BlueCardEntitlementType {
-  JULEICA
-  SERVICE
-  STANDARD
+  Juleica
+  Service
+  Standard
 }
 
 enum BlueCardServiceEntitlementActivity {
-  DISASTER_CONTROL
-  FIRE_DEPARTMENT
-  RESCUE_SERVICE
+  DisasterControl
+  FireDepartment
+  RescueService
 }
 
 enum GoldenCardEntitlementType {
@@ -142,22 +142,28 @@ input AttachmentInput {
   fileName: String!
 }
 
-input BlueCardEntitlementInput {
-  blueEntitlementType: BlueCardEntitlementType!
-  copyOfJuleica: AttachmentInput
-  juleicaExpirationDate: String
-  juleicaNumber: String
-  serviceActivity: BlueCardServiceEntitlementActivity
-  serviceCertificate: AttachmentInput
-  workAtOrganizations: [WorkAtOrganizationInput!]
-}
-
-input BlueEakCardApplicationInput {
+input BlueCardApplicationInput {
   applicationType: ApplicationType!
   entitlement: BlueCardEntitlementInput!
   givenInformationIsCorrectAndComplete: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
+}
+
+"""
+Entitlement for blue EAK.
+    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
+    or     entitlementType == Service and serviceActivity, serviceCertification are not null
+    or     entitlementType == Standard and workAtOrganizations is not null
+"""
+input BlueCardEntitlementInput {
+  copyOfJuleica: AttachmentInput
+  entitlementType: BlueCardEntitlementType!
+  juleicaExpirationDate: String
+  juleicaNumber: String
+  serviceActivity: BlueCardServiceEntitlementActivity
+  serviceCertificate: AttachmentInput
+  workAtOrganizations: [WorkAtOrganizationInput!]
 }
 
 input CardGenerationModelInput {
@@ -202,8 +208,11 @@ input OrganizationContactInput {
 }
 
 input OrganizationInput {
+  address: String!
   contact: OrganizationContactInput!
   name: String!
+  "Link zu Website oder Satzung"
+  website: String
 }
 
 input PersonalDataInput {
