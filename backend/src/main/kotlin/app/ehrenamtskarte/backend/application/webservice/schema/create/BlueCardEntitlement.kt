@@ -20,7 +20,7 @@ enum class BlueCardServiceEntitlementActivity {
 
 
 @GraphQLDescription(
-"""Entitlement for blue EAK.
+    """Entitlement for blue EAK.
     Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
     or     entitlementType == Service and serviceActivity, serviceCertification are not null
     or     entitlementType == Standard and workAtOrganizations is not null
@@ -38,9 +38,9 @@ data class BlueCardEntitlement(
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "blueCardEntitlement",
-            translations = mapOf("de" to "Anspruchsgrund"),
+            translations = mapOf("de" to "Berechtigungsgrund"),
             type = Type.Array,
-            value = when (entitlementType) {
+            value = listOf(when (entitlementType) {
                 BlueCardEntitlementType.JULEICA -> JsonField(
                     name = "juleicaEntitlement",
                     type = Type.Array,
@@ -67,7 +67,10 @@ data class BlueCardEntitlement(
                     translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
                     value = listOf(
                         JsonField(
-                            "serviceActivity", mapOf("de" to "Dienstaktivität"), Type.String, when (serviceActivity!!) {
+                            "serviceActivity",
+                            mapOf("de" to "Dienstaktivität"),
+                            Type.String,
+                            when (serviceActivity!!) {
                                 BlueCardServiceEntitlementActivity.DISASTER_CONTROL -> "Katastrophenschutz"
                                 BlueCardServiceEntitlementActivity.FIRE_DEPARTMENT -> "Feuerwehr"
                                 BlueCardServiceEntitlementActivity.RESCUE_SERVICE -> "Rettungsdienst"
@@ -87,7 +90,7 @@ data class BlueCardEntitlement(
                     translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
                     value = workAtOrganizations!!.map { it.toJsonField() }
                 )
-            }
+            })
         )
     }
 }

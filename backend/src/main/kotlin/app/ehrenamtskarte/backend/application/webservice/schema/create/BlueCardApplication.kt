@@ -14,7 +14,7 @@ data class BlueCardApplication(
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "blue-card-application",
-            translations = mapOf("de" to "Antrag für blaue Ehrenamtskarte"),
+            translations = mapOf("de" to "Antrag auf blaue Ehrenamtskarte"),
             type = Type.Array,
             value = listOf(
                 personalData.toJsonField(),
@@ -27,7 +27,19 @@ data class BlueCardApplication(
                         ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
                     }
                 ),
-                entitlement.toJsonField()
+                entitlement.toJsonField(),
+                JsonField(
+                    "hasAcceptedPrivacyPolicy",
+                    mapOf("de" to "Ich habe die Richtlinien zum Datenschutz gelesen und akzeptiert"),
+                    Type.String,
+                    if (hasAcceptedPrivacyPolicy) "Ja" else "Nein"
+                ),
+                JsonField(
+                    "givenInformationIsCorrectAndComplete",
+                    mapOf("de" to "Ich bestätige, dass die gegebenen Informationen korrekt und vollständig sind"),
+                    Type.String,
+                    if (givenInformationIsCorrectAndComplete) "Ja" else "Nein"
+                )
             )
         )
     }

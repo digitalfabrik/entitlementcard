@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
+import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 
 data class GoldenEakCardApplication(
@@ -10,18 +11,23 @@ data class GoldenEakCardApplication(
     val givenInformationIsCorrectAndComplete: Boolean
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
-        TODO("Not yet implemented")
+        return JsonField(
+            "golden-card-applicatoin", mapOf("de" to "Antrag auf goldene Ehrenamtskarte"), Type.Array, listOf(
+                personalData.toJsonField(),
+                entitlement.toJsonField(),
+                JsonField(
+                    "hasAcceptedPrivacyPolicy",
+                    mapOf("de" to "Ich habe die Richtlinien zum Datenschutz gelesen und akzeptiert"),
+                    Type.String,
+                    if (hasAcceptedPrivacyPolicy) "Ja" else "Nein"
+                ),
+                JsonField(
+                    "givenInformationIsCorrectAndComplete",
+                    mapOf("de" to "Ich bestätige, dass die gegebenen Informationen korrekt und vollständig sind"),
+                    Type.String,
+                    if (givenInformationIsCorrectAndComplete) "Ja" else "Nein"
+                )
+            )
+        )
     }
 }
-
-enum class GoldenCardEntitlementType {
-    SERVICE_AWARD,
-    STANDARD,
-    HONOR_BY_MINISTER_PRESIDENT
-}
-
-data class GoldenCardEntitlement(
-    val goldenEntitlementType: GoldenCardEntitlementType,
-    val certificate: Attachment?,
-    val workAtOrganizations: List<WorkAtOrganization>?
-)
