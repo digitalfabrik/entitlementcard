@@ -7,15 +7,15 @@ import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializ
 import com.expediagroup.graphql.annotations.GraphQLDescription
 
 enum class BlueCardEntitlementType {
-    Juleica,
-    Service,
-    Standard
+    JULEICA,
+    SERVICE,
+    STANDARD
 }
 
 enum class BlueCardServiceEntitlementActivity {
-    FireDepartment,
-    DisasterControl,
-    RescueService
+    FIRE_DEPARTMENT,
+    DISASTER_CONTROL,
+    RESCUE_SERVICE
 }
 
 
@@ -41,7 +41,7 @@ data class BlueCardEntitlement(
             translations = mapOf("de" to "Anspruchsgrund"),
             type = Type.Array,
             value = when (entitlementType) {
-                BlueCardEntitlementType.Juleica -> JsonField(
+                BlueCardEntitlementType.JULEICA -> JsonField(
                     name = "juleicaEntitlement",
                     type = Type.Array,
                     translations = mapOf("de" to "Juleica-Inhaber:in"),
@@ -61,16 +61,16 @@ data class BlueCardEntitlement(
                         )
                     )
                 )
-                BlueCardEntitlementType.Service -> JsonField(
+                BlueCardEntitlementType.SERVICE -> JsonField(
                     name = "serviceEntitlement",
                     type = Type.Array,
                     translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
                     value = listOf(
                         JsonField(
                             "serviceActivity", mapOf("de" to "Dienstaktivität"), Type.String, when (serviceActivity!!) {
-                                BlueCardServiceEntitlementActivity.DisasterControl -> "Katastrophenschutz"
-                                BlueCardServiceEntitlementActivity.FireDepartment -> "Feuerwehr"
-                                BlueCardServiceEntitlementActivity.RescueService -> "Rettungsdienst"
+                                BlueCardServiceEntitlementActivity.DISASTER_CONTROL -> "Katastrophenschutz"
+                                BlueCardServiceEntitlementActivity.FIRE_DEPARTMENT -> "Feuerwehr"
+                                BlueCardServiceEntitlementActivity.RESCUE_SERVICE -> "Rettungsdienst"
                             }
                         ),
                         JsonField(
@@ -81,7 +81,7 @@ data class BlueCardEntitlement(
                         )
                     )
                 )
-                BlueCardEntitlementType.Standard -> JsonField(
+                BlueCardEntitlementType.STANDARD -> JsonField(
                     name = "standardEntitlement",
                     type = Type.Array,
                     translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
