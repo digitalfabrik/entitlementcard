@@ -34,7 +34,10 @@ class VerificationWorkflow {
           builder: (context) => QrCodeScannerPage(
             title: "Karte verifizieren",
             onCodeScanned: (code) => _handleQrCode(context, code),
-          ),
+            onHelpClicked: () async {
+              await setHideVerificationInfo(hideVerificationInfo: false);
+              await VerificationInfoDialog.show(context);
+            }),
         ));
   }
 

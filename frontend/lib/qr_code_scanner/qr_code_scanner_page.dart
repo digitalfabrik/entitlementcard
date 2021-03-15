@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'qr_code_processor.dart';
 import 'qr_code_scanner.dart';
 
+typedef OnHelpClickedCallback = void Function();
+
 class QrCodeScannerPage extends StatelessWidget {
   final OnCodeScannedCallback onCodeScanned;
+  final OnHelpClickedCallback onHelpClicked;
   final String title;
 
   QrCodeScannerPage({Key key, @required this.onCodeScanned,
-    @required this.title})
+    @required this.title, this.onHelpClicked})
       : super(key: key);
 
   @override
@@ -16,6 +19,10 @@ class QrCodeScannerPage extends StatelessWidget {
     return Scaffold(
           appBar: AppBar(
           title: Text(title),
+          actions: [
+            if (onHelpClicked != null)
+              IconButton(icon: Icon(Icons.help), onPressed: onHelpClicked)
+          ],
       ),
       body: QrCodeScanner(
         onCodeScanned: (code) async => await _onCodeScanned(context, code),
