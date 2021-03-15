@@ -19,19 +19,20 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final getRegions = GetRegionsQuery();
+    final regionsQuery = GetRegionsByIdQuery(
+        variables: GetRegionsByIdArguments(
+            ids: IdsParamsInput(ids: [cardDetails.regionId])));
+
     return Query(
         options: QueryOptions(
-            document: getRegions.document,
-            variables: getRegions.getVariablesMap()),
-        builder: (result, {fetchMore, refetch}) {
+            document: regionsQuery.document,
+            variables: regionsQuery.getVariablesMap()),
+        builder: (result, {refetch, fetchMore}) {
+          var region = result.isConcrete
+              ? regionsQuery.parse(result.data).regionsById[0]
+              : null;
           var isLandscape =
               MediaQuery.of(context).orientation == Orientation.landscape;
-          var region = result.hasException || result.isLoading
-              ? null
-              : getRegions.parse(result.data).regions.firstWhere(
-                  (element) => element.id == cardDetails.regionId,
-                  orElse: () => null);
           return Flex(
             direction: isLandscape ? Axis.horizontal : Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,8 +47,9 @@ class CardDetailView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: IdCard(
                         height: isLandscape ? 200 : null,
-                        child:
-                            EakCard(cardDetails: cardDetails, region: region)),
+                        child: EakCard(
+                            cardDetails: cardDetails,
+                            region: Region(region.prefix, region.name))),
                   ),
                 ],
               ),

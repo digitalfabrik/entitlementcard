@@ -1,20 +1,29 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-import '../../graphql/graphql_api.graphql.dart';
 import '../base_card_details.dart';
-import '../card_details.dart';
 import 'eak_card_header_logo.dart';
 
 final blueCardColor = Color(0xffcfeaff);
 final goldenCardColor = Color(0xffcab374);
 final textColor = Color(0xff172c82);
 
+class Region with EquatableMixin {
+  final String prefix;
+  final String name;
+
+  Region(this.prefix, this.name);
+
+  @override
+  List<Object> get props => [prefix, name];
+}
+
 class EakCard extends StatelessWidget {
-  final CardDetails cardDetails;
-  final GetRegions$Query$Region region;
+  final BaseCardDetails cardDetails;
+  final Region region;
 
   const EakCard({Key key, this.cardDetails, this.region}) : super(key: key);
 
