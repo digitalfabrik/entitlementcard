@@ -114,15 +114,15 @@ enum ApplicationType {
 }
 
 enum BlueCardEntitlementType {
-  Juleica
-  Service
-  Standard
+  JULEICA
+  SERVICE
+  STANDARD
 }
 
 enum BlueCardServiceEntitlementActivity {
-  DisasterControl
-  FireDepartment
-  RescueService
+  DISASTER_CONTROL
+  FIRE_DEPARTMENT
+  RESCUE_SERVICE
 }
 
 enum GoldenCardEntitlementType {
