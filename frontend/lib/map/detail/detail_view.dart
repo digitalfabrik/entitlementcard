@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
+import '../../util/color_utils.dart';
 import '../../widgets/error_message.dart';
 import 'detail_content.dart';
 import 'detail_layout.dart';
@@ -10,10 +11,8 @@ import 'detail_layout.dart';
 class DetailView extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
-  final Color accentColor;
 
-  DetailView(this._acceptingStoreId,
-      {this.hideShowOnMapButton = false, this.accentColor});
+  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +35,8 @@ class DetailView extends StatelessWidget {
         if (matchingStores.isEmpty) {
           return _errorMessage("Akzeptanzstelle nicht gefunden");
         }
+        final categoryId = matchingStores.first?.store?.category?.id;
+        final accentColor = getDarkenedColorForCategory(categoryId);
         return DetailLayout(
           title: matchingStores.first.store.name ?? "Akzeptanzstelle",
           body: DetailContent(

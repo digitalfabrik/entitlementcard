@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:tinycolor/tinycolor.dart';
 
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
@@ -34,10 +33,6 @@ class SearchResultItem extends StatelessWidget {
         : null;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
     final categoryColor = itemCategoryAsset?.color;
-    Color categoryColorDark;
-    if (categoryColor != null) {
-      categoryColorDark = TinyColor(categoryColor).darken().color;
-    }
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
 
@@ -46,7 +41,7 @@ class SearchResultItem extends StatelessWidget {
       top: false,
       child: InkWell(
         onTap: () {
-          _openDetailView(context, item.id, categoryColorDark);
+          _openDetailView(context, item.id);
         },
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -77,13 +72,11 @@ class SearchResultItem extends StatelessWidget {
     );
   }
 
-  void _openDetailView(
-      BuildContext context, int acceptingStoreId, Color accentColor) {
+  void _openDetailView(BuildContext context, int acceptingStoreId) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              DetailView(acceptingStoreId, accentColor: accentColor),
+          builder: (context) => DetailView(acceptingStoreId),
         ));
   }
 }
