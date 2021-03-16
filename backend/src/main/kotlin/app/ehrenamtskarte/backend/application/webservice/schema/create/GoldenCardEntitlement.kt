@@ -24,7 +24,7 @@ data class GoldenCardEntitlement(
                     GoldenCardEntitlementType.HONOR_BY_MINISTER_PRESIDENT -> JsonField(
                         "honorByMinisterPresidentEntitlement",
                         mapOf(
-                            "de" to "Inhaber:in des Ehrenzeichens für Verdienstet im Ehrenamt"
+                            "de" to "Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt"
                                     + " des Bayerischen Ministerpräsidenten"
                         ),
                         Type.Attachment,
