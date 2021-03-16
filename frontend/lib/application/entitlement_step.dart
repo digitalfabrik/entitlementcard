@@ -6,19 +6,19 @@ import 'package:provider/provider.dart';
 import '../graphql/graphql_api.dart';
 import 'application_model.dart';
 import 'entitlement/entitlement_juleica.dart';
-import 'entitlement/entitlement_service.dart';
-import 'entitlement/entitlement_work_list.dart';
+import 'entitlement/entitlement_service_blue.dart';
+import 'entitlement/entitlement_work.dart';
 
-class EntitlementDataStep extends StatefulWidget {
+class EntitlementStep extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementDataStep({Key key, this.formKey}) : super(key: key);
+  const EntitlementStep({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementDataStepState createState() => _EntitlementDataStepState();
+  _EntitlementStepState createState() => _EntitlementStepState();
 }
 
-class _EntitlementDataStepState extends State<EntitlementDataStep> {
+class _EntitlementStepState extends State<EntitlementStep> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationModel>(
@@ -32,12 +32,12 @@ class _EntitlementDataStepState extends State<EntitlementDataStep> {
             );
             break;
           case BlueCardEntitlementType.service:
-            return EntitlementService(
+            return EntitlementServiceBlue(
               formKey: widget.formKey,
             );
             break;
           case BlueCardEntitlementType.standard:
-            return EntitlementWorkList(
+            return EntitlementWork(
               formKey: widget.formKey,
             );
             break;

@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/application/application_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,6 +44,8 @@ class _HomePageState extends State<HomePage> {
       if (showVerification)
         AppFlow(IdentificationPage(), Icons.remove_red_eye, "Ausweisen",
             GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+      AppFlow(ApplicationForm(), Icons.article, "Beantragung",
+          GlobalKey<NavigatorState>(debugLabel: "More tab key")),
       AppFlow(MorePage(), Icons.more_horiz, "Mehr",
           GlobalKey<NavigatorState>(debugLabel: "More tab key")),
     ];

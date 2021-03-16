@@ -1,8 +1,8 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
+import '../graphql/graphql_api.graphql.dart';
 import 'application_model.dart';
 
 class EntitlementTypeGold extends StatefulWidget {

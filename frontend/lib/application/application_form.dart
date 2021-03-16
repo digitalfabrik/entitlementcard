@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'application_model.dart';
 import 'card_type_step.dart';
-import 'entitlement_data_step.dart';
+import 'entitlement_step.dart';
 import 'entitlement_type_step.dart';
 import 'personal_data_step.dart';
 import 'summary_step.dart';
@@ -43,8 +43,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
           onStepCancel: _onStepCancel,
           type: StepperType.vertical,
           onStepTapped: _onStepTapped,
-          controlsBuilder: (BuildContext context,
-              {onStepContinue, onStepCancel}) {
+          controlsBuilder: (context, {onStepContinue, onStepCancel}) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -105,7 +104,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
             ),
             Step(
               title: Text('Organisation'),
-              content: EntitlementDataStep(
+              content: EntitlementStep(
                 formKey: _formKeys[3],
               ),
               isActive: _currentStep >= 0,

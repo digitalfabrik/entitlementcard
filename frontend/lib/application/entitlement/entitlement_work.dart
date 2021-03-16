@@ -4,18 +4,19 @@ import 'package:provider/provider.dart';
 
 import '../../graphql/graphql_api.dart';
 import '../application_model.dart';
+import 'organization_divider.dart';
 import 'work_at_organization.dart';
 
-class EntitlementWorkList extends StatefulWidget {
+class EntitlementWork extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementWorkList({Key key, this.formKey}) : super(key: key);
+  const EntitlementWork({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementWorkListState createState() => _EntitlementWorkListState();
+  _EntitlementWorkState createState() => _EntitlementWorkState();
 }
 
-class _EntitlementWorkListState extends State<EntitlementWorkList> {
+class _EntitlementWorkState extends State<EntitlementWork> {
   List<WorkAtOrganizationInput> _workAtOrganizations;
 
   @override
@@ -24,7 +25,7 @@ class _EntitlementWorkListState extends State<EntitlementWorkList> {
         .blueCardApplication
         .entitlement
         .workAtOrganizations;
-    if (_workAtOrganizations.length == 0) {
+    if (_workAtOrganizations.isEmpty) {
       _addOrganisation();
     }
     return FormBuilder(
@@ -36,11 +37,16 @@ class _EntitlementWorkListState extends State<EntitlementWorkList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List<Widget>.generate(
                 _workAtOrganizations.length * 2 - 1,
-                (index) => index.isEven
+                    (index) =>
+                index.isEven
                     ? WorkAtOrganization(
-                        workAtOrganizationInput:
-                            _workAtOrganizations[index ~/ 2])
-                    : _organisationDivider(),
+                    workAtOrganizationInput:
+                    _workAtOrganizations[index ~/ 2])
+                    : OrganizationDivider(
+                  title: "Organisation ${_workAtOrganizations.length}",
+                  onOrganisationDeleted: () =>
+                      setState(_removeOrganisation),
+                ),
               ),
             ),
             SizedBox(
@@ -79,35 +85,5 @@ class _EntitlementWorkListState extends State<EntitlementWorkList> {
 
   _removeOrganisation() {
     _workAtOrganizations.removeLast();
-  }
-
-  Widget _organisationDivider() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: 24,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Organisation ${_workAtOrganizations.length}",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            TextButton(
-                onPressed: () => setState(_removeOrganisation),
-                child: Text('LÖSCHEN'),
-                style: TextButton.styleFrom(
-                  primary: Theme.of(context).colorScheme.onPrimary,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  padding: EdgeInsets.all(12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4))),
-                )),
-          ],
-        )
-      ],
-    );
   }
 }

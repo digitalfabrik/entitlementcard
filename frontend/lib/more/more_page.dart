@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/application/application_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,19 +24,12 @@ class MorePage extends StatelessWidget {
             icon: Icons.info_outline,
             callback: () => _showAboutDialog(context),
           ),
-          if (Configuration
-              .of(context)
-              .showVerification)
+          if (Configuration.of(context).showVerification)
             MenuItem(
               title: "Karten verifizieren",
               icon: Icons.fact_check,
               callback: () => _showVerificationPage(context),
             ),
-          MenuItem(
-            title: "Karte beantragen",
-            icon: Icons.article,
-            callback: () => _showApplicationPage(context),
-          ),
           if (showTestDataOptions) TestingDataItem(),
         ]),
       ),
@@ -64,14 +56,6 @@ class MorePage extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) => VerificationPage(),
-        ));
-  }
-
-  void _showApplicationPage(context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ApplicationForm(),
         ));
   }
 }
