@@ -30,7 +30,7 @@ class DetailLayout extends StatelessWidget {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: textColor,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
