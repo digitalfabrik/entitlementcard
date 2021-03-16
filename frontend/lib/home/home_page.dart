@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../about/about_page.dart';
 import '../identification/identification_view.dart';
@@ -49,15 +48,6 @@ class _HomePageState extends State<HomePage> {
     ];
     state = _HomePageState._(mapPage, appFlows);
     return state;
-  }
-
-  @override
-  void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // ios
-      statusBarBrightness: Brightness.light,
-    ));
-    super.initState();
   }
 
   @override
