@@ -28,9 +28,8 @@ class CardDetailView extends StatelessWidget {
             document: regionsQuery.document,
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
-          var region = result.isConcrete
-              ? regionsQuery.parse(result.data).regionsById[0]
-              : null;
+          var region = result.isLoading || result.hasException
+              ? null : regionsQuery.parse(result.data)?.regionsById[0];
           var isLandscape =
               MediaQuery.of(context).orientation == Orientation.landscape;
           return Flex(
@@ -49,7 +48,9 @@ class CardDetailView extends StatelessWidget {
                         height: isLandscape ? 200 : null,
                         child: EakCard(
                             cardDetails: cardDetails,
-                            region: Region(region.prefix, region.name))),
+                            region: region != null
+                                ? Region(region.prefix, region.name)
+                                : null)),
                   ),
                 ],
               ),
