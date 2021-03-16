@@ -80,7 +80,7 @@ class AboutPage extends StatelessWidget {
                       children: getDisclaimerText(context)),
                   ListTile(
                       leading: Icon(Icons.book_outlined),
-                      title: Text("Software Bibliotheken"),
+                      title: Text("Software-Bibliotheken"),
                       onTap: () {
                         Navigator.push(
                             context,

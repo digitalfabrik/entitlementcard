@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../verification/verification_page.dart';
+import '../verification/verification_workflow.dart';
 import 'card_detail_view.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
@@ -49,7 +49,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
               ),
               Center(
                 child: ElevatedButton(
-                    onPressed: () => _showVerificationPage(context),
+                    onPressed: () => _showVerificationDialog(context),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
@@ -70,12 +70,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
     });
   }
 
-  void _showVerificationPage(context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerificationPage(),
-        ));
+  void _showVerificationDialog(context) async {
+    await VerificationWorkflow.startWorkflow(context);
   }
 
   void openQRCodeScannerView(BuildContext context) {

@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-import '../../configuration.dart';
+import '../../configuration/configuration.dart';
 import '../../location/determine_position.dart';
 import 'attribution_dialog.dart';
 import 'map_controller.dart';

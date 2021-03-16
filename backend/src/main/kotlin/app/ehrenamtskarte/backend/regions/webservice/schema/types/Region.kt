@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.webservice.schema.types
+package app.ehrenamtskarte.backend.regions.webservice.schema.types
 
 
 data class Region(

@@ -4,8 +4,7 @@ import 'scanner/verification_qr_content_parser.dart';
 import 'verification_card_details.dart';
 
 VerificationCardDetails processQrCodeContent(String rawBase64Content) {
-  VerificationCardDetails cardDetails;
-  cardDetails = parseQRCodeContent(rawBase64Content);
+  final cardDetails = parseQRCodeContent(rawBase64Content);
   _assertConsistentCardDetails(cardDetails);
   return cardDetails;
 }

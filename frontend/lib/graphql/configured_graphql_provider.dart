@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../configuration.dart';
+import '../configuration/configuration.dart';
 
 class ConfiguredGraphQlProvider extends StatelessWidget {
   final Widget child;
