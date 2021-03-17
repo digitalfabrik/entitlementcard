@@ -3,14 +3,28 @@ import Navigation from "./components/Navigation";
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
+import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
+import {setContext} from '@apollo/client/link/context'
 import {HashRouter, Route} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
+import AuthProvider, {AuthContext} from "./AuthProvider";
+import Login from './components/auth/Login';
 
-const client = new ApolloClient({
-    uri: 'https://api.ehrenamtskarte.app',
+const httpLink = createHttpLink({
+    uri: 'https://api.ehrenamtskarte.app'
+})
+
+const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
+    headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : ""
+    }
+}))
+
+const createClient = (token?: string) => new ApolloClient({
+    link: createAuthLink(token).concat(httpLink),
     cache: new InMemoryCache()
 });
 
@@ -23,23 +37,30 @@ const Main = styled.div`
 
 
 const App = () =>
-    <ApolloProvider client={client}>
-        <RegionProvider>
-            <HashRouter>
-                <Navigation/>
-                <Main>
-                    <Route exact path={"/"}>
+    <AuthProvider>
+        <AuthContext.Consumer>{([authData, onSignIn]) => (
+            <ApolloProvider client={createClient(authData?.token)}>{
+                authData !== null && authData.expiry > new Date()
+                    ? <RegionProvider>
+                        <HashRouter>
+                            <Navigation/>
+                            <Main>
+                                <Route exact path={"/"}>
 
-                    </Route>
-                    <Route path={"/eak-generation"}>
-                        <GenerationController/>
-                    </Route>
-                    <Route path={"/accepting-stores"}>
+                                </Route>
+                                <Route path={"/eak-generation"}>
+                                    <GenerationController/>
+                                </Route>
+                                <Route path={"/accepting-stores"}>
 
-                    </Route>
-                </Main>
-            </HashRouter>
-        </RegionProvider>
-    </ApolloProvider>
+                                </Route>
+                            </Main>
+                        </HashRouter>
+                    </RegionProvider>
+                    : <Login onSignIn={onSignIn}/>
+            }</ApolloProvider>
+        )}
+        </AuthContext.Consumer>
+    </AuthProvider>
 
 export default App;

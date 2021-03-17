@@ -7,6 +7,11 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface AuthDataInput {
+  email: string;
+  password: string;
+}
+
 export interface CardGenerationModelInput {
   cardDetailsHashBase64: string;
   expirationDate: GQL_Long;
