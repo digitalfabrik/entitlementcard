@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
 
 import '../../graphql/graphql_api.dart';
-import '../application_model.dart';
 import 'organization_divider.dart';
 import 'work_at_organization.dart';
 
 class EntitlementWork extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
+  final List<WorkAtOrganizationInput> workAtOrganizations;
 
-  const EntitlementWork({Key key, this.formKey}) : super(key: key);
+  const EntitlementWork({Key key, this.formKey, this.workAtOrganizations})
+      : super(key: key);
 
   @override
   _EntitlementWorkState createState() => _EntitlementWorkState();
 }
 
 class _EntitlementWorkState extends State<EntitlementWork> {
-  List<WorkAtOrganizationInput> _workAtOrganizations;
-
   @override
   Widget build(BuildContext context) {
-    _workAtOrganizations = Provider.of<ApplicationModel>(context, listen: false)
-        .blueCardApplication
-        .entitlement
-        .workAtOrganizations;
-    if (_workAtOrganizations.isEmpty) {
+    if (widget.workAtOrganizations.isEmpty) {
       _addOrganisation();
     }
     return FormBuilder(
@@ -36,17 +30,17 @@ class _EntitlementWorkState extends State<EntitlementWork> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List<Widget>.generate(
-                _workAtOrganizations.length * 2 - 1,
-                    (index) =>
-                index.isEven
+                widget.workAtOrganizations.length * 2 - 1,
+                (index) => index.isEven
                     ? WorkAtOrganization(
-                    workAtOrganizationInput:
-                    _workAtOrganizations[index ~/ 2])
+                        workAtOrganizationInput:
+                            widget.workAtOrganizations[index ~/ 2])
                     : OrganizationDivider(
-                  title: "Organisation ${_workAtOrganizations.length}",
-                  onOrganisationDeleted: () =>
-                      setState(_removeOrganisation),
-                ),
+                        title:
+                            "Organisation ${widget.workAtOrganizations.length}",
+                        onOrganisationDeleted: () =>
+                            setState(_removeOrganisation),
+                      ),
               ),
             ),
             SizedBox(
@@ -70,7 +64,7 @@ class _EntitlementWorkState extends State<EntitlementWork> {
   }
 
   _addOrganisation() {
-    _workAtOrganizations.add(WorkAtOrganizationInput(
+    widget.workAtOrganizations.add(WorkAtOrganizationInput(
         amountOfWork: null,
         amountOfWorkUnit: null,
         certificate: null,
@@ -84,6 +78,6 @@ class _EntitlementWorkState extends State<EntitlementWork> {
   }
 
   _removeOrganisation() {
-    _workAtOrganizations.removeLast();
+    widget.workAtOrganizations.removeLast();
   }
 }
