@@ -9,6 +9,7 @@ import 'card_type_step.dart';
 import 'entitlement_step.dart';
 import 'entitlement_type_step.dart';
 import 'personal_data_step.dart';
+import 'region_step.dart';
 import 'summary_step.dart';
 
 class ApplicationForm extends StatefulWidget {
@@ -17,7 +18,7 @@ class ApplicationForm extends StatefulWidget {
 }
 
 class _ApplicationFormState extends State<ApplicationForm> {
-  static final _lastStep = 4;
+  static final _lastStep = 5;
   int _currentStep = 0;
   final _formKeys = List<GlobalKey<FormBuilderState>>.generate(
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
@@ -44,40 +45,55 @@ class _ApplicationFormState extends State<ApplicationForm> {
           type: StepperType.vertical,
           onStepTapped: _onStepTapped,
           controlsBuilder: (context, {onStepContinue, onStepCancel}) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                    onPressed: onStepCancel,
-                    child: const Text('ZURÜCK'),
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).primaryColorLight,
-                      padding: EdgeInsets.all(12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                    )),
-                SizedBox(
-                  width: 12,
-                ),
-                TextButton(
-                    onPressed: onStepContinue,
-                    child:
-                        Text(_currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      padding: EdgeInsets.all(12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                    )),
-              ],
+            return Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  if (_currentStep > 0)
+                    TextButton(
+                        onPressed: onStepCancel,
+                        child: const Text('ZURÜCK'),
+                        style: TextButton.styleFrom(
+                          primary: Theme
+                              .of(context)
+                              .colorScheme
+                              .onPrimary,
+                          backgroundColor: Theme
+                              .of(context)
+                              .primaryColorLight,
+                          padding: EdgeInsets.all(12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(4))),
+                        )),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  TextButton(
+                      onPressed: onStepContinue,
+                      child: Text(
+                          _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
+                      style: TextButton.styleFrom(
+                        primary: Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
+                        backgroundColor: Theme
+                            .of(context)
+                            .primaryColor,
+                        padding: EdgeInsets.all(12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4))),
+                      )),
+                ],
+              ),
             );
           },
           steps: [
             Step(
-              title: Text('Kartentyp'),
-              content: CardTypeStep(
+              title: Text('Region'),
+              content: RegionStep(
                 formKey: _formKeys[0],
               ),
               isActive: _currentStep >= 0,
@@ -85,8 +101,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
               _currentStep >= 1 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: Text('Voraussetzungen'),
-              content: EntitlementTypeStep(
+              title: Text('Kartentyp'),
+              content: CardTypeStep(
                 formKey: _formKeys[1],
               ),
               isActive: _currentStep >= 0,
@@ -94,8 +110,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
               _currentStep >= 2 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: Text('Persönliche Daten'),
-              content: PersonalDataStep(
+              title: Text('Voraussetzungen'),
+              content: EntitlementTypeStep(
                 formKey: _formKeys[2],
               ),
               isActive: _currentStep >= 0,
@@ -103,8 +119,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
               _currentStep >= 3 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: Text('Organisation'),
-              content: EntitlementStep(
+              title: Text('Persönliche Daten'),
+              content: PersonalDataStep(
                 formKey: _formKeys[3],
               ),
               isActive: _currentStep >= 0,
@@ -112,11 +128,20 @@ class _ApplicationFormState extends State<ApplicationForm> {
               _currentStep >= 4 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: Text('Zusammenfassung'),
-              content: SummaryStep(formKey: _formKeys[4]),
+              title: Text('Organisation'),
+              content: EntitlementStep(
+                formKey: _formKeys[4],
+              ),
               isActive: _currentStep >= 0,
               state:
               _currentStep >= 5 ? StepState.complete : StepState.disabled,
+            ),
+            Step(
+              title: Text('Zusammenfassung'),
+              content: SummaryStep(formKey: _formKeys[5]),
+              isActive: _currentStep >= 0,
+              state:
+              _currentStep >= 6 ? StepState.complete : StepState.disabled,
             ),
           ]),
     );
