@@ -24,7 +24,7 @@ class RawToImportAcceptingStore(private val logger: Logger) : PipelineStep<List<
                 it.category!!.toInt()
             )
             if (it.houseNumber != null && it.houseNumber!!.isNotBlank())
-                store.copy(street = store.street?.trim() + " Nr. " + it.houseNumber)
+                store.copy(street = store.street?.trim() + " " + it.houseNumber)
             else
                 store
         } catch (e: NumberFormatException) {
