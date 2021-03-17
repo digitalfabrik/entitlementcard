@@ -33,6 +33,15 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   }
 
   @override
+  void didUpdateWidget(AnimatedProgressbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    controller.value = 1 -
+        widget.initialProgress.inMicroseconds /
+            AnimatedProgressbar.totalDuration.inMicroseconds;
+    controller.repeat();
+  }
+
+  @override
   void dispose() {
     controller?.dispose();
     super.dispose();
