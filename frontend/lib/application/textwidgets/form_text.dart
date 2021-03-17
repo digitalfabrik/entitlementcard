@@ -10,7 +10,10 @@ class FormText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.subtitle1,
+      style: Theme.of(context)
+          .textTheme
+          .subtitle1
+          .apply(color: Theme.of(context).hintColor),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
 import '../../graphql/graphql_api.dart';
+import '../textwidgets/form_header_text.dart';
+import '../textwidgets/form_text.dart';
 import 'organization.dart';
 
 class WorkAtOrganization extends StatelessWidget {
@@ -22,11 +24,7 @@ class WorkAtOrganization extends StatelessWidget {
         SizedBox(
           height: 24,
         ),
-        Text("Angaben zur ehrenamtlicher Tätigkeit",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .apply(fontWeightDelta: 1)),
+        FormHeaderText("Angaben zur ehrenamtlicher Tätigkeit"),
         FormBuilderDropdown(
           name: 'category',
           decoration: InputDecoration(
@@ -57,14 +55,10 @@ class WorkAtOrganization extends StatelessWidget {
         SizedBox(
           height: 24,
         ),
-        Text(
+        FormText(
           'Wird für diese ehrenamtliche Tätigkeit eine '
           'Aufwandsentschädigung gewährt, die über Auslagenersatz '
           'oder Erstattung der Kosten hinaus geht? *',
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1
-              .apply(color: Theme.of(context).hintColor),
         ),
         FormBuilderRadioGroup(
           name: 'payment',

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../graphql/graphql_api.dart';
+import '../textwidgets/form_header_text.dart';
 
 class Organization extends StatelessWidget {
   final OrganizationInput organizationInput;
@@ -15,11 +16,7 @@ class Organization extends StatelessWidget {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Organisationsdaten",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .apply(fontWeightDelta: 1)),
+          FormHeaderText("Organisationsdaten"),
           TextFormField(
             decoration: InputDecoration(
                 labelText:
@@ -74,11 +71,7 @@ class Organization extends StatelessWidget {
           SizedBox(
             height: 24,
           ),
-          Text("Kontaktperson",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .apply(fontWeightDelta: 1)),
+          FormHeaderText("Kontaktperson"),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Name *'),

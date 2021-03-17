@@ -4,6 +4,7 @@ import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../application_model.dart';
+import '../textwidgets/form_text.dart';
 
 class Certificate extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -25,12 +26,8 @@ class _CertificateState extends State<Certificate> {
         key: widget.formKey,
         child: Column(
           children: <Widget>[
-            Text(
+            FormText(
               widget.title,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .apply(color: Theme.of(context).hintColor),
             ),
             FormBuilderImagePicker(
               name: 'service_award',
