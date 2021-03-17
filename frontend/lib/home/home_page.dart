@@ -1,7 +1,7 @@
-import 'package:ehrenamtskarte/application/application_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../application/application_form.dart';
 import '../identification/identification_view.dart';
 import '../map/map_page.dart';
 import '../more/more_page.dart';
