@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 import 'rectangular_progress_indicator_painter.dart';
 
 class AnimatedProgressbar extends StatefulWidget {
-  final Duration duration;
+  final Duration initialProgress;
   static Duration totalDuration = Duration(seconds: 30);
-  final VoidCallback onCompleted;
 
-  const AnimatedProgressbar({Key key, this.duration, this.onCompleted})
+  const AnimatedProgressbar({Key key, this.initialProgress})
       : super(key: key);
 
   @override
@@ -23,24 +21,15 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   @override
   void initState() {
     super.initState();
-    if (widget.duration.inMicroseconds > 0) {
-      controller = AnimationController(
-          duration: AnimatedProgressbar.totalDuration, vsync: this);
-      var beginValue = 1 -
-          widget.duration.inMicroseconds /
-              AnimatedProgressbar.totalDuration.inMicroseconds;
-      animation = Tween(begin: 1.0, end: 0.0).animate(controller)
-        ..addListener(() {
-          setState(() {});
-        })
-        ..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            if (widget.onCompleted != null) widget.onCompleted();
-          }
-        });
-      controller.value = beginValue;
-      controller.forward();
-    }
+    var beginValue = 1 -
+        widget.initialProgress.inMicroseconds /
+            AnimatedProgressbar.totalDuration.inMicroseconds;
+    controller = AnimationController(
+        duration: AnimatedProgressbar.totalDuration, vsync: this)
+      ..addListener(() => setState(() {}))
+      ..value = beginValue;
+    animation = Tween(begin: 1.0, end: 0.0).animate(controller);
+    controller.repeat();
   }
 
   @override
@@ -55,7 +44,7 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
       painter: RectangularProgressIndicatorPainter(
         valueColor: Theme.of(context).accentColor,
         value: animation?.value ?? 0.0,
-      ),
+      )
     );
   }
 }

@@ -11,17 +11,22 @@ class CardDetailsModel extends ChangeNotifier {
     return _cardDetails;
   }
 
+  bool get isInitialized {
+    return _isInitialized;
+  }
+
   Future<void> initialize() async {
     if (_isInitialized) {
       return;
     }
     try {
       _cardDetails = await loadCardDetails();
-      _isInitialized = true;
-      notifyListeners();
     } on Exception catch (e) {
       print("Failed to initialize stored card details");
       print(e.toString());
+    } finally {
+      _isInitialized = true;
+      notifyListeners();
     }
   }
 

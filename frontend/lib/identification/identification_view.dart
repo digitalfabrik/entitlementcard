@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../verification/verification_workflow.dart';
-import 'card_detail_view.dart';
+import 'card_detail_view/card_detail_view.dart';
 import 'card_details.dart';
 import 'card_details_model.dart';
 import 'identification_qr_scanner_page.dart';
 import 'no_card_view.dart';
-import 'testing_data_item.dart';
 
 const showTestDataOptions =
-    bool.fromEnvironment("test_data_options", defaultValue: false);
+bool.fromEnvironment("test_data_options", defaultValue: false);
 
 class IdentificationPage extends StatefulWidget {
   IdentificationPage({Key key, this.title}) : super(key: key);
@@ -28,26 +27,24 @@ class _IdentificationPageState extends State<IdentificationPage> {
   Widget build(BuildContext context) {
     return Consumer<CardDetailsModel>(
         builder: (context, cardDetailsModel, child) {
-      _cardDetails = cardDetailsModel.cardDetails;
-      return Scaffold(
-          body: SingleChildScrollView(
-              child: SafeArea(
-                  child: Column(children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: _cardDetails == null
-              ? NoCardView(
-                  startVerification: () => _showVerificationDialog(context),
-                  startActivateQrCode: () => _showActivateQrCode(context))
-              : CardDetailView(
-                  cardDetails: _cardDetails,
-                  openQrScanner: () => _showActivateQrCode(context),
-                  startVerification: () => _showVerificationDialog(context),
-                ),
-        ),
-        if (showTestDataOptions) TestingDataItem(),
-      ]))));
-    });
+          if (!cardDetailsModel.isInitialized) {
+            return Container();
+          }
+
+          _cardDetails = cardDetailsModel.cardDetails;
+          if (_cardDetails != null) {
+            return CardDetailView(
+                cardDetails: _cardDetails,
+                startActivateEak: () => _showActivateQrCode(context),
+                startVerification: () => _showVerificationDialog(context));
+          }
+
+          return Scaffold(
+            body: NoCardView(
+                startVerification: () => _showVerificationDialog(context),
+                startActivateQrCode: () => _showActivateQrCode(context)),
+          );
+        });
   }
 
   void _showVerificationDialog(context) async {
