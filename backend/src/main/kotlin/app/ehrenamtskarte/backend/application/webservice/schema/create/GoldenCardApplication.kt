@@ -12,7 +12,7 @@ data class GoldenEakCardApplication(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "golden-card-applicatoin", mapOf("de" to "Antrag auf goldene Ehrenamtskarte"), Type.Array, listOf(
+            "golden-card-application", mapOf("de" to "Antrag auf goldene Ehrenamtskarte"), Type.Array, listOf(
                 personalData.toJsonField(),
                 entitlement.toJsonField(),
                 JsonField(
