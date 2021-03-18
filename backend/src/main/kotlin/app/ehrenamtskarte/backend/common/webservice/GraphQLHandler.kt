@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
 import com.auth0.jwt.exceptions.*
+import com.expediagroup.graphql.SchemaGeneratorConfig
 import com.expediagroup.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -22,7 +23,8 @@ class GraphQLHandler(
         storesGraphQlParams stitch verificationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
 ) {
     val graphQLSchema = toSchema(
-        graphQLParams.config,
+        graphQLParams.config
+            .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema"))),
         graphQLParams.queries,
         graphQLParams.mutations,
         graphQLParams.subscriptions
