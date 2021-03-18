@@ -8,14 +8,6 @@ class NonMaterialPage extends StatelessWidget {
   const NonMaterialPage({Key key, this.overlayStyle, this.child})
       : super(key: key);
 
-  static SystemUiOverlayStyle getDefaultOverlayStyle(BuildContext context) {
-    if (Theme.of(context).brightness == Brightness.dark) {
-      return SystemUiOverlayStyle.light;
-    } else {
-      return SystemUiOverlayStyle.dark;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -23,5 +15,13 @@ class NonMaterialPage extends StatelessWidget {
           child: child,
         ),
         value: overlayStyle ?? getDefaultOverlayStyle(context));
+  }
+}
+
+SystemUiOverlayStyle getDefaultOverlayStyle(BuildContext context) {
+  if (Theme.of(context).brightness == Brightness.dark) {
+    return SystemUiOverlayStyle.light;
+  } else {
+    return SystemUiOverlayStyle.dark;
   }
 }
