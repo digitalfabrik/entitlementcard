@@ -18,6 +18,40 @@ enum class BlueCardServiceEntitlementActivity {
     RESCUE_SERVICE
 }
 
+data class BlueCardServiceEntitlement (
+    val activity: BlueCardServiceEntitlementActivity,
+    val organization: Organization,
+    val certificate: Attachment?
+) : JsonFieldSerializable {
+    override fun toJsonField(): JsonField {
+        return JsonField(
+            name = "serviceEntitlement",
+            type = Type.Array,
+            translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
+            value = listOfNotNull(
+                JsonField(
+                    "serviceActivity",
+                    mapOf("de" to "Dienstaktivität"),
+                    Type.String,
+                    when (activity) {
+                        BlueCardServiceEntitlementActivity.DISASTER_CONTROL -> "Katastrophenschutz"
+                        BlueCardServiceEntitlementActivity.FIRE_DEPARTMENT -> "Feuerwehr"
+                        BlueCardServiceEntitlementActivity.RESCUE_SERVICE -> "Rettungsdienst"
+                    }
+                ),
+                organization.toJsonField(),
+                if (certificate != null) JsonField(
+                    "serviceCertificate",
+                    mapOf("de" to "Zertifikat"),
+                    Type.Attachment,
+                    AttachmentView.from(certificate)
+                ) else null
+            )
+        )
+    }
+
+}
+
 
 @GraphQLDescription(
     """Entitlement for blue EAK.
@@ -31,8 +65,7 @@ data class BlueCardEntitlement(
     val juleicaNumber: String?,
     val juleicaExpirationDate: String?,
     val copyOfJuleica: Attachment?,
-    val serviceActivity: BlueCardServiceEntitlementActivity?,
-    val serviceCertificate: Attachment?,
+    val serviceEntitlement: BlueCardServiceEntitlement?,
     val workAtOrganizations: List<WorkAtOrganization>?
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
@@ -61,29 +94,7 @@ data class BlueCardEntitlement(
                         )
                     )
                 )
-                BlueCardEntitlementType.SERVICE -> JsonField(
-                    name = "serviceEntitlement",
-                    type = Type.Array,
-                    translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
-                    value = listOf(
-                        JsonField(
-                            "serviceActivity",
-                            mapOf("de" to "Dienstaktivität"),
-                            Type.String,
-                            when (serviceActivity!!) {
-                                BlueCardServiceEntitlementActivity.DISASTER_CONTROL -> "Katastrophenschutz"
-                                BlueCardServiceEntitlementActivity.FIRE_DEPARTMENT -> "Feuerwehr"
-                                BlueCardServiceEntitlementActivity.RESCUE_SERVICE -> "Rettungsdienst"
-                            }
-                        ),
-                        JsonField(
-                            "serviceCertificate",
-                            mapOf("de" to "Zertifikat"),
-                            Type.Attachment,
-                            AttachmentView.from(serviceCertificate!!)
-                        )
-                    )
-                )
+                BlueCardEntitlementType.SERVICE -> serviceEntitlement!!.toJsonField()
                 BlueCardEntitlementType.STANDARD -> JsonField(
                     name = "standardEntitlement",
                     type = Type.Array,
