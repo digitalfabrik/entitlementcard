@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 
+import '../../graphql/graphql_api.dart';
 import '../application_model.dart';
 import '../textwidgets/form_text.dart';
 
@@ -34,7 +37,16 @@ class _CertificateState extends State<Certificate> {
               decoration: InputDecoration(labelText: 'Kopie oder Foto'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
-              onSaved: (value) => {entitlement.certificate = value.first},
+              onSaved: (value) => {
+                entitlement.certificate = AttachmentInput(
+                    fileName: '',
+                    data: MultipartFile.fromBytes(
+                      'photo',
+                      value.first.readAsBytesSync(),
+                      filename: '${DateTime.now().second}.jpg',
+                      contentType: MediaType("image", "jpg"),
+                    ))
+              },
             ),
           ],
         ));

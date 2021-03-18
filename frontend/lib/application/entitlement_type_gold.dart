@@ -17,6 +17,8 @@ class EntitlementTypeGold extends StatefulWidget {
 class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
   @override
   Widget build(BuildContext context) {
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
     return FormBuilder(
         key: widget.formKey,
         child: Column(
@@ -25,7 +27,8 @@ class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
             FormBuilderRadioGroup(
                 decoration: InputDecoration(labelText: 'Voraussetzungen'),
                 name: 'card_type',
-                onSaved: _onSaved,
+                onSaved: (value) =>
+                    applicationModel.initGoldenCardEntitlement(value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: [
@@ -50,13 +53,5 @@ class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
                 ]),
           ],
         ));
-  }
-
-  _onSaved(value) {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
-    final goldCardApplication = applicationModel.goldenCardApplication;
-    goldCardApplication.entitlement.goldenEntitlementType = value;
-    applicationModel.updateListeners();
   }
 }

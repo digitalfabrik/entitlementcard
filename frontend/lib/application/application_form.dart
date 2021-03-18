@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../graphql/graphql_api.dart';
 import 'application_model.dart';
 import 'card_type_step.dart';
 import 'entitlement_step.dart';
@@ -55,17 +56,12 @@ class _ApplicationFormState extends State<ApplicationForm> {
                         onPressed: onStepCancel,
                         child: const Text('ZURÜCK'),
                         style: TextButton.styleFrom(
-                          primary: Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary,
-                          backgroundColor: Theme
-                              .of(context)
-                              .primaryColorLight,
+                          primary: Theme.of(context).colorScheme.onPrimary,
+                          backgroundColor: Theme.of(context).primaryColorLight,
                           padding: EdgeInsets.all(12),
                           shape: RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(4))),
+                                  BorderRadius.all(Radius.circular(4))),
                         )),
                   SizedBox(
                     width: 12,
@@ -175,20 +171,21 @@ class _ApplicationFormState extends State<ApplicationForm> {
   _sendApplication() async {
     final applicationModel =
     Provider.of<ApplicationModel>(context, listen: false);
-    print(applicationModel.blueCardApplication);
-    // var query;
-    // if (applicationModel.blueCardApplication != null) {
-    //   var application = AddBlueEakApplicationArguments(
-    //       application: applicationModel.blueCardApplication);
-    //   query = AddBlueEakApplicationMutation(variables: application);
-    // } else if (applicationModel.goldenCardApplication != null) {
-    //   var application = AddGoldenEakApplicationArguments(
-    //       application: applicationModel.goldenCardApplication);
-    //   query = AddGoldenEakApplicationMutation(variables: application);
-    // }
-    //
-    // final result = await _client.query(QueryOptions(
-    //     document: query.document, variables: query.getVariablesMap()));
-    // if (result.hasException) throw result.exception;
+    var query;
+    if (applicationModel.hasBlueCardApplication()) {
+      var application = AddBlueEakApplicationArguments(
+          application: applicationModel.blueCardApplication,
+          regionId: applicationModel.regionId);
+      query = AddBlueEakApplicationMutation(variables: application);
+    } else if (applicationModel.hasGoldCardApplication()) {
+      var application = AddGoldenEakApplicationArguments(
+          application: applicationModel.goldenCardApplication,
+          regionId: applicationModel.regionId);
+      query = AddGoldenEakApplicationMutation(variables: application);
+    }
+
+    final result = await _client.query(QueryOptions(
+        document: query.document, variables: query.getVariablesMap()));
+    if (result.hasException) throw result.exception;
   }
 }

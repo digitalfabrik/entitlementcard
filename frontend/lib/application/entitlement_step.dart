@@ -25,8 +25,8 @@ class _EntitlementStepState extends State<EntitlementStep> {
     return Consumer<ApplicationModel>(
         builder: (context, applicationModel, child) {
       if (applicationModel.hasBlueCardApplication()) {
-        switch (applicationModel
-            .blueCardApplication.entitlement.blueEntitlementType) {
+        switch (
+            applicationModel.blueCardApplication.entitlement.entitlementType) {
           case BlueCardEntitlementType.juleica:
             return EntitlementJuleica(
               formKey: widget.formKey,

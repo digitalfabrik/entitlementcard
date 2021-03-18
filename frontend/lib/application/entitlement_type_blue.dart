@@ -17,6 +17,8 @@ class EntitlementTypeBlue extends StatefulWidget {
 class _EntitlementTypeBlueState extends State<EntitlementTypeBlue> {
   @override
   Widget build(BuildContext context) {
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
     return FormBuilder(
         key: widget.formKey,
         child: Column(
@@ -25,7 +27,8 @@ class _EntitlementTypeBlueState extends State<EntitlementTypeBlue> {
             FormBuilderRadioGroup(
                 decoration: InputDecoration(labelText: 'Beantragung'),
                 name: 'card_type',
-                onSaved: _onSaved,
+                onSaved: (value) =>
+                    applicationModel.initBlueCardEntitlement(value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: [
@@ -44,15 +47,5 @@ class _EntitlementTypeBlueState extends State<EntitlementTypeBlue> {
                 ]),
           ],
         ));
-  }
-
-  _onSaved(value) {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
-    if (applicationModel.hasBlueCardApplication()) {
-      final blueCardApplication = applicationModel.blueCardApplication;
-      blueCardApplication.entitlement.blueEntitlementType = value;
-      applicationModel.updateListeners();
-    }
   }
 }

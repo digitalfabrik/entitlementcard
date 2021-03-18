@@ -3,10 +3,11 @@ import 'package:flutter/foundation.dart';
 import '../graphql/graphql_api.graphql.dart';
 
 class ApplicationModel extends ChangeNotifier {
-  BlueEakCardApplicationInput _blueCardApplication;
+  BlueCardApplicationInput _blueCardApplication;
   GoldenEakCardApplicationInput _goldenCardApplication;
+  int regionId;
 
-  BlueEakCardApplicationInput get blueCardApplication {
+  BlueCardApplicationInput get blueCardApplication {
     return _blueCardApplication;
   }
 
@@ -22,15 +23,27 @@ class ApplicationModel extends ChangeNotifier {
         dateOfBirth: null,
         emailAddress: null,
         forenames: null,
-        houseNumber: null,
-        location: null,
-        postalCode: null,
-        street: null,
-        surname: null);
+        surname: null,
+        address: AddressInput(
+            street: '', houseNumber: '', location: '', postalCode: ''));
     final entitlement = BlueCardEntitlementInput(
-        blueEntitlementType: null,
-        workAtOrganizations: <WorkAtOrganizationInput>[]);
-    _blueCardApplication = BlueEakCardApplicationInput(
+        workAtOrganizations: <WorkAtOrganizationInput>[],
+        entitlementType: null,
+        serviceEntitlement: BlueCardServiceEntitlementInput(
+            organization: OrganizationInput(
+                contact: OrganizationContactInput(
+                    email: '',
+                    telephone: '',
+                    name: '',
+                    hasGivenPermission: null),
+                category: '',
+                name: '',
+                address: AddressInput(
+                    street: '',
+                    postalCode: '',
+                    houseNumber: '',
+                    location: ''))));
+    _blueCardApplication = BlueCardApplicationInput(
         applicationType: null,
         entitlement: entitlement,
         givenInformationIsCorrectAndComplete: null,
@@ -44,14 +57,13 @@ class ApplicationModel extends ChangeNotifier {
     if (_goldenCardApplication != null) return;
 
     final personalData = PersonalDataInput(
-        dateOfBirth: null,
-        emailAddress: null,
-        forenames: null,
-        houseNumber: null,
-        location: null,
-        postalCode: null,
-        street: null,
-        surname: null);
+      dateOfBirth: null,
+      emailAddress: null,
+      forenames: null,
+      surname: null,
+      address: AddressInput(
+          street: '', houseNumber: '', location: '', postalCode: ''),
+    );
     final entitlement = GoldenCardEntitlementInput(goldenEntitlementType: null);
     _goldenCardApplication = GoldenEakCardApplicationInput(
         entitlement: entitlement,
@@ -59,6 +71,70 @@ class ApplicationModel extends ChangeNotifier {
         hasAcceptedPrivacyPolicy: null,
         givenInformationIsCorrectAndComplete: null);
     notifyListeners();
+  }
+
+  void initBlueCardEntitlement(
+      BlueCardEntitlementType blueCardEntitlementType) {
+    if (_blueCardApplication?.entitlement?.entitlementType ==
+        blueCardEntitlementType) {
+      return;
+    }
+    initializeBlueCardApplication();
+    switch (blueCardEntitlementType) {
+      case BlueCardEntitlementType.juleica:
+        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+            entitlementType: BlueCardEntitlementType.juleica);
+        break;
+      case BlueCardEntitlementType.service:
+        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+            entitlementType: BlueCardEntitlementType.service,
+            serviceEntitlement: BlueCardServiceEntitlementInput(
+                organization: OrganizationInput(
+                    address: null,
+                    category: '',
+                    name: '',
+                    contact: OrganizationContactInput(
+                        hasGivenPermission: null,
+                        telephone: '',
+                        name: '',
+                        email: ''))));
+        break;
+      case BlueCardEntitlementType.standard:
+        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+          workAtOrganizations: <WorkAtOrganizationInput>[],
+          entitlementType: BlueCardEntitlementType.standard,
+        );
+        break;
+      default:
+        break;
+    }
+    notifyListeners();
+  }
+
+  void initGoldenCardEntitlement(
+      GoldenCardEntitlementType goldenCardEntitlementType) {
+    if (_goldenCardApplication?.entitlement?.goldenEntitlementType ==
+        goldenCardEntitlementType) {
+      return;
+    }
+    initializeGoldenCardApplication();
+    switch (goldenCardEntitlementType) {
+      case GoldenCardEntitlementType.honorByMinisterPresident:
+        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+            goldenEntitlementType: goldenCardEntitlementType);
+        break;
+      case GoldenCardEntitlementType.serviceAward:
+        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+            goldenEntitlementType: goldenCardEntitlementType);
+        break;
+      case GoldenCardEntitlementType.standard:
+        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+            goldenEntitlementType: goldenCardEntitlementType,
+            workAtOrganizations: <WorkAtOrganizationInput>[]);
+        break;
+      default:
+        break;
+    }
   }
 
   PersonalDataInput get personalData {
@@ -74,7 +150,7 @@ class ApplicationModel extends ChangeNotifier {
 
   bool hasGoldCardApplication() => _goldenCardApplication != null;
 
-  void setBlueCardApplication(BlueEakCardApplicationInput blueCardApplication) {
+  void setBlueCardApplication(BlueCardApplicationInput blueCardApplication) {
     _blueCardApplication = blueCardApplication;
     _goldenCardApplication = null;
     notifyListeners();

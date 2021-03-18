@@ -63,11 +63,10 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             ),
             allowClear: true,
             items: ['weiblich', 'männlich', 'divers']
-                .map((gender) =>
-                DropdownMenuItem(
-                  value: gender,
-                  child: Text('$gender'),
-                ))
+                .map((gender) => DropdownMenuItem(
+                      value: gender,
+                      child: Text('$gender'),
+                    ))
                 .toList(),
             onSaved: (value) {
               personalData.gender = value;
@@ -85,14 +84,14 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
           TextFormField(
             decoration: InputDecoration(labelText: 'Adresszusatz'),
             onSaved: (value) {
-              personalData.addressSupplement = value;
+              personalData.address.addressSupplement = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
             onSaved: (value) {
-              personalData.street = value;
+              personalData.address.street = value;
             },
           ),
           TextFormField(
@@ -103,7 +102,7 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             ]),
             keyboardType: TextInputType.number,
             onSaved: (value) {
-              personalData.houseNumber = value;
+              personalData.address.houseNumber = value;
             },
           ),
           TextFormField(
@@ -117,14 +116,14 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onSaved: (value) {
-              personalData.postalCode = value;
+              personalData.address.postalCode = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Ort *'),
             onSaved: (value) {
-              personalData.location = value;
+              personalData.address.location = value;
             },
           ),
           SizedBox(
