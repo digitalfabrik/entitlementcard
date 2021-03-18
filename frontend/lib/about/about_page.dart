@@ -64,7 +64,10 @@ class AboutPage extends StatelessWidget {
                           "Mehr Informationen",
                           style: Theme.of(context).textTheme.bodyText2.merge(
                                 TextStyle(
-                                    color: Theme.of(context).primaryColor),
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.blue),
                               ),
                         ),
                       ],
