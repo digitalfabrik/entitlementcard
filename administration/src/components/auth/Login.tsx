@@ -1,4 +1,4 @@
-import {ApolloError, useMutation} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import React from "react";
 import styled from "styled-components";
 import {signIn as SignInCarrier, signIn_signInPayload as SignInPayload} from "../../graphql/auth/__generated__/signIn";
@@ -28,7 +28,7 @@ const Login = (props: Props) => {
     const [state, setState] = React.useState<State>({email: "", password: ""})
     const [signIn, mutationState] = useMutation(SIGN_IN, {
         onCompleted: (payload: SignInCarrier) => props.onSignIn(payload.signInPayload, state.password),
-        onError: () => AppToaster.show({ intent: "danger", message: "Login fehlgeschlagen."})
+        onError: () => AppToaster.show({intent: "danger", message: "Login fehlgeschlagen."})
     })
     const onSubmit = () => signIn({variables: {authData: {email: state.email, password: state.password}}})
 
