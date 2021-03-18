@@ -33,17 +33,17 @@ class _CertificateState extends State<Certificate> {
               widget.title,
             ),
             FormBuilderImagePicker(
-              name: 'service_award',
+              name: 'certificate',
               decoration: InputDecoration(labelText: 'Kopie oder Foto'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               onSaved: (value) => {
                 entitlement.certificate = AttachmentInput(
-                    fileName: '',
+                    fileName: 'zertifikat.jpg',
                     data: MultipartFile.fromBytes(
-                      'photo',
+                      'certificate',
                       value.first.readAsBytesSync(),
-                      filename: '${DateTime.now().second}.jpg',
+                      filename: 'zertifikat.jpg',
                       contentType: MediaType("image", "jpg"),
                     ))
               },

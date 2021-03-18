@@ -70,15 +70,13 @@ class _EntitlementStepState extends State<EntitlementStep> {
             );
             break;
           case GoldenCardEntitlementType.standard:
-          // TODO: goldenCardApplication
             return EntitlementWork(
               formKey: widget.formKey,
               workAtOrganizations:
-              Provider
-                  .of<ApplicationModel>(context, listen: false)
-                  .blueCardApplication
-                  .entitlement
-                  .workAtOrganizations,
+                  Provider.of<ApplicationModel>(context, listen: false)
+                      .goldenCardApplication
+                      .entitlement
+                      .workAtOrganizations,
             );
             break;
           default:

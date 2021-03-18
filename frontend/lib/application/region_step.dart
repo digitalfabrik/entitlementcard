@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../graphql/graphql_api.dart';
+import 'application_model.dart';
 import 'textwidgets/form_header_text.dart';
 
 class RegionStep extends StatefulWidget {
@@ -19,6 +21,8 @@ class _RegionStepState extends State<RegionStep> {
   @override
   Widget build(BuildContext context) {
     final regionsQuery = GetRegionsQuery();
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
     return Query(
         options: QueryOptions(
             document: regionsQuery.document,
@@ -37,16 +41,16 @@ class _RegionStepState extends State<RegionStep> {
                       ' Landkreis oder kreisfreie Stadt:'),
                   FormBuilderDropdown(
                     name: 'region',
-                    //TODO
-                    onSaved: (value) => {},
+                    onSaved: (value) => {applicationModel.regionId = value},
                     decoration: InputDecoration(
                       labelText: 'Auswahl',
                     ),
                     items: regions
-                        .map((region) => DropdownMenuItem(
-                              value: region.id,
-                              child: Text(region.name),
-                            ))
+                        .map((region) =>
+                        DropdownMenuItem(
+                          value: region.id,
+                          child: Text(region.name),
+                        ))
                         .toList(),
                   ),
                 ],

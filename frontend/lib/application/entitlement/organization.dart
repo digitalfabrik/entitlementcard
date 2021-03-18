@@ -29,8 +29,7 @@ class Organization extends StatelessWidget {
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
             onSaved: (value) {
-              //TODO
-              //organizationInput.contact.street = value;
+              organizationInput.address.street = value;
             },
           ),
           TextFormField(
@@ -41,8 +40,7 @@ class Organization extends StatelessWidget {
             ]),
             keyboardType: TextInputType.number,
             onSaved: (value) {
-              //TODO
-              //organizationInput.contact.houseNumber = value;
+              organizationInput.address.houseNumber = value;
             },
           ),
           TextFormField(
@@ -56,16 +54,14 @@ class Organization extends StatelessWidget {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onSaved: (value) {
-              //TODO
-              //organizationInput.contact.postalCode = value;
+              organizationInput.address.postalCode = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Ort *'),
             onSaved: (value) {
-              //TODO
-              //organizationInput.contact.location = value;
+              organizationInput.address.location = value;
             },
           ),
           SizedBox(
