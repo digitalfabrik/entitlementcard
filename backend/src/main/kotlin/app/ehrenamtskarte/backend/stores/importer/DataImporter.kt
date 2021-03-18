@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 object DataImporter {
 
-    fun import(manualImport: Boolean) {
+    fun import(manualImport: Boolean): Boolean {
         val logger = LoggerFactory.getLogger(DataImporter::class.java)
         val pipe = {
             Unit.addStep(Download(logger), logger) { logger.info("== Download raw data ==" )}
@@ -19,8 +19,10 @@ object DataImporter {
         try {
             pipe()
             logger.info("== Pipeline successfully finished ==")
+            return true;
         } catch (e : Exception) {
             logger.info("== Pipeline was aborted without altering the database ==", e)
+            return false;
         }
     }
 }
