@@ -46,6 +46,11 @@ type Address {
   street: String
 }
 
+type Administrator {
+  email: String!
+  id: Int!
+}
+
 type Category {
   id: Int!
   name: String!
@@ -66,6 +71,8 @@ type Coordinates {
 type Mutation {
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
+  "Signs in an administrator"
+  signIn(authData: AuthDataInput!): SignInPayload!
 }
 
 type PhysicalStore {
@@ -101,8 +108,18 @@ type Region {
   regionIdentifier: String!
 }
 
+type SignInPayload {
+  token: String!
+  user: Administrator!
+}
+
 "Long type"
 scalar Long
+
+input AuthDataInput {
+  email: String!
+  password: String!
+}
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
