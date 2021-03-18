@@ -14,12 +14,12 @@ data class WorkAtOrganization(
     val organization: Organization,
     val amountOfWork: Double,
     val amountOfWorkUnit: AmountOfWorkUnit,
-    val certificate: Attachment
+    val certificate: Attachment?
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
             "workAtOrganization", mapOf("de" to "Arbeit bei Organisation oder Verein"), Type.Array,
-            listOf(
+            listOfNotNull(
                 organization.toJsonField(),
                 JsonField("amountOfWork", mapOf("de" to "Arbeitsaufwand"), Type.Number, amountOfWork),
                 JsonField(
@@ -28,7 +28,14 @@ data class WorkAtOrganization(
                         AmountOfWorkUnit.HOURS_PER_YEAR -> "Stunden pro Jahr"
                     }
                 ),
-                JsonField("certificate", mapOf("de" to "Zertifikat"), Type.Attachment, AttachmentView.from(certificate))
+                if (certificate != null)
+                    JsonField(
+                        "certificate",
+                        mapOf("de" to "Zertifikat"),
+                        Type.Attachment,
+                        AttachmentView.from(certificate)
+                    )
+                else null
             )
         )
     }
