@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
+import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.stores.database.Categories
 import app.ehrenamtskarte.backend.stores.database.CategoryEntity
-import app.ehrenamtskarte.backend.stores.database.sortByKeys
 
 object CategoriesRepository {
 

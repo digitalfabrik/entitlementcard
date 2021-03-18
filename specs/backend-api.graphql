@@ -46,6 +46,11 @@ type Address {
   street: String
 }
 
+type Administrator {
+  email: String!
+  id: Int!
+}
+
 type Category {
   id: Int!
   name: String!
@@ -65,11 +70,13 @@ type Coordinates {
 
 type Mutation {
   "Stores a new blue digital EAK"
-  addBlueEakApplication(application: BlueEakCardApplicationInput!): Boolean!
+  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenEakCardApplicationInput!): Boolean!
+  addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
+  "Signs in an administrator"
+  signIn(authData: AuthDataInput!): SignInPayload!
 }
 
 type PhysicalStore {
@@ -103,6 +110,11 @@ type Region {
   regionIdentifier: String!
 }
 
+type SignInPayload {
+  token: String!
+  user: Administrator!
+}
+
 enum AmountOfWorkUnit {
   HOURS_PER_WEEK
   HOURS_PER_YEAR
@@ -134,26 +146,41 @@ enum GoldenCardEntitlementType {
 "Long type"
 scalar Long
 
+"A file part in a multipart request"
+scalar Upload
+
 input AttachmentInput {
+  data: Upload!
   fileName: String!
 }
 
-input BlueCardEntitlementInput {
-  blueEntitlementType: BlueCardEntitlementType!
-  copyOfJuleica: AttachmentInput
-  juleicaExpirationDate: String
-  juleicaNumber: String
-  serviceActivity: BlueCardServiceEntitlementActivity
-  serviceCertificate: AttachmentInput
-  workAtOrganizations: [WorkAtOrganizationInput!]
+input AuthDataInput {
+  email: String!
+  password: String!
 }
 
-input BlueEakCardApplicationInput {
+input BlueCardApplicationInput {
   applicationType: ApplicationType!
   entitlement: BlueCardEntitlementInput!
   givenInformationIsCorrectAndComplete: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
+}
+
+"""
+Entitlement for blue EAK.
+    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
+    or     entitlementType == Service and serviceActivity, serviceCertification are not null
+    or     entitlementType == Standard and workAtOrganizations is not null
+"""
+input BlueCardEntitlementInput {
+  copyOfJuleica: AttachmentInput
+  entitlementType: BlueCardEntitlementType!
+  juleicaExpirationDate: String
+  juleicaNumber: String
+  serviceActivity: BlueCardServiceEntitlementActivity
+  serviceCertificate: AttachmentInput
+  workAtOrganizations: [WorkAtOrganizationInput!]
 }
 
 input CardGenerationModelInput {
@@ -198,8 +225,11 @@ input OrganizationContactInput {
 }
 
 input OrganizationInput {
+  address: String!
   contact: OrganizationContactInput!
   name: String!
+  "Link zu Website oder Satzung"
+  website: String
 }
 
 input PersonalDataInput {

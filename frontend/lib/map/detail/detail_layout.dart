@@ -44,7 +44,7 @@ class DetailLayout extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         )
                       ]))),
-          backgroundColor: Theme.of(context).primaryColorLight,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0.0, //No shadow
         ),
         body: SingleChildScrollView(

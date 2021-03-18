@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+
+import 'rectangular_progress_indicator_painter.dart';
 
 class AnimatedProgressbar extends StatefulWidget {
   final Duration duration;
+  static Duration totalDuration = Duration(seconds: 30);
   final VoidCallback onCompleted;
 
   const AnimatedProgressbar({Key key, this.duration, this.onCompleted})
@@ -19,8 +23,12 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   @override
   void initState() {
     super.initState();
-    if (widget.duration.inSeconds > 0) {
-      controller = AnimationController(duration: widget.duration, vsync: this);
+    if (widget.duration.inMicroseconds > 0) {
+      controller = AnimationController(
+          duration: AnimatedProgressbar.totalDuration, vsync: this);
+      var beginValue = 1 -
+          widget.duration.inMicroseconds /
+              AnimatedProgressbar.totalDuration.inMicroseconds;
       animation = Tween(begin: 1.0, end: 0.0).animate(controller)
         ..addListener(() {
           setState(() {});
@@ -29,8 +37,8 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
           if (status == AnimationStatus.completed) {
             if (widget.onCompleted != null) widget.onCompleted();
           }
-          ;
         });
+      controller.value = beginValue;
       controller.forward();
     }
   }
@@ -43,8 +51,11 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
 
   @override
   Widget build(BuildContext context) {
-    return LinearProgressIndicator(
-      value: animation?.value ?? 0,
+    return CustomPaint(
+      painter: RectangularProgressIndicatorPainter(
+        valueColor: Theme.of(context).accentColor,
+        value: animation?.value ?? 0.0,
+      ),
     );
   }
 }

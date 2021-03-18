@@ -3,8 +3,6 @@
 ############
 
 fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
-  container:
-    image: cirrusci/flutter:latest
   pub_cache:
     folder: ~/.pub-cache
     reupload_on_changes: false # since there is a fingerprint script
@@ -12,6 +10,7 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
       - echo $CIRRUS_OS
       - flutter --version
       - cat frontend/pubspec.lock
+      - echo v2
     populate_script:
       - cd frontend
       - flutter pub get
@@ -19,7 +18,7 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
 fe_task_template: &FE_TASK_TEMPLATE
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   container:
-    image: cirrusci/flutter:1.22.6
+    image: cirrusci/flutter:latest
 
 fe_analyze_task:
   name: "FE: analyze"
@@ -37,6 +36,8 @@ fe_test_task:
 
 fe_build_ios_task:
   name: "FE: build (iOS)"
+  flutter_upgrade_script:
+    - flutter upgrade
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   required_pr_labels: build-ios
   depends_on:

@@ -5,10 +5,13 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.`java-time`.CurrentDateTime
+import org.jetbrains.exposed.sql.`java-time`.datetime
 
 object EakApplications : IntIdTable() {
     val regiondId = reference("regionId", Regions)
-    val valueBlob = blob("value")
+    val jsonValue = text("jsonValue")
+    val createdDate = datetime("createdDate").defaultExpression(CurrentDateTime())
 }
 
 class EakApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -17,5 +20,6 @@ class EakApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     )
 
     var regionId by EakApplications.regiondId
-    var valueBlob by EakApplications.valueBlob
+    var jsonValue by EakApplications.jsonValue
+    var createdDate by EakApplications.createdDate
 }
