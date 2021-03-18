@@ -21,7 +21,7 @@ class OTPGenerator {
     }
     return OTPCode(
         int.parse(OTP.generateTOTPCodeString(
-            _base32TotpSecret, DateTime.now().millisecondsSinceEpoch,
+            _base32TotpSecret, time,
             algorithm: _algorithm,
             length: _otpLength,
             interval: _otpIntervalSeconds,

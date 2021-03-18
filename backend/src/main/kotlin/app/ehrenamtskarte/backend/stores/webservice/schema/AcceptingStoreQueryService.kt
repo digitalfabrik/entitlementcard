@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.dataloader.PHYSICAL_STORE_LOADER_NAME
@@ -47,7 +48,6 @@ class AcceptingStoreQueryService {
     }
 }
 
-data class IdsParams(val ids: List<Int>)
 data class SearchParams(
     val searchText: String?,
     val categoryIds: List<Int>?,

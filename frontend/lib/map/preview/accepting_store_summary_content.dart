@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../util/put_between.dart';
 import 'models.dart';
 
 class AcceptingStoreSummaryContent extends StatelessWidget {
@@ -14,7 +15,7 @@ class AcceptingStoreSummaryContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: _space(8, [
+      children: <Widget>[
         Text(acceptingStore.name ?? "Akzeptanzstelle",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -25,15 +26,7 @@ class AcceptingStoreSummaryContent extends StatelessWidget {
             maxLines: 4,
             overflow: TextOverflow.ellipsis,
           )
-      ]),
+      ].putBetween((_) => SizedBox(height: 8)).toList(growable: false),
     );
   }
-
-  List<Widget> _space(double gap, Iterable<Widget> children) => children
-      .expand((item) sync* {
-        yield SizedBox(height: gap);
-        yield item;
-      })
-      .skip(1)
-      .toList();
 }

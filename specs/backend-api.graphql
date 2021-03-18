@@ -97,6 +97,8 @@ type Query {
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
   "Return list of all regions."
   regions: [Region!]!
+  "Returns regions queried by ids."
+  regionsById(params: IdsParamsInput!): [Region!]!
   "Search for accepting stores using searchText and categoryIds."
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
   "Returns whether there is a card with that hash registered for that this TOTP is currently valid"

@@ -87,7 +87,8 @@ flutter:
   assets:
     - assets/category_icons/
     - assets/detail_headers/
-    - assets/card.svg
+    - assets/eak-lettering.svg
+    - assets/wappen-bavaria.png
     - assets/app_icon/
     - assets/icon/icon.png
 
