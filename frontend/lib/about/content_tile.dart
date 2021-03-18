@@ -39,10 +39,7 @@ class ContentPage extends StatelessWidget {
         title: Text(title),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: ListView(children: children, padding: EdgeInsets.all(10)),
-        ),
+        child: ListView(children: children, padding: EdgeInsets.all(10)),
       ),
     );
   }
