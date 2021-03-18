@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../about/about_page.dart';
-import '../identification/identification_view.dart';
+import '../identification/identification_page.dart';
 import '../map/map_page.dart';
 import '../search/search_page.dart';
 import 'app_flow.dart';
@@ -41,23 +40,13 @@ class _HomePageState extends State<HomePage> {
       AppFlow(SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
       if (showVerification)
-        AppFlow(IdentificationPage(), 
-            Icons.remove_red_eye_outlined, "Ausweisen",
-            GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+        AppFlow(IdentificationPage(), Icons.remove_red_eye_outlined,
+            "Ausweisen", GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
       AppFlow(AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
     state = _HomePageState._(mapPage, appFlows);
     return state;
-  }
-
-  @override
-  void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // ios
-      statusBarBrightness: Brightness.light,
-    ));
-    super.initState();
   }
 
   @override

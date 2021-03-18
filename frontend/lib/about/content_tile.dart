@@ -38,7 +38,9 @@ class ContentPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: ListView(children: children, padding: EdgeInsets.all(10)),
+      body: SafeArea(
+        child: ListView(children: children, padding: EdgeInsets.all(10)),
+      ),
     );
   }
 }

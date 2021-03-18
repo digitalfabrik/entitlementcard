@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
                     Expanded(
                         child: Padding(
                             padding: EdgeInsets.only(left: 8),
-                            child: Divider(thickness: 0.7)))
+                            child: Divider()))
                   ]))),
           ResultsLoader(
               searchText: _searchFieldText,

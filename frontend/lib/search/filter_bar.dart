@@ -11,6 +11,7 @@ class FilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var sortedCategories = [...categoryAssets];
     sortedCategories.sort((a, b) => a.id.compareTo(b.id));
+    sortedCategories.removeLast();
     return SliverToBoxAdapter(
         child: Column(children: [
       Padding(

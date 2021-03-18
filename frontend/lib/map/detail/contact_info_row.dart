@@ -6,9 +6,11 @@ class ContactInfoRow extends StatelessWidget {
   final String _description;
   final String _semanticLabel;
   final Function onTap;
+  final Color iconColor;
+  final Color iconFillColor;
 
   ContactInfoRow(this._icon, this._description, this._semanticLabel,
-      {this.onTap});
+      {this.onTap, this.iconColor, this.iconFillColor});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,9 @@ class ContactInfoRow extends StatelessWidget {
                 _icon,
                 size: 28,
                 semanticLabel: _semanticLabel,
+                color: iconColor ?? Colors.white,
               ),
-              color: Theme.of(context).colorScheme.primary,
+              color: iconFillColor ?? Theme.of(context).colorScheme.primary,
             ),
           )),
       Expanded(

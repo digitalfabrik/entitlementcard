@@ -44,6 +44,7 @@ dependencies:
   crypto: ^2.1.5
   intro_slider: ^2.3.4
   shared_preferences: ^0.5.12+4
+  tinycolor: ^1.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

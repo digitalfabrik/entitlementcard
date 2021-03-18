@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
+import '../../util/color_utils.dart';
 import '../../widgets/error_message.dart';
 import 'detail_content.dart';
 import 'detail_layout.dart';
@@ -20,8 +21,7 @@ class DetailView extends StatelessWidget {
             ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
       options: QueryOptions(
-          document: byIdQuery.document,
-          variables: byIdQuery.getVariablesMap()),
+          document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         if (result.hasException) {
           return _errorMessage(result.exception.toString());
@@ -35,12 +35,18 @@ class DetailView extends StatelessWidget {
         if (matchingStores.isEmpty) {
           return _errorMessage("Akzeptanzstelle nicht gefunden");
         }
+        final categoryId = matchingStores.first?.store?.category?.id;
+        final accentColor = getDarkenedColorForCategory(categoryId);
         return DetailLayout(
           title: matchingStores.first.store.name ?? "Akzeptanzstelle",
-          body: DetailContent(matchingStores.first,
-              hideShowOnMapButton: hideShowOnMapButton),
+          body: DetailContent(
+            matchingStores.first,
+            hideShowOnMapButton: hideShowOnMapButton,
+            accentColor: accentColor,
+          ),
           categoryId: matchingStores.first.store.category.id,
           categoryName: matchingStores.first.store.category.name,
+          accentColor: accentColor,
         );
       },
     );
