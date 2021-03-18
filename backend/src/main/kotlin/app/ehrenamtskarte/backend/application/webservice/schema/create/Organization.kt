@@ -7,21 +7,22 @@ import com.expediagroup.graphql.annotations.GraphQLDescription
 
 data class Organization(
     val name: String,
-    val address: String,
+    val address: Address,
     @GraphQLDescription("Link zu Website oder Satzung")
     val website: String?,
-    val contact: OrganizationContact
+    val contact: OrganizationContact,
+    val category: String
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
             "organization", mapOf("de" to "Organisation/Verein"), Type.Array, listOfNotNull(
                 JsonField("name", mapOf("de" to "Name"), Type.String, name),
-                JsonField("address", mapOf("de" to "Adresse"), Type.String, address),
+                address.toJsonField(),
                 if (website != null)
                     JsonField("website", mapOf("de" to "Link zu Website oder Satzung"), Type.String, website) else null,
-                contact.toJsonField()
+                contact.toJsonField(),
+                JsonField("category", mapOf("de" to "Kategorie"), Type.String, category)
             )
         )
     }
-
 }

@@ -97,6 +97,8 @@ type Query {
   physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
   "Return list of all regions."
   regions: [Region!]!
+  "Returns regions queried by ids."
+  regionsById(params: IdsParamsInput!): [Region!]!
   "Search for accepting stores using searchText and categoryIds."
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
   "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
@@ -131,12 +133,6 @@ enum BlueCardEntitlementType {
   STANDARD
 }
 
-enum BlueCardServiceEntitlementActivity {
-  DISASTER_CONTROL
-  FIRE_DEPARTMENT
-  RESCUE_SERVICE
-}
-
 enum GoldenCardEntitlementType {
   HONOR_BY_MINISTER_PRESIDENT
   SERVICE_AWARD
@@ -148,6 +144,14 @@ scalar Long
 
 "A file part in a multipart request"
 scalar Upload
+
+input AddressInput {
+  addressSupplement: String
+  houseNumber: String!
+  location: String!
+  postalCode: String!
+  street: String!
+}
 
 input AttachmentInput {
   data: Upload!
@@ -178,9 +182,14 @@ input BlueCardEntitlementInput {
   entitlementType: BlueCardEntitlementType!
   juleicaExpirationDate: String
   juleicaNumber: String
-  serviceActivity: BlueCardServiceEntitlementActivity
-  serviceCertificate: AttachmentInput
+  serviceEntitlement: BlueCardServiceEntitlementInput
   workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input BlueCardServiceEntitlementInput {
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: String
 }
 
 input CardGenerationModelInput {
@@ -225,7 +234,8 @@ input OrganizationContactInput {
 }
 
 input OrganizationInput {
-  address: String!
+  address: AddressInput!
+  category: String!
   contact: OrganizationContactInput!
   name: String!
   "Link zu Website oder Satzung"
@@ -233,16 +243,12 @@ input OrganizationInput {
 }
 
 input PersonalDataInput {
-  addressSupplement: String
+  address: AddressInput!
   dateOfBirth: String!
   emailAddress: String!
   forenames: String!
   gender: String
-  houseNumber: String!
-  location: String!
   nationality: String
-  postalCode: String!
-  street: String!
   surname: String!
   telephone: String
   title: String
@@ -259,6 +265,7 @@ input SearchParamsInput {
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   amountOfWorkUnit: AmountOfWorkUnit!
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
+  responsibility: String!
 }

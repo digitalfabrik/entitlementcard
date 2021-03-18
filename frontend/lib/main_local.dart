@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
-import 'configuration.dart';
+import 'configuration/configuration.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,5 +9,6 @@ Future<void> main() async {
       mapStyleUrl: "http://localhost:5002/style.json",
       graphqlUrl: "http://localhost:7000",
       showVerification: true,
+      showDevSettings: true,
       child: App()));
 }

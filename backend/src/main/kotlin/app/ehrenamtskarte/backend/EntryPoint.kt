@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.stores.importer.DataImporter
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.ProgramResult
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import java.io.File
@@ -25,7 +26,9 @@ class Entry : CliktCommand() {
             Database.setup()
             if (importFlag) {
                 println("Importing data from Lbe")
-                DataImporter.import(importFlag)
+                if (!DataImporter.import(importFlag)) {
+                    throw ProgramResult(statusCode = 5)
+                }
             } else {
                 WebService().start()
             }
