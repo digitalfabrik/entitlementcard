@@ -101,6 +101,6 @@ const List<CategoryAsset> categoryAssets = [
       name: 'Anderes',
       shortName: "Anderes",
       icon: "assets/category_icons/9.svg",
-      detailIcon: "assets/detail_headers/8_essen.svg",
-      color: Color(0xFFD70062)),
+      detailIcon: null,
+      color: null),
 ];

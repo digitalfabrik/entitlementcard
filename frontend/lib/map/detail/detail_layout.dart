@@ -74,7 +74,9 @@ class DetailLayout extends StatelessWidget {
   }
 
   Widget _headerImageForCategory() {
-    if (categoryId == null || categoryId > categoryAssets.length) {
+    if (categoryId == null ||
+        categoryId > categoryAssets.length ||
+        categoryAssets[categoryId].detailIcon == null) {
       return null;
     }
     return SvgPicture.asset(
