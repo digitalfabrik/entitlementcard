@@ -22,6 +22,10 @@ class WebService {
         println("Goto http://${host}:${port}/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
-        app.post("/") { ctx -> graphQLHandler.handle(ctx) }
+        app.post("/") { ctx ->
+            ctx.header("Access-Control-Allow-Headers: Authorization")
+            ctx.header("Access-Control-Allow-Origin: *")
+            graphQLHandler.handle(ctx)
+        }
     }
 }
