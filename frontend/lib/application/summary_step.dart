@@ -45,7 +45,7 @@ class _SummaryStepState extends State<SummaryStep> {
                 ),
                 onSaved: _onCorrectAndCompleteSaved,
                 title: Text('Die hier angegeben Informationen sind'
-                    ' richtig und vollständig')),
+                    ' richtig und vollständig.')),
           ],
         ));
   }
