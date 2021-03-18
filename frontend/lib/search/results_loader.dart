@@ -107,7 +107,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               newPageErrorIndicatorBuilder: _buildErrorWithRetry,
               newPageProgressIndicatorBuilder: _buildProgressIndicator,
               firstPageProgressIndicatorBuilder: _buildProgressIndicator),
-      separatorBuilder: (context, index) => Divider(height: 0, thickness: 0.7),
+      separatorBuilder: (context, index) => Divider(height: 0),
     );
   }
 
