@@ -12,14 +12,13 @@ import RegionProvider from "./RegionProvider";
 import AuthProvider, {AuthContext} from "./AuthProvider";
 import Login from './components/auth/Login';
 
-const httpLink = createHttpLink({
-    uri: 'https://api.ehrenamtskarte.app'
-})
-
-
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
 }
+
+const httpLink = createHttpLink({
+    uri: process.env.REACT_APP_API_BASE_URL
+})
 
 const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
     headers: {
@@ -29,7 +28,7 @@ const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
 }))
 
 const createClient = (token?: string) => new ApolloClient({
-    link: createAuthLink(token).concat(process.env.REACT_APP_API_BASE_URL),
+    link: createAuthLink(token).concat(httpLink),
     cache: new InMemoryCache()
 });
 
