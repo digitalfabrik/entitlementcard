@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/application/application_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,24 +17,25 @@ class IdentificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<CardDetailsModel>(
         builder: (context, cardDetailsModel, child) {
-      if (!cardDetailsModel.isInitialized) {
-        return Container();
-      }
+          if (!cardDetailsModel.isInitialized) {
+            return Container();
+          }
 
-      var cardDetails = cardDetailsModel.cardDetails;
-      if (cardDetails != null) {
-        return CardDetailView(
-            cardDetails: cardDetails,
-            startActivateEak: () => _showActivateQrCode(context),
-            startVerification: () => _showVerificationDialog(context));
-      }
+          var cardDetails = cardDetailsModel.cardDetails;
+          if (cardDetails != null) {
+            return CardDetailView(
+                cardDetails: cardDetails,
+                startActivateEak: () => _showActivateQrCode(context),
+                startVerification: () => _showVerificationDialog(context));
+          }
 
-      return Scaffold(
-        body: NoCardView(
+          return Scaffold(
+            body: NoCardView(
             startVerification: () => _showVerificationDialog(context),
-            startActivateQrCode: () => _showActivateQrCode(context)),
+            startActivateQrCode: () => _showActivateQrCode(context),
+            startEakApplication: () => _showEakApplication(context)),
       );
-    });
+        });
   }
 
   void _showVerificationDialog(context) async {
@@ -43,5 +45,10 @@ class IdentificationPage extends StatelessWidget {
   void _showActivateQrCode(BuildContext context) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => IdentificationQrScannerPage()));
+  }
+
+  void _showEakApplication(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ApplicationForm()));
   }
 }

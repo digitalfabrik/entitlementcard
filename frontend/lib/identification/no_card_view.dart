@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class NoCardView extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startActivateQrCode;
+  final VoidCallback startEakApplication;
 
-  const NoCardView({Key key, this.startVerification, this.startActivateQrCode})
+  const NoCardView(
+      {Key key,
+      this.startVerification,
+      this.startActivateQrCode,
+      this.startEakApplication})
       : super(key: key);
 
   @override
@@ -42,13 +47,21 @@ class NoCardView extends StatelessWidget {
                         SizedBox(height: 24, width: 24),
                         Text(
                             "… und haben bereits einen Aktivierungscode"
-                            " für die digitale Ehrenamtskarte?",
+                                " für die digitale Ehrenamtskarte?",
                             textAlign: TextAlign.center),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startActivateQrCode,
                             child: Text("Jetzt Aktivierungscode einscannen"),
+                          ),
+                        ),
+                        Text("oder", textAlign: TextAlign.center),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: OutlinedButton(
+                            onPressed: startEakApplication,
+                            child: Text("Ehrenamtskarte beantragen"),
                           ),
                         )
                       ])),

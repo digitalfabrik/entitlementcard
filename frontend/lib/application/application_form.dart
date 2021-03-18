@@ -71,13 +71,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       child: Text(
                           _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
                       style: TextButton.styleFrom(
-                        primary: Theme
-                            .of(context)
-                            .colorScheme
-                            .onPrimary,
-                        backgroundColor: Theme
-                            .of(context)
-                            .primaryColor,
+                        primary: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).primaryColor,
                         padding: EdgeInsets.all(12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -187,5 +182,6 @@ class _ApplicationFormState extends State<ApplicationForm> {
     final result = await _client.query(QueryOptions(
         document: query.document, variables: query.getVariablesMap()));
     if (result.hasException) throw result.exception;
+    Navigator.of(context).pop();
   }
 }
