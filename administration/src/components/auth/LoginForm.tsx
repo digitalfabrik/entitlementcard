@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from "react";
-import {Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Button, Classes, FormGroup, InputGroup} from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 
@@ -15,7 +15,10 @@ interface Props {
 const LoginForm = (props: Props) => {
     return (
         <div style={{marginTop: "20px"}}>
-            <form onSubmit={props.onSubmit}>
+            <form onSubmit={event => {
+                event.preventDefault()
+                props.onSubmit()
+            }}>
                 <FormGroup label="E-Mail">
                     <InputGroup placeholder="erika.musterfrau@example.org"
                                 autoFocus
@@ -30,10 +33,13 @@ const LoginForm = (props: Props) => {
                                 type="password"
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => props.setPassword(event.target.value)}/>
                 </FormGroup>
-                <Button
-                    text="Anmelden"
-                    type="submit"
-                    loading={!!props.loading} />
+                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <Button
+                        text="Anmelden"
+                        type="submit"
+                        intent="primary"
+                        loading={!!props.loading}/>
+                </div>
             </form>
         </div>
     )
