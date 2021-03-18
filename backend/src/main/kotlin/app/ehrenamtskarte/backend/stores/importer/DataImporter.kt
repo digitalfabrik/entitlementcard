@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 object DataImporter {
 
     fun import(manualImport: Boolean): Boolean {
-        prepareCategories()
         val logger = LoggerFactory.getLogger(DataImporter::class.java)
         val pipe = {
             Unit.addStep(Download(logger), logger) { logger.info("== Download raw data ==" )}
