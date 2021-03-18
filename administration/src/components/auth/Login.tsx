@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {signIn as SignInCarrier, signIn_signInPayload as SignInPayload} from "../../graphql/auth/__generated__/signIn";
 import LoginForm from "./LoginForm";
 import {SIGN_IN} from "../../graphql/auth/mutations";
-import {LoginToaster} from "../AppToaster";
+import {AppToaster} from "../AppToaster";
 import {Card, H2} from "@blueprintjs/core";
 
 interface Props {
@@ -13,16 +13,11 @@ interface Props {
 
 const Center = styled("div")`
   display: flex;
+  flex-grow: 1;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 40px;
 `
-
-const onError = function (error: ApolloError) {
-    LoginToaster.show({message: "Login failed"});
-}
 
 interface State {
     email: string
@@ -33,7 +28,7 @@ const Login = (props: Props) => {
     const [state, setState] = React.useState<State>({email: "", password: ""})
     const [signIn, mutationState] = useMutation(SIGN_IN, {
         onCompleted: (payload: SignInCarrier) => props.onSignIn(payload.signInPayload, state.password),
-        onError: onError
+        onError: () => AppToaster.show({ intent: "danger", message: "Login fehlgeschlagen."})
     })
     const onSubmit = () => signIn({variables: {authData: {email: state.email, password: state.password}}})
 
