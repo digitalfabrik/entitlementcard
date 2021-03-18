@@ -9,8 +9,12 @@ import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
 
+if (!process.env.REACT_APP_API_BASE_URL) {
+    throw new Error('REACT_APP_API_BASE_URL is not set!')
+}
+
 const client = new ApolloClient({
-    uri: 'https://api.ehrenamtskarte.app',
+    uri: process.env.REACT_APP_API_BASE_URL,
     cache: new InMemoryCache()
 });
 

@@ -69,10 +69,10 @@ type Coordinates {
 }
 
 type Mutation {
+  "Stores a new blue digital EAK"
+  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
-  "Signs in an administrator"
-  signIn(authData: AuthDataInput!): SignInPayload!
 }
 
 type PhysicalStore {
@@ -108,18 +108,8 @@ type Region {
   regionIdentifier: String!
 }
 
-type SignInPayload {
-  token: String!
-  user: Administrator!
-}
-
 "Long type"
 scalar Long
-
-input AuthDataInput {
-  email: String!
-  password: String!
-}
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
@@ -138,8 +128,49 @@ input CoordinatesInput {
   lng: Float!
 }
 
+input GoldenCardEntitlementInput {
+  certificate: AttachmentInput
+  goldenEntitlementType: GoldenCardEntitlementType!
+  workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input GoldenEakCardApplicationInput {
+  entitlement: GoldenCardEntitlementInput!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
+
 input IdsParamsInput {
   ids: [Int!]!
+}
+
+input OrganizationContactInput {
+  email: String!
+  hasGivenPermission: Boolean!
+  name: String!
+  telephone: String!
+}
+
+input OrganizationInput {
+  address: AddressInput!
+  category: String!
+  contact: OrganizationContactInput!
+  name: String!
+  "Link zu Website oder Satzung"
+  website: String
+}
+
+input PersonalDataInput {
+  address: AddressInput!
+  dateOfBirth: String!
+  emailAddress: String!
+  forenames: String!
+  gender: String
+  nationality: String
+  surname: String!
+  telephone: String
+  title: String
 }
 
 input SearchParamsInput {
@@ -148,4 +179,12 @@ input SearchParamsInput {
   limit: Int
   offset: Long
   searchText: String
+}
+
+input WorkAtOrganizationInput {
+  amountOfWork: Float!
+  amountOfWorkUnit: AmountOfWorkUnit!
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: String!
 }
