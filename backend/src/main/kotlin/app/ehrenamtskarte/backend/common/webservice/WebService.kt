@@ -6,8 +6,7 @@ import io.javalin.http.staticfiles.Location
 const val DEFAULT_PORT = "7000"
 
 class WebService {
-    fun start() {
-        val production = System.getProperty("app.production", "").isNotEmpty()
+    fun start(production: Boolean) {
         val host = System.getProperty("app.host", "0.0.0.0")
         val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
         val app = Javalin.create { cfg ->

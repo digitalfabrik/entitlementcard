@@ -29,12 +29,13 @@ class Database {
             }
         }
 
-        fun setup() {
+        fun setup(logging: Boolean) {
             Database().db
 
             transaction {
-                // print sql to std-out
-                addLogger(StdOutSqlLogger)
+                if (logging) {
+                    addLogger(StdOutSqlLogger)
+                }
                 setupDatabaseForRegions(Companion::executeScript)
                 setupDatabaseForStores(Companion::executeScript)
                 setupDatabaseForVerification()
