@@ -44,12 +44,15 @@ dependencies:
   crypto: ^2.1.5
   intro_slider: ^2.3.4
   shared_preferences: ^0.5.12+4
-  flutter_form_builder: ^4.2.0
+  flutter_form_builder: ^5.0.0-alpha.1
   form_builder_image_picker: ^0.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+
+dependency_overrides:
+  flutter_form_builder: ^5.0.0-alpha.1
 
 dev_dependencies:
   flutter_test:

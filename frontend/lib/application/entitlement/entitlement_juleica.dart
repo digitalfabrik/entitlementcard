@@ -45,8 +45,7 @@ class _EntitlementJuleicaState extends State<EntitlementJuleica> {
               decoration: InputDecoration(
                 labelText: 'Gültig bis *',
               ),
-              onSaved: (value) =>
-              {
+              onSaved: (value) => {
                 entitlement.juleicaExpirationDate =
                     DateFormat('dd.MM.yyyy').format(value)
               },

@@ -25,7 +25,7 @@ class _RegionStepState extends State<RegionStep> {
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {fetchMore, refetch}) {
           var regions = result.isLoading || result.hasException
-              ? null
+              ? []
               : regionsQuery.parse(result.data)?.regions;
           return FormBuilder(
               key: widget.formKey,

@@ -36,7 +36,6 @@ class GetRegions$Query with EquatableMixin {
 
   @override
   List<Object> get props => [regions];
-
   Map<String, dynamic> toJson() => _$GetRegions$QueryToJson(this);
 }
 
@@ -54,7 +53,6 @@ class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
 
   @override
   List<Object> get props => [location];
-
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(
           this);
@@ -76,7 +74,6 @@ class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates
 
   @override
   List<Object> get props => [lat, lng];
-
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(
           this);
@@ -98,7 +95,6 @@ class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore
 
   @override
   List<Object> get props => [address, coordinates];
-
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(this);
 }
@@ -121,7 +117,6 @@ class AcceptingStoresSearch$Query$AcceptingStore with EquatableMixin {
 
   @override
   List<Object> get props => [id, name, description, physicalStore];
-
   Map<String, dynamic> toJson() =>
       _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
 }
@@ -137,7 +132,6 @@ class AcceptingStoresSearch$Query with EquatableMixin {
 
   @override
   List<Object> get props => [searchAcceptingStores];
-
   Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
 }
 
@@ -154,7 +148,6 @@ class CoordinatesInput with EquatableMixin {
 
   @override
   List<Object> get props => [lat, lng];
-
   Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
 }
 
@@ -183,7 +176,6 @@ class SearchParamsInput with EquatableMixin {
   @override
   List<Object> get props =>
       [categoryIds, coordinates, limit, offset, searchText];
-
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
 
@@ -411,7 +403,6 @@ class CardVerificationByHash$Query with EquatableMixin {
 
   @override
   List<Object> get props => [cardValid];
-
   Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
 }
 
@@ -429,7 +420,6 @@ class CardVerificationModelInput with EquatableMixin {
 
   @override
   List<Object> get props => [cardDetailsHashBase64, totp];
-
   Map<String, dynamic> toJson() => _$CardVerificationModelInputToJson(this);
 }
 
@@ -444,7 +434,6 @@ class AddBlueEakApplication$Mutation with EquatableMixin {
 
   @override
   List<Object> get props => [addBlueEakApplication];
-
   Map<String, dynamic> toJson() => _$AddBlueEakApplication$MutationToJson(this);
 }
 
@@ -459,19 +448,19 @@ class AttachmentInput with EquatableMixin {
 
   @override
   List<Object> get props => [fileName];
-
   Map<String, dynamic> toJson() => _$AttachmentInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class BlueCardEntitlementInput with EquatableMixin {
-  BlueCardEntitlementInput({@required this.blueEntitlementType,
-    this.copyOfJuleica,
-    this.juleicaExpirationDate,
-    this.juleicaNumber,
-    this.serviceActivity,
-    this.serviceCertificate,
-    this.workAtOrganizations});
+  BlueCardEntitlementInput(
+      {@required this.blueEntitlementType,
+      this.copyOfJuleica,
+      this.juleicaExpirationDate,
+      this.juleicaNumber,
+      this.serviceActivity,
+      this.serviceCertificate,
+      this.workAtOrganizations});
 
   factory BlueCardEntitlementInput.fromJson(Map<String, dynamic> json) =>
       _$BlueCardEntitlementInputFromJson(json);
@@ -503,7 +492,6 @@ class BlueCardEntitlementInput with EquatableMixin {
         serviceCertificate,
         workAtOrganizations
       ];
-
   Map<String, dynamic> toJson() => _$BlueCardEntitlementInputToJson(this);
 }
 
@@ -538,7 +526,6 @@ class BlueEakCardApplicationInput with EquatableMixin {
         hasAcceptedPrivacyPolicy,
         personalData
       ];
-
   Map<String, dynamic> toJson() => _$BlueEakCardApplicationInputToJson(this);
 }
 
@@ -562,7 +549,6 @@ class OrganizationContactInput with EquatableMixin {
 
   @override
   List<Object> get props => [email, hasGivenPermission, name, telephone];
-
   Map<String, dynamic> toJson() => _$OrganizationContactInputToJson(this);
 }
 
@@ -579,7 +565,6 @@ class OrganizationInput with EquatableMixin {
 
   @override
   List<Object> get props => [contact, name];
-
   Map<String, dynamic> toJson() => _$OrganizationInputToJson(this);
 }
 
@@ -645,7 +630,6 @@ class PersonalDataInput with EquatableMixin {
         telephone,
         title
       ];
-
   Map<String, dynamic> toJson() => _$PersonalDataInputToJson(this);
 }
 
@@ -671,7 +655,6 @@ class WorkAtOrganizationInput with EquatableMixin {
   @override
   List<Object> get props =>
       [amountOfWork, amountOfWorkUnit, certificate, organization];
-
   Map<String, dynamic> toJson() => _$WorkAtOrganizationInputToJson(this);
 }
 
@@ -687,7 +670,6 @@ class AddGoldenEakApplication$Mutation with EquatableMixin {
 
   @override
   List<Object> get props => [addGoldenEakApplication];
-
   Map<String, dynamic> toJson() =>
       _$AddGoldenEakApplication$MutationToJson(this);
 }
@@ -711,7 +693,6 @@ class GoldenCardEntitlementInput with EquatableMixin {
   @override
   List<Object> get props =>
       [certificate, goldenEntitlementType, workAtOrganizations];
-
   Map<String, dynamic> toJson() => _$GoldenCardEntitlementInputToJson(this);
 }
 
@@ -818,7 +799,6 @@ class GetRegionsQuery extends GraphQLQuery<GetRegions$Query, JsonSerializable> {
 
   @override
   List<Object> get props => [document, operationName];
-
   @override
   GetRegions$Query parse(Map<String, dynamic> json) =>
       GetRegions$Query.fromJson(json);
@@ -837,7 +817,6 @@ class AcceptingStoresSearchArguments extends JsonSerializable
 
   @override
   List<Object> get props => [params];
-
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoresSearchArgumentsToJson(this);
 }
@@ -941,7 +920,6 @@ class AcceptingStoresSearchQuery extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   AcceptingStoresSearch$Query parse(Map<String, dynamic> json) =>
       AcceptingStoresSearch$Query.fromJson(json);
@@ -1237,7 +1215,6 @@ class CardVerificationByHashArguments extends JsonSerializable
 
   @override
   List<Object> get props => [card];
-
   @override
   Map<String, dynamic> toJson() =>
       _$CardVerificationByHashArgumentsToJson(this);
@@ -1285,7 +1262,6 @@ class CardVerificationByHashQuery extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   CardVerificationByHash$Query parse(Map<String, dynamic> json) =>
       CardVerificationByHash$Query.fromJson(json);
@@ -1304,7 +1280,6 @@ class AddBlueEakApplicationArguments extends JsonSerializable
 
   @override
   List<Object> get props => [application];
-
   @override
   Map<String, dynamic> toJson() => _$AddBlueEakApplicationArgumentsToJson(this);
 }
@@ -1351,7 +1326,6 @@ class AddBlueEakApplicationMutation extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   AddBlueEakApplication$Mutation parse(Map<String, dynamic> json) =>
       AddBlueEakApplication$Mutation.fromJson(json);
@@ -1371,7 +1345,6 @@ class AddGoldenEakApplicationArguments extends JsonSerializable
 
   @override
   List<Object> get props => [application];
-
   @override
   Map<String, dynamic> toJson() =>
       _$AddGoldenEakApplicationArgumentsToJson(this);
@@ -1419,7 +1392,6 @@ class AddGoldenEakApplicationMutation extends GraphQLQuery<
 
   @override
   List<Object> get props => [document, operationName, variables];
-
   @override
   AddGoldenEakApplication$Mutation parse(Map<String, dynamic> json) =>
       AddGoldenEakApplication$Mutation.fromJson(json);

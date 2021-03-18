@@ -367,10 +367,10 @@ AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
 }
 
 Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
-    AcceptingStoreSummaryById$Query instance) =>
+        AcceptingStoreSummaryById$Query instance) =>
     <String, dynamic>{
       'physicalStoresById':
-      instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
+          instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
 CardVerificationByHash$Query _$CardVerificationByHash$QueryFromJson(
