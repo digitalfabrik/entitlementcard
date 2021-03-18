@@ -27,6 +27,7 @@ const AuthProvider = ({ children }: {children: ReactNode}) => {
     const [authContextData, setAuthContextData] = useState<AuthContextData | null>(null)
     const setAuthContextDataFromPayload = (payload: SignInPayload) =>
         setAuthContextData(convertToAuthContextData(payload))
+
     return <AuthContext.Provider value={[authContextData, setAuthContextDataFromPayload]}>
         {children}
     </AuthContext.Provider>

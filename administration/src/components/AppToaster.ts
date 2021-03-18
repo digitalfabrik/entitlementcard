@@ -5,3 +5,7 @@ export const AppToaster = Toaster.create({
     position: Position.BOTTOM,
 });
 
+export const LoginToaster = Toaster.create({
+    position: Position.TOP,
+});
+

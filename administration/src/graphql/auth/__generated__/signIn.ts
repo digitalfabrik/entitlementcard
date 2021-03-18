@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {AuthDataInput} from "./../../../../__generated__/globalTypes";
+import { AuthDataInput } from "./../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: signIn
@@ -16,8 +16,8 @@ export interface signIn_signInPayload_user {
 
 export interface signIn_signInPayload {
   __typename: "SignInPayload";
-  token: string;
   user: signIn_signInPayload_user;
+  token: string;
 }
 
 export interface signIn {
