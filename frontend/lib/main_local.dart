@@ -9,5 +9,6 @@ Future<void> main() async {
       mapStyleUrl: "http://localhost:5002/style.json",
       graphqlUrl: "http://localhost:7000",
       showVerification: true,
+      showDevSettings: true,
       child: App()));
 }

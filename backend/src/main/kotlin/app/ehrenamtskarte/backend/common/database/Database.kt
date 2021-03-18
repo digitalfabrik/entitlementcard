@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.auth.database.setupDatabase as setupDatabaseFo
 import app.ehrenamtskarte.backend.regions.database.setupDatabase as setupDatabaseForRegions
 import app.ehrenamtskarte.backend.stores.database.setupDatabase as setupDatabaseForStores
 import app.ehrenamtskarte.backend.verification.database.setupDatabase as setupDatabaseForVerification
+import app.ehrenamtskarte.backend.application.database.setupDatabase as setupDatabaseForApplication
 
 
 class Database {
@@ -38,6 +39,7 @@ class Database {
                 setupDatabaseForRegions(Companion::executeScript)
                 setupDatabaseForStores(Companion::executeScript)
                 setupDatabaseForVerification()
+                setupDatabaseForApplication()
                 setupDatabaseForAuth()
             }
         }

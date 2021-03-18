@@ -69,8 +69,12 @@ type Coordinates {
 }
 
 type Mutation {
+  "Stores a new blue digital EAK"
+  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
+  "Stores a new golden digital EAK"
+  addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!): SignInPayload!
 }
@@ -113,12 +117,79 @@ type SignInPayload {
   user: Administrator!
 }
 
+enum AmountOfWorkUnit {
+  HOURS_PER_WEEK
+  HOURS_PER_YEAR
+}
+
+enum ApplicationType {
+  FIRST_APPLICATION
+  RENEWAL_APPLICATION
+}
+
+enum BlueCardEntitlementType {
+  JULEICA
+  SERVICE
+  STANDARD
+}
+
+enum GoldenCardEntitlementType {
+  HONOR_BY_MINISTER_PRESIDENT
+  SERVICE_AWARD
+  STANDARD
+}
+
 "Long type"
 scalar Long
+
+"A file part in a multipart request"
+scalar Upload
+
+input AddressInput {
+  addressSupplement: String
+  houseNumber: String!
+  location: String!
+  postalCode: String!
+  street: String!
+}
+
+input AttachmentInput {
+  data: Upload!
+  fileName: String!
+}
 
 input AuthDataInput {
   email: String!
   password: String!
+}
+
+input BlueCardApplicationInput {
+  applicationType: ApplicationType!
+  entitlement: BlueCardEntitlementInput!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
+
+"""
+Entitlement for blue EAK.
+    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
+    or     entitlementType == Service and serviceActivity, serviceCertification are not null
+    or     entitlementType == Standard and workAtOrganizations is not null
+"""
+input BlueCardEntitlementInput {
+  copyOfJuleica: AttachmentInput
+  entitlementType: BlueCardEntitlementType!
+  juleicaExpirationDate: String
+  juleicaNumber: String
+  serviceEntitlement: BlueCardServiceEntitlementInput
+  workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input BlueCardServiceEntitlementInput {
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: String
 }
 
 input CardGenerationModelInput {
@@ -138,8 +209,49 @@ input CoordinatesInput {
   lng: Float!
 }
 
+input GoldenCardEntitlementInput {
+  certificate: AttachmentInput
+  goldenEntitlementType: GoldenCardEntitlementType!
+  workAtOrganizations: [WorkAtOrganizationInput!]
+}
+
+input GoldenEakCardApplicationInput {
+  entitlement: GoldenCardEntitlementInput!
+  givenInformationIsCorrectAndComplete: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
+
 input IdsParamsInput {
   ids: [Int!]!
+}
+
+input OrganizationContactInput {
+  email: String!
+  hasGivenPermission: Boolean!
+  name: String!
+  telephone: String!
+}
+
+input OrganizationInput {
+  address: AddressInput!
+  category: String!
+  contact: OrganizationContactInput!
+  name: String!
+  "Link zu Website oder Satzung"
+  website: String
+}
+
+input PersonalDataInput {
+  address: AddressInput!
+  dateOfBirth: String!
+  emailAddress: String!
+  forenames: String!
+  gender: String
+  nationality: String
+  surname: String!
+  telephone: String
+  title: String
 }
 
 input SearchParamsInput {
@@ -148,4 +260,12 @@ input SearchParamsInput {
   limit: Int
   offset: Long
   searchText: String
+}
+
+input WorkAtOrganizationInput {
+  amountOfWork: Float!
+  amountOfWorkUnit: AmountOfWorkUnit!
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: String!
 }

@@ -16,6 +16,11 @@ const httpLink = createHttpLink({
     uri: 'https://api.ehrenamtskarte.app'
 })
 
+
+if (!process.env.REACT_APP_API_BASE_URL) {
+    throw new Error('REACT_APP_API_BASE_URL is not set!')
+}
+
 const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
     headers: {
         ...headers,
@@ -24,7 +29,7 @@ const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
 }))
 
 const createClient = (token?: string) => new ApolloClient({
-    link: createAuthLink(token).concat(httpLink),
+    link: createAuthLink(token).concat(process.env.REACT_APP_API_BASE_URL),
     cache: new InMemoryCache()
 });
 

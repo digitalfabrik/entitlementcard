@@ -32,6 +32,7 @@ dependencies {
     implementation("org.apache.commons", "commons-text", "1.9")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
+    implementation("com.graphql-java-kickstart:graphql-java-servlet:11.1.0")
 
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -48,6 +49,7 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
+    implementation("org.jetbrains.exposed", "exposed-java-time", exposed_version)
     implementation("org.postgresql", "postgresql", "42.2.18")
     implementation("com.kohlschutter.junixsocket", "junixsocket-core", "2.3.2")
     implementation("com.kohlschutter.junixsocket", "junixsocket-common", "2.3.2")

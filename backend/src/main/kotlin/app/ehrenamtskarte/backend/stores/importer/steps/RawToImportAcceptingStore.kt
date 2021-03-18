@@ -9,7 +9,7 @@ class RawToImportAcceptingStore(private val logger: Logger) : PipelineStep<List<
 
     override fun execute(input: List<LbeAcceptingStore>) = input.map {
         try {
-            ImportAcceptingStore(
+            val store = ImportAcceptingStore(
                 it.name,
                 it.street,
                 it.postalCode,
@@ -23,6 +23,10 @@ class RawToImportAcceptingStore(private val logger: Logger) : PipelineStep<List<
                 it.discount,
                 it.category!!.toInt()
             )
+            if (it.houseNumber != null && it.houseNumber!!.isNotBlank())
+                store.copy(street = store.street?.trim() + " " + it.houseNumber)
+            else
+                store
         } catch (e: NumberFormatException) {
             logger.info("Number format exception occurred while mapping $it from raw", e)
             null
