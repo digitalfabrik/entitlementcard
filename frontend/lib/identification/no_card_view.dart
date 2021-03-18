@@ -1,55 +1,85 @@
 import 'package:flutter/material.dart';
 
-import 'id_card.dart';
-
 class NoCardView extends StatelessWidget {
-  final VoidCallback onOpenQrScanner;
+  final VoidCallback startVerification;
+  final VoidCallback startActivateQrCode;
 
-  const NoCardView({Key key, this.onOpenQrScanner}) : super(key: key);
+  const NoCardView({Key key, this.startVerification, this.startActivateQrCode})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    return Flex(
-      direction: isLandscape ? Axis.horizontal : Axis.vertical,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IdCard(
-          height: isLandscape ? 200 : null,
-          child: Container(
-              padding: EdgeInsets.all(16),
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Noch keine Ehrenamtskarte hinterlegt",
-                textAlign: TextAlign.start,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .merge(TextStyle(color: Colors.white70)),
-              )),
-        ),
-        SizedBox(height: 24),
-        Flexible(
-            fit: FlexFit.loose,
-            child: Center(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0)),
-                      padding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    ),
-                    onPressed: onOpenQrScanner,
-                    child: Text(
-                      "Code einscannen",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .merge(TextStyle(color: Colors.white, fontSize: 20)),
-                    ))))
-      ],
-    );
+
+    Widget wrapIntrinsic(Widget widget) => isLandscape
+        ? IntrinsicHeight(child: widget)
+        : IntrinsicWidth(child: widget);
+
+    return SingleChildScrollView(
+        child: SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Icon(Icons.contact_support_outlined,
+                size: 100, color: Theme.of(context).accentColor),
+          ),
+          SizedBox(height: 30),
+          wrapIntrinsic(
+            Flex(
+                direction: isLandscape ? Axis.horizontal : Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 300),
+                      child: Column(children: [
+                        Text("Sie sind ehrenamtlich engagiert …",
+                            style: Theme.of(context).textTheme.headline6,
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 24, width: 24),
+                        Text(
+                            "… und haben bereits einen Aktivierungscode"
+                            " für die digitale Ehrenamtskarte?",
+                            textAlign: TextAlign.center),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: OutlinedButton(
+                            onPressed: startActivateQrCode,
+                            child: Text("Jetzt Aktivierungscode einscannen"),
+                          ),
+                        )
+                      ])),
+                  isLandscape
+                      ? VerticalDivider(width: 80)
+                      : Divider(height: 80),
+                  ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 300),
+                      child: Column(children: [
+                        Text(
+                          "Sie arbeiten bei einer Akzeptanzstelle …",
+                          style: Theme.of(context).textTheme.headline6,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 24),
+                        Text(
+                            "… und möchten eine Ihnen gezeigte digitale"
+                            " Ehrenamtskarte auf Echtheit prüfen?",
+                            textAlign: TextAlign.center),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: OutlinedButton(
+                            onPressed: startVerification,
+                            child: Text("Jetzt Ehrenamtskarte validieren"),
+                          ),
+                        )
+                      ]))
+                ]),
+          ),
+        ],
+      ),
+    ));
   }
 }

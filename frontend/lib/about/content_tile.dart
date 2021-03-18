@@ -35,12 +35,10 @@ class ContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: ListView(children: children),
-        ));
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: ListView(children: children, padding: EdgeInsets.all(10)),
+    );
   }
 }

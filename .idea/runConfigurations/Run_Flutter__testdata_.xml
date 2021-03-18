@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Flutter (testdata)" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=test_data_options=true" />
-    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main_staging.dart" />
-    <method v="2" />
-  </configuration>
-</component>
