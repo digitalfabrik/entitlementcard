@@ -44,7 +44,7 @@ class SearchResultItem extends StatelessWidget {
           _openDetailView(context, item.id);
         },
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            padding: EdgeInsets.symmetric(vertical: 16),
             child: IntrinsicHeight(
               child: Row(
                 children: [
@@ -54,17 +54,24 @@ class SearchResultItem extends StatelessWidget {
                       categoryName: categoryName,
                     )
                   else
-                    CategoryColorIndicator(
-                      categoryColor: categoryColor,
-                    ),
+                    CategoryColorIndicator(categoryColor: categoryColor),
                   StoreTextOverview(
                     item: item,
                     showTownName: _distance == null,
                   ),
-                  if (_distance != null) DistanceText(distance: _distance),
-                  Container(
-                      child: Icon(Icons.keyboard_arrow_right, size: 30.0),
-                      height: double.infinity),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          if (_distance != null)
+                            DistanceText(distance: _distance),
+                          Container(
+                              child: Icon(Icons.keyboard_arrow_right,
+                                  size: 30.0,
+                                  color: Theme.of(context).disabledColor),
+                              height: double.infinity),
+                        ],
+                      ))
                 ],
               ),
             )),
@@ -91,14 +98,13 @@ class CategoryIconIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 5, right: 10),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: svgIconPath != null
           ? SvgPicture.asset(svgIconPath,
-              width: 40.0,
-              semanticsLabel: categoryName ?? "Unbekannte Kategorie")
+              width: 30, semanticsLabel: categoryName ?? "Unbekannte Kategorie")
           : Icon(
               Icons.info,
-              size: 40,
+              size: 30,
             ),
     );
   }
@@ -112,7 +118,7 @@ class CategoryColorIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 5),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       child: VerticalDivider(
         color: categoryColor ?? Theme.of(context).colorScheme.primary,
         thickness: 3,
@@ -136,20 +142,15 @@ class StoreTextOverview extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              item.name ?? "Akzeptanzstelle",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  .apply(fontSizeFactor: 1.1),
-            ),
-            Text(
-              item.description ?? "",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            Text(item.name ?? "Akzeptanzstelle",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyText1),
+            SizedBox(height: 4),
+            Text(item.description ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyText2),
             if (showTownName && item.physicalStore?.address?.location != null)
               Text(item.physicalStore?.address?.location,
                   maxLines: 1, overflow: TextOverflow.ellipsis)
@@ -176,11 +177,8 @@ class DistanceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        _formatDistance(distance),
-        maxLines: 1,
-        style: DefaultTextStyle.of(context).style.apply(fontWeightDelta: 3),
-      ),
+      child: Text(_formatDistance(distance),
+          maxLines: 1, style: Theme.of(context).textTheme.bodyText2),
     );
   }
 }
