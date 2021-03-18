@@ -23,37 +23,24 @@ List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
 List<Widget> getCopyrightText(BuildContext context) {
   return toWidgets(Theme.of(context), [
     Paragraph(content: '''
-Der Quelltext dieser App ist unter der MIT Lizenz veröfferntlicht und kann auf https://github.com/ehrenamtskarte/ehrenamtskarte/ eingesehen werden.
+Der Quelltext dieser App ist unter der MIT Lizenz veröffentlicht und kann unter https://github.com/ehrenamtskarte/ehrenamtskarte/ eingesehen werden.
 
 MIT License
 
 Copyright (c) 2021 The Digitale Ehrenamtskarte contributors
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-''')
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''')
   ]);
 }
 
 List<Widget> getDataPrivacyText(BuildContext context) {
   var content = [
     Paragraph(content: '''
-Bei der Nutzung der App "Ehrenamtskarte" für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
+Bei der Nutzung der App „Ehrenamtskarte“ für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind solche Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
 '''),
     Paragraph(title: '''
 Welche Daten wir erheben und verarbeiten
