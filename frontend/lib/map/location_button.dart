@@ -29,7 +29,7 @@ class _LocationButtonState extends State<LocationButton> {
             padding: EdgeInsets.all(10),
             child: FloatingActionButton(
               elevation: 1,
-              backgroundColor: Colors.white,
+              backgroundColor: theme.backgroundColor,
               child: AnimatedSwitcher(
                 child: _status == LocationPermissionStatus.requestFinished
                     ? Icon(Icons.my_location, color: theme.accentColor)
