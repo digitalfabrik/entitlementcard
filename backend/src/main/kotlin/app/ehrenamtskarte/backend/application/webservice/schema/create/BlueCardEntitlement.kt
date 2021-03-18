@@ -12,15 +12,9 @@ enum class BlueCardEntitlementType {
     STANDARD
 }
 
-enum class BlueCardServiceEntitlementActivity {
-    FIRE_DEPARTMENT,
-    DISASTER_CONTROL,
-    RESCUE_SERVICE
-}
-
-data class BlueCardServiceEntitlement (
-    val activity: BlueCardServiceEntitlementActivity,
+data class BlueCardServiceEntitlement(
     val organization: Organization,
+    val responsibility: String?,
     val certificate: Attachment?
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
@@ -29,17 +23,9 @@ data class BlueCardServiceEntitlement (
             type = Type.Array,
             translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
             value = listOfNotNull(
-                JsonField(
-                    "serviceActivity",
-                    mapOf("de" to "Dienstaktivität"),
-                    Type.String,
-                    when (activity) {
-                        BlueCardServiceEntitlementActivity.DISASTER_CONTROL -> "Katastrophenschutz"
-                        BlueCardServiceEntitlementActivity.FIRE_DEPARTMENT -> "Feuerwehr"
-                        BlueCardServiceEntitlementActivity.RESCUE_SERVICE -> "Rettungsdienst"
-                    }
-                ),
                 organization.toJsonField(),
+                if (responsibility != null)
+                    JsonField("responsibility", mapOf("de" to "Funktion"), Type.String, responsibility) else null,
                 if (certificate != null) JsonField(
                     "serviceCertificate",
                     mapOf("de" to "Zertifikat"),
