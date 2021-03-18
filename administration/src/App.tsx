@@ -11,6 +11,7 @@ import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
 import AuthProvider, {AuthContext} from "./AuthProvider";
 import Login from './components/auth/Login';
+import KeepAliveToken from "./KeepAliveToken";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -20,7 +21,7 @@ const httpLink = createHttpLink({
     uri: process.env.REACT_APP_API_BASE_URL
 })
 
-const createAuthLink = (token?: string) => setContext((_, { headers }) => ({
+const createAuthLink = (token?: string) => setContext((_, {headers}) => ({
     headers: {
         ...headers,
         authorization: token ? `Bearer ${token}` : ""
@@ -39,15 +40,14 @@ const Main = styled.div`
   justify-content: center;
 `
 
-
-const App = () =>
-    <AuthProvider>
-        <AuthContext.Consumer>{([authData, onSignIn]) => (
-            <ApolloProvider client={createClient(authData?.token)}>{
-                authData !== null && authData.expiry > new Date()
-                    ? <RegionProvider>
+const App = () => <AuthProvider>
+    <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
+        <ApolloProvider client={createClient(authData?.token)}>{
+            authData !== null && authData.expiry > new Date()
+                ? <KeepAliveToken authData={authData} onSignIn={onSignIn}>
+                    <RegionProvider>
                         <HashRouter>
-                            <Navigation/>
+                            <Navigation onSignOut={onSignOut}/>
                             <Main>
                                 <Route exact path={"/"}>
 
@@ -61,10 +61,11 @@ const App = () =>
                             </Main>
                         </HashRouter>
                     </RegionProvider>
-                    : <Login onSignIn={onSignIn}/>
-            }</ApolloProvider>
-        )}
-        </AuthContext.Consumer>
-    </AuthProvider>
+                </KeepAliveToken>
+                : <Login onSignIn={onSignIn}/>
+        }</ApolloProvider>
+    )}
+    </AuthContext.Consumer>
+</AuthProvider>
 
 export default App;

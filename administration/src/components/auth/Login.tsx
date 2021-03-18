@@ -8,7 +8,7 @@ import {LoginToaster} from "../AppToaster";
 import {Card, H2} from "@blueprintjs/core";
 
 interface Props {
-    onSignIn: (payload: SignInPayload) => void
+    onSignIn: (payload: SignInPayload, password: string) => void
 }
 
 const Center = styled("div")`
@@ -24,17 +24,25 @@ const onError = function (error: ApolloError) {
     LoginToaster.show({message: "Login failed"});
 }
 
+interface State {
+    email: string
+    password: string
+}
+
 const Login = (props: Props) => {
+    const [state, setState] = React.useState<State>({email: "", password: ""})
     const [signIn, mutationState] = useMutation(SIGN_IN, {
-        onCompleted: (payload: SignInCarrier) => props.onSignIn(payload.signInPayload),
+        onCompleted: (payload: SignInCarrier) => props.onSignIn(payload.signInPayload, state.password),
         onError: onError
     })
-    const onSubmit = (email: string, password: string) => signIn({variables: {authData: {email, password}}})
+    const onSubmit = () => signIn({variables: {authData: {email: state.email, password: state.password}}})
 
     return <Center>
         <Card>
             <H2>Ehrenamtskarte Verwaltung</H2>
-            <LoginForm onSubmit={onSubmit} loading={mutationState.loading}/>
+            <LoginForm password={state.password} email={state.email} setEmail={email => setState({...state, email})}
+                       setPassword={password => setState({...state, password})}
+                       onSubmit={onSubmit} loading={mutationState.loading}/>
         </Card>
     </Center>
 }
