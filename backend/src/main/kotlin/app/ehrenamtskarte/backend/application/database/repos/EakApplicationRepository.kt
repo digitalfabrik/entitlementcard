@@ -49,9 +49,11 @@ object EakApplicationRepository {
 
         // todo: Save attachments using dataFetchingEnvironment
 
-        EakApplicationEntity.new {
-            this.regionId = EntityID(regionId, Regions)
-            this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
+        transaction {
+            EakApplicationEntity.new {
+                this.regionId = EntityID(regionId, Regions)
+                this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
+            }
         }
 
         // todo: Clear attachments if transaction failed

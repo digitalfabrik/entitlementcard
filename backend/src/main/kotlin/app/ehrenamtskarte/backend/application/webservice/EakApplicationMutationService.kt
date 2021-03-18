@@ -26,9 +26,7 @@ class EakApplicationMutationService {
         application: GoldenEakCardApplication,
         dataFetchingEnvironment: DataFetchingEnvironment
     ): Boolean {
-        transaction {
-            EakApplicationRepository.addGoldenEakApplication(regionId, application, dataFetchingEnvironment)
-        }
+        EakApplicationRepository.addGoldenEakApplication(regionId, application, dataFetchingEnvironment)
         return true
     }
 
