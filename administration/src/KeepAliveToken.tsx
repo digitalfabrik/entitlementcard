@@ -9,7 +9,8 @@ import {AppToaster} from "./components/AppToaster";
 interface Props {
     authData: AuthContextData,
     children: ReactNode,
-    onSignIn: (payload: SignInPayload, password: string) => void
+    onSignIn: (payload: SignInPayload, password: string) => void,
+    onSignOut: () => void
 }
 
 const KeepAliveToken = (props: Props) => {
@@ -33,13 +34,18 @@ const KeepAliveToken = (props: Props) => {
 
     return <>
         {props.children}
-        <Dialog isOpen={timeLeft <= 120} title={"Ihr Login-Zeitraum läuft ab!"} icon={"warning-sign"}
+        <Dialog isOpen={timeLeft <= 30} title={"Ihr Login-Zeitraum läuft ab!"} icon={"warning-sign"}
                 isCloseButtonShown={false}>
             <div className={Classes.DIALOG_BODY}>
-                <p>Sie werden in {timeLeft} Sekunden ausgeloggt. Damit verlieren Sie alle ungespeicherten Eingaben.</p>
+                {
+                    timeLeft >= 0
+                        ? <p>Ihr Login-Zeitraum läuft in {timeLeft} Sekunden ab.</p>
+                        : <p>Ihr Login-Zeitraum ist abgelaufen.</p>
+                }
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <Button onClick={props.onSignOut} loading={mutationState.loading}>Ausloggen</Button>
                     <Button intent={"primary"} onClick={extendLogin} loading={mutationState.loading}>
                         Login-Zeitraum verlängern
                     </Button>

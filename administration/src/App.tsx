@@ -44,7 +44,7 @@ const App = () => <AuthProvider>
     <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
         <ApolloProvider client={createClient(authData?.token)}>{
             authData !== null && authData.expiry > new Date()
-                ? <KeepAliveToken authData={authData} onSignIn={onSignIn}>
+                ? <KeepAliveToken authData={authData} onSignIn={onSignIn} onSignOut={onSignOut}>
                     <RegionProvider>
                         <HashRouter>
                             <Navigation onSignOut={onSignOut}/>
