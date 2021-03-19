@@ -65,16 +65,20 @@ class _EntitlementWorkState extends State<EntitlementWork> {
 
   _addOrganisation() {
     widget.workAtOrganizations.add(WorkAtOrganizationInput(
+        responsibility: null,
         amountOfWork: null,
         amountOfWorkUnit: null,
         certificate: null,
         organization: OrganizationInput(
+            category: null,
+            website: null,
             contact: OrganizationContactInput(
                 email: null,
                 telephone: null,
                 hasGivenPermission: null,
                 name: null),
-            name: null)));
+            name: null,
+            address: null)));
   }
 
   _removeOrganisation() {
