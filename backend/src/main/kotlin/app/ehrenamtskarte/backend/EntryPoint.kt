@@ -17,20 +17,22 @@ class Entry : CliktCommand() {
     private val importFlag by option("--import").flag()
 
     override fun run() {
+        val production = System.getProperty("app.production", "").isNotEmpty()
+
         val exportApi = exportApi
         if (exportApi != null) {
             val schema = GraphQLHandler().graphQLSchema.print()
             val file = File(exportApi)
             file.writeText(schema)
         } else {
-            Database.setup()
+            Database.setup(!production)
             if (importFlag) {
                 println("Importing data from Lbe")
-                if (!DataImporter.import(importFlag)) {
+                if (!DataImporter.import(!production)) {
                     throw ProgramResult(statusCode = 5)
                 }
             } else {
-                WebService().start()
+                WebService().start(production)
             }
         }
     }
