@@ -49,7 +49,7 @@ class _RegionStepState extends State<RegionStep> {
                         .map((region) =>
                         DropdownMenuItem(
                           value: region.id,
-                          child: Text(region.name),
+                          child: Text('${region.prefix} ${region.name}'),
                         ))
                         .toList(),
                   ),

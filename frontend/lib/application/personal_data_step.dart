@@ -106,7 +106,7 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "PLZ *"),
+            decoration: InputDecoration(labelText: "Postleitzahl *"),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(context),
               FormBuilderValidators.numeric(context),

@@ -47,7 +47,7 @@ class NoCardView extends StatelessWidget {
                         SizedBox(height: 24, width: 24),
                         Text(
                             "… und haben bereits einen Aktivierungscode"
-                                " für die digitale Ehrenamtskarte?",
+                            " für die digitale Ehrenamtskarte?",
                             textAlign: TextAlign.center),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -56,12 +56,15 @@ class NoCardView extends StatelessWidget {
                             child: Text("Jetzt Aktivierungscode einscannen"),
                           ),
                         ),
-                        Text("oder", textAlign: TextAlign.center),
+                        SizedBox(height: 16),
+                        Text("… haben aber noch keine"
+                            " Bayerische Ehrenamtskarte?",
+                            textAlign: TextAlign.center),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startEakApplication,
-                            child: Text("Ehrenamtskarte beantragen"),
+                            child: Text("Jetzt Ehrenamtskarte beantragen"),
                           ),
                         )
                       ])),

@@ -44,7 +44,7 @@ class Organization extends StatelessWidget {
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "PLZ *"),
+            decoration: InputDecoration(labelText: "Postleitzahl *"),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(context),
               FormBuilderValidators.numeric(context),

@@ -34,15 +34,16 @@ class _EntitlementTypeBlueState extends State<EntitlementTypeBlue> {
                 options: [
                   FormBuilderFieldOption(
                     value: BlueCardEntitlementType.juleica,
-                    child: Text('Inhaber einer Jugenleiterkarte'),
+                    child: Text('Inhaber:in einer Jugendleiterkarte'),
                   ),
                   FormBuilderFieldOption(
                     value: BlueCardEntitlementType.service,
-                    child: Text('Feuerwehr/Rettungsdienst'),
+                    child: Text('Feuerwehr/Rettungsdienst/Katastrophenschutz'),
                   ),
                   FormBuilderFieldOption(
                     value: BlueCardEntitlementType.standard,
-                    child: Text('Engangement seit mindestens 2 Jahren'),
+                    child: Text("Engangement seit mindestens 2 Jahren"
+                        " bei anderen Vereinen oder Organisationen"),
                   ),
                 ]),
           ],

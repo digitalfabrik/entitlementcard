@@ -34,13 +34,13 @@ class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
                 options: [
                   FormBuilderFieldOption(
                     value: GoldenCardEntitlementType.honorByMinisterPresident,
-                    child: Text('Inhaber*in des Ehrenzeichens des Bayerischen '
+                    child: Text('Inhaber:in des Ehrenzeichens des Bayerischen '
                         'Ministerpräsidenten'),
                   ),
                   FormBuilderFieldOption(
                     value: GoldenCardEntitlementType.serviceAward,
                     child: Text(
-                        'Inhaber*in einer Dienstauszeichnung des Freistaats '
+                        'Inhaber:in einer Dienstauszeichnung des Freistaats '
                         'Bayern nach dem Feuerwehr- und '
                         'Hilfsorganisationen-Ehrenzeichengesetz'),
                   ),
