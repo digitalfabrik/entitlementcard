@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -6,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../graphql/graphql_api.dart';
+import '../widgets/small_button_spinner.dart';
 import 'application_model.dart';
 import 'textwidgets/form_header_text.dart';
 
