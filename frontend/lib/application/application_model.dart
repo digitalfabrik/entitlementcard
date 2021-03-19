@@ -25,27 +25,10 @@ class ApplicationModel extends ChangeNotifier {
         forenames: null,
         surname: null,
         address: AddressInput(
-            street: '', houseNumber: '', location: '', postalCode: ''));
-    final entitlement = BlueCardEntitlementInput(
-        workAtOrganizations: <WorkAtOrganizationInput>[],
-        entitlementType: null,
-        serviceEntitlement: BlueCardServiceEntitlementInput(
-            organization: OrganizationInput(
-                contact: OrganizationContactInput(
-                    email: '',
-                    telephone: '',
-                    name: '',
-                    hasGivenPermission: null),
-                category: '',
-                name: '',
-                address: AddressInput(
-                    street: '',
-                    postalCode: '',
-                    houseNumber: '',
-                    location: ''))));
+            street: null, houseNumber: null, location: null, postalCode: null));
     _blueCardApplication = BlueCardApplicationInput(
         applicationType: null,
-        entitlement: entitlement,
+        entitlement: null,
         givenInformationIsCorrectAndComplete: null,
         hasAcceptedPrivacyPolicy: null,
         personalData: personalData);
@@ -62,11 +45,10 @@ class ApplicationModel extends ChangeNotifier {
       forenames: null,
       surname: null,
       address: AddressInput(
-          street: '', houseNumber: '', location: '', postalCode: ''),
+          street: null, houseNumber: null, location: null, postalCode: null),
     );
-    final entitlement = GoldenCardEntitlementInput(goldenEntitlementType: null);
     _goldenCardApplication = GoldenEakCardApplicationInput(
-        entitlement: entitlement,
+        entitlement: null,
         personalData: personalData,
         hasAcceptedPrivacyPolicy: null,
         givenInformationIsCorrectAndComplete: null);
