@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -41,16 +42,22 @@ class _RegionStepState extends State<RegionStep> {
                       ' Landkreis oder kreisfreie Stadt:'),
                   FormBuilderDropdown(
                     name: 'region',
+                    enabled: !result.isLoading && !result.hasException,
                     onSaved: (value) => {applicationModel.regionId = value},
                     decoration: InputDecoration(
-                      labelText: 'Auswahl',
-                    ),
+                        labelText: 'Region auswählen',
+                        suffixIcon: result.isLoading
+                            ? SmallButtonSpinner()
+                            : result.hasException
+                                ? IconButton(
+                                    onPressed: refetch,
+                                    icon: Icon(Icons.refresh))
+                                : null),
                     items: regions
-                        .map((region) =>
-                        DropdownMenuItem(
-                          value: region.id,
-                          child: Text('${region.prefix} ${region.name}'),
-                        ))
+                        .map((region) => DropdownMenuItem(
+                              value: region.id,
+                              child: Text('${region.prefix} ${region.name}'),
+                            ))
                         .toList(),
                   ),
                 ],
