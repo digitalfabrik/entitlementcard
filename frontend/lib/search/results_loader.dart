@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../graphql/graphql_api.dart';
-import 'seach_result_item.dart';
+import 'search_result_item.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput coordinates;
@@ -107,8 +107,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               newPageErrorIndicatorBuilder: _buildErrorWithRetry,
               newPageProgressIndicatorBuilder: _buildProgressIndicator,
               firstPageProgressIndicatorBuilder: _buildProgressIndicator),
-      separatorBuilder: (context, index) =>
-          Divider(height: 0, thickness: 0.7),
+      separatorBuilder: (context, index) => Divider(height: 0),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import 'location_button.dart';
@@ -41,35 +42,38 @@ class _MapPageState extends State<MapPage>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      MapWithFutures(
-        onFeatureClick: _onFeatureClick,
-        onNoFeatureClick: stopShowingAcceptingStore,
-        onFeatureClickLayerFilter: ["physical_stores"],
-        onMapCreated: (controller) {
-          controller.setTelemetryEnabled(enabled: false);
-          setState(() => _controller = controller);
-          if (widget.onMapCreated != null) widget.onMapCreated(this);
-        },
-      ),
-      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-        LocationButton(mapController: _controller),
-        AnimatedSize(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: Stack(children: [
+        MapWithFutures(
+          onFeatureClick: _onFeatureClick,
+          onNoFeatureClick: stopShowingAcceptingStore,
+          onFeatureClickLayerFilter: ["physical_stores"],
+          onMapCreated: (controller) {
+            controller.setTelemetryEnabled(enabled: false);
+            setState(() => _controller = controller);
+            if (widget.onMapCreated != null) widget.onMapCreated(this);
+          },
+        ),
+        Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          LocationButton(mapController: _controller),
+          AnimatedSize(
             duration: Duration(milliseconds: 200),
             vsync: this,
             child: IntrinsicHeight(
-                child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 200),
-                    child: _selectedAcceptingStoreId != null
-                        ? AcceptingStoreSummary(
-                            _selectedAcceptingStoreId,
-                            hideShowOnMapButton: true,
-                          )
-                        : null)
-            )
-        ),
-      ])
-    ]);
+              child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  child: _selectedAcceptingStoreId != null
+                      ? AcceptingStoreSummary(
+                          _selectedAcceptingStoreId,
+                          hideShowOnMapButton: true,
+                        )
+                      : null),
+            ),
+          ),
+        ])
+      ]),
+    );
   }
 
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,

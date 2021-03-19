@@ -32,437 +32,6 @@ Map<String, dynamic> _$CardVerificationModelInputToJson(
       'totp': instance.totp,
     };
 
-GetRegionsById$Query$Region _$GetRegionsById$Query$RegionFromJson(
-    Map<String, dynamic> json) {
-  return GetRegionsById$Query$Region()
-    ..id = json['id'] as int
-    ..prefix = json['prefix'] as String
-    ..name = json['name'] as String;
-}
-
-Map<String, dynamic> _$GetRegionsById$Query$RegionToJson(
-        GetRegionsById$Query$Region instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'prefix': instance.prefix,
-      'name': instance.name,
-    };
-
-GetRegionsById$Query _$GetRegionsById$QueryFromJson(Map<String, dynamic> json) {
-  return GetRegionsById$Query()
-    ..regionsById = (json['regionsById'] as List)
-        ?.map((e) => e == null
-            ? null
-            : GetRegionsById$Query$Region.fromJson(e as Map<String, dynamic>))
-        ?.toList();
-}
-
-Map<String, dynamic> _$GetRegionsById$QueryToJson(
-        GetRegionsById$Query instance) =>
-    <String, dynamic>{
-      'regionsById': instance.regionsById?.map((e) => e?.toJson())?.toList(),
-    };
-
-IdsParamsInput _$IdsParamsInputFromJson(Map<String, dynamic> json) {
-  return IdsParamsInput(
-    ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
-  );
-}
-
-Map<String, dynamic> _$IdsParamsInputToJson(IdsParamsInput instance) =>
-    <String, dynamic>{
-      'ids': instance.ids,
-    };
-
-GetRegions$Query$Region _$GetRegions$Query$RegionFromJson(
-    Map<String, dynamic> json) {
-  return GetRegions$Query$Region()
-    ..id = json['id'] as int
-    ..prefix = json['prefix'] as String
-    ..name = json['name'] as String;
-}
-
-Map<String, dynamic> _$GetRegions$Query$RegionToJson(
-        GetRegions$Query$Region instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'prefix': instance.prefix,
-      'name': instance.name,
-    };
-
-GetRegions$Query _$GetRegions$QueryFromJson(Map<String, dynamic> json) {
-  return GetRegions$Query()
-    ..regions = (json['regions'] as List)
-        ?.map((e) => e == null
-            ? null
-            : GetRegions$Query$Region.fromJson(e as Map<String, dynamic>))
-        ?.toList();
-}
-
-Map<String, dynamic> _$GetRegions$QueryToJson(GetRegions$Query instance) =>
-    <String, dynamic>{
-      'regions': instance.regions?.map((e) => e?.toJson())?.toList(),
-    };
-
-AddBlueEakApplication$Mutation _$AddBlueEakApplication$MutationFromJson(
-    Map<String, dynamic> json) {
-  return AddBlueEakApplication$Mutation()
-    ..addBlueEakApplication = json['addBlueEakApplication'] as bool;
-}
-
-Map<String, dynamic> _$AddBlueEakApplication$MutationToJson(
-        AddBlueEakApplication$Mutation instance) =>
-    <String, dynamic>{
-      'addBlueEakApplication': instance.addBlueEakApplication,
-    };
-
-AddressInput _$AddressInputFromJson(Map<String, dynamic> json) {
-  return AddressInput(
-    addressSupplement: json['addressSupplement'] as String,
-    houseNumber: json['houseNumber'] as String,
-    location: json['location'] as String,
-    postalCode: json['postalCode'] as String,
-    street: json['street'] as String,
-  );
-}
-
-Map<String, dynamic> _$AddressInputToJson(AddressInput instance) =>
-    <String, dynamic>{
-      'addressSupplement': instance.addressSupplement,
-      'houseNumber': instance.houseNumber,
-      'location': instance.location,
-      'postalCode': instance.postalCode,
-      'street': instance.street,
-    };
-
-AttachmentInput _$AttachmentInputFromJson(Map<String, dynamic> json) {
-  return AttachmentInput(
-    data: fromGraphQLUploadToDartMultipartFile(json['data'] as MultipartFile),
-    fileName: json['fileName'] as String,
-  );
-}
-
-Map<String, dynamic> _$AttachmentInputToJson(AttachmentInput instance) =>
-    <String, dynamic>{
-      'data': fromDartMultipartFileToGraphQLUpload(instance.data),
-      'fileName': instance.fileName,
-    };
-
-BlueCardApplicationInput _$BlueCardApplicationInputFromJson(
-    Map<String, dynamic> json) {
-  return BlueCardApplicationInput(
-    applicationType: _$enumDecodeNullable(
-        _$ApplicationTypeEnumMap, json['applicationType'],
-        unknownValue: ApplicationType.artemisUnknown),
-    entitlement: json['entitlement'] == null
-        ? null
-        : BlueCardEntitlementInput.fromJson(
-            json['entitlement'] as Map<String, dynamic>),
-    givenInformationIsCorrectAndComplete:
-        json['givenInformationIsCorrectAndComplete'] as bool,
-    hasAcceptedPrivacyPolicy: json['hasAcceptedPrivacyPolicy'] as bool,
-    personalData: json['personalData'] == null
-        ? null
-        : PersonalDataInput.fromJson(
-            json['personalData'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$BlueCardApplicationInputToJson(
-        BlueCardApplicationInput instance) =>
-    <String, dynamic>{
-      'applicationType': _$ApplicationTypeEnumMap[instance.applicationType],
-      'entitlement': instance.entitlement?.toJson(),
-      'givenInformationIsCorrectAndComplete':
-          instance.givenInformationIsCorrectAndComplete,
-      'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData?.toJson(),
-    };
-
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$ApplicationTypeEnumMap = {
-  ApplicationType.firstApplication: 'FIRST_APPLICATION',
-  ApplicationType.renewalApplication: 'RENEWAL_APPLICATION',
-  ApplicationType.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-BlueCardEntitlementInput _$BlueCardEntitlementInputFromJson(
-    Map<String, dynamic> json) {
-  return BlueCardEntitlementInput(
-    copyOfJuleica: json['copyOfJuleica'] == null
-        ? null
-        : AttachmentInput.fromJson(
-            json['copyOfJuleica'] as Map<String, dynamic>),
-    entitlementType: _$enumDecodeNullable(
-        _$BlueCardEntitlementTypeEnumMap, json['entitlementType'],
-        unknownValue: BlueCardEntitlementType.artemisUnknown),
-    juleicaExpirationDate: json['juleicaExpirationDate'] as String,
-    juleicaNumber: json['juleicaNumber'] as String,
-    serviceEntitlement: json['serviceEntitlement'] == null
-        ? null
-        : BlueCardServiceEntitlementInput.fromJson(
-            json['serviceEntitlement'] as Map<String, dynamic>),
-    workAtOrganizations: (json['workAtOrganizations'] as List)
-        ?.map((e) => e == null
-            ? null
-            : WorkAtOrganizationInput.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
-
-Map<String, dynamic> _$BlueCardEntitlementInputToJson(
-        BlueCardEntitlementInput instance) =>
-    <String, dynamic>{
-      'copyOfJuleica': instance.copyOfJuleica?.toJson(),
-      'entitlementType':
-          _$BlueCardEntitlementTypeEnumMap[instance.entitlementType],
-      'juleicaExpirationDate': instance.juleicaExpirationDate,
-      'juleicaNumber': instance.juleicaNumber,
-      'serviceEntitlement': instance.serviceEntitlement?.toJson(),
-      'workAtOrganizations':
-          instance.workAtOrganizations?.map((e) => e?.toJson())?.toList(),
-    };
-
-const _$BlueCardEntitlementTypeEnumMap = {
-  BlueCardEntitlementType.juleica: 'JULEICA',
-  BlueCardEntitlementType.service: 'SERVICE',
-  BlueCardEntitlementType.standard: 'STANDARD',
-  BlueCardEntitlementType.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-BlueCardServiceEntitlementInput _$BlueCardServiceEntitlementInputFromJson(
-    Map<String, dynamic> json) {
-  return BlueCardServiceEntitlementInput(
-    certificate: json['certificate'] == null
-        ? null
-        : AttachmentInput.fromJson(json['certificate'] as Map<String, dynamic>),
-    organization: json['organization'] == null
-        ? null
-        : OrganizationInput.fromJson(
-            json['organization'] as Map<String, dynamic>),
-    responsibility: json['responsibility'] as String,
-  );
-}
-
-Map<String, dynamic> _$BlueCardServiceEntitlementInputToJson(
-        BlueCardServiceEntitlementInput instance) =>
-    <String, dynamic>{
-      'certificate': instance.certificate?.toJson(),
-      'organization': instance.organization?.toJson(),
-      'responsibility': instance.responsibility,
-    };
-
-OrganizationContactInput _$OrganizationContactInputFromJson(
-    Map<String, dynamic> json) {
-  return OrganizationContactInput(
-    email: json['email'] as String,
-    hasGivenPermission: json['hasGivenPermission'] as bool,
-    name: json['name'] as String,
-    telephone: json['telephone'] as String,
-  );
-}
-
-Map<String, dynamic> _$OrganizationContactInputToJson(
-        OrganizationContactInput instance) =>
-    <String, dynamic>{
-      'email': instance.email,
-      'hasGivenPermission': instance.hasGivenPermission,
-      'name': instance.name,
-      'telephone': instance.telephone,
-    };
-
-OrganizationInput _$OrganizationInputFromJson(Map<String, dynamic> json) {
-  return OrganizationInput(
-    address: json['address'] == null
-        ? null
-        : AddressInput.fromJson(json['address'] as Map<String, dynamic>),
-    category: json['category'] as String,
-    contact: json['contact'] == null
-        ? null
-        : OrganizationContactInput.fromJson(
-            json['contact'] as Map<String, dynamic>),
-    name: json['name'] as String,
-    website: json['website'] as String,
-  );
-}
-
-Map<String, dynamic> _$OrganizationInputToJson(OrganizationInput instance) =>
-    <String, dynamic>{
-      'address': instance.address?.toJson(),
-      'category': instance.category,
-      'contact': instance.contact?.toJson(),
-      'name': instance.name,
-      'website': instance.website,
-    };
-
-PersonalDataInput _$PersonalDataInputFromJson(Map<String, dynamic> json) {
-  return PersonalDataInput(
-    address: json['address'] == null
-        ? null
-        : AddressInput.fromJson(json['address'] as Map<String, dynamic>),
-    dateOfBirth: json['dateOfBirth'] as String,
-    emailAddress: json['emailAddress'] as String,
-    forenames: json['forenames'] as String,
-    gender: json['gender'] as String,
-    nationality: json['nationality'] as String,
-    surname: json['surname'] as String,
-    telephone: json['telephone'] as String,
-    title: json['title'] as String,
-  );
-}
-
-Map<String, dynamic> _$PersonalDataInputToJson(PersonalDataInput instance) =>
-    <String, dynamic>{
-      'address': instance.address?.toJson(),
-      'dateOfBirth': instance.dateOfBirth,
-      'emailAddress': instance.emailAddress,
-      'forenames': instance.forenames,
-      'gender': instance.gender,
-      'nationality': instance.nationality,
-      'surname': instance.surname,
-      'telephone': instance.telephone,
-      'title': instance.title,
-    };
-
-WorkAtOrganizationInput _$WorkAtOrganizationInputFromJson(
-    Map<String, dynamic> json) {
-  return WorkAtOrganizationInput(
-    amountOfWork: (json['amountOfWork'] as num)?.toDouble(),
-    amountOfWorkUnit: _$enumDecodeNullable(
-        _$AmountOfWorkUnitEnumMap, json['amountOfWorkUnit'],
-        unknownValue: AmountOfWorkUnit.artemisUnknown),
-    certificate: json['certificate'] == null
-        ? null
-        : AttachmentInput.fromJson(json['certificate'] as Map<String, dynamic>),
-    organization: json['organization'] == null
-        ? null
-        : OrganizationInput.fromJson(
-            json['organization'] as Map<String, dynamic>),
-    responsibility: json['responsibility'] as String,
-  );
-}
-
-Map<String, dynamic> _$WorkAtOrganizationInputToJson(
-        WorkAtOrganizationInput instance) =>
-    <String, dynamic>{
-      'amountOfWork': instance.amountOfWork,
-      'amountOfWorkUnit': _$AmountOfWorkUnitEnumMap[instance.amountOfWorkUnit],
-      'certificate': instance.certificate?.toJson(),
-      'organization': instance.organization?.toJson(),
-      'responsibility': instance.responsibility,
-    };
-
-const _$AmountOfWorkUnitEnumMap = {
-  AmountOfWorkUnit.hoursPerWeek: 'HOURS_PER_WEEK',
-  AmountOfWorkUnit.hoursPerYear: 'HOURS_PER_YEAR',
-  AmountOfWorkUnit.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-AddGoldenEakApplication$Mutation _$AddGoldenEakApplication$MutationFromJson(
-    Map<String, dynamic> json) {
-  return AddGoldenEakApplication$Mutation()
-    ..addGoldenEakApplication = json['addGoldenEakApplication'] as bool;
-}
-
-Map<String, dynamic> _$AddGoldenEakApplication$MutationToJson(
-        AddGoldenEakApplication$Mutation instance) =>
-    <String, dynamic>{
-      'addGoldenEakApplication': instance.addGoldenEakApplication,
-    };
-
-GoldenCardEntitlementInput _$GoldenCardEntitlementInputFromJson(
-    Map<String, dynamic> json) {
-  return GoldenCardEntitlementInput(
-    certificate: json['certificate'] == null
-        ? null
-        : AttachmentInput.fromJson(json['certificate'] as Map<String, dynamic>),
-    goldenEntitlementType: _$enumDecodeNullable(
-        _$GoldenCardEntitlementTypeEnumMap, json['goldenEntitlementType'],
-        unknownValue: GoldenCardEntitlementType.artemisUnknown),
-    workAtOrganizations: (json['workAtOrganizations'] as List)
-        ?.map((e) => e == null
-            ? null
-            : WorkAtOrganizationInput.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
-
-Map<String, dynamic> _$GoldenCardEntitlementInputToJson(
-        GoldenCardEntitlementInput instance) =>
-    <String, dynamic>{
-      'certificate': instance.certificate?.toJson(),
-      'goldenEntitlementType':
-          _$GoldenCardEntitlementTypeEnumMap[instance.goldenEntitlementType],
-      'workAtOrganizations':
-          instance.workAtOrganizations?.map((e) => e?.toJson())?.toList(),
-    };
-
-const _$GoldenCardEntitlementTypeEnumMap = {
-  GoldenCardEntitlementType.honorByMinisterPresident:
-      'HONOR_BY_MINISTER_PRESIDENT',
-  GoldenCardEntitlementType.serviceAward: 'SERVICE_AWARD',
-  GoldenCardEntitlementType.standard: 'STANDARD',
-  GoldenCardEntitlementType.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-GoldenEakCardApplicationInput _$GoldenEakCardApplicationInputFromJson(
-    Map<String, dynamic> json) {
-  return GoldenEakCardApplicationInput(
-    entitlement: json['entitlement'] == null
-        ? null
-        : GoldenCardEntitlementInput.fromJson(
-            json['entitlement'] as Map<String, dynamic>),
-    givenInformationIsCorrectAndComplete:
-        json['givenInformationIsCorrectAndComplete'] as bool,
-    hasAcceptedPrivacyPolicy: json['hasAcceptedPrivacyPolicy'] as bool,
-    personalData: json['personalData'] == null
-        ? null
-        : PersonalDataInput.fromJson(
-            json['personalData'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$GoldenEakCardApplicationInputToJson(
-        GoldenEakCardApplicationInput instance) =>
-    <String, dynamic>{
-      'entitlement': instance.entitlement?.toJson(),
-      'givenInformationIsCorrectAndComplete':
-          instance.givenInformationIsCorrectAndComplete,
-      'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData?.toJson(),
-    };
-
 AcceptingStoreById$Query$PhysicalStore$Coordinates
     _$AcceptingStoreById$Query$PhysicalStore$CoordinatesFromJson(
         Map<String, dynamic> json) {
@@ -607,57 +176,15 @@ Map<String, dynamic> _$AcceptingStoreById$QueryToJson(
           instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
     };
 
-AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
-    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(
-        Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore()
-    ..name = json['name'] as String
-    ..description = json['description'] as String;
+IdsParamsInput _$IdsParamsInputFromJson(Map<String, dynamic> json) {
+  return IdsParamsInput(
+    ids: (json['ids'] as List)?.map((e) => e as int)?.toList(),
+  );
 }
 
-Map<String, dynamic>
-    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(
-            AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
-                instance) =>
-        <String, dynamic>{
-          'name': instance.name,
-          'description': instance.description,
-        };
-
-AcceptingStoreSummaryById$Query$PhysicalStore
-    _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(
-        Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query$PhysicalStore()
-    ..id = json['id'] as int
-    ..store = json['store'] == null
-        ? null
-        : AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(
-            json['store'] as Map<String, dynamic>);
-}
-
-Map<String, dynamic> _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(
-        AcceptingStoreSummaryById$Query$PhysicalStore instance) =>
+Map<String, dynamic> _$IdsParamsInputToJson(IdsParamsInput instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'store': instance.store?.toJson(),
-    };
-
-AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
-    Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query()
-    ..physicalStoresById = (json['physicalStoresById'] as List)
-        ?.map((e) => e == null
-            ? null
-            : AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(
-                e as Map<String, dynamic>))
-        ?.toList();
-}
-
-Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
-        AcceptingStoreSummaryById$Query instance) =>
-    <String, dynamic>{
-      'physicalStoresById':
-          instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
+      'ids': instance.ids,
     };
 
 AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
@@ -724,7 +251,8 @@ AcceptingStoresSearch$Query$AcceptingStore
     ..physicalStore = json['physicalStore'] == null
         ? null
         : AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(
-            json['physicalStore'] as Map<String, dynamic>);
+            json['physicalStore'] as Map<String, dynamic>)
+    ..categoryId = json['categoryId'] as int;
 }
 
 Map<String, dynamic> _$AcceptingStoresSearch$Query$AcceptingStoreToJson(
@@ -734,6 +262,7 @@ Map<String, dynamic> _$AcceptingStoresSearch$Query$AcceptingStoreToJson(
       'name': instance.name,
       'description': instance.description,
       'physicalStore': instance.physicalStore?.toJson(),
+      'categoryId': instance.categoryId,
     };
 
 AcceptingStoresSearch$Query _$AcceptingStoresSearch$QueryFromJson(
@@ -789,6 +318,120 @@ Map<String, dynamic> _$SearchParamsInputToJson(SearchParamsInput instance) =>
       'searchText': instance.searchText,
     };
 
+AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
+    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore()
+    ..name = json['name'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic>
+    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(
+            AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
+                instance) =>
+        <String, dynamic>{
+          'name': instance.name,
+          'description': instance.description,
+        };
+
+AcceptingStoreSummaryById$Query$PhysicalStore
+    _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query$PhysicalStore()
+    ..id = json['id'] as int
+    ..store = json['store'] == null
+        ? null
+        : AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(
+            json['store'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(
+        AcceptingStoreSummaryById$Query$PhysicalStore instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'store': instance.store?.toJson(),
+    };
+
+AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query()
+    ..physicalStoresById = (json['physicalStoresById'] as List)
+        ?.map((e) => e == null
+            ? null
+            : AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(
+                e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
+        AcceptingStoreSummaryById$Query instance) =>
+    <String, dynamic>{
+      'physicalStoresById':
+          instance.physicalStoresById?.map((e) => e?.toJson())?.toList(),
+    };
+
+GetRegions$Query$Region _$GetRegions$Query$RegionFromJson(
+    Map<String, dynamic> json) {
+  return GetRegions$Query$Region()
+    ..id = json['id'] as int
+    ..prefix = json['prefix'] as String
+    ..name = json['name'] as String;
+}
+
+Map<String, dynamic> _$GetRegions$Query$RegionToJson(
+        GetRegions$Query$Region instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'prefix': instance.prefix,
+      'name': instance.name,
+    };
+
+GetRegions$Query _$GetRegions$QueryFromJson(Map<String, dynamic> json) {
+  return GetRegions$Query()
+    ..regions = (json['regions'] as List)
+        ?.map((e) => e == null
+            ? null
+            : GetRegions$Query$Region.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$GetRegions$QueryToJson(GetRegions$Query instance) =>
+    <String, dynamic>{
+      'regions': instance.regions?.map((e) => e?.toJson())?.toList(),
+    };
+
+GetRegionsById$Query$Region _$GetRegionsById$Query$RegionFromJson(
+    Map<String, dynamic> json) {
+  return GetRegionsById$Query$Region()
+    ..id = json['id'] as int
+    ..prefix = json['prefix'] as String
+    ..name = json['name'] as String;
+}
+
+Map<String, dynamic> _$GetRegionsById$Query$RegionToJson(
+        GetRegionsById$Query$Region instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'prefix': instance.prefix,
+      'name': instance.name,
+    };
+
+GetRegionsById$Query _$GetRegionsById$QueryFromJson(Map<String, dynamic> json) {
+  return GetRegionsById$Query()
+    ..regionsById = (json['regionsById'] as List)
+        ?.map((e) => e == null
+            ? null
+            : GetRegionsById$Query$Region.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$GetRegionsById$QueryToJson(
+        GetRegionsById$Query instance) =>
+    <String, dynamic>{
+      'regionsById': instance.regionsById?.map((e) => e?.toJson())?.toList(),
+    };
+
 CardVerificationByHashArguments _$CardVerificationByHashArgumentsFromJson(
     Map<String, dynamic> json) {
   return CardVerificationByHashArguments(
@@ -803,57 +446,6 @@ Map<String, dynamic> _$CardVerificationByHashArgumentsToJson(
         CardVerificationByHashArguments instance) =>
     <String, dynamic>{
       'card': instance.card?.toJson(),
-    };
-
-GetRegionsByIdArguments _$GetRegionsByIdArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return GetRegionsByIdArguments(
-    ids: json['ids'] == null
-        ? null
-        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$GetRegionsByIdArgumentsToJson(
-        GetRegionsByIdArguments instance) =>
-    <String, dynamic>{
-      'ids': instance.ids?.toJson(),
-    };
-
-AddBlueEakApplicationArguments _$AddBlueEakApplicationArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return AddBlueEakApplicationArguments(
-    application: json['application'] == null
-        ? null
-        : BlueCardApplicationInput.fromJson(
-            json['application'] as Map<String, dynamic>),
-    regionId: json['regionId'] as int,
-  );
-}
-
-Map<String, dynamic> _$AddBlueEakApplicationArgumentsToJson(
-        AddBlueEakApplicationArguments instance) =>
-    <String, dynamic>{
-      'application': instance.application?.toJson(),
-      'regionId': instance.regionId,
-    };
-
-AddGoldenEakApplicationArguments _$AddGoldenEakApplicationArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return AddGoldenEakApplicationArguments(
-    application: json['application'] == null
-        ? null
-        : GoldenEakCardApplicationInput.fromJson(
-            json['application'] as Map<String, dynamic>),
-    regionId: json['regionId'] as int,
-  );
-}
-
-Map<String, dynamic> _$AddGoldenEakApplicationArgumentsToJson(
-        AddGoldenEakApplicationArguments instance) =>
-    <String, dynamic>{
-      'application': instance.application?.toJson(),
-      'regionId': instance.regionId,
     };
 
 AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(
@@ -871,6 +463,21 @@ Map<String, dynamic> _$AcceptingStoreByIdArgumentsToJson(
       'ids': instance.ids?.toJson(),
     };
 
+AcceptingStoresSearchArguments _$AcceptingStoresSearchArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoresSearchArguments(
+    params: json['params'] == null
+        ? null
+        : SearchParamsInput.fromJson(json['params'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$AcceptingStoresSearchArgumentsToJson(
+        AcceptingStoresSearchArguments instance) =>
+    <String, dynamic>{
+      'params': instance.params?.toJson(),
+    };
+
 AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
     Map<String, dynamic> json) {
   return AcceptingStoreSummaryByIdArguments(
@@ -886,17 +493,17 @@ Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
       'ids': instance.ids?.toJson(),
     };
 
-AcceptingStoresSearchArguments _$AcceptingStoresSearchArgumentsFromJson(
+GetRegionsByIdArguments _$GetRegionsByIdArgumentsFromJson(
     Map<String, dynamic> json) {
-  return AcceptingStoresSearchArguments(
-    params: json['params'] == null
+  return GetRegionsByIdArguments(
+    ids: json['ids'] == null
         ? null
-        : SearchParamsInput.fromJson(json['params'] as Map<String, dynamic>),
+        : IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$AcceptingStoresSearchArgumentsToJson(
-        AcceptingStoresSearchArguments instance) =>
+Map<String, dynamic> _$GetRegionsByIdArgumentsToJson(
+        GetRegionsByIdArguments instance) =>
     <String, dynamic>{
-      'params': instance.params?.toJson(),
+      'ids': instance.ids?.toJson(),
     };
