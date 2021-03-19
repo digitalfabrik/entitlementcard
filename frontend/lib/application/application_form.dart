@@ -131,7 +131,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 5 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Zusammenfassung'),
+                title: Text('Abschluss'),
                 content: SummaryStep(formKey: _formKeys[5]),
                 isActive: _currentStep >= 0,
                 state:
