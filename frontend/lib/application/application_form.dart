@@ -38,104 +38,106 @@ class _ApplicationFormState extends State<ApplicationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stepper(
-          currentStep: _currentStep,
-          onStepContinue: _onStepContinued,
-          onStepCancel: _onStepCancel,
-          type: StepperType.vertical,
-          onStepTapped: _onStepTapped,
-          controlsBuilder: (context, {onStepContinue, onStepCancel}) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  if (_currentStep > 0)
+    return Scaffold(
+        appBar: AppBar(title: Text("Ehrenamtskarte beantragen")),
+        body: Stepper(
+            currentStep: _currentStep,
+            onStepContinue: _onStepContinued,
+            onStepCancel: _onStepCancel,
+            type: StepperType.vertical,
+            onStepTapped: _onStepTapped,
+            controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    if (_currentStep > 0)
+                      TextButton(
+                          onPressed: onStepCancel,
+                          child: const Text('ZURÜCK'),
+                          style: TextButton.styleFrom(
+                            primary: Theme.of(context).colorScheme.onPrimary,
+                            backgroundColor:
+                                Theme.of(context).primaryColorLight,
+                            padding: EdgeInsets.all(12),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4))),
+                          )),
+                    SizedBox(
+                      width: 12,
+                    ),
                     TextButton(
-                        onPressed: onStepCancel,
-                        child: const Text('ZURÜCK'),
+                        onPressed: onStepContinue,
+                        child: Text(
+                            _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
                         style: TextButton.styleFrom(
                           primary: Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor: Theme.of(context).primaryColorLight,
+                          backgroundColor: Theme.of(context).primaryColor,
                           padding: EdgeInsets.all(12),
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4))),
                         )),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  TextButton(
-                      onPressed: onStepContinue,
-                      child: Text(
-                          _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                      style: TextButton.styleFrom(
-                        primary: Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        padding: EdgeInsets.all(12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(4))),
-                      )),
-                ],
+                  ],
+                ),
+              );
+            },
+            steps: [
+              Step(
+                title: Text('Region'),
+                content: RegionStep(
+                  formKey: _formKeys[0],
+                ),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 1 ? StepState.complete : StepState.disabled,
               ),
-            );
-          },
-          steps: [
-            Step(
-              title: Text('Region'),
-              content: RegionStep(
-                formKey: _formKeys[0],
+              Step(
+                title: Text('Kartentyp'),
+                content: CardTypeStep(
+                  formKey: _formKeys[1],
+                ),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 2 ? StepState.complete : StepState.disabled,
               ),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 1 ? StepState.complete : StepState.disabled,
-            ),
-            Step(
-              title: Text('Kartentyp'),
-              content: CardTypeStep(
-                formKey: _formKeys[1],
+              Step(
+                title: Text('Voraussetzungen'),
+                content: EntitlementTypeStep(
+                  formKey: _formKeys[2],
+                ),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 3 ? StepState.complete : StepState.disabled,
               ),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 2 ? StepState.complete : StepState.disabled,
-            ),
-            Step(
-              title: Text('Voraussetzungen'),
-              content: EntitlementTypeStep(
-                formKey: _formKeys[2],
+              Step(
+                title: Text('Persönliche Daten'),
+                content: PersonalDataStep(
+                  formKey: _formKeys[3],
+                ),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 4 ? StepState.complete : StepState.disabled,
               ),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 3 ? StepState.complete : StepState.disabled,
-            ),
-            Step(
-              title: Text('Persönliche Daten'),
-              content: PersonalDataStep(
-                formKey: _formKeys[3],
+              Step(
+                title: Text('Organisation'),
+                content: EntitlementStep(
+                  formKey: _formKeys[4],
+                ),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 5 ? StepState.complete : StepState.disabled,
               ),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 4 ? StepState.complete : StepState.disabled,
-            ),
-            Step(
-              title: Text('Organisation'),
-              content: EntitlementStep(
-                formKey: _formKeys[4],
+              Step(
+                title: Text('Zusammenfassung'),
+                content: SummaryStep(formKey: _formKeys[5]),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 6 ? StepState.complete : StepState.disabled,
               ),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 5 ? StepState.complete : StepState.disabled,
-            ),
-            Step(
-              title: Text('Zusammenfassung'),
-              content: SummaryStep(formKey: _formKeys[5]),
-              isActive: _currentStep >= 0,
-              state:
-              _currentStep >= 6 ? StepState.complete : StepState.disabled,
-            ),
-          ]),
-    );
+            ]));
   }
 
   _onStepTapped(step) {
@@ -165,7 +167,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
 
   _sendApplication() async {
     final applicationModel =
-    Provider.of<ApplicationModel>(context, listen: false);
+        Provider.of<ApplicationModel>(context, listen: false);
     var query;
     if (applicationModel.hasBlueCardApplication()) {
       var application = AddBlueEakApplicationArguments(
