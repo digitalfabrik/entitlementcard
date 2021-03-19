@@ -122,7 +122,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 4 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Organisation'),
+                title: Text('Tätigkeitsnachweis'),
                 content: EntitlementStep(
                   formKey: _formKeys[4],
                 ),
@@ -147,12 +147,6 @@ class _ApplicationFormState extends State<ApplicationForm> {
   _onStepContinued() {
     if (_formKeys[_currentStep].currentState.validate()) {
       _formKeys[_currentStep].currentState.save();
-      if (_currentStep < _lastStep) {
-        setState(() => _currentStep++);
-      } else {
-        _sendApplication();
-      }
-    } else {
       if (_currentStep < _lastStep) {
         setState(() => _currentStep++);
       } else {

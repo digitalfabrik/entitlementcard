@@ -42,6 +42,7 @@ class _RegionStepState extends State<RegionStep> {
                       ' Landkreis oder kreisfreie Stadt:'),
                   FormBuilderDropdown(
                     name: 'region',
+                    validator: FormBuilderValidators.required(context),
                     enabled: !result.isLoading && !result.hasException,
                     onSaved: (value) => {applicationModel.regionId = value},
                     decoration: InputDecoration(
