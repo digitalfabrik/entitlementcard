@@ -20,7 +20,6 @@ class EntitlementTypeBlue extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
-                decoration: InputDecoration(labelText: 'Beantragung'),
                 name: 'card_type',
                 onSaved: (value) =>
                     applicationModel.initBlueCardEntitlement(value),
