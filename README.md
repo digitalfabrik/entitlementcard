@@ -6,7 +6,15 @@
 # Getting Started
 
 * [Setup documentation](./docs/development-setup.md)
+
+# Documentation
+
+* [Staging Setup](./docs/staging-setup.md)
+* [Production Setup](./docs/production-setup.md)
 * [Map editing](./docs/map-editing.md)
+* [GraphQL Code Generation](./docs/graphql_generation.md)
+* [Protobuf Code Generation](./docs/protobuf-generation.md)
+* [Generate EAK Regions](./docs/creating_participating_regions.md)
 
 # Resources about the Ehrenamtskarte
 

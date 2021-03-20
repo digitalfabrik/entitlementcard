@@ -102,3 +102,11 @@ mv font-glyphs-gh-pages font-glyphs
 ## Starting the Services
 
 After starting `docker-compose` with the staging configuration, the setup should be available at port 80: `docker-compose -f docker-compose.yml -f docker-compose.staging.yml up`.
+
+## Importing EAK data on staging
+
+To import the EAK data using docker, run the following:
+
+```bash
+docker exec -it $(docker ps -q --filter name=ehrenamtskarte_backend_1) bash -c 'BACKEND_OPTS="-Dapp.postgres.url=jdbc:postgresql://db-postgis:5432/ehrenamtskarte -Dapp.postgres.user=postgres -Dapp.postgres.password=postgres -Dapp.import.xml=https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/akzeptanzstellen/app-daten.xml" /backend/bin/backend --import'
+```
