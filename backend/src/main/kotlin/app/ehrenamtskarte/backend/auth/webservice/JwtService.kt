@@ -12,7 +12,7 @@ import kotlin.NoSuchElementException
 object JwtService {
     private val secret by lazy {
         System.getenv("JWT_SECRET")
-        readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
+            ?: readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
         ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
