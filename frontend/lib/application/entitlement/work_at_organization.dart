@@ -37,14 +37,14 @@ class WorkAtOrganization extends StatelessWidget {
           onSaved: (value) =>
               {workAtOrganizationInput.organization.category = value},
           items: [
-            'Soziales/ Jugend/ Senioren',
+            'Soziales/Jugend/Senioren',
             'Tierschutz',
             'Sport',
             'Bildung',
-            'Umwelt-/ Naturschutz',
+            'Umwelt-/Naturschutz',
             'Kultur',
             'Gesundheit',
-            'Katastrophenschutz/ Feuerwehr/ Rettungsdienst',
+            'Katastrophenschutz/Feuerwehr/Rettungsdienst',
             'Kirchen',
             'Andere'
           ]

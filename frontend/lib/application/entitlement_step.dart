@@ -54,17 +54,17 @@ class EntitlementStep extends StatelessWidget {
               case GoldenCardEntitlementType.honorByMinisterPresident:
                 return Certificate(
                   formKey: formKey,
-                  title: 'Laden Sie hier eine Kopie Ihres Ehrenzeichens des'
+                  title: 'Laden Sie hier den Nachweis Ihres Ehrenzeichens des'
                       ' bayerischen Ministerpräsidenten hoch.',
                 );
                 break;
               case GoldenCardEntitlementType.serviceAward:
             return Certificate(
               formKey: formKey,
-              title: 'Laden Sie hier Ihre Kopie des Feuerwehr-Ehrenzeichens des'
-                  ' Freistaates Bayern bzw. der Auszeichnung des Bayerischen'
-                  ' Innenministeriums für 25- bzw. 40-jährige aktive'
-                  ' Dienstzeit hoch.',
+              title: 'Laden Sie hier Ihren Nachweis des '
+                  'Feuerwehr-Ehrenzeichens des Freistaates Bayern bzw. der '
+                  'Auszeichnung des Bayerischen Innenministeriums für 25- bzw. '
+                  '40-jährige aktive Dienstzeit hoch.',
             );
             break;
           case GoldenCardEntitlementType.standard:
