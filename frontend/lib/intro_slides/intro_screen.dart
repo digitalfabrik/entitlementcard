@@ -96,9 +96,7 @@ class IntroScreenState extends State<IntroScreen> {
       nameDoneBtn: "Fertig",
       nameNextBtn: "Weiter",
       nameSkipBtn: "Überspringen",
-      styleNameSkipBtn: MediaQuery.of(context).size.width / 4 < 120
-          ? TextStyle(color: Colors.white, fontSize: 11)
-          : null,
+      isShowSkipBtn: false,
     );
   }
 }
