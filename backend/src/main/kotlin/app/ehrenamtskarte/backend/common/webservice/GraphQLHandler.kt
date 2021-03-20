@@ -100,12 +100,6 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getJwtTokenFromHeader(context: Context): String? {
-        val header = context.header("Authorization") ?: return null
-        val split = header.split(" ")
-        return if (split.size != 2 || split[0] != "Bearer") null else split[1]
-    }
-
     private fun getGraphQLContext(context: Context, files: List<Part>) =
         try {
             GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken), files)
