@@ -1,7 +1,7 @@
 -- SRID DB: 4326
 -- SRID Output: 3857
 
-CREATE OR REPLACE FUNCTION public.physical_stores_clustered(z integer, x integer, y integer, query_params json) RETURNS bytea AS
+CREATE OR REPLACE FUNCTION physical_stores_clustered(z integer, x integer, y integer, query_params json) RETURNS bytea AS
 $$
 DECLARE
     clip_geom     boolean  = false;
@@ -15,7 +15,7 @@ BEGIN
     FROM (
              WITH locations AS (
                  SELECT store.coordinates
-                 FROM public.physicalstores store
+                 FROM physicalstores store
                  WHERE store.coordinates && tile_bbox
              ),
                   k AS (
