@@ -72,14 +72,18 @@ class ApplicationModel extends ChangeNotifier {
             entitlementType: BlueCardEntitlementType.service,
             serviceEntitlement: BlueCardServiceEntitlementInput(
                 organization: OrganizationInput(
-                    address: null,
-                    category: '',
-                    name: '',
+                    address: AddressInput(
+                        houseNumber: null,
+                        location: null,
+                        street: null,
+                        postalCode: null),
+                    category: null,
+                    name: null,
                     contact: OrganizationContactInput(
                         hasGivenPermission: null,
-                        telephone: '',
-                        name: '',
-                        email: ''))));
+                        telephone: null,
+                        name: null,
+                        email: null))));
         break;
       case BlueCardEntitlementType.standard:
         _blueCardApplication.entitlement = BlueCardEntitlementInput(
@@ -142,16 +146,6 @@ class ApplicationModel extends ChangeNotifier {
       GoldenEakCardApplicationInput goldenCardApplication) {
     _goldenCardApplication = goldenCardApplication;
     _blueCardApplication = null;
-    notifyListeners();
-  }
-
-  void clearBlueCardApplication() {
-    _blueCardApplication = null;
-    notifyListeners();
-  }
-
-  void clearGoldenCardApplication() {
-    _goldenCardApplication = null;
     notifyListeners();
   }
 

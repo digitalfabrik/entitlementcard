@@ -78,7 +78,12 @@ class _EntitlementWorkState extends State<EntitlementWork> {
                 hasGivenPermission: null,
                 name: null),
             name: null,
-            address: null)));
+            address: AddressInput(
+              location: null,
+              houseNumber: null,
+              street: null,
+              postalCode: null,
+            ))));
   }
 
   _removeOrganisation() {
