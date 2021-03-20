@@ -47,7 +47,7 @@ function ApplicationView(props: { application: Application }) {
     const createdDate = new Date(createdDateString)
     const jsonField: JsonField = JSON.parse(jsonValue)
 
-    return <Card>
+    return <Card elevation={2}>
         <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
         <JsonFieldView jsonField={jsonField}/>
     </Card>;
