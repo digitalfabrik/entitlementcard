@@ -21,9 +21,11 @@ services:
       - martin
       - backend
   druckerei:
-    build: ./administration/
+    build:
+      context: .
+      dockerfile: ./administration/Dockerfile
     ports:
-      - 127.0.0.1:5003:3000
+      - 127.0.0.1:3000:3000
     networks:
       - network_proxy
 networks:

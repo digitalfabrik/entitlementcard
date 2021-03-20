@@ -1,8 +1,10 @@
 FROM node:15.12.0-buster
-WORKDIR /app
-COPY . ./
+WORKDIR /app/druckerei
 
-RUN yarn
+COPY ./specs /app/specs
+COPY ./administration /app/druckerei
+
+RUN npm install
 
 # start app
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
