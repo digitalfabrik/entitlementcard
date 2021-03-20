@@ -72,8 +72,10 @@ object EakApplicationRepository {
     }
 
     fun getApplications(regionId: Int): List<ApplicationView> {
-        return EakApplicationEntity.find { EakApplications.regiondId eq regionId }
-            .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
+        return transaction {
+            EakApplicationEntity.find { EakApplications.regiondId eq regionId }
+                .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
+        }
     }
 
 }
