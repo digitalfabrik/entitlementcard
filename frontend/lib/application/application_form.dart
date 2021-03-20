@@ -19,11 +19,10 @@ class ApplicationForm extends StatefulWidget {
 }
 
 class _ApplicationFormState extends State<ApplicationForm> {
-  static final _lastStep = 5;
-  int _currentStep = 0;
+  static const _lastStep = 5;
   final _formKeys = List<GlobalKey<FormBuilderState>>.generate(
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
-
+  int _currentStep = 0;
   GraphQLClient _client;
 
   @override
@@ -141,11 +140,11 @@ class _ApplicationFormState extends State<ApplicationForm> {
             ]));
   }
 
-  _onStepTapped(step) {
+  void _onStepTapped(int step) {
     setState(() => _currentStep = step);
   }
 
-  _onStepContinued() {
+  void _onStepContinued() {
     if (_formKeys[_currentStep].currentState.validate()) {
       _formKeys[_currentStep].currentState.save();
       if (_currentStep < _lastStep) {
@@ -156,11 +155,11 @@ class _ApplicationFormState extends State<ApplicationForm> {
     }
   }
 
-  _onStepCancel() {
+  void _onStepCancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
-  _sendApplication() async {
+  void _sendApplication() async {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     var query;

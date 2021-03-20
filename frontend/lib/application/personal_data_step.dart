@@ -6,22 +6,17 @@ import 'package:provider/provider.dart';
 
 import 'application_model.dart';
 
-class PersonalDataStep extends StatefulWidget {
+class PersonalDataStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const PersonalDataStep({Key key, this.formKey}) : super(key: key);
 
   @override
-  _PersonalDataStepState createState() => _PersonalDataStepState();
-}
-
-class _PersonalDataStepState extends State<PersonalDataStep> {
-  @override
   Widget build(BuildContext context) {
     var personalData =
         Provider.of<ApplicationModel>(context, listen: false).personalData;
     return FormBuilder(
-        key: widget.formKey,
+        key: formKey,
         child: Column(children: <Widget>[
           TextFormField(
             decoration: InputDecoration(labelText: 'Titel'),

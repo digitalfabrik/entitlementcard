@@ -9,28 +9,22 @@ import '../../graphql/graphql_api.dart';
 import '../application_model.dart';
 import '../textwidgets/form_text.dart';
 
-class Certificate extends StatefulWidget {
+class Certificate extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
   final String title;
 
   const Certificate({Key key, this.formKey, this.title}) : super(key: key);
 
-  @override
-  _CertificateState createState() => _CertificateState();
-}
-
-class _CertificateState extends State<Certificate> {
-  @override
   Widget build(BuildContext context) {
     var entitlement = Provider.of<ApplicationModel>(context, listen: false)
         .goldenCardApplication
         .entitlement;
     return FormBuilder(
-        key: widget.formKey,
+        key: formKey,
         child: Column(
           children: <Widget>[
             FormText(
-              widget.title,
+              title,
             ),
             FormBuilderImagePicker(
               name: 'certificate',
