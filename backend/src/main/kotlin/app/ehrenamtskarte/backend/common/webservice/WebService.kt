@@ -18,9 +18,7 @@ class WebService {
         val dataDirectory = System.getProperty("app.data", null)
             ?: throw Error("Property app.data is required!")
 
-        val applicationData = File(dataDirectory, "application-data")
-
-        println(applicationData.freeSpace)
+        val applicationData = File(dataDirectory, "applications")
 
         if (applicationData.exists()) {
             if (!applicationData.isDirectory) {
@@ -32,7 +30,7 @@ class WebService {
             }
         }
 
-        if (applicationData.freeSpace < MIN_FREE_STORAGE) {
+        if (applicationData.usableSpace < MIN_FREE_STORAGE) {
             throw Error("You need at least 1GiB free storage for the application data!")
         }
         
