@@ -6,34 +6,48 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardA
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import graphql.schema.DataFetchingEnvironment
+import io.javalin.core.util.FileUtil
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 
 object EakApplicationRepository {
 
     fun addBlueEakApplication(
         regionId: Int,
         application: BlueCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
+        graphQLContext: GraphQLContext
     ) {
         val valid = validateBlueApplication(application)
         if (!valid)
             return
 
-        // todo: Save attachments using dataFetchingEnvironment
-
-        transaction {
+        val newApplication = transaction {
             EakApplicationEntity.new {
                 this.regionId = EntityID(regionId, Regions)
                 this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
             }
         }
 
-        // todo: Clear attachments if transaction failed
+        try {
+            graphQLContext.files.forEachIndexed { index, part ->
+                FileUtil.streamToFile(
+                    part.inputStream,
+                    System.getenv("APPLICATIONS_DIRECTORY") + "/" + newApplication.id + "/file/" + index.toString()
+                )
+            }
+        } catch (e: Exception) {
+            File(System.getenv("APPLICATIONS_DIRECTORY") + "/" + newApplication.id).deleteRecursively()
+            transaction {
+                newApplication.delete()
+            }
+            throw e
+        }
+
     }
 
     private fun validateBlueApplication(application: BlueCardApplication): Boolean {
@@ -43,7 +57,7 @@ object EakApplicationRepository {
     fun addGoldenEakApplication(
         regionId: Int,
         application: GoldenEakCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
+        graphQLContext: GraphQLContext
     ) {
         val valid = validateGoldenApplication(application)
         if (!valid)

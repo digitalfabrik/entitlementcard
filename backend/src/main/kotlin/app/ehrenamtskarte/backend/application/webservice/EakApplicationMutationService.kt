@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import com.expediagroup.graphql.annotations.GraphQLDescription
-import graphql.schema.DataFetchingEnvironment
 
 @Suppress("unused")
 class EakApplicationMutationService {
@@ -13,9 +13,9 @@ class EakApplicationMutationService {
     fun addBlueEakApplication(
         regionId: Int,
         application: BlueCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
+        graphQLContext: GraphQLContext
     ): Boolean {
-        EakApplicationRepository.addBlueEakApplication(regionId, application, dataFetchingEnvironment)
+        EakApplicationRepository.addBlueEakApplication(regionId, application, graphQLContext)
         return true
     }
 
@@ -23,9 +23,9 @@ class EakApplicationMutationService {
     fun addGoldenEakApplication(
         regionId: Int,
         application: GoldenEakCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
+        graphQLContext: GraphQLContext
     ): Boolean {
-        EakApplicationRepository.addGoldenEakApplication(regionId, application, dataFetchingEnvironment)
+        EakApplicationRepository.addGoldenEakApplication(regionId, application, graphQLContext)
         return true
     }
 
