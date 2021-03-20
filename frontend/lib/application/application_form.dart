@@ -69,62 +69,45 @@ class _ApplicationFormState extends State<ApplicationForm> {
               );
             },
             steps: [
-              Step(
-                title: StepTitleText(title: 'Region'),
-                content: RegionStep(
-                  formKey: _formKeys[0],
-                ),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 1 ? StepState.complete : StepState.disabled,
-              ),
-              Step(
-                title: StepTitleText(title: 'Kartentyp'),
-                content: CardTypeStep(
-                  formKey: _formKeys[1],
-                ),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 2 ? StepState.complete : StepState.disabled,
-              ),
-              Step(
-                title: StepTitleText(title: 'Voraussetzungen'),
-                content: EntitlementTypeStep(
-                  formKey: _formKeys[2],
-                ),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 3 ? StepState.complete : StepState.disabled,
-              ),
-              Step(
-                title: StepTitleText(title: 'Persönliche Daten'),
-                content: PersonalDataStep(
-                  formKey: _formKeys[3],
-                ),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 4 ? StepState.complete : StepState.disabled,
-              ),
-              Step(
-                title: StepTitleText(title: 'Tätigkeitsnachweis'),
-                content: EntitlementStep(
-                  formKey: _formKeys[4],
-                ),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 5 ? StepState.complete : StepState.disabled,
-              ),
-              Step(
-                title: StepTitleText(title: 'Abschluss'),
-                content: SummaryStep(formKey: _formKeys[5]),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 6 ? StepState.complete : StepState.disabled,
-              ),
+              _buildStep('Region', 0, (key) => RegionStep(formKey: key)),
+              _buildStep('Kartentyp', 1, (key) => CardTypeStep(formKey: key)),
+              _buildStep('Voraussetzungen', 2, (key) =>
+                  EntitlementTypeStep(formKey: key)),
+              _buildStep('Persönliche Daten', 3, (key) =>
+                  PersonalDataStep(formKey: key)),
+              _buildStep('Tätigkeitsnachweis', 4, (key) =>
+                  EntitlementStep(formKey: key)),
+              _buildStep('Abschluss', 5, (key) => SummaryStep(formKey: key)),
             ]));
   }
 
+  _buildStep(String title, int index,
+      Widget formBuilder(GlobalKey<FormBuilderState> key)) =>
+    Step(
+      title: StepTitleText(title: title),
+      content: formBuilder(_formKeys[index]),
+      isActive: _currentStep >= 0,
+      state: _getStepState(index)
+    );
+
+  _getStepState(index) => _currentStep > index
+      ? (_formKeys[index].currentState?.validate() ?? false)
+        ? StepState.complete
+        : StepState.error
+      : _currentStep == index
+        ? StepState.editing
+        : StepState.indexed;
+
   void _onStepTapped(int step) {
+    // can go forward by tapping only if the forms in between are valid
+    if (step > _currentStep) {
+      for (var i = _currentStep; i < step; i++) {
+        if (!_formKeys[i].currentState.validate()) return;
+        if (i == _currentStep) {
+          _formKeys[i].currentState.save();
+        }
+      }
+    }
     setState(() => _currentStep = step);
   }
 

@@ -55,7 +55,9 @@ val applicationGraphQlParams = GraphQLParams(
         }
     ),
     dataLoaderRegistry = createDataLoaderRegistry(),
-    queries = listOf(),
+    queries = listOf(
+        TopLevelObject(EakApplicationQueryService())
+    ),
     mutations = listOf(
         TopLevelObject(EakApplicationMutationService())
     )
