@@ -54,7 +54,7 @@ const App = () => <AuthProvider>
 
                                 </Route>
                                 <Route exact path={"/applications"}>
-                                    <ApplicationsController/>
+                                    <ApplicationsController token={authData.token}/>
                                 </Route>
                                 <Route path={"/eak-generation"}>
                                     <GenerationController/>

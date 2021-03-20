@@ -11,7 +11,7 @@ import {
 import ApplicationsOverview from "./ApplicationsOverview";
 import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 
-const ApplicationsController = (props: { region: Region }) => {
+const ApplicationsController = (props: { region: Region, token: string }) => {
     const {loading, error, data, refetch} =
         useQuery<getApplications, getApplicationsVariables>(
             GET_APPLICATIONS, {variables: {regionId: props.region.id}}
@@ -21,10 +21,10 @@ const ApplicationsController = (props: { region: Region }) => {
         <H3>Ein Fehler ist aufgetreten.</H3>
         <Button intent="primary" onClick={() => refetch()}>Erneut versuchen</Button>
     </Card>
-    else return <ApplicationsOverview applications={data.applications}/>
+    else return <ApplicationsOverview applications={data.applications} token={props.token}/>
 };
 
-const ControllerWithRegion = () => {
+const ControllerWithRegion = (props: { token: string }) => {
     const [region] = useContext(RegionContext)
 
     if (region === null) {
@@ -33,7 +33,7 @@ const ControllerWithRegion = () => {
             <RegionSelector/>
         </div>
     } else {
-        return <ApplicationsController region={region}/>
+        return <ApplicationsController region={region} token={props.token}/>
     }
 }
 
