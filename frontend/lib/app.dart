@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'application/application_model.dart';
 import 'entry_widget.dart';
 import 'graphql/configured_graphql_provider.dart';
 import 'identification/card_details_model.dart';
@@ -14,6 +15,7 @@ class App extends StatelessWidget {
       child: MultiProvider(providers: [
         ChangeNotifierProvider(
             create: (context) => CardDetailsModel()..initialize()),
+        ChangeNotifierProvider(create: (context) => ApplicationModel()),
       ], child: EntryWidget()),
     );
   }

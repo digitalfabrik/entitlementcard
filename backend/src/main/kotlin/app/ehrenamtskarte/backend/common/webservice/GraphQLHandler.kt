@@ -51,7 +51,7 @@ class GraphQLHandler(
                 val operationsJson =
                     partsMap["operations"]?.inputStream ?: throw IOException("Missing operations part.")
                 val operations = mapper.readTree(operationsJson)
-                val mapJson = partsMap["operations"]?.inputStream
+                val mapJson = partsMap["map"]?.inputStream
                     ?: return Pair(mapper.readValue(mapper.treeAsTokens(operations)), emptyList())
 
                 val substitutions = mapper.readValue<Map<String, List<String>>>(mapJson)

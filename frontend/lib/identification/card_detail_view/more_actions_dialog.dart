@@ -28,7 +28,7 @@ class MoreActionsDialog extends StatelessWidget {
         ListTile(
             title: Text("Eine digitale Ehrenamtskarte prüfen"),
             subtitle:
-                Text("Verfizieren Sie die Echtheit einer Ehrenamtskarte."),
+                Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
             leading: Icon(Icons.check_circle_outline, size: 36),
             onTap: () {
               Navigator.pop(context);
