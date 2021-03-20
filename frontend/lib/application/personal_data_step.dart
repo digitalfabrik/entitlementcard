@@ -82,12 +82,6 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
             height: 16,
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Adresszusatz'),
-            onSaved: (value) {
-              personalData.address.addressSupplement = value;
-            },
-          ),
-          TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
             onSaved: (value) {
@@ -96,13 +90,15 @@ class _PersonalDataStepState extends State<PersonalDataStep> {
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Hausnummer *"),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(context),
-              FormBuilderValidators.numeric(context),
-            ]),
-            keyboardType: TextInputType.number,
+            validator: FormBuilderValidators.required(context),
             onSaved: (value) {
               personalData.address.houseNumber = value;
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Adresszusatz'),
+            onSaved: (value) {
+              personalData.address.addressSupplement = value;
             },
           ),
           TextFormField(

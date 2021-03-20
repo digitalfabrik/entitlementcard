@@ -34,11 +34,7 @@ class Organization extends StatelessWidget {
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Hausnummer *"),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(context),
-              FormBuilderValidators.numeric(context),
-            ]),
-            keyboardType: TextInputType.number,
+            validator: FormBuilderValidators.required(context),
             onSaved: (value) {
               organizationInput.address.houseNumber = value;
             },
