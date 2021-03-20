@@ -13,11 +13,13 @@ class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;
   final VoidCallback startActivateEak;
   final VoidCallback startVerification;
+  final VoidCallback startEakApplication;
 
   CardDetailView({Key key,
     this.cardDetails,
     this.startActivateEak,
-    this.startVerification})
+    this.startVerification,
+    this.startEakApplication})
       : super(key: key);
 
   @override
@@ -85,6 +87,7 @@ class CardDetailView extends StatelessWidget {
         builder: (context) =>
             MoreActionsDialog(
                 startActivateEak: startActivateEak,
+                startEakApplication: startEakApplication,
                 startVerification: startVerification));
   }
 }
