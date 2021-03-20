@@ -20,6 +20,14 @@ services:
     depends_on:
       - martin
       - backend
+  druckerei:
+    build:
+      context: .
+      dockerfile: ./administration/Dockerfile
+    ports:
+      - 127.0.0.1:3000:3000
+    networks:
+      - network_proxy
 networks:
   network_proxy:
     external:

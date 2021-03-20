@@ -42,7 +42,8 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.7"
+    "@types/styled-components": "^5.1.7",
+    "run-script-os": "^1.1.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -51,7 +52,9 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "generate-graphql": "apollo client:codegen --target=typescript --passthroughCustomScalars --customScalarsPrefix=GQL_",
-    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
+    "generate-protobuf": "run-script-os",
+    "generate-protobuf:linux": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/compiled.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/compiled.d.ts src/generated/compiled.js",
+    "generate-protobuf:win32": "mkdir src\\generated | pbjs -t static-module -w es6 -o src\\generated\\compiled.js ..\\specs\\card_activate_model.proto --force-long | pbts -o src\\generated\\compiled.d.ts src\\generated\\compiled.js",
     "postinstall": "npm run generate-protobuf"
   },
   "eslintConfig": {
