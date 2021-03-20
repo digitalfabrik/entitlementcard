@@ -20,9 +20,7 @@ class WebService {
 
         val applicationData = File(dataDirectory, "application-data")
 
-        if (applicationData.freeSpace < MIN_FREE_STORAGE) {
-            throw Error("You need at least 1GiB free storage for the application data!")
-        }
+        println(applicationData.freeSpace)
 
         if (applicationData.exists()) {
             if (!applicationData.isDirectory) {
@@ -34,6 +32,10 @@ class WebService {
             }
         }
 
+        if (applicationData.freeSpace < MIN_FREE_STORAGE) {
+            throw Error("You need at least 1GiB free storage for the application data!")
+        }
+        
         val app = Javalin.create { cfg ->
             if (!production) {
                 cfg.enableDevLogging()
