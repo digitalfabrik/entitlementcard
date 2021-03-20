@@ -3,6 +3,7 @@
     <ExternalSystemSettings>
       <option name="env">
         <map>
+          <entry key="APPLICATIONS_DIRECTORY" value="applications" />
           <entry key="JWT_SECRET" value="&quot;Hello world!&quot;" />
         </map>
       </option>

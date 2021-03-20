@@ -12,9 +12,9 @@ class WebService {
     fun start(production: Boolean) {
         val host = System.getProperty("app.host", "0.0.0.0")
         val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
-        val filesDirectory = System.getProperty("app.files-directory")
+        val filesDirectory = System.getenv("APPLICATIONS_DIRECTORY") ?: ""
         if (!File(filesDirectory).isDirectory) {
-            throw Error("Environment variable app.files-directory is not a directory.")
+            throw Error(File(filesDirectory).absolutePath + " is not a directory. Set the env variable APPLICATIONS_DIRECTORY!")
         }
 
         val app = Javalin.create { cfg ->
@@ -42,12 +42,13 @@ class WebService {
             if (getJwtTokenFromHeader(ctx)?.let(JwtService::verifyToken) !== null) {
                 val applicationId = ctx.pathParam("applicationId")
                 val fileIndex = ctx.pathParam("fileIndex");
-                val file = File(filesDirectory + "/" + applicationId + "/file/" + fileIndex)
+                val file = File("$filesDirectory/$applicationId/file/$fileIndex")
                 if (!file.isFile) {
                     ctx.status(404)
-                    return@get
+                } else {
+                    ctx.contentType("application/octet-stream")
+                    ctx.result(file.inputStream())
                 }
-
             }
         }
     }
