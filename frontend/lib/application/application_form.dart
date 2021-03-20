@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -12,6 +11,7 @@ import 'entitlement_type_step.dart';
 import 'personal_data_step.dart';
 import 'region_step.dart';
 import 'summary_step.dart';
+import 'textwidgets/step_title_text.dart';
 
 class ApplicationForm extends StatefulWidget {
   @override
@@ -59,7 +59,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                           style: TextButton.styleFrom(
                             primary: Theme.of(context).colorScheme.onPrimary,
                             backgroundColor:
-                                Theme.of(context).primaryColorLight,
+                                Theme.of(context).colorScheme.primary,
                             padding: EdgeInsets.all(12),
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -74,7 +74,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
                             _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
                         style: TextButton.styleFrom(
                           primary: Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor: Theme.of(context).primaryColor,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           padding: EdgeInsets.all(12),
                           shape: RoundedRectangleBorder(
                               borderRadius:
@@ -86,7 +87,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
             },
             steps: [
               Step(
-                title: Text('Region'),
+                title: StepTitleText(title: 'Region'),
                 content: RegionStep(
                   formKey: _formKeys[0],
                 ),
@@ -95,7 +96,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 1 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Kartentyp'),
+                title: StepTitleText(title: 'Kartentyp'),
                 content: CardTypeStep(
                   formKey: _formKeys[1],
                 ),
@@ -104,7 +105,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 2 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Voraussetzungen'),
+                title: StepTitleText(title: 'Voraussetzungen'),
                 content: EntitlementTypeStep(
                   formKey: _formKeys[2],
                 ),
@@ -113,7 +114,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 3 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Persönliche Daten'),
+                title: StepTitleText(title: 'Persönliche Daten'),
                 content: PersonalDataStep(
                   formKey: _formKeys[3],
                 ),
@@ -122,7 +123,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 4 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Tätigkeitsnachweis'),
+                title: StepTitleText(title: 'Tätigkeitsnachweis'),
                 content: EntitlementStep(
                   formKey: _formKeys[4],
                 ),
@@ -131,7 +132,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     _currentStep >= 5 ? StepState.complete : StepState.disabled,
               ),
               Step(
-                title: Text('Abschluss'),
+                title: StepTitleText(title: 'Abschluss'),
                 content: SummaryStep(formKey: _formKeys[5]),
                 isActive: _currentStep >= 0,
                 state:
