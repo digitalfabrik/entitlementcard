@@ -17,6 +17,7 @@ import graphql.ExecutionResult
 import graphql.GraphQL
 import io.javalin.http.Context
 import io.javalin.http.util.MultipartUtil
+import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 import javax.servlet.http.Part
@@ -100,13 +101,13 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(context: Context, files: List<Part>) =
+    private fun getGraphQLContext(context: Context, files: List<Part>, applicationData: File) =
         try {
-            GraphQLContext(getJwtTokenFromHeader(context)?.let(JwtService::verifyToken), files)
+            GraphQLContext(applicationData,JwtService.verifyRequest(context), files)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(null, files)
+                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(applicationData, null, files)
                 else -> throw e
             }
         }
@@ -114,9 +115,9 @@ class GraphQLHandler(
     /**
      * Execute a query against schema
      */
-    fun handle(context: Context) {
+    fun handle(context: Context, applicationData: File) {
         val (payload, files) = getPayload(context)
-        val graphQLContext = getGraphQLContext(context, files)
+        val graphQLContext = getGraphQLContext(context, files, applicationData)
 
         // Execute the query against the schema
         try {

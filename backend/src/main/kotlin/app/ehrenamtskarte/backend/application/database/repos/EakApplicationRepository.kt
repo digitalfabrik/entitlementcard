@@ -17,66 +17,54 @@ import java.io.File
 
 object EakApplicationRepository {
 
-    fun addBlueEakApplication(
+    fun <T> addEakApplication(
         regionId: Int,
-        application: BlueCardApplication,
+        application: T,
+        graphQLContext: GraphQLContext,
+        validate: (application: T) -> Boolean
+    ) where T : JsonFieldSerializable {
+        if (!validate(application)) {
+            return
+        }
+
+        persistApplication(toString(application), regionId, graphQLContext)
+    }
+
+    fun validateBlueApplication(application: BlueCardApplication): Boolean {
+        return true // todo add sensible validation
+    }
+
+    fun validateGoldenApplication(application: GoldenEakCardApplication): Boolean {
+        return true // todo add sensible validation
+    }
+
+    private fun persistApplication(
+        applicationJson: String, regionId: Int,
         graphQLContext: GraphQLContext
     ) {
-        val valid = validateBlueApplication(application)
-        if (!valid)
-            return
-
         val newApplication = transaction {
             EakApplicationEntity.new {
                 this.regionId = EntityID(regionId, Regions)
-                this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
+                this.jsonValue = applicationJson
             }
         }
+
+        val applicationDirectory = File(graphQLContext.applicationData, newApplication.id.toString())
 
         try {
             graphQLContext.files.forEachIndexed { index, part ->
                 FileUtil.streamToFile(
                     part.inputStream,
-                    System.getenv("APPLICATIONS_DIRECTORY") + "/" + newApplication.id + "/file/" + index.toString()
+                    File(applicationDirectory, "file/$index").absolutePath
                 )
             }
         } catch (e: Exception) {
-            File(System.getenv("APPLICATIONS_DIRECTORY") + "/" + newApplication.id).deleteRecursively()
+            applicationDirectory.deleteRecursively()
             transaction {
                 newApplication.delete()
             }
             throw e
         }
-
-    }
-
-    private fun validateBlueApplication(application: BlueCardApplication): Boolean {
-        return true // todo add sensible validation
-    }
-
-    fun addGoldenEakApplication(
-        regionId: Int,
-        application: GoldenEakCardApplication,
-        graphQLContext: GraphQLContext
-    ) {
-        val valid = validateGoldenApplication(application)
-        if (!valid)
-            return
-
-        // todo: Save attachments using dataFetchingEnvironment
-
-        transaction {
-            EakApplicationEntity.new {
-                this.regionId = EntityID(regionId, Regions)
-                this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
-            }
-        }
-
-        // todo: Clear attachments if transaction failed
-    }
-
-    private fun validateGoldenApplication(application: GoldenEakCardApplication): Boolean {
-        return true // todo add sensible validation
     }
 
     private fun toString(obj: JsonFieldSerializable): String {

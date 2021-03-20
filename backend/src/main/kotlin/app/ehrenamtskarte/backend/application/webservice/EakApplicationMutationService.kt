@@ -15,7 +15,7 @@ class EakApplicationMutationService {
         application: BlueCardApplication,
         graphQLContext: GraphQLContext
     ): Boolean {
-        EakApplicationRepository.addBlueEakApplication(regionId, application, graphQLContext)
+        EakApplicationRepository.addEakApplication(regionId, application, graphQLContext, EakApplicationRepository::validateBlueApplication)
         return true
     }
 
@@ -25,7 +25,7 @@ class EakApplicationMutationService {
         application: GoldenEakCardApplication,
         graphQLContext: GraphQLContext
     ): Boolean {
-        EakApplicationRepository.addGoldenEakApplication(regionId, application, graphQLContext)
+        EakApplicationRepository.addEakApplication(regionId, application, graphQLContext, EakApplicationRepository::validateGoldenApplication)
         return true
     }
 
