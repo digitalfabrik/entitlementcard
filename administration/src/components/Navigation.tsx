@@ -19,7 +19,6 @@ const Navigation = (props: Props) => {
                 <NavLink to={"/"}><Button minimal icon="home" text="Home"/></NavLink>
                 <NavLink to={"/applications"}><Button minimal icon="form" text="Eingehende Anträge" /></NavLink>
                 <NavLink to={"/eak-generation"}><Button minimal icon="people" text="Karten erstellen"/></NavLink>
-                <NavLink to={"/accepting-stores"}><Button minimal icon="list" text="Akzeptanzstellen"/></NavLink>
             </Navbar.Group>
             <Navbar.Group align={Alignment.RIGHT}>
                 <Button minimal icon="log-out" text="Logout" onClick={props.onSignOut}/>
