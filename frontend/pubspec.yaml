@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   intl: ^0.17.0
   mapbox_gl: ^0.10.0
   provider: ^5.0.0
