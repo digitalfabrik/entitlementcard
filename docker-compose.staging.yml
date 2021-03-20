@@ -20,6 +20,12 @@ services:
     depends_on:
       - martin
       - backend
+  druckerei:
+    build: ./administration/
+    ports:
+      - 127.0.0.1:5003:3000
+    networks:
+      - network_proxy
 networks:
   network_proxy:
     external:
