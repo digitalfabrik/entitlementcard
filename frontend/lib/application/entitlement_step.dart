@@ -24,7 +24,8 @@ class _EntitlementStepState extends State<EntitlementStep> {
   Widget build(BuildContext context) {
     return Consumer<ApplicationModel>(
         builder: (context, applicationModel, child) {
-      if (applicationModel.hasBlueCardApplication()) {
+      if (applicationModel.hasBlueCardApplication() &&
+          applicationModel.blueCardApplication.entitlement != null) {
         switch (
             applicationModel.blueCardApplication.entitlement.entitlementType) {
           case BlueCardEntitlementType.juleica:
@@ -41,26 +42,28 @@ class _EntitlementStepState extends State<EntitlementStep> {
             return EntitlementWork(
               formKey: widget.formKey,
               workAtOrganizations:
-                  Provider.of<ApplicationModel>(context, listen: false)
-                      .blueCardApplication
-                      .entitlement
-                      .workAtOrganizations,
+              Provider
+                  .of<ApplicationModel>(context, listen: false)
+                  .blueCardApplication
+                  .entitlement
+                  .workAtOrganizations,
             );
             break;
-          default:
-            break;
-        }
-      } else if (applicationModel.hasGoldCardApplication()) {
-        switch (applicationModel
-            .goldenCardApplication.entitlement.goldenEntitlementType) {
-          case GoldenCardEntitlementType.honorByMinisterPresident:
-            return Certificate(
-              formKey: widget.formKey,
-              title: 'Laden Sie hier eine Kopie Ihres Ehrenzeichens des'
-                  ' bayerischen Ministerpräsidenten hoch.',
-            );
-            break;
-          case GoldenCardEntitlementType.serviceAward:
+              default:
+                break;
+            }
+          } else if (applicationModel.hasGoldCardApplication() &&
+              applicationModel.goldenCardApplication.entitlement != null) {
+            switch (applicationModel
+                .goldenCardApplication.entitlement.goldenEntitlementType) {
+              case GoldenCardEntitlementType.honorByMinisterPresident:
+                return Certificate(
+                  formKey: widget.formKey,
+                  title: 'Laden Sie hier eine Kopie Ihres Ehrenzeichens des'
+                      ' bayerischen Ministerpräsidenten hoch.',
+                );
+                break;
+              case GoldenCardEntitlementType.serviceAward:
             return Certificate(
               formKey: widget.formKey,
               title: 'Laden Sie hier Ihre Kopie des Feuerwehr-Ehrenzeichens des'
