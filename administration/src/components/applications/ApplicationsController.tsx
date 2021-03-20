@@ -14,7 +14,7 @@ import {getRegions_regions as Region} from "../../graphql/regions/__generated__/
 const ApplicationsController = (props: { region: Region, token: string }) => {
     const {loading, error, data, refetch} =
         useQuery<getApplications, getApplicationsVariables>(
-            GET_APPLICATIONS, {variables: {regionId: props.region.id}}
+            GET_APPLICATIONS, {variables: {regionId: props.region.id}, onError: error => console.error(error)},
         )
     if (loading) return <Spinner/>
     else if (error || !data) return <Card>
