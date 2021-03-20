@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.auth.webservice
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -11,6 +12,7 @@ import kotlin.NoSuchElementException
 object JwtService {
     private val secret by lazy {
         System.getenv("JWT_SECRET")
+            ?: readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
         ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
@@ -22,6 +24,14 @@ object JwtService {
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
+    private fun readJwtSecretFile(fileName: String?): String? {
+        if (fileName == null) {
+            return null
+        }
+
+        return File(fileName).readText(Charsets.UTF_8)
+    }
+    
     fun verifyToken(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
         JwtPayload(it[JwtPayload::email.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
     }
