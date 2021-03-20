@@ -15,16 +15,23 @@ class WebService {
     fun start(production: Boolean) {
         val host = System.getProperty("app.host", "0.0.0.0")
         val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
-        val applicationDataPath = System.getProperty("app.application-data", null)
-            ?: throw Error("Property app.application-data is required!")
+        val dataDirectory = System.getProperty("app.data", null)
+            ?: throw Error("Property app.data is required!")
 
-        val applicationData = File(applicationDataPath)
-        if (!applicationData.isDirectory) {
-            throw Error("${applicationData.absolutePath} is not a directory. Set the property app.application-data correctly!")
-        }
+        val applicationData = File(dataDirectory, "application-data")
 
         if (applicationData.freeSpace < MIN_FREE_STORAGE) {
             throw Error("You need at least 1GiB free storage for the application data!")
+        }
+
+        if (applicationData.exists()) {
+            if (!applicationData.isDirectory) {
+                throw Error("${applicationData.absolutePath} is not a directory. Set the property app.application-data correctly!")
+            }
+        } else {
+            if (!applicationData.mkdirs()) {
+                throw Error("Failed to create directory ${applicationData.absolutePath}")
+            }
         }
 
         val app = Javalin.create { cfg ->
