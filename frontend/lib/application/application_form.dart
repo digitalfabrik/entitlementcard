@@ -55,15 +55,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       TextButton(
                           onPressed: onStepCancel,
                           child: const Text('ZURÜCK'),
-                          style: TextButton.styleFrom(
-                            primary: Theme.of(context).colorScheme.onPrimary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            padding: EdgeInsets.all(12),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4))),
-                          )),
+                      ),
                     SizedBox(
                       width: 12,
                     ),
@@ -71,15 +63,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                         onPressed: onStepContinue,
                         child: Text(
                             _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                        style: TextButton.styleFrom(
-                          primary: Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          padding: EdgeInsets.all(12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4))),
-                        )),
+                        ),
                   ],
                 ),
               );
