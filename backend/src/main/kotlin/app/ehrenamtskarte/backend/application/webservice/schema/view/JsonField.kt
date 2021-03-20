@@ -7,7 +7,8 @@ enum class Type {
     String,
     Number,
     Array,
-    Attachment
+    Attachment,
+    Boolean
 }
 
 data class AttachmentView(val fileName: String, val fileIndex: Int) {

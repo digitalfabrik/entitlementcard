@@ -83,7 +83,9 @@ class _EntitlementWorkState extends State<EntitlementWork> {
               houseNumber: null,
               street: null,
               postalCode: null,
-            ))));
+            )),
+        workSinceDate: null,
+        payment: null));
   }
 
   _removeOrganisation() {

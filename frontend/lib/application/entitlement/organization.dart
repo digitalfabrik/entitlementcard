@@ -92,7 +92,19 @@ class Organization extends StatelessWidget {
             onSaved: (value) {
               organizationInput.contact.telephone = value;
             },
-          )
+          ),
+          FormBuilderCheckbox(
+              name: 'has_given_permission',
+              initialValue: false,
+              validator: FormBuilderValidators.equal(
+                context,
+                true,
+                errorText: 'Zustimmung erforderlich',
+              ),
+              onSaved: (value) =>
+                  {organizationInput.contact.hasGivenPermission = value},
+              title: Text('Kontaktperson hat der Weitergabe der Daten und'
+                  ' möglicher Kontaktaufnahme zugestimmt')),
         ]);
   }
 }
