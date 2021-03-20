@@ -23,8 +23,10 @@ class WebService {
 
         val graphQLHandler = GraphQLHandler()
         app.post("/") { ctx ->
-            ctx.header("Access-Control-Allow-Headers: Authorization")
-            ctx.header("Access-Control-Allow-Origin: *")
+            if (!production) {
+                ctx.header("Access-Control-Allow-Headers: Authorization")
+                ctx.header("Access-Control-Allow-Origin: *")
+            }
             graphQLHandler.handle(ctx)
         }
     }
