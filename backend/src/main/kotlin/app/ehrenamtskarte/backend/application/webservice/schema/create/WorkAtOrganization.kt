@@ -15,6 +15,8 @@ data class WorkAtOrganization(
     val amountOfWork: Double,
     val amountOfWorkUnit: AmountOfWorkUnit,
     val responsibility: String,
+    val workSinceDate: String,
+    val payment: Boolean,
     val certificate: Attachment?
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
@@ -30,6 +32,13 @@ data class WorkAtOrganization(
                     }
                 ),
                 JsonField("responsibility", mapOf("de" to "Funktion"), Type.String, responsibility),
+                JsonField("workSinceDate", mapOf("de" to "Datum des Arbeitsbeginns"), Type.String, workSinceDate),
+                JsonField(
+                    "payment",
+                    mapOf("de" to "Bezahlung außerhalb von Auslagenersatz oder Erstattung der Kosten"),
+                    Type.Boolean,
+                    payment
+                ),
                 if (certificate != null)
                     JsonField(
                         "certificate",

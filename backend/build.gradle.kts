@@ -32,7 +32,6 @@ dependencies {
     implementation("org.apache.commons", "commons-text", "1.9")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
-    implementation("com.graphql-java-kickstart:graphql-java-servlet:11.1.0")
 
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))

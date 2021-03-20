@@ -276,5 +276,7 @@ input WorkAtOrganizationInput {
   amountOfWorkUnit: AmountOfWorkUnit!
   certificate: AttachmentInput
   organization: OrganizationInput!
+  payment: Boolean!
   responsibility: String!
+  workSinceDate: String!
 }

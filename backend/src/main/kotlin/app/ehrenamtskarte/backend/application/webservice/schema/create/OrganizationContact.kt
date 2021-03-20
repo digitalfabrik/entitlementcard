@@ -12,15 +12,15 @@ data class OrganizationContact(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "orgnaizationContact", mapOf("de" to "Kontaktperson der Organisation"), Type.Array, listOf(
+            "organizationContact", mapOf("de" to "Kontaktperson der Organisation"), Type.Array, listOf(
                 JsonField("name", mapOf("de" to "Name"), Type.String, name),
                 JsonField("telephone", mapOf("de" to "Telefonnummer"), Type.String, telephone),
                 JsonField("email", mapOf("de" to "Email-Adresse"), Type.String, email),
                 JsonField(
                     "hasGivenPermission",
                     mapOf("de" to "Kontaktperson hat zur Weitergabe der Daten möglicher Kontaktaufnahme eingewilligt"),
-                    Type.String,
-                    if (hasGivenPermission) "Ja" else "Nein"
+                    Type.Boolean,
+                    hasGivenPermission
                 )
             )
         )

@@ -1599,7 +1599,7 @@
       "id": "physical_stores",
       "type": "symbol",
       "source": "physical_stores",
-      "source-layer": "public.physical_stores",
+      "source-layer": "physical_stores",
       "minzoom": 11,
       "maxzoom": 24,
       "filter": ["all"],

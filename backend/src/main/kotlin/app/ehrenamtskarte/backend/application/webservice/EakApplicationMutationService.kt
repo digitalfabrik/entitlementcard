@@ -5,7 +5,6 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardA
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
 import com.expediagroup.graphql.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class EakApplicationMutationService {

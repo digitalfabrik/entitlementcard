@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/localization/form_builder_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'configuration/configuration.dart';
 import 'configuration/first_start.dart';
@@ -32,6 +34,14 @@ class EntryWidget extends StatelessWidget {
               darkTheme: darkTheme,
               themeMode: ThemeMode.system,
               initialRoute: initialRoute,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                FormBuilderLocalizations.delegate,
+              ],
+              supportedLocales: [Locale('de')],
+              locale: Locale('de'),
               home: HomePage(
                 showVerification: Configuration.of(context).showVerification,
               ),

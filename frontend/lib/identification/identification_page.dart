@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../application/application_form.dart';
 import '../util/non_material_page.dart';
 import '../verification/verification_workflow.dart';
 import 'card_detail_view/card_detail_view.dart';
@@ -26,14 +27,16 @@ class IdentificationPage extends StatelessWidget {
           var cardDetails = cardDetailsModel.cardDetails;
           if (cardDetails != null) {
             return CardDetailView(
-                cardDetails: cardDetails,
-                startActivateEak: () => _showActivateQrCode(context),
-                startVerification: () => _showVerificationDialog(context));
+              cardDetails: cardDetails,
+              startActivateEak: () => _showActivateQrCode(context),
+              startVerification: () => _showVerificationDialog(context),
+            );
           }
 
           return Scaffold(
             body: NoCardView(
                 startVerification: () => _showVerificationDialog(context),
+                startEakApplication: () => _showEakApplication(context),
                 startActivateQrCode: () => _showActivateQrCode(context)),
           );
         }),
@@ -47,5 +50,10 @@ class IdentificationPage extends StatelessWidget {
   void _showActivateQrCode(BuildContext context) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => IdentificationQrScannerPage()));
+  }
+
+  void _showEakApplication(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ApplicationForm()));
   }
 }
