@@ -1,8 +1,10 @@
 package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
+import app.ehrenamtskarte.backend.application.database.EakApplications
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -63,10 +65,15 @@ object EakApplicationRepository {
         return true // todo add sensible validation
     }
 
-    private fun toString(obj: JsonFieldSerializable): String? {
+    private fun toString(obj: JsonFieldSerializable): String {
         val mapper = JsonMapper()
         mapper.registerModule(KotlinModule())
         return mapper.writeValueAsString(obj.toJsonField())
+    }
+
+    fun getApplications(regionId: Int): List<ApplicationView> {
+        return EakApplicationEntity.find { EakApplications.regiondId eq regionId }
+            .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
     }
 
 }
