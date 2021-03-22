@@ -33,7 +33,7 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Einsatzgebiet *',
           ),
-          allowClear: true,
+          validator: FormBuilderValidators.required(context),
           onSaved: (value) =>
               {workAtOrganizationInput.organization.category = value},
           items: [
@@ -63,8 +63,8 @@ class WorkAtOrganization extends StatelessWidget {
         ),
         FormText(
           'Wird für diese ehrenamtliche Tätigkeit eine '
-              'Aufwandsentschädigung gewährt, die über Auslagenersatz '
-              'oder Erstattung der Kosten hinausgeht?',
+          'Aufwandsentschädigung gewährt, die über Auslagenersatz '
+          'oder Erstattung der Kosten hinausgeht?',
         ),
         FormBuilderRadioGroup(
             name: 'payment',
@@ -77,8 +77,7 @@ class WorkAtOrganization extends StatelessWidget {
         TextFormField(
           decoration: InputDecoration(
               labelText: 'Arbeitsstunden pro Woche (Durchschnitt) *'),
-          onSaved: (value) =>
-          {
+          onSaved: (value) => {
             workAtOrganizationInput.amountOfWork = double.parse(value),
             workAtOrganizationInput.amountOfWorkUnit =
                 AmountOfWorkUnit.hoursPerWeek
@@ -95,16 +94,15 @@ class WorkAtOrganization extends StatelessWidget {
           inputType: InputType.date,
           format: DateFormat('dd.MM.yyyy'),
           lastDate: DateTime.now(),
-          onSaved: (value) =>
-          {
+          onSaved: (value) => {
             workAtOrganizationInput.workSinceDate =
                 DateFormat('dd.MM.yyyy').format(value)
           },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
-                (date) {
+            (date) {
               return date
-                  .isAfter(DateTime.now().subtract(Duration(days: 365 * 2)))
+                      .isAfter(DateTime.now().subtract(Duration(days: 365 * 2)))
                   ? 'Mindestens seit 2 Jahren'
                   : null;
             }
@@ -118,8 +116,7 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: InputDecoration(
               labelText: 'Bestätigung der Organisation oder des Vereins'),
           maxImages: 1,
-          onSaved: (value) =>
-          {
+          onSaved: (value) => {
             if (value != null && value.isNotEmpty)
               workAtOrganizationInput.certificate = AttachmentInput(
                   fileName: 'bestaetigung.jpg',

@@ -22,7 +22,30 @@ class EntitlementServiceBlue extends StatelessWidget {
         key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [Organization(organizationInput: _organization)],
+          children: [
+            FormBuilderDropdown(
+              name: 'category',
+              validator: FormBuilderValidators.required(context),
+              decoration: InputDecoration(
+                labelText: 'Einsatzgebiet *',
+              ),
+              onSaved: (value) => {_organization.category = value},
+              items: [
+                'Katastrophenschutz',
+                'Feuerwehr',
+                'Rettungsdienst',
+              ]
+                  .map((category) => DropdownMenuItem(
+                        value: category,
+                        child: Text('$category'),
+                      ))
+                  .toList(),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Organization(organizationInput: _organization)
+          ],
         ));
   }
 }
