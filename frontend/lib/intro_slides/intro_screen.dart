@@ -65,10 +65,11 @@ class IntroScreenState extends State<IntroScreen> {
           widgetDescription: Center(
             child: Column(children: [
               Text(
-                "Wir können Ihren Standort für Sie auf der Karte anzeigen"
-                " und Suchergebnisse nach der Entfernung zu Ihnen "
-                "sortieren. Wenn Sie diese optionalen Hilfen benutzen "
-                "möchten, dann benötigen wir Ihre Zustimmung.",
+                "Wir können Ihren Standort auf der Karte anzeigen"
+                " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
+                "Wenn Sie diese Hilfen nutzen "
+                "möchten, benötigen wir Ihre Zustimmung.
+                 Ihr Standort wird nicht gespeichert.",
                 style: theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2),
                 textAlign: TextAlign.center,
                 maxLines: 100,
