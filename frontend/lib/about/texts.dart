@@ -183,7 +183,9 @@ Telefon: 089 1261-01
 Telefax: 089 1261-1122
 E-Mail: Poststelle@stmas.bayern.de
 
-USt-Identifikations-Nr. gemäß § 27 a Umsatzsteuergesetz: DE - 811335517Verantwortlich für den Inhalt
+USt-Identifikations-Nr. gemäß § 27 a Umsatzsteuergesetz: DE - 811335517
+
+Verantwortlich für den Inhalt
 
 Christian K. J. Diener
 Leiter Referat Öffentlichkeitsarbeit
