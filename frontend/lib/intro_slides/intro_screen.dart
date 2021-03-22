@@ -20,47 +20,56 @@ class IntroScreen extends StatefulWidget {
 class IntroScreenState extends State<IntroScreen> {
   List<Slide> slides = [];
 
-  @override
-  void initState() {
-    super.initState();
-
+  void _setSlides() {
+    final theme = Theme.of(context);
+    slides.clear();
     slides.add(
       Slide(
-        title: "Willkommen!",
-        description: "Danke für Ihr ehrenamtliches Engagement! Nutzen Sie Ihre "
-            "Vorteile als InhaberIn der bayerischen Ehrenamtskarte "
-            "bestmöglich mit den Funktionen dieser App.",
-        pathImage: "assets/icon/icon.png",
-        backgroundColor: Color(0xff8377A9),
-        maxLineTitle: 3,
-      ),
+          title: "Willkommen!",
+          description: "Vielen Dank, dass Sie sich die App zur "
+              "Bayerischen Ehrenamtskarte heruntergeladen haben!",
+          pathImage: "assets/icon/icon_foreground_new.png",
+          backgroundColor: theme.brightness == Brightness.light
+              ? Color(0xffECECEC)
+              : theme.backgroundColor,
+          maxLineTitle: 3,
+          styleTitle: theme.textTheme.headline5,
+          styleDescription:
+              theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
-        title: "Wo kann ich meine Ehrenamtskarte nutzen?",
-        description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
-            " finden. Durch Vergrößern der Karte mit zwei Fingern bekommen Sie"
-            " einen genaueren Blick auf die Standorte. Tippen Sie auf einen"
-            " Standort, um mehr Informationen sehen zu können.",
-        pathImage: "assets/icon/icon.png",
-        backgroundColor: Color(0xff203152),
-        maxLineTitle: 3,
-      ),
+          title: "Wo kann ich meine Ehrenamtskarte nutzen?",
+          description:
+              "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
+              " finden. Tippen Sie auf einen Standort, um mehr Informationen "
+              "sehen zu können.",
+          pathImage: "assets/intro_slides/map_zoom.jpeg",
+          backgroundColor: theme.brightness == Brightness.light
+              ? Color(0xffECECEC)
+              : theme.backgroundColor,
+          maxLineTitle: 3,
+          styleTitle: theme.textTheme.headline5,
+          styleDescription:
+              theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
           title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-          backgroundColor: Color(0xff1c8fc2),
+          backgroundColor: theme.brightness == Brightness.light
+              ? Color(0xffECECEC)
+              : theme.backgroundColor,
           maxLineTitle: 3,
-          pathImage: "assets/icon/icon.png",
+          styleTitle: theme.textTheme.headline5,
+          pathImage: "assets/intro_slides/search_with_location.png",
           widgetDescription: Center(
             child: Column(children: [
               Text(
-                "Wir können Ihren Standort für Sie auf der Karte anzeigen"
-                " und Suchergebnisse nach der Entfernung zu Ihnen "
-                "sortieren. Wenn Sie diese optionalen Hilfen benutzen "
-                "möchten, dann benötigen wir Ihre Zustimmung.",
-                style: TextStyle(color: Colors.white, fontSize: 18.0),
+                "Wir können Ihren Standort auf der Karte anzeigen"
+                " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
+                "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre "
+                "Zustimmung. Ihr Standort wird nicht gespeichert.",
+                style: theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2),
                 textAlign: TextAlign.center,
                 maxLines: 100,
                 overflow: TextOverflow.ellipsis,
@@ -90,15 +99,21 @@ class IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _setSlides();
     return IntroSlider(
       slides: slides,
       onDonePress: onDonePress,
       nameDoneBtn: "Fertig",
       nameNextBtn: "Weiter",
       nameSkipBtn: "Überspringen",
-      styleNameSkipBtn: MediaQuery.of(context).size.width / 4 < 120
-          ? TextStyle(color: Colors.white, fontSize: 11)
-          : null,
+      styleNameDoneBtn: Theme.of(context).textTheme.button,
+      isShowSkipBtn: false,
+      colorDot: Theme.of(context).brightness == Brightness.light
+          ? Colors.black54
+          : Colors.white38,
+      colorActiveDot: Theme.of(context).brightness == Brightness.light
+          ? Colors.black
+          : Colors.white,
     );
   }
 }
