@@ -4,20 +4,20 @@ import '../graphql/graphql_api.dart';
 import 'verification_card_details.dart';
 import 'verification_hasher.dart';
 
-Future<bool> queryServerVerification(GraphQLClient client,
-    VerificationCardDetails cardDetails) async {
+Future<bool> queryServerVerification(
+    GraphQLClient client, VerificationCardDetails cardDetails) async {
   final hash = hashVerificationCardDetails(cardDetails);
   return _queryServerVerification(client, hash, cardDetails.otp);
 }
 
-Future<bool> _queryServerVerification(GraphQLClient client,
-    String verificationHash, int totp) async {
+Future<bool> _queryServerVerification(
+    GraphQLClient client, String verificationHash, int totp) async {
   final byCardDetailsHash = CardVerificationByHashQuery(
       variables: CardVerificationByHashArguments(
           card: CardVerificationModelInput(
-              cardDetailsHashBase64: verificationHash,
-              totp: totp)));
+              cardDetailsHashBase64: verificationHash, totp: totp)));
   final queryOptions = QueryOptions(
+      fetchPolicy: FetchPolicy.noCache,
       document: byCardDetailsHash.document,
       variables: byCardDetailsHash.getVariablesMap());
 
