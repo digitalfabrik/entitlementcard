@@ -46,16 +46,10 @@ class _EntitlementWorkState extends State<EntitlementWork> {
             SizedBox(
               height: 24,
             ),
-            TextButton(
+            ElevatedButton(
                 onPressed: () => setState(_addOrganisation),
                 child: Text('Weitere Organisation hinzufügen'),
-                style: TextButton.styleFrom(
-                  primary: Theme.of(context).colorScheme.onPrimary,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  padding: EdgeInsets.all(12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4))),
-                )),
+            ),
             SizedBox(
               height: 24,
             ),

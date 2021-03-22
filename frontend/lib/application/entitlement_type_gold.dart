@@ -5,22 +5,17 @@ import 'package:provider/provider.dart';
 import '../graphql/graphql_api.graphql.dart';
 import 'application_model.dart';
 
-class EntitlementTypeGold extends StatefulWidget {
+class EntitlementTypeGold extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const EntitlementTypeGold({Key key, this.formKey}) : super(key: key);
 
   @override
-  _EntitlementTypeGoldState createState() => _EntitlementTypeGoldState();
-}
-
-class _EntitlementTypeGoldState extends State<EntitlementTypeGold> {
-  @override
   Widget build(BuildContext context) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     return FormBuilder(
-        key: widget.formKey,
+        key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

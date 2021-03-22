@@ -4,9 +4,11 @@ import 'package:flutter/rendering.dart';
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivateEak;
   final VoidCallback startVerification;
+  final VoidCallback startEakApplication;
 
   const MoreActionsDialog(
-      {Key key, this.startActivateEak, this.startVerification})
+      {Key key, this.startActivateEak, this.startVerification,
+        this.startEakApplication})
       : super(key: key);
 
   @override
@@ -23,6 +25,16 @@ class MoreActionsDialog extends StatelessWidget {
           onTap: () {
             Navigator.pop(context);
             startActivateEak();
+          },
+        ),
+        ListTile(
+          title: Text("Weitere Ehrenamtskarte beantragen"),
+          subtitle:
+              Text("Ihre hinterlegte Karte bleibt erhalten."),
+          leading: Icon(Icons.attach_file, size: 36),
+          onTap: () {
+            Navigator.pop(context);
+            startEakApplication();
           },
         ),
         ListTile(

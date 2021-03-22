@@ -6,27 +6,21 @@ import 'package:provider/provider.dart';
 import '../graphql/graphql_api.dart';
 import 'application_model.dart';
 
-class CardTypeStep extends StatefulWidget {
+class CardTypeStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const CardTypeStep({Key key, this.formKey}) : super(key: key);
 
   @override
-  _CardTypeStepState createState() => _CardTypeStepState();
-}
-
-class _CardTypeStepState extends State<CardTypeStep> {
-  @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: widget.formKey,
+        key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
-                decoration: InputDecoration(labelText: 'Beantragung'),
                 name: 'card_type',
-                onSaved: _onSaved,
+                onSaved: (value) => _onSaved(context, value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: [
@@ -47,7 +41,7 @@ class _CardTypeStepState extends State<CardTypeStep> {
         ));
   }
 
-  _onSaved(value) {
+  void _onSaved(BuildContext context, ApplicationType value) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     if (value == ApplicationType.firstApplication) {

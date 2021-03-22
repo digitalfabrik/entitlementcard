@@ -19,11 +19,10 @@ class ApplicationForm extends StatefulWidget {
 }
 
 class _ApplicationFormState extends State<ApplicationForm> {
-  static final _lastStep = 5;
-  int _currentStep = 0;
+  static const _lastStep = 5;
   final _formKeys = List<GlobalKey<FormBuilderState>>.generate(
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
-
+  int _currentStep = 0;
   GraphQLClient _client;
 
   @override
@@ -56,15 +55,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       TextButton(
                           onPressed: onStepCancel,
                           child: const Text('ZURÜCK'),
-                          style: TextButton.styleFrom(
-                            primary: Theme.of(context).colorScheme.onPrimary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            padding: EdgeInsets.all(12),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4))),
-                          )),
+                      ),
                     SizedBox(
                       width: 12,
                     ),
@@ -72,15 +63,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                         onPressed: onStepContinue,
                         child: Text(
                             _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                        style: TextButton.styleFrom(
-                          primary: Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          padding: EdgeInsets.all(12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4))),
-                        )),
+                        ),
                   ],
                 ),
               );
@@ -139,11 +122,11 @@ class _ApplicationFormState extends State<ApplicationForm> {
     }
   }
 
-  _onStepCancel() {
+  void _onStepCancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
-  _sendApplication() async {
+  void _sendApplication() async {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     var query;

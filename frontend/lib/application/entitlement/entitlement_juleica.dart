@@ -9,23 +9,18 @@ import 'package:provider/provider.dart';
 import '../../graphql/graphql_api.dart';
 import '../application_model.dart';
 
-class EntitlementJuleica extends StatefulWidget {
+class EntitlementJuleica extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const EntitlementJuleica({Key key, this.formKey}) : super(key: key);
 
-  @override
-  _EntitlementJuleicaState createState() => _EntitlementJuleicaState();
-}
-
-class _EntitlementJuleicaState extends State<EntitlementJuleica> {
   @override
   Widget build(BuildContext context) {
     var entitlement = Provider.of<ApplicationModel>(context, listen: false)
         .blueCardApplication
         .entitlement;
     return FormBuilder(
-        key: widget.formKey,
+        key: formKey,
         child: Column(
           children: <Widget>[
             TextFormField(
