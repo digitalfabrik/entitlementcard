@@ -42,9 +42,7 @@ class IntroScreenState extends State<IntroScreen> {
           title: "Wo kann ich meine Ehrenamtskarte nutzen?",
           description:
               "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
-              " finden. Durch Vergrößern der "
-              "Karte mit zwei Fingern bekommen Sie"
-              " einen genaueren Blick auf die Standorte. Tippen Sie auf einen"
+              " finden. Tippen Sie auf einen"
               " Standort, um mehr Informationen sehen zu können.",
           pathImage: "assets/intro_slides/map_zoom.jpeg",
           backgroundColor: theme.brightness == Brightness.light
