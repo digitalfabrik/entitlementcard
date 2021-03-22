@@ -41,6 +41,7 @@ class PersonalDataStep extends StatelessWidget {
           FormBuilderDateTimePicker(
             name: 'date',
             inputType: InputType.date,
+            initialEntryMode: DatePickerEntryMode.input,
             format: DateFormat('dd.MM.yyyy'),
             lastDate: DateTime.now(),
             validator: FormBuilderValidators.required(context),
