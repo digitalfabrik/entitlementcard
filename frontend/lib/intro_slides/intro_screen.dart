@@ -26,8 +26,8 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       Slide(
           title: "Willkommen!",
-          description: "Vielen Dank, dass Sie sich die App zur Bayerischen Ehrenamtskarte
-              " heruntergeladen haben!",
+          description: "Vielen Dank, dass Sie sich die App zur "
+              "Bayerischen Ehrenamtskarte heruntergeladen haben!",
           pathImage: "assets/icon/icon_foreground_new.png",
           backgroundColor: theme.brightness == Brightness.light
               ? Color(0xffECECEC)
@@ -42,8 +42,8 @@ class IntroScreenState extends State<IntroScreen> {
           title: "Wo kann ich meine Ehrenamtskarte nutzen?",
           description:
               "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
-              " finden. Tippen Sie auf einen"
-              " Standort, um mehr Informationen sehen zu können.",
+              " finden. Tippen Sie auf einen Standort, um mehr Informationen "
+              "sehen zu können.",
           pathImage: "assets/intro_slides/map_zoom.jpeg",
           backgroundColor: theme.brightness == Brightness.light
               ? Color(0xffECECEC)
@@ -67,9 +67,8 @@ class IntroScreenState extends State<IntroScreen> {
               Text(
                 "Wir können Ihren Standort auf der Karte anzeigen"
                 " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
-                "Wenn Sie diese Hilfen nutzen "
-                "möchten, benötigen wir Ihre Zustimmung.
-                 Ihr Standort wird nicht gespeichert.",
+                "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre "
+                "Zustimmung. Ihr Standort wird nicht gespeichert.",
                 style: theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2),
                 textAlign: TextAlign.center,
                 maxLines: 100,
