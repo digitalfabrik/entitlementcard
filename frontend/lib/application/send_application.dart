@@ -31,7 +31,9 @@ class SendApplication extends StatelessWidget {
     }
     return Query(
       options: QueryOptions(
-          document: query.document, variables: query.getVariablesMap()),
+          fetchPolicy: FetchPolicy.noCache,
+          document: query.document,
+          variables: query.getVariablesMap()),
       builder: (result, {fetchMore, refetch}) {
         print("RESULT: $result");
         if (result.isLoading) {
@@ -41,7 +43,7 @@ class SendApplication extends StatelessWidget {
               SizedBox(
                 width: 18,
               ),
-              Text('Senden ...'),
+              Text('Wird gesendet ...'),
             ],
           );
         } else if (result.isConcrete &&
@@ -60,7 +62,7 @@ class SendApplication extends StatelessWidget {
                 width: 18,
               ),
               Text(
-                'Bewerbung gesendet',
+                'Antrag gesendet',
                 maxLines: null,
                 textAlign: TextAlign.center,
               ),
@@ -77,7 +79,7 @@ class SendApplication extends StatelessWidget {
             SizedBox(
               width: 18,
             ),
-            Text('Absenden fehlgeschlagen'),
+            Text('Senden fehlgeschlagen'),
           ]);
         }
       },
