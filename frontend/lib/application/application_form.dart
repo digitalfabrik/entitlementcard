@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/application/send_application.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -8,6 +7,7 @@ import 'entitlement_step.dart';
 import 'entitlement_type_step.dart';
 import 'personal_data_step.dart';
 import 'region_step.dart';
+import 'send_application.dart';
 import 'summary_step.dart';
 import 'textwidgets/step_title_text.dart';
 
@@ -54,17 +54,17 @@ class _ApplicationFormState extends State<ApplicationForm> {
                   children: <Widget>[
                     if (_currentStep > 0)
                       TextButton(
-                          onPressed: onStepCancel,
-                          child: const Text('ZURÜCK'),
+                        onPressed: onStepCancel,
+                        child: const Text('ZURÜCK'),
                       ),
                     SizedBox(
                       width: 12,
                     ),
                     TextButton(
-                        onPressed: onStepContinue,
-                        child: Text(
-                            _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                        ),
+                      onPressed: onStepContinue,
+                      child: Text(
+                          _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
+                    ),
                   ],
                 ),
               );
@@ -72,32 +72,31 @@ class _ApplicationFormState extends State<ApplicationForm> {
             steps: [
               _buildStep('Region', 0, (key) => RegionStep(formKey: key)),
               _buildStep('Kartentyp', 1, (key) => CardTypeStep(formKey: key)),
-              _buildStep('Voraussetzungen', 2, (key) =>
-                  EntitlementTypeStep(formKey: key)),
-              _buildStep('Persönliche Daten', 3, (key) =>
-                  PersonalDataStep(formKey: key)),
-              _buildStep('Tätigkeitsnachweis', 4, (key) =>
-                  EntitlementStep(formKey: key)),
+              _buildStep('Voraussetzungen', 2,
+                  (key) => EntitlementTypeStep(formKey: key)),
+              _buildStep('Persönliche Daten', 3,
+                  (key) => PersonalDataStep(formKey: key)),
+              _buildStep('Tätigkeitsnachweis', 4,
+                  (key) => EntitlementStep(formKey: key)),
               _buildStep('Abschluss', 5, (key) => SummaryStep(formKey: key)),
             ]));
   }
 
   _buildStep(String title, int index,
-      Widget formBuilder(GlobalKey<FormBuilderState> key)) =>
-    Step(
-      title: StepTitleText(title: title),
-      content: formBuilder(_formKeys[index]),
-      isActive: _currentStep >= 0,
-      state: _getStepState(index)
-    );
+          Widget formBuilder(GlobalKey<FormBuilderState> key)) =>
+      Step(
+          title: StepTitleText(title: title),
+          content: formBuilder(_formKeys[index]),
+          isActive: _currentStep >= 0,
+          state: _getStepState(index));
 
   _getStepState(index) => _currentStep > index
       ? (_formKeys[index].currentState?.validate() ?? false)
-        ? StepState.complete
-        : StepState.error
+          ? StepState.complete
+          : StepState.error
       : _currentStep == index
-        ? StepState.editing
-        : StepState.indexed;
+          ? StepState.editing
+          : StepState.indexed;
 
   void _onStepTapped(int step) {
     // can go forward by tapping only if the forms in between are valid
@@ -129,8 +128,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   void _sendApplication() {
-    final sendApplication =
-        SendApplication(key: UniqueKey(), onResult: _onApplicationResult);
+    final sendApplication = SendApplication(
+        key: UniqueKey(), onResult: (success) => _sendingSuccessful = success);
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: sendApplication))
         .closed
@@ -140,9 +139,5 @@ class _ApplicationFormState extends State<ApplicationForm> {
               else
                 {_sendingInProgress = false}
             });
-  }
-
-  void _onApplicationResult(bool success) {
-    _sendingSuccessful = success;
   }
 }
