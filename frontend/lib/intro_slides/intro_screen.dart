@@ -26,8 +26,8 @@ class IntroScreenState extends State<IntroScreen> {
     slides.add(
       Slide(
           title: "Willkommen!",
-          description: "Danke für Ihr ehrenamtliches Engagement! Wir möchten "
-              "Ihnen kurz die Funktionen dieser App vorstellen.",
+          description: "Vielen Dank, dass Sie sich die App zur Bayerischen Ehrenamtskarte
+              " heruntergeladen haben!",
           pathImage: "assets/icon/icon_foreground_new.png",
           backgroundColor: theme.brightness == Brightness.light
               ? Color(0xffECECEC)
