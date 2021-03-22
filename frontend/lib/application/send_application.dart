@@ -5,16 +5,11 @@ import 'package:provider/provider.dart';
 import '../graphql/graphql_api.dart';
 import 'application_model.dart';
 
-class SendApplication extends StatefulWidget {
+class SendApplication extends StatelessWidget {
   final Function(bool) onResult;
 
   SendApplication({Key key, this.onResult}) : super(key: key);
 
-  @override
-  _SendApplicationState createState() => _SendApplicationState();
-}
-
-class _SendApplicationState extends State<SendApplication> {
   @override
   Widget build(BuildContext context) {
     final applicationModel =
@@ -38,6 +33,7 @@ class _SendApplicationState extends State<SendApplication> {
       options: QueryOptions(
           document: query.document, variables: query.getVariablesMap()),
       builder: (result, {fetchMore, refetch}) {
+        print("RESULT: $result");
         if (result.isLoading) {
           return Row(
             children: [
@@ -51,7 +47,7 @@ class _SendApplicationState extends State<SendApplication> {
         } else if (result.isConcrete &&
             result.data != null &&
             parseResult(result.data) == true) {
-          widget.onResult(true);
+          onResult(true);
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -71,7 +67,7 @@ class _SendApplicationState extends State<SendApplication> {
             ],
           );
         } else {
-          widget.onResult(false);
+          onResult(false);
           return Row(children: [
             Icon(
               Icons.error_outline,
