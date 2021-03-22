@@ -64,9 +64,6 @@ const App = () => <AuthProvider>
                                 <Route path={"/eak-generation"}>
                                     <GenerationController/>
                                 </Route>
-                                <Route path={"/accepting-stores"}>
-
-                                </Route>
                             </Main>
                         </HashRouter>
                     </RegionProvider>
