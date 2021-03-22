@@ -39,13 +39,14 @@ class RegionStep extends StatelessWidget {
                     name: 'region',
                     validator: FormBuilderValidators.required(context),
                     enabled: !result.isLoading && !result.hasException,
+                    initialValue: applicationModel.regionId,
                     onSaved: (value) => {applicationModel.regionId = value},
                     decoration: InputDecoration(
                         labelText: result.isLoading
                             ? 'Regionen werden geladen …'
                             : result.hasException
-                              ? 'Fehler beim Laden'
-                              : 'Region auswählen',
+                                ? 'Fehler beim Laden'
+                                : 'Region auswählen',
                         suffixIcon: result.isLoading
                             ? SmallButtonSpinner()
                             : result.hasException

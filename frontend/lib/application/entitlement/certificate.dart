@@ -31,6 +31,9 @@ class Certificate extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Kopie oder Foto'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
+              initialValue: entitlement.certificate != null
+                  ? [entitlement.certificate]
+                  : [],
               onSaved: (value) => {
                 entitlement.certificate = AttachmentInput(
                     fileName: 'zertifikat.jpg',

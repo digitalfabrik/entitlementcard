@@ -21,6 +21,8 @@ class EntitlementTypeBlue extends StatelessWidget {
           children: <Widget>[
             FormBuilderRadioGroup(
                 name: 'card_type',
+                initialValue: applicationModel
+                    .blueCardApplication?.entitlement?.entitlementType,
                 onSaved: (value) =>
                     applicationModel.initBlueCardEntitlement(value),
                 validator: FormBuilderValidators.compose(

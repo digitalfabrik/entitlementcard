@@ -29,6 +29,7 @@ class EntitlementServiceBlue extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Einsatzgebiet *',
               ),
+              initialValue: _organization?.category,
               onSaved: (value) => {_organization.category = value},
               items: [
                 'Katastrophenschutz',

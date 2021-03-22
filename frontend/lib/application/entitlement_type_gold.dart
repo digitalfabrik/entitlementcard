@@ -22,6 +22,8 @@ class EntitlementTypeGold extends StatelessWidget {
             FormBuilderRadioGroup(
                 decoration: InputDecoration(labelText: 'Voraussetzungen'),
                 name: 'card_type',
+                initialValue: applicationModel
+                    .goldenCardApplication?.entitlement?.goldenEntitlementType,
                 onSaved: (value) =>
                     applicationModel.initGoldenCardEntitlement(value),
                 validator: FormBuilderValidators.compose(

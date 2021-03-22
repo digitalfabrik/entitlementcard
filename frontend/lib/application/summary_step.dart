@@ -11,6 +11,8 @@ class SummaryStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -18,13 +20,18 @@ class SummaryStep extends StatelessWidget {
           children: <Widget>[
             FormBuilderCheckbox(
                 name: 'privacy_policy',
-                initialValue: false,
+                initialValue: applicationModel
+                        .blueCardApplication?.hasAcceptedPrivacyPolicy ??
+                    applicationModel
+                        .goldenCardApplication?.hasAcceptedPrivacyPolicy ??
+                    false,
                 validator: FormBuilderValidators.equal(
                   context,
                   true,
                   errorText: 'Zustimmung erforderlich',
                 ),
-                onSaved: (value) => _onPrivacyPolicySaved(context, value),
+                onSaved: (value) =>
+                    _onPrivacyPolicySaved(context, applicationModel, value),
                 title: Text('Hiermit erkläre ich mich damit einverstanden, dass'
                     ' meine Daten zum Zwecke der Zusendung von Informationen'
                     ' (z.B. zu bayernweiten Aktionen) rund um das Thema'
@@ -38,16 +45,16 @@ class SummaryStep extends StatelessWidget {
                   true,
                   errorText: 'Zustimmung erforderlich',
                 ),
-                onSaved: (value) => _onCorrectAndCompleteSaved(context, value),
+                onSaved: (value) => _onCorrectAndCompleteSaved(
+                    context, applicationModel, value),
                 title: Text('Die hier angegeben Informationen sind'
                     ' richtig und vollständig.')),
           ],
         ));
   }
 
-  void _onPrivacyPolicySaved(BuildContext context, bool value) {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
+  void _onPrivacyPolicySaved(
+      BuildContext context, ApplicationModel applicationModel, bool value) {
     if (applicationModel.hasBlueCardApplication()) {
       applicationModel.blueCardApplication.hasAcceptedPrivacyPolicy = value;
     } else if (applicationModel.hasGoldCardApplication()) {
@@ -55,9 +62,8 @@ class SummaryStep extends StatelessWidget {
     }
   }
 
-  void _onCorrectAndCompleteSaved(BuildContext context, bool value) {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
+  void _onCorrectAndCompleteSaved(
+      BuildContext context, ApplicationModel applicationModel, bool value) {
     if (applicationModel.hasBlueCardApplication()) {
       applicationModel
           .blueCardApplication.givenInformationIsCorrectAndComplete = value;

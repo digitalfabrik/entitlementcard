@@ -30,6 +30,7 @@ class EntitlementJuleica extends StatelessWidget {
                 FormBuilderValidators.numeric(context),
               ]),
               keyboardType: TextInputType.number,
+              initialValue: entitlement?.juleicaNumber,
               onSaved: (value) {
                 entitlement.juleicaNumber = value;
               },
@@ -43,6 +44,10 @@ class EntitlementJuleica extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Gültig bis *',
               ),
+              initialValue: entitlement?.juleicaExpirationDate != null
+                  ? DateFormat('dd.MM.yyyy')
+                      .parse(entitlement.juleicaExpirationDate)
+                  : null,
               onSaved: (value) => {
                 entitlement.juleicaExpirationDate =
                     DateFormat('dd.MM.yyyy').format(value)
@@ -53,6 +58,9 @@ class EntitlementJuleica extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Bild der Juleica'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
+              initialValue: entitlement.copyOfJuleica != null
+                  ? [entitlement.copyOfJuleica]
+                  : [],
               onSaved: (value) => {
                 entitlement.copyOfJuleica = AttachmentInput(
                     fileName: 'juleica.jpg',

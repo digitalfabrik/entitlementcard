@@ -91,7 +91,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
           state: _getStepState(index));
 
   _getStepState(index) => _currentStep > index
-      ? (_formKeys[index].currentState?.validate() ?? false)
+      ? (_formKeys[index].currentState?.validate() ?? true)
           ? StepState.complete
           : StepState.error
       : _currentStep == index

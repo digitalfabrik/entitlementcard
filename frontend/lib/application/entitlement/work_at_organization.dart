@@ -22,7 +22,7 @@ class WorkAtOrganization extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Organization(
-          organizationInput: workAtOrganizationInput.organization,
+          organizationInput: workAtOrganizationInput?.organization,
         ),
         SizedBox(
           height: 24,
@@ -34,8 +34,9 @@ class WorkAtOrganization extends StatelessWidget {
             labelText: 'Einsatzgebiet *',
           ),
           validator: FormBuilderValidators.required(context),
+          initialValue: workAtOrganizationInput?.organization?.category,
           onSaved: (value) =>
-              {workAtOrganizationInput.organization.category = value},
+              {workAtOrganizationInput?.organization?.category = value},
           items: [
             'Soziales/Jugend/Senioren',
             'Tierschutz',
@@ -56,7 +57,8 @@ class WorkAtOrganization extends StatelessWidget {
         ),
         TextFormField(
           decoration: InputDecoration(labelText: 'Funktionsbeschreibung'),
-          onSaved: (value) => {workAtOrganizationInput.responsibility = value},
+          initialValue: workAtOrganizationInput?.responsibility,
+          onSaved: (value) => {workAtOrganizationInput?.responsibility = value},
         ),
         SizedBox(
           height: 24,
@@ -69,7 +71,8 @@ class WorkAtOrganization extends StatelessWidget {
         FormBuilderRadioGroup(
             name: 'payment',
             validator: FormBuilderValidators.required(context),
-            onSaved: (value) => {workAtOrganizationInput.payment = value},
+            initialValue: workAtOrganizationInput?.payment,
+            onSaved: (value) => {workAtOrganizationInput?.payment = value},
             options: [
               FormBuilderFieldOption(value: true, child: Text("Ja")),
               FormBuilderFieldOption(value: false, child: Text("Nein"))
@@ -77,9 +80,10 @@ class WorkAtOrganization extends StatelessWidget {
         TextFormField(
           decoration: InputDecoration(
               labelText: 'Arbeitsstunden pro Woche (Durchschnitt) *'),
+          initialValue: workAtOrganizationInput?.amountOfWork?.toString(),
           onSaved: (value) => {
-            workAtOrganizationInput.amountOfWork = double.parse(value),
-            workAtOrganizationInput.amountOfWorkUnit =
+            workAtOrganizationInput?.amountOfWork = double.parse(value),
+            workAtOrganizationInput?.amountOfWorkUnit =
                 AmountOfWorkUnit.hoursPerWeek
           },
           validator: FormBuilderValidators.compose([
@@ -94,8 +98,12 @@ class WorkAtOrganization extends StatelessWidget {
           inputType: InputType.date,
           format: DateFormat('dd.MM.yyyy'),
           lastDate: DateTime.now(),
+          initialValue: workAtOrganizationInput?.workSinceDate != null
+              ? DateFormat('dd.MM.yyyy')
+                  .parse(workAtOrganizationInput?.workSinceDate)
+              : null,
           onSaved: (value) => {
-            workAtOrganizationInput.workSinceDate =
+            workAtOrganizationInput?.workSinceDate =
                 DateFormat('dd.MM.yyyy').format(value)
           },
           validator: FormBuilderValidators.compose([
@@ -116,9 +124,12 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: InputDecoration(
               labelText: 'Bestätigung der Organisation oder des Vereins'),
           maxImages: 1,
+          initialValue: workAtOrganizationInput?.certificate != null
+              ? [workAtOrganizationInput?.certificate]
+              : null,
           onSaved: (value) => {
             if (value != null && value.isNotEmpty)
-              workAtOrganizationInput.certificate = AttachmentInput(
+              workAtOrganizationInput?.certificate = AttachmentInput(
                   fileName: 'bestaetigung.jpg',
                   data: MultipartFile.fromBytes(
                     'certificate',
