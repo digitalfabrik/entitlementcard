@@ -1,10 +1,8 @@
+import 'package:ehrenamtskarte/application/send_application.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:provider/provider.dart';
 
-import '../graphql/graphql_api.dart';
-import 'application_model.dart';
 import 'card_type_step.dart';
 import 'entitlement_step.dart';
 import 'entitlement_type_step.dart';
@@ -23,6 +21,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
   int _currentStep = 0;
   final _formKeys = List<GlobalKey<FormBuilderState>>.generate(
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
+  bool _sendingInProgress = false;
+  bool _sendingSuccessful = false;
 
   GraphQLClient _client;
 
@@ -150,7 +150,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
       _formKeys[_currentStep].currentState.save();
       if (_currentStep < _lastStep) {
         setState(() => _currentStep++);
-      } else {
+      } else if (!_sendingInProgress) {
+        _sendingInProgress = true;
         _sendApplication();
       }
     }
@@ -160,25 +161,21 @@ class _ApplicationFormState extends State<ApplicationForm> {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
-  _sendApplication() async {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
-    var query;
-    if (applicationModel.hasBlueCardApplication()) {
-      var application = AddBlueEakApplicationArguments(
-          application: applicationModel.blueCardApplication,
-          regionId: applicationModel.regionId);
-      query = AddBlueEakApplicationMutation(variables: application);
-    } else if (applicationModel.hasGoldCardApplication()) {
-      var application = AddGoldenEakApplicationArguments(
-          application: applicationModel.goldenCardApplication,
-          regionId: applicationModel.regionId);
-      query = AddGoldenEakApplicationMutation(variables: application);
-    }
+  _sendApplication() {
+    final sendApplication =
+        SendApplication(key: UniqueKey(), onResult: _onApplicationResult);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: sendApplication))
+        .closed
+        .then((value) => {
+              if (_sendingSuccessful)
+                {Navigator.of(context).pop()}
+              else
+                {_sendingInProgress = false}
+            });
+  }
 
-    final result = await _client.query(QueryOptions(
-        document: query.document, variables: query.getVariablesMap()));
-    if (result.hasException) throw result.exception;
-    Navigator.of(context).pop();
+  void _onApplicationResult(bool success) {
+    _sendingSuccessful = success;
   }
 }
