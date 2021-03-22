@@ -79,5 +79,5 @@ export function generatePdf(models: CardActivateModel[], region: Region) {
         creator: "Bayern"
     });
 
-    return doc.output('blob')
+    return new Blob([doc.output('blob')], {type: "application/pdf"})
 }

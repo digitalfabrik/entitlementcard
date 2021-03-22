@@ -5,13 +5,15 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
 import {setContext} from '@apollo/client/link/context'
-import {HashRouter, Route} from "react-router-dom";
+import {HashRouter, NavLink, Route} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
 import AuthProvider, {AuthContext} from "./AuthProvider";
 import Login from './components/auth/Login';
 import KeepAliveToken from "./KeepAliveToken";
+import ApplicationsController from "./components/applications/ApplicationsController";
+import {Button, H3} from '@blueprintjs/core';
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -50,13 +52,17 @@ const App = () => <AuthProvider>
                             <Navigation onSignOut={onSignOut}/>
                             <Main>
                                 <Route exact path={"/"}>
-
+                                    <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                        <H3>Wählen Sie eine Aktion aus:</H3>
+                                        <NavLink to={"/applications"}><Button style={{ marginBottom: '10px'}} icon="form" text="Eingehende Anträge"/></NavLink>
+                                        <NavLink to={"/eak-generation"}><Button icon="people" text="Karten erstellen"/></NavLink>
+                                    </div>
+                                </Route>
+                                <Route exact path={"/applications"}>
+                                    <ApplicationsController token={authData.token}/>
                                 </Route>
                                 <Route path={"/eak-generation"}>
                                     <GenerationController/>
-                                </Route>
-                                <Route path={"/accepting-stores"}>
-
                                 </Route>
                             </Main>
                         </HashRouter>

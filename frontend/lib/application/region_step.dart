@@ -9,16 +9,11 @@ import '../widgets/small_button_spinner.dart';
 import 'application_model.dart';
 import 'textwidgets/form_header_text.dart';
 
-class RegionStep extends StatefulWidget {
+class RegionStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const RegionStep({Key key, this.formKey}) : super(key: key);
 
-  @override
-  _RegionStepState createState() => _RegionStepState();
-}
-
-class _RegionStepState extends State<RegionStep> {
   @override
   Widget build(BuildContext context) {
     final regionsQuery = GetRegionsQuery();
@@ -33,7 +28,7 @@ class _RegionStepState extends State<RegionStep> {
               ? []
               : regionsQuery.parse(result.data)?.regions;
           return FormBuilder(
-              key: widget.formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -46,7 +41,11 @@ class _RegionStepState extends State<RegionStep> {
                     enabled: !result.isLoading && !result.hasException,
                     onSaved: (value) => {applicationModel.regionId = value},
                     decoration: InputDecoration(
-                        labelText: 'Region auswählen',
+                        labelText: result.isLoading
+                            ? 'Regionen werden geladen …'
+                            : result.hasException
+                              ? 'Fehler beim Laden'
+                              : 'Region auswählen',
                         suffixIcon: result.isLoading
                             ? SmallButtonSpinner()
                             : result.hasException

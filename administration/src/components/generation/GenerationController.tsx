@@ -5,7 +5,7 @@ import GenerationForm from "./GenerationForm";
 import {useApolloClient} from "@apollo/client";
 import {AppToaster} from "../AppToaster";
 import GenerationFinished from "./GenerationFinished";
-import downloadDataUri from "./downloadDataUri";
+import downloadDataUri from "../../util/downloadDataUri";
 import generateCards from "./generateCards";
 import RegionSelector from "../RegionSelector";
 import {RegionContext} from "../../RegionProvider";

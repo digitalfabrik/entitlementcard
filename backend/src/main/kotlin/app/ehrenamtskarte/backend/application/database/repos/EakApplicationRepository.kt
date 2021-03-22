@@ -1,72 +1,83 @@
 package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
+import app.ehrenamtskarte.backend.application.database.EakApplications
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import graphql.schema.DataFetchingEnvironment
+import io.javalin.core.util.FileUtil
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 
 object EakApplicationRepository {
 
-    fun addBlueEakApplication(
+    fun <T> addEakApplication(
         regionId: Int,
-        application: BlueCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
-    ) {
-        val valid = validateBlueApplication(application)
-        if (!valid)
+        application: T,
+        graphQLContext: GraphQLContext,
+        validate: (application: T) -> Boolean
+    ) where T : JsonFieldSerializable {
+        if (!validate(application)) {
             return
-
-        // todo: Save attachments using dataFetchingEnvironment
-
-        transaction {
-            EakApplicationEntity.new {
-                this.regionId = EntityID(regionId, Regions)
-                this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
-            }
         }
 
-        // todo: Clear attachments if transaction failed
+        persistApplication(toString(application), regionId, graphQLContext)
     }
 
-    private fun validateBlueApplication(application: BlueCardApplication): Boolean {
+    fun validateBlueApplication(application: BlueCardApplication): Boolean {
         return true // todo add sensible validation
     }
 
-    fun addGoldenEakApplication(
-        regionId: Int,
-        application: GoldenEakCardApplication,
-        dataFetchingEnvironment: DataFetchingEnvironment
-    ) {
-        val valid = validateGoldenApplication(application)
-        if (!valid)
-            return
-
-        // todo: Save attachments using dataFetchingEnvironment
-
-        transaction {
-            EakApplicationEntity.new {
-                this.regionId = EntityID(regionId, Regions)
-                this.jsonValue = toString(application) ?: throw Error("Error while converting to JSON")
-            }
-        }
-
-        // todo: Clear attachments if transaction failed
-    }
-
-    private fun validateGoldenApplication(application: GoldenEakCardApplication): Boolean {
+    fun validateGoldenApplication(application: GoldenEakCardApplication): Boolean {
         return true // todo add sensible validation
     }
 
-    private fun toString(obj: JsonFieldSerializable): String? {
+    private fun persistApplication(
+        applicationJson: String, regionId: Int,
+        graphQLContext: GraphQLContext
+    ) {
+        val newApplication = transaction {
+            EakApplicationEntity.new {
+                this.regionId = EntityID(regionId, Regions)
+                this.jsonValue = applicationJson
+            }
+        }
+
+        val applicationDirectory = File(graphQLContext.applicationData, newApplication.id.toString())
+
+        try {
+            graphQLContext.files.forEachIndexed { index, part ->
+                FileUtil.streamToFile(
+                    part.inputStream,
+                    File(applicationDirectory, "file/$index").absolutePath
+                )
+            }
+        } catch (e: Exception) {
+            applicationDirectory.deleteRecursively()
+            transaction {
+                newApplication.delete()
+            }
+            throw e
+        }
+    }
+
+    private fun toString(obj: JsonFieldSerializable): String {
         val mapper = JsonMapper()
         mapper.registerModule(KotlinModule())
         return mapper.writeValueAsString(obj.toJsonField())
+    }
+
+    fun getApplications(regionId: Int): List<ApplicationView> {
+        return transaction {
+            EakApplicationEntity.find { EakApplications.regiondId eq regionId }
+                .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
+        }
     }
 
 }

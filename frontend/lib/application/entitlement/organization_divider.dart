@@ -25,16 +25,10 @@ class OrganizationDivider extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.headline6,
             ),
-            TextButton(
+            ElevatedButton(
                 onPressed: onOrganisationDeleted,
                 child: Text('LÖSCHEN'),
-                style: TextButton.styleFrom(
-                  primary: Theme.of(context).colorScheme.onPrimary,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  padding: EdgeInsets.all(12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4))),
-                )),
+            ),
           ],
         )
       ],

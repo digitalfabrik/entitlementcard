@@ -20,7 +20,7 @@ data class PersonalData(
             "personalData", mapOf("de" to "Persönliche Daten"), Type.Array, listOfNotNull(
                 if (title != null) JsonField("title", mapOf("de" to "Titel"), Type.String, title) else null,
                 JsonField("forenames", mapOf("de" to "Vorname(n)"), Type.String, forenames),
-                JsonField("surname", mapOf("de" to "Nachname(n)"), Type.String, surname),
+                JsonField("surname", mapOf("de" to "Nachname"), Type.String, surname),
                 JsonField("dateOfBirth", mapOf("de" to "Geburtsdatum"), Type.String, dateOfBirth),
                 address.toJsonField(),
                 if (telephone != null)

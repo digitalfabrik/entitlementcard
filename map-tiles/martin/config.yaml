@@ -25,12 +25,10 @@ function_sources:
     id: physical_stores
     schema: public
 
-    # function name
     function: physical_stores
 
   physical_stores_clustered:
     id: physical_stores_clustered
     schema: public
 
-    # function name
     function: physical_stores_clustered

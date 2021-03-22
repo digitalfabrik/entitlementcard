@@ -29,6 +29,7 @@ class IdentificationPage extends StatelessWidget {
             return CardDetailView(
               cardDetails: cardDetails,
               startActivateEak: () => _showActivateQrCode(context),
+              startEakApplication: () => _showEakApplication(context),
               startVerification: () => _showVerificationDialog(context),
             );
           }

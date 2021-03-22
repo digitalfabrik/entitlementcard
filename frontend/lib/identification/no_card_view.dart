@@ -31,7 +31,7 @@ class NoCardView extends StatelessWidget {
             child: Icon(Icons.contact_support_outlined,
                 size: 100, color: Theme.of(context).accentColor),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 12),
           wrapIntrinsic(
             Flex(
                 direction: isLandscape ? Axis.horizontal : Axis.vertical,
@@ -70,7 +70,7 @@ class NoCardView extends StatelessWidget {
                       ])),
                   isLandscape
                       ? VerticalDivider(width: 80)
-                      : Divider(height: 80),
+                      : Divider(height: 30),
                   ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: 300),
                       child: Column(children: [
