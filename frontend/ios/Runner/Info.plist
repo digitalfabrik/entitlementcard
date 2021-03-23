@@ -25,9 +25,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Einlesen von QR-Codes (Feature aktuell deaktiviert).</string>
+	<string>Einlesen von QR-Codes und Abfotografieren von Dokumenten für das Bewerbungsformular.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Anhängen von Bildern für das Bewerbungsformular.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
