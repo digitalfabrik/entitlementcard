@@ -58,6 +58,7 @@ class EntitlementJuleica extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Bild der Juleica'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
+              iconColor: Theme.of(context).colorScheme.primary,
               initialValue: entitlement.copyOfJuleica != null
                   ? [applicationModel.attachment]
                   : [],

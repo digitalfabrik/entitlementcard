@@ -31,6 +31,7 @@ class Certificate extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Kopie oder Foto'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
+              iconColor: Theme.of(context).colorScheme.primary,
               initialValue: entitlement.certificate != null
                   ? [applicationModel.attachment]
                   : [],
