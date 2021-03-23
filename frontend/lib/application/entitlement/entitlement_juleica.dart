@@ -35,6 +35,7 @@ class EntitlementJuleica extends StatelessWidget {
             FormBuilderDateTimePicker(
               name: 'expiration_date',
               inputType: InputType.date,
+              initialEntryMode: DatePickerEntryMode.input,
               format: DateFormat('dd.MM.yyyy'),
               firstDate: DateTime.now(),
               validator: FormBuilderValidators.required(context),
