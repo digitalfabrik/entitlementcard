@@ -16,9 +16,9 @@ class EntitlementJuleica extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var entitlement = Provider.of<ApplicationModel>(context, listen: false)
-        .blueCardApplication
-        .entitlement;
+    var applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
+    var entitlement = applicationModel.blueCardApplication.entitlement;
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -59,9 +59,10 @@ class EntitlementJuleica extends StatelessWidget {
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               initialValue: entitlement.copyOfJuleica != null
-                  ? [entitlement.copyOfJuleica]
+                  ? [applicationModel.attachment]
                   : [],
               onSaved: (value) => {
+                applicationModel.attachment = value.first,
                 entitlement.copyOfJuleica = AttachmentInput(
                     fileName: 'juleica.jpg',
                     data: MultipartFile.fromBytes(

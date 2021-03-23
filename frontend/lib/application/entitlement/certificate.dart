@@ -16,9 +16,9 @@ class Certificate extends StatelessWidget {
   const Certificate({Key key, this.formKey, this.title}) : super(key: key);
 
   Widget build(BuildContext context) {
-    var entitlement = Provider.of<ApplicationModel>(context, listen: false)
-        .goldenCardApplication
-        .entitlement;
+    var applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
+    var entitlement = applicationModel.goldenCardApplication.entitlement;
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -32,9 +32,10 @@ class Certificate extends StatelessWidget {
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               initialValue: entitlement.certificate != null
-                  ? [entitlement.certificate]
+                  ? [applicationModel.attachment]
                   : [],
               onSaved: (value) => {
+                applicationModel.attachment = value.first,
                 entitlement.certificate = AttachmentInput(
                     fileName: 'zertifikat.jpg',
                     data: MultipartFile.fromBytes(

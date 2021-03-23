@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../graphql/graphql_api.graphql.dart';
@@ -6,6 +8,7 @@ class ApplicationModel extends ChangeNotifier {
   BlueCardApplicationInput _blueCardApplication;
   GoldenEakCardApplicationInput _goldenCardApplication;
   int regionId;
+  File attachment;
 
   BlueCardApplicationInput get blueCardApplication {
     return _blueCardApplication;
