@@ -22,7 +22,6 @@ class _ApplicationFormState extends State<ApplicationForm> {
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
   bool _sendingInProgress = false;
   bool _sendingSuccessful = false;
-  final _focusNode = FocusNode();
 
   int _currentStep = 0;
   GraphQLClient _client;
@@ -35,20 +34,6 @@ class _ApplicationFormState extends State<ApplicationForm> {
     if (client != _client) {
       _client = client;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
   }
 
   @override
@@ -85,7 +70,12 @@ class _ApplicationFormState extends State<ApplicationForm> {
               );
             },
             steps: [
-              _buildStep('Region', 0, (key) => RegionStep(formKey: key)),
+              _buildStep(
+                  'Region',
+                  0,
+                  (key) => RegionStep(
+                        formKey: key,
+                      )),
               _buildStep('Kartentyp', 1, (key) => CardTypeStep(formKey: key)),
               _buildStep('Voraussetzungen', 2,
                   (key) => EntitlementTypeStep(formKey: key)),

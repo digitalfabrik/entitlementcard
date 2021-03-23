@@ -97,6 +97,7 @@ class WorkAtOrganization extends StatelessWidget {
           name: 'date',
           inputType: InputType.date,
           format: DateFormat('dd.MM.yyyy'),
+          initialEntryMode: DatePickerEntryMode.input,
           lastDate: DateTime.now(),
           initialValue: workAtOrganizationInput?.workSinceDate != null
               ? DateFormat('dd.MM.yyyy')
