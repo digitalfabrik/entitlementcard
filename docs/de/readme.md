@@ -6,7 +6,7 @@
 
 [English](../../README.md) | Deutsch
 
-**Technische Dokumentation ist nur auf englisch verfügbar im `/docs` Ordner.**
+**Technische Dokumentation ist nur auf Englisch verfügbar im `/docs` Ordner.**
 
 ![Drei Screenshots von der App mit Karte, Suchfunktion und Ausweisfunktion.](../img/phones1.png)
 
