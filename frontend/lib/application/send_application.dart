@@ -36,7 +36,6 @@ class SendApplication extends StatelessWidget {
           document: query.document,
           variables: query.getVariablesMap()),
       builder: (result, {fetchMore, refetch}) {
-        print("RESULT: $result");
         if (result.isLoading) {
           return Row(
             children: [
