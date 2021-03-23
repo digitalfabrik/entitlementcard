@@ -22,7 +22,7 @@ class WorkAtOrganization extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Organization(
-          organizationInput: workAtOrganizationInput.organization,
+          organizationInput: workAtOrganizationInput?.organization,
         ),
         SizedBox(
           height: 24,
@@ -33,9 +33,10 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Einsatzgebiet *',
           ),
-          allowClear: true,
+          validator: FormBuilderValidators.required(context),
+          initialValue: workAtOrganizationInput?.organization?.category,
           onSaved: (value) =>
-              {workAtOrganizationInput.organization.category = value},
+              {workAtOrganizationInput?.organization?.category = value},
           items: [
             'Soziales/Jugend/Senioren',
             'Tierschutz',
@@ -56,20 +57,22 @@ class WorkAtOrganization extends StatelessWidget {
         ),
         TextFormField(
           decoration: InputDecoration(labelText: 'Funktionsbeschreibung'),
-          onSaved: (value) => {workAtOrganizationInput.responsibility = value},
+          initialValue: workAtOrganizationInput?.responsibility,
+          onSaved: (value) => {workAtOrganizationInput?.responsibility = value},
         ),
         SizedBox(
           height: 24,
         ),
         FormText(
           'Wird für diese ehrenamtliche Tätigkeit eine '
-              'Aufwandsentschädigung gewährt, die über Auslagenersatz '
-              'oder Erstattung der Kosten hinausgeht?',
+          'Aufwandsentschädigung gewährt, die über Auslagenersatz '
+          'oder Erstattung der Kosten hinausgeht?',
         ),
         FormBuilderRadioGroup(
             name: 'payment',
             validator: FormBuilderValidators.required(context),
-            onSaved: (value) => {workAtOrganizationInput.payment = value},
+            initialValue: workAtOrganizationInput?.payment,
+            onSaved: (value) => {workAtOrganizationInput?.payment = value},
             options: [
               FormBuilderFieldOption(value: true, child: Text("Ja")),
               FormBuilderFieldOption(value: false, child: Text("Nein"))
@@ -77,10 +80,10 @@ class WorkAtOrganization extends StatelessWidget {
         TextFormField(
           decoration: InputDecoration(
               labelText: 'Arbeitsstunden pro Woche (Durchschnitt) *'),
-          onSaved: (value) =>
-          {
-            workAtOrganizationInput.amountOfWork = double.parse(value),
-            workAtOrganizationInput.amountOfWorkUnit =
+          initialValue: workAtOrganizationInput?.amountOfWork?.toString(),
+          onSaved: (value) => {
+            workAtOrganizationInput?.amountOfWork = double.parse(value),
+            workAtOrganizationInput?.amountOfWorkUnit =
                 AmountOfWorkUnit.hoursPerWeek
           },
           validator: FormBuilderValidators.compose([
@@ -94,17 +97,21 @@ class WorkAtOrganization extends StatelessWidget {
           name: 'date',
           inputType: InputType.date,
           format: DateFormat('dd.MM.yyyy'),
+          initialEntryMode: DatePickerEntryMode.input,
           lastDate: DateTime.now(),
-          onSaved: (value) =>
-          {
-            workAtOrganizationInput.workSinceDate =
+          initialValue: workAtOrganizationInput?.workSinceDate != null
+              ? DateFormat('dd.MM.yyyy')
+                  .parse(workAtOrganizationInput?.workSinceDate)
+              : null,
+          onSaved: (value) => {
+            workAtOrganizationInput?.workSinceDate =
                 DateFormat('dd.MM.yyyy').format(value)
           },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
-                (date) {
+            (date) {
               return date
-                  .isAfter(DateTime.now().subtract(Duration(days: 365 * 2)))
+                      .isAfter(DateTime.now().subtract(Duration(days: 365 * 2)))
                   ? 'Mindestens seit 2 Jahren'
                   : null;
             }
@@ -118,10 +125,12 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: InputDecoration(
               labelText: 'Bestätigung der Organisation oder des Vereins'),
           maxImages: 1,
-          onSaved: (value) =>
-          {
+          initialValue: workAtOrganizationInput?.certificate != null
+              ? [workAtOrganizationInput?.certificate]
+              : null,
+          onSaved: (value) => {
             if (value != null && value.isNotEmpty)
-              workAtOrganizationInput.certificate = AttachmentInput(
+              workAtOrganizationInput?.certificate = AttachmentInput(
                   fileName: 'bestaetigung.jpg',
                   data: MultipartFile.fromBytes(
                     'certificate',

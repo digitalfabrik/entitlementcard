@@ -21,22 +21,25 @@ class Organization extends StatelessWidget {
             decoration: InputDecoration(
                 labelText:
                     'Name des Vereins, der Organisation, der Initiative *'),
+            initialValue: organizationInput?.name,
             onSaved: (value) {
-              organizationInput.name = value;
+              organizationInput?.name = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
+            initialValue: organizationInput?.address?.street,
             onSaved: (value) {
-              organizationInput.address.street = value;
+              organizationInput?.address?.street = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Hausnummer *"),
             validator: FormBuilderValidators.required(context),
+            initialValue: organizationInput?.address?.houseNumber,
             onSaved: (value) {
-              organizationInput.address.houseNumber = value;
+              organizationInput?.address?.houseNumber = value;
             },
           ),
           TextFormField(
@@ -49,15 +52,17 @@ class Organization extends StatelessWidget {
             ]),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            initialValue: organizationInput?.address?.postalCode,
             onSaved: (value) {
-              organizationInput.address.postalCode = value;
+              organizationInput?.address?.postalCode = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Ort *'),
+            initialValue: organizationInput?.address?.location,
             onSaved: (value) {
-              organizationInput.address.location = value;
+              organizationInput?.address?.location = value;
             },
           ),
           SizedBox(
@@ -67,8 +72,9 @@ class Organization extends StatelessWidget {
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Name *'),
+            initialValue: organizationInput?.contact?.name,
             onSaved: (value) {
-              organizationInput.contact.name = value;
+              organizationInput?.contact?.name = value;
             },
           ),
           TextFormField(
@@ -78,27 +84,30 @@ class Organization extends StatelessWidget {
             ]),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(labelText: 'E-Mail *'),
+            initialValue: organizationInput?.contact?.email,
             onSaved: (value) {
-              organizationInput.contact.email = value;
+              organizationInput?.contact?.email = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Telefon (tagsüber)"),
             keyboardType: TextInputType.phone,
+            initialValue: organizationInput?.contact?.telephone,
             onSaved: (value) {
-              organizationInput.contact.telephone = value;
+              organizationInput?.contact?.telephone = value;
             },
           ),
           FormBuilderCheckbox(
               name: 'has_given_permission',
-              initialValue: false,
+              initialValue:
+                  organizationInput?.contact?.hasGivenPermission ?? false,
               validator: FormBuilderValidators.equal(
                 context,
                 true,
                 errorText: 'Zustimmung erforderlich',
               ),
               onSaved: (value) =>
-                  {organizationInput.contact.hasGivenPermission = value},
+                  {organizationInput?.contact?.hasGivenPermission = value},
               title: Text('Kontaktperson hat der Weitergabe der Daten und'
                   ' möglicher Kontaktaufnahme zugestimmt')),
         ]);

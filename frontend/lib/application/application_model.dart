@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../graphql/graphql_api.graphql.dart';
 
@@ -6,6 +12,7 @@ class ApplicationModel extends ChangeNotifier {
   BlueCardApplicationInput _blueCardApplication;
   GoldenEakCardApplicationInput _goldenCardApplication;
   int regionId;
+  File attachment;
 
   BlueCardApplicationInput get blueCardApplication {
     return _blueCardApplication;
@@ -147,6 +154,34 @@ class ApplicationModel extends ChangeNotifier {
     _goldenCardApplication = goldenCardApplication;
     _blueCardApplication = null;
     notifyListeners();
+  }
+
+  void createAttachmentStream() {
+    if (_blueCardApplication?.entitlement?.entitlementType ==
+            BlueCardEntitlementType.juleica &&
+        attachment != null) {
+      _blueCardApplication.entitlement.copyOfJuleica = AttachmentInput(
+          fileName: 'juleica.jpg',
+          data: MultipartFile.fromBytes(
+            'juleica_copy',
+            attachment.readAsBytesSync(),
+            filename: 'juleica.jpg',
+            contentType: MediaType("image", "jpg"),
+          ));
+    } else if ((_goldenCardApplication?.entitlement?.goldenEntitlementType ==
+                GoldenCardEntitlementType.honorByMinisterPresident ||
+            _goldenCardApplication?.entitlement?.goldenEntitlementType ==
+                GoldenCardEntitlementType.serviceAward) &&
+        attachment != null) {
+      _goldenCardApplication.entitlement.certificate = AttachmentInput(
+          fileName: 'zertifikat.jpg',
+          data: MultipartFile.fromBytes(
+            'certificate',
+            attachment.readAsBytesSync(),
+            filename: 'zertifikat.jpg',
+            contentType: MediaType("image", "jpg"),
+          ));
+    }
   }
 
   void updateListeners() => notifyListeners();

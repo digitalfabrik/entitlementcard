@@ -20,22 +20,25 @@ class PersonalDataStep extends StatelessWidget {
         child: Column(children: <Widget>[
           TextFormField(
             decoration: InputDecoration(labelText: 'Titel'),
+            initialValue: personalData?.title,
             onSaved: (value) {
-              personalData.title = value;
+              personalData?.title = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Nachname *'),
+            initialValue: personalData?.surname,
             onSaved: (value) {
-              personalData.surname = value;
+              personalData?.surname = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Vorname(n) *'),
+            initialValue: personalData?.forenames,
             onSaved: (value) {
-              personalData.forenames = value;
+              personalData?.forenames = value;
             },
           ),
           FormBuilderDateTimePicker(
@@ -48,8 +51,12 @@ class PersonalDataStep extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Geburtsdatum *',
             ),
+            initialValue: personalData?.dateOfBirth != null
+                ? DateFormat('dd.MM.yyyy').parse(personalData?.dateOfBirth)
+                : null,
             onSaved: (value) {
-              personalData.dateOfBirth = DateFormat('dd.MM.yyyy').format(value);
+              personalData?.dateOfBirth =
+                  DateFormat('dd.MM.yyyy').format(value);
             },
           ),
           FormBuilderDropdown(
@@ -64,14 +71,16 @@ class PersonalDataStep extends StatelessWidget {
                       child: Text('$gender'),
                     ))
                 .toList(),
+            initialValue: personalData?.gender,
             onSaved: (value) {
-              personalData.gender = value;
+              personalData?.gender = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'Nationalität'),
+            initialValue: personalData?.nationality,
             onSaved: (value) {
-              personalData.nationality = value;
+              personalData?.nationality = value;
             },
           ),
           SizedBox(
@@ -80,21 +89,24 @@ class PersonalDataStep extends StatelessWidget {
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Straße *'),
+            initialValue: personalData?.address?.street,
             onSaved: (value) {
-              personalData.address.street = value;
+              personalData?.address?.street = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Hausnummer *"),
             validator: FormBuilderValidators.required(context),
+            initialValue: personalData?.address?.houseNumber,
             onSaved: (value) {
-              personalData.address.houseNumber = value;
+              personalData?.address?.houseNumber = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'Adresszusatz'),
+            initialValue: personalData?.address?.addressSupplement,
             onSaved: (value) {
-              personalData.address.addressSupplement = value;
+              personalData?.address?.addressSupplement = value;
             },
           ),
           TextFormField(
@@ -107,15 +119,17 @@ class PersonalDataStep extends StatelessWidget {
             ]),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            initialValue: personalData?.address?.postalCode,
             onSaved: (value) {
-              personalData.address.postalCode = value;
+              personalData?.address?.postalCode = value;
             },
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
             decoration: InputDecoration(labelText: 'Ort *'),
+            initialValue: personalData?.address?.location,
             onSaved: (value) {
-              personalData.address.location = value;
+              personalData?.address?.location = value;
             },
           ),
           SizedBox(
@@ -128,15 +142,17 @@ class PersonalDataStep extends StatelessWidget {
             ]),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(labelText: 'E-Mail *'),
+            initialValue: personalData?.emailAddress,
             onSaved: (value) {
-              personalData.emailAddress = value;
+              personalData?.emailAddress = value;
             },
           ),
           TextFormField(
             decoration: InputDecoration(labelText: "Telefon"),
             keyboardType: TextInputType.phone,
+            initialValue: personalData?.telephone,
             onSaved: (value) {
-              personalData.telephone = value;
+              personalData?.telephone = value;
             },
           ),
         ]));

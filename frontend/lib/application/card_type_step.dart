@@ -13,6 +13,8 @@ class CardTypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final applicationModel =
+        Provider.of<ApplicationModel>(context, listen: false);
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -21,7 +23,8 @@ class CardTypeStep extends StatelessWidget {
             FormBuilderRadioGroup(
                 activeColor: Theme.of(context).colorScheme.primary,
                 name: 'card_type',
-                onSaved: (value) => _onSaved(context, value),
+                initialValue: _getApplicationType(context, applicationModel),
+                onSaved: (value) => _onSaved(context, applicationModel, value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: [
@@ -42,7 +45,18 @@ class CardTypeStep extends StatelessWidget {
         ));
   }
 
-  void _onSaved(BuildContext context, ApplicationType value) {
+  ApplicationType _getApplicationType(
+      BuildContext context, ApplicationModel applicationModel) {
+    if (applicationModel.hasBlueCardApplication()) {
+      return applicationModel.blueCardApplication.applicationType;
+    } else if (applicationModel.hasGoldCardApplication()) {
+      return ApplicationType.artemisUnknown;
+    }
+    return null;
+  }
+
+  void _onSaved(BuildContext context, ApplicationModel applicationModel,
+      ApplicationType value) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     if (value == ApplicationType.firstApplication) {

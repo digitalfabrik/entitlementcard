@@ -23,6 +23,8 @@ class EntitlementTypeGold extends StatelessWidget {
                 activeColor: Theme.of(context).colorScheme.primary,
                 decoration: InputDecoration(labelText: 'Voraussetzungen'),
                 name: 'card_type',
+                initialValue: applicationModel
+                    .goldenCardApplication?.entitlement?.goldenEntitlementType,
                 onSaved: (value) =>
                     applicationModel.initGoldenCardEntitlement(value),
                 validator: FormBuilderValidators.compose(
