@@ -20,6 +20,7 @@ class EntitlementTypeBlue extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
+                activeColor: Theme.of(context).colorScheme.primary,
                 name: 'card_type',
                 initialValue: applicationModel
                     .blueCardApplication?.entitlement?.entitlementType,

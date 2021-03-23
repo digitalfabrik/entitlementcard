@@ -20,6 +20,7 @@ class EntitlementTypeGold extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
+                activeColor: Theme.of(context).colorScheme.primary,
                 decoration: InputDecoration(labelText: 'Voraussetzungen'),
                 name: 'card_type',
                 initialValue: applicationModel
@@ -36,16 +37,23 @@ class EntitlementTypeGold extends StatelessWidget {
                   ),
                   FormBuilderFieldOption(
                     value: GoldenCardEntitlementType.serviceAward,
-                    child: Text(
-                        'Inhaber:in einer Dienstauszeichnung des Freistaats '
-                        'Bayern nach dem Feuerwehr- und '
-                        'Hilfsorganisationen-Ehrenzeichengesetz'),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                          'Inhaber:in einer Dienstauszeichnung des Freistaats '
+                          'Bayern nach dem Feuerwehr- und '
+                          'Hilfsorganisationen-Ehrenzeichengesetz'),
+                    ),
                   ),
                   FormBuilderFieldOption(
                     value: GoldenCardEntitlementType.standard,
-                    child: Text('Ehrenamtliche, die nachweislich mindestens 25 '
-                        'Jahre mindestens 5 Stunden pro Woche oder 250 Stunden '
-                        'pro Jahr ehrenamtlich tätig waren'),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child:
+                          Text('Ehrenamtliche, die nachweislich mindestens 25 '
+                              'Jahre mindestens 5 Stunden pro Woche oder 250 '
+                              'Stunden pro Jahr ehrenamtlich tätig waren'),
+                    ),
                   ),
                 ]),
           ],

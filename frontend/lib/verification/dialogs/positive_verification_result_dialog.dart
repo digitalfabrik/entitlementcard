@@ -34,7 +34,9 @@ class PositiveVerificationResultDialog extends StatelessWidget {
               child: IdCard(
                 child: EakCard(
                     cardDetails: cardDetails,
-                    region: Region(region.prefix, region.name)),
+                    region: region != null
+                        ? Region(region.prefix, region.name)
+                        : null),
               ));
         });
   }

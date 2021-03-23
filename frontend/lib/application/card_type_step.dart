@@ -21,6 +21,7 @@ class CardTypeStep extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FormBuilderRadioGroup(
+                activeColor: Theme.of(context).colorScheme.primary,
                 name: 'card_type',
                 initialValue: _getApplicationType(context, applicationModel),
                 onSaved: (value) => _onSaved(context, applicationModel, value),
