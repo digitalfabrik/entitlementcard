@@ -14,6 +14,7 @@ class SendApplication extends StatelessWidget {
   Widget build(BuildContext context) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
+    applicationModel.createAttachmentStream();
     var query;
     Function parseResult;
     if (applicationModel.hasBlueCardApplication()) {

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
-import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 
-import '../../graphql/graphql_api.dart';
 import '../application_model.dart';
 import '../textwidgets/form_text.dart';
 
@@ -37,14 +34,6 @@ class Certificate extends StatelessWidget {
                   : [],
               onSaved: (value) => {
                 applicationModel.attachment = value.first,
-                entitlement.certificate = AttachmentInput(
-                    fileName: 'zertifikat.jpg',
-                    data: MultipartFile.fromBytes(
-                      'certificate',
-                      value.first.readAsBytesSync(),
-                      filename: 'zertifikat.jpg',
-                      contentType: MediaType("image", "jpg"),
-                    ))
               },
             ),
           ],
