@@ -1,6 +1,8 @@
 # Digitale Ehrenamtskarte
 
 > App für die [bayerische Ehrenamtskarte](https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/index.php).
+>
+> App für Android & iOS + Backend + Administrations-Webportal - **100% offener Quellcode**.
 
 [English](../../README.md) | Deutsch
 
