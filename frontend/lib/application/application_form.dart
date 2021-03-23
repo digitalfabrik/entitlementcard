@@ -22,7 +22,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
   bool _sendingInProgress = false;
   bool _sendingSuccessful = false;
-  static var _focusNode = FocusNode();
+  final _focusNode = FocusNode();
 
   int _currentStep = 0;
   GraphQLClient _client;
@@ -144,7 +144,9 @@ class _ApplicationFormState extends State<ApplicationForm> {
 
   void _sendApplication() {
     final sendApplication = SendApplication(
-        key: UniqueKey(), onResult: (success) => _sendingSuccessful = success);
+      key: UniqueKey(),
+      onResult: (success) => _sendingSuccessful = success,
+    );
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: sendApplication))
         .closed
