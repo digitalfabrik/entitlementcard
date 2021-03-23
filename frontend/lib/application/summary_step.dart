@@ -39,7 +39,11 @@ class SummaryStep extends StatelessWidget {
                     ' weitergeleitet werden.')),
             FormBuilderCheckbox(
                 name: 'correct_and_complete',
-                initialValue: false,
+                initialValue: applicationModel.blueCardApplication
+                        ?.givenInformationIsCorrectAndComplete ??
+                    applicationModel.goldenCardApplication
+                        ?.givenInformationIsCorrectAndComplete ??
+                    false,
                 validator: FormBuilderValidators.equal(
                   context,
                   true,
