@@ -22,6 +22,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
       _lastStep + 1, (index) => GlobalKey<FormBuilderState>());
   bool _sendingInProgress = false;
   bool _sendingSuccessful = false;
+  static var _focusNode = FocusNode();
 
   int _currentStep = 0;
   GraphQLClient _client;
@@ -34,6 +35,20 @@ class _ApplicationFormState extends State<ApplicationForm> {
     if (client != _client) {
       _client = client;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
