@@ -16,20 +16,22 @@ typedef OnMapCreatedCallback = void Function(MapController controller);
 
 class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
-  static const double initialZoomLevel = 6;
-  static const LatLng initialLocation = LatLng(48.949444, 11.395);
+  static const double bavariaZoomLevel = 6;
+  static const LatLng centerOfBavaria = LatLng(48.949444, 11.395);
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
   final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
+  final LatLng userLocation;
 
   const Map(
       {this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
       this.locationAvailable,
-      this.onMapCreated});
+      this.onMapCreated,
+      this.userLocation});
 
   @override
   State createState() => _MapState();
@@ -59,13 +61,15 @@ class _MapState extends State<Map> implements MapController {
         ? statusBarHeight / pixelRatio
         : statusBarHeight * pixelRatio;
     if (_mapboxView == null || !_isAnimating) {
+      var cameraPosition = widget.userLocation != null
+          ? CameraPosition(
+              target: widget.userLocation, zoom: Map.userLocationZoomLevel)
+          : CameraPosition(
+              target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+
       _mapboxView = Stack(children: [
         MapboxMap(
-          initialCameraPosition: CameraPosition(
-              target: Map.initialLocation,
-              zoom: widget.locationAvailable
-                  ? Map.userLocationZoomLevel
-                  : Map.initialZoomLevel),
+          initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
           attributionButtonMargins: Point(-100, -100),
