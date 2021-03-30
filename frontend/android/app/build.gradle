@@ -51,6 +51,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+
+            // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
+            // probably involving image-picker.
+            // The workaround is from https://github.com/flutter/flutter/issues/58479.
+            // Also have a look at https://github.com/ehrenamtskarte/ehrenamtskarte/issues/340
+            // As of flutter_plugin_android_lifecycle 2.0.1, this should no longer be necessary.
+            // Once upgrading to that version, we can remove the next line together with proguard-rules.pro.
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
