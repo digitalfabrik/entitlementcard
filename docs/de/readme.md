@@ -29,6 +29,12 @@
 - Einer Postgres bzw. [PostGIS](https://postgis.net/) Datenbank zum Speichern der Akzeptanzstellen, sowie der digitalen Ehrenamtskarten und Bewerbungen.
 - [Martin](https://github.com/urbica/martin), für Abfragen zur Darstellung von Akzeptanzstellen auf der Karte.
 
+## Demo Video
+
+[![Demo Video](https://img.youtube.com/vi/YsEAVG6efVU/0.jpg)]( https://youtu.be/YsEAVG6efVU "Digitale Ehrenamtskarte: Demo und Technologie")
+
+Klicke [hier](https://youtu.be/YsEAVG6efVU ) um das Video anzusehen.
+
 ## Projektursprung
 
 Dieses Projekt ist durch 6 Studierende des [Software Engineering Master-Studiengangs](https://elite-se.informatik.uni-augsburg.de/) der Universität Augsburg, 
