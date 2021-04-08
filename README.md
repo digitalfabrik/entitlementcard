@@ -56,6 +56,12 @@ Translated from [Wikipedia](https://de.wikipedia.org/wiki/Ehrenamtskarte):
 - A Postgres or [PostGIS](https://postgis.net/) database to store the accepting stores, as well as the digital volunteer cards and applications.
 - [Martin](https://github.com/urbica/martin), for queries to display accepting stores on the map.
 
+## Demo Video (German)
+
+[![Demo Video](https://img.youtube.com/vi/YsEAVG6efVU/0.jpg)]( https://youtu.be/YsEAVG6efVU "Digitale Ehrenamtskarte: Demo und Technologie")
+
+Click [here](https://youtu.be/YsEAVG6efVU ) to view the video.
+
 ## Resources about the Ehrenamtskarte
 
 See [here](https://github.com/ehrenamtskarte/artefacts/blob/main/resources.md)
