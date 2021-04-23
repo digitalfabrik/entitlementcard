@@ -80,4 +80,14 @@ object EakApplicationRepository {
         }
     }
 
+    fun delete(applicationId: Int): Boolean {
+        return transaction {
+            val application = EakApplicationEntity.findById(applicationId)
+                if (application != null) {
+                    application.delete()
+                    true
+                } else false
+        }
+    }
+
 }

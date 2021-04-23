@@ -82,6 +82,8 @@ type Mutation {
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new golden digital EAK"
   addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
+  "Deletes the application with specified id"
+  deleteApplication(applicationId: Int!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!): SignInPayload!
 }
