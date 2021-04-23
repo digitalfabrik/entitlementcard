@@ -1,85 +1,83 @@
-import {Button, Card, H4, Icon} from "@blueprintjs/core";
+import {Button, Card, H4, IResizeEntry, ResizeSensor} from "@blueprintjs/core";
 import {format} from "date-fns";
-import React from "react";
+import React, {FunctionComponent, useState} from "react";
+import styled from "styled-components";
 import {getApplications_applications as Application} from "../../graphql/applications/__generated__/getApplications";
-import {AppToaster} from "../AppToaster";
-import downloadDataUri from "../../util/downloadDataUri";
+import JsonFieldView, {JsonField} from "./JsonFieldView";
 
 interface Props {
     applications: Application[],
     token: string
 }
 
-interface JsonField {
-    name: string,
-    translations: { de: string },
-    type: 'Array' | 'String' | 'Number' | 'Boolean' | 'Attachment',
-    value: any
-}
+const CARD_PADDING = 20
+const COLLAPSED_HEIGHT = 250
 
-function JsonFieldView(props: { jsonField: JsonField, baseUrl: string, token: string }) {
-    if (props.jsonField.type === 'Array') {
-        return <>
-            <p><b>{props.jsonField.translations.de}</b></p>
-            <div style={{paddingLeft: '10px', borderLeft: '1px solid #ccc'}}>
-                {props.jsonField.value.map((jsonField: JsonField) => JsonFieldView({
-                    jsonField,
-                    baseUrl: props.baseUrl,
-                    token: props.token
-                }))}
-            </div>
-        </>
-    } else if (props.jsonField.type === 'String') {
-        return <p>{props.jsonField.translations.de}: {props.jsonField.value}</p>
-    } else if (props.jsonField.type === 'Number') {
-        return <p>{props.jsonField.translations.de}: {props.jsonField.value}</p>
-    } else if (props.jsonField.type === 'Boolean') {
-        return <p>
-            {props.jsonField.translations.de}:&nbsp;{
-            props.jsonField.value ? <Icon icon='tick'/> : <Icon icon='cross'/>}
-        </p>
-    } else if (props.jsonField.type === 'Attachment') {
-        const attachement = props.jsonField.value
-        const downloadUrl = `${props.baseUrl}/file/${attachement.fileIndex}`
-        const onClick = () => {
-            AppToaster.show({ message: `Lädt ${attachement.fileName}...`, intent: 'primary'})
-            fetch(downloadUrl, { headers: { authorization: `Bearer ${props.token}` } })
-                .then(result => {
-                    if (result.status === 200)
-                        return result.arrayBuffer()
-                    else throw Error("Status code not OK")
-                })
-                .then(result => {
-                    const file = new File([result], attachement.fileName)
-                    downloadDataUri(file, attachement.fileName)
-                })
-                .catch(() => AppToaster.show({ message: 'Etwas ist schiefgelaufen.', intent: 'danger'}))
-        }
-        return <p>
-            {props.jsonField.translations.de}:&nbsp;<Button icon='download' onClick={onClick}>
-            Anhang ({props.jsonField.value.fileName})</Button>
-        </p>
-    } else {
-        console.error(`Unknown type ${props.jsonField.type} found.`)
-        return <p>Ein Fehler ist aufgetreten!</p>
-    }
-}
+const ApplicationViewCard = styled(Card)<{collapsed: boolean, contentHeight: number}>`
+    transition: height 0.2s;
+    height: ${props => props.collapsed ? COLLAPSED_HEIGHT : props.contentHeight + 2*CARD_PADDING}px;
+    overflow: hidden;
+    margin: 10px;
+    padding: 0px;
+    position: relative;
+    min-width: 200px;
+`
 
-function ApplicationView(props: { application: Application, token: string }) {
-    const {createdDate: createdDateString, jsonValue, id} = props.application
+const ExpandContainer = styled.div<{ collapsed: boolean }>`
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 100%);
+    opacity: ${props => props.collapsed ? '1' : '0'};
+    position: absolute;
+    top: 0px;
+    transition: opacity 0.2s;
+    bottom: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    align-items: flex-end;
+    padding: ${CARD_PADDING}px;
+    pointer-events: ${props => props.collapsed ? 'all' : 'none'};
+`
+
+const ApplicationView: FunctionComponent<{ application: Application, token: string }> = ({application, token}) => {
+    const {createdDate: createdDateString, jsonValue, id} = application
     const createdDate = new Date(createdDateString)
     const jsonField: JsonField = JSON.parse(jsonValue)
     const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${id}`
+    const [collapsed, setCollapsed] = useState(false)
+    const [height, setHeight] = useState(0)
 
-    return <Card elevation={2}>
-        <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
-        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} token={props.token} />
-    </Card>;
+    const handleResize = (entries: IResizeEntry[]) => {
+        setHeight(entries[0].contentRect.height)
+        if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT)
+            setCollapsed(true)
+    }
+
+    return <ApplicationViewCard elevation={2} collapsed={collapsed} contentHeight={height}>
+        <ExpandContainer onClick={() => setCollapsed(false)} collapsed={collapsed}>
+            <Button icon='caret-down'>Mehr anzeigen</Button>
+        </ExpandContainer>
+        <ResizeSensor onResize={handleResize}>
+            <div style={{overflow: 'visible', padding: `${CARD_PADDING}px`}}>
+                <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
+                <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} token={token} key={0}/>
+                <div
+                    style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '20px'}}>
+                    {height > COLLAPSED_HEIGHT ?
+                        <Button onClick={() => setCollapsed(true)} icon='caret-up'>Weniger anzeigen</Button> : null}
+                    <Button onClick={() => alert(application.id)} intent='danger' icon='trash'>
+                        Bewerbung löschen
+                    </Button>
+                </div>
+            </div>
+        </ResizeSensor>
+    </ApplicationViewCard>;
 }
 
 const ApplicationsOverview = (props: Props) => {
-    return <div style={{display: 'flex', justifyContent: 'center'}}>
-        {props.applications.map(application => <ApplicationView application={application} token={props.token} />)}
+    return <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
+        {props.applications.map(application => <ApplicationView key={application.id} application={application}
+                                                                token={props.token}/>)}
     </div>
 }
 
