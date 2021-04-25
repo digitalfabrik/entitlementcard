@@ -121,11 +121,12 @@ class GraphQLHandler(
 
         // Execute the query against the schema
         try {
+            val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =
                 ExecutionInput.Builder()
                     .context(graphQLContext)
                     .query(payload["query"].toString())
-                    .variables(payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>)
+                    .variables(variables ?: emptyMap<String, Any>())
                     .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
                     .build()
 
