@@ -32,7 +32,7 @@ Ihre digitale Ehrenamtskarte ist da!`, pageMargin, greetingY);
     const instructionsY = (qrCodeY - qrCodeMargin - 16 + greetingY) / 2;
     doc.text([
         'Anleitung:',
-        "1. Laden Sie sich die App „Ehrenamtskarte“ herunter.",
+        "1. Laden Sie sich die App \"Ehrenamtskarte\" herunter.",
         "2. Starten Sie die App und folgen Sie den Hinweisen zum Scannen des Anmeldecodes.",
         "3. Scannen Sie den Anmeldecode.",
     ], pageMargin, instructionsY, {baseline: "middle"});
