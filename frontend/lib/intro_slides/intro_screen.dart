@@ -106,8 +106,8 @@ class IntroScreenState extends State<IntroScreen> {
       nameDoneBtn: "Fertig",
       nameNextBtn: "Weiter",
       nameSkipBtn: "Überspringen",
-      styleNameDoneBtn: Theme.of(context).textTheme.button,
-      isShowSkipBtn: false,
+      styleDoneBtn: Theme.of(context).textTheme.button,
+      showSkipBtn: false,
       colorDot: Theme.of(context).brightness == Brightness.light
           ? Colors.black54
           : Colors.white38,
