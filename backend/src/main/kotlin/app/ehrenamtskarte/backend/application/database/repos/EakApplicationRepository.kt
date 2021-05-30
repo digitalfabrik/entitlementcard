@@ -75,17 +75,18 @@ object EakApplicationRepository {
 
     fun getApplications(regionId: Int): List<ApplicationView> {
         return transaction {
-            EakApplicationEntity.find { EakApplications.regiondId eq regionId }
+            EakApplicationEntity.find { EakApplications.regionId eq regionId }
                 .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
         }
     }
 
-    fun delete(applicationId: Int): Boolean {
+    fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
         return transaction {
             val application = EakApplicationEntity.findById(applicationId)
                 if (application != null) {
+                    val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
                     application.delete()
-                    true
+                    return@transaction applicationDirectory.deleteRecursively()
                 } else false
         }
     }
