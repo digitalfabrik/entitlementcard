@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer
 
+import app.ehrenamtskarte.backend.stores.importer.steps.DataTransformation.Companion.findPostalCode
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
@@ -16,9 +17,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
     fun filterPostalCode(): Boolean {
         val pc = store.postalCode
         val valid = store.postalCode == null
-                || store.postalCode?.trim()?.length == 5
-                || store.postalCode?.trim()?.length == 0 // must be 5 symbols or completely empty!
-                || pc != null && matchesNa(pc)
+                || findPostalCode(pc!!).length == 5
 
         if (!valid)
             logger.info("$store was filtered out because postal code is invalid")
