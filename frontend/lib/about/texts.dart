@@ -10,12 +10,11 @@ class Paragraph {
 
 List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
   return paragraphs
-      .map((e) =>
-  [
-    if (e.title != null)
-      Text(e.title, style: theme.textTheme.headline6),
-    Text(e.content, style: theme.textTheme.bodyText1)
-  ])
+      .map((e) => [
+            if (e.title != null)
+              Text(e.title, style: theme.textTheme.headline6),
+            Text(e.content, style: theme.textTheme.bodyText1)
+          ])
       .expand((i) => i)
       .toList();
 }
@@ -127,18 +126,11 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
   ];
 
   return content
-      .map((e) =>
-  [
-    if (e.title != null)
-      Text(e.title, style: Theme
-          .of(context)
-          .textTheme
-          .headline6),
-    Text(e.content, style: Theme
-        .of(context)
-        .textTheme
-        .bodyText1)
-  ])
+      .map((e) => [
+            if (e.title != null)
+              Text(e.title, style: Theme.of(context).textTheme.headline6),
+            Text(e.content, style: Theme.of(context).textTheme.bodyText1)
+          ])
       .expand((i) => i)
       .toList();
 }
@@ -203,5 +195,5 @@ https://tuerantuer.de/digitalfabrik/
 }
 
 String publisherAddress = '''
-Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 7\n80797 München
+Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München
 ''';

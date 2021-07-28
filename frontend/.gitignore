@@ -1,5 +1,7 @@
 schema.graphql
 
+.fvm/flutter_sdk
+
 
 # Miscellaneous
 *.class

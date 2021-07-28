@@ -31,9 +31,10 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
-        context:GraphQLContext, applicationId: Int
+        context: GraphQLContext,
+        applicationId: Int
     ): Boolean {
         context.enforceSignedIn()
-        return EakApplicationRepository.delete(applicationId)
+        return EakApplicationRepository.delete(applicationId, context)
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.`java-time`.CurrentDateTime
 import org.jetbrains.exposed.sql.`java-time`.datetime
 
 object EakApplications : IntIdTable() {
-    val regiondId = reference("regionId", Regions)
+    val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
     val createdDate = datetime("createdDate").defaultExpression(CurrentDateTime())
 }
@@ -19,7 +19,7 @@ class EakApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         EakApplications
     )
 
-    var regionId by EakApplications.regiondId
+    var regionId by EakApplications.regionId
     var jsonValue by EakApplications.jsonValue
     var createdDate by EakApplications.createdDate
 }
