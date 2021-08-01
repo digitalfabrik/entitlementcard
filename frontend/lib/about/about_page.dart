@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../configuration/configuration.dart';
 import '../util/non_material_page.dart';
@@ -104,6 +105,13 @@ class AboutPage extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => LicensePage(),
                           ));
+                    }),
+                ListTile(
+                    leading: Icon(Icons.code_outlined),
+                    title: Text("Quellcode dieser App auf github.com"),
+                    onTap: () {
+                      launch(
+                          "https://github.com/ehrenamtskarte/ehrenamtskarte");
                     }),
                 if (config.showDevSettings)
                   ListTile(
