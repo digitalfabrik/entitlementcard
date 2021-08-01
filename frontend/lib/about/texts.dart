@@ -167,7 +167,7 @@ Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird 
 List<Widget> getPublisherText(BuildContext context) {
   return toWidgets(Theme.of(context), [
     Paragraph(content: '''
-Bayerisches Staatsministerium für Arbeit und Soziales, Familie und Integration
+Bayerisches Staatsministerium für Familie, Arbeit und Soziales
 Winzererstraße 9
 80797 München
 
