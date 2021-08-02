@@ -108,7 +108,7 @@ class AboutPage extends StatelessWidget {
                     }),
                 ListTile(
                     leading: Icon(Icons.code_outlined),
-                    title: Text("Quellcode dieser App auf github.com"),
+                    title: Text("Quellcode der App"),
                     onTap: () {
                       launch(
                           "https://github.com/ehrenamtskarte/ehrenamtskarte");
