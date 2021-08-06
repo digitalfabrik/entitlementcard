@@ -1,9 +1,9 @@
-import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
 import 'accepting_store_preview_card.dart';
+import 'models.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;

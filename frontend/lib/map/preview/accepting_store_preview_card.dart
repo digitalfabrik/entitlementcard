@@ -1,9 +1,9 @@
-import 'package:ehrenamtskarte/map/preview/models.dart';
-import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/error_message.dart';
 import '../detail/detail_view.dart';
 import 'accepting_store_preview_card_content.dart';
+import 'models.dart';
 
 class AcceptingStorePreviewCard extends StatelessWidget {
   final bool isLoading;
