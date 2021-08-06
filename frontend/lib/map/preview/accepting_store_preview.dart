@@ -1,18 +1,16 @@
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
-import '../../widgets/error_message.dart';
-import 'accepting_store_summary_content.dart';
-import 'models.dart';
+import 'accepting_store_preview_card.dart';
 
-typedef OnExecptionCallback = void Function(Exception exception);
-
-class LoadingAcceptingStorySummary extends StatelessWidget {
+class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
+  final bool hideShowOnMapButton;
 
-  LoadingAcceptingStorySummary(this.acceptingStoreId, {Key key})
+  AcceptingStorePreview(this.acceptingStoreId,
+      {Key key, this.hideShowOnMapButton})
       : super(key: key);
 
   @override
@@ -29,19 +27,18 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
               throw result.exception;
             }
             if (result.isLoading) {
-              return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: const LinearProgressIndicator());
+              return AcceptingStorePreviewCard(isLoading: true);
             }
             var stores = query.parse(result.data).physicalStoresById;
             if (stores.isEmpty) {
               throw Exception("ID not found");
             }
-            return AcceptingStoreSummaryContent(
-                _convertToAcceptingStoreSummary(stores[0]));
+            return AcceptingStorePreviewCard(
+                isLoading: false,
+                acceptingStore: _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return ErrorMessage("Fehler beim Laden der Infos.");
+            return AcceptingStorePreviewCard(isLoading: false);
           }
         });
   }
