@@ -215,7 +215,7 @@ jobs:
           name: "Build .deb"
           command: |
             cp /tmp/workspace/martin/martin .
-            ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -M .
+            ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
       - run:
           name: "Move .deb to artifacts folder"
           command: |

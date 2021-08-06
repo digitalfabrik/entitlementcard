@@ -9,7 +9,7 @@ architecture=all
 maintainer="The Ehrenamtskarte Team <info@ehrenamtskarte.app>"
 
 # read input
-while getopts v:r:a:n:t:s:d:f:c:m:M:h flag
+while getopts v:r:a:n:t:s:d:f:c:m:M:C:h flag
 do
     case "${flag}" in
         v) version=${OPTARG};;
@@ -23,8 +23,9 @@ do
         c) dependencies=${OPTARG};;
         m) stylesfolder=${OPTARG};;
         M) martinfolder=${OPTARG};;
+        C) configfile=${OPTARG};;
         h)
-            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-m mapboxstylesfolder] [-M martinfolder}"
+            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-m mapboxstylesfolder] [-M martinfolder] [-C configfile]"
             exit 0;;
         *)
             echo "Unknown flag"
@@ -38,7 +39,7 @@ debfile=${fullname}.deb
 
 # init deb workdir
 mkdir "${debworkdir}/DEBIAN"
-ctrlfile=${debworkdir}/DEBIAN/control
+ctrlfile="${debworkdir}/DEBIAN/control"
 echo "Creating control file in $ctrlfile …"
 touch "$ctrlfile"
 echo "Package: $name" >> "$ctrlfile"
@@ -50,6 +51,11 @@ if [[ -n "$description" ]]; then
 fi
 if [[ -n "$dependencies" ]]; then
     echo "Depends: $dependencies" >> "$ctrlfile"
+fi
+
+# create conffiles file
+if [[ -n "$configfile" ]]; then
+    echo "$configfile" >> "${debworkdir}/DEBIAN/conffiles"
 fi
 
 # copy files to deb workdir
