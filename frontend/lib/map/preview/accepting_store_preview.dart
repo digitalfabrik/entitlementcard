@@ -38,7 +38,8 @@ class AcceptingStorePreview extends StatelessWidget {
                 acceptingStore: _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return AcceptingStorePreviewCard(isLoading: false);
+            return AcceptingStorePreviewCard(
+                isLoading: false, refetch: refetch);
           }
         });
   }

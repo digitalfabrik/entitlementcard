@@ -7,21 +7,25 @@ import 'accepting_store_preview_card_content.dart';
 
 class AcceptingStorePreviewCard extends StatelessWidget {
   final bool isLoading;
+  final Function refetch;
   final /*?*/ AcceptingStoreSummary acceptingStore;
 
-  AcceptingStorePreviewCard({this.isLoading, this.acceptingStore, Key key})
+  AcceptingStorePreviewCard(
+      {this.isLoading, this.acceptingStore, this.refetch, Key key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var onTap = isLoading || acceptingStore == null
+    var onTap = isLoading
         ? null
-        : () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  DetailView(acceptingStore.id, hideShowOnMapButton: true),
-            ));
+        : acceptingStore == null
+            ? refetch
+            : () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DetailView(acceptingStore.id, hideShowOnMapButton: true),
+                ));
     return Container(
         alignment: Alignment.bottomCenter,
         child: SizedBox(

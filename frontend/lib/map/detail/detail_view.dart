@@ -20,44 +20,51 @@ class DetailView extends StatelessWidget {
         variables: AcceptingStoreByIdArguments(
             ids: IdsParamsInput(ids: [_acceptingStoreId])));
     return Query(
-      options: QueryOptions(
-          document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
-      builder: (result, {refetch, fetchMore}) {
-        if (result.hasException) {
-          return _errorMessage(result.exception.toString());
-        }
+        options: QueryOptions(
+            document: byIdQuery.document,
+            variables: byIdQuery.getVariablesMap()),
+        builder: (result, {refetch, fetchMore}) {
+          try {
+            if (result.hasException) {
+              throw result.exception;
+            }
 
-        if (result.isLoading) {
-          return DetailLayout(body: LinearProgressIndicator());
-        }
-        final matchingStores =
-            AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
-        if (matchingStores.isEmpty) {
-          return _errorMessage("Akzeptanzstelle nicht gefunden");
-        }
-        final categoryId = matchingStores.first?.store?.category?.id;
-        final accentColor = getDarkenedColorForCategory(categoryId);
-        return DetailLayout(
-          title: matchingStores.first.store.name ?? "Akzeptanzstelle",
-          body: DetailContent(
-            matchingStores.first,
-            hideShowOnMapButton: hideShowOnMapButton,
-            accentColor: accentColor,
-          ),
-          categoryId: matchingStores.first.store.category.id,
-          categoryName: matchingStores.first.store.category.name,
-          accentColor: accentColor,
-        );
-      },
-    );
+            if (result.isLoading) {
+              return DetailLayout(body: LinearProgressIndicator());
+            }
+            final matchingStores =
+                AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
+            if (matchingStores.isEmpty) {
+              throw ArgumentError("Store not found.");
+            }
+            final categoryId = matchingStores.first?.store?.category?.id;
+            final accentColor = getDarkenedColorForCategory(categoryId);
+            return DetailLayout(
+              title: matchingStores.first.store.name ?? "Akzeptanzstelle",
+              body: DetailContent(
+                matchingStores.first,
+                hideShowOnMapButton: hideShowOnMapButton,
+                accentColor: accentColor,
+              ),
+              categoryId: matchingStores.first.store.category.id,
+              categoryName: matchingStores.first.store.category.name,
+              accentColor: accentColor,
+            );
+          } on Exception catch (e) {
+            debugPrint(e.toString());
+            return _errorMessage("Fehler beim Laden der Daten", refetch);
+          }
+        });
   }
 
-  Widget _errorMessage(String message) {
+  Widget _errorMessage(String message, Function refetch) {
     return DetailLayout(
         title: "",
-        body: Padding(
-          padding: EdgeInsets.all(16),
-          child: ErrorMessage(message),
-        ));
+        body: InkWell(
+            onTap: refetch,
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: ErrorMessage(message),
+            )));
   }
 }
