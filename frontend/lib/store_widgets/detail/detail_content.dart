@@ -5,9 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../graphql/graphql_api.graphql.dart';
 import '../../home/home_page.dart';
+import '../../map/map_page.dart';
 import '../../util/color_utils.dart';
 import '../../util/sanitize_contact_details.dart';
-import '../../map/map_page.dart';
 import 'contact_info_row.dart';
 
 class DetailContent extends StatelessWidget {

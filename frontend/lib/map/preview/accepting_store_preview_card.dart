@@ -1,6 +1,6 @@
-import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 
+import '../../store_widgets/accepting_store_summary.dart';
 import '../../widgets/error_message.dart';
 import 'models.dart';
 
