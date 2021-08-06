@@ -12,8 +12,6 @@ class SearchPage extends StatefulWidget {
   State<StatefulWidget> createState() => _SearchPageState();
 }
 
-enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
-
 class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;

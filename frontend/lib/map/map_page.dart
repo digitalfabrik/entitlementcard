@@ -65,8 +65,7 @@ class _MapPageState extends State<MapPage>
                   duration: Duration(milliseconds: 200),
                   child: _selectedAcceptingStoreId != null
                       ? AcceptingStorePreview(
-                          _selectedAcceptingStoreId,
-                          hideShowOnMapButton: true,
+                          _selectedAcceptingStoreId
                         )
                       : null),
             ),

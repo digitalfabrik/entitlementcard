@@ -4,7 +4,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../graphql/graphql_api.dart';
-import 'search_result_item.dart';
+import '../map/preview/models.dart';
+import '../store_widgets/accepting_store_summary.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput coordinates;
@@ -98,10 +99,21 @@ class ResultsLoaderState extends State<ResultsLoader> {
       pagingController: _pagingController,
       builderDelegate:
           PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
-              itemBuilder: (context, item, index) => SearchResultItem(
-                  key: ValueKey(item.id),
-                  item: item,
-                  coordinates: widget.coordinates),
+              itemBuilder: (context, item, index) => IntrinsicHeight(
+                  child: AcceptingStoreSummary(
+                      key: ValueKey(item.id),
+                      store: AcceptingStoreSummaryModel(
+                          item.id,
+                          item.name,
+                          item.description,
+                          item.categoryId,
+                          item.physicalStore?.coordinates != null
+                              ? Coordinates(item.physicalStore.coordinates.lat,
+                                  item.physicalStore.coordinates.lng)
+                              : null,
+                          item.physicalStore?.address?.location),
+                      coordinates: widget.coordinates,
+                      showMapButtonOnDetails: true)),
               noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
               firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
               newPageErrorIndicatorBuilder: _buildErrorWithRetry,

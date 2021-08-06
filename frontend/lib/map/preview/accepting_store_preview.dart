@@ -7,11 +7,8 @@ import 'models.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
-  final bool hideShowOnMapButton;
 
-  AcceptingStorePreview(this.acceptingStoreId,
-      {Key key, this.hideShowOnMapButton})
-      : super(key: key);
+  AcceptingStorePreview(this.acceptingStoreId, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +42,13 @@ class AcceptingStorePreview extends StatelessWidget {
   }
 
   _convertToAcceptingStoreSummary(
-      AcceptingStoreSummaryById$Query$PhysicalStore store) {
-    return AcceptingStoreSummary(
-        store.id, store.store.name, store.store.description);
+      AcceptingStoreSummaryById$Query$PhysicalStore item) {
+    return AcceptingStoreSummaryModel(
+        item.id,
+        item.store.name,
+        item.store.description,
+        item.store.categoryId,
+        null,
+        null);
   }
 }
