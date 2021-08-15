@@ -1,6 +1,6 @@
 # Frontend
 
-The Ehrenamtskarte app uses Flutter. You can have a look at [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it.
+The Ehrenamtskarte app uses Flutter. You can have a look at [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it. Alternatively, you can take a look at [README.md](../frontend/README.md) for a simpler guide which used Flutter Version Manager.
 
 This short guide focuses on setting up the project using IntelliJ instead of Android Studio:
 1. Install [Dart SDK](https://dart.dev/get-dart)
