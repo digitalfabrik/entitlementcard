@@ -5,7 +5,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'location_button.dart';
 import 'map/map_controller.dart';
 import 'map/map_with_futures.dart';
-import 'preview/accepting_store_summary.dart';
+import 'preview/accepting_store_preview.dart';
 
 class PhysicalStoreFeatureData {
   final int id;
@@ -64,9 +64,8 @@ class _MapPageState extends State<MapPage>
               child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),
                   child: _selectedAcceptingStoreId != null
-                      ? AcceptingStoreSummary(
-                          _selectedAcceptingStoreId,
-                          hideShowOnMapButton: true,
+                      ? AcceptingStorePreview(
+                          _selectedAcceptingStoreId
                         )
                       : null),
             ),

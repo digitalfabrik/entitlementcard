@@ -13,7 +13,8 @@ class ErrorMessage extends StatelessWidget {
       Expanded(
           child: Text(
         _message,
-      ))
+      )),
+      Icon(Icons.replay)
     ]);
   }
 }

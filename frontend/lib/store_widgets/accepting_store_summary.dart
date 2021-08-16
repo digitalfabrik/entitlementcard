@@ -6,30 +6,38 @@ import 'package:intl/intl.dart';
 
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
-import '../map/detail/detail_view.dart';
+import '../map/preview/models.dart';
+import './detail/detail_view.dart';
 
-class SearchResultItem extends StatelessWidget {
-  final AcceptingStoresSearch$Query$AcceptingStore item;
+class AcceptingStoreSummary extends StatelessWidget {
+  final AcceptingStoreSummaryModel store;
   final CoordinatesInput coordinates;
   final double wideDepictionThreshold;
+  final bool showMapButtonOnDetails;
+  final bool showLocation;
 
-  const SearchResultItem(
-      {Key key, this.item, this.coordinates, this.wideDepictionThreshold = 400})
+  const AcceptingStoreSummary(
+      {Key key,
+      this.store,
+      this.coordinates,
+      this.showMapButtonOnDetails,
+      this.showLocation = true,
+      this.wideDepictionThreshold = 400})
       : super(key: key);
 
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
   double get _distance {
     // ignore: avoid_returning_null
-    if (coordinates == null || item.physicalStore == null) return null;
-    return calcDistance(coordinates.lat, coordinates.lng,
-        item.physicalStore.coordinates.lat, item.physicalStore.coordinates.lng);
+    if (coordinates == null || store.coordinates == null) return null;
+    return calcDistance(coordinates.lat, coordinates.lng, store.coordinates.lat,
+        store.coordinates.lng);
   }
 
   @override
   Widget build(BuildContext context) {
-    final itemCategoryAsset = item.categoryId < categoryAssets.length
-        ? categoryAssets[item.categoryId]
+    final itemCategoryAsset = store.categoryId < categoryAssets.length
+        ? categoryAssets[store.categoryId]
         : null;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
     final categoryColor = itemCategoryAsset?.color;
@@ -40,50 +48,49 @@ class SearchResultItem extends StatelessWidget {
       bottom: false,
       top: false,
       child: InkWell(
-        onTap: () {
-          _openDetailView(context, item.id);
-        },
-        child: Padding(
+          onTap: () {
+            _openDetailView(context);
+          },
+          child: Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
-            child: IntrinsicHeight(
-              child: Row(
-                children: [
-                  if (useWideDepiction)
-                    CategoryIconIndicator(
-                      svgIconPath: itemCategoryAsset?.icon,
-                      categoryName: categoryName,
-                    )
-                  else
-                    CategoryColorIndicator(categoryColor: categoryColor),
-                  StoreTextOverview(
-                    item: item,
-                    showTownName: _distance == null,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        children: [
-                          if (_distance != null)
-                            DistanceText(distance: _distance),
-                          Container(
-                              child: Icon(Icons.keyboard_arrow_right,
-                                  size: 30.0,
-                                  color: Theme.of(context).disabledColor),
-                              height: double.infinity),
-                        ],
-                      ))
-                ],
-              ),
-            )),
-      ),
+            child: Row(
+              children: [
+                if (useWideDepiction)
+                  CategoryIconIndicator(
+                    svgIconPath: itemCategoryAsset?.icon,
+                    categoryName: categoryName,
+                  )
+                else
+                  CategoryColorIndicator(categoryColor: categoryColor),
+                StoreTextOverview(
+                  store: store,
+                  showTownName: _distance == null && showLocation,
+                ),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        if (_distance != null)
+                          DistanceText(distance: _distance),
+                        Container(
+                            child: Icon(Icons.keyboard_arrow_right,
+                                size: 30.0,
+                                color: Theme.of(context).disabledColor),
+                            height: double.infinity),
+                      ],
+                    ))
+              ],
+            ),
+          )),
     );
   }
 
-  void _openDetailView(BuildContext context, int acceptingStoreId) {
+  void _openDetailView(BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailView(acceptingStoreId),
+          builder: (context) => DetailView(store.id,
+              hideShowOnMapButton: !showMapButtonOnDetails),
         ));
   }
 }
@@ -91,14 +98,19 @@ class SearchResultItem extends StatelessWidget {
 class CategoryIconIndicator extends StatelessWidget {
   final String svgIconPath;
   final String categoryName;
+  final EdgeInsets padding;
 
-  const CategoryIconIndicator({Key key, this.svgIconPath, this.categoryName})
+  const CategoryIconIndicator(
+      {Key key,
+      this.svgIconPath,
+      this.categoryName,
+      this.padding = const EdgeInsets.symmetric(horizontal: 16)})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: padding,
       child: svgIconPath != null
           ? SvgPicture.asset(svgIconPath,
               width: 30, semanticsLabel: categoryName ?? "Unbekannte Kategorie")
@@ -128,11 +140,11 @@ class CategoryColorIndicator extends StatelessWidget {
 }
 
 class StoreTextOverview extends StatelessWidget {
-  final AcceptingStoresSearch$Query$AcceptingStore item;
+  final AcceptingStoreSummaryModel store;
   final bool showTownName;
 
   const StoreTextOverview(
-      {Key key, @required this.item, this.showTownName = false})
+      {Key key, @required this.store, this.showTownName = false})
       : super(key: key);
 
   @override
@@ -142,18 +154,17 @@ class StoreTextOverview extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.name ?? "Akzeptanzstelle",
+            Text(store.name ?? "Akzeptanzstelle",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText1),
             SizedBox(height: 4),
-            Text(item.description ?? "",
+            Text(store.description ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2),
-            if (showTownName && item.physicalStore?.address?.location != null)
-              Text(item.physicalStore?.address?.location,
-                  maxLines: 1, overflow: TextOverflow.ellipsis)
+            if (showTownName && store.location != null)
+              Text(store.location, maxLines: 1, overflow: TextOverflow.ellipsis)
           ]),
     );
   }

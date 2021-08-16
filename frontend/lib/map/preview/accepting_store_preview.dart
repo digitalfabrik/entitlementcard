@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../graphql/graphql_api.dart';
-import '../../widgets/error_message.dart';
-import 'accepting_store_summary_content.dart';
+import 'accepting_store_preview_card.dart';
 import 'models.dart';
 
-typedef OnExecptionCallback = void Function(Exception exception);
-
-class LoadingAcceptingStorySummary extends StatelessWidget {
+class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  LoadingAcceptingStorySummary(this.acceptingStoreId, {Key key})
-      : super(key: key);
+  AcceptingStorePreview(this.acceptingStoreId, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +24,31 @@ class LoadingAcceptingStorySummary extends StatelessWidget {
               throw result.exception;
             }
             if (result.isLoading) {
-              return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: const LinearProgressIndicator());
+              return AcceptingStorePreviewCard(isLoading: true);
             }
             var stores = query.parse(result.data).physicalStoresById;
             if (stores.isEmpty) {
               throw Exception("ID not found");
             }
-            return AcceptingStoreSummaryContent(
-                _convertToAcceptingStoreSummary(stores[0]));
+            return AcceptingStorePreviewCard(
+                isLoading: false,
+                acceptingStore: _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return ErrorMessage("Fehler beim Laden der Infos.");
+            return AcceptingStorePreviewCard(
+                isLoading: false, refetch: refetch);
           }
         });
   }
 
   _convertToAcceptingStoreSummary(
-      AcceptingStoreSummaryById$Query$PhysicalStore store) {
-    return AcceptingStoreSummary(
-        store.id, store.store.name, store.store.description);
+      AcceptingStoreSummaryById$Query$PhysicalStore item) {
+    return AcceptingStoreSummaryModel(
+        item.id,
+        item.store.name,
+        item.store.description,
+        item.store.categoryId,
+        null,
+        null);
   }
 }

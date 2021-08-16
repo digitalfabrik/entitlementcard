@@ -9,12 +9,13 @@ class AttributionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var color = Theme.of(context).colorScheme.primary;
     return SimpleDialog(
       title: Text('Kartendaten'),
       children: [
         AttributionDialogItem(
           icon: Icons.copyright,
-          color: Colors.blue,
+          color: color,
           text: 'OpenStreetMap Mitwirkende',
           onPressed: () {
             launch("https://www.openstreetmap.org/copyright");
@@ -22,15 +23,15 @@ class AttributionDialog extends StatelessWidget {
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
-          color: Colors.blue,
+          color: color,
           text: 'OpenMapTiles',
           onPressed: () {
             launch("https://openmaptiles.org/");
-          },     
+          },
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
-          color: Colors.blue,
+          color: color,
           text: 'Natural Earth',
           onPressed: () {
             launch("https://naturalearthdata.com/");
@@ -38,7 +39,7 @@ class AttributionDialog extends StatelessWidget {
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
-          color: Colors.blue,
+          color: color,
           text: 'LBE Bayern',
           onPressed: () {
             launch("https://www.lbe.bayern.de/");

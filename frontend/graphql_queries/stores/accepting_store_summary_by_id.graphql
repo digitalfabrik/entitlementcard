@@ -4,6 +4,7 @@ query AcceptingStoreSummaryById($ids: IdsParamsInput!) {
         store {
             name
             description
+            categoryId
         }
     }
 }
