@@ -28,6 +28,8 @@
 	<string>Einlesen von QR-Codes und Abfotografieren von Dokumenten für das Bewerbungsformular.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Anhängen von Bildern für das Bewerbungsformular.</string>
 	<key>UILaunchStoryboardName</key>
@@ -52,6 +54,6 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
+	<false/>
 </dict>
 </plist>
