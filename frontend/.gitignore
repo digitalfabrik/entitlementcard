@@ -40,5 +40,4 @@ app.*.symbols
 app.*.map.json
 
 .fvm/
-android/
-ios/
+
