@@ -36,3 +36,4 @@ build
 vendor
 
 fastlane/report.xml
+fastlane/screenshots
