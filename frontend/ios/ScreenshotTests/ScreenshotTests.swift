@@ -62,6 +62,10 @@ class ScreenshotTests: XCTestCase {
         setupSnapshot(app)
         app.launch()
         
+        let element = app.staticTexts["Suche\nTab 2 von 3"]
+        self.waitForElementToAppear(element: element)
+        sleep(5)
+        
         app.staticTexts["Suche\nTab 2 von 3"].tap()
         app.textFields["Tippen, um zu suchen …"].tap()
         
@@ -77,8 +81,13 @@ class ScreenshotTests: XCTestCase {
         fKey.tap()
         eKey.tap()
         app.images["Essen/Trinken/Gastronomie"].tap()
-
-        app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] %@", "Alpha-Café")).element(boundBy: 0).tap()
+        
+        var result = app.staticTexts.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
+            
+        if (!result.exists) {
+            result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
+        }
+        result.tap()
         
         snapshot("01Detail")
     }
