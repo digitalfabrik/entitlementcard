@@ -67,27 +67,24 @@ class ScreenshotTests: XCTestCase {
         sleep(5)
         
         app.staticTexts["Suche\nTab 2 von 3"].tap()
-        app.textFields["Tippen, um zu suchen …"].tap()
+        let search = app.textFields["Tippen, um zu suchen …"]
+        search.tap()
         
-        let kKey = app/*@START_MENU_TOKEN@*/.keys["K"]/*[[".keyboards.keys[\"K\"]",".keys[\"K\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        let aKey = app/*@START_MENU_TOKEN@*/.keys["a"]/*[[".keyboards.keys[\"a\"]",".keys[\"a\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        let fKey = app/*@START_MENU_TOKEN@*/.keys["f"]/*[[".keyboards.keys[\"f\"]",".keys[\"f\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        let eKey = app/*@START_MENU_TOKEN@*/.keys["e"]/*[[".keyboards.keys[\"e\"]",".keys[\"e\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+
+        search.tap()
+        search.typeText("Alpha-Caf")
+        search.typeText("\n") // Close keyboard for more space
         
-        app/*@START_MENU_TOKEN@*/.buttons["shift"]/*[[".keyboards",".buttons[\"Umschalt\"]",".buttons[\"shift\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
-        kKey.tap()
-        aKey.tap()
-        fKey.tap()
-        fKey.tap()
-        eKey.tap()
-        app.images["Essen/Trinken/Gastronomie"].tap()
-        
-        var result = app.staticTexts.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
+        app.images.matching(identifier: "Essen/Trinken/Gastronomie").element(boundBy: 0).tap()
+
+        var result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
             
-        if (!result.exists) {
-            result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
-        }
+        //if (!result.exists || !result.isHittable) {
+        //    result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
+        //}
         result.tap()
+        
+        sleep(2)
         
         snapshot("01Detail")
     }
