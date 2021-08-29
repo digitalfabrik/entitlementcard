@@ -77,7 +77,8 @@ class ScreenshotTests: XCTestCase {
         
         app.images.matching(identifier: "Essen/Trinken/Gastronomie").element(boundBy: 0).tap()
 
-        var result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
+        // on ipads the list element is a "otherElements" element, on iphones it is a "staticTexts"
+        var result = app.descendants(matching: .any).element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
             
         //if (!result.exists || !result.isHittable) {
         //    result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
