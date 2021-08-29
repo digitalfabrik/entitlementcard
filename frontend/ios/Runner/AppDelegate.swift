@@ -15,8 +15,6 @@ import Flutter
     func clearITNRWStorage() {
         let preferences = UserDefaults.standard
         let key = "preferencesSQLFilterString"
-
-        print(preferences.string(forKey: key))
         
         if preferences.string(forKey: key) != nil {
             //clear preferences
