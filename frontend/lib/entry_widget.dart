@@ -34,6 +34,7 @@ class EntryWidget extends StatelessWidget {
               darkTheme: darkTheme,
               themeMode: ThemeMode.system,
               initialRoute: initialRoute,
+              debugShowCheckedModeBanner: false,
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,

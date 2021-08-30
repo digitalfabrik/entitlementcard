@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Ehrenamtskarte</string>
+	<string>Ehrenamt</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,6 +27,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Einlesen von QR-Codes und Abfotografieren von Dokumenten für das Bewerbungsformular.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Anhängen von Bildern für das Bewerbungsformular.</string>
@@ -51,5 +53,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

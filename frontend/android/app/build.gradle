@@ -37,8 +37,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "app.ehrenamtskarte"
+        applicationId "de.nrw.it.giz.ehrensache.bayern.android"
         minSdkVersion 20
         targetSdkVersion 29
         multiDexEnabled true
@@ -71,6 +70,7 @@ android {
 
 flutter {
     source '../..'
+    target 'lib/main_prod.dart'
 }
 
 dependencies {
