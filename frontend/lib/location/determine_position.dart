@@ -82,6 +82,31 @@ Future<bool> canDetermineLocation({BuildContext userInteractContext}) async {
   }
 }
 
+Future<bool> checkQuietIfLocationIsEnabled() async {
+  try {
+    final locationPermission = await Geolocator.checkPermission();
+    var isLocationEnabled = false;
+    switch (locationPermission) {
+      case LocationPermission.denied:
+        isLocationEnabled = false;
+        break;
+      case LocationPermission.deniedForever:
+        isLocationEnabled = false;
+        break;
+      case LocationPermission.whileInUse:
+        isLocationEnabled = true;
+        break;
+      case LocationPermission.always:
+        isLocationEnabled = true;
+        break;
+    }
+    return isLocationEnabled;
+  } on Exception catch (e) {
+    print(e);
+    return false;
+  }
+}
+
 class PositionNotAvailableException implements Exception {
   final String reason;
 
