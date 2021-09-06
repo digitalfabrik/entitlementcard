@@ -18,7 +18,9 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
 
   void _setInitialLocationStatus(bool isLocationEnabled) {
     setState(() {
-      _locationStatus = isLocationEnabled ? _LocationStatus.approved : _LocationStatus.notApproved;
+      _locationStatus = isLocationEnabled
+          ? _LocationStatus.approved
+          : _LocationStatus.notApproved;
     });
   }
 
@@ -69,4 +71,4 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   }
 }
 
-enum _LocationStatus { loading, notApproved, approved, denied, error }
+enum _LocationStatus { loading, notApproved, approved, denied }
