@@ -62,11 +62,10 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
           child: Text("Standort ist nicht freigegeben."),
         );
         break;
-      case _LocationStatus.error:
+      default:
         return Text("Ein unerwarteter Fehler ist aufgetreten.");
         break;
     }
-    return Text("Ein unerwarteter Fehler ist aufgetreten.");
   }
 }
 
