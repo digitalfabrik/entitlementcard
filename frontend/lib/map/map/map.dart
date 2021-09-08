@@ -117,6 +117,9 @@ class _MapState extends State<Map> implements MapController {
 
   void _onMapCreated(MapboxMapController controller) {
     _controller = controller;
+    _controller.onSymbolTapped.add((argument) {
+      widget.onNoFeatureClick();
+    });
     if (widget.locationAvailable) {
       _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
@@ -142,10 +145,29 @@ class _MapState extends State<Map> implements MapController {
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var features = await _controller.queryRenderedFeatures(
-        point, widget.onFeatureClickLayerFilter ?? [], null);
-    if (features.isNotEmpty) {
-      var featureInfo = json.decode(features[0]);
+    var touch_target_size = 125.0;
+    var rect = Rect.fromCenter(
+        center: Offset(point.x, point.y),
+        width: touch_target_size,
+        height: touch_target_size);
+
+    var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
+        rect, widget.onFeatureClickLayerFilter ?? [], null);
+    var mapPoint = await _controller.toLatLng(point);
+    if (jsonFeatures.isNotEmpty) {
+      int distSort(a, b) {
+        var cA = a["geometry"]["coordinates"];
+        var cB = b["geometry"]["coordinates"];
+        var dA = sqrt(pow(cA[0] - mapPoint.longitude, 2) +
+            pow(cA[1] - mapPoint.latitude, 2));
+        var dB = sqrt(pow(cB[0] - mapPoint.longitude, 2) +
+            pow(cB[1] - mapPoint.latitude, 2));
+        return dA < dB ? -1 : 1;
+      }
+
+      var features = jsonFeatures.map((x) => json.decode(x)).toList();
+      features.sort(distSort);
+      var featureInfo = features[0];
       if (featureInfo != null) {
         if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
       }
