@@ -145,11 +145,11 @@ class _MapState extends State<Map> implements MapController {
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var touch_target_size = 125.0;
+    var touchTargetSize = 125.0;
     var rect = Rect.fromCenter(
         center: Offset(point.x, point.y),
-        width: touch_target_size,
-        height: touch_target_size);
+        width: touchTargetSize,
+        height: touchTargetSize);
 
     var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
         rect, widget.onFeatureClickLayerFilter ?? [], null);
