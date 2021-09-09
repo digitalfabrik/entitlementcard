@@ -145,14 +145,15 @@ class _MapState extends State<Map> implements MapController {
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var touchTargetSize = 125.0;
+    var touchTargetSize = 100.0;
     var rect = Rect.fromCenter(
         center: Offset(point.x, point.y),
         width: touchTargetSize,
         height: touchTargetSize);
-    if (Platform.isIOS) { // Work around for flutter bindings
+    if (Platform.isIOS) { // Work around flutter bindings
+      touchTargetSize = 15.0;
       rect = Rect.fromLTRB(
-        rect.left, rect.top, rect.width, rect.height
+        rect.left, rect.top, touchTargetSize, touchTargetSize
       );
     }
 
