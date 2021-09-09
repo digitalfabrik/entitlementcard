@@ -170,7 +170,6 @@ class _MapState extends State<Map> implements MapController {
         return dA < dB ? -1 : 1;
       }
 
-      var features = jsonFeatures.map((x) => json.decode(x)).toList();
       features.sort(distSort);
       var featureInfo = features[0];
       if (featureInfo != null) {
