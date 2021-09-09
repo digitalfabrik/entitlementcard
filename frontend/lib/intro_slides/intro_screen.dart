@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 
-import '../location/determine_position.dart';
+import 'location_request_button.dart';
 
 typedef OnFinishedCallback = void Function();
 
@@ -76,18 +76,11 @@ class IntroScreenState extends State<IntroScreen> {
               ),
               Padding(
                 padding: EdgeInsets.all(15),
-                child: ElevatedButton(
-                  onPressed: _onLocationButtonClicked,
-                  child: Text("Ich möchte meinen Standort freigeben."),
-                ),
+                child: LocationRequestButton(),
               )
             ]),
           )),
     );
-  }
-
-  void _onLocationButtonClicked() {
-    requestPermissionToDeterminePosition(userInteractContext: context);
   }
 
   void onDonePress() {
