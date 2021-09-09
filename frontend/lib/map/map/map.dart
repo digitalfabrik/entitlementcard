@@ -153,8 +153,13 @@ class _MapState extends State<Map> implements MapController {
 
     var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
         rect, widget.onFeatureClickLayerFilter ?? [], null);
-    var mapPoint = await _controller.toLatLng(point);
-    if (jsonFeatures.isNotEmpty) {
+    var features = jsonFeatures
+        .map((x) => json.decode(x))
+        .where((x) =>
+            x["properties"] != null && x["properties"]["categoryId"] != null)
+        .toList();
+    if (features.isNotEmpty) {
+      var mapPoint = await _controller.toLatLng(point);
       int distSort(a, b) {
         var cA = a["geometry"]["coordinates"];
         var cB = b["geometry"]["coordinates"];
