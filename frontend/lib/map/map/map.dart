@@ -151,7 +151,6 @@ class _MapState extends State<Map> implements MapController {
         width: touchTargetSize,
         height: touchTargetSize);
     if (Platform.isIOS) { // Work around flutter bindings
-      touchTargetSize = 15.0;
       rect = Rect.fromLTRB(
         rect.left, rect.top, touchTargetSize, touchTargetSize
       );
