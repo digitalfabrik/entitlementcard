@@ -145,7 +145,9 @@ class _MapState extends State<Map> implements MapController {
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var touchTargetSize = 100.0;
+    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+    var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
     var rect = Rect.fromCenter(
         center: Offset(point.x, point.y),
         width: touchTargetSize,
