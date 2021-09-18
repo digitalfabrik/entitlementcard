@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Location permission button in into slides is greyed out if permission is already given
 - Increased the touch target for selection points on the map
+- Switched development team from IT.NRW to Tür an Tür - Digitalfabrik
 
 
 ## [2.0.0] - 51 - 2021-08-29
