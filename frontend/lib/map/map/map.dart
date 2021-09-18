@@ -117,9 +117,6 @@ class _MapState extends State<Map> implements MapController {
 
   void _onMapCreated(MapboxMapController controller) {
     _controller = controller;
-    _controller.onSymbolTapped.add((argument) {
-      widget.onNoFeatureClick();
-    });
     if (widget.locationAvailable) {
       _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
