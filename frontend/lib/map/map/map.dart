@@ -142,10 +142,40 @@ class _MapState extends State<Map> implements MapController {
   }
 
   void _onMapClick(Point<double> point, clickCoordinates) async {
-    var features = await _controller.queryRenderedFeatures(
-        point, widget.onFeatureClickLayerFilter ?? [], null);
+    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+    var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
+    var rect = Rect.fromCenter(
+        center: Offset(point.x, point.y),
+        width: touchTargetSize,
+        height: touchTargetSize);
+    if (Platform.isIOS) { // Work around flutter bindings
+      rect = Rect.fromLTRB(
+        rect.left, rect.top, touchTargetSize, touchTargetSize
+      );
+    }
+
+    var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
+        rect, widget.onFeatureClickLayerFilter ?? [], null);
+    var features = jsonFeatures
+        .map((x) => json.decode(x))
+        .where((x) =>
+            x["properties"] != null && x["properties"]["categoryId"] != null)
+        .toList();
     if (features.isNotEmpty) {
-      var featureInfo = json.decode(features[0]);
+      var mapPoint = await _controller.toLatLng(point);
+      int distSort(a, b) {
+        var cA = a["geometry"]["coordinates"];
+        var cB = b["geometry"]["coordinates"];
+        var dA = sqrt(pow(cA[0] - mapPoint.longitude, 2) +
+            pow(cA[1] - mapPoint.latitude, 2));
+        var dB = sqrt(pow(cB[0] - mapPoint.longitude, 2) +
+            pow(cB[1] - mapPoint.latitude, 2));
+        return dA < dB ? -1 : 1;
+      }
+
+      features.sort(distSort);
+      var featureInfo = features[0];
       if (featureInfo != null) {
         if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
       }
