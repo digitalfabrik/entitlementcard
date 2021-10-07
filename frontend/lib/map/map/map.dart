@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import '../../configuration/configuration.dart';
 import '../../location/determine_position.dart';
@@ -40,7 +40,7 @@ class Map extends StatefulWidget {
 const mapboxColor = Color(0xFF979897);
 
 class _MapState extends State<Map> implements MapController {
-  MapboxMapController _controller;
+  MaplibreMapController _controller;
   Symbol _symbol;
   bool _permissionGiven;
   Stack _mapboxView;
@@ -68,7 +68,7 @@ class _MapState extends State<Map> implements MapController {
               target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
       _mapboxView = Stack(children: [
-        MapboxMap(
+        MaplibreMap(
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
@@ -115,7 +115,7 @@ class _MapState extends State<Map> implements MapController {
     return _mapboxView;
   }
 
-  void _onMapCreated(MapboxMapController controller) {
+  void _onMapCreated(MaplibreMapController controller) {
     _controller = controller;
     if (widget.locationAvailable) {
       _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
