@@ -26,9 +26,7 @@ class EntitlementServiceBlue extends StatelessWidget {
             FormBuilderDropdown(
               name: 'category',
               validator: FormBuilderValidators.required(context),
-              decoration: InputDecoration(
-                labelText: 'Einsatzgebiet *',
-              ),
+              decoration: const InputDecoration(labelText: 'Einsatzgebiet *'),
               initialValue: _organization?.category,
               onSaved: (value) => {_organization.category = value},
               items: [
@@ -38,13 +36,11 @@ class EntitlementServiceBlue extends StatelessWidget {
               ]
                   .map((category) => DropdownMenuItem(
                         value: category,
-                        child: Text('$category'),
+                        child: Text(category),
                       ))
                   .toList(),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             Organization(organizationInput: _organization)
           ],
         ));

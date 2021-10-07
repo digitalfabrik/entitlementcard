@@ -27,7 +27,7 @@ class CardTypeStep extends StatelessWidget {
                 onSaved: (value) => _onSaved(context, applicationModel, value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
-                options: [
+                options: const [
                   FormBuilderFieldOption(
                     value: ApplicationType.firstApplication,
                     child: Text('Blaue Ehrenamtskarte\nErstbeantragung'),

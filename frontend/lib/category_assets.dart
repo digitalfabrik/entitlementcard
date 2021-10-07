@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:meta/meta.dart';
 
-final test = Color(0xff5f5384);
+const test = Color(0xff5f5384);
 
 @immutable
 class CategoryAsset {

@@ -9,6 +9,8 @@ import 'location_button.dart';
 import 'results_loader.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _SearchPageState();
 }
@@ -17,13 +19,13 @@ class _SearchPageState extends State<SearchPage> {
   String _searchFieldText;
   TextEditingController _textEditingController;
   final List<CategoryAsset> _selectedCategories = [];
-  final _debouncer = Debouncer(delay: Duration(milliseconds: 50));
+  final _debouncer = Debouncer(delay: const Duration(milliseconds: 50));
   FocusNode _focusNode;
   CoordinatesInput _coordinates;
 
   @override
   Widget build(BuildContext context) {
-    final appBarTextStyle = TextStyle(color: Colors.white);
+    const appBarTextStyle = TextStyle(color: Colors.white);
     return Stack(children: [
       CustomScrollView(
         slivers: [
@@ -33,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
               onChanged: _onSearchFieldTextChanged,
               controller: _textEditingController,
               focusNode: _focusNode,
-              decoration: InputDecoration.collapsed(
+              decoration: const InputDecoration.collapsed(
                 hintText: "Tippen, um zu suchen …",
                 hintStyle: appBarTextStyle,
               ),
@@ -54,13 +56,13 @@ class _SearchPageState extends State<SearchPage> {
           FilterBar(onCategoryPress: _onCategoryPress),
           SliverToBoxAdapter(
               child: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Row(children: [
                     Text(
                       "Suchresultate".toUpperCase(),
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
-                    Expanded(
+                    const Expanded(
                         child: Padding(
                             padding: EdgeInsets.only(left: 8),
                             child: Divider()))

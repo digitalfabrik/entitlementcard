@@ -26,12 +26,14 @@ class Map extends StatefulWidget {
   final LatLng userLocation;
 
   const Map(
-      {this.onFeatureClick,
+      {Key key,
+      this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
       this.locationAvailable,
       this.onMapCreated,
-      this.userLocation});
+      this.userLocation})
+      : super(key: key);
 
   @override
   State createState() => _MapState();
@@ -64,7 +66,7 @@ class _MapState extends State<Map> implements MapController {
       var cameraPosition = widget.userLocation != null
           ? CameraPosition(
               target: widget.userLocation, zoom: Map.userLocationZoomLevel)
-          : CameraPosition(
+          : const CameraPosition(
               target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
       _mapboxView = Stack(children: [
@@ -72,10 +74,10 @@ class _MapState extends State<Map> implements MapController {
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
-          attributionButtonMargins: Point(-100, -100),
+          attributionButtonMargins: const Point(-100, -100),
           // The Mapbox wordmark must be shown because of legal weirdness
           logoViewMargins: Platform.isIOS
-              ? Point(30, 5)
+              ? const Point(30, 5)
               : Point(30 * pixelRatio, 5 * pixelRatio),
           myLocationEnabled: _permissionGiven,
           myLocationTrackingMode: _permissionGiven
@@ -95,16 +97,16 @@ class _MapState extends State<Map> implements MapController {
           left: 0,
           child: IconButton(
             color: mapboxColor,
-            padding: EdgeInsets.all(5),
-            constraints: BoxConstraints(),
+            padding: const EdgeInsets.all(5),
+            constraints: const BoxConstraints(),
             iconSize: 20,
-            icon: Icon(Icons.info_outline),
+            icon: const Icon(Icons.info_outline),
             tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return AttributionDialog();
+                  return const AttributionDialog();
                 },
               );
             },
@@ -125,16 +127,19 @@ class _MapState extends State<Map> implements MapController {
     }
   }
 
+  @override
   Future<void> setTelemetryEnabled({bool enabled}) async {
     await _controller.setTelemetryEnabled(enabled);
   }
 
+  @override
   Future<void> removeSymbol() async {
     if (_symbol == null) return;
     await _controller.removeSymbol(_symbol);
     _symbol = null;
   }
 
+  @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
     _symbol = await _controller.addSymbol(SymbolOptions(
@@ -149,10 +154,10 @@ class _MapState extends State<Map> implements MapController {
         center: Offset(point.x, point.y),
         width: touchTargetSize,
         height: touchTargetSize);
-    if (Platform.isIOS) { // Work around flutter bindings
-      rect = Rect.fromLTRB(
-        rect.left, rect.top, touchTargetSize, touchTargetSize
-      );
+    if (Platform.isIOS) {
+      // Work around flutter bindings
+      rect =
+          Rect.fromLTRB(rect.left, rect.top, touchTargetSize, touchTargetSize);
     }
 
     var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
@@ -190,6 +195,7 @@ class _MapState extends State<Map> implements MapController {
     _isAnimating = false;
   }
 
+  @override
   Future<void> bringCameraToLocation(LatLng location,
       {double zoomLevel}) async {
     final update = zoomLevel != null

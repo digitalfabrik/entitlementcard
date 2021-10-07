@@ -18,7 +18,7 @@ class VerificationParseException extends QrCodeParseException {
 }
 
 VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
-  final base64Decoder = Base64Decoder();
+  const base64Decoder = Base64Decoder();
 
   Uint8List rawProtobufData;
   try {
@@ -42,7 +42,7 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
   }
 
   final fullName = cardVerifyModel.fullName;
-  final hashSecretBase64 = Base64Encoder().convert(cardVerifyModel.hashSecret);
+  final hashSecretBase64 = const Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixInt64ExpirationDate = cardVerifyModel.expirationDate;
   int unixExpirationDate;
   if (unixInt64ExpirationDate != null) {

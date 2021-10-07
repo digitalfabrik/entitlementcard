@@ -7,41 +7,42 @@ class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startEakApplication;
 
   const MoreActionsDialog(
-      {Key key, this.startActivateEak, this.startVerification,
-        this.startEakApplication})
+      {Key key,
+      this.startActivateEak,
+      this.startVerification,
+      this.startEakApplication})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      contentPadding: EdgeInsets.only(top: 8),
-      title: Text("Weitere Aktionen"),
+      contentPadding: const EdgeInsets.only(top: 8),
+      title: const Text("Weitere Aktionen"),
       children: [
         ListTile(
-          title: Text("Anderen Aktivierungscode einscannen"),
-          subtitle:
-              Text("Dadurch wird die bestehende Karte vom Gerät gelöscht."),
-          leading: Icon(Icons.qr_code_scanner, size: 36),
+          title: const Text("Anderen Aktivierungscode einscannen"),
+          subtitle: const Text(
+              "Dadurch wird die bestehende Karte vom Gerät gelöscht."),
+          leading: const Icon(Icons.qr_code_scanner, size: 36),
           onTap: () {
             Navigator.pop(context);
             startActivateEak();
           },
         ),
         ListTile(
-          title: Text("Weitere Ehrenamtskarte beantragen"),
-          subtitle:
-              Text("Ihre hinterlegte Karte bleibt erhalten."),
-          leading: Icon(Icons.attach_file, size: 36),
+          title: const Text("Weitere Ehrenamtskarte beantragen"),
+          subtitle: const Text("Ihre hinterlegte Karte bleibt erhalten."),
+          leading: const Icon(Icons.attach_file, size: 36),
           onTap: () {
             Navigator.pop(context);
             startEakApplication();
           },
         ),
         ListTile(
-            title: Text("Eine digitale Ehrenamtskarte prüfen"),
-            subtitle:
-                Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
-            leading: Icon(Icons.check_circle_outline, size: 36),
+            title: const Text("Eine digitale Ehrenamtskarte prüfen"),
+            subtitle: const Text(
+                "Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
+            leading: const Icon(Icons.check_circle_outline, size: 36),
             onTap: () {
               Navigator.pop(context);
               startVerification();
@@ -51,7 +52,7 @@ class MoreActionsDialog extends StatelessWidget {
           child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Abbrechen"))
+                child: const Text("Abbrechen"))
           ]),
         )
       ],

@@ -11,12 +11,14 @@ class DetailLayout extends StatelessWidget {
   final String categoryName;
   final Color accentColor;
 
-  DetailLayout(
-      {this.title,
+  const DetailLayout(
+      {Key key,
+      this.title,
       this.body,
       this.categoryId,
       this.categoryName,
-      this.accentColor});
+      this.accentColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +38,9 @@ class DetailLayout extends StatelessWidget {
         ),
         flexibleSpace: _headerImageForCategory(),
         bottom: PreferredSize(
-            preferredSize: Size.fromHeight(75.0),
+            preferredSize: const Size.fromHeight(75.0),
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 alignment: Alignment.bottomLeft,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

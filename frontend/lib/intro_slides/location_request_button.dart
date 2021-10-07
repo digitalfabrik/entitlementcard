@@ -41,7 +41,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   Widget build(BuildContext context) {
     switch (_locationStatus) {
       case _LocationStatus.loading:
-        return ElevatedButton(
+        return const ElevatedButton(
           onPressed: null,
           child: Text("Prüfe Einstellungen..."),
         );
@@ -49,23 +49,23 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case _LocationStatus.notApproved:
         return ElevatedButton(
           onPressed: _onLocationButtonClicked,
-          child: Text("Ich möchte meinen Standort freigeben."),
+          child: const Text("Ich möchte meinen Standort freigeben."),
         );
         break;
       case _LocationStatus.approved:
-        return ElevatedButton(
+        return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist bereits freigegeben."),
         );
         break;
       case _LocationStatus.denied:
-        return ElevatedButton(
+        return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist nicht freigegeben."),
         );
         break;
       default:
-        return Text("Ein unerwarteter Fehler ist aufgetreten.");
+        return const Text("Ein unerwarteter Fehler ist aufgetreten.");
         break;
     }
   }

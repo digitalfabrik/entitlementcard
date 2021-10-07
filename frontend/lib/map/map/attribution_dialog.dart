@@ -11,7 +11,7 @@ class AttributionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = Theme.of(context).colorScheme.primary;
     return SimpleDialog(
-      title: Text('Kartendaten'),
+      title: const Text('Kartendaten'),
       children: [
         AttributionDialogItem(
           icon: Icons.copyright,

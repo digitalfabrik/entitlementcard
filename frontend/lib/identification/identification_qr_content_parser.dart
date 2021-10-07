@@ -33,7 +33,7 @@ class IdentificationQrContentParser {
   IdentificationQrContentParser(this._cardDetailsModel);
 
   void processQrCodeContent(String rawBase64Content) {
-    final base64Decoder = Base64Decoder();
+    const base64Decoder = Base64Decoder();
 
     CardActivateModel cardActivateModel;
     try {
@@ -78,7 +78,7 @@ class IdentificationQrContentParser {
 
     final cardDetails = CardDetails(
         cardActivateModel.fullName,
-        Base64Encoder().convert(cardActivateModel.hashSecret),
+        const Base64Encoder().convert(cardActivateModel.hashSecret),
         unixExpirationDate,
         cardType,
         cardActivateModel.regionId,

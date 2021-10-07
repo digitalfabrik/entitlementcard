@@ -24,15 +24,11 @@ class WorkAtOrganization extends StatelessWidget {
         Organization(
           organizationInput: workAtOrganizationInput?.organization,
         ),
-        SizedBox(
-          height: 24,
-        ),
-        FormHeaderText("Angaben zur ehrenamtlicher Tätigkeit"),
+        const SizedBox(height: 24),
+        const FormHeaderText("Angaben zur ehrenamtlicher Tätigkeit"),
         FormBuilderDropdown(
           name: 'category',
-          decoration: InputDecoration(
-            labelText: 'Einsatzgebiet *',
-          ),
+          decoration: const InputDecoration(labelText: 'Einsatzgebiet *'),
           validator: FormBuilderValidators.required(context),
           initialValue: workAtOrganizationInput?.organization?.category,
           onSaved: (value) =>
@@ -51,19 +47,17 @@ class WorkAtOrganization extends StatelessWidget {
           ]
               .map((category) => DropdownMenuItem(
                     value: category,
-                    child: Text('$category'),
+                    child: Text(category),
                   ))
               .toList(),
         ),
         TextFormField(
-          decoration: InputDecoration(labelText: 'Funktionsbeschreibung'),
+          decoration: const InputDecoration(labelText: 'Funktionsbeschreibung'),
           initialValue: workAtOrganizationInput?.responsibility,
           onSaved: (value) => {workAtOrganizationInput?.responsibility = value},
         ),
-        SizedBox(
-          height: 24,
-        ),
-        FormText(
+        const SizedBox(height: 24),
+        const FormText(
           'Wird für diese ehrenamtliche Tätigkeit eine '
           'Aufwandsentschädigung gewährt, die über Auslagenersatz '
           'oder Erstattung der Kosten hinausgeht?',
@@ -73,12 +67,12 @@ class WorkAtOrganization extends StatelessWidget {
             validator: FormBuilderValidators.required(context),
             initialValue: workAtOrganizationInput?.payment,
             onSaved: (value) => {workAtOrganizationInput?.payment = value},
-            options: [
+            options: const [
               FormBuilderFieldOption(value: true, child: Text("Ja")),
               FormBuilderFieldOption(value: false, child: Text("Nein"))
             ]),
         TextFormField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Arbeitsstunden pro Woche (Durchschnitt) *'),
           initialValue: workAtOrganizationInput?.amountOfWork?.toString(),
           onSaved: (value) => {
@@ -110,19 +104,18 @@ class WorkAtOrganization extends StatelessWidget {
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
             (date) {
-              return date
-                      .isAfter(DateTime.now().subtract(Duration(days: 365 * 2)))
+              return date.isAfter(
+                      DateTime.now().subtract(const Duration(days: 365 * 2)))
                   ? 'Mindestens seit 2 Jahren'
                   : null;
             }
           ]),
-          decoration: InputDecoration(
-            labelText: 'Ehrenamtliche Tätigkeit seit *',
-          ),
+          decoration: const InputDecoration(
+              labelText: 'Ehrenamtliche Tätigkeit seit *'),
         ),
         FormBuilderImagePicker(
           name: 'certificate',
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Bestätigung der Organisation oder des Vereins'),
           maxImages: 1,
           initialValue: workAtOrganizationInput?.certificate != null

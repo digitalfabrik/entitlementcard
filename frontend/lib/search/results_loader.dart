@@ -119,21 +119,21 @@ class ResultsLoaderState extends State<ResultsLoader> {
               newPageErrorIndicatorBuilder: _buildErrorWithRetry,
               newPageProgressIndicatorBuilder: _buildProgressIndicator,
               firstPageProgressIndicatorBuilder: _buildProgressIndicator),
-      separatorBuilder: (context, index) => Divider(height: 0),
+      separatorBuilder: (context, index) => const Divider(height: 0),
     );
   }
 
-  Widget _buildProgressIndicator(BuildContext context) => Center(
+  Widget _buildProgressIndicator(BuildContext context) => const Center(
       child: Padding(
           padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
 
   Widget _buildErrorWithRetry(BuildContext context) => Center(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.warning, size: 60, color: Colors.orange),
-        Text("Bitte Internetverbindung prüfen."),
+        const Icon(Icons.warning, size: 60, color: Colors.orange),
+        const Text("Bitte Internetverbindung prüfen."),
         OutlinedButton(
           onPressed: _pagingController.retryLastFailedRequest,
-          child: Text("Erneut versuchen"),
+          child: const Text("Erneut versuchen"),
         )
       ]));
 
@@ -141,7 +141,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
         Icon(Icons.search_off,
             size: 60, color: Theme.of(context).disabledColor),
-        Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
+        const Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
       ]));
 
   @override

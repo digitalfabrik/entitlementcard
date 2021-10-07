@@ -6,7 +6,7 @@ class ContentTile extends StatelessWidget {
   final List<Widget> children;
   final IconData icon;
 
-  ContentTile({Key key, this.title, this.children, this.icon})
+  const ContentTile({Key key, this.title, this.children, this.icon})
       : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class ContentPage extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  ContentPage({Key key, this.title, this.children}) : super(key: key);
+  const ContentPage({Key key, this.title, this.children}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class ContentPage extends StatelessWidget {
         title: Text(title),
       ),
       body: SafeArea(
-        child: ListView(children: children, padding: EdgeInsets.all(10)),
+        child: ListView(children: children, padding: const EdgeInsets.all(10)),
       ),
     );
   }

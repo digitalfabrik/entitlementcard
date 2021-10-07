@@ -101,7 +101,7 @@ class VerificationWorkflow {
       return AlertDialog(
         title: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: const [
             CircularProgressIndicator()
         ])
       );

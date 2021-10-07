@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class QrParsingErrorDialog extends StatelessWidget {
   final String message;
 
-  QrParsingErrorDialog({Key key, @required this.message}) : super(key: key);
+  const QrParsingErrorDialog({Key key, @required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Fehler beim Lesen des Codes'),
+      title: const Text('Fehler beim Lesen des Codes'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -18,7 +18,7 @@ class QrParsingErrorDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Ok'),
+          child: const Text('Ok'),
           onPressed: () {
             Navigator.of(context).pop();
           },

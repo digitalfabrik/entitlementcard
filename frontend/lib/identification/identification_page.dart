@@ -13,7 +13,7 @@ import 'no_card_view.dart';
 class IdentificationPage extends StatelessWidget {
   final String title;
 
-  IdentificationPage({Key key, this.title}) : super(key: key);
+  const IdentificationPage({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +49,14 @@ class IdentificationPage extends StatelessWidget {
   }
 
   void _showActivateQrCode(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => IdentificationQrScannerPage()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const IdentificationQrScannerPage()));
   }
 
   void _showEakApplication(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ApplicationForm()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ApplicationForm()));
   }
 }

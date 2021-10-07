@@ -72,6 +72,7 @@ dev_dependencies:
   equatable: ^2.0.3
   meta: '>=1.0.0 <2.0.0' # only if you have non nullable fields
   gql: '>=0.12.3 <1.0.0'
+  flutter_lints: ^1.0.4
 
 flutter_icons:
   android: 'launcher_icon'

@@ -14,7 +14,7 @@ const totpSecretBase32Key = "totpSecretBase32";
 const currentDataVersion = 4;
 
 Future<void> saveCardDetails(CardDetails cardDetails) async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   if (cardDetails != null) {
     await Future.wait([
       storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
@@ -44,7 +44,7 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
 }
 
 Future<CardDetails> loadCardDetails() async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final hasDataVersionKey = await storage.containsKey(key: dataVersionKey);
   if (hasDataVersionKey) {
     final storedDataVersionStr = await storage.read(key: dataVersionKey);

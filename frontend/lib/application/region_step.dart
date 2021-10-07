@@ -32,7 +32,7 @@ class RegionStep extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  FormHeaderText(
+                  const FormHeaderText(
                       'Sie beantragen die Ehrenamtskarte für den folgenden'
                       ' Landkreis oder kreisfreie Stadt:'),
                   FormBuilderDropdown(
@@ -48,11 +48,11 @@ class RegionStep extends StatelessWidget {
                                 ? 'Fehler beim Laden'
                                 : 'Region auswählen',
                         suffixIcon: result.isLoading
-                            ? SmallButtonSpinner()
+                            ? const SmallButtonSpinner()
                             : result.hasException
                                 ? IconButton(
                                     onPressed: refetch,
-                                    icon: Icon(Icons.refresh))
+                                    icon: const Icon(Icons.refresh))
                                 : null),
                     items: regions
                         .map((region) => DropdownMenuItem(

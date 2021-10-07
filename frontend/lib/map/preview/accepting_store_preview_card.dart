@@ -9,7 +9,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   final Function refetch;
   final /*?*/ AcceptingStoreSummaryModel acceptingStore;
 
-  AcceptingStorePreviewCard(
+  const AcceptingStorePreviewCard(
       {this.isLoading, this.acceptingStore, this.refetch, Key key})
       : super(key: key);
 
@@ -23,7 +23,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
         child: Card(
             margin: const EdgeInsets.all(10),
             child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 child: isLoading
                     ? Container(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -35,7 +35,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                                 height: double.infinity,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
-                                child: ErrorMessage(
+                                child: const ErrorMessage(
                                     "Fehler beim Laden der Infos.")))
                         : AcceptingStoreSummary(
                             store: acceptingStore,

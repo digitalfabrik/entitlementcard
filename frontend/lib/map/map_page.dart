@@ -47,7 +47,7 @@ class _MapPageState extends State<MapPage>
         MapWithFutures(
           onFeatureClick: _onFeatureClick,
           onNoFeatureClick: stopShowingAcceptingStore,
-          onFeatureClickLayerFilter: ["physical_stores"],
+          onFeatureClickLayerFilter: const ["physical_stores"],
           onMapCreated: (controller) {
             controller.setTelemetryEnabled(enabled: false);
             setState(() => _controller = controller);
@@ -57,10 +57,10 @@ class _MapPageState extends State<MapPage>
         Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           LocationButton(mapController: _controller),
           AnimatedSize(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             child: IntrinsicHeight(
               child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200),
                   child: _selectedAcceptingStoreId != null
                       ? AcceptingStorePreview(
                           _selectedAcceptingStoreId
@@ -73,6 +73,7 @@ class _MapPageState extends State<MapPage>
     );
   }
 
+  @override
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
       {bool selectedAcceptingStoreInMap = false}) async {
     setState(() {
@@ -91,6 +92,7 @@ class _MapPageState extends State<MapPage>
     }
   }
 
+  @override
   Future<void> stopShowingAcceptingStore() async {
     setState(() => _selectedAcceptingStoreId = null);
     await _controller.removeSymbol();
@@ -110,7 +112,7 @@ class _MapPageState extends State<MapPage>
   int _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
 
   LatLng _getLatLngOrNull(dynamic coordinates) {
-    if (!(coordinates is List)) return null;
+    if (coordinates is! List) return null;
     if (!(coordinates[0] is double && coordinates[1] is double)) return null;
     return LatLng(coordinates[1], coordinates[0]);
   }

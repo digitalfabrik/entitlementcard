@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-final bavariaFontColor = Color(0xff008dc9);
+const bavariaFontColor = Color(0xff008dc9);
 
 class EakCardHeaderLogo extends StatelessWidget {
   final String title;
@@ -18,7 +18,7 @@ class EakCardHeaderLogo extends StatelessWidget {
         Flexible(
             child: Padding(
           padding: EdgeInsets.all(2 * scaleFactor),
-          child: logo != null ? logo : Container(),
+          child: logo ?? Container(),
         )),
         Text(title,
             maxLines: 1,

@@ -7,15 +7,15 @@ class LocationPermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Standortberechtigung freigeben"),
-      content: Text("Geben Sie in den App-Einstellungen die"
+      title: const Text("Standortberechtigung freigeben"),
+      content: const Text("Geben Sie in den App-Einstellungen die"
           " Standortberechtigung frei."),
       actions: [
         TextButton(
-            child: Text("Abbrechen"),
+            child: const Text("Abbrechen"),
             onPressed: () => Navigator.of(context).pop(false)),
         TextButton(
-            child: Text("Einstellungen öffnen"),
+            child: const Text("Einstellungen öffnen"),
             onPressed: () => Navigator.of(context).pop(true))
       ],
     );

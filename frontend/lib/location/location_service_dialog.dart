@@ -6,15 +6,15 @@ class LocationServiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Standortermittlung aktivieren"),
+      title: const Text("Standortermittlung aktivieren"),
       content:
-          Text("Aktivieren Sie die Standortermittlung in den Einstellungen."),
+          const Text("Aktivieren Sie die Standortermittlung in den Einstellungen."),
       actions: [
         TextButton(
-            child: Text("Abbrechen"),
+            child: const Text("Abbrechen"),
             onPressed: () => Navigator.of(context).pop(false)),
         TextButton(
-            child: Text("Einstellungen öffnen"),
+            child: const Text("Einstellungen öffnen"),
             onPressed: () => Navigator.of(context).pop(true))
       ],
     );

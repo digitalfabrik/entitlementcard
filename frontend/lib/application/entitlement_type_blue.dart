@@ -28,7 +28,7 @@ class EntitlementTypeBlue extends StatelessWidget {
                     applicationModel.initBlueCardEntitlement(value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
-                options: [
+                options: const [
                   FormBuilderFieldOption(
                     value: BlueCardEntitlementType.juleica,
                     child: Text('Inhaber:in einer Jugendleiterkarte'),

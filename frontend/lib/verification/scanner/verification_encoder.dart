@@ -15,21 +15,21 @@ String encodeVerificationCardDetails(
     expirationDate: Int64(cardDetails.unixExpirationDate),
     cardType: CardVerifyModel_CardType.valueOf(cardDetails.cardType.index),
     regionId: cardDetails.regionId,
-    hashSecret: Base64Decoder().convert(cardDetails.hashSecretBase64),
+    hashSecret: const Base64Decoder().convert(cardDetails.hashSecretBase64),
     otp: verificationCardDetails.otp,
   );
 
-  return Base64Encoder().convert(cardVerifyModel.writeToBuffer());
+  return const Base64Encoder().convert(cardVerifyModel.writeToBuffer());
 }
 
 VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
-  final base64Decoder = Base64Decoder();
+  const base64Decoder = Base64Decoder();
 
   final cardVerifyModel =
       CardVerifyModel.fromBuffer(base64Decoder.convert(base64Data));
 
   final fullName = cardVerifyModel.fullName;
-  final randomBytes = Base64Encoder().convert(cardVerifyModel.hashSecret);
+  final randomBytes = const Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixExpirationTime = cardVerifyModel.expirationDate.toInt();
   final cardType = CardType.values[cardVerifyModel.cardType.value];
   final regionId = cardVerifyModel.regionId;

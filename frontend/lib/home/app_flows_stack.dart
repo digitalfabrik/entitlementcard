@@ -6,7 +6,7 @@ class AppFlowsStack extends StatelessWidget {
   final int currentIndex;
   final List<AppFlow> appFlows;
 
-  AppFlowsStack({Key key, this.currentIndex, this.appFlows}) : super(key: key);
+  const AppFlowsStack({Key key, this.currentIndex, this.appFlows}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

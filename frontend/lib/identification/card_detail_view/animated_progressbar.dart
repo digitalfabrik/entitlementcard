@@ -4,7 +4,7 @@ import 'rectangular_progress_indicator_painter.dart';
 
 class AnimatedProgressbar extends StatefulWidget {
   final Duration initialProgress;
-  static Duration totalDuration = Duration(seconds: 30);
+  static const Duration totalDuration = Duration(seconds: 30);
 
   const AnimatedProgressbar({Key key, this.initialProgress})
       : super(key: key);

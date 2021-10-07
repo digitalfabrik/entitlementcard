@@ -9,6 +9,8 @@ import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
 
 class EntryWidget extends StatelessWidget {
+  const EntryWidget({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
@@ -22,7 +24,7 @@ class EntryWidget extends StatelessWidget {
           String initialRoute;
           if (!snapshot.hasError && snapshot.hasData && snapshot.data) {
             routes.addAll(<String, WidgetBuilder>{
-              '/intro': (context) => IntroScreen(
+              '/intro': (context) => const IntroScreen(
                     onFinishedCallback: setFirstStart,
                   ),
             });
@@ -35,14 +37,14 @@ class EntryWidget extends StatelessWidget {
               themeMode: ThemeMode.system,
               initialRoute: initialRoute,
               debugShowCheckedModeBanner: false,
-              localizationsDelegates: [
+              localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
                 FormBuilderLocalizations.delegate,
               ],
-              supportedLocales: [Locale('de')],
-              locale: Locale('de'),
+              supportedLocales: const [Locale('de')],
+              locale: const Locale('de'),
               home: HomePage(
                 showVerification: Configuration.of(context).showVerification,
               ),

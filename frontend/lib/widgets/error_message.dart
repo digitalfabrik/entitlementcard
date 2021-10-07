@@ -3,18 +3,15 @@ import 'package:flutter/material.dart';
 class ErrorMessage extends StatelessWidget {
   final String _message;
 
-  ErrorMessage(this._message);
+  const ErrorMessage(this._message, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: <Widget>[
-      Icon(Icons.warning, color: Colors.orange),
-      SizedBox(width: 10),
-      Expanded(
-          child: Text(
-        _message,
-      )),
-      Icon(Icons.replay)
+    return Row(children: [
+      const Icon(Icons.warning, color: Colors.orange),
+      const SizedBox(width: 10),
+      Expanded(child: Text(_message)),
+      const Icon(Icons.replay)
     ]);
   }
 }

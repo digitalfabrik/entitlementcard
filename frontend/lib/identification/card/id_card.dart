@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-final creditCardAspectRatio = 86 / 54;
+const creditCardAspectRatio = 86 / 54;
 
 class IdCard extends StatelessWidget {
   final Widget child;
@@ -19,7 +19,7 @@ class IdCard extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 600, maxWidth: 600),
+            constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
             child:
                 AspectRatio(aspectRatio: creditCardAspectRatio, child: child)));
   }

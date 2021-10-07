@@ -10,12 +10,12 @@ String hashVerificationCardDetails(
     VerificationCardDetails verificationCardDetails) {
   final hasher = Hmac(
       sha256,
-      Base64Decoder()
+      const Base64Decoder()
           .convert(verificationCardDetails.cardDetails.hashSecretBase64));
 
   final byteList = cardDetailsToBinary(verificationCardDetails.cardDetails);
   final result = hasher.convert(byteList);
-  return Base64Encoder().convert(result.bytes);
+  return const Base64Encoder().convert(result.bytes);
 }
 
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {

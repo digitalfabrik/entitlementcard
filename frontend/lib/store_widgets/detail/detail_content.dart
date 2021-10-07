@@ -16,10 +16,12 @@ class DetailContent extends StatelessWidget {
   final Color accentColor;
   final Color readableOnAccentColor;
 
-  DetailContent(this.acceptingStore,
-      {this.hideShowOnMapButton = false,
+  const DetailContent(this.acceptingStore,
+      {Key key,
+      this.hideShowOnMapButton = false,
       this.accentColor,
-      this.readableOnAccentColor});
+      this.readableOnAccentColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class DetailContent extends StatelessWidget {
     final readableOnAccentColor =
         accentColor != null ? getReadableOnColor(accentColor) : null;
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
           if (acceptingStore.store.description != null) ...[
@@ -94,7 +96,7 @@ class DetailContent extends StatelessWidget {
             ButtonBar(
               children: [
                 OutlinedButton(
-                  child: Text("Auf Karte zeigen"),
+                  child: const Text("Auf Karte zeigen"),
                   onPressed: () => _showOnMap(context),
                 ),
               ],

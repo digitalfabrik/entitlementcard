@@ -21,7 +21,7 @@ class EntitlementTypeGold extends StatelessWidget {
           children: <Widget>[
             FormBuilderRadioGroup(
                 activeColor: Theme.of(context).colorScheme.primary,
-                decoration: InputDecoration(labelText: 'Voraussetzungen'),
+                decoration: const InputDecoration(labelText: 'Voraussetzungen'),
                 name: 'card_type',
                 initialValue: applicationModel
                     .goldenCardApplication?.entitlement?.goldenEntitlementType,
@@ -29,7 +29,7 @@ class EntitlementTypeGold extends StatelessWidget {
                     applicationModel.initGoldenCardEntitlement(value),
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
-                options: [
+                options: const [
                   FormBuilderFieldOption(
                     value: GoldenCardEntitlementType.honorByMinisterPresident,
                     child: Text('Inhaber:in des Ehrenzeichens des Bayerischen '
