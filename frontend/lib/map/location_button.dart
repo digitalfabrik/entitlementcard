@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../location/determine_position.dart';
@@ -50,7 +52,7 @@ class _LocationButtonState extends State<LocationButton> {
       setState(() => _status = LocationPermissionStatus.requestFinished);
       await widget.mapController.bringCameraToUser();
     } on Exception catch (e) {
-      print(e);
+      log("onPressed in LocationButton threw an error.", error: e);
     } finally {
       setState(() => _status = LocationPermissionStatus.requestFinished);
     }

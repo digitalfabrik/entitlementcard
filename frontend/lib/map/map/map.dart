@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -74,11 +75,11 @@ class _MapState extends State<Map> implements MapController {
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
-          attributionButtonMargins: const Point(-100, -100),
+          attributionButtonMargins: const math.Point(-100, -100),
           // The Mapbox wordmark must be shown because of legal weirdness
           logoViewMargins: Platform.isIOS
-              ? const Point(30, 5)
-              : Point(30 * pixelRatio, 5 * pixelRatio),
+              ? const math.Point(30, 5)
+              : math.Point(30 * pixelRatio, 5 * pixelRatio),
           myLocationEnabled: _permissionGiven,
           myLocationTrackingMode: _permissionGiven
               ? MyLocationTrackingMode.Tracking
@@ -89,7 +90,7 @@ class _MapState extends State<Map> implements MapController {
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
           compassViewMargins:
-              Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
         ),
         Positioned(
@@ -146,7 +147,7 @@ class _MapState extends State<Map> implements MapController {
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
-  void _onMapClick(Point<double> point, clickCoordinates) async {
+  void _onMapClick(math.Point<double> point, clickCoordinates) async {
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
     var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
@@ -172,10 +173,10 @@ class _MapState extends State<Map> implements MapController {
       int distSort(a, b) {
         var cA = a["geometry"]["coordinates"];
         var cB = b["geometry"]["coordinates"];
-        var dA = sqrt(pow(cA[0] - mapPoint.longitude, 2) +
-            pow(cA[1] - mapPoint.latitude, 2));
-        var dB = sqrt(pow(cB[0] - mapPoint.longitude, 2) +
-            pow(cB[1] - mapPoint.latitude, 2));
+        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) +
+            math.pow(cA[1] - mapPoint.latitude, 2));
+        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) +
+            math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
 
@@ -222,8 +223,7 @@ class _MapState extends State<Map> implements MapController {
         setState(() => _permissionGiven = true);
       }
     } on Exception catch (e) {
-      print("Could not find position.");
-      print(e);
+      log("Could not find position.", error: e);
     }
   }
 }

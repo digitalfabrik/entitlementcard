@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -96,7 +98,7 @@ Future<bool> checkQuietIfLocationIsEnabled() async {
         return false;
     }
   } on Exception catch (e) {
-    print(e);
+    log("checkQuietIfLocationIsEnabled threw an Exception.", error: e);
     return false;
   }
 }
