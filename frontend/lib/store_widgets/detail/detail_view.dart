@@ -33,7 +33,7 @@ class DetailView extends StatelessWidget {
               return DetailLayout(body: LinearProgressIndicator());
             }
             final matchingStores =
-                AcceptingStoreByIdQuery().parse(result.data).physicalStoresById;
+                byIdQuery.parse(result.data).physicalStoresById;
             if (matchingStores.isEmpty) {
               throw ArgumentError("Store not found.");
             }
