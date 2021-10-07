@@ -20,23 +20,23 @@ class IdentificationQrScannerPage extends StatelessWidget {
 
   void _onCodeScanned(BuildContext context, String code) async {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
-    void showError(msg) async =>
+    Future<void> showError(msg) async =>
         await QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
-      showError("Die eingescannte Karte enthält kein Ablauf-"
+      await showError("Die eingescannte Karte enthält kein Ablauf-"
           "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
           " ist. Vermutlich ist beim Erstellen der "
           "digitalen Ehrenamtskarte ein Fehler passiert.");
     } on QRCodeInvalidTotpSecretException catch (_) {
-      showError("Beim Verarbeiten des eingescannten Codes ist ein"
+      await showError("Beim Verarbeiten des eingescannten Codes ist ein"
           "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
     } on QRCodeInvalidExpiryException catch (_) {
-      showError("Beim Verarbeiten des Ablaufdatums ist ein "
+      await showError("Beim Verarbeiten des Ablaufdatums ist ein "
           "unerwarteter Fehler aufgetreten.");
     } on QRCodeInvalidFormatException catch (e, s) {
-      showError("Der Inhalt des eingescannten Codes kann nicht "
+      await showError("Der Inhalt des eingescannten Codes kann nicht "
           "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
           "der nicht für die Ehrenamtskarte-App generiert wurde.");
       debugPrintStack(stackTrace: s, label: e.toString());
@@ -45,11 +45,11 @@ class IdentificationQrScannerPage extends StatelessWidget {
         debugPrintStack(stackTrace: e.stackTrace, label: e.cause.toString());
       }
     } on QrCodeFieldMissingException catch (e) {
-      showError("Der Inhalt des eingescannten Codes ist unvollständig. "
+      await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
           "(Fehlercode: ${e.missingFieldName}Missing)");
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      showError("Ein unerwarteter Fehler ist aufgetreten.");
+      await showError("Ein unerwarteter Fehler ist aufgetreten.");
     }
   }
 }
