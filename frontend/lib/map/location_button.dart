@@ -32,7 +32,8 @@ class _LocationButtonState extends State<LocationButton> {
               backgroundColor: theme.backgroundColor,
               child: AnimatedSwitcher(
                 child: _status == LocationPermissionStatus.requestFinished
-                    ? Icon(Icons.my_location, color: theme.accentColor)
+                    ? Icon(Icons.my_location,
+                        color: theme.colorScheme.secondary)
                     : SmallButtonSpinner(),
                 duration: Duration(milliseconds: 200),
               ),

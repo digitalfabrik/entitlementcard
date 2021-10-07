@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../category_assets.dart';
 import '../debouncer.dart';
@@ -27,6 +28,7 @@ class _SearchPageState extends State<SearchPage> {
       CustomScrollView(
         slivers: [
           SliverAppBar(
+            systemOverlayStyle: SystemUiOverlayStyle.light,
             title: TextField(
               onChanged: _onSearchFieldTextChanged,
               controller: _textEditingController,
