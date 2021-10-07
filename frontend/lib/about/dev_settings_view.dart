@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +39,11 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
             title: const Text('Set application test data'),
             onTap: () => _createApplicationData(context),
-          )
+          ),
+          ListTile(
+              title: const Text('Log sample execption'),
+              onTap: () => log("Sample exception.",
+                  error: Exception("Sample exception...")))
         ],
       ),
     );
