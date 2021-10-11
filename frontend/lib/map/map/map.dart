@@ -155,11 +155,6 @@ class _MapState extends State<Map> implements MapController {
         center: Offset(point.x, point.y),
         width: touchTargetSize,
         height: touchTargetSize);
-    if (Platform.isIOS) {
-      // Work around flutter bindings
-      rect =
-          Rect.fromLTRB(rect.left, rect.top, touchTargetSize, touchTargetSize);
-    }
 
     var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
         rect, widget.onFeatureClickLayerFilter ?? [], null);
