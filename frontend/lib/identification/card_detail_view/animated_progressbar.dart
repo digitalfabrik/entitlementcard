@@ -51,7 +51,7 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: RectangularProgressIndicatorPainter(
-        valueColor: Theme.of(context).accentColor,
+        valueColor: Theme.of(context).colorScheme.secondary,
         value: animation?.value ?? 0.0,
       )
     );

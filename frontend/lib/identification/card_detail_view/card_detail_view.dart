@@ -126,7 +126,7 @@ class RichQrCode extends StatelessWidget {
                       "Weitere Aktionen",
                       style: TextStyle(color: Theme
                           .of(context)
-                          .accentColor),
+                          .colorScheme.secondary),
                     ),
                     onPressed: onMoreActionsPressed)),
           ],

@@ -26,7 +26,7 @@ Future<bool> _queryServerVerification(
     if (queryResult.hasException) {
       throw queryResult.exception;
     }
-    final parsedResult = CardVerificationByHashQuery().parse(queryResult.data);
+    final parsedResult = byCardDetailsHash.parse(queryResult.data);
     return parsedResult.cardValid;
     // because we do not know what kinds of exceptions might be thrown:
     // ignore: avoid_catches_without_on_clauses

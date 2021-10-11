@@ -47,27 +47,6 @@
 			remoteGlobalIDString = 82E59F73EFCFED5A91D21FE6046A6F0A;
 			remoteInfo = image_picker;
 		};
-		0B1FA80D26DBD06400D4AEA7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A26C7DAD532CDB12DB154B862C93F57F;
-			remoteInfo = mapbox_gl;
-		};
-		0B1FA80F26DBD06400D4AEA7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2678243B7C7F13C08623D7E9B3B8F523;
-			remoteInfo = MapboxAnnotationExtension;
-		};
-		0B1FA81126DBD06400D4AEA7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7CDFA2DAE745FD57264494A16D3C14B6;
-			remoteInfo = MapboxMobileEvents;
-		};
 		0B1FA81326DBD06400D4AEA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
@@ -130,6 +109,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 88201E9CFC476A9A0003632CB83B1D0A;
 			remoteInfo = url_launcher;
+		};
+		0B330E3927143BA80011A908 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A0FB9E05DDA3999E70637369AB58C832;
+			remoteInfo = maplibre_gl;
+		};
+		0B330E3B27143BA80011A908 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 78A9CE321245CD4217BAEF5174CD9A06;
+			remoteInfo = MapLibreAnnotationExtension;
 		};
 		0BC36CA026DBC53B00AAB6AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -206,9 +199,8 @@
 				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */,
 				0B1FA80A26DBD06400D4AEA7 /* geolocator.framework */,
 				0B1FA80C26DBD06400D4AEA7 /* image_picker.framework */,
-				0B1FA80E26DBD06400D4AEA7 /* mapbox_gl.framework */,
-				0B1FA81026DBD06400D4AEA7 /* MapboxAnnotationExtension.framework */,
-				0B1FA81226DBD06400D4AEA7 /* MapboxMobileEvents.framework */,
+				0B330E3A27143BA80011A908 /* maplibre_gl.framework */,
+				0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension.framework */,
 				0B1FA81426DBD06400D4AEA7 /* maps_launcher.framework */,
 				0B1FA81626DBD06400D4AEA7 /* MTBBarcodeScanner.framework */,
 				0B1FA81826DBD06400D4AEA7 /* package_info.framework */,
@@ -416,27 +408,6 @@
 			remoteRef = 0B1FA80B26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA80E26DBD06400D4AEA7 /* mapbox_gl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = mapbox_gl.framework;
-			remoteRef = 0B1FA80D26DBD06400D4AEA7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0B1FA81026DBD06400D4AEA7 /* MapboxAnnotationExtension.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MapboxAnnotationExtension.framework;
-			remoteRef = 0B1FA80F26DBD06400D4AEA7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0B1FA81226DBD06400D4AEA7 /* MapboxMobileEvents.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MapboxMobileEvents.framework;
-			remoteRef = 0B1FA81126DBD06400D4AEA7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		0B1FA81426DBD06400D4AEA7 /* maps_launcher.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -498,6 +469,20 @@
 			fileType = wrapper.framework;
 			path = url_launcher.framework;
 			remoteRef = 0B1FA82326DBD06400D4AEA7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0B330E3A27143BA80011A908 /* maplibre_gl.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = maplibre_gl.framework;
+			remoteRef = 0B330E3927143BA80011A908 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MapLibreAnnotationExtension.framework;
+			remoteRef = 0B330E3B27143BA80011A908 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -789,7 +774,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 7272KE28TJ;
@@ -809,7 +794,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.nrw.it.ehrensachebayern;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore de.nrw.it.ehrensachebayern";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development de.nrw.it.ehrensachebayern";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -933,7 +918,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 7272KE28TJ;
@@ -953,7 +938,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.nrw.it.ehrensachebayern;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore de.nrw.it.ehrensachebayern";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development de.nrw.it.ehrensachebayern";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;

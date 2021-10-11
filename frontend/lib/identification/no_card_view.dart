@@ -29,7 +29,7 @@ class NoCardView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Icon(Icons.contact_support_outlined,
-                size: 100, color: Theme.of(context).accentColor),
+                size: 100, color: Theme.of(context).colorScheme.secondary),
           ),
           SizedBox(height: 12),
           wrapIntrinsic(

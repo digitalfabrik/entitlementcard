@@ -32,7 +32,7 @@ class _LocationButtonState extends State<LocationButton> {
         : Icon(
             Icons.my_location,
             size: 24,
-            color: theme.accentColor,
+            color: theme.colorScheme.secondary,
           );
     return Container(
         alignment: Alignment.bottomCenter,

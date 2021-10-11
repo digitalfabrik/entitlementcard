@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'location_button.dart';
 import 'map/map_controller.dart';
@@ -35,7 +35,6 @@ abstract class MapPageController {
 }
 
 class _MapPageState extends State<MapPage>
-    with TickerProviderStateMixin
     implements MapPageController {
   int _selectedAcceptingStoreId;
   MapController _controller;
@@ -59,7 +58,6 @@ class _MapPageState extends State<MapPage>
           LocationButton(mapController: _controller),
           AnimatedSize(
             duration: Duration(milliseconds: 200),
-            vsync: this,
             child: IntrinsicHeight(
               child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),

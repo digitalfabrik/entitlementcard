@@ -18,9 +18,7 @@ ThemeData get lightTheme {
   );
   return lightTheme.copyWith(
     appBarTheme: AppBarTheme(
-      // required to properly display status bar
-      // systemOverlayStyle is ignored here for some reason
-      brightness: Brightness.dark,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
       color: lightTheme.colorScheme.primary,
     ),
   );
@@ -42,6 +40,8 @@ ThemeData get darkTheme {
     ),
   );
   return theme.copyWith(
-    appBarTheme: AppBarTheme(color: theme.colorScheme.primary),
+    appBarTheme: AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        color: theme.colorScheme.primary),
   );
 }

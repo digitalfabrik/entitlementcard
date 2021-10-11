@@ -18,7 +18,7 @@ fe_task_without_container_template: &FE_TASK_WITHOUT_CONTAINER_TEMPLATE
 fe_task_template: &FE_TASK_TEMPLATE
   << : *FE_TASK_WITHOUT_CONTAINER_TEMPLATE
   container:
-    image: cirrusci/flutter:2.0.6
+    image: cirrusci/flutter:2.5.2
 
 fe_analyze_task:
   name: "FE: analyze"
