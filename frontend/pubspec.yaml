@@ -51,7 +51,10 @@ dependencies:
   intro_slider: ^3.0.2
   shared_preferences: ^2.0.8
   flutter_form_builder: ^6.0.1
-  form_builder_image_picker: ^1.0.0-nullsafety.0
+  form_builder_image_picker:
+    git:
+      url: https://github.com/danvick/form_builder_image_picker.git
+      ref: 20a2767
   tinycolor: ^1.0.3
 
   # The following adds the Cupertino Icons font to your application.
