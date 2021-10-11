@@ -44,29 +44,23 @@ Future<void> requestPermissionToDeterminePosition(
   }
 
   var permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.deniedForever) {
-    if (userInteractContext != null) {
-      var result = await showDialog(
-          context: userInteractContext,
-          builder: (context) => const LocationPermissionDialog());
-      if (result == true) {
-        return await Geolocator.openAppSettings();
-      }
-    }
-    throw PositionNotAvailableException(
-        'Location permissions were permanently denied.');
-  }
-
   if (permission == LocationPermission.denied) {
     if (userInteractContext != null) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        throw PositionNotAvailableException(
-            'Location permissions are denied (actual value: $permission).');
+      if (permission == LocationPermission.deniedForever) {
+        var result = await showDialog(
+            context: userInteractContext,
+            builder: (context) => const LocationPermissionDialog());
+        if (result == true) {
+          await Geolocator.openAppSettings();
+        }
       }
-    } else {
-      throw PositionNotAvailableException("Location permissions were denied");
+      throw PositionNotAvailableException('Location permissions were denied.');
+    }
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
+      throw PositionNotAvailableException(
+          'Location permissions are denied (actual value: $permission).');
     }
   }
 }
@@ -84,19 +78,9 @@ Future<bool> canDetermineLocation({BuildContext userInteractContext}) async {
 
 Future<bool> checkQuietIfLocationIsEnabled() async {
   try {
-    final locationPermission = await Geolocator.checkPermission();
-    switch (locationPermission) {
-      case LocationPermission.denied:
-        return false;
-      case LocationPermission.deniedForever:
-        return false;
-      case LocationPermission.whileInUse:
-        return true;
-      case LocationPermission.always:
-        return true;
-      default:
-        return false;
-    }
+    final permission = await Geolocator.checkPermission();
+    return permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always;
   } on Exception catch (e) {
     log("checkQuietIfLocationIsEnabled threw an Exception.", error: e);
     return false;

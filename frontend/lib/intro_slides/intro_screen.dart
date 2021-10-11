@@ -96,10 +96,10 @@ class IntroScreenState extends State<IntroScreen> {
     return IntroSlider(
       slides: slides,
       onDonePress: onDonePress,
-      nameDoneBtn: "Fertig",
-      nameNextBtn: "Weiter",
-      nameSkipBtn: "Überspringen",
-      styleDoneBtn: Theme.of(context).textTheme.button,
+      renderDoneBtn: const Text("Fertig"),
+      renderNextBtn: const Text("Weiter"),
+      renderPrevBtn: const Text("Zurück"),
+      doneButtonStyle: Theme.of(context).textButtonTheme.style,
       showSkipBtn: false,
       colorDot: Theme.of(context).brightness == Brightness.light
           ? Colors.black54
