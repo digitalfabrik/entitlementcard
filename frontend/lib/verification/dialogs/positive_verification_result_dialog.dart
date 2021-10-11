@@ -10,7 +10,7 @@ import 'verification_result_dialog.dart';
 class PositiveVerificationResultDialog extends StatelessWidget {
   final BaseCardDetails cardDetails;
 
-  PositiveVerificationResultDialog({Key key, this.cardDetails})
+  const PositiveVerificationResultDialog({Key key, this.cardDetails})
       : super(key: key);
 
   @override

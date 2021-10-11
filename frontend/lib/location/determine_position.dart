@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,9 +15,7 @@ Future<Position> determinePosition({BuildContext userInteractContext}) async {
   await requestPermissionToDeterminePosition(
       userInteractContext: userInteractContext);
   var position = await Geolocator.getLastKnownPosition();
-  if (position == null) {
-    position = await Geolocator.getCurrentPosition();
-  }
+  position ??= await Geolocator.getCurrentPosition();
   if (position == null) {
     throw PositionNotAvailableException("Could not determine position.");
   }
@@ -35,7 +35,7 @@ Future<void> requestPermissionToDeterminePosition(
     if (userInteractContext != null) {
       var result = await showDialog(
           context: userInteractContext,
-          builder: (context) => LocationServiceDialog());
+          builder: (context) => const LocationServiceDialog());
       if (result == true) {
         await Geolocator.openLocationSettings();
       }
@@ -48,7 +48,7 @@ Future<void> requestPermissionToDeterminePosition(
     if (userInteractContext != null) {
       var result = await showDialog(
           context: userInteractContext,
-          builder: (context) => LocationPermissionDialog());
+          builder: (context) => const LocationPermissionDialog());
       if (result == true) {
         return await Geolocator.openAppSettings();
       }
@@ -98,7 +98,7 @@ Future<bool> checkQuietIfLocationIsEnabled() async {
         return false;
     }
   } on Exception catch (e) {
-    print(e);
+    log("checkQuietIfLocationIsEnabled threw an Exception.", error: e);
     return false;
   }
 }
@@ -108,5 +108,6 @@ class PositionNotAvailableException implements Exception {
 
   PositionNotAvailableException(this.reason);
 
+  @override
   String toString() => "PositionNotAvailableException: $reason";
 }

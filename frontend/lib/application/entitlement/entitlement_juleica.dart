@@ -21,7 +21,8 @@ class EntitlementJuleica extends StatelessWidget {
         child: Column(
           children: <Widget>[
             TextFormField(
-              decoration: InputDecoration(labelText: "Juleica Kartennummer *"),
+              decoration:
+                  const InputDecoration(labelText: "Juleica Kartennummer *"),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(context),
                 FormBuilderValidators.numeric(context),
@@ -39,9 +40,7 @@ class EntitlementJuleica extends StatelessWidget {
               format: DateFormat('dd.MM.yyyy'),
               firstDate: DateTime.now(),
               validator: FormBuilderValidators.required(context),
-              decoration: InputDecoration(
-                labelText: 'Gültig bis *',
-              ),
+              decoration: const InputDecoration(labelText: 'Gültig bis *'),
               initialValue: entitlement?.juleicaExpirationDate != null
                   ? DateFormat('dd.MM.yyyy')
                       .parse(entitlement.juleicaExpirationDate)
@@ -53,7 +52,7 @@ class EntitlementJuleica extends StatelessWidget {
             ),
             FormBuilderImagePicker(
               name: 'juleica_copy',
-              decoration: InputDecoration(labelText: 'Bild der Juleica'),
+              decoration: const InputDecoration(labelText: 'Bild der Juleica'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               iconColor: Theme.of(context).colorScheme.primary,

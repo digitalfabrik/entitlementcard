@@ -13,12 +13,12 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokeWidth = 6.0;
-    final radius = 12.0;
-    var splashDuration = 0.01;
-    var delay = 0.01;
-    var fadeOutDuration = 0.03;
-    final strokeRadius = radius - strokeWidth / 2;
+    const strokeWidth = 6.0;
+    const radius = 12.0;
+    const splashDuration = 0.01;
+    const delay = 0.01;
+    const fadeOutDuration = 0.03;
+    const strokeRadius = radius - strokeWidth / 2;
     final verticalLineLength = size.height - strokeWidth - 2 * strokeRadius;
     final horizontalLineLength = size.width - strokeWidth - 2 * strokeRadius;
     final quarterArcLength = pi * strokeRadius / 2;
@@ -45,7 +45,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         var dest =
         Offset(-strokeRadius * sin(angle), strokeRadius * (1 - cos(angle)));
         path.relativeArcToPoint(dest,
-            radius: Radius.circular(strokeRadius), clockwise: false);
+            radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -59,7 +59,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         var dest =
         Offset(strokeRadius * (1 - cos(angle)), strokeRadius * sin(angle));
         path.relativeArcToPoint(dest,
-            radius: Radius.circular(strokeRadius), clockwise: false);
+            radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -73,7 +73,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         var dest =
         Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
         path.relativeArcToPoint(dest,
-            radius: Radius.circular(strokeRadius), clockwise: false);
+            radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -87,7 +87,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         var dest = Offset(
             -strokeRadius * (1 - cos(angle)), -strokeRadius * sin(angle));
         path.relativeArcToPoint(dest,
-            radius: Radius.circular(strokeRadius), clockwise: false);
+            radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -130,7 +130,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(RectangularProgressIndicatorPainter oldPainter) {
-    return oldPainter.valueColor != valueColor || oldPainter.value != value;
+  bool shouldRepaint(RectangularProgressIndicatorPainter oldDelegate) {
+    return oldDelegate.valueColor != valueColor || oldDelegate.value != value;
   }
 }

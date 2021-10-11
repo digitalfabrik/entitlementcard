@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,30 +16,34 @@ final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
     1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class DevSettingsView extends StatelessWidget {
-  DevSettingsView({Key key}) : super(key: key);
+  const DevSettingsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
           ListTile(
-            title: Text('Reset EAK'),
+            title: const Text('Reset EAK'),
             onTap: () => _resetEakData(context),
           ),
           ListTile(
-            title: Text('Set valid EAK data'),
+            title: const Text('Set valid EAK data'),
             onTap: () => _setValidEakData(context),
           ),
           ListTile(
-            title: Text('Show Intro Slides'),
+            title: const Text('Show Intro Slides'),
             onTap: () => _showInfoSlides(context),
           ),
           ListTile(
-            title: Text('Set application test data'),
+            title: const Text('Set application test data'),
             onTap: () => _createApplicationData(context),
-          )
+          ),
+          ListTile(
+              title: const Text('Log sample execption'),
+              onTap: () => log("Sample exception.",
+                  error: Exception("Sample exception...")))
         ],
       ),
     );
@@ -56,7 +62,7 @@ class DevSettingsView extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => IntroScreen(),
+          builder: (context) => const IntroScreen(),
         ));
   }
 

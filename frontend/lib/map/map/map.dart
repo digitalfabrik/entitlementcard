@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -26,12 +27,14 @@ class Map extends StatefulWidget {
   final LatLng userLocation;
 
   const Map(
-      {this.onFeatureClick,
+      {Key key,
+      this.onFeatureClick,
       this.onNoFeatureClick,
       this.onFeatureClickLayerFilter,
       this.locationAvailable,
       this.onMapCreated,
-      this.userLocation});
+      this.userLocation})
+      : super(key: key);
 
   @override
   State createState() => _MapState();
@@ -64,7 +67,7 @@ class _MapState extends State<Map> implements MapController {
       var cameraPosition = widget.userLocation != null
           ? CameraPosition(
               target: widget.userLocation, zoom: Map.userLocationZoomLevel)
-          : CameraPosition(
+          : const CameraPosition(
               target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
       _mapboxView = Stack(children: [
@@ -72,11 +75,11 @@ class _MapState extends State<Map> implements MapController {
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
-          attributionButtonMargins: Point(-100, -100),
+          attributionButtonMargins: const math.Point(-100, -100),
           // The Mapbox wordmark must be shown because of legal weirdness
           logoViewMargins: Platform.isIOS
-              ? Point(30, 5)
-              : Point(30 * pixelRatio, 5 * pixelRatio),
+              ? const math.Point(30, 5)
+              : math.Point(30 * pixelRatio, 5 * pixelRatio),
           myLocationEnabled: _permissionGiven,
           myLocationTrackingMode: _permissionGiven
               ? MyLocationTrackingMode.Tracking
@@ -87,7 +90,7 @@ class _MapState extends State<Map> implements MapController {
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
           compassViewMargins:
-              Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
         ),
         Positioned(
@@ -95,16 +98,16 @@ class _MapState extends State<Map> implements MapController {
           left: 0,
           child: IconButton(
             color: mapboxColor,
-            padding: EdgeInsets.all(5),
-            constraints: BoxConstraints(),
+            padding: const EdgeInsets.all(5),
+            constraints: const BoxConstraints(),
             iconSize: 20,
-            icon: Icon(Icons.info_outline),
+            icon: const Icon(Icons.info_outline),
             tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return AttributionDialog();
+                  return const AttributionDialog();
                 },
               );
             },
@@ -125,23 +128,26 @@ class _MapState extends State<Map> implements MapController {
     }
   }
 
+  @override
   Future<void> setTelemetryEnabled({bool enabled}) async {
     await _controller.setTelemetryEnabled(enabled);
   }
 
+  @override
   Future<void> removeSymbol() async {
     if (_symbol == null) return;
     await _controller.removeSymbol(_symbol);
     _symbol = null;
   }
 
+  @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
     _symbol = await _controller.addSymbol(SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
-  void _onMapClick(Point<double> point, clickCoordinates) async {
+  void _onMapClick(math.Point<double> point, clickCoordinates) async {
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
     var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
@@ -162,10 +168,10 @@ class _MapState extends State<Map> implements MapController {
       int distSort(a, b) {
         var cA = a["geometry"]["coordinates"];
         var cB = b["geometry"]["coordinates"];
-        var dA = sqrt(pow(cA[0] - mapPoint.longitude, 2) +
-            pow(cA[1] - mapPoint.latitude, 2));
-        var dB = sqrt(pow(cB[0] - mapPoint.longitude, 2) +
-            pow(cB[1] - mapPoint.latitude, 2));
+        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) +
+            math.pow(cA[1] - mapPoint.latitude, 2));
+        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) +
+            math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
 
@@ -185,6 +191,7 @@ class _MapState extends State<Map> implements MapController {
     _isAnimating = false;
   }
 
+  @override
   Future<void> bringCameraToLocation(LatLng location,
       {double zoomLevel}) async {
     final update = zoomLevel != null
@@ -211,8 +218,7 @@ class _MapState extends State<Map> implements MapController {
         setState(() => _permissionGiven = true);
       }
     } on Exception catch (e) {
-      print("Could not find position.");
-      print(e);
+      log("Could not find position.", error: e);
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:artemis/schema/graphql_query.dart';
 
 import '../graphql/graphql_api.dart';
 import 'application_model.dart';
@@ -8,14 +9,14 @@ import 'application_model.dart';
 class SendApplication extends StatelessWidget {
   final Function(bool) onResult;
 
-  SendApplication({Key key, this.onResult}) : super(key: key);
+  const SendApplication({Key key, this.onResult}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
     applicationModel.createAttachmentStream();
-    var query;
+    GraphQLQuery query;
     Function parseResult;
     if (applicationModel.hasBlueCardApplication()) {
       var application = AddBlueEakApplicationArguments(
@@ -38,7 +39,7 @@ class SendApplication extends StatelessWidget {
       builder: (result, {fetchMore, refetch}) {
         if (result.isLoading) {
           return Row(
-            children: [
+            children: const [
               CircularProgressIndicator(),
               SizedBox(
                 width: 18,
@@ -52,7 +53,7 @@ class SendApplication extends StatelessWidget {
           onResult(true);
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+            children: const [
               Icon(
                 Icons.check_circle_outline,
                 size: 42,
@@ -70,7 +71,7 @@ class SendApplication extends StatelessWidget {
           );
         } else {
           onResult(false);
-          return Row(children: [
+          return Row(children: const [
             Icon(
               Icons.error_outline,
               size: 42,

@@ -9,6 +9,8 @@ import 'dev_settings_view.dart';
 import 'texts.dart';
 
 class AboutPage extends StatelessWidget {
+  const AboutPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var config = Configuration.of(context);
@@ -22,10 +24,10 @@ class AboutPage extends StatelessWidget {
                 Container(height: 20),
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
-                      child: Image(
+                      child: const Image(
                         image: AssetImage("assets/icon/icon.png"),
                         height: 100.0,
                         width: 100.0,
@@ -57,7 +59,7 @@ class AboutPage extends StatelessWidget {
                         ),
                         Padding(
                           padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 10),
+                              const EdgeInsets.only(left: 10, right: 10, top: 10),
                           child: Text(publisherAddress,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
@@ -99,29 +101,29 @@ class AboutPage extends StatelessWidget {
                     title: "Haftung, Haftungsausschluss und Disclaimer",
                     children: getDisclaimerText(context)),
                 ListTile(
-                    leading: Icon(Icons.book_outlined),
-                    title: Text("Software-Bibliotheken"),
+                    leading: const Icon(Icons.book_outlined),
+                    title: const Text("Software-Bibliotheken"),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LicensePage(),
+                            builder: (context) => const LicensePage(),
                           ));
                     }),
                 ListTile(
-                    leading: Icon(Icons.code_outlined),
-                    title: Text("Quellcode der App"),
+                    leading: const Icon(Icons.code_outlined),
+                    title: const Text("Quellcode der App"),
                     onTap: () {
                       launch(
                           "https://github.com/ehrenamtskarte/ehrenamtskarte");
                     }),
                 if (config.showDevSettings)
                   ListTile(
-                    leading: Icon(Icons.build),
-                    title: Text("Entwickleroptionen"),
+                    leading: const Icon(Icons.build),
+                    title: const Text("Entwickleroptionen"),
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) => SimpleDialog(
+                      builder: (context) => const SimpleDialog(
                           title: Text("Entwickleroptionen"),
                           children: [DevSettingsView()]),
                     ),

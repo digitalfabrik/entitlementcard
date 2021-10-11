@@ -51,8 +51,8 @@ class _QRViewState extends State<QrCodeScanner> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(8),
-                      child: Text('Halten Sie die Kamera auf den QR Code.'),
+                      margin: const EdgeInsets.all(8),
+                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
                     ),
                     if (controller != null)
                       QrCodeScannerControls(controller: controller)
@@ -101,7 +101,7 @@ class _QRViewState extends State<QrCodeScanner> {
     }
 
     // give the user time to move the camara away from the qr code
-    await Future.delayed(Duration(milliseconds: scanDelayAfterErrorMs));
+    await Future.delayed(const Duration(milliseconds: scanDelayAfterErrorMs));
 
     if (mounted) {
       controller.resumeCamera();

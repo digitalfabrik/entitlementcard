@@ -30,7 +30,7 @@ class IntroScreenState extends State<IntroScreen> {
               "Bayerischen Ehrenamtskarte heruntergeladen haben!",
           pathImage: "assets/icon/icon_foreground.png",
           backgroundColor: theme.brightness == Brightness.light
-              ? Color(0xffECECEC)
+              ? const Color(0xffECECEC)
               : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
@@ -46,7 +46,7 @@ class IntroScreenState extends State<IntroScreen> {
               "sehen zu können.",
           pathImage: "assets/intro_slides/map_zoom.jpeg",
           backgroundColor: theme.brightness == Brightness.light
-              ? Color(0xffECECEC)
+              ? const Color(0xffECECEC)
               : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
@@ -57,7 +57,7 @@ class IntroScreenState extends State<IntroScreen> {
       Slide(
           title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
           backgroundColor: theme.brightness == Brightness.light
-              ? Color(0xffECECEC)
+              ? const Color(0xffECECEC)
               : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
@@ -74,7 +74,7 @@ class IntroScreenState extends State<IntroScreen> {
                 maxLines: 100,
                 overflow: TextOverflow.ellipsis,
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(15),
                 child: LocationRequestButton(),
               )

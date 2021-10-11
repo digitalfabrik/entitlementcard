@@ -32,11 +32,11 @@ class SummaryStep extends StatelessWidget {
                 ),
                 onSaved: (value) =>
                     _onPrivacyPolicySaved(context, applicationModel, value),
-                title: Text('Hiermit erkläre ich mich damit einverstanden, dass'
-                    ' meine Daten zum Zwecke der Zusendung von Informationen'
-                    ' (z.B. zu bayernweiten Aktionen) rund um das Thema'
-                    ' „Ehrenamtskarte“ gespeichert und ggf. an das Land Bayern'
-                    ' weitergeleitet werden.')),
+                title: const Text('Hiermit erkläre ich mich damit einverstanden,'
+                    ' dass meine Daten zum Zwecke der Zusendung von'
+                    ' Informationen (z.B. zu bayernweiten Aktionen) rund um das'
+                    ' Thema „Ehrenamtskarte“ gespeichert und ggf. an das Land'
+                    ' Bayern weitergeleitet werden.')),
             FormBuilderCheckbox(
                 name: 'correct_and_complete',
                 initialValue: applicationModel.blueCardApplication
@@ -51,7 +51,7 @@ class SummaryStep extends StatelessWidget {
                 ),
                 onSaved: (value) => _onCorrectAndCompleteSaved(
                     context, applicationModel, value),
-                title: Text('Die hier angegeben Informationen sind'
+                title: const Text('Die hier angegeben Informationen sind'
                     ' richtig und vollständig.')),
           ],
         ));

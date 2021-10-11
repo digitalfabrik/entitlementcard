@@ -34,7 +34,7 @@ class QrCodeScannerControls extends StatelessWidget {
                 children: <Widget>[
                   if (snapshot.data != null && snapshot.data.hasFlash)
                     Container(
-                      margin: EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(8),
                       child: OutlinedButton(
                           onPressed: () => controller
                               .toggleFlash()
@@ -45,14 +45,14 @@ class QrCodeScannerControls extends StatelessWidget {
                                 snapshot.data ?? false
                                     ? "Blitz aus"
                                     : "Blitz an",
-                                style: TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16)),
                           )),
                     ),
                   if (snapshot.data != null &&
                       snapshot.data.hasBackCamera &&
                       snapshot.data.hasFrontCamera)
                     Container(
-                      margin: EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(8),
                       child: OutlinedButton(
                           onPressed: () => controller
                               .flipCamera()
@@ -63,7 +63,7 @@ class QrCodeScannerControls extends StatelessWidget {
                                 snapshot.data == CameraFacing.back
                                     ? "Frontkamera"
                                     : "Standard-Kamera",
-                                style: TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16)),
                           )),
                     )
                 ]));
@@ -74,7 +74,7 @@ class QrCodeScannerControls extends StatelessWidget {
       try {
         return await controller.getSystemFeatures();
       } on CameraException {
-        await Future.delayed(Duration(milliseconds: 50));
+        await Future.delayed(const Duration(milliseconds: 50));
       }
     }
     return SystemFeatures(true, true, true);

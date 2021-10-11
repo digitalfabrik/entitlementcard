@@ -21,8 +21,8 @@ void main() {
   });
 
   group("prepare website for display", () {
-    final prepare = prepareWebsiteUrlForDisplay;
-    final website = "www.musik-hofmann.de";
+    const prepare = prepareWebsiteUrlForDisplay;
+    const website = "www.musik-hofmann.de";
 
     test("should not change correctly formatted website",
         () => expect(prepare(website), website));
@@ -38,10 +38,10 @@ void main() {
   });
 
   group("prepare website for launch", () {
-    final prepare = prepareWebsiteUrlForLaunch;
-    final website = "www.musik-hofmann.de";
-    final websiteHttp = "http://$website";
-    final websiteHttps = "https://$website";
+    const prepare = prepareWebsiteUrlForLaunch;
+    const website = "www.musik-hofmann.de";
+    const websiteHttp = "http://$website";
+    const websiteHttps = "https://$website";
 
     test("should not change correctly formatted website with https",
         () => expect(prepare(websiteHttps), websiteHttps));

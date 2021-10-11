@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../../configuration/hide_verification_info.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
+  const VerificationInfoDialog({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("So prüfen Sie die Echtheit einer Ehrenamtskarte"),
+      title: const Text("So prüfen Sie die Echtheit einer Ehrenamtskarte"),
       content: SingleChildScrollView(
-        child: ListBody(children: [
+        child: ListBody(children: const [
           Text("Scannen Sie den QR-Code, der auf der „Ausweisen“-Seite Ihres "
               "Gegenübers angezeigt wird. "
               "Daraufhin wird durch eine Server-Anfrage geprüft, ob die "
@@ -18,14 +20,14 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: Text("Nicht mehr anzeigen"),
+          child: const Text("Nicht mehr anzeigen"),
           onPressed: () async {
             await setHideVerificationInfo();
             _onDone(context);
           },
         ),
         TextButton(
-          child: Text("OK"),
+          child: const Text("OK"),
           onPressed: () => _onDone(context),
         )
       ],
@@ -40,7 +42,7 @@ class VerificationInfoDialog extends StatelessWidget {
   static Future<bool> show(BuildContext context) {
     return showDialog<bool>(
         context: context,
-        builder: (_) => VerificationInfoDialog(),
+        builder: (_) => const VerificationInfoDialog(),
     );
   }
 }

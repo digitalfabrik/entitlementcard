@@ -12,6 +12,8 @@ import 'summary_step.dart';
 import 'textwidgets/step_title_text.dart';
 
 class ApplicationForm extends StatefulWidget {
+  const ApplicationForm({Key key}) : super(key: key);
+
   @override
   _ApplicationFormState createState() => _ApplicationFormState();
 }
@@ -39,7 +41,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Ehrenamtskarte beantragen")),
+        appBar: AppBar(title: const Text("Ehrenamtskarte beantragen")),
         body: Stepper(
             currentStep: _currentStep,
             onStepContinue: _onStepContinued,
@@ -57,9 +59,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                         onPressed: onStepCancel,
                         child: const Text('ZURÜCK'),
                       ),
-                    SizedBox(
-                      width: 12,
-                    ),
+                    const SizedBox(width: 12),
                     TextButton(
                       onPressed: onStepContinue,
                       child: Text(
@@ -88,7 +88,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   _buildStep(String title, int index,
-          Widget formBuilder(GlobalKey<FormBuilderState> key)) =>
+          Widget Function(GlobalKey<FormBuilderState> key) formBuilder) =>
       Step(
           title: StepTitleText(title: title),
           content: formBuilder(_formKeys[index]),

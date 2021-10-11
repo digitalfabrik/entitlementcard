@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 import 'card_details.dart';
@@ -22,8 +24,7 @@ class CardDetailsModel extends ChangeNotifier {
     try {
       _cardDetails = await loadCardDetails();
     } on Exception catch (e) {
-      print("Failed to initialize stored card details");
-      print(e.toString());
+      log("Failed to initialize stored card details", error: e);
     } finally {
       _isInitialized = true;
       notifyListeners();

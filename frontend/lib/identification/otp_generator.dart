@@ -13,7 +13,7 @@ class OTPGenerator {
 
   OTPCode generateOTP([VoidCallback onTimeout]) {
     final time = DateTime.now().millisecondsSinceEpoch;
-    final intervalMilliSeconds = _otpIntervalSeconds * 1000;
+    const intervalMilliSeconds = _otpIntervalSeconds * 1000;
     final validUntilMilliSeconds =
         (time ~/ intervalMilliSeconds + 1) * intervalMilliSeconds;
     if (onTimeout != null) {

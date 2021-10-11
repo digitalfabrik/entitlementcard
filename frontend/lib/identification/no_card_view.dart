@@ -31,7 +31,7 @@ class NoCardView extends StatelessWidget {
             child: Icon(Icons.contact_support_outlined,
                 size: 100, color: Theme.of(context).colorScheme.secondary),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           wrapIntrinsic(
             Flex(
                 direction: isLandscape ? Axis.horizontal : Axis.vertical,
@@ -39,13 +39,13 @@ class NoCardView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 300),
+                      constraints: const BoxConstraints(maxWidth: 300),
                       child: Column(children: [
                         Text("Sie sind ehrenamtlich engagiert …",
                             style: Theme.of(context).textTheme.headline6,
                             textAlign: TextAlign.center),
-                        SizedBox(height: 24, width: 24),
-                        Text(
+                        const SizedBox(height: 24, width: 24),
+                        const Text(
                             "… und haben bereits einen Aktivierungscode"
                             " für die digitale Ehrenamtskarte?",
                             textAlign: TextAlign.center),
@@ -53,34 +53,36 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startActivateQrCode,
-                            child: Text("Jetzt Aktivierungscode einscannen"),
+                            child:
+                                const Text("Jetzt Aktivierungscode einscannen"),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        Text("… haben aber noch keine"
+                        const SizedBox(height: 16),
+                        const Text(
+                            "… haben aber noch keine"
                             " Bayerische Ehrenamtskarte?",
                             textAlign: TextAlign.center),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startEakApplication,
-                            child: Text("Jetzt Ehrenamtskarte beantragen"),
+                            child: const Text("Jetzt Ehrenamtskarte beantragen"),
                           ),
                         )
                       ])),
                   isLandscape
-                      ? VerticalDivider(width: 80)
-                      : Divider(height: 30),
+                      ? const VerticalDivider(width: 80)
+                      : const Divider(height: 30),
                   ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 300),
+                      constraints: const BoxConstraints(maxWidth: 300),
                       child: Column(children: [
                         Text(
                           "Sie arbeiten bei einer Akzeptanzstelle …",
                           style: Theme.of(context).textTheme.headline6,
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 24),
-                        Text(
+                        const SizedBox(height: 24),
+                        const Text(
                             "… und möchten eine Ihnen gezeigte digitale"
                             " Ehrenamtskarte auf Echtheit prüfen?",
                             textAlign: TextAlign.center),
@@ -88,7 +90,7 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startVerification,
-                            child: Text("Jetzt Ehrenamtskarte validieren"),
+                            child: const Text("Jetzt Ehrenamtskarte validieren"),
                           ),
                         )
                       ]))

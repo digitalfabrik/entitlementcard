@@ -15,7 +15,7 @@ class CardDetailView extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startEakApplication;
 
-  CardDetailView({Key key,
+  const CardDetailView({Key key,
     this.cardDetails,
     this.startActivateEak,
     this.startVerification,
@@ -64,7 +64,7 @@ class CardDetailView extends StatelessWidget {
                           constraints.maxWidth > qrCodeMinWidth * 2
                               ? Flexible(child: richQrCode)
                               : ConstrainedBox(constraints:
-                          BoxConstraints.tightFor(width: qrCodeMinWidth),
+                          const BoxConstraints.tightFor(width: qrCodeMinWidth),
                               child: richQrCode)
                         ]);
                   }))
@@ -74,7 +74,7 @@ class CardDetailView extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(children: [
                           eakCard,
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           richQrCode
                         ]),
                       ))));
@@ -113,7 +113,7 @@ class RichQrCode extends StatelessWidget {
             Container(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 constraints: const BoxConstraints(maxWidth: 300),
-                child: Text(
+                child: const Text(
                   "Mit diesem QR-Code können Sie sich"
                       " bei Akzeptanzstellen ausweisen:",
                   textAlign: TextAlign.center,

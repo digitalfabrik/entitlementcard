@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
@@ -82,7 +84,7 @@ class VerificationWorkflow {
 
   Future<void> _onError(String message, [Exception exception]) async {
     if (exception != null) {
-      print("Verification failed: ${exception.toString()}");
+      log("Verification failed.", error: exception);
     }
     if (_userCancelled) return;
     _closeWaitingDialog();
@@ -101,7 +103,7 @@ class VerificationWorkflow {
       return AlertDialog(
         title: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: const [
             CircularProgressIndicator()
         ])
       );

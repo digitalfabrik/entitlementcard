@@ -8,7 +8,7 @@ import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
 
 class IdentificationQrScannerPage extends StatelessWidget {
-  IdentificationQrScannerPage({Key key}) : super(key: key);
+  const IdentificationQrScannerPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class IdentificationQrScannerPage extends StatelessWidget {
 
   void _onCodeScanned(BuildContext context, String code) async {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
-    void showError(msg) async =>
+    Future<void> showError(msg) async =>
         await QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);

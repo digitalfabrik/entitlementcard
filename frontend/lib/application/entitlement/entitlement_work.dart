@@ -43,16 +43,12 @@ class _EntitlementWorkState extends State<EntitlementWork> {
                       ),
               ),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             ElevatedButton(
-                onPressed: () => setState(_addOrganisation),
-                child: Text('Weitere Organisation hinzufügen'),
+              onPressed: () => setState(_addOrganisation),
+              child: const Text('Weitere Organisation hinzufügen'),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
           ],
         ));
   }

@@ -21,7 +21,7 @@ List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
 
 List<Widget> getCopyrightText(BuildContext context) {
   return toWidgets(Theme.of(context), [
-    Paragraph(content: '''
+    const Paragraph(content: '''
 Der Quelltext dieser App ist unter der MIT Lizenz veröffentlicht und kann unter https://github.com/ehrenamtskarte/ehrenamtskarte/ eingesehen werden.
 
 MIT License
@@ -37,7 +37,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 
 List<Widget> getDataPrivacyText(BuildContext context) {
-  var content = [
+  var content = const [
     Paragraph(content: '''
 Bei der Nutzung der App „Ehrenamtskarte“ für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind solche Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
 '''),
@@ -136,7 +136,7 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
 }
 
 List<Widget> getDisclaimerText(BuildContext context) {
-  return toWidgets(Theme.of(context), [
+  return toWidgets(Theme.of(context), const [
     Paragraph(title: 'Verantwortlich im Sinne § 7 TMG:', content: '''
 Christian K. J. Diener
 Leiter Referat Öffentlichkeitsarbeit
@@ -165,7 +165,7 @@ Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird 
 }
 
 List<Widget> getPublisherText(BuildContext context) {
-  return toWidgets(Theme.of(context), [
+  return toWidgets(Theme.of(context), const [
     Paragraph(content: '''
 Bayerisches Staatsministerium für Familie, Arbeit und Soziales
 Winzererstraße 9

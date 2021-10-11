@@ -16,9 +16,9 @@ class Organization extends StatelessWidget {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FormHeaderText("Organisationsdaten"),
+          const FormHeaderText("Organisationsdaten"),
           TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText:
                     'Name des Vereins, der Organisation, der Initiative *'),
             initialValue: organizationInput?.name,
@@ -28,14 +28,14 @@ class Organization extends StatelessWidget {
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
-            decoration: InputDecoration(labelText: 'Straße *'),
+            decoration: const InputDecoration(labelText: 'Straße *'),
             initialValue: organizationInput?.address?.street,
             onSaved: (value) {
               organizationInput?.address?.street = value;
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "Hausnummer *"),
+            decoration: const InputDecoration(labelText: "Hausnummer *"),
             validator: FormBuilderValidators.required(context),
             initialValue: organizationInput?.address?.houseNumber,
             onSaved: (value) {
@@ -43,7 +43,7 @@ class Organization extends StatelessWidget {
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "Postleitzahl *"),
+            decoration: const InputDecoration(labelText: "Postleitzahl *"),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(context),
               FormBuilderValidators.numeric(context),
@@ -59,19 +59,17 @@ class Organization extends StatelessWidget {
           ),
           TextFormField(
             validator: FormBuilderValidators.required(context),
-            decoration: InputDecoration(labelText: 'Ort *'),
+            decoration: const InputDecoration(labelText: 'Ort *'),
             initialValue: organizationInput?.address?.location,
             onSaved: (value) {
               organizationInput?.address?.location = value;
             },
           ),
-          SizedBox(
-            height: 24,
-          ),
-          FormHeaderText("Kontaktperson"),
+          const SizedBox(height: 24),
+          const FormHeaderText("Kontaktperson"),
           TextFormField(
             validator: FormBuilderValidators.required(context),
-            decoration: InputDecoration(labelText: 'Name *'),
+            decoration: const InputDecoration(labelText: 'Name *'),
             initialValue: organizationInput?.contact?.name,
             onSaved: (value) {
               organizationInput?.contact?.name = value;
@@ -83,14 +81,14 @@ class Organization extends StatelessWidget {
               FormBuilderValidators.email(context),
             ]),
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(labelText: 'E-Mail *'),
+            decoration: const InputDecoration(labelText: 'E-Mail *'),
             initialValue: organizationInput?.contact?.email,
             onSaved: (value) {
               organizationInput?.contact?.email = value;
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "Telefon (tagsüber)"),
+            decoration: const InputDecoration(labelText: "Telefon (tagsüber)"),
             keyboardType: TextInputType.phone,
             initialValue: organizationInput?.contact?.telephone,
             onSaved: (value) {
@@ -108,7 +106,7 @@ class Organization extends StatelessWidget {
               ),
               onSaved: (value) =>
                   {organizationInput?.contact?.hasGivenPermission = value},
-              title: Text('Kontaktperson hat der Weitergabe der Daten und'
+              title: const Text('Kontaktperson hat der Weitergabe der Daten und'
                   ' möglicher Kontaktaufnahme zugestimmt')),
         ]);
   }

@@ -6,7 +6,7 @@ class VerificationResultDialog extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
 
-  VerificationResultDialog(
+  const VerificationResultDialog(
       {Key key, this.child, this.title, this.icon, this.iconColor})
       : super(key: key);
 
@@ -27,7 +27,8 @@ class VerificationResultDialog extends StatelessWidget {
       content: child,
       actions: [
         TextButton(
-            onPressed: () => Navigator.of(context).pop(), child: Text("OK"))
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"))
       ],
     );
   }

@@ -52,7 +52,7 @@ class AcceptingStoreSummary extends StatelessWidget {
             _openDetailView(context);
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
               children: [
                 if (useWideDepiction)
@@ -67,12 +67,12 @@ class AcceptingStoreSummary extends StatelessWidget {
                   showTownName: _distance == null && showLocation,
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       children: [
                         if (_distance != null)
                           DistanceText(distance: _distance),
-                        Container(
+                        SizedBox(
                             child: Icon(Icons.keyboard_arrow_right,
                                 size: 30.0,
                                 color: Theme.of(context).disabledColor),
@@ -114,7 +114,7 @@ class CategoryIconIndicator extends StatelessWidget {
       child: svgIconPath != null
           ? SvgPicture.asset(svgIconPath,
               width: 30, semanticsLabel: categoryName ?? "Unbekannte Kategorie")
-          : Icon(
+          : const Icon(
               Icons.info,
               size: 30,
             ),
@@ -130,7 +130,7 @@ class CategoryColorIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: VerticalDivider(
         color: categoryColor ?? Theme.of(context).colorScheme.primary,
         thickness: 3,
@@ -158,7 +158,7 @@ class StoreTextOverview extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText1),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(store.description ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -196,7 +196,7 @@ class DistanceText extends StatelessWidget {
 
 // from https://www.movable-type.co.uk/scripts/latlong.html
 double calcDistance(double lat1, double lng1, double lat2, double lng2) {
-  final R = 6371; // kilometers
+  const R = 6371; // kilometers
   final phi1 = lat1 * pi / 180; // φ, λ in radians
   final phi2 = lat2 * pi / 180;
   final deltaPhi = (lat2 - lat1) * pi / 180;

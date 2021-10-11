@@ -15,9 +15,7 @@ class OrganizationDivider extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(
-          height: 24,
-        ),
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -26,8 +24,8 @@ class OrganizationDivider extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6,
             ),
             ElevatedButton(
-                onPressed: onOrganisationDeleted,
-                child: Text('LÖSCHEN'),
+              onPressed: onOrganisationDeleted,
+              child: const Text('LÖSCHEN'),
             ),
           ],
         )

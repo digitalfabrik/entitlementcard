@@ -28,7 +28,7 @@ class _LocationButtonState extends State<LocationButton> {
         ? null
         : () => _initCoordinates(true);
     var icon = _locationStatus == LocationRequestStatus.requesting
-        ? SmallButtonSpinner()
+        ? const SmallButtonSpinner()
         : Icon(
             Icons.my_location,
             size: 24,
@@ -36,13 +36,13 @@ class _LocationButtonState extends State<LocationButton> {
           );
     return Container(
         alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: FloatingActionButton.extended(
             backgroundColor: Theme.of(context).backgroundColor,
             elevation: 1,
             onPressed: onPressed,
             icon: AnimatedSwitcher(
-                child: icon, duration: Duration(milliseconds: 200)),
+                child: icon, duration: const Duration(milliseconds: 200)),
             label: Text(
               "In meiner Nähe suchen",
               style: TextStyle(color: theme.hintColor),

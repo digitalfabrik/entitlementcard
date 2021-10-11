@@ -10,7 +10,7 @@ class QrCodeScannerPage extends StatelessWidget {
   final OnHelpClickedCallback onHelpClicked;
   final String title;
 
-  QrCodeScannerPage({Key key, @required this.onCodeScanned,
+  const QrCodeScannerPage({Key key, @required this.onCodeScanned,
     @required this.title, this.onHelpClicked})
       : super(key: key);
 
@@ -21,7 +21,7 @@ class QrCodeScannerPage extends StatelessWidget {
           title: Text(title),
           actions: [
             if (onHelpClicked != null)
-              IconButton(icon: Icon(Icons.help), onPressed: onHelpClicked)
+              IconButton(icon: const Icon(Icons.help), onPressed: onHelpClicked)
           ],
       ),
       body: QrCodeScanner(

@@ -9,7 +9,7 @@ class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
   final Function(CategoryAsset, bool) onCategoryPress;
 
-  FilterBarButton({Key key, this.asset, this.onCategoryPress})
+  const FilterBarButton({Key key, this.asset, this.onCategoryPress})
       : super(key: key);
 
   @override
@@ -28,8 +28,8 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 400));
 
     super.initState();
   }
@@ -63,7 +63,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
         animation: _colorTween,
         builder: (context, child) => RawMaterialButton(
             elevation: 0.0,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             constraints: BoxConstraints.tightFor(width: width, height: 70),
             fillColor: _colorTween.value,
@@ -85,7 +85,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
                       alignment: Alignment.center,
                       child: Text(widget.asset.shortName,
                           maxLines: 2,
-                          style: TextStyle(fontSize: 10),
+                          style: const TextStyle(fontSize: 10),
                           textAlign: TextAlign.center),
                     ),
                   )

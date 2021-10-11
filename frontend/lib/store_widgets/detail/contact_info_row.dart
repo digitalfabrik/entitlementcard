@@ -9,20 +9,18 @@ class ContactInfoRow extends StatelessWidget {
   final Color iconColor;
   final Color iconFillColor;
 
-  ContactInfoRow(this._icon, this._description, this._semanticLabel,
-      {this.onTap, this.iconColor, this.iconFillColor});
+  const ContactInfoRow(this._icon, this._description, this._semanticLabel,
+      {Key key, this.onTap, this.iconColor, this.iconFillColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (_description == null || _description.isEmpty) {
-      return Container(
-        width: 0,
-        height: 0,
-      );
+      return const SizedBox(width: 0, height: 0);
     }
     var row = Row(children: [
       Padding(
-          padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
+          padding: const EdgeInsets.only(top: 6, bottom: 6, right: 16),
           child: ClipOval(
             child: Container(
               width: 42,

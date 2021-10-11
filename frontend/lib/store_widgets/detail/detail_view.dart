@@ -12,7 +12,9 @@ class DetailView extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
 
-  DetailView(this._acceptingStoreId, {this.hideShowOnMapButton = false});
+  const DetailView(this._acceptingStoreId,
+      {Key key, this.hideShowOnMapButton = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class DetailView extends StatelessWidget {
             }
 
             if (result.isLoading) {
-              return DetailLayout(body: LinearProgressIndicator());
+              return const DetailLayout(body: LinearProgressIndicator());
             }
             final matchingStores =
                 byIdQuery.parse(result.data).physicalStoresById;
@@ -63,7 +65,7 @@ class DetailView extends StatelessWidget {
         body: InkWell(
             onTap: refetch,
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ErrorMessage(message),
             )));
   }

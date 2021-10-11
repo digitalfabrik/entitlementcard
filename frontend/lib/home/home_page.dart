@@ -10,43 +10,39 @@ import 'app_flows_stack.dart';
 class HomePage extends StatefulWidget {
   final bool showVerification;
 
-  HomePage({Key key, this.showVerification}) : super(key: key);
+  const HomePage({Key key, this.showVerification}) : super(key: key);
 
   static _HomePageData of(BuildContext context) => _HomePageData.of(context);
 
   @override
-  _HomePageState createState() =>
-      _HomePageState(showVerification: showVerification);
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
   MapPageController mapPageController;
 
-  final MapPage mapPage;
-  final List<AppFlow> appFlows;
+  MapPage mapPage;
+  List<AppFlow> appFlows;
 
-  _HomePageState._(this.mapPage, this.appFlows);
-
-  factory _HomePageState({bool showVerification}) {
-    _HomePageState state;
-    var mapPage = MapPage(
+  @override
+  void initState() {
+    super.initState();
+    mapPage = MapPage(
       onMapCreated: (controller) =>
-          state.setState(() => state.mapPageController = controller),
+          setState(() => mapPageController = controller),
     );
-    var appFlows = <AppFlow>[
+    appFlows = [
       AppFlow(mapPage, Icons.map_outlined, "Karte",
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
-      AppFlow(SearchPage(), Icons.search_outlined, "Suche",
+      AppFlow(const SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
-      if (showVerification)
-        AppFlow(IdentificationPage(), Icons.remove_red_eye_outlined,
+      if (widget.showVerification)
+        AppFlow(const IdentificationPage(), Icons.remove_red_eye_outlined,
             "Ausweisen", GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
-      AppFlow(AboutPage(), Icons.info_outline, "Über",
+      AppFlow(const AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
-    state = _HomePageState._(mapPage, appFlows);
-    return state;
   }
 
   @override
@@ -104,7 +100,7 @@ class _HomePageState extends State<HomePage> {
 class _HomePageData extends InheritedWidget {
   final Function goToMap;
 
-  _HomePageData({Key key, this.goToMap, Widget child})
+  const _HomePageData({Key key, this.goToMap, Widget child})
       : super(key: key, child: child);
 
   static _HomePageData of(BuildContext context) {

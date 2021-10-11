@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../location/determine_position.dart';
@@ -26,7 +28,7 @@ class _LocationButtonState extends State<LocationButton> {
     return Align(
         alignment: Alignment.bottomRight,
         child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: FloatingActionButton(
               elevation: 1,
               backgroundColor: theme.backgroundColor,
@@ -34,8 +36,8 @@ class _LocationButtonState extends State<LocationButton> {
                 child: _status == LocationPermissionStatus.requestFinished
                     ? Icon(Icons.my_location,
                         color: theme.colorScheme.secondary)
-                    : SmallButtonSpinner(),
-                duration: Duration(milliseconds: 200),
+                    : const SmallButtonSpinner(),
+                duration: const Duration(milliseconds: 200),
               ),
               onPressed: _status == LocationPermissionStatus.requestFinished
                   ? _onPressed
@@ -50,7 +52,7 @@ class _LocationButtonState extends State<LocationButton> {
       setState(() => _status = LocationPermissionStatus.requestFinished);
       await widget.mapController.bringCameraToUser();
     } on Exception catch (e) {
-      print(e);
+      log("onPressed in LocationButton threw an error.", error: e);
     } finally {
       setState(() => _status = LocationPermissionStatus.requestFinished);
     }

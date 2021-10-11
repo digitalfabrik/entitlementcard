@@ -5,7 +5,7 @@ import 'filter_bar_button.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
-  FilterBar({Key key, this.onCategoryPress}) : super(key: key);
+  const FilterBar({Key key, this.onCategoryPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,11 @@ class FilterBar extends StatelessWidget {
     return SliverToBoxAdapter(
         child: Column(children: [
       Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Row(children: [
             Text("Nach Kategorien filtern".toUpperCase(),
-                maxLines: 1, style: TextStyle(color: Colors.grey)),
-            Expanded(
+                maxLines: 1, style: const TextStyle(color: Colors.grey)),
+            const Expanded(
                 child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Divider(thickness: 0.7)))

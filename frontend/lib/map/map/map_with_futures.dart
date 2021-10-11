@@ -10,7 +10,7 @@ class MapWithFutures extends StatelessWidget {
   final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
 
-  MapWithFutures(
+  const MapWithFutures(
       {Key key,
       this.onNoFeatureClick,
       this.onFeatureClick,
@@ -23,12 +23,12 @@ class MapWithFutures extends StatelessWidget {
     return FutureBuilder(
       future: Future.wait([
         canDetermineLocation(),
-        determinePosition().timeout(Duration(milliseconds: 400))
+        determinePosition().timeout(const Duration(milliseconds: 400))
             .onError((_,__) => null)
       ]),
       builder: (context, snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
-          return Center();
+          return const Center();
         }
         var userLocation = snapshot.hasData && snapshot.data[1] != null
          ? LatLng(snapshot.data[1].latitude, snapshot.data[1].longitude) : null;

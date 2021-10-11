@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import '../base_card_details.dart';
 import 'eak_card_header_logo.dart';
 
-final blueCardColor = Color(0xffcfeaff);
-final goldenCardColor = Color(0xffcab374);
-final textColor = Color(0xff172c82);
+const blueCardColor = Color(0xffcfeaff);
+const goldenCardColor = Color(0xffcab374);
+const textColor = Color(0xff172c82);
 
 class Region with EquatableMixin {
   final String prefix;
@@ -43,7 +43,7 @@ class EakCard extends StatelessWidget {
           children: [
             // Header
             Container(
-              color: Color(0xf5f5f5ff),
+              color: const Color(0xf5f5f5ff),
               child: AspectRatio(
                   aspectRatio: 6 / 1,
                   child: Row(
@@ -57,7 +57,7 @@ class EakCard extends StatelessWidget {
                         EakCardHeaderLogo(
                           title: "Freistaat Bayern",
                           scaleFactor: scaleFactor,
-                          logo: Image(
+                          logo: const Image(
                               image: AssetImage("assets/wappen-bavaria.png"),
                               fit: BoxFit.contain),
                         )

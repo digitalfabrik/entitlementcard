@@ -18,7 +18,8 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
     throw QrCodeFieldMissingException("regionId");
   }
   if (baseCardDetails.unixExpirationDate == null &&
-      baseCardDetails.cardType == CardActivateModel_CardType.STANDARD.value) {
+      baseCardDetails.cardType.index ==
+          CardActivateModel_CardType.STANDARD.value) {
     throw QrCodeFieldMissingException("expirationDate");
   }
   if (baseCardDetails.hashSecretBase64 == null ||
@@ -38,5 +39,6 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
 
 class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
+
   CardExpiredException(this.expiry) : super("card already expired");
 }

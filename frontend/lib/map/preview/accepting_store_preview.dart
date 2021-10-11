@@ -8,7 +8,7 @@ import 'models.dart';
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  AcceptingStorePreview(this.acceptingStoreId, {Key key}) : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class AcceptingStorePreview extends StatelessWidget {
               throw result.exception;
             }
             if (result.isLoading) {
-              return AcceptingStorePreviewCard(isLoading: true);
+              return const AcceptingStorePreviewCard(isLoading: true);
             }
             var stores = query.parse(result.data).physicalStoresById;
             if (stores.isEmpty) {

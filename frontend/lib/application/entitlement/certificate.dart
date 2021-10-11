@@ -12,6 +12,7 @@ class Certificate extends StatelessWidget {
 
   const Certificate({Key key, this.formKey, this.title}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     var applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
@@ -25,7 +26,7 @@ class Certificate extends StatelessWidget {
             ),
             FormBuilderImagePicker(
               name: 'certificate',
-              decoration: InputDecoration(labelText: 'Kopie oder Foto'),
+              decoration: const InputDecoration(labelText: 'Kopie oder Foto'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               iconColor: Theme.of(context).colorScheme.primary,

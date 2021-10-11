@@ -16,7 +16,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => CardDetailsModel()..initialize()),
         ChangeNotifierProvider(create: (context) => ApplicationModel()),
-      ], child: EntryWidget()),
+      ], child: const EntryWidget()),
     );
   }
 }
