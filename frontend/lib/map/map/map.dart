@@ -197,6 +197,8 @@ class _MapState extends State<Map> implements MapController {
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
+    await _animate(
+        _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None));
     await _animate(_controller.animateCamera(update));
   }
 
