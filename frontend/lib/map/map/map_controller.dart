@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 abstract class MapController {
@@ -7,7 +8,7 @@ abstract class MapController {
 
   Future<void> removeSymbol();
 
-  Future<void> bringCameraToUser();
+  Future<void> bringCameraToUser(Position position);
 
   Future<void> setTelemetryEnabled({bool enabled});
 }

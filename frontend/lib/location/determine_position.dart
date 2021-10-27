@@ -7,19 +7,39 @@ import 'package:geolocator/geolocator.dart';
 import 'location_permission_dialog.dart';
 import 'location_service_dialog.dart';
 
+class RequestedPosition {
+  Position position;
+
+  RequestedPosition(this.position);
+
+  bool isAvailable() {
+    return position != null;
+  }
+}
+
 /// Determine the current position of the device.
 ///
-/// When the location services are not enabled or permissions
-/// are denied the `Future` will return an `PositionNotAvailableException`.
-Future<Position> determinePosition({BuildContext userInteractContext}) async {
-  await requestPermissionToDeterminePosition(
-      userInteractContext: userInteractContext);
+Future<RequestedPosition> determinePosition(
+    {BuildContext userInteractContext, bool requestIfNotGranted}) async {
+  if (requestIfNotGranted) {
+    final permission = await checkAndRequestLocationPermission(
+        userInteractContext: userInteractContext);
+
+    if (!isPermissionGranted(permission)) {
+      return RequestedPosition(null);
+    }
+  }
+
+  if (!isPermissionGranted(await checkQuietLocationPermission())) {
+    return RequestedPosition(null);
+  }
+
   var position = await Geolocator.getLastKnownPosition();
   position ??= await Geolocator.getCurrentPosition();
   if (position == null) {
-    throw PositionNotAvailableException("Could not determine position.");
+    return RequestedPosition(null);
   }
-  return position;
+  return RequestedPosition(position);
 }
 
 /// Ensures all preconditions needed to determine the current position.
@@ -28,63 +48,56 @@ Future<Position> determinePosition({BuildContext userInteractContext}) async {
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return with an `PositionNotAvailableException`.
 /// Else it will complete without a value.
-Future<void> requestPermissionToDeterminePosition(
-    {BuildContext userInteractContext}) async {
+Future<LocationPermission> checkAndRequestLocationPermission(
+    {BuildContext userInteractContext, bool askIfDeniedForever}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (userInteractContext != null) {
       var result = await showDialog(
           context: userInteractContext,
           builder: (context) => const LocationServiceDialog());
-      if (result == true) {
+      if (result) {
         await Geolocator.openLocationSettings();
       }
     }
-    throw PositionNotAvailableException('Location service was disabled.');
+    return LocationPermission.deniedForever;
   }
 
   var permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
-    if (userInteractContext != null) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        var result = await showDialog(
-            context: userInteractContext,
-            builder: (context) => const LocationPermissionDialog());
-        if (result == true) {
-          await Geolocator.openAppSettings();
-        }
-      }
-      throw PositionNotAvailableException('Location permissions were denied.');
+    final requestedPermission = await Geolocator.requestPermission();
+
+    if (requestedPermission == LocationPermission.deniedForever) {
+      await openSettingsToGrantPermissions(userInteractContext); 
     }
-    if (permission != LocationPermission.whileInUse &&
-        permission != LocationPermission.always) {
-      throw PositionNotAvailableException(
-          'Location permissions are denied (actual value: $permission).');
+    return requestedPermission;
+  } else if (permission == LocationPermission.deniedForever) {
+    await openSettingsToGrantPermissions(userInteractContext);
+    return permission;
+  }
+  return permission;
+}
+
+Future<void> openSettingsToGrantPermissions(
+    BuildContext userInteractContext) async {
+  if (userInteractContext != null) {
+    var result = await showDialog(
+        context: userInteractContext,
+        builder: (context) => const LocationPermissionDialog());
+    if (result) {
+      await Geolocator.openAppSettings();
     }
   }
 }
 
-Future<bool> canDetermineLocation({BuildContext userInteractContext}) async {
-  try {
-    await requestPermissionToDeterminePosition(
-        userInteractContext: userInteractContext);
-    return true;
-  } on PositionNotAvailableException catch (e) {
-    debugPrint(e.reason);
-    return false;
-  }
+bool isPermissionGranted(LocationPermission permission) {
+  return permission == LocationPermission.always ||
+      permission == LocationPermission.whileInUse;
 }
 
-Future<bool> checkQuietIfLocationIsEnabled() async {
-  try {
-    final permission = await Geolocator.checkPermission();
-    return permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always;
-  } on Exception catch (e) {
-    log("checkQuietIfLocationIsEnabled threw an Exception.", error: e);
-    return false;
-  }
+Future<LocationPermission> checkQuietLocationPermission() async {
+  final permission = await Geolocator.checkPermission();
+  return permission;
 }
 
 class PositionNotAvailableException implements Exception {

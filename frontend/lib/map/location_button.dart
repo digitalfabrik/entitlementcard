@@ -30,6 +30,7 @@ class _LocationButtonState extends State<LocationButton> {
         child: Padding(
             padding: const EdgeInsets.all(10),
             child: FloatingActionButton(
+              heroTag: "fab_map_view",
               elevation: 1,
               backgroundColor: theme.backgroundColor,
               child: AnimatedSwitcher(
@@ -47,14 +48,11 @@ class _LocationButtonState extends State<LocationButton> {
 
   _onPressed() async {
     setState(() => _status = LocationPermissionStatus.requesting);
-    try {
-      await determinePosition(userInteractContext: context);
-      setState(() => _status = LocationPermissionStatus.requestFinished);
-      await widget.mapController.bringCameraToUser();
-    } on Exception catch (e) {
-      log("onPressed in LocationButton threw an error.", error: e);
-    } finally {
-      setState(() => _status = LocationPermissionStatus.requestFinished);
+    final position = await determinePosition(
+        requestIfNotGranted: true, userInteractContext: context);
+    if (position.isAvailable()) {
+      await widget.mapController.bringCameraToUser(position.position);
     }
+    setState(() => _status = LocationPermissionStatus.requestFinished);
   }
 }
