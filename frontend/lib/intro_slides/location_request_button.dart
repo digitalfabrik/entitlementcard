@@ -4,14 +4,14 @@ import 'package:geolocator/geolocator.dart';
 import '../location/determine_position.dart';
 
 class LocationRequestButton extends StatefulWidget {
-  const LocationRequestButton({Key key}) : super(key: key);
+  const LocationRequestButton({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LocationRequestButtonState();
 }
 
 class _LocationRequestButtonState extends State<LocationRequestButton> {
-  LocationPermission _locationPermissionStatus;
+  LocationPermission? _locationPermissionStatus;
 
   _LocationRequestButtonState() {
     checkAndRequestLocationPermission(context, requestIfNotGranted: false)
@@ -45,23 +45,19 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
           onPressed: _onLocationButtonClicked,
           child: const Text("Ich möchte meinen Standort freigeben."),
         );
-        break;
       case LocationPermission.whileInUse:
       case LocationPermission.always:
         return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist bereits freigegeben."),
         );
-        break;
       case LocationPermission.deniedForever:
         return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist nicht freigegeben."),
         );
-        break;
       default:
         return const Text("Ein unerwarteter Fehler ist aufgetreten.");
-        break;
     }
   }
 }

@@ -8,7 +8,7 @@ import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
 
 class IdentificationQrScannerPage extends StatelessWidget {
-  const IdentificationQrScannerPage({Key key}) : super(key: key);
+  const IdentificationQrScannerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

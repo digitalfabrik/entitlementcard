@@ -13,7 +13,7 @@ class QrCodeScannerControls extends StatelessWidget {
   final StreamController<CameraFacing> cameraStreamController =
       StreamController<CameraFacing>();
 
-  QrCodeScannerControls({@required this.controller, Key key})
+  QrCodeScannerControls({required this.controller, Key key})
       : super(key: key) {
     updateFlashStream();
     updateCameraStream();

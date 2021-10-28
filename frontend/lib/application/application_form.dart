@@ -12,7 +12,7 @@ import 'summary_step.dart';
 import 'textwidgets/step_title_text.dart';
 
 class ApplicationForm extends StatefulWidget {
-  const ApplicationForm({Key key}) : super(key: key);
+  const ApplicationForm({Key? key}) : super(key: key);
 
   @override
   _ApplicationFormState createState() => _ApplicationFormState();

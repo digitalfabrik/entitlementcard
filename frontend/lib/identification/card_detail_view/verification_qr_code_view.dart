@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -15,7 +16,7 @@ class VerificationQrCodeView extends StatefulWidget {
   final CardDetails cardDetails;
   final OTPGenerator _otpGenerator;
 
-  VerificationQrCodeView({Key key, this.cardDetails})
+  VerificationQrCodeView({Key? key, required this.cardDetails})
       : _otpGenerator = OTPGenerator(cardDetails.totpSecretBase32),
         super(key: key);
 
@@ -24,7 +25,7 @@ class VerificationQrCodeView extends StatefulWidget {
 }
 
 class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
-  OTPCode _otpCode;
+  OTPCode? _otpCode;
 
   @override
   void initState() {
@@ -40,8 +41,14 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
 
   @override
   Widget build(BuildContext context) {
+    final otpCode = _otpCode;
+    
+    if (otpCode == null) {
+      return const SmallButtonSpinner();
+    }
+    
     var time = DateTime.now().millisecondsSinceEpoch;
-    final animationDuration = _otpCode.validUntilMilliSeconds - time;
+    final animationDuration = otpCode.validUntilMilliSeconds - time;
     return LayoutBuilder(builder: (context, constraints) {
       var padding =
           min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
@@ -59,10 +66,10 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
                       child: QrImage(
                           data: encodeVerificationCardDetails(
                               VerificationCardDetails(
-                                  widget.cardDetails, _otpCode.code)),
+                                  widget.cardDetails, otpCode.code)),
                           version: QrVersions.auto,
                           foregroundColor:
-                              Theme.of(context).textTheme.bodyText2.color,
+                              Theme.of(context).textTheme.bodyText2?.color,
                           gapless: false)),
                   Positioned.fill(
                       child: AnimatedProgressbar(

@@ -13,7 +13,7 @@ import 'no_card_view.dart';
 class IdentificationPage extends StatelessWidget {
   final String title;
 
-  const IdentificationPage({Key key, this.title}) : super(key: key);
+  const IdentificationPage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -144,7 +144,7 @@ class StoreTextOverview extends StatelessWidget {
   final bool showTownName;
 
   const StoreTextOverview(
-      {Key key, @required this.store, this.showTownName = false})
+      {Key key, required this.store, this.showTownName = false})
       : super(key: key);
 
   @override
@@ -173,7 +173,7 @@ class StoreTextOverview extends StatelessWidget {
 class DistanceText extends StatelessWidget {
   final double distance;
 
-  const DistanceText({Key key, @required this.distance}) : super(key: key);
+  const DistanceText({Key key, required this.distance}) : super(key: key);
 
   static String _formatDistance(double d) {
     if (d < 1) {

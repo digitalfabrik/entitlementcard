@@ -7,7 +7,7 @@ import 'map/map_controller.dart';
 class LocationButton extends StatefulWidget {
   final MapController mapController;
 
-  const LocationButton({Key key, this.mapController}) : super(key: key);
+  const LocationButton({Key? key, required this.mapController}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -46,10 +46,11 @@ class _LocationButtonState extends State<LocationButton> {
 
   _onPressed() async {
     setState(() => _status = LocationPermissionStatus.requesting);
-    final position =
+    final requestedPosition =
         await determinePosition(context, requestIfNotGranted: true);
-    if (position.isAvailable()) {
-      await widget.mapController.bringCameraToUser(position.position);
+    final position = requestedPosition.position;
+    if (position != null) {
+      await widget.mapController.bringCameraToUser(position);
     }
     setState(() => _status = LocationPermissionStatus.requestFinished);
   }

@@ -23,20 +23,27 @@ class Region with EquatableMixin {
 
 class EakCard extends StatelessWidget {
   final BaseCardDetails cardDetails;
-  final Region region;
+  final Region? region;
 
-  const EakCard({Key key, this.cardDetails, this.region}) : super(key: key);
+  const EakCard({Key? key, required this.cardDetails, this.region}) : super(key: key);
 
-  get _formattedExpirationDate => cardDetails.expirationDate != null
-      ? DateFormat('dd.MM.yyyy').format(cardDetails.expirationDate)
+  get _formattedExpirationDate {
+    final expirationDate = cardDetails.expirationDate;
+    return expirationDate != null
+      ? DateFormat('dd.MM.yyyy').format(expirationDate)
       : "unbegrenzt";
+  }
 
   @override
   Widget build(BuildContext context) {
     var cardColor =
         cardDetails.cardType == CardType.gold ? goldenCardColor : blueCardColor;
     return LayoutBuilder(builder: (context, constraints) {
-      var scaleFactor = constraints.maxWidth / 300;
+      final scaleFactor = constraints.maxWidth / 300;
+      final currentRegion = region;
+      final headerTitle = currentRegion != null
+          ? "${currentRegion.prefix} ${currentRegion.name}"
+          : "";
       return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,9 +57,7 @@ class EakCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         EakCardHeaderLogo(
-                            title: region != null
-                                ? "${region.prefix} ${region.name}"
-                                : "",
+                            title: headerTitle,
                             scaleFactor: scaleFactor),
                         EakCardHeaderLogo(
                           title: "Freistaat Bayern",

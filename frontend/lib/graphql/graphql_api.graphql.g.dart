@@ -76,58 +76,6 @@ Map<String, dynamic> _$GetRegions$QueryToJson(GetRegions$Query instance) =>
       'regions': instance.regions.map((e) => e.toJson()).toList(),
     };
 
-AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
-    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(
-        Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore()
-    ..name = json['name'] as String?
-    ..description = json['description'] as String?
-    ..categoryId = json['categoryId'] as int;
-}
-
-Map<String, dynamic>
-    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(
-            AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
-                instance) =>
-        <String, dynamic>{
-          'name': instance.name,
-          'description': instance.description,
-          'categoryId': instance.categoryId,
-        };
-
-AcceptingStoreSummaryById$Query$PhysicalStore
-    _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(
-        Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query$PhysicalStore()
-    ..id = json['id'] as int
-    ..store =
-        AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(
-            json['store'] as Map<String, dynamic>);
-}
-
-Map<String, dynamic> _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(
-        AcceptingStoreSummaryById$Query$PhysicalStore instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'store': instance.store.toJson(),
-    };
-
-AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
-    Map<String, dynamic> json) {
-  return AcceptingStoreSummaryById$Query()
-    ..physicalStoresById = (json['physicalStoresById'] as List<dynamic>)
-        .map((e) => AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(
-            e as Map<String, dynamic>))
-        .toList();
-}
-
-Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
-        AcceptingStoreSummaryById$Query instance) =>
-    <String, dynamic>{
-      'physicalStoresById':
-          instance.physicalStoresById.map((e) => e.toJson()).toList(),
-    };
-
 AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address
     _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(
         Map<String, dynamic> json) {
@@ -384,6 +332,58 @@ AcceptingStoreById$Query _$AcceptingStoreById$QueryFromJson(
 
 Map<String, dynamic> _$AcceptingStoreById$QueryToJson(
         AcceptingStoreById$Query instance) =>
+    <String, dynamic>{
+      'physicalStoresById':
+          instance.physicalStoresById.map((e) => e.toJson()).toList(),
+    };
+
+AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
+    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore()
+    ..name = json['name'] as String?
+    ..description = json['description'] as String?
+    ..categoryId = json['categoryId'] as int;
+}
+
+Map<String, dynamic>
+    _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(
+            AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore
+                instance) =>
+        <String, dynamic>{
+          'name': instance.name,
+          'description': instance.description,
+          'categoryId': instance.categoryId,
+        };
+
+AcceptingStoreSummaryById$Query$PhysicalStore
+    _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(
+        Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query$PhysicalStore()
+    ..id = json['id'] as int
+    ..store =
+        AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(
+            json['store'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(
+        AcceptingStoreSummaryById$Query$PhysicalStore instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'store': instance.store.toJson(),
+    };
+
+AcceptingStoreSummaryById$Query _$AcceptingStoreSummaryById$QueryFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoreSummaryById$Query()
+    ..physicalStoresById = (json['physicalStoresById'] as List<dynamic>)
+        .map((e) => AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(
+            e as Map<String, dynamic>))
+        .toList();
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
+        AcceptingStoreSummaryById$Query instance) =>
     <String, dynamic>{
       'physicalStoresById':
           instance.physicalStoresById.map((e) => e.toJson()).toList(),
@@ -765,19 +765,6 @@ Map<String, dynamic> _$GetRegionsByIdArgumentsToJson(
       'ids': instance.ids.toJson(),
     };
 
-AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return AcceptingStoreSummaryByIdArguments(
-    ids: IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
-        AcceptingStoreSummaryByIdArguments instance) =>
-    <String, dynamic>{
-      'ids': instance.ids.toJson(),
-    };
-
 AcceptingStoresSearchArguments _$AcceptingStoresSearchArgumentsFromJson(
     Map<String, dynamic> json) {
   return AcceptingStoresSearchArguments(
@@ -800,6 +787,19 @@ AcceptingStoreByIdArguments _$AcceptingStoreByIdArgumentsFromJson(
 
 Map<String, dynamic> _$AcceptingStoreByIdArgumentsToJson(
         AcceptingStoreByIdArguments instance) =>
+    <String, dynamic>{
+      'ids': instance.ids.toJson(),
+    };
+
+AcceptingStoreSummaryByIdArguments _$AcceptingStoreSummaryByIdArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return AcceptingStoreSummaryByIdArguments(
+    ids: IdsParamsInput.fromJson(json['ids'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
+        AcceptingStoreSummaryByIdArguments instance) =>
     <String, dynamic>{
       'ids': instance.ids.toJson(),
     };

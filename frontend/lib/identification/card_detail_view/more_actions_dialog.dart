@@ -7,10 +7,10 @@ class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startEakApplication;
 
   const MoreActionsDialog(
-      {Key key,
-      this.startActivateEak,
-      this.startVerification,
-      this.startEakApplication})
+      {Key? key,
+      required this.startActivateEak,
+      required this.startVerification,
+      required this.startEakApplication})
       : super(key: key);
 
   @override

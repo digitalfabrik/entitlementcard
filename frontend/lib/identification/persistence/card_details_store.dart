@@ -11,9 +11,11 @@ const unixExpirationDateKey = "unixExpirationDate";
 const cardTypeKey = "cardType";
 const totpSecretBase32Key = "totpSecretBase32";
 
+const invalidDataVersion = -1;
+
 const currentDataVersion = 4;
 
-Future<void> saveCardDetails(CardDetails cardDetails) async {
+Future<void> saveCardDetails(CardDetails? cardDetails) async {
   const storage = FlutterSecureStorage();
   if (cardDetails != null) {
     await Future.wait([
@@ -43,29 +45,46 @@ Future<void> saveCardDetails(CardDetails cardDetails) async {
   }
 }
 
-Future<CardDetails> loadCardDetails() async {
+Future<CardDetails?> loadCardDetails() async {
   const storage = FlutterSecureStorage();
-  final hasDataVersionKey = await storage.containsKey(key: dataVersionKey);
-  if (hasDataVersionKey) {
-    final storedDataVersionStr = await storage.read(key: dataVersionKey);
-    final storedDataVersion = int.parse(storedDataVersionStr);
-    if (storedDataVersion != currentDataVersion) {
-      throw Exception(("Can't load data because the versions don't match. "
-          "Stored version: $storedDataVersion, "
-          "current version $currentDataVersion"));
-    }
-    final fullName = await storage.read(key: fullNameKey);
-    final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
-    final unixExpirationDate =
-        int.parse(await storage.read(key: unixExpirationDateKey));
-    final regionId = int.parse(await storage.read(key: regionIdKey));
-    final cardType =
-        CardType.values[int.parse(await storage.read(key: cardTypeKey))];
-    final totpSecret = await storage.read(key: totpSecretBase32Key);
-
-    return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
-        regionId, totpSecret);
-  } else {
+  final storedDataVersion = await storage.read(key: dataVersionKey);
+  if (storedDataVersion == null) {
     return null;
   }
+  final dataVersion = int.parse(storedDataVersion);
+  if (dataVersion != currentDataVersion) {
+    throw Exception("Can't load data because the versions don't match. "
+        "Stored version: $dataVersion, "
+        "current version $currentDataVersion");
+  }
+  final fullName = await storage.read(key: fullNameKey);
+  final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+  
+  var storedUnixExpirationDate =
+      await storage.read(key: unixExpirationDateKey);
+  if (storedUnixExpirationDate == null) {
+    throw Exception("Can't load expiration date.") ;
+  }
+  final unixExpirationDate = int.parse(storedUnixExpirationDate);
+  
+  
+  final storedRegionId = await storage.read(key: regionIdKey);
+  if (storedRegionId == null) {
+    throw Exception("Can't load region id.") ;
+  }
+  final regionId = int.parse(storedRegionId);
+
+  final storedCardType = await storage.read(key: cardTypeKey);
+  if (storedCardType == null) {
+    throw Exception("Can't load region id.") ;
+  }
+  final cardType =
+      CardType.values[int.parse(storedCardType)];
+  final totpSecret = await storage.read(key: totpSecretBase32Key);
+  if (totpSecret == null) {
+    throw Exception("Can't load totp secret.") ;
+  }
+  
+  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
+      regionId, totpSecret);
 }

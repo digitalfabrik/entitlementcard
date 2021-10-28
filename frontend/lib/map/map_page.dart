@@ -9,7 +9,7 @@ import 'preview/accepting_store_preview.dart';
 
 class PhysicalStoreFeatureData {
   final int id;
-  final LatLng coordinates;
+  final LatLng? coordinates;
   final int categoryId;
 
   PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
@@ -20,7 +20,7 @@ typedef OnMapCreatedCallback = void Function(MapPageController controller);
 class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
 
-  const MapPage({Key key, this.onMapCreated}) : super(key: key);
+  const MapPage({Key? key, required this.onMapCreated}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -34,9 +34,8 @@ abstract class MapPageController {
   Future<void> stopShowingAcceptingStore();
 }
 
-class _MapPageState extends State<MapPage>
-    implements MapPageController {
-  int _selectedAcceptingStoreId;
+class _MapPageState extends State<MapPage> implements MapPageController {
+  int? _selectedAcceptingStoreId;
   MapController _controller;
 
   @override
@@ -62,9 +61,7 @@ class _MapPageState extends State<MapPage>
               child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: _selectedAcceptingStoreId != null
-                      ? AcceptingStorePreview(
-                          _selectedAcceptingStoreId
-                        )
+                      ? AcceptingStorePreview(_selectedAcceptingStoreId)
                       : null),
             ),
           ),
@@ -111,7 +108,7 @@ class _MapPageState extends State<MapPage>
 
   int _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
 
-  LatLng _getLatLngOrNull(dynamic coordinates) {
+  LatLng? _getLatLngOrNull(dynamic coordinates) {
     if (coordinates is! List) return null;
     if (!(coordinates[0] is double && coordinates[1] is double)) return null;
     return LatLng(coordinates[1], coordinates[0]);

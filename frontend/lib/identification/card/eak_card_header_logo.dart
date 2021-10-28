@@ -4,10 +4,11 @@ const bavariaFontColor = Color(0xff008dc9);
 
 class EakCardHeaderLogo extends StatelessWidget {
   final String title;
-  final Image logo;
+  final Image? logo;
   final double scaleFactor;
 
-  const EakCardHeaderLogo({Key key, this.title, this.logo, this.scaleFactor})
+  const EakCardHeaderLogo(
+      {Key? key, required this.title, this.logo, required this.scaleFactor})
       : super(key: key);
 
   @override

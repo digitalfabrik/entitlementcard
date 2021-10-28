@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 
   const HomePage({Key key, this.showVerification}) : super(key: key);
 
-  static _HomePageData of(BuildContext context) => _HomePageData.of(context);
+  static _HomePageData of(BuildContext context) => _HomePageData.of(context) ?? _HomePageState(super.key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,10 +20,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
-  MapPageController mapPageController;
+  MapPageController? mapPageController;
 
-  MapPage mapPage;
-  List<AppFlow> appFlows;
+  late MapPage mapPage;
+  late List<AppFlow> appFlows;
 
   @override
   void initState() {
@@ -103,7 +103,7 @@ class _HomePageData extends InheritedWidget {
   const _HomePageData({Key key, this.goToMap, Widget child})
       : super(key: key, child: child);
 
-  static _HomePageData of(BuildContext context) {
+  static _HomePageData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_HomePageData>();
   }
 

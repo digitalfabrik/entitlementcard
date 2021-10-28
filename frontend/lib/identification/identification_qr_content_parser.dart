@@ -21,9 +21,9 @@ class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
 }
 
 class QRCodeInvalidFormatException extends QrCodeParseException {
-  final Exception cause;
+  final Exception? cause;
   final StackTrace stackTrace;
-  QRCodeInvalidFormatException([this.cause, this.stackTrace]) :
+  QRCodeInvalidFormatException([this.cause, required this.stackTrace]) :
         super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
 }
 

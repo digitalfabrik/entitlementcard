@@ -6,15 +6,16 @@ import 'models.dart';
 
 class AcceptingStorePreviewCard extends StatelessWidget {
   final bool isLoading;
-  final Function refetch;
-  final /*?*/ AcceptingStoreSummaryModel acceptingStore;
+  final void Function()? refetch;
+  final AcceptingStoreSummaryModel? acceptingStore;
 
   const AcceptingStorePreviewCard(
-      {this.isLoading, this.acceptingStore, this.refetch, Key key})
+      {Key? key, required this.isLoading, this.acceptingStore, this.refetch})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final currentAcceptingStore = acceptingStore;
     return Container(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
@@ -28,7 +29,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                     ? Container(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: const LinearProgressIndicator())
-                    : acceptingStore == null
+                    : currentAcceptingStore == null
                         ? InkWell(
                             onTap: refetch,
                             child: Container(
@@ -38,9 +39,9 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                                 child: const ErrorMessage(
                                     "Fehler beim Laden der Infos.")))
                         : AcceptingStoreSummary(
-                            store: acceptingStore,
+                            store: currentAcceptingStore,
                             showLocation: false,
-                            key: ValueKey(acceptingStore.id),
+                            key: ValueKey(currentAcceptingStore.id),
                             showMapButtonOnDetails: false))),
       ),
     );

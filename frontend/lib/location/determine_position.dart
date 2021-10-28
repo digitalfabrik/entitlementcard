@@ -7,7 +7,7 @@ import 'location_permission_dialog.dart';
 import 'location_service_dialog.dart';
 
 class RequestedPosition {
-  Position position;
+  Position? position;
 
   RequestedPosition(this.position);
 
@@ -17,14 +17,17 @@ class RequestedPosition {
     return position != null;
   }
 
-  LatLng toLatLng() {
-    return isAvailable() ? LatLng(position.latitude, position.longitude) : null;
+  LatLng? toLatLng() {
+    final currentPosition = position;
+    return currentPosition != null
+        ? LatLng(currentPosition.latitude, currentPosition.longitude)
+        : null;
   }
 }
 
 /// Determine the current position of the device.
 Future<RequestedPosition> determinePosition(BuildContext context,
-    {bool requestIfNotGranted}) async {
+    {bool requestIfNotGranted = false}) async {
   final permission = await checkAndRequestLocationPermission(context,
       requestIfNotGranted: requestIfNotGranted);
 
@@ -34,9 +37,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 
   var position = await Geolocator.getLastKnownPosition();
   position ??= await Geolocator.getCurrentPosition();
-  if (position == null) {
-    return RequestedPosition.unknown();
-  }
+
   return RequestedPosition(position);
 }
 
@@ -47,7 +48,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// LocationPermission.deniedForever
 Future<LocationPermission> checkAndRequestLocationPermission(
     BuildContext context,
-    {bool requestIfNotGranted}) async {
+    {bool requestIfNotGranted = false}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
@@ -63,7 +64,7 @@ Future<LocationPermission> checkAndRequestLocationPermission(
 
   var permission = await Geolocator.checkPermission();
 
-  if (requestIfNotGranted) {
+  if (requestIfNotGranted != null && requestIfNotGranted) {
     if (permission == LocationPermission.denied) {
       final requestedPermission = await Geolocator.requestPermission();
 
@@ -82,8 +83,7 @@ Future<LocationPermission> checkAndRequestLocationPermission(
 
 Future<void> openSettingsToGrantPermissions(BuildContext context) async {
   var result = await showDialog(
-      context: context,
-      builder: (context) => const LocationPermissionDialog());
+      context: context, builder: (context) => const LocationPermissionDialog());
   if (result) {
     await Geolocator.openAppSettings();
   }

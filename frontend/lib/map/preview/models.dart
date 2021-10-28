@@ -6,11 +6,11 @@ class Coordinates {
 
 class AcceptingStoreSummaryModel {
   int id;
-  String name;
-  String description;
+  String? name;
+  String? description;
   int categoryId;
-  Coordinates coordinates;
-  String location;
+  Coordinates? coordinates;
+  String? location;
 
   AcceptingStoreSummaryModel(this.id, this.name, this.description,
       this.categoryId, this.coordinates, this.location);

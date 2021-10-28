@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -17,20 +18,20 @@ class Map extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
   static const double bavariaZoomLevel = 6;
   static const LatLng centerOfBavaria = LatLng(48.949444, 11.395);
-  final OnFeatureClickCallback onFeatureClick;
-  final OnNoFeatureClickCallback onNoFeatureClick;
-  final OnMapCreatedCallback onMapCreated;
+  final OnFeatureClickCallback? onFeatureClick;
+  final OnNoFeatureClickCallback? onNoFeatureClick;
+  final OnMapCreatedCallback? onMapCreated;
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
-  final LatLng userLocation;
+  final LatLng? userLocation;
 
   const Map(
-      {Key key,
-      this.onFeatureClick,
-      this.onNoFeatureClick,
-      this.onFeatureClickLayerFilter,
-      this.locationAvailable,
-      this.onMapCreated,
+      {Key? key,
+      required this.onFeatureClick,
+      required this.onNoFeatureClick,
+      required this.onFeatureClickLayerFilter,
+      required this.locationAvailable,
+      required this.onMapCreated,
       this.userLocation})
       : super(key: key);
 
@@ -41,10 +42,10 @@ class Map extends StatefulWidget {
 const mapboxColor = Color(0xFF979897);
 
 class _MapState extends State<Map> implements MapController {
-  MaplibreMapController _controller;
-  Symbol _symbol;
-  bool _permissionGiven;
-  Stack _mapboxView;
+  MaplibreMapController? _controller;
+  Symbol? _symbol;
+  bool _permissionGiven = false;
+  Stack? _mapboxView;
   bool _isAnimating = false;
 
   @override
@@ -56,96 +57,118 @@ class _MapState extends State<Map> implements MapController {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
+
+    if (config == null) {
+      return const SmallButtonSpinner();
+    }
+
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = Platform.isIOS
         ? statusBarHeight / pixelRatio
         : statusBarHeight * pixelRatio;
-    if (_mapboxView == null || !_isAnimating) {
-      var cameraPosition = widget.userLocation != null
-          ? CameraPosition(
-              target: widget.userLocation, zoom: Map.userLocationZoomLevel)
-          : const CameraPosition(
-              target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
-      _mapboxView = Stack(children: [
-        MaplibreMap(
-          initialCameraPosition: cameraPosition,
-          styleString: config.mapStyleUrl,
-          // We provide our own attribution menu
-          attributionButtonMargins: const math.Point(-100, -100),
-          // The Mapbox wordmark must be shown because of legal weirdness
-          logoViewMargins: Platform.isIOS
-              ? const math.Point(30, 5)
-              : math.Point(30 * pixelRatio, 5 * pixelRatio),
-          myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven
-              ? MyLocationTrackingMode.Tracking
-              : MyLocationTrackingMode.None,
-          // required to prevent mapbox iOS from requesting location
-          // permissions on startup, as discussed in #249
-          myLocationRenderMode: MyLocationRenderMode.NORMAL,
-          onMapCreated: _onMapCreated,
-          onMapClick: _onMapClick,
-          compassViewMargins:
-              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-          compassViewPosition: CompassViewPosition.TopRight,
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          child: IconButton(
-            color: mapboxColor,
-            padding: const EdgeInsets.all(5),
-            constraints: const BoxConstraints(),
-            iconSize: 20,
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const AttributionDialog();
-                },
-              );
-            },
-          ),
-        ),
-      ]);
+    if (_isAnimating) {
+      _mapboxView = null;
     }
-    return _mapboxView;
+
+    var cameraPosition = widget.userLocation != null
+        ? CameraPosition(
+            target: widget.userLocation, zoom: Map.userLocationZoomLevel)
+        : const CameraPosition(
+            target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+
+    final mapboxView = _mapboxView ??
+        Stack(children: [
+          MaplibreMap(
+            initialCameraPosition: cameraPosition,
+            styleString: config.mapStyleUrl,
+            // We provide our own attribution menu
+            attributionButtonMargins: const math.Point(-100, -100),
+            // The Mapbox wordmark must be shown because of legal weirdness
+            logoViewMargins: Platform.isIOS
+                ? const math.Point(30, 5)
+                : math.Point(30 * pixelRatio, 5 * pixelRatio),
+            myLocationEnabled: _permissionGiven,
+            myLocationTrackingMode: _permissionGiven
+                ? MyLocationTrackingMode.Tracking
+                : MyLocationTrackingMode.None,
+            // required to prevent mapbox iOS from requesting location
+            // permissions on startup, as discussed in #249
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+            onMapCreated: _onMapCreated,
+            onMapClick: _onMapClick,
+            compassViewMargins:
+                math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+            compassViewPosition: CompassViewPosition.TopRight,
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: IconButton(
+              color: mapboxColor,
+              padding: const EdgeInsets.all(5),
+              constraints: const BoxConstraints(),
+              iconSize: 20,
+              icon: const Icon(Icons.info_outline),
+              tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AttributionDialog();
+                  },
+                );
+              },
+            ),
+          ),
+        ]);
+
+    _mapboxView = mapboxView;
+
+    return mapboxView;
   }
 
   void _onMapCreated(MaplibreMapController controller) {
     _controller = controller;
     if (widget.locationAvailable) {
-      _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+      _controller
+          ?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
-    if (widget.onMapCreated != null) {
-      widget.onMapCreated(this);
+    final onMapCreated = widget.onMapCreated;
+    if (onMapCreated != null) {
+      onMapCreated(this);
     }
   }
 
   @override
-  Future<void> setTelemetryEnabled({bool enabled}) async {
-    await _controller.setTelemetryEnabled(enabled);
+  Future<void> setTelemetryEnabled({bool enabled = false}) async {
+    await _controller?.setTelemetryEnabled(enabled);
   }
 
   @override
   Future<void> removeSymbol() async {
     if (_symbol == null) return;
-    await _controller.removeSymbol(_symbol);
+    await _controller?.removeSymbol(_symbol);
     _symbol = null;
   }
 
   @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
-    _symbol = await _controller.addSymbol(SymbolOptions(
+    _symbol = await _controller?.addSymbol(SymbolOptions(
         iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
   void _onMapClick(math.Point<double> point, clickCoordinates) async {
+    final controller = _controller;
+    if (controller == null) {
+      return;
+    }
+
+    final onFeatureClick = widget.onFeatureClick;
+    final onNoFeatureClick = widget.onNoFeatureClick;
+
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
     var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
@@ -154,15 +177,15 @@ class _MapState extends State<Map> implements MapController {
         width: touchTargetSize,
         height: touchTargetSize);
 
-    var jsonFeatures = await _controller.queryRenderedFeaturesInRect(
-        rect, widget.onFeatureClickLayerFilter ?? [], null);
+    var jsonFeatures = await controller.queryRenderedFeaturesInRect(
+        rect, widget.onFeatureClickLayerFilter, null);
     var features = jsonFeatures
         .map((x) => json.decode(x))
         .where((x) =>
             x["properties"] != null && x["properties"]["categoryId"] != null)
         .toList();
     if (features.isNotEmpty) {
-      var mapPoint = await _controller.toLatLng(point);
+      var mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {
         var cA = a["geometry"]["coordinates"];
         var cB = b["geometry"]["coordinates"];
@@ -176,10 +199,12 @@ class _MapState extends State<Map> implements MapController {
       features.sort(distSort);
       var featureInfo = features[0];
       if (featureInfo != null) {
-        if (widget.onFeatureClick != null) widget.onFeatureClick(featureInfo);
+        if (onFeatureClick != null) {
+          onFeatureClick(featureInfo);
+        }
       }
-    } else if (widget.onNoFeatureClick != null) {
-      widget.onNoFeatureClick();
+    } else if (onNoFeatureClick != null) {
+      onNoFeatureClick();
     }
   }
 
@@ -191,24 +216,34 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Future<void> bringCameraToLocation(LatLng location,
-      {double zoomLevel}) async {
+      {double? zoomLevel}) async {
+    final controller = _controller;
+    if (controller == null) {
+      return;
+    }
+
     final update = zoomLevel != null
         ? CameraUpdate.newLatLngZoom(location, zoomLevel)
         : CameraUpdate.newLatLng(location);
-    await _controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
-    await _animate(_controller.animateCamera(update));
+    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
+    await _animate(controller.animateCamera(update));
   }
 
   @override
   Future<void> bringCameraToUser(Position position) async {
+    final controller = _controller;
+    if (controller == null) {
+      return;
+    }
+
     var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(position.latitude, position.longitude),
         bearing: 0,
         tilt: 0,
         zoom: Map.userLocationZoomLevel));
-    await _animate(_controller.animateCamera(cameraUpdate));
+    await _animate(controller.animateCamera(cameraUpdate));
 
-    await _controller
+    await controller
         .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     if (!_permissionGiven) {
       setState(() => _permissionGiven = true);
