@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import '../../configuration/configuration.dart';
-import '../../location/determine_position.dart';
 import 'attribution_dialog.dart';
 import 'map_controller.dart';
 

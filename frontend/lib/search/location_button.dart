@@ -52,9 +52,8 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _initCoordinates(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    var position = await determinePosition(
-        requestIfNotGranted: userInteract,
-        userInteractContext: context);
+    var position =
+        await determinePosition(context, requestIfNotGranted: userInteract);
     if (position.isAvailable()) {
       widget.setCoordinates(position.position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);

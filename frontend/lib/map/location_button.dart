@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../location/determine_position.dart';
@@ -48,8 +46,8 @@ class _LocationButtonState extends State<LocationButton> {
 
   _onPressed() async {
     setState(() => _status = LocationPermissionStatus.requesting);
-    final position = await determinePosition(
-        requestIfNotGranted: true, userInteractContext: context);
+    final position =
+        await determinePosition(context, requestIfNotGranted: true);
     if (position.isAvailable()) {
       await widget.mapController.bringCameraToUser(position.position);
     }

@@ -12,10 +12,10 @@ class LocationRequestButton extends StatefulWidget {
 
 class _LocationRequestButtonState extends State<LocationRequestButton> {
   LocationPermission _locationPermissionStatus;
-  bool _isLoading;
 
   _LocationRequestButtonState() {
-    checkQuietLocationPermission().then(_setInitialLocationStatus);
+    checkAndRequestLocationPermission(context, requestIfNotGranted: false)
+        .then(_setInitialLocationStatus);
   }
 
   void _setInitialLocationStatus(LocationPermission permission) {
@@ -25,7 +25,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   }
 
   void _onLocationButtonClicked() async {
-    final permission = await checkAndRequestLocationPermission(userInteractContext: context);
+    final permission = await checkAndRequestLocationPermission(context);
     setState(() {
       _locationPermissionStatus = permission;
     });

@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
-
 import '../../location/determine_position.dart';
 import 'map.dart';
 
@@ -24,23 +21,21 @@ class MapWithFutures extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: determinePosition(requestIfNotGranted: false).timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition(null))
-          .onError((_,__) => null),
-      builder: (context, snapshot) {
+      future: determinePosition(context, requestIfNotGranted: false).timeout(
+          const Duration(milliseconds: 400),
+          onTimeout: () => RequestedPosition.unknown()),
+      builder: (context, AsyncSnapshot<RequestedPosition> snapshot) {
         if (!snapshot.hasData) {
-          return const Center();
+          return const SmallButtonSpinner();
         }
-        
-        var position = snapshot.data.position;
-        var userLocation = position == null
-            ? null
-            : LatLng(position.latitude, position.longitude);
+
+        var position = snapshot.data;
 
         return Map(
           onFeatureClick: onFeatureClick,
           onNoFeatureClick: onNoFeatureClick,
-          locationAvailable: userLocation != null,
-          userLocation: userLocation,
+          locationAvailable: position.isAvailable(),
+          userLocation: position.toLatLng(),
           onFeatureClickLayerFilter: onFeatureClickLayerFilter,
           onMapCreated: onMapCreated,
         );
