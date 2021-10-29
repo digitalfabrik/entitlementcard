@@ -4,10 +4,14 @@ class VerificationResultDialog extends StatelessWidget {
   final Widget child;
   final String title;
   final IconData icon;
-  final Color iconColor;
+  final Color? iconColor;
 
   const VerificationResultDialog(
-      {Key key, this.child, this.title, this.icon, this.iconColor})
+      {Key? key,
+      required this.child,
+      required this.title,
+      required this.icon,
+      this.iconColor})
       : super(key: key);
 
   @override

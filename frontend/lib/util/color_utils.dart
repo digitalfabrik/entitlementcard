@@ -13,12 +13,12 @@ Color getReadableOnColorSecondary(Color backgroundColor) {
       : Colors.white54;
 }
 
-Color getDarkenedColorForCategory(int categoryId) {
+Color? getDarkenedColorForCategory(int categoryId) {
   if (categoryId == null) {
     return null;
   }
   final categoryColor = categoryAssets[categoryId].color;
-  Color categoryColorDark;
+  Color? categoryColorDark;
   if (categoryColor != null) {
     categoryColorDark = TinyColor(categoryColor).darken().color;
   }

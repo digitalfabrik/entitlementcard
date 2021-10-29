@@ -13,7 +13,7 @@ typedef OnCodeScannedCallback = Future<void> Function(String code);
 class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
 
-  const QrCodeScanner({Key key, this.onCodeScanned})
+  const QrCodeScanner({Key? key, required this.onCodeScanned})
       : super(key: key);
 
   @override
@@ -21,47 +21,48 @@ class QrCodeScanner extends StatefulWidget {
 }
 
 class _QRViewState extends State<QrCodeScanner> {
-  QRViewController controller;
+  QRViewController? _controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
 
   @override
   Widget build(BuildContext context) {
+    final controller = _controller;
     return Column(
-        children: <Widget>[
-          Expanded(
-              flex: 4,
-              child: QRView(
-                key: qrKey,
-                onQRViewCreated: _onQrViewCreated,
-                overlay: QrScannerOverlayShape(
-                  borderColor: Theme.of(context).colorScheme.secondary,
-                  borderRadius: 10,
-                  borderLength: 30,
-                  borderWidth: 10,
-                  cutOutSize: _calculateScanArea(context),
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          flex: 4,
+          child: QRView(
+            key: qrKey,
+            onQRViewCreated: _onQrViewCreated,
+            overlay: QrScannerOverlayShape(
+              borderColor: Theme.of(context).colorScheme.secondary,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 10,
+              cutOutSize: _calculateScanArea(context),
+            ),
           ),
+        ),
+        if (controller != null)
           Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
+              flex: 1,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Container(
                       margin: const EdgeInsets.all(8),
-                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                      child:
+                          const Text('Halten Sie die Kamera auf den QR Code.'),
                     ),
-                    if (controller != null)
-                      QrCodeScannerControls(controller: controller)
+                    QrCodeScannerControls(controller: controller)
                   ],
-              ),
-            )
-          )
-        ],
-      );
+                ),
+              ))
+      ],
+    );
   }
 
   double _calculateScanArea(BuildContext context) {
@@ -80,13 +81,20 @@ class _QRViewState extends State<QrCodeScanner> {
 
   void _onQrViewCreated(QRViewController controller) {
     setState(() {
-      this.controller = controller;
+      _controller = controller;
     });
     controller.scannedDataStream.listen(_onCodeScanned);
   }
 
   void _onCodeScanned(Barcode scanData) async {
-    if (scanData.code == null) return;
+    final controller = _controller;
+    var code = scanData.code;
+    if (controller == null) {
+      return;
+    }
+    if (code == null) {
+      return;
+    }
 
     // needed because this method gets called multiple times in a row after one
     // qr code gets detected, therefore we need to protect it
@@ -97,7 +105,7 @@ class _QRViewState extends State<QrCodeScanner> {
     controller.pauseCamera();
 
     if (widget.onCodeScanned != null) {
-      await widget.onCodeScanned(scanData.code);
+      await widget.onCodeScanned(code);
     }
 
     // give the user time to move the camara away from the qr code
@@ -111,7 +119,7 @@ class _QRViewState extends State<QrCodeScanner> {
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 }

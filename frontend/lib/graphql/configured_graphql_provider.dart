@@ -6,11 +6,16 @@ import '../configuration/configuration.dart';
 class ConfiguredGraphQlProvider extends StatelessWidget {
   final Widget child;
 
-  const ConfiguredGraphQlProvider({Key key, this.child}) : super(key: key);
+  const ConfiguredGraphQlProvider({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
+    
+    if (config == null) {
+      return const Center();
+    }
+    
     final client = ValueNotifier(
       GraphQLClient(
         cache: GraphQLCache(),

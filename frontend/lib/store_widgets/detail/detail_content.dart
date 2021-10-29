@@ -17,31 +17,41 @@ class DetailContent extends StatelessWidget {
   final Color readableOnAccentColor;
 
   const DetailContent(this.acceptingStore,
-      {Key key,
-      this.hideShowOnMapButton = false,
-      this.accentColor,
-      this.readableOnAccentColor})
+      {Key? key,
+        this.hideShowOnMapButton = false,
+        required this.accentColor,
+        required this.readableOnAccentColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final contact = acceptingStore.store.contact;
-    final readableOnAccentColor =
-        accentColor != null ? getReadableOnColor(accentColor) : null;
+    var currentAccentColor = accentColor;
+    final readableOnAccentColor = getReadableOnColor(currentAccentColor);
+
+    var storeDescription = acceptingStore.store.description;
+    var website = contact.website;
+    var telephone = contact.telephone;
+    var email = contact.email;
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
-          if (acceptingStore.store.description != null) ...[
+          if (storeDescription != null) ...[
             Text(
-              acceptingStore.store.description,
-              style: Theme.of(context).textTheme.bodyText1,
+              storeDescription,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyText1,
             ),
             Divider(
                 thickness: 0.7,
                 height: 48,
-                color: Theme.of(context).primaryColorLight),
+                color: Theme
+                    .of(context)
+                    .primaryColorLight),
           ],
           Column(
             children: <Widget>[
@@ -51,37 +61,38 @@ class DetailContent extends StatelessWidget {
                   "${address.street}\n"
                       "${address.postalCode} ${address.location}",
                   "Adresse",
-                  onTap: () => MapsLauncher.launchQuery("${address.street}, "
-                      "${address.postalCode} ${address.location}"),
+                  onTap: () =>
+                      MapsLauncher.launchQuery("${address.street}, "
+                          "${address.postalCode} ${address.location}"),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
-              if (contact.website != null)
+              if (website != null)
                 ContactInfoRow(
                   Icons.language,
-                  prepareWebsiteUrlForDisplay(contact.website),
+                  prepareWebsiteUrlForDisplay(website),
                   "Website",
                   onTap: () =>
-                      launch(prepareWebsiteUrlForLaunch(contact.website)),
+                      launch(prepareWebsiteUrlForLaunch(website)),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
-              if (contact.telephone != null)
+              if (telephone != null)
                 ContactInfoRow(
                   Icons.phone,
-                  contact.telephone,
+                  telephone,
                   "Telefon",
                   onTap: () =>
-                      launch("tel:${sanitizePhoneNumber(contact.telephone)}"),
+                      launch("tel:${sanitizePhoneNumber(telephone)}"),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
-              if (contact.email != null)
+              if (email != null)
                 ContactInfoRow(
                   Icons.alternate_email,
-                  contact.email,
+                  email,
                   "E-Mail",
-                  onTap: () => launch("mailto:${contact.email.trim()}"),
+                  onTap: () => launch("mailto:${email.trim()}"),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
@@ -91,7 +102,9 @@ class DetailContent extends StatelessWidget {
             Divider(
               thickness: 0.7,
               height: 48,
-              color: Theme.of(context).primaryColorLight,
+              color: Theme
+                  .of(context)
+                  .primaryColorLight,
             ),
             ButtonBar(
               children: [

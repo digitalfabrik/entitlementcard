@@ -23,20 +23,26 @@ Future<bool> _queryServerVerification(
 
   try {
     final queryResult = await client.query(queryOptions);
-    if (queryResult.hasException) {
-      throw queryResult.exception;
+    var exception = queryResult.exception;
+    if (exception != null && queryResult.hasException) {
+      throw exception;
     }
-    final parsedResult = byCardDetailsHash.parse(queryResult.data);
+    var data = queryResult.data;
+
+    if (data == null) {
+      return false;
+    }
+
+    final parsedResult = byCardDetailsHash.parse(data);
     return parsedResult.cardValid;
-    // because we do not know what kinds of exceptions might be thrown:
-    // ignore: avoid_catches_without_on_clauses
-  } catch (e) {
+  } on Object catch (e) {
     throw ServerVerificationException(e);
   }
 }
 
 class ServerVerificationException implements Exception {
-  final Exception cause;
+  final Object cause;
+
   const ServerVerificationException(this.cause);
 
   @override

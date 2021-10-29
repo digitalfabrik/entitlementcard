@@ -9,7 +9,8 @@ class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
   final Function(CategoryAsset, bool) onCategoryPress;
 
-  const FilterBarButton({Key key, this.asset, this.onCategoryPress})
+  const FilterBarButton(
+      {Key? key, required this.asset, required this.onCategoryPress})
       : super(key: key);
 
   @override
@@ -21,8 +22,8 @@ class FilterBarButton extends StatefulWidget {
 class _FilterBarButtonState extends State<FilterBarButton>
     with SingleTickerProviderStateMixin {
   bool _selected = false;
-  AnimationController _animationController;
-  Animation _colorTween;
+  AnimationController? _animationController;
+  Animation? _colorTween;
 
   _FilterBarButtonState();
 
@@ -36,17 +37,21 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   void didChangeDependencies() {
-    _colorTween = ColorTween(
-            begin: Theme.of(context).backgroundColor,
-            end: Theme.of(context).primaryColorLight)
-        .animate(_animationController);
-    super.didChangeDependencies();
+    var animationController = _animationController;
+
+    if (animationController != null) {
+      _colorTween = ColorTween(
+              begin: Theme.of(context).backgroundColor,
+              end: Theme.of(context).primaryColorLight)
+          .animate(animationController);
+      super.didChangeDependencies();
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _animationController.dispose();
+    _animationController?.dispose();
   }
 
   @override
@@ -59,19 +64,25 @@ class _FilterBarButtonState extends State<FilterBarButton>
         (totalWidth - minNumberElements * paddingPerElement) /
             minNumberElements);
 
+    var colorTween = _colorTween;
+    var animationController = _animationController;
+    if (colorTween == null || animationController == null) {
+      return const Center();
+    }
+
     return AnimatedBuilder(
-        animation: _colorTween,
+        animation: colorTween,
         builder: (context, child) => RawMaterialButton(
             elevation: 0.0,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             constraints: BoxConstraints.tightFor(width: width, height: 70),
-            fillColor: _colorTween.value,
+            fillColor: colorTween.value,
             onPressed: () {
               var isSelected = !_selected;
               setState(() {
                 _selected = isSelected;
-                _animationController.animateTo(isSelected ? 1 : 0);
+                animationController.animateTo(isSelected ? 1 : 0);
                 widget.onCategoryPress(widget.asset, isSelected);
               });
             },

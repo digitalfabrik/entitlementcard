@@ -26,10 +26,11 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
       baseCardDetails.hashSecretBase64.isEmpty) {
     throw QrCodeFieldMissingException("hashSecretBase64");
   }
-  if (baseCardDetails.expirationDate != null) {
+  var expirationDate = baseCardDetails.expirationDate;
+  if (expirationDate != null) {
     var now = DateTime.now();
-    if (baseCardDetails.expirationDate.isBefore(now)) {
-      throw CardExpiredException(baseCardDetails.expirationDate);
+    if (expirationDate.isBefore(now)) {
+      throw CardExpiredException(expirationDate);
     }
   }
   if (verCardDetails.otp == null || verCardDetails.otp <= 0) {

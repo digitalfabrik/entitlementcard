@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class NonMaterialPage extends StatelessWidget {
-  final SystemUiOverlayStyle overlayStyle;
+  final SystemUiOverlayStyle? overlayStyle;
   final Widget child;
 
-  const NonMaterialPage({Key key, this.overlayStyle, this.child})
+  const NonMaterialPage({Key? key, required this.overlayStyle, required this.child})
       : super(key: key);
 
   @override

@@ -11,27 +11,28 @@ import '../map/preview/models.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
-  final CoordinatesInput coordinates;
+  final CoordinatesInput? coordinates;
   final double wideDepictionThreshold;
   final bool showMapButtonOnDetails;
   final bool showLocation;
 
   const AcceptingStoreSummary(
-      {Key key,
-      this.store,
+      {Key? key,
+      required this.store,
       this.coordinates,
-      this.showMapButtonOnDetails,
+      required this.showMapButtonOnDetails,
       this.showLocation = true,
       this.wideDepictionThreshold = 400})
       : super(key: key);
 
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
-  double get _distance {
-    // ignore: avoid_returning_null
-    if (coordinates == null || store.coordinates == null) return null;
-    return calcDistance(coordinates.lat, coordinates.lng, store.coordinates.lat,
-        store.coordinates.lng);
+  double? get _distance {
+    var storedCoordinates = store.coordinates;
+    var currentCoordinates = coordinates;
+    if (currentCoordinates == null || storedCoordinates == null) return null;
+    return calcDistance(currentCoordinates.lat, currentCoordinates.lng,
+        storedCoordinates.lat, storedCoordinates.lng);
   }
 
   @override
@@ -43,7 +44,7 @@ class AcceptingStoreSummary extends StatelessWidget {
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
-
+    var currentDistance = _distance;
     return SafeArea(
       bottom: false,
       top: false,
@@ -64,14 +65,14 @@ class AcceptingStoreSummary extends StatelessWidget {
                   CategoryColorIndicator(categoryColor: categoryColor),
                 StoreTextOverview(
                   store: store,
-                  showTownName: _distance == null && showLocation,
+                  showTownName: currentDistance == null && showLocation,
                 ),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       children: [
-                        if (_distance != null)
-                          DistanceText(distance: _distance),
+                        if (currentDistance != null)
+                          DistanceText(distance: currentDistance),
                         SizedBox(
                             child: Icon(Icons.keyboard_arrow_right,
                                 size: 30.0,
@@ -96,23 +97,24 @@ class AcceptingStoreSummary extends StatelessWidget {
 }
 
 class CategoryIconIndicator extends StatelessWidget {
-  final String svgIconPath;
+  final String? svgIconPath;
   final String categoryName;
   final EdgeInsets padding;
 
   const CategoryIconIndicator(
-      {Key key,
-      this.svgIconPath,
-      this.categoryName,
+      {Key? key,
+      required this.svgIconPath,
+      required this.categoryName,
       this.padding = const EdgeInsets.symmetric(horizontal: 16)})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var currentSvgIconPath = svgIconPath;
     return Padding(
       padding: padding,
-      child: svgIconPath != null
-          ? SvgPicture.asset(svgIconPath,
+      child: currentSvgIconPath != null
+          ? SvgPicture.asset(currentSvgIconPath,
               width: 30, semanticsLabel: categoryName ?? "Unbekannte Kategorie")
           : const Icon(
               Icons.info,
@@ -123,9 +125,10 @@ class CategoryIconIndicator extends StatelessWidget {
 }
 
 class CategoryColorIndicator extends StatelessWidget {
-  final Color categoryColor;
+  final Color? categoryColor;
 
-  const CategoryColorIndicator({Key key, this.categoryColor}) : super(key: key);
+  const CategoryColorIndicator({Key? key, this.categoryColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -144,11 +147,12 @@ class StoreTextOverview extends StatelessWidget {
   final bool showTownName;
 
   const StoreTextOverview(
-      {Key key, required this.store, this.showTownName = false})
+      {Key? key, required this.store, this.showTownName = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var location = store.location;
     return Expanded(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -163,8 +167,8 @@ class StoreTextOverview extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2),
-            if (showTownName && store.location != null)
-              Text(store.location, maxLines: 1, overflow: TextOverflow.ellipsis)
+            if (showTownName && location != null)
+              Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
           ]),
     );
   }
@@ -173,7 +177,7 @@ class StoreTextOverview extends StatelessWidget {
 class DistanceText extends StatelessWidget {
   final double distance;
 
-  const DistanceText({Key key, required this.distance}) : super(key: key);
+  const DistanceText({Key? key, required this.distance}) : super(key: key);
 
   static String _formatDistance(double d) {
     if (d < 1) {

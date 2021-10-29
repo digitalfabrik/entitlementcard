@@ -21,8 +21,10 @@ class EntryWidget extends StatelessWidget {
             return Container();
           }
           final routes = <String, WidgetBuilder>{};
-          String initialRoute = null;
-          if (!snapshot.hasError && snapshot.hasData && (snapshot.data ?? false)) {
+          String? initialRoute;
+          if (!snapshot.hasError &&
+              snapshot.hasData &&
+              (snapshot.data ?? false)) {
             routes.addAll(<String, WidgetBuilder>{
               '/intro': (context) => const IntroScreen(
                     onFinishedCallback: setFirstStart,
@@ -30,6 +32,12 @@ class EntryWidget extends StatelessWidget {
             });
             initialRoute = '/intro';
           }
+          var config = Configuration.of(context);
+
+          if (config == null) {
+            throw Exception("Config was not found in component tree!");
+          }
+
           return MaterialApp(
               title: 'Ehrenamtskarte',
               theme: lightTheme,
@@ -46,7 +54,7 @@ class EntryWidget extends StatelessWidget {
               supportedLocales: const [Locale('de')],
               locale: const Locale('de'),
               home: HomePage(
-                showVerification: Configuration.of(context).showVerification,
+                showVerification: config.showVerification,
               ),
               routes: routes);
         });

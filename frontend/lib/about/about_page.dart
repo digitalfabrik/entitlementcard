@@ -9,17 +9,19 @@ import 'dev_settings_view.dart';
 import 'texts.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key key}) : super(key: key);
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var config = Configuration.of(context);
     return NonMaterialPage(
+      overlayStyle: null,
       child: FutureBuilder<PackageInfo>(
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
             List<Widget> children;
             if (snapshot.hasData) {
+              var packageInfo = snapshot.data;
               children = [
                 Container(height: 20),
                 Center(
@@ -37,11 +39,11 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: Text(snapshot.data.appName,
+                  child: Text(packageInfo.appName,
                       style: Theme.of(context).textTheme.headline5),
                 ),
                 Center(
-                  child: Text(snapshot.data.version,
+                  child: Text(packageInfo.version,
                       style: Theme.of(context).textTheme.bodyText2),
                 ),
                 const Divider(

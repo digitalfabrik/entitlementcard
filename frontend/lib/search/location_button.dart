@@ -7,7 +7,8 @@ import '../widgets/small_button_spinner.dart';
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
 
-  const LocationButton({Key key, this.setCoordinates}) : super(key: key);
+  const LocationButton({Key? key, required this.setCoordinates})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LocationButtonState();
@@ -52,10 +53,11 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _initCoordinates(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    var position =
+    var requiredPosition =
         await determinePosition(context, requestIfNotGranted: userInteract);
-    if (position.isAvailable()) {
-      widget.setCoordinates(position.position);
+    var position = requiredPosition.position;
+    if (position != null) {
+      widget.setCoordinates(position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);
     } else {
       setState(() => _locationStatus = LocationRequestStatus.requestFailed);

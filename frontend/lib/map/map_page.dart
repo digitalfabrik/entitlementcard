@@ -8,9 +8,9 @@ import 'map/map_with_futures.dart';
 import 'preview/accepting_store_preview.dart';
 
 class PhysicalStoreFeatureData {
-  final int id;
+  final int? id;
   final LatLng? coordinates;
-  final int categoryId;
+  final int? categoryId;
 
   PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
 }
@@ -36,10 +36,13 @@ abstract class MapPageController {
 
 class _MapPageState extends State<MapPage> implements MapPageController {
   int? _selectedAcceptingStoreId;
-  MapController _controller;
+  MapController? _controller;
 
   @override
   Widget build(BuildContext context) {
+    final controller = _controller;
+    final selectedAcceptingStoreId = _selectedAcceptingStoreId;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       child: Stack(children: [
@@ -50,22 +53,23 @@ class _MapPageState extends State<MapPage> implements MapPageController {
           onMapCreated: (controller) {
             controller.setTelemetryEnabled(enabled: false);
             setState(() => _controller = controller);
-            if (widget.onMapCreated != null) widget.onMapCreated(this);
+            widget.onMapCreated(this);
           },
         ),
-        Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-          LocationButton(mapController: _controller),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 200),
-            child: IntrinsicHeight(
-              child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: _selectedAcceptingStoreId != null
-                      ? AcceptingStorePreview(_selectedAcceptingStoreId)
-                      : null),
+        if (controller != null)
+          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            LocationButton(mapController: controller),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              child: IntrinsicHeight(
+                child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: selectedAcceptingStoreId != null
+                        ? AcceptingStorePreview(selectedAcceptingStoreId)
+                        : null),
+              ),
             ),
-          ),
-        ])
+          ])
       ]),
     );
   }
@@ -73,26 +77,39 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   @override
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
       {bool selectedAcceptingStoreInMap = false}) async {
+    final controller = _controller;
+
+    if (controller == null) {
+      return;
+    }
+
     setState(() {
       _selectedAcceptingStoreId = data.id;
     });
-    if (data.coordinates != null) {
-      if (data.categoryId != null) {
-        await _controller.setSymbol(data.coordinates, data.categoryId);
+    var coordinates = data.coordinates;
+    if (coordinates != null) {
+      var categoryId = data.categoryId;
+      if (categoryId != null) {
+        await controller.setSymbol(coordinates, categoryId);
       }
       if (selectedAcceptingStoreInMap) {
-        await _controller.bringCameraToLocation(data.coordinates);
+        await controller.bringCameraToLocation(coordinates);
       } else {
-        await _controller.bringCameraToLocation(data.coordinates,
-            zoomLevel: 13);
+        await controller.bringCameraToLocation(coordinates, zoomLevel: 13);
       }
     }
   }
 
   @override
   Future<void> stopShowingAcceptingStore() async {
+    final controller = _controller;
+
+    if (controller == null) {
+      return;
+    }
+
     setState(() => _selectedAcceptingStoreId = null);
-    await _controller.removeSymbol();
+    await controller.removeSymbol();
   }
 
   Future<void> _onFeatureClick(dynamic feature) async =>
@@ -106,7 +123,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
         _getIntOrNull(feature["properties"]["categoryId"]),
       );
 
-  int _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
+  int? _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
 
   LatLng? _getLatLngOrNull(dynamic coordinates) {
     if (coordinates is! List) return null;

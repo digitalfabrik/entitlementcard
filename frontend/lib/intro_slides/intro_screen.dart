@@ -9,9 +9,9 @@ import 'location_request_button.dart';
 typedef OnFinishedCallback = void Function();
 
 class IntroScreen extends StatefulWidget {
-  final OnFinishedCallback onFinishedCallback;
+  final OnFinishedCallback? onFinishedCallback;
 
-  const IntroScreen({Key? key, required this.onFinishedCallback}) : super(key: key);
+  const IntroScreen({Key? key, this.onFinishedCallback}) : super(key: key);
 
   @override
   IntroScreenState createState() => IntroScreenState();
@@ -84,8 +84,9 @@ class IntroScreenState extends State<IntroScreen> {
   }
 
   void onDonePress() {
-    if (widget.onFinishedCallback != null) {
-      widget.onFinishedCallback();
+    var onFinishedCallback = widget.onFinishedCallback;
+    if (onFinishedCallback != null) {
+      onFinishedCallback();
     }
     Navigator.of(context).pop();
   }

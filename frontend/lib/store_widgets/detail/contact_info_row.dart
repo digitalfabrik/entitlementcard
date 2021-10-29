@@ -5,12 +5,12 @@ class ContactInfoRow extends StatelessWidget {
   final IconData _icon;
   final String _description;
   final String _semanticLabel;
-  final Function onTap;
+  final void Function()? onTap;
   final Color iconColor;
   final Color iconFillColor;
 
   const ContactInfoRow(this._icon, this._description, this._semanticLabel,
-      {Key key, this.onTap, this.iconColor, this.iconFillColor})
+      {Key? key, this.onTap, required this.iconColor, required this.iconFillColor})
       : super(key: key);
 
   @override
@@ -40,11 +40,12 @@ class ContactInfoRow extends StatelessWidget {
         ),
       ),
     ]);
-    return (onTap == null)
+    var currentOnTap = onTap;
+    return (currentOnTap == null)
         ? row
         : InkWell(
             child: row,
-            onTap: onTap,
+            onTap: currentOnTap,
           );
   }
 }

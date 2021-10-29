@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class QrParsingErrorDialog extends StatelessWidget {
   final String message;
 
-  const QrParsingErrorDialog({Key key, required this.message}) : super(key: key);
+  const QrParsingErrorDialog({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

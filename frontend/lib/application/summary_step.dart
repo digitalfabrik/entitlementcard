@@ -7,7 +7,7 @@ import 'application_model.dart';
 class SummaryStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const SummaryStep({Key key, this.formKey}) : super(key: key);
+  const SummaryStep({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,10 @@ class SummaryStep extends StatelessWidget {
                   true,
                   errorText: 'Zustimmung erforderlich',
                 ),
-                onSaved: (value) =>
-                    _onPrivacyPolicySaved(context, applicationModel, value),
-                title: const Text('Hiermit erkläre ich mich damit einverstanden,'
+                onSaved: (value) => _onPrivacyPolicySaved(
+                    context, applicationModel, value ?? false),
+                title: const Text(
+                    'Hiermit erkläre ich mich damit einverstanden,'
                     ' dass meine Daten zum Zwecke der Zusendung von'
                     ' Informationen (z.B. zu bayernweiten Aktionen) rund um das'
                     ' Thema „Ehrenamtskarte“ gespeichert und ggf. an das Land'
@@ -50,7 +51,7 @@ class SummaryStep extends StatelessWidget {
                   errorText: 'Zustimmung erforderlich',
                 ),
                 onSaved: (value) => _onCorrectAndCompleteSaved(
-                    context, applicationModel, value),
+                    context, applicationModel, value ?? false),
                 title: const Text('Die hier angegeben Informationen sind'
                     ' richtig und vollständig.')),
           ],

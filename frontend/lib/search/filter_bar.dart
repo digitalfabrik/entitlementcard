@@ -5,7 +5,7 @@ import 'filter_bar_button.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
-  const FilterBar({Key key, this.onCategoryPress}) : super(key: key);
+  const FilterBar({Key? key, required this.onCategoryPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

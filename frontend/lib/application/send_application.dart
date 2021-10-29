@@ -9,7 +9,7 @@ import 'application_model.dart';
 class SendApplication extends StatelessWidget {
   final Function(bool) onResult;
 
-  const SendApplication({Key key, this.onResult}) : super(key: key);
+  const SendApplication({Key? key, required this.onResult}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,8 @@ class SendApplication extends StatelessWidget {
           regionId: applicationModel.regionId);
       query = AddGoldenEakApplicationMutation(variables: application);
       parseResult = (data) => query.parse(data).addGoldenEakApplication;
+    } else {
+      throw Exception("Unknown card application. Unable to create a query.");
     }
     return Query(
       options: QueryOptions(
