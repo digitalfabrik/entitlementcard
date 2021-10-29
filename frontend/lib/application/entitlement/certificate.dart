@@ -10,7 +10,7 @@ class Certificate extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
   final String title;
 
-  const Certificate({Key key, this.formKey, this.title}) : super(key: key);
+  const Certificate({Key? key, required this.formKey, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,9 @@ class Certificate extends StatelessWidget {
                   ? [applicationModel.attachment]
                   : [],
               onSaved: (value) => {
-                applicationModel.attachment = value.first,
+                if (value != null) {
+                  applicationModel.attachment = value.first,
+                }
               },
             ),
           ],

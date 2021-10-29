@@ -9,16 +9,16 @@ import 'package:http_parser/http_parser.dart';
 import '../graphql/graphql_api.graphql.dart';
 
 class ApplicationModel extends ChangeNotifier {
-  BlueCardApplicationInput _blueCardApplication;
-  GoldenEakCardApplicationInput _goldenCardApplication;
-  int regionId;
-  File attachment;
+  BlueCardApplicationInput? _blueCardApplication;
+  GoldenEakCardApplicationInput? _goldenCardApplication;
+  int? regionId;
+  File? attachment;
 
-  BlueCardApplicationInput get blueCardApplication {
+  BlueCardApplicationInput? get blueCardApplication {
     return _blueCardApplication;
   }
 
-  GoldenEakCardApplicationInput get goldenCardApplication {
+  GoldenEakCardApplicationInput? get goldenCardApplication {
     return _goldenCardApplication;
   }
 

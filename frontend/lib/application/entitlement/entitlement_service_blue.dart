@@ -8,7 +8,8 @@ import 'organization.dart';
 class EntitlementServiceBlue extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementServiceBlue({Key key, this.formKey}) : super(key: key);
+  const EntitlementServiceBlue({Key? key, required this.formKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,11 @@ class EntitlementServiceBlue extends StatelessWidget {
               validator: FormBuilderValidators.required(context),
               decoration: const InputDecoration(labelText: 'Einsatzgebiet *'),
               initialValue: _organization?.category,
-              onSaved: (value) => {_organization.category = value},
+              onSaved: (value) {
+                if (value != null) {
+                  _organization.category = value;
+                }
+              },
               items: [
                 'Katastrophenschutz',
                 'Feuerwehr',

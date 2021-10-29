@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 class Paragraph {
   const Paragraph({this.title, this.content});
 
-  final String content;
-  final String title;
+  final String? content;
+  final String? title;
 }
 
 List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
   return paragraphs
-      .map((e) => [
-            if (e.title != null)
-              Text(e.title, style: theme.textTheme.headline6),
-            Text(e.content, style: theme.textTheme.bodyText1)
-          ])
+      .map((e) {
+        var title = e.title;
+        var content = e.content;
+        return [
+          if (title != null) Text(title, style: theme.textTheme.headline6),
+          if (content != null) Text(content, style: theme.textTheme.bodyText1)
+        ];
+      })
       .expand((i) => i)
       .toList();
 }
@@ -126,11 +129,16 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
   ];
 
   return content
-      .map((e) => [
-            if (e.title != null)
-              Text(e.title, style: Theme.of(context).textTheme.headline6),
-            Text(e.content, style: Theme.of(context).textTheme.bodyText1)
-          ])
+      .map((e) {
+        var title = e.title;
+        var content = e.content;
+        return [
+          if (title != null)
+            Text(title, style: Theme.of(context).textTheme.headline6),
+          if (content != null)
+            Text(content, style: Theme.of(context).textTheme.bodyText1)
+        ];
+      })
       .expand((i) => i)
       .toList();
 }

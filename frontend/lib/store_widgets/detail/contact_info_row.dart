@@ -6,11 +6,11 @@ class ContactInfoRow extends StatelessWidget {
   final String _description;
   final String _semanticLabel;
   final void Function()? onTap;
-  final Color iconColor;
-  final Color iconFillColor;
+  final Color? iconColor;
+  final Color? iconFillColor;
 
   const ContactInfoRow(this._icon, this._description, this._semanticLabel,
-      {Key? key, this.onTap, required this.iconColor, required this.iconFillColor})
+      {Key? key, this.onTap, this.iconColor, this.iconFillColor})
       : super(key: key);
 
   @override

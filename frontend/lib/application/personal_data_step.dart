@@ -9,7 +9,7 @@ import 'application_model.dart';
 class PersonalDataStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const PersonalDataStep({Key key, this.formKey}) : super(key: key);
+  const PersonalDataStep({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

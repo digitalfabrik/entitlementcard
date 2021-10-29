@@ -13,7 +13,7 @@ import 'entitlement/entitlement_work.dart';
 class EntitlementStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementStep({Key key, this.formKey}) : super(key: key);
+  const EntitlementStep({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'application_model.dart';
 class CardTypeStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const CardTypeStep({Key key, this.formKey}) : super(key: key);
+  const CardTypeStep({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

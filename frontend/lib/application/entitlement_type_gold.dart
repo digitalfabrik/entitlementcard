@@ -8,7 +8,7 @@ import 'application_model.dart';
 class EntitlementTypeGold extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementTypeGold({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeGold({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -14,6 +14,11 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var config = Configuration.of(context);
+
+    if (config == null) {
+      throw Exception("Could not find configuration in component tree.");
+    }
+
     return NonMaterialPage(
       overlayStyle: null,
       child: FutureBuilder<PackageInfo>(
@@ -38,14 +43,16 @@ class AboutPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Center(
-                  child: Text(packageInfo.appName,
-                      style: Theme.of(context).textTheme.headline5),
-                ),
-                Center(
-                  child: Text(packageInfo.version,
-                      style: Theme.of(context).textTheme.bodyText2),
-                ),
+                if (packageInfo != null)
+                  Center(
+                    child: Text(packageInfo.appName,
+                        style: Theme.of(context).textTheme.headline5),
+                  ),
+                if (packageInfo != null)
+                  Center(
+                    child: Text(packageInfo.version,
+                        style: Theme.of(context).textTheme.bodyText2),
+                  ),
                 const Divider(
                   height: 40,
                   thickness: 1,
@@ -60,14 +67,14 @@ class AboutPage extends StatelessWidget {
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 10, right: 10, top: 10),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 10),
                           child: Text(publisherAddress,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
                         Text(
                           "Mehr Informationen",
-                          style: Theme.of(context).textTheme.bodyText2.merge(
+                          style: Theme.of(context).textTheme.bodyText2?.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.secondary)),

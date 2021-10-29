@@ -13,7 +13,7 @@ import 'organization.dart';
 class WorkAtOrganization extends StatelessWidget {
   final WorkAtOrganizationInput workAtOrganizationInput;
 
-  const WorkAtOrganization({Key key, this.workAtOrganizationInput})
+  const WorkAtOrganization({Key? key, required this.workAtOrganizationInput})
       : super(key: key);
 
   @override

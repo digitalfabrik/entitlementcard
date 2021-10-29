@@ -8,7 +8,7 @@ import 'application_model.dart';
 class EntitlementTypeBlue extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementTypeBlue({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeBlue({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
