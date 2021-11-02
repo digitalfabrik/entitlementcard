@@ -15,4 +15,5 @@ For dart:
    in the frontend directory.
 3. Run `flutter pub global activate protoc_plugin` in the frontend directory. Add the recommended line to your path as
    printed on the terminal after running the command.
-4. Then `protoc --dart_out=. card_activate_model.proto` should work in the folder where the .proto file is.
+4. Then `protoc --dart_out=../frontend/lib/identification/protobuf card_activate_model.proto` should work in the folder where the .proto file is.
+4. Then `protoc --dart_out=../frontend/lib/identification/protobuf card_verify_model.proto` should work in the folder where the .proto file is.

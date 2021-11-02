@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: card_verify_model.proto
 //
-// @dart = 2.7
+// @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
 import 'dart:core' as $core;
@@ -27,12 +27,12 @@ class CardVerifyModel extends $pb.GeneratedMessage {
 
   CardVerifyModel._() : super();
   factory CardVerifyModel({
-    $core.String fullName,
-    $fixnum.Int64 expirationDate,
-    CardVerifyModel_CardType cardType,
-    $core.int regionId,
-    $core.List<$core.int> hashSecret,
-    $core.int otp,
+    $core.String? fullName,
+    $fixnum.Int64? expirationDate,
+    CardVerifyModel_CardType? cardType,
+    $core.int? regionId,
+    $core.List<$core.int>? hashSecret,
+    $core.int? otp,
   }) {
     final _result = create();
     if (fullName != null) {
@@ -66,7 +66,7 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  CardVerifyModel copyWith(void Function(CardVerifyModel) updates) => super.copyWith((message) => updates(message as CardVerifyModel)); // ignore: deprecated_member_use
+  CardVerifyModel copyWith(void Function(CardVerifyModel) updates) => super.copyWith((message) => updates(message as CardVerifyModel)) as CardVerifyModel; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static CardVerifyModel create() => CardVerifyModel._();
@@ -74,7 +74,7 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   static $pb.PbList<CardVerifyModel> createRepeated() => $pb.PbList<CardVerifyModel>();
   @$core.pragma('dart2js:noInline')
   static CardVerifyModel getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardVerifyModel>(create);
-  static CardVerifyModel _defaultInstance;
+  static CardVerifyModel? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get fullName => $_getSZ(0);
