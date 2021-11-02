@@ -447,11 +447,11 @@ Map<String, dynamic> _$BlueCardApplicationInputToJson(
         BlueCardApplicationInput instance) =>
     <String, dynamic>{
       'applicationType': _$ApplicationTypeEnumMap[instance.applicationType],
-      'entitlement': instance.entitlement.toJson(),
+      'entitlement': instance.entitlement?.toJson(),
       'givenInformationIsCorrectAndComplete':
           instance.givenInformationIsCorrectAndComplete,
       'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData.toJson(),
+      'personalData': instance.personalData?.toJson(),
     };
 
 K _$enumDecode<K, V>(
@@ -575,9 +575,9 @@ OrganizationInput _$OrganizationInputFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$OrganizationInputToJson(OrganizationInput instance) =>
     <String, dynamic>{
-      'address': instance.address.toJson(),
+      'address': instance.address?.toJson(),
       'category': instance.category,
-      'contact': instance.contact.toJson(),
+      'contact': instance.contact?.toJson(),
       'name': instance.name,
       'website': instance.website,
     };
@@ -644,7 +644,7 @@ Map<String, dynamic> _$WorkAtOrganizationInputToJson(
       'amountOfWork': instance.amountOfWork,
       'amountOfWorkUnit': _$AmountOfWorkUnitEnumMap[instance.amountOfWorkUnit],
       'certificate': instance.certificate?.toJson(),
-      'organization': instance.organization.toJson(),
+      'organization': instance.organization?.toJson(),
       'payment': instance.payment,
       'responsibility': instance.responsibility,
       'workSinceDate': instance.workSinceDate,
@@ -672,7 +672,7 @@ PersonalDataInput _$PersonalDataInputFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PersonalDataInputToJson(PersonalDataInput instance) =>
     <String, dynamic>{
-      'address': instance.address.toJson(),
+      'address': instance.address?.toJson(),
       'dateOfBirth': instance.dateOfBirth,
       'emailAddress': instance.emailAddress,
       'forenames': instance.forenames,
@@ -711,11 +711,11 @@ GoldenEakCardApplicationInput _$GoldenEakCardApplicationInputFromJson(
 Map<String, dynamic> _$GoldenEakCardApplicationInputToJson(
         GoldenEakCardApplicationInput instance) =>
     <String, dynamic>{
-      'entitlement': instance.entitlement.toJson(),
+      'entitlement': instance.entitlement?.toJson(),
       'givenInformationIsCorrectAndComplete':
           instance.givenInformationIsCorrectAndComplete,
       'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData.toJson(),
+      'personalData': instance.personalData?.toJson(),
     };
 
 GoldenCardEntitlementInput _$GoldenCardEntitlementInputFromJson(
@@ -830,7 +830,7 @@ AddBlueEakApplicationArguments _$AddBlueEakApplicationArgumentsFromJson(
 Map<String, dynamic> _$AddBlueEakApplicationArgumentsToJson(
         AddBlueEakApplicationArguments instance) =>
     <String, dynamic>{
-      'application': instance.application.toJson(),
+      'application': instance.application?.toJson(),
       'regionId': instance.regionId,
     };
 
@@ -846,6 +846,6 @@ AddGoldenEakApplicationArguments _$AddGoldenEakApplicationArgumentsFromJson(
 Map<String, dynamic> _$AddGoldenEakApplicationArgumentsToJson(
         AddGoldenEakApplicationArguments instance) =>
     <String, dynamic>{
-      'application': instance.application.toJson(),
+      'application': instance.application?.toJson(),
       'regionId': instance.regionId,
     };
