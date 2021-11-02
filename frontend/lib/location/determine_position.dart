@@ -48,7 +48,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// LocationPermission.deniedForever
 Future<LocationPermission> checkAndRequestLocationPermission(
     BuildContext context,
-    {bool requestIfNotGranted = false}) async {
+    {bool requestIfNotGranted = true}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
@@ -64,7 +64,7 @@ Future<LocationPermission> checkAndRequestLocationPermission(
 
   var permission = await Geolocator.checkPermission();
 
-  if (requestIfNotGranted != null && requestIfNotGranted) {
+  if (requestIfNotGranted) {
     if (permission == LocationPermission.denied) {
       final requestedPermission = await Geolocator.requestPermission();
 

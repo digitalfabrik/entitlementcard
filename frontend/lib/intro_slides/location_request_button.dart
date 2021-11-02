@@ -13,19 +13,18 @@ class LocationRequestButton extends StatefulWidget {
 class _LocationRequestButtonState extends State<LocationRequestButton> {
   LocationPermission? _locationPermissionStatus;
 
-  _LocationRequestButtonState() {
+  @override
+  void initState() {
+    super.initState();
     checkAndRequestLocationPermission(context, requestIfNotGranted: false)
-        .then(_setInitialLocationStatus);
-  }
-
-  void _setInitialLocationStatus(LocationPermission permission) {
-    setState(() {
-      _locationPermissionStatus = permission;
-    });
+        .then((LocationPermission permission) => setState(() {
+              _locationPermissionStatus = permission;
+            }));
   }
 
   void _onLocationButtonClicked() async {
-    final permission = await checkAndRequestLocationPermission(context);
+    final permission = await checkAndRequestLocationPermission(context,
+        requestIfNotGranted: true);
     setState(() {
       _locationPermissionStatus = permission;
     });
