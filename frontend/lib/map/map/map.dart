@@ -72,9 +72,9 @@ class _MapState extends State<Map> implements MapController {
       _mapboxView = null;
     }
 
-    var cameraPosition = widget.userLocation != null
-        ? CameraPosition(
-            target: widget.userLocation, zoom: Map.userLocationZoomLevel)
+    var userLocation = widget.userLocation;
+    var cameraPosition = userLocation != null
+        ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
         : const CameraPosition(
             target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
@@ -148,8 +148,9 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Future<void> removeSymbol() async {
-    if (_symbol == null) return;
-    await _controller?.removeSymbol(_symbol);
+    var symbol = _symbol;
+    if (symbol == null) return;
+    await _controller?.removeSymbol(symbol);
     _symbol = null;
   }
 

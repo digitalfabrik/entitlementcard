@@ -597,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.4"
+  lint:
+    dependency: transitive
+    description:
+      name: lint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.2"
   lints:
     dependency: transitive
     description:
@@ -617,34 +624,34 @@ packages:
       name: mapbox_gl_dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.2.0-nullsafety.0"
   maplibre_gl:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.13.0"
-      resolved-ref: "9200abb64ebe664cbd62548d95d02c0da7a21f20"
+      ref: "0.15.0"
+      resolved-ref: f95dd42b9fab2dc938a259041667a19fbb2c7d78
       url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
-    version: "0.13.0"
+    version: "0.15.0"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
       path: maplibre_gl_platform_interface
-      ref: "release-0.13"
-      resolved-ref: "9200abb64ebe664cbd62548d95d02c0da7a21f20"
+      ref: main
+      resolved-ref: "9f70349359a003da53fd64166a81e3d3d9d60d94"
       url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
-    version: "0.13.0"
+    version: "0.15.0"
   maplibre_gl_web:
     dependency: transitive
     description:
       path: maplibre_gl_web
-      ref: "release-0.13"
-      resolved-ref: "9200abb64ebe664cbd62548d95d02c0da7a21f20"
+      ref: main
+      resolved-ref: "9f70349359a003da53fd64166a81e3d3d9d60d94"
       url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
-    version: "0.13.0"
+    version: "0.15.0"
   maps_launcher:
     dependency: "direct main"
     description:
@@ -1070,13 +1077,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  tinycolor:
+  tinycolor2:
     dependency: "direct main"
     description:
-      name: tinycolor
+      name: tinycolor2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:
