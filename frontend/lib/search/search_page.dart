@@ -31,7 +31,6 @@ class _SearchPageState extends State<SearchPage> {
     var currentCoordinatesInput = _coordinates;
     return Stack(children: [
       if (textEditingController != null &&
-          searchFieldText != null &&
           currentCoordinatesInput != null)
         CustomScrollView(
           slivers: [

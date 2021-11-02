@@ -106,7 +106,7 @@ class WorkAtOrganization extends StatelessWidget {
               : null,
           onSaved: (value) => {
             if (value != null)
-              {workSinceDate = DateFormat('dd.MM.yyyy').format(value)}
+              {workAtOrganizationInput?.workSinceDate = DateFormat('dd.MM.yyyy').format(value)}
           },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),

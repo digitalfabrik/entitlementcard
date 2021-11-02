@@ -55,7 +55,7 @@ class PersonalDataStep extends StatelessWidget {
                 : null,
             onSaved: (value) {
               if (value != null) {
-                dateOfBirth = DateFormat('dd.MM.yyyy').format(value);
+                personalData?.dateOfBirth = DateFormat('dd.MM.yyyy').format(value);
               }
             },
           ),
