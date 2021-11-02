@@ -181,7 +181,6 @@ class _MapState extends State<Map> implements MapController {
     var jsonFeatures = await controller.queryRenderedFeaturesInRect(
         rect, widget.onFeatureClickLayerFilter, null);
     var features = jsonFeatures
-        .map((x) => json.decode(x))
         .where((x) =>
             x["properties"] != null && x["properties"]["categoryId"] != null)
         .toList();
