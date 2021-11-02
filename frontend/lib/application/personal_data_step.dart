@@ -15,6 +15,7 @@ class PersonalDataStep extends StatelessWidget {
   Widget build(BuildContext context) {
     var personalData =
         Provider.of<ApplicationModel>(context, listen: false).personalData;
+    var dateOfBirth = personalData?.dateOfBirth;
     return FormBuilder(
         key: formKey,
         child: Column(children: <Widget>[
@@ -49,12 +50,13 @@ class PersonalDataStep extends StatelessWidget {
             lastDate: DateTime.now(),
             validator: FormBuilderValidators.required(context),
             decoration: const InputDecoration(labelText: 'Geburtsdatum *'),
-            initialValue: personalData?.dateOfBirth != null
-                ? DateFormat('dd.MM.yyyy').parse(personalData?.dateOfBirth)
+            initialValue: dateOfBirth != null
+                ? DateFormat('dd.MM.yyyy').parse(dateOfBirth)
                 : null,
             onSaved: (value) {
-              personalData?.dateOfBirth =
-                  DateFormat('dd.MM.yyyy').format(value);
+              if (value != null) {
+                dateOfBirth = DateFormat('dd.MM.yyyy').format(value);
+              }
             },
           ),
           FormBuilderDropdown(
@@ -68,8 +70,10 @@ class PersonalDataStep extends StatelessWidget {
                     ))
                 .toList(),
             initialValue: personalData?.gender,
-            onSaved: (value) {
-              personalData?.gender = value;
+            onSaved: (String? value) {
+              if (value != null) {
+                personalData?.gender = value;
+              }
             },
           ),
           TextFormField(

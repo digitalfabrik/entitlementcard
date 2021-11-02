@@ -71,11 +71,11 @@ class ApplicationModel extends ChangeNotifier {
     initializeBlueCardApplication();
     switch (blueCardEntitlementType) {
       case BlueCardEntitlementType.juleica:
-        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+        _blueCardApplication?.entitlement = BlueCardEntitlementInput(
             entitlementType: BlueCardEntitlementType.juleica);
         break;
       case BlueCardEntitlementType.service:
-        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+        _blueCardApplication?.entitlement = BlueCardEntitlementInput(
             entitlementType: BlueCardEntitlementType.service,
             serviceEntitlement: BlueCardServiceEntitlementInput(
                 organization: OrganizationInput(
@@ -93,7 +93,7 @@ class ApplicationModel extends ChangeNotifier {
                         email: null))));
         break;
       case BlueCardEntitlementType.standard:
-        _blueCardApplication.entitlement = BlueCardEntitlementInput(
+        _blueCardApplication?.entitlement = BlueCardEntitlementInput(
           workAtOrganizations: <WorkAtOrganizationInput>[],
           entitlementType: BlueCardEntitlementType.standard,
         );
@@ -113,15 +113,15 @@ class ApplicationModel extends ChangeNotifier {
     initializeGoldenCardApplication();
     switch (goldenCardEntitlementType) {
       case GoldenCardEntitlementType.honorByMinisterPresident:
-        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+        _goldenCardApplication?.entitlement = GoldenCardEntitlementInput(
             goldenEntitlementType: goldenCardEntitlementType);
         break;
       case GoldenCardEntitlementType.serviceAward:
-        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+        _goldenCardApplication?.entitlement = GoldenCardEntitlementInput(
             goldenEntitlementType: goldenCardEntitlementType);
         break;
       case GoldenCardEntitlementType.standard:
-        _goldenCardApplication.entitlement = GoldenCardEntitlementInput(
+        _goldenCardApplication?.entitlement = GoldenCardEntitlementInput(
             goldenEntitlementType: goldenCardEntitlementType,
             workAtOrganizations: <WorkAtOrganizationInput>[]);
         break;
@@ -130,11 +130,14 @@ class ApplicationModel extends ChangeNotifier {
     }
   }
 
-  PersonalDataInput get personalData {
-    if (_blueCardApplication != null) {
-      return _blueCardApplication.personalData;
-    } else if (_goldenCardApplication != null) {
-      return _goldenCardApplication.personalData;
+  PersonalDataInput? get personalData {
+    var goldenCardApplication = _goldenCardApplication;
+    var blueCardApplication = _blueCardApplication;
+
+    if (blueCardApplication != null) {
+      return blueCardApplication.personalData;
+    } else if (goldenCardApplication != null) {
+      return goldenCardApplication.personalData;
     }
     return null;
   }
@@ -157,14 +160,15 @@ class ApplicationModel extends ChangeNotifier {
   }
 
   void createAttachmentStream() {
+    var currentAttachment = attachment;
     if (_blueCardApplication?.entitlement?.entitlementType ==
             BlueCardEntitlementType.juleica &&
-        attachment != null) {
-      _blueCardApplication.entitlement.copyOfJuleica = AttachmentInput(
+        currentAttachment != null) {
+      _blueCardApplication?.entitlement?.copyOfJuleica = AttachmentInput(
           fileName: 'juleica.jpg',
           data: MultipartFile.fromBytes(
             'juleica_copy',
-            attachment.readAsBytesSync(),
+            currentAttachment.readAsBytesSync(),
             filename: 'juleica.jpg',
             contentType: MediaType("image", "jpg"),
           ));
@@ -172,12 +176,12 @@ class ApplicationModel extends ChangeNotifier {
                 GoldenCardEntitlementType.honorByMinisterPresident ||
             _goldenCardApplication?.entitlement?.goldenEntitlementType ==
                 GoldenCardEntitlementType.serviceAward) &&
-        attachment != null) {
-      _goldenCardApplication.entitlement.certificate = AttachmentInput(
+        currentAttachment != null) {
+      _goldenCardApplication?.entitlement?.certificate = AttachmentInput(
           fileName: 'zertifikat.jpg',
           data: MultipartFile.fromBytes(
             'certificate',
-            attachment.readAsBytesSync(),
+            currentAttachment.readAsBytesSync(),
             filename: 'zertifikat.jpg',
             contentType: MediaType("image", "jpg"),
           ));

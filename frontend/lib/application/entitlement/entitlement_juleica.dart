@@ -15,7 +15,8 @@ class EntitlementJuleica extends StatelessWidget {
   Widget build(BuildContext context) {
     var applicationModel =
     Provider.of<ApplicationModel>(context, listen: false);
-    var entitlement = applicationModel.blueCardApplication.entitlement;
+    var entitlement = applicationModel.blueCardApplication?.entitlement;
+    var juleicaExpirationDate = entitlement?.juleicaExpirationDate;
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -30,7 +31,7 @@ class EntitlementJuleica extends StatelessWidget {
               keyboardType: TextInputType.number,
               initialValue: entitlement?.juleicaNumber,
               onSaved: (value) {
-                entitlement.juleicaNumber = value;
+                entitlement?.juleicaNumber = value;
               },
             ),
             FormBuilderDateTimePicker(
@@ -41,14 +42,14 @@ class EntitlementJuleica extends StatelessWidget {
               firstDate: DateTime.now(),
               validator: FormBuilderValidators.required(context),
               decoration: const InputDecoration(labelText: 'Gültig bis *'),
-              initialValue: entitlement?.juleicaExpirationDate != null
+              initialValue: juleicaExpirationDate != null
                   ? DateFormat('dd.MM.yyyy')
-                  .parse(entitlement.juleicaExpirationDate)
+                  .parse(juleicaExpirationDate)
                   : null,
               onSaved: (value) =>
               {
                 if (value != null) {
-                  entitlement.juleicaExpirationDate =
+                  entitlement?.juleicaExpirationDate =
                       DateFormat('dd.MM.yyyy').format(value)
                 }
               },
@@ -62,13 +63,13 @@ class EntitlementJuleica extends StatelessWidget {
                   .of(context)
                   .colorScheme
                   .primary,
-              initialValue: entitlement.copyOfJuleica != null
+              initialValue: entitlement?.copyOfJuleica != null
               ? [applicationModel.attachment]
                   : [],
               onSaved: (value) => {
-              if (value != null) {
-              applicationModel.attachment = value.first;
-              }
+                if (value != null) {
+                  applicationModel.attachment = value.first
+                }
               },
             ),
           ],

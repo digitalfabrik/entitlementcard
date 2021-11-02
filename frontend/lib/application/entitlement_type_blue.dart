@@ -24,8 +24,11 @@ class EntitlementTypeBlue extends StatelessWidget {
                 name: 'card_type',
                 initialValue: applicationModel
                     .blueCardApplication?.entitlement?.entitlementType,
-                onSaved: (value) =>
-                    applicationModel.initBlueCardEntitlement(value),
+                onSaved: (BlueCardEntitlementType? value) {
+                  if (value != null) {
+                    applicationModel.initBlueCardEntitlement(value);
+                  }
+                },
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: const [

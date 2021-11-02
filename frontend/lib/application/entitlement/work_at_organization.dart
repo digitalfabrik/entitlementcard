@@ -18,6 +18,7 @@ class WorkAtOrganization extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var workSinceDate = workAtOrganizationInput?.workSinceDate;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -31,8 +32,10 @@ class WorkAtOrganization extends StatelessWidget {
           decoration: const InputDecoration(labelText: 'Einsatzgebiet *'),
           validator: FormBuilderValidators.required(context),
           initialValue: workAtOrganizationInput?.organization?.category,
-          onSaved: (value) =>
-              {workAtOrganizationInput?.organization?.category = value},
+          onSaved: (String? value) => {
+            if (value != null)
+              {workAtOrganizationInput?.organization?.category = value}
+          },
           items: [
             'Soziales/Jugend/Senioren',
             'Tierschutz',
@@ -66,7 +69,9 @@ class WorkAtOrganization extends StatelessWidget {
             name: 'payment',
             validator: FormBuilderValidators.required(context),
             initialValue: workAtOrganizationInput?.payment,
-            onSaved: (value) => {workAtOrganizationInput?.payment = value},
+            onSaved: (bool? value) => {
+                  if (value != null) {workAtOrganizationInput?.payment = value}
+                },
             options: const [
               FormBuilderFieldOption(value: true, child: Text("Ja")),
               FormBuilderFieldOption(value: false, child: Text("Nein"))
@@ -76,9 +81,12 @@ class WorkAtOrganization extends StatelessWidget {
               labelText: 'Arbeitsstunden pro Woche (Durchschnitt) *'),
           initialValue: workAtOrganizationInput?.amountOfWork?.toString(),
           onSaved: (value) => {
-            workAtOrganizationInput?.amountOfWork = double.parse(value),
-            workAtOrganizationInput?.amountOfWorkUnit =
-                AmountOfWorkUnit.hoursPerWeek
+            if (value != null)
+              {
+                workAtOrganizationInput?.amountOfWork = double.parse(value),
+                workAtOrganizationInput?.amountOfWorkUnit =
+                    AmountOfWorkUnit.hoursPerWeek
+              }
           },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
@@ -93,21 +101,24 @@ class WorkAtOrganization extends StatelessWidget {
           format: DateFormat('dd.MM.yyyy'),
           initialEntryMode: DatePickerEntryMode.input,
           lastDate: DateTime.now(),
-          initialValue: workAtOrganizationInput?.workSinceDate != null
-              ? DateFormat('dd.MM.yyyy')
-                  .parse(workAtOrganizationInput?.workSinceDate)
+          initialValue: workSinceDate != null
+              ? DateFormat('dd.MM.yyyy').parse(workSinceDate)
               : null,
           onSaved: (value) => {
-            workAtOrganizationInput?.workSinceDate =
-                DateFormat('dd.MM.yyyy').format(value)
+            if (value != null)
+              {workSinceDate = DateFormat('dd.MM.yyyy').format(value)}
           },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(context),
             (date) {
-              return date.isAfter(
-                      DateTime.now().subtract(const Duration(days: 365 * 2)))
-                  ? 'Mindestens seit 2 Jahren'
-                  : null;
+              if (date == null) {
+                return null;
+              } else {
+                return date.isAfter(
+                        DateTime.now().subtract(const Duration(days: 365 * 2)))
+                    ? 'Mindestens seit 2 Jahren'
+                    : null;
+              }
             }
           ]),
           decoration: const InputDecoration(

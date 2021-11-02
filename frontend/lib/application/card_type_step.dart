@@ -24,7 +24,11 @@ class CardTypeStep extends StatelessWidget {
                 activeColor: Theme.of(context).colorScheme.primary,
                 name: 'card_type',
                 initialValue: _getApplicationType(context, applicationModel),
-                onSaved: (value) => _onSaved(context, applicationModel, value),
+                onSaved: (ApplicationType? value) {
+                  if (value != null) {
+                    _onSaved(context, applicationModel, value);
+                  }
+                },
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: const [
@@ -45,10 +49,10 @@ class CardTypeStep extends StatelessWidget {
         ));
   }
 
-  ApplicationType _getApplicationType(
+  ApplicationType? _getApplicationType(
       BuildContext context, ApplicationModel applicationModel) {
     if (applicationModel.hasBlueCardApplication()) {
-      return applicationModel.blueCardApplication.applicationType;
+      return applicationModel.blueCardApplication?.applicationType;
     } else if (applicationModel.hasGoldCardApplication()) {
       return ApplicationType.artemisUnknown;
     }
@@ -61,11 +65,11 @@ class CardTypeStep extends StatelessWidget {
         Provider.of<ApplicationModel>(context, listen: false);
     if (value == ApplicationType.firstApplication) {
       applicationModel.initializeBlueCardApplication();
-      applicationModel.blueCardApplication.applicationType =
+      applicationModel.blueCardApplication?.applicationType =
           ApplicationType.firstApplication;
     } else if (value == ApplicationType.renewalApplication) {
       applicationModel.initializeBlueCardApplication();
-      applicationModel.blueCardApplication.applicationType =
+      applicationModel.blueCardApplication?.applicationType =
           ApplicationType.renewalApplication;
     } else {
       applicationModel.initializeGoldenCardApplication();

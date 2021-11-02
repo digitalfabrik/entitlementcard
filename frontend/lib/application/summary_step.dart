@@ -61,9 +61,9 @@ class SummaryStep extends StatelessWidget {
   void _onPrivacyPolicySaved(
       BuildContext context, ApplicationModel applicationModel, bool value) {
     if (applicationModel.hasBlueCardApplication()) {
-      applicationModel.blueCardApplication.hasAcceptedPrivacyPolicy = value;
+      applicationModel.blueCardApplication?.hasAcceptedPrivacyPolicy = value;
     } else if (applicationModel.hasGoldCardApplication()) {
-      applicationModel.goldenCardApplication.hasAcceptedPrivacyPolicy = value;
+      applicationModel.goldenCardApplication?.hasAcceptedPrivacyPolicy = value;
     }
   }
 
@@ -71,10 +71,10 @@ class SummaryStep extends StatelessWidget {
       BuildContext context, ApplicationModel applicationModel, bool value) {
     if (applicationModel.hasBlueCardApplication()) {
       applicationModel
-          .blueCardApplication.givenInformationIsCorrectAndComplete = value;
+          .blueCardApplication?.givenInformationIsCorrectAndComplete = value;
     } else if (applicationModel.hasGoldCardApplication()) {
       applicationModel
-          .goldenCardApplication.givenInformationIsCorrectAndComplete = value;
+          .goldenCardApplication?.givenInformationIsCorrectAndComplete = value;
     }
   }
 }

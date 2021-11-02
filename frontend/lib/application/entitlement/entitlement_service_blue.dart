@@ -15,9 +15,9 @@ class EntitlementServiceBlue extends StatelessWidget {
   Widget build(BuildContext context) {
     final _organization = Provider.of<ApplicationModel>(context, listen: false)
         .blueCardApplication
-        .entitlement
-        .serviceEntitlement
-        .organization;
+        ?.entitlement
+        ?.serviceEntitlement
+        ?.organization;
 
     return FormBuilder(
         key: formKey,
@@ -29,9 +29,9 @@ class EntitlementServiceBlue extends StatelessWidget {
               validator: FormBuilderValidators.required(context),
               decoration: const InputDecoration(labelText: 'Einsatzgebiet *'),
               initialValue: _organization?.category,
-              onSaved: (value) {
+              onSaved: (String? value) {
                 if (value != null) {
-                  _organization.category = value;
+                  _organization?.category = value;
                 }
               },
               items: [

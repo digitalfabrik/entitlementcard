@@ -25,9 +25,10 @@ class RegionStep extends StatelessWidget {
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {fetchMore, refetch}) {
           final data = result.data;
-          var regions = result.isLoading || result.hasException || data == null
-              ? []
-              : regionsQuery.parse(data).regions;
+          List<GetRegions$Query$Region> regions =
+              result.isLoading || result.hasException || data == null
+                  ? []
+                  : regionsQuery.parse(data).regions;
           return FormBuilder(
               key: formKey,
               child: Column(
@@ -41,7 +42,9 @@ class RegionStep extends StatelessWidget {
                     validator: FormBuilderValidators.required(context),
                     enabled: !result.isLoading && !result.hasException,
                     initialValue: applicationModel.regionId,
-                    onSaved: (value) => {applicationModel.regionId = value},
+                    onSaved: (int? value) {
+                      applicationModel.regionId = value;
+                    },
                     decoration: InputDecoration(
                         labelText: result.isLoading
                             ? 'Regionen werden geladen …'
