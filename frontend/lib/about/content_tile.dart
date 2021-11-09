@@ -6,7 +6,11 @@ class ContentTile extends StatelessWidget {
   final List<Widget> children;
   final IconData icon;
 
-  const ContentTile({Key key, this.title, this.children, this.icon})
+  const ContentTile(
+      {Key? key,
+      required this.title,
+      required this.children,
+      required this.icon})
       : super(key: key);
 
   @override
@@ -30,7 +34,8 @@ class ContentPage extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const ContentPage({Key key, this.title, this.children}) : super(key: key);
+  const ContentPage({Key? key, required this.title, required this.children})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

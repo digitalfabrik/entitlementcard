@@ -13,11 +13,11 @@ import 'contact_info_row.dart';
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
   final bool hideShowOnMapButton;
-  final Color accentColor;
-  final Color readableOnAccentColor;
+  final Color? accentColor;
+  final Color? readableOnAccentColor;
 
   const DetailContent(this.acceptingStore,
-      {Key key,
+      {Key? key,
       this.hideShowOnMapButton = false,
       this.accentColor,
       this.readableOnAccentColor})
@@ -27,87 +27,95 @@ class DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final contact = acceptingStore.store.contact;
-    final readableOnAccentColor =
-        accentColor != null ? getReadableOnColor(accentColor) : null;
+    var currentAccentColor = accentColor;
+    final readableOnAccentColor = currentAccentColor == null
+        ? null
+        : getReadableOnColor(currentAccentColor);
+
+    var storeDescription = acceptingStore.store.description;
+    var website = contact.website;
+    var telephone = contact.telephone;
+    var email = contact.email;
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
-          if (acceptingStore.store.description != null) ...[
-            Text(
-              acceptingStore.store.description,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            Divider(
-                thickness: 0.7,
-                height: 48,
-                color: Theme.of(context).primaryColorLight),
-          ],
-          Column(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (address != null)
-                ContactInfoRow(
-                  Icons.location_on,
-                  "${address.street}\n"
-                      "${address.postalCode} ${address.location}",
-                  "Adresse",
-                  onTap: () => MapsLauncher.launchQuery("${address.street}, "
-                      "${address.postalCode} ${address.location}"),
-                  iconColor: readableOnAccentColor,
-                  iconFillColor: accentColor,
+              if (storeDescription != null) ...[
+                Text(
+                  storeDescription,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
-              if (contact.website != null)
-                ContactInfoRow(
-                  Icons.language,
-                  prepareWebsiteUrlForDisplay(contact.website),
-                  "Website",
-                  onTap: () =>
-                      launch(prepareWebsiteUrlForLaunch(contact.website)),
-                  iconColor: readableOnAccentColor,
-                  iconFillColor: accentColor,
-                ),
-              if (contact.telephone != null)
-                ContactInfoRow(
-                  Icons.phone,
-                  contact.telephone,
-                  "Telefon",
-                  onTap: () =>
-                      launch("tel:${sanitizePhoneNumber(contact.telephone)}"),
-                  iconColor: readableOnAccentColor,
-                  iconFillColor: accentColor,
-                ),
-              if (contact.email != null)
-                ContactInfoRow(
-                  Icons.alternate_email,
-                  contact.email,
-                  "E-Mail",
-                  onTap: () => launch("mailto:${contact.email.trim()}"),
-                  iconColor: readableOnAccentColor,
-                  iconFillColor: accentColor,
-                ),
-            ],
-          ),
-          if (!hideShowOnMapButton) ...[
-            Divider(
-              thickness: 0.7,
-              height: 48,
-              color: Theme.of(context).primaryColorLight,
-            ),
-            ButtonBar(
-              children: [
-                OutlinedButton(
-                  child: const Text("Auf Karte zeigen"),
-                  onPressed: () => _showOnMap(context),
-                ),
+                Divider(
+                    thickness: 0.7,
+                    height: 48,
+                    color: Theme.of(context).primaryColorLight),
               ],
-              alignment: MainAxisAlignment.center,
-            ),
-          ]
-        ]));
+              Column(
+                children: <Widget>[
+                  if (address != null)
+                    ContactInfoRow(
+                      Icons.location_on,
+                      "${address.street}\n"
+                          "${address.postalCode} ${address.location}",
+                      "Adresse",
+                      onTap: () =>
+                          MapsLauncher.launchQuery("${address.street}, "
+                              "${address.postalCode} ${address.location}"),
+                      iconColor: readableOnAccentColor,
+                      iconFillColor: accentColor,
+                    ),
+                  if (website != null)
+                    ContactInfoRow(
+                      Icons.language,
+                      prepareWebsiteUrlForDisplay(website),
+                      "Website",
+                      onTap: () => launch(prepareWebsiteUrlForLaunch(website)),
+                      iconColor: readableOnAccentColor,
+                      iconFillColor: accentColor,
+                    ),
+                  if (telephone != null)
+                    ContactInfoRow(
+                      Icons.phone,
+                      telephone,
+                      "Telefon",
+                      onTap: () =>
+                          launch("tel:${sanitizePhoneNumber(telephone)}"),
+                      iconColor: readableOnAccentColor,
+                      iconFillColor: accentColor,
+                    ),
+                  if (email != null)
+                    ContactInfoRow(
+                      Icons.alternate_email,
+                      email,
+                      "E-Mail",
+                      onTap: () => launch("mailto:${email.trim()}"),
+                      iconColor: readableOnAccentColor,
+                      iconFillColor: accentColor,
+                    ),
+                ],
+              ),
+              if (!hideShowOnMapButton) ...[
+                Divider(
+                  thickness: 0.7,
+                  height: 48,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+                ButtonBar(
+                  children: [
+                    OutlinedButton(
+                      child: const Text("Auf Karte zeigen"),
+                      onPressed: () => _showOnMap(context),
+                    ),
+                  ],
+                  alignment: MainAxisAlignment.center,
+                ),
+              ]
+            ]));
   }
 
   void _showOnMap(BuildContext context) {
-    HomePage.of(context).goToMap(PhysicalStoreFeatureData(
+    HomePage.of(context)?.goToMap(PhysicalStoreFeatureData(
         acceptingStore.id,
         LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),
         acceptingStore.store.category.id));

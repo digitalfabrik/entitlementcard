@@ -7,19 +7,19 @@ const test = Color(0xff5f5384);
 @immutable
 class CategoryAsset {
   const CategoryAsset(
-      {this.id,
-      this.name,
-      this.shortName,
-      this.icon,
-      this.detailIcon,
-      this.color});
+      {required this.id,
+      required this.name,
+      required this.shortName,
+      required this.icon,
+      required this.detailIcon,
+      required this.color});
 
   final int id;
   final String name;
   final String shortName;
   final String icon;
-  final String detailIcon;
-  final Color color;
+  final String? detailIcon;
+  final Color? color;
 
   @override
   bool operator ==(Object other) =>

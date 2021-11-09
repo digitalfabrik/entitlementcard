@@ -9,12 +9,11 @@ import '../verification_card_details.dart';
 class VerificationParseException extends QrCodeParseException {
   final String internalMessage;
   final Exception cause;
-  final StackTrace stackTrace;
+  final StackTrace? stackTrace;
 
   VerificationParseException(
-      {this.internalMessage,
-      this.cause,
-      this.stackTrace}) : super(internalMessage);
+      {required this.internalMessage, required this.cause, this.stackTrace})
+      : super(internalMessage);
 }
 
 VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
@@ -42,9 +41,10 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
   }
 
   final fullName = cardVerifyModel.fullName;
-  final hashSecretBase64 = const Base64Encoder().convert(cardVerifyModel.hashSecret);
+  final hashSecretBase64 =
+      const Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixInt64ExpirationDate = cardVerifyModel.expirationDate;
-  int unixExpirationDate;
+  int? unixExpirationDate;
   if (unixInt64ExpirationDate != null) {
     unixExpirationDate = unixInt64ExpirationDate.toInt();
   }

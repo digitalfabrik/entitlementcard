@@ -7,7 +7,8 @@ import '../widgets/small_button_spinner.dart';
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
 
-  const LocationButton({Key key, this.setCoordinates}) : super(key: key);
+  const LocationButton({Key? key, required this.setCoordinates})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LocationButtonState();
@@ -17,6 +18,12 @@ enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
 
 class _LocationButtonState extends State<LocationButton> {
   LocationRequestStatus _locationStatus = LocationRequestStatus.requesting;
+
+  @override
+  void initState() {
+    _initCoordinates(false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,19 +59,18 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _initCoordinates(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    var position =
-        await determinePosition(context, requestIfNotGranted: userInteract);
-    if (position.isAvailable()) {
-      widget.setCoordinates(position.position);
+    var requiredPosition = userInteract
+        ? await determinePosition(context, requestIfNotGranted: true)
+        : await determinePosition(context, requestIfNotGranted: false)
+            .timeout(const Duration(milliseconds: 2000),
+                onTimeout: () => RequestedPosition.unknown());
+
+    var position = requiredPosition.position;
+    if (position != null) {
+      widget.setCoordinates(position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);
     } else {
       setState(() => _locationStatus = LocationRequestStatus.requestFailed);
     }
-  }
-
-  @override
-  void initState() {
-    _initCoordinates(false);
-    super.initState();
   }
 }

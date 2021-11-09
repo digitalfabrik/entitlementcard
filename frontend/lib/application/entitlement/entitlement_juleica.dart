@@ -9,20 +9,21 @@ import '../application_model.dart';
 class EntitlementJuleica extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementJuleica({Key key, this.formKey}) : super(key: key);
+  const EntitlementJuleica({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
-    var entitlement = applicationModel.blueCardApplication.entitlement;
+    Provider.of<ApplicationModel>(context, listen: false);
+    var entitlement = applicationModel.blueCardApplication?.entitlement;
+    var juleicaExpirationDate = entitlement?.juleicaExpirationDate;
     return FormBuilder(
         key: formKey,
         child: Column(
           children: <Widget>[
             TextFormField(
               decoration:
-                  const InputDecoration(labelText: "Juleica Kartennummer *"),
+              const InputDecoration(labelText: "Juleica Kartennummer *"),
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(context),
                 FormBuilderValidators.numeric(context),
@@ -30,7 +31,7 @@ class EntitlementJuleica extends StatelessWidget {
               keyboardType: TextInputType.number,
               initialValue: entitlement?.juleicaNumber,
               onSaved: (value) {
-                entitlement.juleicaNumber = value;
+                entitlement?.juleicaNumber = value;
               },
             ),
             FormBuilderDateTimePicker(
@@ -41,13 +42,16 @@ class EntitlementJuleica extends StatelessWidget {
               firstDate: DateTime.now(),
               validator: FormBuilderValidators.required(context),
               decoration: const InputDecoration(labelText: 'Gültig bis *'),
-              initialValue: entitlement?.juleicaExpirationDate != null
+              initialValue: juleicaExpirationDate != null
                   ? DateFormat('dd.MM.yyyy')
-                      .parse(entitlement.juleicaExpirationDate)
+                  .parse(juleicaExpirationDate)
                   : null,
-              onSaved: (value) => {
-                entitlement.juleicaExpirationDate =
-                    DateFormat('dd.MM.yyyy').format(value)
+              onSaved: (value) =>
+              {
+                if (value != null) {
+                  entitlement?.juleicaExpirationDate =
+                      DateFormat('dd.MM.yyyy').format(value)
+                }
               },
             ),
             FormBuilderImagePicker(
@@ -55,11 +59,18 @@ class EntitlementJuleica extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Bild der Juleica'),
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
-              iconColor: Theme.of(context).colorScheme.primary,
-              initialValue: entitlement.copyOfJuleica != null
-                  ? [applicationModel.attachment]
+              iconColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .primary,
+              initialValue: entitlement?.copyOfJuleica != null
+              ? [applicationModel.attachment]
                   : [],
-              onSaved: (value) => {applicationModel.attachment = value.first},
+              onSaved: (value) => {
+                if (value != null) {
+                  applicationModel.attachment = value.first
+                }
+              },
             ),
           ],
         ));

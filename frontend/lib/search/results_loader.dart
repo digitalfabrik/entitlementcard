@@ -8,12 +8,12 @@ import '../map/preview/models.dart';
 import '../store_widgets/accepting_store_summary.dart';
 
 class ResultsLoader extends StatefulWidget {
-  final CoordinatesInput coordinates;
-  final String searchText;
+  final CoordinatesInput? coordinates;
+  final String? searchText;
   final List<int> categoryIds;
 
   const ResultsLoader(
-      {Key key, this.coordinates, this.searchText, this.categoryIds})
+      {Key? key, this.coordinates, this.searchText, required this.categoryIds})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class ResultsLoader extends StatefulWidget {
 
 class ResultsLoaderState extends State<ResultsLoader> {
   static const _pageSize = 20;
-  GraphQLClient _client;
+  GraphQLClient? _client;
 
   final PagingController<int, AcceptingStoresSearch$Query$AcceptingStore>
       _pagingController = PagingController(firstPageKey: 0);
@@ -61,9 +61,18 @@ class ResultsLoaderState extends State<ResultsLoader> {
               limit: _pageSize,
               offset: pageKey));
       var query = AcceptingStoresSearchQuery(variables: arguments);
-      final result = await _client.query(QueryOptions(
+
+      var client = _client;
+      if (client == null) {
+        throw Exception("GraqhQL client is not yet initialized!");
+      }
+    
+      final result = await client.query(QueryOptions(
           document: query.document, variables: query.getVariablesMap()));
-      if (result.hasException) throw result.exception;
+      var exception = result.exception;
+      if (result.hasException && exception != null) {
+        throw exception;
+      }
 
       if (widget != oldWidget) {
         // Params are outdated.
@@ -72,7 +81,13 @@ class ResultsLoaderState extends State<ResultsLoader> {
           return await _fetchPage(pageKey);
         }
       }
-      var newItems = query.parse(result.data).searchAcceptingStores;
+      var newData = result.data;
+      
+      if (newData == null) {
+        throw Exception("Fetched data is null.");
+      }
+      
+      var newItems = query.parse(newData).searchAcceptingStores;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -99,21 +114,24 @@ class ResultsLoaderState extends State<ResultsLoader> {
       pagingController: _pagingController,
       builderDelegate:
           PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
-              itemBuilder: (context, item, index) => IntrinsicHeight(
-                  child: AcceptingStoreSummary(
-                      key: ValueKey(item.id),
-                      store: AcceptingStoreSummaryModel(
-                          item.id,
-                          item.name,
-                          item.description,
-                          item.categoryId,
-                          item.physicalStore?.coordinates != null
-                              ? Coordinates(item.physicalStore.coordinates.lat,
-                                  item.physicalStore.coordinates.lng)
-                              : null,
-                          item.physicalStore?.address?.location),
-                      coordinates: widget.coordinates,
-                      showMapButtonOnDetails: true)),
+              itemBuilder: (context, item, index) {
+                var storeCoordinates = item.physicalStore?.coordinates;
+                return IntrinsicHeight(
+                    child: AcceptingStoreSummary(
+                        key: ValueKey(item.id),
+                        store: AcceptingStoreSummaryModel(
+                            item.id,
+                            item.name,
+                            item.description,
+                            item.categoryId,
+                            storeCoordinates != null
+                                ? Coordinates(
+                                    storeCoordinates.lat, storeCoordinates.lng)
+                                : null,
+                            item.physicalStore?.address?.location),
+                        coordinates: widget.coordinates,
+                        showMapButtonOnDetails: true));
+              },
               noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
               firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
               newPageErrorIndicatorBuilder: _buildErrorWithRetry,

@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 
 class RectangularProgressIndicatorPainter extends CustomPainter {
   const RectangularProgressIndicatorPainter({
-    this.valueColor,
-    this.value,
+    required this.valueColor,
+    required this.value,
   });
 
   final Color valueColor;

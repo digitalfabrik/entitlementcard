@@ -5,7 +5,7 @@ import 'verification_result_dialog.dart';
 class NegativeVerificationResultDialog extends StatelessWidget {
   final String reason;
 
-  const NegativeVerificationResultDialog({Key key, this.reason}) : super(key: key);
+  const NegativeVerificationResultDialog({Key? key, required this.reason}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

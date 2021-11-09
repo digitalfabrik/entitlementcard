@@ -10,7 +10,7 @@ import 'verification_result_dialog.dart';
 class PositiveVerificationResultDialog extends StatelessWidget {
   final BaseCardDetails cardDetails;
 
-  const PositiveVerificationResultDialog({Key key, this.cardDetails})
+  const PositiveVerificationResultDialog({Key? key, required this.cardDetails})
       : super(key: key);
 
   @override
@@ -24,8 +24,9 @@ class PositiveVerificationResultDialog extends StatelessWidget {
             document: regionsQuery.document,
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
-          var region = result.isConcrete
-              ? regionsQuery.parse(result.data).regionsById[0]
+          var data = result.data;
+          var region = result.isConcrete && data != null
+              ? regionsQuery.parse(data).regionsById[0]
               : null;
           return VerificationResultDialog(
               title: "Karte ist gültig",

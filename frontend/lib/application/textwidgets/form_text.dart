@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FormText extends StatelessWidget {
   final String text;
 
-  const FormText(this.text, {Key key}) : super(key: key);
+  const FormText(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class FormText extends StatelessWidget {
       style: Theme.of(context)
           .textTheme
           .subtitle1
-          .apply(color: Theme.of(context).hintColor),
+          ?.apply(color: Theme.of(context).hintColor),
     );
   }
 }

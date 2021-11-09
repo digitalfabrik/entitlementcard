@@ -7,9 +7,9 @@ import '../../graphql/graphql_api.dart';
 import '../textwidgets/form_header_text.dart';
 
 class Organization extends StatelessWidget {
-  final OrganizationInput organizationInput;
+  final OrganizationInput? organizationInput;
 
-  const Organization({Key key, this.organizationInput}) : super(key: key);
+  const Organization({Key? key, this.organizationInput}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

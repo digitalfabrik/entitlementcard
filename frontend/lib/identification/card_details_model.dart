@@ -6,10 +6,10 @@ import 'card_details.dart';
 import 'persistence/card_details_store.dart';
 
 class CardDetailsModel extends ChangeNotifier {
-  CardDetails _cardDetails;
+  CardDetails? _cardDetails;
   bool _isInitialized = false;
 
-  CardDetails get cardDetails {
+  CardDetails? get cardDetails {
     return _cardDetails;
   }
 

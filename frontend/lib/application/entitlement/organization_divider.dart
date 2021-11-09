@@ -5,9 +5,9 @@ class OrganizationDivider extends StatelessWidget {
   final VoidCallback onOrganisationDeleted;
 
   const OrganizationDivider({
-    Key key,
-    this.title,
-    this.onOrganisationDeleted,
+    Key? key,
+    required this.title,
+    required this.onOrganisationDeleted,
   }) : super(key: key);
 
   @override

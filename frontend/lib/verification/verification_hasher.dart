@@ -21,7 +21,10 @@ String hashVerificationCardDetails(
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
   var buffer = Uint8List(16).buffer;
   var data = ByteData.view(buffer);
-  data.setInt64(0, cardDetails.unixExpirationDate, Endian.little);
+  var unixExpirationDate = cardDetails.unixExpirationDate;
+  if (unixExpirationDate != null) {
+    data.setInt64(0, unixExpirationDate, Endian.little);
+  }
   data.setInt32(8, cardDetails.cardType.index, Endian.little);
   data.setInt32(12, cardDetails.regionId, Endian.little);
 

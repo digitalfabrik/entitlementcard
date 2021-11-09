@@ -8,7 +8,8 @@ import 'application_model.dart';
 class EntitlementTypeGold extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const EntitlementTypeGold({Key key, this.formKey}) : super(key: key);
+  const EntitlementTypeGold({Key? key, required this.formKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,11 @@ class EntitlementTypeGold extends StatelessWidget {
                 name: 'card_type',
                 initialValue: applicationModel
                     .goldenCardApplication?.entitlement?.goldenEntitlementType,
-                onSaved: (value) =>
-                    applicationModel.initGoldenCardEntitlement(value),
+                onSaved: (GoldenCardEntitlementType? value) {
+                  if (value != null) {
+                    applicationModel.initGoldenCardEntitlement(value);
+                  }
+                },
                 validator: FormBuilderValidators.compose(
                     [FormBuilderValidators.required(context)]),
                 options: const [

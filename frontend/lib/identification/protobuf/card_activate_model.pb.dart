@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: card_activate_model.proto
 //
-// @dart = 2.7
+// @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
 import 'dart:core' as $core;
@@ -27,12 +27,12 @@ class CardActivateModel extends $pb.GeneratedMessage {
 
   CardActivateModel._() : super();
   factory CardActivateModel({
-    $core.String fullName,
-    $fixnum.Int64 expirationDate,
-    CardActivateModel_CardType cardType,
-    $core.int regionId,
-    $core.List<$core.int> totpSecret,
-    $core.List<$core.int> hashSecret,
+    $core.String? fullName,
+    $fixnum.Int64? expirationDate,
+    CardActivateModel_CardType? cardType,
+    $core.int? regionId,
+    $core.List<$core.int>? totpSecret,
+    $core.List<$core.int>? hashSecret,
   }) {
     final _result = create();
     if (fullName != null) {
@@ -66,7 +66,7 @@ class CardActivateModel extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  CardActivateModel copyWith(void Function(CardActivateModel) updates) => super.copyWith((message) => updates(message as CardActivateModel)); // ignore: deprecated_member_use
+  CardActivateModel copyWith(void Function(CardActivateModel) updates) => super.copyWith((message) => updates(message as CardActivateModel)) as CardActivateModel; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static CardActivateModel create() => CardActivateModel._();
@@ -74,7 +74,7 @@ class CardActivateModel extends $pb.GeneratedMessage {
   static $pb.PbList<CardActivateModel> createRepeated() => $pb.PbList<CardActivateModel>();
   @$core.pragma('dart2js:noInline')
   static CardActivateModel getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardActivateModel>(create);
-  static CardActivateModel _defaultInstance;
+  static CardActivateModel? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get fullName => $_getSZ(0);

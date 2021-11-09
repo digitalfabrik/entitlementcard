@@ -11,11 +11,11 @@ class MapWithFutures extends StatelessWidget {
   final List<String> onFeatureClickLayerFilter;
 
   const MapWithFutures(
-      {Key key,
-      this.onNoFeatureClick,
-      this.onFeatureClick,
-      this.onFeatureClickLayerFilter,
-      this.onMapCreated})
+      {Key? key,
+      required this.onNoFeatureClick,
+      required this.onFeatureClick,
+      required this.onFeatureClickLayerFilter,
+      required this.onMapCreated})
       : super(key: key);
 
   @override
@@ -25,8 +25,8 @@ class MapWithFutures extends StatelessWidget {
           const Duration(milliseconds: 400),
           onTimeout: () => RequestedPosition.unknown()),
       builder: (context, AsyncSnapshot<RequestedPosition> snapshot) {
-        if (!snapshot.hasData) {
-          return const SmallButtonSpinner();
+        if (!snapshot.hasData && !snapshot.hasError) {
+          return const Center();
         }
 
         var position = snapshot.data;
@@ -34,8 +34,8 @@ class MapWithFutures extends StatelessWidget {
         return Map(
           onFeatureClick: onFeatureClick,
           onNoFeatureClick: onNoFeatureClick,
-          locationAvailable: position.isAvailable(),
-          userLocation: position.toLatLng(),
+          locationAvailable: position?.isAvailable() ?? false,
+          userLocation: position?.toLatLng(),
           onFeatureClickLayerFilter: onFeatureClickLayerFilter,
           onMapCreated: onMapCreated,
         );

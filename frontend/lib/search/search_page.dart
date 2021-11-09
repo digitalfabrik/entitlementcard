@@ -9,70 +9,74 @@ import 'location_button.dart';
 import 'results_loader.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key key}) : super(key: key);
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String _searchFieldText;
-  TextEditingController _textEditingController;
+  String? _searchFieldText;
+  TextEditingController? _textEditingController;
   final List<CategoryAsset> _selectedCategories = [];
   final _debouncer = Debouncer(delay: const Duration(milliseconds: 50));
-  FocusNode _focusNode;
-  CoordinatesInput _coordinates;
+  FocusNode? _focusNode;
+  CoordinatesInput? _coordinates;
 
   @override
   Widget build(BuildContext context) {
     const appBarTextStyle = TextStyle(color: Colors.white);
+    var textEditingController = _textEditingController;
+    var searchFieldText = _searchFieldText;
+    var currentCoordinatesInput = _coordinates;
     return Stack(children: [
-      CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-            title: TextField(
-              onChanged: _onSearchFieldTextChanged,
-              controller: _textEditingController,
-              focusNode: _focusNode,
-              decoration: const InputDecoration.collapsed(
-                hintText: "Tippen, um zu suchen …",
-                hintStyle: appBarTextStyle,
+      if (textEditingController != null)
+        CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              title: TextField(
+                onChanged: _onSearchFieldTextChanged,
+                controller: textEditingController,
+                focusNode: _focusNode,
+                decoration: const InputDecoration.collapsed(
+                  hintText: "Tippen, um zu suchen …",
+                  hintStyle: appBarTextStyle,
+                ),
+                cursorColor: Colors.white,
+                style: appBarTextStyle,
               ),
-              cursorColor: Colors.white,
-              style: appBarTextStyle,
-            ),
-            pinned: true,
-            actions: [
-              if (_textEditingController.value.text.isNotEmpty)
+              pinned: true,
+              actions: [
+                if (textEditingController.value.text.isNotEmpty)
+                  IconButton(
+                      icon: const Icon(Icons.clear), onPressed: _clearInput),
                 IconButton(
-                    icon: const Icon(Icons.clear), onPressed: _clearInput),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _onSearchPressed,
-              )
-            ],
-          ),
-          FilterBar(onCategoryPress: _onCategoryPress),
-          SliverToBoxAdapter(
-              child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(children: [
-                    Text(
-                      "Suchresultate".toUpperCase(),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Divider()))
-                  ]))),
-          ResultsLoader(
-              searchText: _searchFieldText,
-              categoryIds: _selectedCategories.map((e) => e.id).toList(),
-              coordinates: _coordinates)
-        ],
-      ),
+                  icon: const Icon(Icons.search),
+                  onPressed: _onSearchPressed,
+                )
+              ],
+            ),
+            FilterBar(onCategoryPress: _onCategoryPress),
+            SliverToBoxAdapter(
+                child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(children: [
+                      Text(
+                        "Suchresultate".toUpperCase(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const Expanded(
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Divider()))
+                    ]))),
+            ResultsLoader(
+                searchText: searchFieldText,
+                categoryIds: _selectedCategories.map((e) => e.id).toList(),
+                coordinates: currentCoordinatesInput)
+          ],
+        ),
       LocationButton(
         setCoordinates: (position) => setState(() => _coordinates =
             CoordinatesInput(lat: position.latitude, lng: position.longitude)),
@@ -97,15 +101,27 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   _clearInput() {
-    _textEditingController.clear();
-    _onSearchFieldTextChanged(_textEditingController.value.text);
+    final textEditingController = _textEditingController;
+
+    if (textEditingController == null) {
+      return;
+    }
+
+    textEditingController.clear();
+    _onSearchFieldTextChanged(textEditingController.value.text);
   }
 
   _onSearchPressed() {
-    if (_focusNode.hasPrimaryFocus) {
-      _focusNode.nextFocus();
+    final focusNode = _focusNode;
+
+    if (focusNode == null) {
+      return;
+    }
+
+    if (focusNode.hasPrimaryFocus) {
+      focusNode.nextFocus();
     } else {
-      _focusNode.requestFocus();
+      focusNode.requestFocus();
     }
   }
 
@@ -118,8 +134,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
-    _textEditingController.dispose();
-    _focusNode.dispose();
+    _textEditingController?.dispose();
+    _focusNode?.dispose();
     super.dispose();
   }
 }

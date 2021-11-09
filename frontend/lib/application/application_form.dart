@@ -12,7 +12,7 @@ import 'summary_step.dart';
 import 'textwidgets/step_title_text.dart';
 
 class ApplicationForm extends StatefulWidget {
-  const ApplicationForm({Key key}) : super(key: key);
+  const ApplicationForm({Key? key}) : super(key: key);
 
   @override
   _ApplicationFormState createState() => _ApplicationFormState();
@@ -26,7 +26,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
   bool _sendingSuccessful = false;
 
   int _currentStep = 0;
-  GraphQLClient _client;
+  GraphQLClient? _client;
 
   @override
   void didChangeDependencies() {
@@ -107,9 +107,15 @@ class _ApplicationFormState extends State<ApplicationForm> {
     // can go forward by tapping only if the forms in between are valid
     if (step > _currentStep) {
       for (var i = _currentStep; i < step; i++) {
-        if (!_formKeys[i].currentState.validate()) return;
+        var currentState = _formKeys[i].currentState;
+        
+        if (currentState == null) {
+          continue;
+        }
+        
+        if (!currentState.validate()) return;
         if (i == _currentStep) {
-          _formKeys[i].currentState.save();
+          currentState.save();
         }
       }
     }
@@ -117,8 +123,13 @@ class _ApplicationFormState extends State<ApplicationForm> {
   }
 
   void _onStepContinued() {
-    if (_formKeys[_currentStep].currentState.validate()) {
-      _formKeys[_currentStep].currentState.save();
+    var currentState = _formKeys[_currentStep].currentState;
+    if (currentState == null) {
+      return;
+    }
+    
+    if (currentState.validate()) {
+      currentState.save();
       if (_currentStep < _lastStep) {
         setState(() => _currentStep++);
       } else if (!_sendingInProgress) {

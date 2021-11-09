@@ -6,14 +6,16 @@ class AppFlowsStack extends StatelessWidget {
   final int currentIndex;
   final List<AppFlow> appFlows;
 
-  const AppFlowsStack({Key key, this.currentIndex, this.appFlows}) : super(key: key);
+  const AppFlowsStack({Key? key, required this.currentIndex, required this.appFlows}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async =>
-          // do not pop if the inner navigator can handle it
-          !await appFlows[currentIndex].navigatorKey.currentState.maybePop(),
+      onWillPop: () async {
+        final currentState = appFlows[currentIndex].navigatorKey.currentState;
+        final currentStatePopped = await currentState?.maybePop() ?? false;
+        return !currentStatePopped;
+      },
       child: IndexedStack(
         index: currentIndex,
         children: _buildChildren(),

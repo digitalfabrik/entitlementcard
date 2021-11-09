@@ -13,7 +13,7 @@ class DetailView extends StatelessWidget {
   final bool hideShowOnMapButton;
 
   const DetailView(this._acceptingStoreId,
-      {Key key, this.hideShowOnMapButton = false})
+      {Key? key, this.hideShowOnMapButton = false})
       : super(key: key);
 
   @override
@@ -27,19 +27,21 @@ class DetailView extends StatelessWidget {
             variables: byIdQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           try {
-            if (result.hasException) {
-              throw result.exception;
+            var exception = result.exception;
+            if (result.hasException && exception != null) {
+              throw exception;
             }
+            var data = result.data;
 
-            if (result.isLoading) {
+            if (result.isLoading || data == null) {
               return const DetailLayout(body: LinearProgressIndicator());
             }
-            final matchingStores =
-                byIdQuery.parse(result.data).physicalStoresById;
+
+            final matchingStores = byIdQuery.parse(data).physicalStoresById;
             if (matchingStores.isEmpty) {
               throw ArgumentError("Store not found.");
             }
-            final categoryId = matchingStores.first?.store?.category?.id;
+            final categoryId = matchingStores.first.store.category.id;
             final accentColor = getDarkenedColorForCategory(categoryId);
             return DetailLayout(
               title: matchingStores.first.store.name ?? "Akzeptanzstelle",
@@ -59,7 +61,7 @@ class DetailView extends StatelessWidget {
         });
   }
 
-  Widget _errorMessage(String message, Function refetch) {
+  Widget _errorMessage(String message, Future<QueryResult?> Function()? refetch) {
     return DetailLayout(
         title: "",
         body: InkWell(

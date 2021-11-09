@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:base32/base32.dart';
 
@@ -21,10 +22,11 @@ class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
 }
 
 class QRCodeInvalidFormatException extends QrCodeParseException {
-  final Exception cause;
-  final StackTrace stackTrace;
-  QRCodeInvalidFormatException([this.cause, this.stackTrace]) :
-        super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
+  final Exception? cause;
+  final StackTrace? stackTrace;
+
+  QRCodeInvalidFormatException([this.cause, this.stackTrace])
+      : super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
 }
 
 class IdentificationQrContentParser {
@@ -51,7 +53,7 @@ class IdentificationQrContentParser {
     }
 
     final unixInt64ExpirationDate = cardActivateModel.expirationDate;
-    int unixExpirationDate;
+    int? unixExpirationDate;
     if (unixInt64ExpirationDate != null && unixInt64ExpirationDate > 0) {
       try {
         unixExpirationDate = unixInt64ExpirationDate.toInt();
@@ -69,9 +71,10 @@ class IdentificationQrContentParser {
     if (!cardActivateModel.hasTotpSecret()) {
       throw QrCodeFieldMissingException("totpSecret");
     }
-    String base32TotpSecret;
+    String? base32TotpSecret;
     try {
-      base32TotpSecret = base32.encode(cardActivateModel.totpSecret);
+      base32TotpSecret = base32.encode(Uint8List.fromList(cardActivateModel
+          .totpSecret));
     } on Exception catch (_) {
       throw QRCodeInvalidTotpSecretException();
     }

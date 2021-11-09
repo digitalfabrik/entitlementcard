@@ -16,7 +16,7 @@ final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
     1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class DevSettingsView extends StatelessWidget {
-  const DevSettingsView({Key key}) : super(key: key);
+  const DevSettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class DevSettingsView extends StatelessWidget {
     var blueCardEntitlement = BlueCardEntitlementInput(
         entitlementType: BlueCardEntitlementType.standard,
         workAtOrganizations: <WorkAtOrganizationInput>[]);
-    blueCardEntitlement.workAtOrganizations.add(workAtOrganization);
+    blueCardEntitlement.workAtOrganizations!.add(workAtOrganization);
     var blueCardApplicationInput = BlueCardApplicationInput(
         applicationType: ApplicationType.firstApplication,
         entitlement: blueCardEntitlement,

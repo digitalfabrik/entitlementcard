@@ -8,7 +8,7 @@ import 'models.dart';
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {Key key}) : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,19 @@ class AcceptingStorePreview extends StatelessWidget {
             document: query.document, variables: query.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           try {
-            if (result.hasException) {
-              throw result.exception;
+            final exception = result.exception;
+            
+            if (result.hasException && exception != null) {
+              throw exception;
             }
-            if (result.isLoading) {
+            
+            final fetchedData = result.data;
+            
+            if (result.isLoading || fetchedData == null) {
               return const AcceptingStorePreviewCard(isLoading: true);
             }
-            var stores = query.parse(result.data).physicalStoresById;
+            
+            var stores = query.parse(fetchedData).physicalStoresById;
             if (stores.isEmpty) {
               throw Exception("ID not found");
             }

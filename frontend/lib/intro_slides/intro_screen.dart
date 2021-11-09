@@ -9,9 +9,9 @@ import 'location_request_button.dart';
 typedef OnFinishedCallback = void Function();
 
 class IntroScreen extends StatefulWidget {
-  final OnFinishedCallback onFinishedCallback;
+  final OnFinishedCallback? onFinishedCallback;
 
-  const IntroScreen({Key key, this.onFinishedCallback}) : super(key: key);
+  const IntroScreen({Key? key, this.onFinishedCallback}) : super(key: key);
 
   @override
   IntroScreenState createState() => IntroScreenState();
@@ -35,7 +35,7 @@ class IntroScreenState extends State<IntroScreen> {
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
           styleDescription:
-              theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2)),
+              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
@@ -51,7 +51,7 @@ class IntroScreenState extends State<IntroScreen> {
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
           styleDescription:
-              theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2)),
+              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
@@ -69,7 +69,7 @@ class IntroScreenState extends State<IntroScreen> {
                 " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
                 "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre "
                 "Zustimmung. Ihr Standort wird nicht gespeichert.",
-                style: theme.textTheme.bodyText1.apply(fontSizeFactor: 1.2),
+                style: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2),
                 textAlign: TextAlign.center,
                 maxLines: 100,
                 overflow: TextOverflow.ellipsis,
@@ -84,8 +84,9 @@ class IntroScreenState extends State<IntroScreen> {
   }
 
   void onDonePress() {
-    if (widget.onFinishedCallback != null) {
-      widget.onFinishedCallback();
+    var onFinishedCallback = widget.onFinishedCallback;
+    if (onFinishedCallback != null) {
+      onFinishedCallback();
     }
     Navigator.of(context).pop();
   }

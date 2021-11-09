@@ -9,7 +9,7 @@ import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
 
 class EntryWidget extends StatelessWidget {
-  const EntryWidget({Key key}) : super(key: key);
+  const EntryWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,10 @@ class EntryWidget extends StatelessWidget {
             return Container();
           }
           final routes = <String, WidgetBuilder>{};
-          String initialRoute;
-          if (!snapshot.hasError && snapshot.hasData && snapshot.data) {
+          String? initialRoute;
+          if (!snapshot.hasError &&
+              snapshot.hasData &&
+              (snapshot.data ?? false)) {
             routes.addAll(<String, WidgetBuilder>{
               '/intro': (context) => const IntroScreen(
                     onFinishedCallback: setFirstStart,
@@ -30,6 +32,7 @@ class EntryWidget extends StatelessWidget {
             });
             initialRoute = '/intro';
           }
+
           return MaterialApp(
               title: 'Ehrenamtskarte',
               theme: lightTheme,

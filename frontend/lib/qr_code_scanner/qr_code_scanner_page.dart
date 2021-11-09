@@ -6,34 +6,36 @@ import 'qr_code_scanner.dart';
 typedef OnHelpClickedCallback = void Function();
 
 class QrCodeScannerPage extends StatelessWidget {
-  final OnCodeScannedCallback onCodeScanned;
-  final OnHelpClickedCallback onHelpClicked;
+  final OnCodeScannedCallback? onCodeScanned;
+  final OnHelpClickedCallback? onHelpClicked;
   final String title;
 
-  const QrCodeScannerPage({Key key, @required this.onCodeScanned,
-    @required this.title, this.onHelpClicked})
+  const QrCodeScannerPage(
+      {Key? key, this.onCodeScanned, required this.title, this.onHelpClicked})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var currentOnHelpClicked = onHelpClicked;
     return Scaffold(
-          appBar: AppBar(
+        appBar: AppBar(
           title: Text(title),
           actions: [
-            if (onHelpClicked != null)
-              IconButton(icon: const Icon(Icons.help), onPressed: onHelpClicked)
+            if (currentOnHelpClicked != null)
+              IconButton(
+                  icon: const Icon(Icons.help), onPressed: currentOnHelpClicked)
           ],
-      ),
-      body: QrCodeScanner(
-        onCodeScanned: (code) async => await _onCodeScanned(context, code),
-      )
-    );
+        ),
+        body: QrCodeScanner(
+          onCodeScanned: (code) async => await _onCodeScanned(context, code),
+        ));
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
+    var currentOnCodeScanned = onCodeScanned;
     try {
-      if (onCodeScanned != null) {
-        await onCodeScanned(code);
+      if (currentOnCodeScanned != null) {
+        await currentOnCodeScanned(code);
       }
     } on QrCodeParseException catch (e, stackTrace) {
       debugPrintStack(stackTrace: stackTrace, label: e?.toString());

@@ -6,7 +6,7 @@ Future<bool> isFirstStart() async {
   try {
     final sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.containsKey("firstStart")) {
-      return sharedPreferences.getBool("firstStart");
+      return sharedPreferences.getBool("firstStart") ?? false;
     } else {
       return true;
     }

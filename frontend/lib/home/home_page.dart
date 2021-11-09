@@ -10,9 +10,11 @@ import 'app_flows_stack.dart';
 class HomePage extends StatefulWidget {
   final bool showVerification;
 
-  const HomePage({Key key, this.showVerification}) : super(key: key);
+  const HomePage({Key? key, required this.showVerification}) : super(key: key);
 
-  static _HomePageData of(BuildContext context) => _HomePageData.of(context);
+  static _HomePageData? of(BuildContext context) {
+    return _HomePageData.of(context);
+  }
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,10 +22,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
-  MapPageController mapPageController;
+  MapPageController? mapPageController;
 
-  MapPage mapPage;
-  List<AppFlow> appFlows;
+  late MapPage mapPage;
+  late List<AppFlow> appFlows;
 
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       AppFlow(const SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
       if (widget.showVerification)
-        AppFlow(const IdentificationPage(), Icons.remove_red_eye_outlined,
+        AppFlow(const IdentificationPage(title: "Ausweisen"), Icons.remove_red_eye_outlined,
             "Ausweisen", GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
       AppFlow(const AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
@@ -82,17 +84,23 @@ class _HomePageState extends State<HomePage> {
         appFlows[_currentTabIndex]
             .navigatorKey
             .currentState
-            .popUntil((route) => route.isFirst);
+            ?.popUntil((route) => route.isFirst);
       }
     });
   }
 
-  void _goToMap([PhysicalStoreFeatureData idWithCoordinates]) {
+  void _goToMap([PhysicalStoreFeatureData? idWithCoordinates]) {
+    var currentMapPageController = mapPageController;
+    
+    if (currentMapPageController == null) {
+      return;
+    }
+    
     setState(() {
       _currentTabIndex = 0;
     });
     if (idWithCoordinates != null) {
-      mapPageController.showAcceptingStore(idWithCoordinates);
+      currentMapPageController.showAcceptingStore(idWithCoordinates);
     }
   }
 }
@@ -100,10 +108,10 @@ class _HomePageState extends State<HomePage> {
 class _HomePageData extends InheritedWidget {
   final Function goToMap;
 
-  const _HomePageData({Key key, this.goToMap, Widget child})
+  const _HomePageData({Key? key, required this.goToMap, required Widget child})
       : super(key: key, child: child);
 
-  static _HomePageData of(BuildContext context) {
+  static _HomePageData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_HomePageData>();
   }
 

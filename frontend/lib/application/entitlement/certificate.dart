@@ -10,13 +10,13 @@ class Certificate extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
   final String title;
 
-  const Certificate({Key key, this.formKey, this.title}) : super(key: key);
+  const Certificate({Key? key, required this.formKey, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var applicationModel =
         Provider.of<ApplicationModel>(context, listen: false);
-    var entitlement = applicationModel.goldenCardApplication.entitlement;
+    var entitlement = applicationModel.goldenCardApplication?.entitlement;
     return FormBuilder(
         key: formKey,
         child: Column(
@@ -30,11 +30,13 @@ class Certificate extends StatelessWidget {
               validator: FormBuilderValidators.required(context),
               maxImages: 1,
               iconColor: Theme.of(context).colorScheme.primary,
-              initialValue: entitlement.certificate != null
+              initialValue: entitlement?.certificate != null
                   ? [applicationModel.attachment]
                   : [],
               onSaved: (value) => {
-                applicationModel.attachment = value.first,
+                if (value != null) {
+                  applicationModel.attachment = value.first,
+                }
               },
             ),
           ],

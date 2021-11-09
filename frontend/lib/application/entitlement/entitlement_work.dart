@@ -9,7 +9,7 @@ class EntitlementWork extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
   final List<WorkAtOrganizationInput> workAtOrganizations;
 
-  const EntitlementWork({Key key, this.formKey, this.workAtOrganizations})
+  const EntitlementWork({Key? key, required this.formKey, required this.workAtOrganizations})
       : super(key: key);
 
   @override

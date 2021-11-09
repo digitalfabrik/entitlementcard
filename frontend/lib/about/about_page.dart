@@ -9,17 +9,24 @@ import 'dev_settings_view.dart';
 import 'texts.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key key}) : super(key: key);
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var config = Configuration.of(context);
+
+    if (config == null) {
+      throw Exception("Could not find configuration in component tree.");
+    }
+
     return NonMaterialPage(
+      overlayStyle: null,
       child: FutureBuilder<PackageInfo>(
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
             List<Widget> children;
-            if (snapshot.hasData) {
+            var packageInfo = snapshot.data;
+            if (snapshot.hasData && packageInfo != null) {
               children = [
                 Container(height: 20),
                 Center(
@@ -37,11 +44,11 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: Text(snapshot.data.appName,
+                  child: Text(packageInfo.appName,
                       style: Theme.of(context).textTheme.headline5),
                 ),
                 Center(
-                  child: Text(snapshot.data.version,
+                  child: Text(packageInfo.version,
                       style: Theme.of(context).textTheme.bodyText2),
                 ),
                 const Divider(
@@ -58,14 +65,14 @@ class AboutPage extends StatelessWidget {
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 10, right: 10, top: 10),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 10),
                           child: Text(publisherAddress,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
                         Text(
                           "Mehr Informationen",
-                          style: Theme.of(context).textTheme.bodyText2.merge(
+                          style: Theme.of(context).textTheme.bodyText2?.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.secondary)),

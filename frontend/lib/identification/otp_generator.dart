@@ -11,7 +11,7 @@ class OTPGenerator {
 
   OTPGenerator(this._base32TotpSecret);
 
-  OTPCode generateOTP([VoidCallback onTimeout]) {
+  OTPCode generateOTP([VoidCallback? onTimeout]) {
     final time = DateTime.now().millisecondsSinceEpoch;
     const intervalMilliSeconds = _otpIntervalSeconds * 1000;
     final validUntilMilliSeconds =

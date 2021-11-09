@@ -5,16 +5,16 @@ import '../../category_assets.dart';
 import '../../util/color_utils.dart';
 
 class DetailLayout extends StatelessWidget {
-  final String title;
+  final String? title;
   final Widget body;
-  final int categoryId;
-  final String categoryName;
-  final Color accentColor;
+  final int? categoryId;
+  final String? categoryName;
+  final Color? accentColor;
 
   const DetailLayout(
-      {Key key,
+      {Key? key,
       this.title,
-      this.body,
+      required this.body,
       this.categoryId,
       this.categoryName,
       this.accentColor})
@@ -40,7 +40,8 @@ class DetailLayout extends StatelessWidget {
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(75.0),
             child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 alignment: Alignment.bottomLeft,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,7 @@ class DetailLayout extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodyText2
-                            .apply(color: textColorGrey),
+                            ?.apply(color: textColorGrey),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -59,7 +60,7 @@ class DetailLayout extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .headline6
-                            .apply(color: textColor),
+                            ?.apply(color: textColor),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       )
@@ -75,16 +76,19 @@ class DetailLayout extends StatelessWidget {
     );
   }
 
-  Widget _headerImageForCategory() {
-    if (categoryId == null ||
-        categoryId > categoryAssets.length ||
-        categoryAssets[categoryId].detailIcon == null) {
-      return null;
+  Widget? _headerImageForCategory() {
+    var currentCategoryId = categoryId;
+    if (currentCategoryId != null &&
+        currentCategoryId > categoryAssets.length) {
+      var currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
+      if (currentDetailIcon != null) {
+        return SvgPicture.asset(
+          currentDetailIcon,
+          semanticsLabel: 'Header',
+          alignment: Alignment.bottomRight,
+        );
+      }
     }
-    return SvgPicture.asset(
-      categoryAssets[categoryId].detailIcon,
-      semanticsLabel: 'Header',
-      alignment: Alignment.bottomRight,
-    );
+    return null;
   }
 }

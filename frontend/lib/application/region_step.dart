@@ -12,7 +12,7 @@ import 'textwidgets/form_header_text.dart';
 class RegionStep extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
 
-  const RegionStep({Key key, this.formKey}) : super(key: key);
+  const RegionStep({Key? key, required this.formKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,11 @@ class RegionStep extends StatelessWidget {
             document: regionsQuery.document,
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {fetchMore, refetch}) {
-          var regions = result.isLoading || result.hasException
-              ? []
-              : regionsQuery.parse(result.data)?.regions;
+          final data = result.data;
+          List<GetRegions$Query$Region> regions =
+              result.isLoading || result.hasException || data == null
+                  ? []
+                  : regionsQuery.parse(data).regions;
           return FormBuilder(
               key: formKey,
               child: Column(
@@ -40,7 +42,9 @@ class RegionStep extends StatelessWidget {
                     validator: FormBuilderValidators.required(context),
                     enabled: !result.isLoading && !result.hasException,
                     initialValue: applicationModel.regionId,
-                    onSaved: (value) => {applicationModel.regionId = value},
+                    onSaved: (int? value) {
+                      applicationModel.regionId = value;
+                    },
                     decoration: InputDecoration(
                         labelText: result.isLoading
                             ? 'Regionen werden geladen …'

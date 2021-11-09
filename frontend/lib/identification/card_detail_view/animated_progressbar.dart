@@ -6,7 +6,7 @@ class AnimatedProgressbar extends StatefulWidget {
   final Duration initialProgress;
   static const Duration totalDuration = Duration(seconds: 30);
 
-  const AnimatedProgressbar({Key key, this.initialProgress})
+  const AnimatedProgressbar({Key? key, required this.initialProgress})
       : super(key: key);
 
   @override
@@ -15,8 +15,8 @@ class AnimatedProgressbar extends StatefulWidget {
 
 class _AnimatedProgressbarState extends State<AnimatedProgressbar>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation<double> animation;
+  late AnimationController controller;
+  late Animation<double> animation;
 
   @override
   void initState() {
@@ -43,17 +43,16 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar>
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: RectangularProgressIndicatorPainter(
-        valueColor: Theme.of(context).colorScheme.secondary,
-        value: animation?.value ?? 0.0,
-      )
-    );
+        painter: RectangularProgressIndicatorPainter(
+      valueColor: Theme.of(context).colorScheme.secondary,
+      value: animation.value,
+    ));
   }
 }

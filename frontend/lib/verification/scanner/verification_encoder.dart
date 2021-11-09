@@ -12,7 +12,7 @@ String encodeVerificationCardDetails(
 
   final cardVerifyModel = CardVerifyModel(
     fullName: cardDetails.fullName,
-    expirationDate: Int64(cardDetails.unixExpirationDate),
+    expirationDate: Int64(cardDetails.unixExpirationDate ?? 0),
     cardType: CardVerifyModel_CardType.valueOf(cardDetails.cardType.index),
     regionId: cardDetails.regionId,
     hashSecret: const Base64Decoder().convert(cardDetails.hashSecretBase64),

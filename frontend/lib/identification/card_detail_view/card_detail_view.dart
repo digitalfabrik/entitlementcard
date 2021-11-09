@@ -15,11 +15,11 @@ class CardDetailView extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startEakApplication;
 
-  const CardDetailView({Key key,
-    this.cardDetails,
-    this.startActivateEak,
-    this.startVerification,
-    this.startEakApplication})
+  const CardDetailView({Key? key,
+    required this.cardDetails,
+    required this.startActivateEak,
+    required this.startVerification,
+    required this.startEakApplication})
       : super(key: key);
 
   @override
@@ -34,10 +34,12 @@ class CardDetailView extends StatelessWidget {
             variables: regionsQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           var orientation = MediaQuery.of(context).orientation;
+          
+          final fetchedData = result.data;
 
-          var region = result.isLoading || result.hasException
+          var region = result.isLoading || result.hasException || fetchedData == null
               ? null
-              : regionsQuery.parse(result.data)?.regionsById[0];
+              : regionsQuery.parse(fetchedData).regionsById[0];
 
           var eakCard = Padding(
               padding: const EdgeInsets.all(8.0),
@@ -97,9 +99,9 @@ class RichQrCode extends StatelessWidget {
   final CardDetails cardDetails;
   final bool compact;
 
-  const RichQrCode({Key key,
-    this.onMoreActionsPressed,
-    this.cardDetails,
+  const RichQrCode({Key? key,
+    required this.onMoreActionsPressed,
+    required this.cardDetails,
     this.compact = false})
       : super(key: key);
 

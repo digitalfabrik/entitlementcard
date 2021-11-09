@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../configuration/hide_verification_info.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
-  const VerificationInfoDialog({Key key}) : super(key: key);
+  const VerificationInfoDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class VerificationInfoDialog extends StatelessWidget {
   /// Shows a [VerificationInfoDialog].
   /// Returns a future that resolves to true if the user accepted the info,
   /// and to null if the dialog was dismissed.
-  static Future<bool> show(BuildContext context) {
+  static Future<bool?> show(BuildContext context) {
     return showDialog<bool>(
         context: context,
         builder: (_) => const VerificationInfoDialog(),

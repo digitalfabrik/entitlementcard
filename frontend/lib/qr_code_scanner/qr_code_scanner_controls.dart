@@ -13,14 +13,15 @@ class QrCodeScannerControls extends StatelessWidget {
   final StreamController<CameraFacing> cameraStreamController =
       StreamController<CameraFacing>();
 
-  QrCodeScannerControls({@required this.controller, Key key})
-      : super(key: key) {
+  QrCodeScannerControls({Key? key, required this.controller}) : super(key: key) {
     updateFlashStream();
     updateCameraStream();
   }
 
-  Future<void> updateFlashStream() =>
-      controller.getFlashStatus().then(flashStreamController.add);
+  Future<void> updateFlashStream() => controller
+      .getFlashStatus()
+      .then((flashStatus) => flashStreamController.add(flashStatus ?? false));
+
   Future<void> updateCameraStream() =>
       controller.getCameraInfo().then(cameraStreamController.add);
 
@@ -28,45 +29,52 @@ class QrCodeScannerControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<SystemFeatures>(
         future: _tryToGetSystemFeatures(),
-        builder: (context, snapshot) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  if (snapshot.data != null && snapshot.data.hasFlash)
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child: OutlinedButton(
-                          onPressed: () => controller
-                              .toggleFlash()
-                              .whenComplete(updateFlashStream),
-                          child: StreamBuilder<bool>(
-                            stream: flashStreamController.stream,
-                            builder: (ctx, snapshot) => Text(
-                                snapshot.data ?? false
-                                    ? "Blitz aus"
-                                    : "Blitz an",
-                                style: const TextStyle(fontSize: 16)),
-                          )),
-                    ),
-                  if (snapshot.data != null &&
-                      snapshot.data.hasBackCamera &&
-                      snapshot.data.hasFrontCamera)
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child: OutlinedButton(
-                          onPressed: () => controller
-                              .flipCamera()
-                              .whenComplete(updateCameraStream),
-                          child: StreamBuilder<CameraFacing>(
-                            stream: cameraStreamController.stream,
-                            builder: (ctx, snapshot) => Text(
-                                snapshot.data == CameraFacing.back
-                                    ? "Frontkamera"
-                                    : "Standard-Kamera",
-                                style: const TextStyle(fontSize: 16)),
-                          )),
-                    )
-                ]));
+        builder: (context, snapshot) {
+          SystemFeatures? systemFeatures = snapshot.data;
+          
+          if (snapshot.hasData || systemFeatures == null) {
+            return const Center();
+          }
+
+          return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                if (systemFeatures.hasFlash)
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    child: OutlinedButton(
+                        onPressed: () => controller
+                            .toggleFlash()
+                            .whenComplete(updateFlashStream),
+                        child: StreamBuilder<bool>(
+                          stream: flashStreamController.stream,
+                          builder: (ctx, snapshot) => Text(
+                              snapshot.data == null
+                                  ? "Blitz aus"
+                                  : "Blitz an",
+                              style: const TextStyle(fontSize: 16)),
+                        )),
+                  ),
+                if (systemFeatures.hasBackCamera &&
+                    systemFeatures.hasFrontCamera)
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    child: OutlinedButton(
+                        onPressed: () => controller
+                            .flipCamera()
+                            .whenComplete(updateCameraStream),
+                        child: StreamBuilder<CameraFacing>(
+                          stream: cameraStreamController.stream,
+                          builder: (ctx, snapshot) => Text(
+                              snapshot.data == CameraFacing.back
+                                  ? "Frontkamera"
+                                  : "Standard-Kamera",
+                              style: const TextStyle(fontSize: 16)),
+                        )),
+                  )
+              ]);
+        });
   }
 
   Future<SystemFeatures> _tryToGetSystemFeatures() async {

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+/// Manually chosen aspect ratio of a card. Maybe this was determined using
+/// a ruler?
 const creditCardAspectRatio = 86 / 54;
 
 class IdCard extends StatelessWidget {
   final Widget child;
-  final double height;
 
-  const IdCard({Key key, this.child, this.height}) : super(key: key);
+  const IdCard({Key? key, required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
