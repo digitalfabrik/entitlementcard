@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-
 import '../location/determine_position.dart';
 
 class LocationRequestButton extends StatefulWidget {
@@ -11,13 +9,13 @@ class LocationRequestButton extends StatefulWidget {
 }
 
 class _LocationRequestButtonState extends State<LocationRequestButton> {
-  LocationPermission? _locationPermissionStatus;
+  LocationStatus? _locationPermissionStatus;
 
   @override
   void initState() {
     super.initState();
     checkAndRequestLocationPermission(context, requestIfNotGranted: false)
-        .then((LocationPermission permission) => setState(() {
+        .then((LocationStatus permission) => setState(() {
               _locationPermissionStatus = permission;
             }));
   }
@@ -32,31 +30,27 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
 
   @override
   Widget build(BuildContext context) {
-    if (_locationPermissionStatus == null) {
+    var status = _locationPermissionStatus;
+    if (status == null) {
       return const ElevatedButton(
         onPressed: null,
         child: Text("Prüfe Einstellungen..."),
       );
     }
-    switch (_locationPermissionStatus) {
-      case LocationPermission.denied:
+    switch (status) {
+      case LocationStatus.denied:
+      case LocationStatus.deniedForever:
+      case LocationStatus.notSupported:
         return ElevatedButton(
           onPressed: _onLocationButtonClicked,
           child: const Text("Ich möchte meinen Standort freigeben."),
         );
-      case LocationPermission.whileInUse:
-      case LocationPermission.always:
+      case LocationStatus.whileInUse:
+      case LocationStatus.always:
         return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist bereits freigegeben."),
         );
-      case LocationPermission.deniedForever:
-        return const ElevatedButton(
-          onPressed: null,
-          child: Text("Standort ist nicht freigegeben."),
-        );
-      default:
-        return const Text("Ein unerwarteter Fehler ist aufgetreten.");
     }
   }
 }

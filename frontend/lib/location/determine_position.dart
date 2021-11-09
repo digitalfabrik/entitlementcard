@@ -6,6 +6,54 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 import 'location_permission_dialog.dart';
 import 'location_service_dialog.dart';
 
+enum LocationStatus {
+  /// This is the initial state on both Android and iOS, but on Android the
+  /// user can still choose to deny permissions, meaning the App can still
+  /// request for permission another time.
+  denied,
+
+  /// Permission to access the device's location is permenantly denied. When
+  /// requestiong permissions the permission dialog will not been shown until
+  /// the user updates the permission in the App settings.
+  deniedForever,
+
+  /// Permission to access the device's location is allowed only while
+  /// the App is in use.
+  whileInUse,
+
+  /// Permission to access the device's location is allowed even when the
+  /// App is running in the background.
+  always,
+  
+  /// Requesting the location is not supported by this device. On Android
+  /// the reason for this could be that the location service is not
+  /// enabled.
+  notSupported
+}
+
+extension GeolocatorExtension on LocationPermission {
+  LocationStatus toLocationStatus() {
+    switch (this) {
+      case LocationPermission.denied:
+        return LocationStatus.denied;
+      case LocationPermission.deniedForever:
+        return LocationStatus.deniedForever;
+      case LocationPermission.whileInUse:
+        return LocationStatus.whileInUse;
+      case LocationPermission.always:
+        return LocationStatus.always;
+    }
+  }
+}
+
+extension GrantedExtension on LocationStatus {
+  bool isPermissionGranted() {
+    return this == LocationStatus.always ||
+        this == LocationStatus.whileInUse;
+  }
+}
+
+
 class RequestedPosition {
   Position? position;
 
@@ -31,7 +79,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
   final permission = await checkAndRequestLocationPermission(context,
       requestIfNotGranted: requestIfNotGranted);
 
-  if (!_isPermissionGranted(permission)) {
+  if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
   }
 
@@ -46,7 +94,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 ///
 /// When the location services are not enabled then it will return
 /// LocationPermission.deniedForever
-Future<LocationPermission> checkAndRequestLocationPermission(
+Future<LocationStatus> checkAndRequestLocationPermission(
     BuildContext context,
     {bool requestIfNotGranted = true}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -59,7 +107,10 @@ Future<LocationPermission> checkAndRequestLocationPermission(
         await Geolocator.openLocationSettings();
       }
     }
-    return LocationPermission.deniedForever;
+    
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      return LocationStatus.notSupported;
+    }
   }
 
   var permission = await Geolocator.checkPermission();
@@ -71,14 +122,14 @@ Future<LocationPermission> checkAndRequestLocationPermission(
       if (requestedPermission == LocationPermission.deniedForever) {
         await openSettingsToGrantPermissions(context);
       }
-      return requestedPermission;
+      return requestedPermission.toLocationStatus();
     } else if (permission == LocationPermission.deniedForever) {
       await openSettingsToGrantPermissions(context);
-      return permission;
+      return permission.toLocationStatus();
     }
   }
 
-  return permission;
+  return permission.toLocationStatus();
 }
 
 Future<void> openSettingsToGrantPermissions(BuildContext context) async {
@@ -89,7 +140,3 @@ Future<void> openSettingsToGrantPermissions(BuildContext context) async {
   }
 }
 
-bool _isPermissionGranted(LocationPermission permission) {
-  return permission == LocationPermission.always ||
-      permission == LocationPermission.whileInUse;
-}
