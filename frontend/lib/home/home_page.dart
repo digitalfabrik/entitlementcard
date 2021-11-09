@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.showVerification}) : super(key: key);
 
   static _HomePageData? of(BuildContext context) {
-    return _HomePageData.of(context); // FIXME: I changed this
+    return _HomePageData.of(context);
   }
 
   @override

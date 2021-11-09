@@ -105,7 +105,7 @@ class DevSettingsView extends StatelessWidget {
     var blueCardEntitlement = BlueCardEntitlementInput(
         entitlementType: BlueCardEntitlementType.standard,
         workAtOrganizations: <WorkAtOrganizationInput>[]);
-    blueCardEntitlement.workAtOrganizations?.add(workAtOrganization);
+    blueCardEntitlement.workAtOrganizations!.add(workAtOrganization);
     var blueCardApplicationInput = BlueCardApplicationInput(
         applicationType: ApplicationType.firstApplication,
         entitlement: blueCardEntitlement,

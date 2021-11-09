@@ -32,11 +32,6 @@ class EntryWidget extends StatelessWidget {
             });
             initialRoute = '/intro';
           }
-          var config = Configuration.of(context);
-
-          if (config == null) {
-            throw Exception("Config was not found in component tree!");
-          }
 
           return MaterialApp(
               title: 'Ehrenamtskarte',
@@ -54,7 +49,7 @@ class EntryWidget extends StatelessWidget {
               supportedLocales: const [Locale('de')],
               locale: const Locale('de'),
               home: HomePage(
-                showVerification: config.showVerification,
+                showVerification: Configuration.of(context).showVerification,
               ),
               routes: routes);
         });

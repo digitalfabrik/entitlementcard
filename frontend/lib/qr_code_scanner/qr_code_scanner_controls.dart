@@ -30,12 +30,17 @@ class QrCodeScannerControls extends StatelessWidget {
     return FutureBuilder<SystemFeatures>(
         future: _tryToGetSystemFeatures(),
         builder: (context, snapshot) {
-          var systemFeatures = snapshot.data;
+          SystemFeatures? systemFeatures = snapshot.data;
+          
+          if (snapshot.hasData || systemFeatures == null) {
+            return const Center();
+          }
+
           return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                if (systemFeatures != null && systemFeatures.hasFlash)
+                if (systemFeatures.hasFlash)
                   Container(
                     margin: const EdgeInsets.all(8),
                     child: OutlinedButton(
@@ -45,14 +50,13 @@ class QrCodeScannerControls extends StatelessWidget {
                         child: StreamBuilder<bool>(
                           stream: flashStreamController.stream,
                           builder: (ctx, snapshot) => Text(
-                              systemFeatures == null // FIXME: this is always true
+                              snapshot.data == null
                                   ? "Blitz aus"
                                   : "Blitz an",
                               style: const TextStyle(fontSize: 16)),
                         )),
                   ),
-                if (systemFeatures != null &&
-                    systemFeatures.hasBackCamera &&
+                if (systemFeatures.hasBackCamera &&
                     systemFeatures.hasFrontCamera)
                   Container(
                     margin: const EdgeInsets.all(8),
@@ -63,7 +67,7 @@ class QrCodeScannerControls extends StatelessWidget {
                         child: StreamBuilder<CameraFacing>(
                           stream: cameraStreamController.stream,
                           builder: (ctx, snapshot) => Text(
-                              systemFeatures == CameraFacing.back
+                              snapshot.data == CameraFacing.back
                                   ? "Frontkamera"
                                   : "Standard-Kamera",
                               style: const TextStyle(fontSize: 16)),

@@ -23,7 +23,6 @@ List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
   var data = ByteData.view(buffer);
   var unixExpirationDate = cardDetails.unixExpirationDate;
   if (unixExpirationDate != null) {
-    // FIXME: Is this oke not to set it if not available?
     data.setInt64(0, unixExpirationDate, Endian.little);
   }
   data.setInt32(8, cardDetails.cardType.index, Endian.little);

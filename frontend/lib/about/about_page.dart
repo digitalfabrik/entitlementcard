@@ -25,8 +25,8 @@ class AboutPage extends StatelessWidget {
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
             List<Widget> children;
-            if (snapshot.hasData) {
-              var packageInfo = snapshot.data;
+            var packageInfo = snapshot.data;
+            if (snapshot.hasData && packageInfo != null) {
               children = [
                 Container(height: 20),
                 Center(
@@ -43,16 +43,14 @@ class AboutPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (packageInfo != null)
-                  Center(
-                    child: Text(packageInfo.appName,
-                        style: Theme.of(context).textTheme.headline5),
-                  ),
-                if (packageInfo != null)
-                  Center(
-                    child: Text(packageInfo.version,
-                        style: Theme.of(context).textTheme.bodyText2),
-                  ),
+                Center(
+                  child: Text(packageInfo.appName,
+                      style: Theme.of(context).textTheme.headline5),
+                ),
+                Center(
+                  child: Text(packageInfo.version,
+                      style: Theme.of(context).textTheme.bodyText2),
+                ),
                 const Divider(
                   height: 40,
                   thickness: 1,

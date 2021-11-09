@@ -25,8 +25,8 @@ class MapWithFutures extends StatelessWidget {
           const Duration(milliseconds: 400),
           onTimeout: () => RequestedPosition.unknown()),
       builder: (context, AsyncSnapshot<RequestedPosition> snapshot) {
-        if (!snapshot.hasData) {
-          return const SmallButtonSpinner();
+        if (!snapshot.hasData && !snapshot.hasError) {
+          return const Center();
         }
 
         var position = snapshot.data;

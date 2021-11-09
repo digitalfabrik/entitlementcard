@@ -10,17 +10,11 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = Configuration.of(context);
-    
-    if (config == null) {
-      return const Center();
-    }
-    
     final client = ValueNotifier(
       GraphQLClient(
         cache: GraphQLCache(),
         link: Link.from([
-          HttpLink(config.graphqlUrl)
+          HttpLink(Configuration.of(context).graphqlUrl)
         ]),
       ),
     );

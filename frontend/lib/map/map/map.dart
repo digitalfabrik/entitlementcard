@@ -56,12 +56,6 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Widget build(BuildContext context) {
-    final config = Configuration.of(context);
-
-    if (config == null) {
-      return const SmallButtonSpinner();
-    }
-
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = Platform.isIOS
@@ -82,7 +76,7 @@ class _MapState extends State<Map> implements MapController {
         Stack(children: [
           MaplibreMap(
             initialCameraPosition: cameraPosition,
-            styleString: config.mapStyleUrl,
+            styleString: Configuration.of(context).mapStyleUrl,
             // We provide our own attribution menu
             attributionButtonMargins: const math.Point(-100, -100),
             // The Mapbox wordmark must be shown because of legal weirdness

@@ -74,7 +74,7 @@ class IdentificationQrContentParser {
     String? base32TotpSecret;
     try {
       base32TotpSecret = base32.encode(Uint8List.fromList(cardActivateModel
-          .totpSecret)); // FIXME: Changed code here in unsafe migration
+          .totpSecret));
     } on Exception catch (_) {
       throw QRCodeInvalidTotpSecretException();
     }
