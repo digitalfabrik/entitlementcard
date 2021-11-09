@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../location/determine_position.dart';
 
@@ -10,55 +11,49 @@ class LocationRequestButton extends StatefulWidget {
 }
 
 class _LocationRequestButtonState extends State<LocationRequestButton> {
-  _LocationStatus _locationStatus = _LocationStatus.loading;
+  LocationPermission _locationPermissionStatus;
 
   _LocationRequestButtonState() {
-    checkQuietIfLocationIsEnabled().then(_setInitialLocationStatus);
+    checkAndRequestLocationPermission(context, requestIfNotGranted: false)
+        .then(_setInitialLocationStatus);
   }
 
-  void _setInitialLocationStatus(bool isLocationEnabled) {
+  void _setInitialLocationStatus(LocationPermission permission) {
     setState(() {
-      _locationStatus = isLocationEnabled
-          ? _LocationStatus.approved
-          : _LocationStatus.notApproved;
+      _locationPermissionStatus = permission;
     });
   }
 
   void _onLocationButtonClicked() async {
-    _LocationStatus newStatus;
-    try {
-      await requestPermissionToDeterminePosition(userInteractContext: context);
-      newStatus = _LocationStatus.approved;
-    } on PositionNotAvailableException {
-      newStatus = _LocationStatus.denied;
-    }
+    final permission = await checkAndRequestLocationPermission(context);
     setState(() {
-      _locationStatus = newStatus;
+      _locationPermissionStatus = permission;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (_locationStatus) {
-      case _LocationStatus.loading:
-        return const ElevatedButton(
-          onPressed: null,
-          child: Text("Prüfe Einstellungen..."),
-        );
-        break;
-      case _LocationStatus.notApproved:
+    if (_locationPermissionStatus == null) {
+      return const ElevatedButton(
+        onPressed: null,
+        child: Text("Prüfe Einstellungen..."),
+      );
+    }
+    switch (_locationPermissionStatus) {
+      case LocationPermission.denied:
         return ElevatedButton(
           onPressed: _onLocationButtonClicked,
           child: const Text("Ich möchte meinen Standort freigeben."),
         );
         break;
-      case _LocationStatus.approved:
+      case LocationPermission.whileInUse:
+      case LocationPermission.always:
         return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist bereits freigegeben."),
         );
         break;
-      case _LocationStatus.denied:
+      case LocationPermission.deniedForever:
         return const ElevatedButton(
           onPressed: null,
           child: Text("Standort ist nicht freigegeben."),
@@ -70,5 +65,3 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     }
   }
 }
-
-enum _LocationStatus { loading, notApproved, approved, denied }

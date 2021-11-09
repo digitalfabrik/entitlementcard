@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import '../../configuration/configuration.dart';
-import '../../location/determine_position.dart';
 import 'attribution_dialog.dart';
 import 'map_controller.dart';
 
@@ -202,24 +200,18 @@ class _MapState extends State<Map> implements MapController {
   }
 
   @override
-  Future<void> bringCameraToUser() async {
-    try {
-      var position = await determinePosition();
-      if (position != null) {
-        var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            bearing: 0,
-            tilt: 0,
-            zoom: Map.userLocationZoomLevel));
-        await _animate(_controller.animateCamera(cameraUpdate));
-      }
-      await _controller
-          .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
-      if (!_permissionGiven) {
-        setState(() => _permissionGiven = true);
-      }
-    } on Exception catch (e) {
-      log("Could not find position.", error: e);
+  Future<void> bringCameraToUser(Position position) async {
+    var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        bearing: 0,
+        tilt: 0,
+        zoom: Map.userLocationZoomLevel));
+    await _animate(_controller.animateCamera(cameraUpdate));
+
+    await _controller
+        .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    if (!_permissionGiven) {
+      setState(() => _permissionGiven = true);
     }
   }
 }

@@ -38,6 +38,7 @@ class _LocationButtonState extends State<LocationButton> {
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
         child: FloatingActionButton.extended(
+            heroTag: "fab_search_view",
             backgroundColor: Theme.of(context).backgroundColor,
             elevation: 1,
             onPressed: onPressed,
@@ -50,14 +51,13 @@ class _LocationButtonState extends State<LocationButton> {
   }
 
   Future<void> _initCoordinates(bool userInteract) async {
-    try {
-      setState(() => _locationStatus = LocationRequestStatus.requesting);
-      var position = await determinePosition(
-          userInteractContext: userInteract ? context : null);
-      widget.setCoordinates(position);
+    setState(() => _locationStatus = LocationRequestStatus.requesting);
+    var position =
+        await determinePosition(context, requestIfNotGranted: userInteract);
+    if (position.isAvailable()) {
+      widget.setCoordinates(position.position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);
-    } on Exception catch (e) {
-      debugPrint(e.toString());
+    } else {
       setState(() => _locationStatus = LocationRequestStatus.requestFailed);
     }
   }
