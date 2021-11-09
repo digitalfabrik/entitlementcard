@@ -30,8 +30,7 @@ class _SearchPageState extends State<SearchPage> {
     var searchFieldText = _searchFieldText;
     var currentCoordinatesInput = _coordinates;
     return Stack(children: [
-      if (textEditingController != null &&
-          currentCoordinatesInput != null)
+      if (textEditingController != null)
         CustomScrollView(
           slivers: [
             SliverAppBar(

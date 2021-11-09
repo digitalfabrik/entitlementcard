@@ -20,6 +20,12 @@ class _LocationButtonState extends State<LocationButton> {
   LocationRequestStatus _locationStatus = LocationRequestStatus.requesting;
 
   @override
+  void initState() {
+    _initCoordinates(false);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     if (_locationStatus == LocationRequestStatus.requestSuccessful) {
@@ -53,8 +59,12 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _initCoordinates(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    var requiredPosition =
-        await determinePosition(context, requestIfNotGranted: userInteract);
+    var requiredPosition = userInteract
+        ? await determinePosition(context, requestIfNotGranted: true)
+        : await determinePosition(context, requestIfNotGranted: false)
+            .timeout(const Duration(milliseconds: 2000),
+                onTimeout: () => RequestedPosition.unknown());
+
     var position = requiredPosition.position;
     if (position != null) {
       widget.setCoordinates(position);
@@ -62,11 +72,5 @@ class _LocationButtonState extends State<LocationButton> {
     } else {
       setState(() => _locationStatus = LocationRequestStatus.requestFailed);
     }
-  }
-
-  @override
-  void initState() {
-    _initCoordinates(false);
-    super.initState();
   }
 }
