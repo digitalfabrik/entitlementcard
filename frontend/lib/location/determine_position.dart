@@ -3,8 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
-import 'location_permission_dialog.dart';
-import 'location_service_dialog.dart';
+import 'dialogs.dart';
 
 enum LocationStatus {
   /// This is the initial state on both Android and iOS, but on Android the
@@ -113,30 +112,45 @@ Future<LocationStatus> checkAndRequestLocationPermission(
     }
   }
 
-  var permission = await Geolocator.checkPermission();
-
   if (requestIfNotGranted) {
-    if (permission == LocationPermission.denied) {
-      final requestedPermission = await Geolocator.requestPermission();
-
-      if (requestedPermission == LocationPermission.deniedForever) {
-        await openSettingsToGrantPermissions(context);
+    var permission = await Geolocator.checkPermission();
+    
+    if (permission == LocationPermission.deniedForever) {
+      // denied forever -> open UI
+      if (await openSettingsToGrantPermissions(context)) {
+        // get new result after the dialog is flo
+        var permission = await Geolocator.checkPermission();
+        return permission.toLocationStatus();
       }
-      return requestedPermission.toLocationStatus();
-    } else if (permission == LocationPermission.deniedForever) {
-      await openSettingsToGrantPermissions(context);
+    
       return permission.toLocationStatus();
-    }
-  }
+    } else if (permission == LocationPermission.denied) {
+      // The result of the permission dialog was to deny the permission
+      // Usually the next check says that it it denied forever
+      final requestResult = await Geolocator.requestPermission();
+      // if requestResult == LocationPermission.deniedForever, then the dialog
+      // was closed without a result.
+      if (permission == LocationPermission.denied) {
+        // in this case the user clicked "Deny" in the UI. We could display here an explanatory UI.
+      }
 
-  return permission.toLocationStatus();
+      return requestResult.toLocationStatus();
+    }
+
+    return permission.toLocationStatus();
+  } else {
+    var permission = await Geolocator.checkPermission();
+    return permission.toLocationStatus();
+  }
 }
 
-Future<void> openSettingsToGrantPermissions(BuildContext context) async {
+Future<bool> openSettingsToGrantPermissions(BuildContext context) async {
   var result = await showDialog(
-      context: context, builder: (context) => const LocationPermissionDialog());
+      context: context, builder: (context) => const LocationPermissionDialog()) ?? false;
   if (result) {
-    await Geolocator.openAppSettings();
+    return await Geolocator.openAppSettings();
   }
+  
+  return false;
 }
 
