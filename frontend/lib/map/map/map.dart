@@ -56,71 +56,67 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Widget build(BuildContext context) {
+    final config = Configuration.of(context);
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var compassMargin = Platform.isIOS
         ? statusBarHeight / pixelRatio
         : statusBarHeight * pixelRatio;
 
-    if (_isAnimating) {
-      _mapboxView = null;
+    if (_mapboxView == null || !_isAnimating) {
+      var userLocation = widget.userLocation;
+      var cameraPosition = userLocation != null
+          ? CameraPosition(
+          target: userLocation, zoom: Map.userLocationZoomLevel)
+          : const CameraPosition(
+          target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+
+      _mapboxView = Stack(children: [
+        MaplibreMap(
+          initialCameraPosition: cameraPosition,
+          styleString: config.mapStyleUrl,
+          // We provide our own attribution menu
+          attributionButtonMargins: const math.Point(-100, -100),
+          // The Mapbox wordmark must be shown because of legal weirdness
+          logoViewMargins: Platform.isIOS
+              ? const math.Point(30, 5)
+              : math.Point(30 * pixelRatio, 5 * pixelRatio),
+          myLocationEnabled: _permissionGiven,
+          myLocationTrackingMode: _permissionGiven
+              ? MyLocationTrackingMode.Tracking
+              : MyLocationTrackingMode.None,
+          // required to prevent mapbox iOS from requesting location
+          // permissions on startup, as discussed in #249
+          myLocationRenderMode: MyLocationRenderMode.NORMAL,
+          onMapCreated: _onMapCreated,
+          onMapClick: _onMapClick,
+          compassViewMargins:
+          math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+          compassViewPosition: CompassViewPosition.TopRight,
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: IconButton(
+            color: mapboxColor,
+            padding: const EdgeInsets.all(5),
+            constraints: const BoxConstraints(),
+            iconSize: 20,
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const AttributionDialog();
+                },
+              );
+            },
+          ),
+        ),
+      ]);
     }
-
-    var userLocation = widget.userLocation;
-    var cameraPosition = userLocation != null
-        ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
-        : const CameraPosition(
-            target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
-
-    final mapboxView = _mapboxView ??
-        Stack(children: [
-          MaplibreMap(
-            initialCameraPosition: cameraPosition,
-            styleString: Configuration.of(context).mapStyleUrl,
-            // We provide our own attribution menu
-            attributionButtonMargins: const math.Point(-100, -100),
-            // The Mapbox wordmark must be shown because of legal weirdness
-            logoViewMargins: Platform.isIOS
-                ? const math.Point(30, 5)
-                : math.Point(30 * pixelRatio, 5 * pixelRatio),
-            myLocationEnabled: _permissionGiven,
-            myLocationTrackingMode: _permissionGiven
-                ? MyLocationTrackingMode.Tracking
-                : MyLocationTrackingMode.None,
-            // required to prevent mapbox iOS from requesting location
-            // permissions on startup, as discussed in #249
-            myLocationRenderMode: MyLocationRenderMode.NORMAL,
-            onMapCreated: _onMapCreated,
-            onMapClick: _onMapClick,
-            compassViewMargins:
-                math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-            compassViewPosition: CompassViewPosition.TopRight,
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: IconButton(
-              color: mapboxColor,
-              padding: const EdgeInsets.all(5),
-              constraints: const BoxConstraints(),
-              iconSize: 20,
-              icon: const Icon(Icons.info_outline),
-              tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const AttributionDialog();
-                  },
-                );
-              },
-            ),
-          ),
-        ]);
-
-    _mapboxView = mapboxView;
-
-    return mapboxView;
+    return _mapboxView ?? Container();
   }
 
   void _onMapCreated(MaplibreMapController controller) {
