@@ -18,44 +18,45 @@ class EntryWidget extends StatelessWidget {
     return FutureBuilder<SettingsModel>(
         future: settings.initialize(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.none ||
-              snapshot.connectionState == ConnectionState.waiting) {
+          final settings = snapshot.data;
+
+          if (snapshot.hasData && settings != null) {
+            final routes = <String, WidgetBuilder>{};
+            String? initialRoute;
+
+            if (settings.firstStart) {
+              routes.addAll(<String, WidgetBuilder>{
+                '/intro': (context) => IntroScreen(
+                      onFinishedCallback: () => settings.setFirstStart(false),
+                    ),
+              });
+              initialRoute = '/intro';
+            }
+
+            return MaterialApp(
+                title: 'Ehrenamtskarte',
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: ThemeMode.system,
+                initialRoute: initialRoute,
+                debugShowCheckedModeBanner: false,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  FormBuilderLocalizations.delegate,
+                ],
+                supportedLocales: const [Locale('de')],
+                locale: const Locale('de'),
+                home: HomePage(
+                  showVerification: Configuration.of(context).showVerification,
+                ),
+                routes: routes);
+          } else if (snapshot.hasError) {
+            return Container();
+          } else {
             return Container();
           }
-          final routes = <String, WidgetBuilder>{};
-          String? initialRoute;
-          var settings = snapshot.data;
-          if (!snapshot.hasError &&
-              snapshot.hasData &&
-              settings != null &&
-              settings.firstStart) {
-            routes.addAll(<String, WidgetBuilder>{
-              '/intro': (context) => IntroScreen(
-                    onFinishedCallback: () => settings.setFirstStart(false),
-                  ),
-            });
-            initialRoute = '/intro';
-          }
-
-          return MaterialApp(
-              title: 'Ehrenamtskarte',
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: ThemeMode.system,
-              initialRoute: initialRoute,
-              debugShowCheckedModeBanner: false,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                FormBuilderLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('de')],
-              locale: const Locale('de'),
-              home: HomePage(
-                showVerification: Configuration.of(context).showVerification,
-              ),
-              routes: routes);
         });
   }
 }

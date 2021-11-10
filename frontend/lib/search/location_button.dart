@@ -24,10 +24,11 @@ class _LocationButtonState extends State<LocationButton> {
   @override
   void initState() {
     super.initState();
-    _initCoordinates(false);
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      var settings = context.read<SettingsModel>();
+      _initCoordinates(false, settings);
+    });
   }
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class _LocationButtonState extends State<LocationButton> {
               elevation: 1,
               onPressed: _locationStatus == LocationRequestStatus.requesting
                   ? null
-                  : () => _initCoordinates(true),
+                  : () => _initCoordinates(true, settings),
               icon: AnimatedSwitcher(
                   child: _locationStatus == LocationRequestStatus.requesting
                       ? const SmallButtonSpinner()
@@ -64,11 +65,16 @@ class _LocationButtonState extends State<LocationButton> {
     }
   }
 
-  Future<void> _initCoordinates(bool userInteract) async {
+  Future<void> _initCoordinates(bool userInteract, settings) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     var requiredPosition = userInteract
-        ? await determinePosition(context, requestIfNotGranted: true)
-        : await determinePosition(context, requestIfNotGranted: false).timeout(
+        ? await determinePosition(context,
+            requestIfNotGranted: true,
+            onDisableFeature: () => settings.setLocationFeatureEnabled(false))
+        : await determinePosition(context,
+            requestIfNotGranted: false,
+            onDisableFeature: () =>
+                settings.setLocationFeatureEnabled(false)).timeout(
             const Duration(milliseconds: 2000),
             onTimeout: () => RequestedPosition.unknown());
 

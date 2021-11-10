@@ -74,10 +74,10 @@ class RequestedPosition {
 
 /// Determine the current position of the device.
 Future<RequestedPosition> determinePosition(BuildContext context,
-    {bool requestIfNotGranted = false}) async {
+    {bool requestIfNotGranted = false, onDisableFeature}) async {
 
   final permission = await checkAndRequestLocationPermission(context,
-      requestIfNotGranted: requestIfNotGranted);
+      requestIfNotGranted: requestIfNotGranted, onDisableFeature: onDisableFeature);
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
