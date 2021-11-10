@@ -74,10 +74,11 @@ class RequestedPosition {
 
 /// Determine the current position of the device.
 Future<RequestedPosition> determinePosition(BuildContext context,
-    {bool requestIfNotGranted = false, onDisableFeature}) async {
-
+    {bool requestIfNotGranted = false,
+    Future<void> Function()? onDisableFeature}) async {
   final permission = await checkAndRequestLocationPermission(context,
-      requestIfNotGranted: requestIfNotGranted, onDisableFeature: onDisableFeature);
+      requestIfNotGranted: requestIfNotGranted,
+      onDisableFeature: onDisableFeature);
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
@@ -96,8 +97,9 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// LocationPermission.deniedForever
 Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
     {bool requestIfNotGranted = true,
-    rationale,
-    void Function()? onDisableFeature}) async {
+    rationale =
+        "Erlauben Sie der App ihren Standort zu benutzen um Akzeptanzstellen ihn Ihrer Umgebung anzuzeigen.",
+    Future<void> Function()? onDisableFeature}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
@@ -147,7 +149,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         // If requestResult == LocationPermission.deniedForever, then the dialog
         // was closed without a result or the permission was denied
         if (onDisableFeature != null) {
-          onDisableFeature();
+          await onDisableFeature();
         }
         return LocationPermission.deniedForever.toLocationStatus();
       }
@@ -157,5 +159,15 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
   } else {
     var permission = await Geolocator.checkPermission();
     return permission.toLocationStatus();
+  }
+}
+
+Future<void> openSettingsToGrantPermissions(
+    BuildContext userInteractContext) async {
+  var result = await showDialog(
+      context: userInteractContext,
+      builder: (context) => const LocationPermissionDialog());
+  if (result ?? false) {
+    await Geolocator.openAppSettings();
   }
 }

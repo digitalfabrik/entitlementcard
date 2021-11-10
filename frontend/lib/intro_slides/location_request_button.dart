@@ -21,21 +21,19 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       final settings = context.read<SettingsModel>();
 
       checkAndRequestLocationPermission(context,
-          requestIfNotGranted: false,
-          onDisableFeature: () => settings.setLocationFeatureEnabled(false))
+              requestIfNotGranted: false,
+              onDisableFeature: () => settings.setLocationFeatureEnabled(false))
           .then((LocationStatus permission) => setState(() {
-        _locationPermissionStatus = permission;
-      }));
+                _locationPermissionStatus = permission;
+              }));
     });
-   
   }
 
   void _onLocationButtonClicked(SettingsModel settings) async {
     final permission = await checkAndRequestLocationPermission(context,
         requestIfNotGranted: true,
-        rationale:
-            "Erlauben Sie der App ihren Standort zu benutzen um Akzeptanzstellen ihn Ihrer Umgebung anzuzeigen.",
-        onDisableFeature: () => settings.setLocationFeatureEnabled(false));
+        onDisableFeature: () async =>
+            await settings.setLocationFeatureEnabled(false));
     setState(() {
       _locationPermissionStatus = permission;
     });

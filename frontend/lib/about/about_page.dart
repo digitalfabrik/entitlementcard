@@ -1,5 +1,9 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../configuration/configuration.dart';
@@ -13,11 +17,8 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var config = Configuration.of(context);
-
-    if (config == null) {
-      throw Exception("Could not find configuration in component tree.");
-    }
+    final config = Configuration.of(context);
+    final settings = Provider.of<SettingsModel>(context);
 
     return NonMaterialPage(
       overlayStyle: null,
@@ -124,6 +125,23 @@ class AboutPage extends StatelessWidget {
                       launch(
                           "https://github.com/ehrenamtskarte/ehrenamtskarte");
                     }),
+                if (!settings.locationFeatureEnabled)
+                  ListTile(
+                      leading: const Icon(Icons.location_on),
+                      title: const Text("Standort Feature aktivieren"),
+                      onTap: () async {
+                        var permission = await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
+                        
+                        if (permission == LocationStatus.deniedForever) {
+                          await openSettingsToGrantPermissions(context);
+                        }
+
+                        permission = await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
+
+                        if (permission.isPermissionGranted()) {
+                          settings.setLocationFeatureEnabled(true);
+                        }
+                      }),
                 if (config.showDevSettings)
                   ListTile(
                     leading: const Icon(Icons.build),

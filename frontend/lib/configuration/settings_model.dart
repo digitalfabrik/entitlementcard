@@ -10,7 +10,7 @@ class SettingsModel extends ChangeNotifier {
   var _hideVerificationInfo = false;
   var _locationFeatureEnabled = false;
 
-  late var _preferences;
+  late SharedPreferences _preferences;
 
   Future<SettingsModel> initialize() async {
     _preferences = await SharedPreferences.getInstance();

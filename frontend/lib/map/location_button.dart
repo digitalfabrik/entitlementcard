@@ -56,7 +56,7 @@ class _LocationButtonState extends State<LocationButton> {
     setState(() => _status = LocationPermissionStatus.requesting);
     final requestedPosition = await determinePosition(context,
         requestIfNotGranted: true,
-        onDisableFeature: () => settings.setLocationFeatureEnabled(false));
+        onDisableFeature: () async => await settings.setLocationFeatureEnabled(false));
     final position = requestedPosition.position;
     if (position != null) {
       await widget.mapController.bringCameraToUser(position);
