@@ -1,10 +1,11 @@
 import 'dart:developer';
 
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-import '../configuration/hide_verification_info.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
@@ -21,11 +22,11 @@ class VerificationWorkflow {
 
   VerificationWorkflow._(); // hide the constructor
 
-  static Future<void> startWorkflow(BuildContext context) =>
-      VerificationWorkflow._().showInfoAndQrScanner(context);
+  static Future<void> startWorkflow(BuildContext context, SettingsModel settings) =>
+      VerificationWorkflow._().showInfoAndQrScanner(context, settings);
 
-  Future<void> showInfoAndQrScanner(BuildContext rootContext) async {
-    if (await hideVerificationInfo() != true) {
+  Future<void> showInfoAndQrScanner(BuildContext rootContext, SettingsModel settings) async {
+    if (await settings.hideVerificationInfo != true) {
       // show info dialog and cancel if it is not accepted
       if (await VerificationInfoDialog.show(rootContext) != true) return;
     }
@@ -38,7 +39,7 @@ class VerificationWorkflow {
               title: "Karte verifizieren",
               onCodeScanned: (code) => _handleQrCode(context, code),
               onHelpClicked: () async {
-                await setHideVerificationInfo(hideVerificationInfo: false);
+                await settings.setHideVerificationInfo(false);
                 await VerificationInfoDialog.show(context);
               }),
         ));

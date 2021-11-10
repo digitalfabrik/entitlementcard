@@ -1,4 +1,6 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../location/determine_position.dart';
 
 class LocationRequestButton extends StatefulWidget {
@@ -14,15 +16,24 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   @override
   void initState() {
     super.initState();
-    checkAndRequestLocationPermission(context, requestIfNotGranted: false)
-        .then((LocationStatus permission) => setState(() {
-              _locationPermissionStatus = permission;
-            }));
+    final settings = Provider.of<SettingsModel>(context);
+
+    checkAndRequestLocationPermission(context,
+        requestIfNotGranted: false,
+        onDisableFeature: () => settings.setLocationFeatureEnabled(false))
+        .then((LocationStatus permission) =>
+        setState(() {
+          _locationPermissionStatus = permission;
+        }));
   }
 
   void _onLocationButtonClicked() async {
+    final settings = Provider.of<SettingsModel>(context);
+
+
     final permission = await checkAndRequestLocationPermission(context,
-        requestIfNotGranted: true);
+        requestIfNotGranted: true,
+        onDisableFeature: () => settings.setLocationFeatureEnabled(false));
     setState(() {
       _locationPermissionStatus = permission;
     });

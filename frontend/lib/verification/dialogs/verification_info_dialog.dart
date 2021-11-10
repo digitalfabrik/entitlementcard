@@ -1,12 +1,14 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
-
-import '../../configuration/hide_verification_info.dart';
+import 'package:provider/provider.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
   const VerificationInfoDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsModel>(context);
+
     return AlertDialog(
       title: const Text("So prüfen Sie die Echtheit einer Ehrenamtskarte"),
       content: SingleChildScrollView(
@@ -22,7 +24,7 @@ class VerificationInfoDialog extends StatelessWidget {
         TextButton(
           child: const Text("Nicht mehr anzeigen"),
           onPressed: () async {
-            await setHideVerificationInfo();
+            await settings.setHideVerificationInfo(true);
             _onDone(context);
           },
         ),

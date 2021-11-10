@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConfiguredGraphQlProvider(
       child: MultiProvider(providers: [
+        ChangeNotifierProvider(
+            create: (context) => SettingsModel()..initialize()),
         ChangeNotifierProvider(
             create: (context) => CardDetailsModel()..initialize()),
         ChangeNotifierProvider(create: (context) => ApplicationModel()),

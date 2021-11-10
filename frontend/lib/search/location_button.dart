@@ -1,5 +1,7 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 import '../location/determine_position.dart';
 import '../widgets/small_button_spinner.dart';
@@ -21,49 +23,54 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   void initState() {
-    _initCoordinates(false);
     super.initState();
+    _initCoordinates(false);
   }
+  
+  
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     if (_locationStatus == LocationRequestStatus.requestSuccessful) {
       return Container();
     }
-    var onPressed = _locationStatus == LocationRequestStatus.requesting
-        ? null
-        : () => _initCoordinates(true);
-    var icon = _locationStatus == LocationRequestStatus.requesting
-        ? const SmallButtonSpinner()
-        : Icon(
-            Icons.my_location,
-            size: 24,
-            color: theme.colorScheme.secondary,
-          );
-    return Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.all(10),
-        child: FloatingActionButton.extended(
-            heroTag: "fab_search_view",
-            backgroundColor: Theme.of(context).backgroundColor,
-            elevation: 1,
-            onPressed: onPressed,
-            icon: AnimatedSwitcher(
-                child: icon, duration: const Duration(milliseconds: 200)),
-            label: Text(
-              "In meiner Nähe suchen",
-              style: TextStyle(color: theme.hintColor),
-            )));
+    final settings = Provider.of<SettingsModel>(context);
+    if (settings.locationFeatureEnabled) {
+      return Container(
+          alignment: Alignment.bottomCenter,
+          padding: const EdgeInsets.all(10),
+          child: FloatingActionButton.extended(
+              heroTag: "fab_search_view",
+              backgroundColor: Theme.of(context).backgroundColor,
+              elevation: 1,
+              onPressed: _locationStatus == LocationRequestStatus.requesting
+                  ? null
+                  : () => _initCoordinates(true),
+              icon: AnimatedSwitcher(
+                  child: _locationStatus == LocationRequestStatus.requesting
+                      ? const SmallButtonSpinner()
+                      : Icon(
+                          Icons.my_location,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  duration: const Duration(milliseconds: 200)),
+              label: Text(
+                "In meiner Nähe suchen",
+                style: TextStyle(color: Theme.of(context).hintColor),
+              )));
+    } else {
+      return Container();
+    }
   }
 
   Future<void> _initCoordinates(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     var requiredPosition = userInteract
         ? await determinePosition(context, requestIfNotGranted: true)
-        : await determinePosition(context, requestIfNotGranted: false)
-            .timeout(const Duration(milliseconds: 2000),
-                onTimeout: () => RequestedPosition.unknown());
+        : await determinePosition(context, requestIfNotGranted: false).timeout(
+            const Duration(milliseconds: 2000),
+            onTimeout: () => RequestedPosition.unknown());
 
     var position = requiredPosition.position;
     if (position != null) {
