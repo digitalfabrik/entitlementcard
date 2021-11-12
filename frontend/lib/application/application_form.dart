@@ -40,51 +40,48 @@ class _ApplicationFormState extends State<ApplicationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text("Ehrenamtskarte beantragen")),
-        body: Stepper(
-            currentStep: _currentStep,
-            onStepContinue: _onStepContinued,
-            onStepCancel: _onStepCancel,
-            type: StepperType.vertical,
-            onStepTapped: _onStepTapped,
-            controlsBuilder: (context, {onStepContinue, onStepCancel}) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    if (_currentStep > 0)
-                      TextButton(
-                        onPressed: onStepCancel,
-                        child: const Text('ZURÜCK'),
-                      ),
-                    const SizedBox(width: 12),
-                    TextButton(
-                      onPressed: onStepContinue,
-                      child: Text(
-                          _currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
-                    ),
-                  ],
+    return Stepper(
+        currentStep: _currentStep,
+        onStepContinue: _onStepContinued,
+        onStepCancel: _onStepCancel,
+        type: StepperType.vertical,
+        onStepTapped: _onStepTapped,
+        controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                if (_currentStep > 0)
+                  TextButton(
+                    onPressed: onStepCancel,
+                    child: const Text('ZURÜCK'),
+                  ),
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: onStepContinue,
+                  child: Text(_currentStep < _lastStep ? 'WEITER' : 'ABSENDEN'),
                 ),
-              );
-            },
-            steps: [
-              _buildStep(
-                  'Region',
-                  0,
-                  (key) => RegionStep(
-                        formKey: key,
-                      )),
-              _buildStep('Kartentyp', 1, (key) => CardTypeStep(formKey: key)),
-              _buildStep('Voraussetzungen', 2,
-                  (key) => EntitlementTypeStep(formKey: key)),
-              _buildStep('Persönliche Daten', 3,
-                  (key) => PersonalDataStep(formKey: key)),
-              _buildStep('Tätigkeitsnachweis', 4,
-                  (key) => EntitlementStep(formKey: key)),
-              _buildStep('Abschluss', 5, (key) => SummaryStep(formKey: key)),
-            ]));
+              ],
+            ),
+          );
+        },
+        steps: [
+          _buildStep(
+              'Region',
+              0,
+              (key) => RegionStep(
+                    formKey: key,
+                  )),
+          _buildStep('Kartentyp', 1, (key) => CardTypeStep(formKey: key)),
+          _buildStep(
+              'Voraussetzungen', 2, (key) => EntitlementTypeStep(formKey: key)),
+          _buildStep(
+              'Persönliche Daten', 3, (key) => PersonalDataStep(formKey: key)),
+          _buildStep(
+              'Tätigkeitsnachweis', 4, (key) => EntitlementStep(formKey: key)),
+          _buildStep('Abschluss', 5, (key) => SummaryStep(formKey: key)),
+        ]);
   }
 
   _buildStep(String title, int index,
@@ -108,11 +105,11 @@ class _ApplicationFormState extends State<ApplicationForm> {
     if (step > _currentStep) {
       for (var i = _currentStep; i < step; i++) {
         var currentState = _formKeys[i].currentState;
-        
+
         if (currentState == null) {
           continue;
         }
-        
+
         if (!currentState.validate()) return;
         if (i == _currentStep) {
           currentState.save();
@@ -127,7 +124,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
     if (currentState == null) {
       return;
     }
-    
+
     if (currentState.validate()) {
       currentState.save();
       if (_currentStep < _lastStep) {

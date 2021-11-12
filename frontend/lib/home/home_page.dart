@@ -10,6 +10,67 @@ import 'floating_action_map_bar.dart';
 
 const mapTabIndex = 0;
 
+class AppBarParams {
+  PreferredSizeWidget? Function() builder;
+
+  AppBarParams(this.builder);
+
+  AppBarParams.none() : builder = (() => null);
+
+  static AppBarParams fromTitle(String title) {
+    return AppBarParams(
+        () => AppBar(leading: const BackButton(), title: Text(title)));
+  }
+
+  static AppBarParams fromBuilder(PreferredSizeWidget? Function() builder) {
+    return AppBarParams(builder);
+  }
+
+  static AppBarParams? fromRouteSettings(RouteSettings? settings) {
+    return (settings?.arguments as Map<String, dynamic>?)?["appBarParams"]
+        as AppBarParams?;
+  }
+
+  toRouteSettings() {
+    return RouteSettings(arguments: {"appBarParams": this});
+  }
+
+  PreferredSizeWidget? build() {
+    return builder();
+  }
+}
+
+class ScaffoldRouteObserver extends NavigatorObserver {
+  final void Function(AppBarParams) setAppBarParams;
+
+  ScaffoldRouteObserver({required this.setAppBarParams});
+
+  @override
+  void didPush(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    var appBarParams = AppBarParams.fromRouteSettings(route?.settings);
+    if (appBarParams != null) {
+      setAppBarParams(appBarParams);
+    }
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    var appBarParams = AppBarParams.fromRouteSettings(newRoute?.settings);
+    setAppBarParams(appBarParams ?? AppBarParams.none());
+  }
+
+  @override
+  void didPop(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    var appBarParams = AppBarParams.fromRouteSettings(previousRoute?.settings);
+    setAppBarParams(appBarParams ?? AppBarParams.none());
+  }
+
+  @override
+  NavigatorState? get navigator {
+    return null;
+  }
+}
+
 class HomePage extends StatefulWidget {
   final bool showVerification;
 
@@ -25,6 +86,7 @@ class _HomePageState extends State<HomePage> {
 
   MapPageController? mapPageController;
   int? selectedAcceptingStoreId;
+  AppBarParams appBarParams = AppBarParams.none();
 
   @override
   void initState() {
@@ -58,9 +120,19 @@ class _HomePageState extends State<HomePage> {
     return HomePageData(
       navigateToMapTab: _navigateToMapTab,
       child: Scaffold(
+        appBar: appBarParams.build(),
         body: AppFlowsStack(
           appFlows: appFlows,
           currentIndex: _currentTabIndex,
+          observer: ScaffoldRouteObserver(
+            setAppBarParams: (_appBarParams) {
+              // WidgetsBinding.instance!.addPostFrameCallback((_) {
+              setState(() {
+                appBarParams = _appBarParams;
+              });
+              //  });
+            },
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _currentTabIndex == mapTabIndex
@@ -104,24 +176,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _navigateToMapTab([PhysicalStoreFeatureData? idWithCoordinates]) {
-    var currentMapPageController = mapPageController;
-
-    if (currentMapPageController == null) {
-      return;
-    }
-
+  Future<void> _navigateToMapTab(
+      PhysicalStoreFeatureData idWithCoordinates) async {
     setState(() {
       _currentTabIndex = mapTabIndex;
     });
-    if (idWithCoordinates != null) {
-      currentMapPageController.showAcceptingStore(idWithCoordinates);
-    }
+
+    await mapPageController?.showAcceptingStore(idWithCoordinates);
   }
 }
 
 class HomePageData extends InheritedWidget {
-  final Function navigateToMapTab;
+  final Future<void> Function(PhysicalStoreFeatureData) navigateToMapTab;
 
   const HomePageData(
       {Key? key, required this.navigateToMapTab, required Widget child})

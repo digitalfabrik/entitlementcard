@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
@@ -25,27 +26,23 @@ class ContentTile extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ContentPage(title: title, children: children),
+          settings: AppBarParams.fromTitle(title).toRouteSettings(),
+          builder: (context) => ContentPage( children: children),
         ));
   }
 }
 
 class ContentPage extends StatelessWidget {
-  final String title;
+
   final List<Widget> children;
 
-  const ContentPage({Key? key, required this.title, required this.children})
+  const ContentPage({Key? key, required this.children})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: SafeArea(
+    return SafeArea(
         child: ListView(children: children, padding: const EdgeInsets.all(10)),
-      ),
     );
   }
 }

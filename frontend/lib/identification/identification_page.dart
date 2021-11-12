@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class IdentificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
         child: Consumer<CardDetailsModel>(
             builder: (context, cardDetailsModel, child) {
@@ -33,16 +34,16 @@ class IdentificationPage extends StatelessWidget {
               cardDetails: cardDetails,
               startActivateEak: () => _showActivateQrCode(context),
               startEakApplication: () => _showEakApplication(context),
-              startVerification: () => _showVerificationDialog(context, settings),
+              startVerification: () =>
+                  _showVerificationDialog(context, settings),
             );
           }
 
-          return Scaffold(
-            body: NoCardView(
-                startVerification: () => _showVerificationDialog(context, settings),
-                startEakApplication: () => _showEakApplication(context),
-                startActivateQrCode: () => _showActivateQrCode(context)),
-          );
+          return NoCardView(
+              startVerification: () =>
+                  _showVerificationDialog(context, settings),
+              startEakApplication: () => _showEakApplication(context),
+              startActivateQrCode: () => _showActivateQrCode(context));
         }),
         value: getDefaultOverlayStyle(context));
   }
@@ -55,11 +56,17 @@ class IdentificationPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
+            settings: AppBarParams.fromTitle("Ehrenamtskarte hinzufügen")
+                .toRouteSettings(),
             builder: (context) => const IdentificationQrScannerPage()));
   }
 
   void _showEakApplication(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ApplicationForm()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            settings: AppBarParams.fromTitle("Ehrenamtskarte beantragen")
+                .toRouteSettings(),
+            builder: (context) => const ApplicationForm()));
   }
 }

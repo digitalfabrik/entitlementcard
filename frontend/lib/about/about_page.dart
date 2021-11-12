@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,9 +81,10 @@ class AboutPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ContentPage(
-                            title: "Herausgeber",
-                            children: getPublisherText(context)),
+                        settings: AppBarParams.fromTitle("Herausgeber")
+                            .toRouteSettings(),
+                        builder: (context) =>
+                            ContentPage(children: getPublisherText(context)),
                       ),
                     );
                   },

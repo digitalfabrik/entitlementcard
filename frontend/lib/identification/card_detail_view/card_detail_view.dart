@@ -52,8 +52,7 @@ class CardDetailView extends StatelessWidget {
               cardDetails: cardDetails,
               onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
-          return Scaffold(
-              body: orientation == Orientation.landscape
+          return orientation == Orientation.landscape
                   ? SafeArea(
                   child: LayoutBuilder(builder: (context, constraints) {
                     const qrCodeMinWidth = 280.0;
@@ -79,7 +78,7 @@ class CardDetailView extends StatelessWidget {
                           const SizedBox(height: 16),
                           richQrCode
                         ]),
-                      ))));
+                      )));
         });
   }
 

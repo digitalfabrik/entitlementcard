@@ -5,8 +5,14 @@ import 'app_flow.dart';
 class AppFlowsStack extends StatelessWidget {
   final int currentIndex;
   final List<AppFlow> appFlows;
+  final NavigatorObserver observer;
 
-  const AppFlowsStack({Key? key, required this.currentIndex, required this.appFlows}) : super(key: key);
+  const AppFlowsStack(
+      {Key? key,
+      required this.currentIndex,
+      required this.appFlows,
+      required this.observer})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,7 @@ class AppFlowsStack extends StatelessWidget {
   Widget _buildNavigatorForAppFlow(AppFlow appFlow) {
     return Navigator(
       key: appFlow.navigatorKey,
+      observers: [observer],
       onGenerateRoute: (settings) => MaterialPageRoute(
           settings: settings, builder: (context) => appFlow.widget),
     );
