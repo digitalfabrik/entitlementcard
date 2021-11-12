@@ -115,7 +115,7 @@ class DetailContent extends StatelessWidget {
   }
 
   void _showOnMap(BuildContext context) {
-    HomePage.of(context)?.goToMap(PhysicalStoreFeatureData(
+    HomePageData.of(context)?.navigateToMapTab(PhysicalStoreFeatureData(
         acceptingStore.id,
         LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),
         acceptingStore.store.category.id));

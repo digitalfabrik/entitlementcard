@@ -26,7 +26,7 @@ class _LocationButtonState extends State<LocationButton> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       var settings = context.read<SettingsModel>();
-      _initCoordinates(false, settings);
+      _determinePosition(false, settings);
     });
   }
 
@@ -46,7 +46,7 @@ class _LocationButtonState extends State<LocationButton> {
               elevation: 1,
               onPressed: _locationStatus == LocationRequestStatus.requesting
                   ? null
-                  : () => _initCoordinates(true, settings),
+                  : () => _determinePosition(true, settings),
               icon: AnimatedSwitcher(
                   child: _locationStatus == LocationRequestStatus.requesting
                       ? const SmallButtonSpinner()
@@ -65,7 +65,7 @@ class _LocationButtonState extends State<LocationButton> {
     }
   }
 
-  Future<void> _initCoordinates(bool userInteract, settings) async {
+  Future<void> _determinePosition(bool userInteract, settings) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     var requiredPosition = userInteract
         ? await determinePosition(context,

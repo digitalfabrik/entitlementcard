@@ -1,11 +1,10 @@
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
-import 'location_button.dart';
 import 'map/map_controller.dart';
 import 'map/map_with_futures.dart';
-import 'preview/accepting_store_preview.dart';
 
 class PhysicalStoreFeatureData {
   final int? id;
@@ -19,8 +18,13 @@ typedef OnMapCreatedCallback = void Function(MapPageController controller);
 
 class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
+  final void Function(int? id) selectAcceptingStore;
 
-  const MapPage({Key? key, required this.onMapCreated}) : super(key: key);
+  const MapPage(
+      {Key? key,
+      required this.onMapCreated,
+      required this.selectAcceptingStore})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -31,47 +35,30 @@ class MapPage extends StatefulWidget {
 abstract class MapPageController {
   Future<void> showAcceptingStore(PhysicalStoreFeatureData data);
 
+  Future<void> bringCameraToUser(RequestedPosition data);
+
   Future<void> stopShowingAcceptingStore();
 }
 
 class _MapPageState extends State<MapPage> implements MapPageController {
-  int? _selectedAcceptingStoreId;
   MapController? _controller;
 
   @override
   Widget build(BuildContext context) {
-    final controller = _controller;
-    final selectedAcceptingStoreId = _selectedAcceptingStoreId;
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Stack(children: [
-        MapWithFutures(
-          onFeatureClick: _onFeatureClick,
-          onNoFeatureClick: stopShowingAcceptingStore,
-          onFeatureClickLayerFilter: const ["physical_stores"],
-          onMapCreated: (controller) {
-            controller.setTelemetryEnabled(enabled: false);
-            setState(() => _controller = controller);
-            widget.onMapCreated(this);
-          },
-        ),
-        if (controller != null)
-          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            LocationButton(mapController: controller),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 200),
-              child: IntrinsicHeight(
-                child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: selectedAcceptingStoreId != null
-                        ? AcceptingStorePreview(selectedAcceptingStoreId)
-                        : null),
-              ),
-            ),
-          ])
-      ]),
-    );
+        value: SystemUiOverlayStyle.dark,
+        child: Stack(children: [
+          MapWithFutures(
+            onFeatureClick: _onFeatureClick,
+            onNoFeatureClick: stopShowingAcceptingStore,
+            onFeatureClickLayerFilter: const ["physical_stores"],
+            onMapCreated: (controller) {
+              controller.setTelemetryEnabled(enabled: false);
+              setState(() => _controller = controller);
+              widget.onMapCreated(this);
+            },
+          ),
+        ]));
   }
 
   @override
@@ -83,9 +70,8 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       return;
     }
 
-    setState(() {
-      _selectedAcceptingStoreId = data.id;
-    });
+    widget.selectAcceptingStore(data.id);
+
     var coordinates = data.coordinates;
     if (coordinates != null) {
       var categoryId = data.categoryId;
@@ -108,7 +94,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       return;
     }
 
-    setState(() => _selectedAcceptingStoreId = null);
+    widget.selectAcceptingStore(null);
     await controller.removeSymbol();
   }
 
@@ -129,5 +115,19 @@ class _MapPageState extends State<MapPage> implements MapPageController {
     if (coordinates is! List) return null;
     if (!(coordinates[0] is double && coordinates[1] is double)) return null;
     return LatLng(coordinates[1], coordinates[0]);
+  }
+
+  @override
+  Future<void> bringCameraToUser(RequestedPosition data) async {
+    final controller = _controller;
+
+    if (controller == null) {
+      return;
+    }
+
+    var position = data.position;
+    if (position != null) {
+      await controller.bringCameraToUser(position);
+    }
   }
 }

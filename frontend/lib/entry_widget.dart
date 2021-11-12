@@ -14,6 +14,8 @@ class EntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var configuration = Configuration.of(context);
+
     final settings = Provider.of<SettingsModel>(context);
     return FutureBuilder<SettingsModel>(
         future: settings.initialize(),
@@ -49,7 +51,7 @@ class EntryWidget extends StatelessWidget {
                 supportedLocales: const [Locale('de')],
                 locale: const Locale('de'),
                 home: HomePage(
-                  showVerification: Configuration.of(context).showVerification,
+                  showVerification: configuration.showVerification,
                 ),
                 routes: routes);
           } else if (snapshot.hasError) {
