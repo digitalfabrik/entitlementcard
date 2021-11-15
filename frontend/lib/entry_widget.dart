@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/localization/form_builder_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,8 +20,10 @@ class EntryWidget extends StatelessWidget {
         future: settings.initialize(),
         builder: (context, snapshot) {
           final settings = snapshot.data;
-
-          if (snapshot.hasData && settings != null) {
+          final error = snapshot.error;
+          if (snapshot.hasError && error != null) {
+            return ErrorMessage(error.toString());
+          } else if (snapshot.hasData && settings != null) {
             final routes = <String, WidgetBuilder>{};
             String? initialRoute;
 
@@ -52,8 +55,6 @@ class EntryWidget extends StatelessWidget {
                   showVerification: Configuration.of(context).showVerification,
                 ),
                 routes: routes);
-          } else if (snapshot.hasError) {
-            return Container();
           } else {
             return Container();
           }
