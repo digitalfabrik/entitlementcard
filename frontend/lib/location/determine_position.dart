@@ -153,6 +153,8 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         }
         return LocationPermission.deniedForever.toLocationStatus();
       }
+
+      return requestResult.toLocationStatus();
     }
 
     return permission.toLocationStatus();
