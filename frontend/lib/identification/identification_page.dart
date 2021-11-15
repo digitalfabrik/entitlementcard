@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../application/application_form.dart';
 import '../routing.dart';
 import '../util/non_material_page.dart';
 import '../verification/verification_workflow.dart';
@@ -34,17 +33,27 @@ class IdentificationPage extends StatelessWidget {
             return CardDetailView(
               cardDetails: cardDetails,
               startActivateEak: () => _showActivateQrCode(context),
-              startEakApplication: () => _showEakApplication(context),
+              startEakApplication: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Not yet implemented.'),
+                ));
+              },
               startVerification: () =>
                   _showVerificationDialog(context, settings),
             );
           }
 
           return NoCardView(
-              startVerification: () =>
-                  _showVerificationDialog(context, settings),
-              startEakApplication: () => _showEakApplication(context),
-              startActivateQrCode: () => _showActivateQrCode(context));
+            startVerification: () => _showVerificationDialog(context, settings),
+            startActivateQrCode: () => _showActivateQrCode(context),
+            startEakApplication: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text('Not yet implemented.'),
+              ));
+            },
+          );
         }),
         value: getDefaultOverlayStyle(context));
   }
@@ -54,16 +63,7 @@ class IdentificationPage extends StatelessWidget {
   }
 
   void _showActivateQrCode(BuildContext context) {
-    Navigator.push(
-        context,
-        AppRoute(
-            builder: (context) => const IdentificationQrScannerPage()));
-  }
-
-  void _showEakApplication(BuildContext context) {
-    Navigator.push(
-        context,
-        AppRoute(
-            builder: (context) => const ApplicationForm()));
+    Navigator.push(context,
+        AppRoute(builder: (context) => const IdentificationQrScannerPage()));
   }
 }
