@@ -60,12 +60,12 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.always:
         return const ElevatedButton(
           onPressed: null,
-          child: Text("Standort ist bereits freigegeben."),
+          child: Text("Standort ist freigegeben."),
         );
       case LocationStatus.deniedForever:
         return const ElevatedButton(
           onPressed: null,
-          child: Text("Standort ist deaktiviert."),
+          child: Text("Standortfreigabe ist deaktiviert."),
         );
     }
   }
