@@ -58,10 +58,7 @@ class _HomePageState extends State<HomePage> {
     return HomePageData(
       navigateToMapTab: _navigateToMapTab,
       child: Scaffold(
-        body: AppFlowsStack(
-          appFlows: appFlows,
-          currentIndex: _currentTabIndex
-        ),
+        body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _currentTabIndex == mapTabIndex
             ? FloatingActionMapBar(
@@ -70,7 +67,8 @@ class _HomePageState extends State<HomePage> {
                 },
                 selectedAcceptingStoreId: selectedAcceptingStoreId,
               )
-            : null,
+            // Returning a Container() instead of null avoids animations
+            : Container(),
         bottomNavigationBar: _buildBottomNavigationBar(context),
       ),
     );
