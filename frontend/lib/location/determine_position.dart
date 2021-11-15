@@ -93,12 +93,10 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// Ensures all preconditions needed to determine the current position.
 /// If needed, location permissions are requested.
 ///
-/// When the location services are not enabled then it will return
-/// LocationPermission.deniedForever
 Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
     {bool requestIfNotGranted = true,
     rationale =
-        "Erlauben Sie der App ihren Standort zu benutzen um Akzeptanzstellen ihn Ihrer Umgebung anzuzeigen.",
+        "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
     Future<void> Function()? onDisableFeature}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
