@@ -29,28 +29,27 @@ class CustomLicensePage extends StatelessWidget {
             return ErrorMessage(error.toString());
           } else if (snapshot.hasData && licenses != null) {
             var licensesPerPackage =
-            licenses.fold<List<CustomLicenseEntry>>([], (value, element) {
-              for (var packageName in element.packages) {
-                value
-                    .add(CustomLicenseEntry(packageName, [element.paragraphs]));
+                licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
+              for (var packageName in entry.packages) {
+                value.add(CustomLicenseEntry(packageName, [entry.paragraphs]));
               }
               return value;
             });
 
             var byPackageName = groupBy(licensesPerPackage,
-                    (CustomLicenseEntry license) => license.packageName);
+                (CustomLicenseEntry entry) => entry.packageName);
 
             var result = <CustomLicenseEntry>[];
             byPackageName.forEach((String key, List<CustomLicenseEntry> value) {
               List<Iterable<LicenseParagraph>> listOfParagraphLists =
-              value.fold([], (value, element) {
+                  value.fold([], (value, element) {
                 value.addAll(element.licenseParagraphs);
                 return value;
               });
 
               result.add(CustomLicenseEntry(key, listOfParagraphLists));
             });
-            
+
             result.sortBy((element) => element.packageName);
 
             return CustomScrollView(
@@ -63,12 +62,13 @@ class CustomLicensePage extends StatelessWidget {
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       var license = result[index];
                       var paragraphs = license.licenseParagraphs;
                       return ListTile(
                         title: Text(license.packageName),
-                        subtitle: Text(paragraphs.length.toString() + " Lizenzen"),
+                        subtitle:
+                            Text(paragraphs.length.toString() + " Lizenzen"),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -79,7 +79,7 @@ class CustomLicensePage extends StatelessWidget {
                         },
                       );
                     },
-                    childCount: result.length, // 1000 list items
+                    childCount: result.length,
                   ),
                 ),
               ],
@@ -108,21 +108,17 @@ class SingleLicensePage extends StatelessWidget {
           title: Text(licenseEntry.packageName),
         ),
         ...licenseEntry.licenseParagraphs.map(
-              (Iterable<LicenseParagraph> e) =>
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    var paragraph = e.toList()[index];
+          (Iterable<LicenseParagraph> paragraphs) => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                var paragraph = paragraphs.toList()[index];
 
-                    return Text(
-                        "\t" * paragraph.indent * 2 + paragraph.text, style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText1);
-                  },
-                  childCount: e.length, // 1000 list items
-                ),
-              ),
+                return Text("\t" * paragraph.indent * 2 + paragraph.text,
+                    style: Theme.of(context).textTheme.bodyText1);
+              },
+              childCount: paragraphs.length,
+            ),
+          ),
         )
       ],
     );
