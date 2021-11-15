@@ -36,12 +36,29 @@ class VerificationWorkflow {
     }
 
     // show the QR scanner that will handle the rest
-    await Navigator.push(
-        rootContext,
-        AppRoute(
-            builder: (context) => QrCodeScannerPage(
-                  onCodeScanned: (code) => _handleQrCode(context, code),
-                )));
+    await Navigator.push(rootContext, AppRoute(builder: (context) {
+      return Expanded(
+          child: Column(children: [
+        AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          foregroundColor: Theme.of(context).colorScheme.onBackground,
+          title: const Text("Karte verifizieren"),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.help),
+                onPressed: () async {
+                  await settings.setHideVerificationInfo(false);
+                  await VerificationInfoDialog.show(context);
+                })
+          ],
+        ),
+        Expanded(
+            child: QrCodeScannerPage(
+          onCodeScanned: (code) => _handleQrCode(context, code),
+        ))
+      ]));
+    }));
   }
 
   Future<void> _handleQrCode(

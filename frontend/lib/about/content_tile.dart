@@ -45,8 +45,9 @@ class ContentPage extends StatelessWidget {
         child: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          floating: false,
           backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          foregroundColor: Theme.of(context).colorScheme.onBackground,
           title: Text(title),
         ),
         SliverList(

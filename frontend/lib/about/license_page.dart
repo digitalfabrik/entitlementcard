@@ -54,10 +54,11 @@ class CustomLicensePage extends StatelessWidget {
 
             return CustomScrollView(
               slivers: <Widget>[
-                const SliverAppBar(
-                  floating: false,
+                SliverAppBar(
                   backgroundColor: Colors.transparent,
-                  title: Text("Lizenzen"),
+                  elevation: 0.0,
+                  foregroundColor: Theme.of(context).colorScheme.onBackground,
+                  title: const Text("Lizenzen"),
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -100,8 +101,9 @@ class SingleLicensePage extends StatelessWidget {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          floating: false,
           backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          foregroundColor: Theme.of(context).colorScheme.onBackground,
           title: Text(licenseEntry.packageName),
         ),
         ...licenseEntry.licenseParagraphs.map(
