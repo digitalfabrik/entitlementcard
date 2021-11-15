@@ -38,17 +38,6 @@ class VerificationWorkflow {
     await Navigator.push(
         rootContext,
         MaterialPageRoute(
-            settings: AppBarParams.fromBuilder(() => AppBar(
-                  title: const Text("Karte verifizieren"),
-                  actions: [
-                    IconButton(
-                        icon: const Icon(Icons.help),
-                        onPressed: () async {
-                          await settings.setHideVerificationInfo(false);
-                          await VerificationInfoDialog.show(rootContext);
-                        })
-                  ],
-                )).toRouteSettings(),
             builder: (context) => QrCodeScannerPage(
                   onCodeScanned: (code) => _handleQrCode(context, code),
                 )));

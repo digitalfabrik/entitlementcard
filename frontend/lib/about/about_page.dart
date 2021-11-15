@@ -81,10 +81,8 @@ class AboutPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings: AppBarParams.fromTitle("Herausgeber")
-                            .toRouteSettings(),
                         builder: (context) =>
-                            ContentPage(children: getPublisherText(context)),
+                            ContentPage(title: "Herausgeber", children: getPublisherText(context)),
                       ),
                     );
                   },

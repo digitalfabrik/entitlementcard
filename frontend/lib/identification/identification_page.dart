@@ -56,8 +56,6 @@ class IdentificationPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: AppBarParams.fromTitle("Ehrenamtskarte hinzufügen")
-                .toRouteSettings(),
             builder: (context) => const IdentificationQrScannerPage()));
   }
 
@@ -65,8 +63,6 @@ class IdentificationPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: AppBarParams.fromTitle("Ehrenamtskarte beantragen")
-                .toRouteSettings(),
             builder: (context) => const ApplicationForm()));
   }
 }

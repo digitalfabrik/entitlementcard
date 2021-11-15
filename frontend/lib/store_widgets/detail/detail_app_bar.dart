@@ -6,6 +6,8 @@ import '../../graphql/graphql_api.graphql.dart';
 import '../../util/color_utils.dart';
 import '../../category_assets.dart';
 
+const double bottomSize = 100;
+
 class DetailAppBarBackButton extends StatelessWidget {
   final Color textColor;
 
@@ -92,70 +94,42 @@ class DetailAppBarBottom extends StatelessWidget {
   }
 }
 
-class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final int _acceptingStoreId;
-  final bool hideShowOnMapButton;
+class DetailAppBar extends StatelessWidget {
+  final AcceptingStoreById$Query$PhysicalStore matchingStore;
 
-  const DetailAppBar(this._acceptingStoreId,
-      {Key? key, this.hideShowOnMapButton = false})
-      : super(key: key);
+  const DetailAppBar(this.matchingStore, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final byIdQuery = AcceptingStoreByIdQuery(
-        variables: AcceptingStoreByIdArguments(
-            ids: IdsParamsInput(ids: [_acceptingStoreId])));
-    return Query(
-        options: QueryOptions(
-            document: byIdQuery.document,
-            variables: byIdQuery.getVariablesMap()),
-        builder: (result, {refetch, fetchMore}) {
-          var exception = result.exception;
-          if (result.hasException && exception != null) {
-            debugPrint(exception.toString());
-            return PreferredSize(
-                preferredSize: const Size.fromHeight(75.0), child: Container());
-          }
-          var data = result.data;
+    var categoryId = matchingStore.store.category.id;
 
-          if (result.isLoading || data == null) {
-            return PreferredSize(
-                preferredSize: const Size.fromHeight(75.0), child: Container());
-          }
+    final accentColor = getDarkenedColorForCategory(categoryId);
+    final categoryName = matchingStore.store.category.name;
+    final title = matchingStore.store.name ?? "Akzeptanzstelle";
 
-          final matchingStores = byIdQuery.parse(data).physicalStoresById;
-          if (matchingStores.isEmpty) {
-            throw ArgumentError("Store not found."); // FIXME
-          }
-          var categoryId = matchingStores.first.store.category.id;
+    final backgroundColor =
+        accentColor ?? Theme.of(context).colorScheme.primary;
+    final textColor = getReadableOnColor(backgroundColor);
+    final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
-          final accentColor = getDarkenedColorForCategory(categoryId);
-          final categoryName = matchingStores.first.store.category.name;
-          final title = matchingStores.first.store.name ?? "Akzeptanzstelle";
-
-          final backgroundColor =
-              accentColor ?? Theme.of(context).colorScheme.primary;
-          final textColor = getReadableOnColor(backgroundColor);
-          final textColorGrey = getReadableOnColorSecondary(backgroundColor);
-
-          return AppBar(
-            leading: const BackButton(),
-            flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-            bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(75.0),
-                child: DetailAppBarBottom(
-                    title: title,
-                    categoryId: categoryId,
-                    categoryName: categoryName,
-                    accentColor: accentColor,
-                    textColorGrey: textColorGrey,
-                    textColor: textColor)),
-            backgroundColor: accentColor,
-            elevation: 0.0, //No shadow
-          );
-        });
+    return SizedBox(
+        height: bottomSize + kToolbarHeight,
+        child: AppBar(
+          leading: const BackButton(),
+          flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(bottomSize),
+              child: SizedBox(
+                  height: bottomSize,
+                  child: DetailAppBarBottom(
+                      title: title,
+                      categoryId: categoryId,
+                      categoryName: categoryName,
+                      accentColor: accentColor,
+                      textColorGrey: textColorGrey,
+                      textColor: textColor))),
+          backgroundColor: accentColor,
+          elevation: 0.0, //No shadow
+        ));
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 75.0);
 }

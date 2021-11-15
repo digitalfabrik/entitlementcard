@@ -1,12 +1,10 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/home/home_page.dart';
-import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
+import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import './detail/detail_view.dart';
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
 import '../map/preview/models.dart';
@@ -92,8 +90,7 @@ class AcceptingStoreSummary extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          settings: AppBarParams.fromBuilder(() => DetailAppBar(store.id)).toRouteSettings(),
-          builder: (context) => DetailView(store.id,
+          builder: (context) => DetailPage(store.id,
               hideShowOnMapButton: !showMapButtonOnDetails),
         ));
   }

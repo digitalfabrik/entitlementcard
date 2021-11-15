@@ -14,9 +14,9 @@ class EntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var configuration = Configuration.of(context);
-
+    final configuration = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
+
     return FutureBuilder<SettingsModel>(
         future: settings.initialize(),
         builder: (context, snapshot) {
