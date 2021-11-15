@@ -1,13 +1,14 @@
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../configuration/configuration.dart';
+import '../routing.dart';
 import '../util/non_material_page.dart';
 import 'content_tile.dart';
 import 'dev_settings_view.dart';
 import 'texts.dart';
+import 'license_page.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -109,8 +110,8 @@ class AboutPage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const LicensePage(),
+                          AppRoute(
+                            builder: (context) => const CustomLicensePage(),
                           ));
                     }),
                 ListTile(
