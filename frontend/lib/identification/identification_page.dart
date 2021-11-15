@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../application/application_form.dart';
+import '../routing.dart';
 import '../util/non_material_page.dart';
 import '../verification/verification_workflow.dart';
 import 'card_detail_view/card_detail_view.dart';
@@ -55,14 +56,14 @@ class IdentificationPage extends StatelessWidget {
   void _showActivateQrCode(BuildContext context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
             builder: (context) => const IdentificationQrScannerPage()));
   }
 
   void _showEakApplication(BuildContext context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
             builder: (context) => const ApplicationForm()));
   }
 }

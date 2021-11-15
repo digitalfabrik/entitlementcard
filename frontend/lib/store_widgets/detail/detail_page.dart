@@ -21,43 +21,40 @@ class DetailPage extends StatelessWidget {
     final byIdQuery = AcceptingStoreByIdQuery(
         variables: AcceptingStoreByIdArguments(
             ids: IdsParamsInput(ids: [_acceptingStoreId])));
-    return Material(
-        child: Query(
-            options: QueryOptions(
-                document: byIdQuery.document,
-                variables: byIdQuery.getVariablesMap()),
-            builder: (result, {refetch, fetchMore}) {
-              var exception = result.exception;
-              var data = result.data;
-              
-              if (result.hasException && exception != null) {
-                return DetailErrorMessage(
-                    message: "Fehler beim Laden der Daten", refetch: refetch);
-              }
-              
-              if (result.isLoading || data == null) {
-                return const SafeArea(child: LinearProgressIndicator());
-              }
+    return Query(
+        options: QueryOptions(
+            document: byIdQuery.document,
+            variables: byIdQuery.getVariablesMap()),
+        builder: (result, {refetch, fetchMore}) {
+          var exception = result.exception;
+          var data = result.data;
 
-              final matchingStores = byIdQuery
-                  .parse(data)
-                  .physicalStoresById;
-              if (matchingStores.isEmpty) {
-                return const DetailErrorMessage(
-                    message: "Akzeptanzstelle nicht gefunden.");
-              }
-              final categoryId = matchingStores.first.store.category.id;
-              final accentColor = getDarkenedColorForCategory(categoryId);
-              return Column(children: [
-                DetailAppBar(matchingStores.first),
-                Expanded(
-                    child: DetailContent(
-                      matchingStores.first,
-                      hideShowOnMapButton: hideShowOnMapButton,
-                      accentColor: accentColor,
-                    ))
-              ]);
-            }));
+          if (result.hasException && exception != null) {
+            return DetailErrorMessage(
+                message: "Fehler beim Laden der Daten", refetch: refetch);
+          }
+
+          if (result.isLoading || data == null) {
+            return const SafeArea(child: LinearProgressIndicator());
+          }
+
+          final matchingStores = byIdQuery.parse(data).physicalStoresById;
+          if (matchingStores.isEmpty) {
+            return const DetailErrorMessage(
+                message: "Akzeptanzstelle nicht gefunden.");
+          }
+          final categoryId = matchingStores.first.store.category.id;
+          final accentColor = getDarkenedColorForCategory(categoryId);
+          return Column(children: [
+            DetailAppBar(matchingStores.first),
+            Expanded(
+                child: DetailContent(
+              matchingStores.first,
+              hideShowOnMapButton: hideShowOnMapButton,
+              accentColor: accentColor,
+            ))
+          ]);
+        });
   }
 }
 
@@ -78,4 +75,3 @@ class DetailErrorMessage extends StatelessWidget {
         ));
   }
 }
-

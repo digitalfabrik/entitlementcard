@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
 import '../map/preview/models.dart';
+import '../routing.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
@@ -89,7 +90,7 @@ class AcceptingStoreSummary extends StatelessWidget {
   void _openDetailView(BuildContext context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
           builder: (context) => DetailPage(store.id,
               hideShowOnMapButton: !showMapButtonOnDetails),
         ));

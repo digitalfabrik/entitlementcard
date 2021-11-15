@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 
 import 'app_flow.dart';
@@ -7,9 +8,7 @@ class AppFlowsStack extends StatelessWidget {
   final List<AppFlow> appFlows;
 
   const AppFlowsStack(
-      {Key? key,
-      required this.currentIndex,
-      required this.appFlows})
+      {Key? key, required this.currentIndex, required this.appFlows})
       : super(key: key);
 
   @override
@@ -46,8 +45,8 @@ class AppFlowsStack extends StatelessWidget {
   Widget _buildNavigatorForAppFlow(AppFlow appFlow) {
     return Navigator(
       key: appFlow.navigatorKey,
-      onGenerateRoute: (settings) => MaterialPageRoute(
-          settings: settings, builder: (context) => appFlow.widget),
+      onGenerateRoute: (settings) =>
+          AppRoute(settings: settings, builder: (context) => appFlow.widget),
     );
   }
 }

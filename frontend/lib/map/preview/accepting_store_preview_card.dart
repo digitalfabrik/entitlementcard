@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/home/floating_action_map_bar.dart';
+import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../store_widgets/accepting_store_summary.dart';

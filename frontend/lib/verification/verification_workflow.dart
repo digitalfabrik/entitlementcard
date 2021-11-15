@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
+import '../routing.dart';
 import 'dialogs/negative_verification_result_dialog.dart';
 import 'dialogs/positive_verification_result_dialog.dart';
 import 'dialogs/verification_info_dialog.dart';
@@ -37,7 +38,7 @@ class VerificationWorkflow {
     // show the QR scanner that will handle the rest
     await Navigator.push(
         rootContext,
-        MaterialPageRoute(
+        AppRoute(
             builder: (context) => QrCodeScannerPage(
                   onCodeScanned: (code) => _handleQrCode(context, code),
                 )));

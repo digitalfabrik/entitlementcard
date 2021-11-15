@@ -6,7 +6,7 @@ import '../map/map_page.dart';
 import '../search/search_page.dart';
 import 'app_flow.dart';
 import 'app_flows_stack.dart';
-import 'floating_action_map_bar.dart';
+import '../map/floating_action_map_bar.dart';
 
 const mapTabIndex = 0;
 
