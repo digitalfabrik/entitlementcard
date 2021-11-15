@@ -10,36 +10,40 @@ class SettingsModel extends ChangeNotifier {
   var _hideVerificationInfo = false;
   var _locationFeatureEnabled = false;
 
-  late SharedPreferences _preferences;
+  SharedPreferences? _preferences;
 
   Future<SettingsModel> initialize() async {
-    _preferences = await SharedPreferences.getInstance();
-    _firstStart = await loadFirstStart();
-    _hideVerificationInfo = await loadHideVerificationInfo();
-    _locationFeatureEnabled = await loadLocationFeatureEnabled();
+    try {
+      _preferences = await SharedPreferences.getInstance();
+      _firstStart = await loadFirstStart();
+      _hideVerificationInfo = await loadHideVerificationInfo();
+      _locationFeatureEnabled = await loadLocationFeatureEnabled();
+    } on Exception {
+      _preferences?.clear();
+    }
     return this;
   }
 
   Future<bool> loadFirstStart() async {
-    return _preferences.getBool("firstStart") ?? true;
+    return _preferences?.getBool("firstStart") ?? true;
   }
 
   // default false
   Future<void> setFirstStart(enabled) async {
     _firstStart = enabled;
     notifyListeners();
-    await _preferences.setBool("firstStart", enabled);
+    await _preferences?.setBool("firstStart", enabled);
   }
 
   Future<bool> loadHideVerificationInfo() async {
-    return _preferences.getBool(hideVerificationInfoPropertyName) ?? false;
+    return _preferences?.getBool(hideVerificationInfoPropertyName) ?? false;
   }
 
   // default true
   Future<void> setHideVerificationInfo(enabled) async {
     _hideVerificationInfo = enabled;
     notifyListeners();
-    await _preferences.setBool(hideVerificationInfoPropertyName, enabled);
+    await _preferences?.setBool(hideVerificationInfoPropertyName, enabled);
   }
 
   Future<bool> loadLocationFeatureEnabled() async {
@@ -49,13 +53,13 @@ class SettingsModel extends ChangeNotifier {
       return true;
     }
 
-    return _preferences.getBool("location") ?? true;
+    return _preferences?.getBool("location") ?? true;
   }
 
   Future<void> setLocationFeatureEnabled(enabled) async {
     _locationFeatureEnabled = enabled;
     notifyListeners();
-    await _preferences.setBool("location", enabled);
+    await _preferences?.setBool("location", enabled);
   }
 
   get firstStart => _firstStart;
