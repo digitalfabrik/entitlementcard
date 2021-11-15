@@ -22,7 +22,8 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
 
       checkAndRequestLocationPermission(context,
               requestIfNotGranted: false,
-              onDisableFeature: () => settings.setLocationFeatureEnabled(false))
+              onDisableFeature: () => settings.setLocationFeatureEnabled(false),
+              onEnableFeature: () => settings.setLocationFeatureEnabled(true))
           .then((LocationStatus permission) => setState(() {
                 _locationPermissionStatus = permission;
               }));

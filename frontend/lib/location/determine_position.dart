@@ -75,10 +75,12 @@ class RequestedPosition {
 /// Determine the current position of the device.
 Future<RequestedPosition> determinePosition(BuildContext context,
     {bool requestIfNotGranted = false,
-    Future<void> Function()? onDisableFeature}) async {
+    Future<void> Function()? onDisableFeature,
+    Future<void> Function()? onEnableFeature}) async {
   final permission = await checkAndRequestLocationPermission(context,
       requestIfNotGranted: requestIfNotGranted,
-      onDisableFeature: onDisableFeature);
+      onDisableFeature: onDisableFeature,
+      onEnableFeature: onEnableFeature);
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
@@ -97,7 +99,8 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
     {bool requestIfNotGranted = true,
     rationale =
         "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
-    Future<void> Function()? onDisableFeature}) async {
+    Future<void> Function()? onDisableFeature,
+    Future<void> Function()? onEnableFeature}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
@@ -119,6 +122,12 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
+      // This happens only on iOS
+
+      if (onDisableFeature != null) {
+        await onDisableFeature();
+      }
+
       return LocationPermission.deniedForever.toLocationStatus();
     } else if (permission == LocationPermission.denied) {
       final requestResult = await Geolocator.requestPermission();
@@ -152,13 +161,27 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         return LocationPermission.deniedForever.toLocationStatus();
       }
 
-      return requestResult.toLocationStatus();
+      var status = requestResult.toLocationStatus();
+
+      if (status.isPermissionGranted() && onEnableFeature != null) {
+        await onEnableFeature();
+      }
+
+      return status;
     }
 
-    return permission.toLocationStatus();
+    var status = permission.toLocationStatus();
+    if (status.isPermissionGranted() && onEnableFeature != null) {
+      await onEnableFeature();
+    }
+    return status;
   } else {
     var permission = await Geolocator.checkPermission();
-    return permission.toLocationStatus();
+    var status = permission.toLocationStatus();
+    if (status.isPermissionGranted() && onEnableFeature != null) {
+      await onEnableFeature();
+    }
+    return status;
   }
 }
 
