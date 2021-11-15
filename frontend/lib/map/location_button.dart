@@ -56,10 +56,14 @@ class _LocationButtonState extends State<LocationButton> {
 
   _showFeatureDisabled() async {
     var messengerState = ScaffoldMessenger.of(context);
-    messengerState.showSnackBar(const SnackBar(
+    messengerState.showSnackBar(SnackBar(
       behavior: SnackBarBehavior.floating,
-      content: Text('Die Standortfreigabe ist deaktiviert. '
-          'Bitte aktivieren Sie diese in den Einstellungen.'),
+      content: const Text('Die Standortfreigabe ist deaktiviert.'),
+      action: SnackBarAction(
+          label: "Einstellungen",
+          onPressed: () async {
+            await openSettingsToGrantPermissions(context);
+          }),
     ));
   }
 
