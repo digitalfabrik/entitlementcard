@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
+import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -32,28 +33,26 @@ class DetailPage extends StatelessWidget {
           if (result.hasException && exception != null) {
             return DetailErrorMessage(
                 message: "Fehler beim Laden der Daten", refetch: refetch);
+          } else if (result.isNotLoading && data != null) {
+            final matchingStores = byIdQuery.parse(data).physicalStoresById;
+            if (matchingStores.isEmpty) {
+              return const DetailErrorMessage(
+                  message: "Akzeptanzstelle nicht gefunden.");
+            }
+            final categoryId = matchingStores.first.store.category.id;
+            final accentColor = getDarkenedColorForCategory(categoryId);
+            return Column(children: [
+              DetailAppBar(matchingStores.first),
+              Expanded(
+                  child: DetailContent(
+                matchingStores.first,
+                hideShowOnMapButton: hideShowOnMapButton,
+                accentColor: accentColor,
+              ))
+            ]);
+          } else {
+            return const TopLoadingSpinner();
           }
-
-          if (result.isLoading || data == null) {
-            return const SafeArea(child: LinearProgressIndicator());
-          }
-
-          final matchingStores = byIdQuery.parse(data).physicalStoresById;
-          if (matchingStores.isEmpty) {
-            return const DetailErrorMessage(
-                message: "Akzeptanzstelle nicht gefunden.");
-          }
-          final categoryId = matchingStores.first.store.category.id;
-          final accentColor = getDarkenedColorForCategory(categoryId);
-          return Column(children: [
-            DetailAppBar(matchingStores.first),
-            Expanded(
-                child: DetailContent(
-              matchingStores.first,
-              hideShowOnMapButton: hideShowOnMapButton,
-              accentColor: accentColor,
-            ))
-          ]);
         });
   }
 }
