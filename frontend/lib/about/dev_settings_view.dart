@@ -47,25 +47,6 @@ class DevSettingsView extends StatelessWidget {
               title: const Text('Log sample execption'),
               onTap: () => log("Sample exception.",
                   error: Exception("Sample exception..."))),
-          ListTile(
-              leading: const Icon(Icons.location_on),
-              title: const Text("Activate Location Permission"),
-              onTap: () async {
-                var permission = await checkAndRequestLocationPermission(
-                    context,
-                    requestIfNotGranted: true);
-
-                if (permission == LocationStatus.deniedForever) {
-                  await openSettingsToGrantPermissions(context);
-                }
-
-                permission = await checkAndRequestLocationPermission(context,
-                    requestIfNotGranted: true);
-
-                if (permission.isPermissionGranted()) {
-                  settings.setLocationFeatureEnabled(true);
-                }
-              }),
         ],
       ),
     );

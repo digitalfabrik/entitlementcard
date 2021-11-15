@@ -1,6 +1,4 @@
-import 'package:ehrenamtskarte/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
