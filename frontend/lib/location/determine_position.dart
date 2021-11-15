@@ -93,8 +93,6 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// Ensures all preconditions needed to determine the current position.
 /// If needed, location permissions are requested.
 ///
-/// When the location services are not enabled then it will return
-/// LocationPermission.deniedForever
 Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
     {bool requestIfNotGranted = true,
     rationale =
