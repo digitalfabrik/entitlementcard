@@ -1,6 +1,6 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
@@ -112,15 +112,10 @@ class DetailAppBar extends StatelessWidget {
         accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
-
-    // Note: A SizedBox is required because AppBar contains a Column.
-    // If we want to add a AppBar into a column, then we need to set its size.
-    return SizedBox(
-        height: MediaQuery.of(context).padding.top + bottomSize + kToolbarHeight,
-        child: AppBar(
-          leading: const BackButton(),
+    
+    return NavigationBarWithBottom(
           flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-          backgroundColor: accentColor,
+          color: accentColor,
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(bottomSize),
               child: DetailAppBarBottom(
@@ -130,7 +125,6 @@ class DetailAppBar extends StatelessWidget {
                   accentColor: accentColor,
                   textColorGrey: textColorGrey,
                   textColor: textColor)),
-          elevation: 0.0
-        ));
+        );
   }
 }

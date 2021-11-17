@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -42,11 +43,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Column(children: [
-      AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
-        title: const Text("Karte beantragen"),
+      const NavigationBar(
+        title: "Karte beantragen",
       ),
       Expanded(
           child: Stepper(
