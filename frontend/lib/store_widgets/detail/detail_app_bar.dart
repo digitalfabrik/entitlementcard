@@ -7,7 +7,7 @@ import '../../graphql/graphql_api.graphql.dart';
 import '../../util/color_utils.dart';
 import '../../category_assets.dart';
 
-const double bottomSize = 75;
+const double bottomSize = 100;
 
 class DetailAppBarBackButton extends StatelessWidget {
   final Color textColor;
@@ -88,7 +88,7 @@ class DetailAppBarBottom extends StatelessWidget {
             title ?? "",
             style:
                 Theme.of(context).textTheme.headline6?.apply(color: textColor),
-            maxLines: 2,
+            maxLines: 3,
             overflow: TextOverflow.ellipsis,
           )
         ]));
@@ -112,12 +112,16 @@ class DetailAppBar extends StatelessWidget {
         accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
-    
+
     return NavigationBarWithBottom(
-          flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-          color: accentColor,
-          bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(bottomSize),
+        flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
+        color: accentColor,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(bottomSize),
+          // The SizedBox makes sure that the text does not move above the
+          // AppBar, but is truncated at the bottom of the "bottom" component.
+          child: SizedBox(
+              height: bottomSize,
               child: DetailAppBarBottom(
                   title: title,
                   categoryId: categoryId,
@@ -125,6 +129,6 @@ class DetailAppBar extends StatelessWidget {
                   accentColor: accentColor,
                   textColorGrey: textColorGrey,
                   textColor: textColor)),
-        );
+        ));
   }
 }
