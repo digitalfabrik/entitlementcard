@@ -1,12 +1,9 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../application/application_form.dart';
 import '../routing.dart';
-import '../util/non_material_page.dart';
 import '../verification/verification_workflow.dart';
 import 'card_detail_view/card_detail_view.dart';
 import 'card_details_model.dart';
@@ -22,31 +19,27 @@ class IdentificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        child: Consumer<CardDetailsModel>(
-            builder: (context, cardDetailsModel, child) {
-          if (!cardDetailsModel.isInitialized) {
-            return Container();
-          }
+    return Consumer<CardDetailsModel>(
+        builder: (context, cardDetailsModel, child) {
+      if (!cardDetailsModel.isInitialized) {
+        return Container();
+      }
 
-          var cardDetails = cardDetailsModel.cardDetails;
-          if (cardDetails != null) {
-            return CardDetailView(
-              cardDetails: cardDetails,
-              startActivateEak: () => _showActivateQrCode(context),
-              startEakApplication: () => _showEakApplication(context),
-              startVerification: () =>
-                  _showVerificationDialog(context, settings),
-            );
-          }
+      var cardDetails = cardDetailsModel.cardDetails;
+      if (cardDetails != null) {
+        return CardDetailView(
+          cardDetails: cardDetails,
+          startActivateEak: () => _showActivateQrCode(context),
+          startEakApplication: () => _showEakApplication(context),
+          startVerification: () => _showVerificationDialog(context, settings),
+        );
+      }
 
-          return NoCardView(
-              startVerification: () =>
-                  _showVerificationDialog(context, settings),
-              startEakApplication: () => _showEakApplication(context),
-              startActivateQrCode: () => _showActivateQrCode(context));
-        }),
-        value: getDefaultOverlayStyle(context));
+      return NoCardView(
+          startVerification: () => _showVerificationDialog(context, settings),
+          startEakApplication: () => _showEakApplication(context),
+          startActivateQrCode: () => _showActivateQrCode(context));
+    });
   }
 
   void _showVerificationDialog(context, SettingsModel settings) async {
@@ -54,16 +47,12 @@ class IdentificationPage extends StatelessWidget {
   }
 
   void _showActivateQrCode(BuildContext context) {
-    Navigator.push(
-        context,
-        AppRoute(
-            builder: (context) => const IdentificationQrScannerPage()));
+    Navigator.push(context,
+        AppRoute(builder: (context) => const IdentificationQrScannerPage()));
   }
 
   void _showEakApplication(BuildContext context) {
     Navigator.push(
-        context,
-        AppRoute(
-            builder: (context) => const ApplicationForm()));
+        context, AppRoute(builder: (context) => const ApplicationForm()));
   }
 }

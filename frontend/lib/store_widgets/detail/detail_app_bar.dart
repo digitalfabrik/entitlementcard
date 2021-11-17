@@ -130,8 +130,7 @@ class DetailAppBar extends StatelessWidget {
                   accentColor: accentColor,
                   textColorGrey: textColorGrey,
                   textColor: textColor)),
-          elevation: 0.0,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
+          elevation: 0.0
         ));
   }
 }

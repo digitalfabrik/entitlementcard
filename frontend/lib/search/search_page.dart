@@ -40,7 +40,6 @@ class _SearchPageState extends State<SearchPage> {
       CustomScrollView(
         slivers: [
           SliverAppBar(
-            systemOverlayStyle: SystemUiOverlayStyle.light,
             title: TextField(
               onChanged: _onSearchFieldTextChanged,
               controller: textEditingController,
