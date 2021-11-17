@@ -7,7 +7,7 @@ import '../../graphql/graphql_api.graphql.dart';
 import '../../util/color_utils.dart';
 import '../../category_assets.dart';
 
-const double bottomSize = 50;
+const double bottomSize = 75;
 
 class DetailAppBarBackButton extends StatelessWidget {
   final Color textColor;
