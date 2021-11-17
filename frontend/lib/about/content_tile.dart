@@ -46,9 +46,12 @@ class ContentPage extends StatelessWidget {
         SliverNavigationBar(
           title: title,
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(children),
-        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(10),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(children),
+          ),
+        )
       ],
     );
   }
