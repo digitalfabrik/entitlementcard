@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
 import '../../util/color_utils.dart';
 import '../../category_assets.dart';
 
-const double bottomSize = 100;
+const double bottomSize = 50;
 
 class DetailAppBarBackButton extends StatelessWidget {
   final Color textColor;
@@ -112,24 +113,25 @@ class DetailAppBar extends StatelessWidget {
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
+    // Note: A SizedBox is required because AppBar contains a Column.
+    // If we want to add a AppBar into a column, then we need to set its size.
     return SizedBox(
-        height: bottomSize + kToolbarHeight,
+        height: MediaQuery.of(context).padding.top + bottomSize + kToolbarHeight,
         child: AppBar(
           leading: const BackButton(),
           flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
+          backgroundColor: accentColor,
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(bottomSize),
-              child: SizedBox(
-                  height: bottomSize,
-                  child: DetailAppBarBottom(
-                      title: title,
-                      categoryId: categoryId,
-                      categoryName: categoryName,
-                      accentColor: accentColor,
-                      textColorGrey: textColorGrey,
-                      textColor: textColor))),
-          backgroundColor: accentColor,
-          elevation: 0.0, //No shadow
+              child: DetailAppBarBottom(
+                  title: title,
+                  categoryId: categoryId,
+                  categoryName: categoryName,
+                  accentColor: accentColor,
+                  textColorGrey: textColorGrey,
+                  textColor: textColor)),
+          elevation: 0.0,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ));
   }
 }

@@ -41,7 +41,7 @@ class DetailPage extends StatelessWidget {
             }
             final categoryId = matchingStores.first.store.category.id;
             final accentColor = getDarkenedColorForCategory(categoryId);
-            return Column(children: [
+            return Column(mainAxisSize: MainAxisSize.min, children: [
               DetailAppBar(matchingStores.first),
               Expanded(
                   child: DetailContent(
