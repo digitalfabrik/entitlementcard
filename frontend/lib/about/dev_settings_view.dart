@@ -4,6 +4,7 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../application/application_model.dart';
 import '../graphql/graphql_api.graphql.dart';
@@ -48,6 +49,17 @@ class DevSettingsView extends StatelessWidget {
               title: const Text('Log sample execption'),
               onTap: () => log("Sample exception.",
                   error: Exception("Sample exception..."))),
+          ListTile(
+            title: const Text('Inspect settings'),
+            onTap: () {
+              showDialog<bool>(
+                context: context,
+                builder: (context) => SimpleDialog(
+                    title: const Text("Settings"),
+                    children: [Text(settings.toString())]),
+              );
+            },
+          ),
         ],
       ),
     );

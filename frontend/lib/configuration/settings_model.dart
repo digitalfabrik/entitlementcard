@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ehrenamtskarte/location/determine_position.dart';
-import 'package:geolocator/geolocator.dart';
 
 const hideVerificationInfoPropertyName = "hideVerificationInfo";
 
@@ -47,12 +45,6 @@ class SettingsModel extends ChangeNotifier {
   }
 
   Future<bool> loadLocationFeatureEnabled() async {
-    var permission = await Geolocator.checkPermission();
-
-    if (permission.toLocationStatus().isPermissionGranted()) {
-      return true;
-    }
-
     return _preferences?.getBool("location") ?? true;
   }
 
@@ -67,4 +59,9 @@ class SettingsModel extends ChangeNotifier {
   get hideVerificationInfo => _hideVerificationInfo;
 
   get locationFeatureEnabled => _locationFeatureEnabled;
+
+  @override
+  String toString() {
+    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled}';
+  }
 }

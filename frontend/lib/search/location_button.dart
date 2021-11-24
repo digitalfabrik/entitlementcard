@@ -71,13 +71,19 @@ class _LocationButtonState extends State<LocationButton> {
         ? await determinePosition(context,
             requestIfNotGranted: true,
             onDisableFeature: () async =>
-                await settings.setLocationFeatureEnabled(false))
+                await settings.setLocationFeatureEnabled(false),
+            onEnableFeature: () async {
+              await settings.setLocationFeatureEnabled(true);
+            })
         : await determinePosition(context,
-            requestIfNotGranted: false,
-            onDisableFeature: () async =>
-                await settings.setLocationFeatureEnabled(false)).timeout(
-            const Duration(milliseconds: 2000),
-            onTimeout: () => RequestedPosition.unknown());
+                requestIfNotGranted: false,
+                onDisableFeature: () async =>
+                    await settings.setLocationFeatureEnabled(false),
+                onEnableFeature: () async {
+                  await settings.setLocationFeatureEnabled(true);
+                })
+            .timeout(const Duration(milliseconds: 2000),
+                onTimeout: () => RequestedPosition.unknown());
 
     var position = requiredPosition.position;
     if (position != null) {

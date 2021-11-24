@@ -36,7 +36,7 @@ class DetailAppBarHeaderImage extends StatelessWidget {
     var currentCategoryId = categoryId;
 
     if (currentCategoryId != null &&
-        currentCategoryId > categoryAssets.length) {
+        currentCategoryId <= categoryAssets.length) {
       var currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
       if (currentDetailIcon != null) {
         return SvgPicture.asset(
