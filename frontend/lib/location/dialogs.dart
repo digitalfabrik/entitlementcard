@@ -43,3 +43,33 @@ class LocationPermissionDialog extends StatelessWidget {
   }
 }
 
+class RationaleDialog extends StatelessWidget {
+  final String _rationale;
+
+  const RationaleDialog({Key? key, required String rationale}) : _rationale = rationale, super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Standortberechtigung"),
+      content:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(_rationale),
+          const Text('Soll nochmal nach der Berechtigung gefragt werden?')
+        ],
+      ) ,
+      actions: [
+        TextButton(
+            child: const Text("Berechtigung erteilen"),
+            onPressed: () => Navigator.of(context).pop(true)),
+        TextButton(
+            child: const Text("Abbrechen"),
+            onPressed: () => Navigator.of(context).pop(true))
+      ],
+    );
+  }
+}
+
+

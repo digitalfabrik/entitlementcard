@@ -29,8 +29,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
+    _pagingController.addPageRequestListener(_fetchPage);
   }
 
   @override
@@ -45,8 +45,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   void didUpdateWidget(ResultsLoader oldWidget) {
-    _pagingController.refresh();
     super.didUpdateWidget(oldWidget);
+    _pagingController.refresh();
   }
 
   Future<void> _fetchPage(int pageKey) async {
