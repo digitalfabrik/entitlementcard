@@ -116,7 +116,7 @@ class CategoryIconIndicator extends StatelessWidget {
       padding: padding,
       child: currentSvgIconPath != null
           ? SvgPicture.asset(currentSvgIconPath,
-              width: 30, semanticsLabel: categoryName ?? "Unbekannte Kategorie")
+              width: 30, semanticsLabel: categoryName)
           : const Icon(
               Icons.info,
               size: 30,
