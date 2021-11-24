@@ -389,32 +389,6 @@ Map<String, dynamic> _$AcceptingStoreSummaryById$QueryToJson(
           instance.physicalStoresById.map((e) => e.toJson()).toList(),
     };
 
-CardVerificationByHash$Query _$CardVerificationByHash$QueryFromJson(
-    Map<String, dynamic> json) {
-  return CardVerificationByHash$Query()..cardValid = json['cardValid'] as bool;
-}
-
-Map<String, dynamic> _$CardVerificationByHash$QueryToJson(
-        CardVerificationByHash$Query instance) =>
-    <String, dynamic>{
-      'cardValid': instance.cardValid,
-    };
-
-CardVerificationModelInput _$CardVerificationModelInputFromJson(
-    Map<String, dynamic> json) {
-  return CardVerificationModelInput(
-    cardDetailsHashBase64: json['cardDetailsHashBase64'] as String,
-    totp: json['totp'] as int,
-  );
-}
-
-Map<String, dynamic> _$CardVerificationModelInputToJson(
-        CardVerificationModelInput instance) =>
-    <String, dynamic>{
-      'cardDetailsHashBase64': instance.cardDetailsHashBase64,
-      'totp': instance.totp,
-    };
-
 AddBlueEakApplication$Mutation _$AddBlueEakApplication$MutationFromJson(
     Map<String, dynamic> json) {
   return AddBlueEakApplication$Mutation()
@@ -447,11 +421,11 @@ Map<String, dynamic> _$BlueCardApplicationInputToJson(
         BlueCardApplicationInput instance) =>
     <String, dynamic>{
       'applicationType': _$ApplicationTypeEnumMap[instance.applicationType],
-      'entitlement': instance.entitlement?.toJson(),
+      'entitlement': instance.entitlement.toJson(),
       'givenInformationIsCorrectAndComplete':
           instance.givenInformationIsCorrectAndComplete,
       'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData?.toJson(),
+      'personalData': instance.personalData.toJson(),
     };
 
 K _$enumDecode<K, V>(
@@ -575,9 +549,9 @@ OrganizationInput _$OrganizationInputFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$OrganizationInputToJson(OrganizationInput instance) =>
     <String, dynamic>{
-      'address': instance.address?.toJson(),
+      'address': instance.address.toJson(),
       'category': instance.category,
-      'contact': instance.contact?.toJson(),
+      'contact': instance.contact.toJson(),
       'name': instance.name,
       'website': instance.website,
     };
@@ -644,7 +618,7 @@ Map<String, dynamic> _$WorkAtOrganizationInputToJson(
       'amountOfWork': instance.amountOfWork,
       'amountOfWorkUnit': _$AmountOfWorkUnitEnumMap[instance.amountOfWorkUnit],
       'certificate': instance.certificate?.toJson(),
-      'organization': instance.organization?.toJson(),
+      'organization': instance.organization.toJson(),
       'payment': instance.payment,
       'responsibility': instance.responsibility,
       'workSinceDate': instance.workSinceDate,
@@ -672,7 +646,7 @@ PersonalDataInput _$PersonalDataInputFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PersonalDataInputToJson(PersonalDataInput instance) =>
     <String, dynamic>{
-      'address': instance.address?.toJson(),
+      'address': instance.address.toJson(),
       'dateOfBirth': instance.dateOfBirth,
       'emailAddress': instance.emailAddress,
       'forenames': instance.forenames,
@@ -711,11 +685,11 @@ GoldenEakCardApplicationInput _$GoldenEakCardApplicationInputFromJson(
 Map<String, dynamic> _$GoldenEakCardApplicationInputToJson(
         GoldenEakCardApplicationInput instance) =>
     <String, dynamic>{
-      'entitlement': instance.entitlement?.toJson(),
+      'entitlement': instance.entitlement.toJson(),
       'givenInformationIsCorrectAndComplete':
           instance.givenInformationIsCorrectAndComplete,
       'hasAcceptedPrivacyPolicy': instance.hasAcceptedPrivacyPolicy,
-      'personalData': instance.personalData?.toJson(),
+      'personalData': instance.personalData.toJson(),
     };
 
 GoldenCardEntitlementInput _$GoldenCardEntitlementInputFromJson(
@@ -751,6 +725,32 @@ const _$GoldenCardEntitlementTypeEnumMap = {
   GoldenCardEntitlementType.standard: 'STANDARD',
   GoldenCardEntitlementType.artemisUnknown: 'ARTEMIS_UNKNOWN',
 };
+
+CardVerificationByHash$Query _$CardVerificationByHash$QueryFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationByHash$Query()..cardValid = json['cardValid'] as bool;
+}
+
+Map<String, dynamic> _$CardVerificationByHash$QueryToJson(
+        CardVerificationByHash$Query instance) =>
+    <String, dynamic>{
+      'cardValid': instance.cardValid,
+    };
+
+CardVerificationModelInput _$CardVerificationModelInputFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationModelInput(
+    cardDetailsHashBase64: json['cardDetailsHashBase64'] as String,
+    totp: json['totp'] as int,
+  );
+}
+
+Map<String, dynamic> _$CardVerificationModelInputToJson(
+        CardVerificationModelInput instance) =>
+    <String, dynamic>{
+      'cardDetailsHashBase64': instance.cardDetailsHashBase64,
+      'totp': instance.totp,
+    };
 
 GetRegionsByIdArguments _$GetRegionsByIdArgumentsFromJson(
     Map<String, dynamic> json) {
@@ -804,20 +804,6 @@ Map<String, dynamic> _$AcceptingStoreSummaryByIdArgumentsToJson(
       'ids': instance.ids.toJson(),
     };
 
-CardVerificationByHashArguments _$CardVerificationByHashArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return CardVerificationByHashArguments(
-    card: CardVerificationModelInput.fromJson(
-        json['card'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$CardVerificationByHashArgumentsToJson(
-        CardVerificationByHashArguments instance) =>
-    <String, dynamic>{
-      'card': instance.card.toJson(),
-    };
-
 AddBlueEakApplicationArguments _$AddBlueEakApplicationArgumentsFromJson(
     Map<String, dynamic> json) {
   return AddBlueEakApplicationArguments(
@@ -830,7 +816,7 @@ AddBlueEakApplicationArguments _$AddBlueEakApplicationArgumentsFromJson(
 Map<String, dynamic> _$AddBlueEakApplicationArgumentsToJson(
         AddBlueEakApplicationArguments instance) =>
     <String, dynamic>{
-      'application': instance.application?.toJson(),
+      'application': instance.application.toJson(),
       'regionId': instance.regionId,
     };
 
@@ -846,6 +832,20 @@ AddGoldenEakApplicationArguments _$AddGoldenEakApplicationArgumentsFromJson(
 Map<String, dynamic> _$AddGoldenEakApplicationArgumentsToJson(
         AddGoldenEakApplicationArguments instance) =>
     <String, dynamic>{
-      'application': instance.application?.toJson(),
+      'application': instance.application.toJson(),
       'regionId': instance.regionId,
+    };
+
+CardVerificationByHashArguments _$CardVerificationByHashArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return CardVerificationByHashArguments(
+    card: CardVerificationModelInput.fromJson(
+        json['card'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$CardVerificationByHashArgumentsToJson(
+        CardVerificationByHashArguments instance) =>
+    <String, dynamic>{
+      'card': instance.card.toJson(),
     };
