@@ -42,6 +42,7 @@ class DetailAppBarHeaderImage extends StatelessWidget {
       if (currentDetailIcon != null) {
         return SvgPicture.asset(
           currentDetailIcon,
+          width: double.infinity,
           semanticsLabel: 'Header',
           alignment: Alignment.bottomRight,
         );
@@ -88,7 +89,7 @@ class DetailAppBarBottom extends StatelessWidget {
             title ?? "",
             style:
                 Theme.of(context).textTheme.headline6?.apply(color: textColor),
-            maxLines: 3,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )
         ]));
