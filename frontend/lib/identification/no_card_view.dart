@@ -90,7 +90,7 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startVerification,
-                            child: const Text("Jetzt Ehrenamtskarte validieren"),
+                            child: const Text("Jetzt Ehrenamtskarte verifizieren"),
                           ),
                         )
                       ]))

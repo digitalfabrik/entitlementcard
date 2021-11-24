@@ -45,20 +45,18 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Stack(children: [
-          MapWithFutures(
-            onFeatureClick: _onFeatureClick,
-            onNoFeatureClick: stopShowingAcceptingStore,
-            onFeatureClickLayerFilter: const ["physical_stores"],
-            onMapCreated: (controller) {
-              controller.setTelemetryEnabled(enabled: false);
-              setState(() => _controller = controller);
-              widget.onMapCreated(this);
-            },
-          ),
-        ]));
+    return Stack(children: [
+      MapWithFutures(
+        onFeatureClick: _onFeatureClick,
+        onNoFeatureClick: stopShowingAcceptingStore,
+        onFeatureClickLayerFilter: const ["physical_stores"],
+        onMapCreated: (controller) {
+          controller.setTelemetryEnabled(enabled: false);
+          setState(() => _controller = controller);
+          widget.onMapCreated(this);
+        },
+      ),
+    ]);
   }
 
   @override

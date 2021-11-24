@@ -1,11 +1,8 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../routing.dart';
-import '../util/non_material_page.dart';
 import '../verification/verification_workflow.dart';
 import 'card_detail_view/card_detail_view.dart';
 import 'card_details_model.dart';
@@ -21,28 +18,26 @@ class IdentificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        child: Consumer<CardDetailsModel>(
-            builder: (context, cardDetailsModel, child) {
-          if (!cardDetailsModel.isInitialized) {
-            return Container();
-          }
+    return Consumer<CardDetailsModel>(
+        builder: (context, cardDetailsModel, child) {
+      if (!cardDetailsModel.isInitialized) {
+        return Container();
+      }
 
-          var cardDetails = cardDetailsModel.cardDetails;
-          if (cardDetails != null) {
-            return CardDetailView(
-              cardDetails: cardDetails,
-              startActivateEak: () => _showActivateQrCode(context),
-              startEakApplication: () {
+      var cardDetails = cardDetailsModel.cardDetails;
+      if (cardDetails != null) {
+        return CardDetailView(
+          cardDetails: cardDetails,
+          startActivateEak: () => _showActivateQrCode(context),
+          startEakApplication: () {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   behavior: SnackBarBehavior.floating,
                   content: Text('Not yet implemented.'),
                 ));
               },
-              startVerification: () =>
-                  _showVerificationDialog(context, settings),
-            );
-          }
+          startVerification: () => _showVerificationDialog(context, settings),
+        );
+      }
 
           return NoCardView(
             startVerification: () => _showVerificationDialog(context, settings),
@@ -54,8 +49,7 @@ class IdentificationPage extends StatelessWidget {
               ));
             },
           );
-        }),
-        value: getDefaultOverlayStyle(context));
+    });
   }
 
   void _showVerificationDialog(context, SettingsModel settings) async {

@@ -47,9 +47,7 @@ class _LocationButtonState extends State<LocationButton> {
             duration: const Duration(milliseconds: 200),
           ),
           onPressed: _status == LocationPermissionStatus.requestFinished
-              ? (settings.locationFeatureEnabled
-                  ? () => _determinePosition(settings)
-                  : _showFeatureDisabled)
+              ? () => _determinePosition(settings)
               : null,
         ));
   }
@@ -71,9 +69,14 @@ class _LocationButtonState extends State<LocationButton> {
     setState(() => _status = LocationPermissionStatus.requesting);
     final requestedPosition = await determinePosition(context,
         requestIfNotGranted: true,
-        onDisableFeature: () async =>
-            await settings.setLocationFeatureEnabled(false));
-
+        onDisableFeature: () async {
+          await settings.setLocationFeatureEnabled(false);
+          await _showFeatureDisabled();
+        },
+        onEnableFeature: () async {
+          await settings.setLocationFeatureEnabled(true);
+        });
+    
     await widget.bringCameraToUser(requestedPosition);
 
     setState(() => _status = LocationPermissionStatus.requestFinished);

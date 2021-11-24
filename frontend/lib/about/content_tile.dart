@@ -1,4 +1,7 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
+
+import '../routing.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
@@ -23,7 +26,7 @@ class ContentTile extends StatelessWidget {
   void _showContent(context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
           builder: (context) => ContentPage(title: title, children: children),
         ));
   }
@@ -38,18 +41,18 @@ class ContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: CustomScrollView(
+    return CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar(
-          floating: false,
-          backgroundColor: Colors.transparent,
-          title: Text(title),
+        SliverNavigationBar(
+          title: title,
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(children),
-        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(10),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(children),
+          ),
+        )
       ],
-    ));
+    );
   }
 }

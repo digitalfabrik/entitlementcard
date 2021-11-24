@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "de.nrw.it.giz.ehrensache.bayern.android"
         minSdkVersion 20
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

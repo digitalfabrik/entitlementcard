@@ -18,7 +18,7 @@ ThemeData get lightTheme {
   );
   return lightTheme.copyWith(
     appBarTheme: AppBarTheme(
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
       color: lightTheme.colorScheme.primary,
     ),
   );

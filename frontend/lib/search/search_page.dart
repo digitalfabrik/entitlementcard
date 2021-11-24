@@ -1,8 +1,6 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import '../category_assets.dart';
-import '../debouncer.dart';
 import '../graphql/graphql_api.graphql.dart';
 import 'filter_bar.dart';
 import 'location_button.dart';
@@ -16,53 +14,20 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String? _searchFieldText;
-  final TextEditingController _textEditingController = TextEditingController();
+  String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
-  final _debouncer = Debouncer(delay: const Duration(milliseconds: 50));
-  final FocusNode _focusNode = FocusNode();
   CoordinatesInput? _coordinates;
 
   @override
-  void dispose() {
-    super.dispose();
-    _textEditingController.dispose();
-    _focusNode.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    const appBarTextStyle = TextStyle(color: Colors.white);
-    var textEditingController = _textEditingController;
-    var searchFieldText = _searchFieldText;
     var currentCoordinatesInput = _coordinates;
     return Stack(children: [
       CustomScrollView(
         slivers: [
-          SliverAppBar(
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-            title: TextField(
-              onChanged: _onSearchFieldTextChanged,
-              controller: textEditingController,
-              focusNode: _focusNode,
-              decoration: const InputDecoration.collapsed(
-                hintText: "Tippen, um zu suchen …",
-                hintStyle: appBarTextStyle,
-              ),
-              cursorColor: Colors.white,
-              style: appBarTextStyle,
-            ),
-            pinned: true,
-            actions: [
-              if (textEditingController.value.text.isNotEmpty)
-                IconButton(
-                    icon: const Icon(Icons.clear), onPressed: _clearInput),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _onSearchPressed,
-              )
-            ],
-          ),
+          SliverSearchNavigationBar(
+              onChanged: (text) => setState(() {
+                    searchFieldText = text;
+                  })),
           FilterBar(onCategoryPress: _onCategoryPress),
           SliverToBoxAdapter(
               child: Padding(
@@ -98,36 +63,5 @@ class _SearchPageState extends State<SearchPage> {
         _selectedCategories.remove(asset);
       }
     });
-  }
-
-  _onSearchFieldTextChanged(String text) {
-    _debouncer.run(() => setState(() {
-          _searchFieldText = text;
-        }));
-  }
-
-  _clearInput() {
-    final textEditingController = _textEditingController;
-
-    if (textEditingController == null) {
-      return;
-    }
-
-    textEditingController.clear();
-    _onSearchFieldTextChanged(textEditingController.value.text);
-  }
-
-  _onSearchPressed() {
-    final focusNode = _focusNode;
-
-    if (focusNode == null) {
-      return;
-    }
-
-    if (focusNode.hasPrimaryFocus) {
-      focusNode.nextFocus();
-    } else {
-      focusNode.requestFocus();
-    }
   }
 }

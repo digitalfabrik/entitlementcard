@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,9 +15,8 @@ class IdentificationQrScannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: Column(children: [
-      AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text("Karte hinzufügen"),
+      const NavigationBar(
+        title: "Karte hinzufügen",
       ),
       Expanded(
           child: QrCodeScannerPage(
