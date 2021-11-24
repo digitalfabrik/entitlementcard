@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/widgets/error_message.dart';
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,11 +55,8 @@ class CustomLicensePage extends StatelessWidget {
 
             return CustomScrollView(
               slivers: <Widget>[
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
-                  foregroundColor: Theme.of(context).colorScheme.onBackground,
-                  title: const Text("Lizenzen"),
+                const SliverNavigationBar(
+                  title: "Lizenzen",
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -101,11 +99,8 @@ class SingleLicensePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          foregroundColor: Theme.of(context).colorScheme.onBackground,
-          title: Text(licenseEntry.packageName),
+        SliverNavigationBar(
+          title: licenseEntry.packageName,
         ),
         ...licenseEntry.licenseParagraphs.map(
           (Iterable<LicenseParagraph> paragraphs) => SliverList(

@@ -1,6 +1,7 @@
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../graphql/graphql_api.dart';
 import '../../graphql/graphql_api.graphql.dart';
 import '../../util/color_utils.dart';
@@ -87,7 +88,7 @@ class DetailAppBarBottom extends StatelessWidget {
             title ?? "",
             style:
                 Theme.of(context).textTheme.headline6?.apply(color: textColor),
-            maxLines: 2,
+            maxLines: 3,
             overflow: TextOverflow.ellipsis,
           )
         ]));
@@ -112,24 +113,22 @@ class DetailAppBar extends StatelessWidget {
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
-    return SizedBox(
-        height: bottomSize + kToolbarHeight,
-        child: AppBar(
-          leading: const BackButton(),
-          flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-          bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(bottomSize),
-              child: SizedBox(
-                  height: bottomSize,
-                  child: DetailAppBarBottom(
-                      title: title,
-                      categoryId: categoryId,
-                      categoryName: categoryName,
-                      accentColor: accentColor,
-                      textColorGrey: textColorGrey,
-                      textColor: textColor))),
-          backgroundColor: accentColor,
-          elevation: 0.0, //No shadow
+    return NavigationBarWithBottom(
+        flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
+        color: accentColor,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(bottomSize),
+          // The SizedBox makes sure that the text does not move above the
+          // AppBar, but is truncated at the bottom of the "bottom" component.
+          child: SizedBox(
+              height: bottomSize,
+              child: DetailAppBarBottom(
+                  title: title,
+                  categoryId: categoryId,
+                  categoryName: categoryName,
+                  accentColor: accentColor,
+                  textColorGrey: textColorGrey,
+                  textColor: textColor)),
         ));
   }
 }
