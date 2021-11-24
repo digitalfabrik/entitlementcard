@@ -11,6 +11,7 @@ import '../identification/base_card_details.dart';
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
 import '../intro_slides/intro_screen.dart';
+import '../routing.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
@@ -64,7 +65,7 @@ class DevSettingsView extends StatelessWidget {
   void _showInfoSlides(BuildContext context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
           builder: (context) => const IntroScreen(),
         ));
   }

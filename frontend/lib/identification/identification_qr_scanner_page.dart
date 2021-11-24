@@ -16,6 +16,8 @@ class IdentificationQrScannerPage extends StatelessWidget {
         child: Column(children: [
       AppBar(
         backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
         title: const Text("Karte hinzufügen"),
       ),
       Expanded(

@@ -15,27 +15,9 @@ class QrCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsModel>(context);
-    
-    return Expanded(
-        child: Column(children: [
-      AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text("Karte verifizieren"),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.help),
-              onPressed: () async {
-                await settings.setHideVerificationInfo(false);
-                await VerificationInfoDialog.show(context);
-              })
-        ],
-      ),
-      Expanded(
-          child: QrCodeScanner(
-        onCodeScanned: (code) async => await _onCodeScanned(context, code),
-      ))
-    ]));
+    return QrCodeScanner(
+      onCodeScanned: (code) async => await _onCodeScanned(context, code),
+    );
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../routing.dart';
+
 class ContentTile extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -23,7 +25,7 @@ class ContentTile extends StatelessWidget {
   void _showContent(context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        AppRoute(
           builder: (context) => ContentPage(title: title, children: children),
         ));
   }
@@ -42,8 +44,9 @@ class ContentPage extends StatelessWidget {
         child: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          floating: false,
           backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          foregroundColor: Theme.of(context).colorScheme.onBackground,
           title: Text(title),
         ),
         SliverList(
