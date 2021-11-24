@@ -7,30 +7,8 @@ class LocationServiceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Standortermittlung aktivieren"),
-      content:
-      const Text("Aktivieren Sie die Standortermittlung in den Einstellungen."),
-      actions: [
-        TextButton(
-            child: const Text("Abbrechen"),
-            onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(
-            child: const Text("Einstellungen öffnen"),
-            onPressed: () => Navigator.of(context).pop(true))
-      ],
-    );
-  }
-}
-
-class LocationPermissionDialog extends StatelessWidget {
-
-  const LocationPermissionDialog({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Standortberechtigung freigeben"),
-      content: const Text("Geben Sie in den App-Einstellungen die"
-          " Standortberechtigung frei."),
+      content: const Text(
+          "Aktivieren Sie die Standortermittlung in den Einstellungen."),
       actions: [
         TextButton(
             child: const Text("Abbrechen"),
@@ -46,20 +24,22 @@ class LocationPermissionDialog extends StatelessWidget {
 class RationaleDialog extends StatelessWidget {
   final String _rationale;
 
-  const RationaleDialog({Key? key, required String rationale}) : _rationale = rationale, super(key: key);
+  const RationaleDialog({Key? key, required String rationale})
+      : _rationale = rationale,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Standortberechtigung"),
-      content:Column(
+      content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(_rationale),
-          const Text('Soll nochmal nach der Berechtigung gefragt werden?')
+          const Text('Soll nocheinmal nach der Berechtigung gefragt werden?')
         ],
-      ) ,
+      ),
       actions: [
         TextButton(
             child: const Text("Berechtigung erteilen"),
@@ -71,5 +51,3 @@ class RationaleDialog extends StatelessWidget {
     );
   }
 }
-
-

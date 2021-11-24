@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ class DevSettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsModel>(context);
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -43,7 +46,7 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
               title: const Text('Log sample execption'),
               onTap: () => log("Sample exception.",
-                  error: Exception("Sample exception...")))
+                  error: Exception("Sample exception..."))),
         ],
       ),
     );

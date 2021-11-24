@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
@@ -39,13 +38,18 @@ class ContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: SafeArea(
-        child: ListView(children: children, padding: const EdgeInsets.all(10)),
-      ),
-    );
+    return SafeArea(
+        child: CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          floating: false,
+          backgroundColor: Colors.transparent,
+          title: Text(title),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(children),
+        ),
+      ],
+    ));
   }
 }

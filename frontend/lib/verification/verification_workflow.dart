@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../identification/base_card_details.dart';
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
+import '../routing.dart';
 import 'dialogs/negative_verification_result_dialog.dart';
 import 'dialogs/positive_verification_result_dialog.dart';
 import 'dialogs/verification_info_dialog.dart';
@@ -22,10 +24,12 @@ class VerificationWorkflow {
 
   VerificationWorkflow._(); // hide the constructor
 
-  static Future<void> startWorkflow(BuildContext context, SettingsModel settings) =>
+  static Future<void> startWorkflow(
+          BuildContext context, SettingsModel settings) =>
       VerificationWorkflow._().showInfoAndQrScanner(context, settings);
 
-  Future<void> showInfoAndQrScanner(BuildContext rootContext, SettingsModel settings) async {
+  Future<void> showInfoAndQrScanner(
+      BuildContext rootContext, SettingsModel settings) async {
     if (await settings.hideVerificationInfo != true) {
       // show info dialog and cancel if it is not accepted
       if (await VerificationInfoDialog.show(rootContext) != true) return;
@@ -34,15 +38,10 @@ class VerificationWorkflow {
     // show the QR scanner that will handle the rest
     await Navigator.push(
         rootContext,
-        MaterialPageRoute(
-          builder: (context) => QrCodeScannerPage(
-              title: "Karte verifizieren",
-              onCodeScanned: (code) => _handleQrCode(context, code),
-              onHelpClicked: () async {
-                await settings.setHideVerificationInfo(false);
-                await VerificationInfoDialog.show(context);
-              }),
-        ));
+        AppRoute(
+            builder: (context) => QrCodeScannerPage(
+                  onCodeScanned: (code) => _handleQrCode(context, code),
+                )));
   }
 
   Future<void> _handleQrCode(

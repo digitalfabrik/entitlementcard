@@ -4,12 +4,11 @@ import 'package:provider/provider.dart';
 
 import '../location/determine_position.dart';
 import '../widgets/small_button_spinner.dart';
-import 'map/map_controller.dart';
 
 class LocationButton extends StatefulWidget {
-  final MapController mapController;
+  final Future<void> Function(RequestedPosition) bringCameraToUser;
 
-  const LocationButton({Key? key, required this.mapController})
+  const LocationButton({Key? key, required this.bringCameraToUser})
       : super(key: key);
 
   @override
@@ -27,40 +26,56 @@ class _LocationButtonState extends State<LocationButton> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     final settings = Provider.of<SettingsModel>(context);
-    if (settings.locationFeatureEnabled) {
-      return Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: FloatingActionButton(
-                heroTag: "fab_map_view",
-                elevation: 1,
-                backgroundColor: theme.backgroundColor,
-                child: AnimatedSwitcher(
-                  child: _status == LocationPermissionStatus.requestFinished
-                      ? Icon(Icons.my_location,
-                          color: theme.colorScheme.secondary)
-                      : const SmallButtonSpinner(),
-                  duration: const Duration(milliseconds: 200),
-                ),
-                onPressed: _status == LocationPermissionStatus.requestFinished
-                    ? () => _onPressed(settings)
-                    : null,
-              )));
-    } else {
-      return Container();
-    }
+
+    return Container(
+        // Makes sure that the FAB has
+        // has a padding to the right
+        //screen edge
+        padding: const EdgeInsets.only(right: 16),
+        child: FloatingActionButton(
+          heroTag: "fab_map_view",
+          elevation: 1,
+          backgroundColor: theme.backgroundColor,
+          child: AnimatedSwitcher(
+            child: _status == LocationPermissionStatus.requestFinished
+                ? (settings.locationFeatureEnabled
+                    ? Icon(Icons.my_location,
+                        color: theme.colorScheme.secondary)
+                    : Icon(Icons.location_disabled,
+                        color: theme.colorScheme.error))
+                : const SmallButtonSpinner(),
+            duration: const Duration(milliseconds: 200),
+          ),
+          onPressed: _status == LocationPermissionStatus.requestFinished
+              ? (settings.locationFeatureEnabled
+                  ? () => _determinePosition(settings)
+                  : _showFeatureDisabled)
+              : null,
+        ));
   }
 
-  _onPressed(SettingsModel settings) async {
+  _showFeatureDisabled() async {
+    var messengerState = ScaffoldMessenger.of(context);
+    messengerState.showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      content: const Text('Die Standortfreigabe ist deaktiviert.'),
+      action: SnackBarAction(
+          label: "Einstellungen",
+          onPressed: () async {
+            await openSettingsToGrantPermissions(context);
+          }),
+    ));
+  }
+
+  _determinePosition(SettingsModel settings) async {
     setState(() => _status = LocationPermissionStatus.requesting);
     final requestedPosition = await determinePosition(context,
         requestIfNotGranted: true,
-        onDisableFeature: () async => await settings.setLocationFeatureEnabled(false));
-    final position = requestedPosition.position;
-    if (position != null) {
-      await widget.mapController.bringCameraToUser(position);
-    }
+        onDisableFeature: () async =>
+            await settings.setLocationFeatureEnabled(false));
+
+    await widget.bringCameraToUser(requestedPosition);
+
     setState(() => _status = LocationPermissionStatus.requestFinished);
   }
 }

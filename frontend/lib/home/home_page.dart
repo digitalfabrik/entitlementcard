@@ -6,15 +6,14 @@ import '../map/map_page.dart';
 import '../search/search_page.dart';
 import 'app_flow.dart';
 import 'app_flows_stack.dart';
+import '../map/floating_action_map_bar.dart';
+
+const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
   final bool showVerification;
 
   const HomePage({Key? key, required this.showVerification}) : super(key: key);
-
-  static _HomePageData? of(BuildContext context) {
-    return _HomePageData.of(context);
-  }
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,26 +21,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentTabIndex = 0;
-  MapPageController? mapPageController;
-
-  late MapPage mapPage;
   late List<AppFlow> appFlows;
+
+  MapPageController? mapPageController;
+  int? selectedAcceptingStoreId;
 
   @override
   void initState() {
     super.initState();
-    mapPage = MapPage(
-      onMapCreated: (controller) =>
-          setState(() => mapPageController = controller),
-    );
     appFlows = [
-      AppFlow(mapPage, Icons.map_outlined, "Karte",
+      AppFlow(
+          MapPage(
+            onMapCreated: (controller) =>
+                setState(() => mapPageController = controller),
+            selectAcceptingStore: (id) =>
+                setState(() => selectedAcceptingStoreId = id),
+          ),
+          Icons.map_outlined,
+          "Karte",
           GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
       AppFlow(const SearchPage(), Icons.search_outlined, "Suche",
           GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
       if (widget.showVerification)
-        AppFlow(const IdentificationPage(title: "Ausweisen"), Icons.remove_red_eye_outlined,
-            "Ausweisen", GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+        AppFlow(
+            const IdentificationPage(title: "Ausweisen"),
+            Icons.remove_red_eye_outlined,
+            "Ausweisen",
+            GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
       AppFlow(const AboutPage(), Icons.info_outline, "Über",
           GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
@@ -49,13 +55,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _HomePageData(
-      goToMap: _goToMap,
+    return HomePageData(
+      navigateToMapTab: _navigateToMapTab,
       child: Scaffold(
         body: AppFlowsStack(
           appFlows: appFlows,
-          currentIndex: _currentTabIndex,
+          currentIndex: _currentTabIndex
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _currentTabIndex == mapTabIndex
+            ? FloatingActionMapBar(
+                bringCameraToUser: (position) async {
+                  await mapPageController?.bringCameraToUser(position);
+                },
+                selectedAcceptingStoreId: selectedAcceptingStoreId,
+              )
+            : null,
         bottomNavigationBar: _buildBottomNavigationBar(context),
       ),
     );
@@ -89,34 +104,29 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _goToMap([PhysicalStoreFeatureData? idWithCoordinates]) {
-    var currentMapPageController = mapPageController;
-    
-    if (currentMapPageController == null) {
-      return;
-    }
-    
+  Future<void> _navigateToMapTab(
+      PhysicalStoreFeatureData idWithCoordinates) async {
     setState(() {
-      _currentTabIndex = 0;
+      _currentTabIndex = mapTabIndex;
     });
-    if (idWithCoordinates != null) {
-      currentMapPageController.showAcceptingStore(idWithCoordinates);
-    }
+
+    await mapPageController?.showAcceptingStore(idWithCoordinates);
   }
 }
 
-class _HomePageData extends InheritedWidget {
-  final Function goToMap;
+class HomePageData extends InheritedWidget {
+  final Future<void> Function(PhysicalStoreFeatureData) navigateToMapTab;
 
-  const _HomePageData({Key? key, required this.goToMap, required Widget child})
+  const HomePageData(
+      {Key? key, required this.navigateToMapTab, required Widget child})
       : super(key: key, child: child);
 
-  static _HomePageData? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_HomePageData>();
+  static HomePageData? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<HomePageData>();
   }
 
   @override
-  bool updateShouldNotify(_HomePageData oldWidget) {
-    return oldWidget.goToMap != goToMap;
+  bool updateShouldNotify(HomePageData oldWidget) {
+    return oldWidget.navigateToMapTab != navigateToMapTab;
   }
 }

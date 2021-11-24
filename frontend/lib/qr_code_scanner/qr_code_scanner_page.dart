@@ -1,4 +1,7 @@
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'qr_code_processor.dart';
 import 'qr_code_scanner.dart';
@@ -7,28 +10,32 @@ typedef OnHelpClickedCallback = void Function();
 
 class QrCodeScannerPage extends StatelessWidget {
   final OnCodeScannedCallback? onCodeScanned;
-  final OnHelpClickedCallback? onHelpClicked;
-  final String title;
 
-  const QrCodeScannerPage(
-      {Key? key, this.onCodeScanned, required this.title, this.onHelpClicked})
-      : super(key: key);
+  const QrCodeScannerPage({Key? key, this.onCodeScanned}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var currentOnHelpClicked = onHelpClicked;
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          actions: [
-            if (currentOnHelpClicked != null)
-              IconButton(
-                  icon: const Icon(Icons.help), onPressed: currentOnHelpClicked)
-          ],
-        ),
-        body: QrCodeScanner(
-          onCodeScanned: (code) async => await _onCodeScanned(context, code),
-        ));
+    final settings = Provider.of<SettingsModel>(context);
+    
+    return Expanded(
+        child: Column(children: [
+      AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text("Karte verifizieren"),
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.help),
+              onPressed: () async {
+                await settings.setHideVerificationInfo(false);
+                await VerificationInfoDialog.show(context);
+              })
+        ],
+      ),
+      Expanded(
+          child: QrCodeScanner(
+        onCodeScanned: (code) async => await _onCodeScanned(context, code),
+      ))
+    ]));
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {

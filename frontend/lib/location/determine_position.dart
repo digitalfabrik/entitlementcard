@@ -164,10 +164,5 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
 
 Future<void> openSettingsToGrantPermissions(
     BuildContext userInteractContext) async {
-  var result = await showDialog(
-      context: userInteractContext,
-      builder: (context) => const LocationPermissionDialog());
-  if (result ?? false) {
-    await Geolocator.openAppSettings();
-  }
+  await Geolocator.openAppSettings();
 }

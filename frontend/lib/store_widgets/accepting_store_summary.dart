@@ -1,13 +1,14 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import './detail/detail_view.dart';
 import '../category_assets.dart';
 import '../graphql/graphql_api.dart';
 import '../map/preview/models.dart';
+import '../routing.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
@@ -89,8 +90,8 @@ class AcceptingStoreSummary extends StatelessWidget {
   void _openDetailView(BuildContext context) {
     Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => DetailView(store.id,
+        AppRoute(
+          builder: (context) => DetailPage(store.id,
               hideShowOnMapButton: !showMapButtonOnDetails),
         ));
   }
