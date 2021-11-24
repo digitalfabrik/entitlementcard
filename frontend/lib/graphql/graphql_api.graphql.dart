@@ -459,40 +459,6 @@ class AcceptingStoreSummaryById$Query extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class CardVerificationByHash$Query extends JsonSerializable
-    with EquatableMixin {
-  CardVerificationByHash$Query();
-
-  factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
-      _$CardVerificationByHash$QueryFromJson(json);
-
-  late bool cardValid;
-
-  @override
-  List<Object?> get props => [cardValid];
-  @override
-  Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CardVerificationModelInput extends JsonSerializable with EquatableMixin {
-  CardVerificationModelInput(
-      {required this.cardDetailsHashBase64, required this.totp});
-
-  factory CardVerificationModelInput.fromJson(Map<String, dynamic> json) =>
-      _$CardVerificationModelInputFromJson(json);
-
-  late String cardDetailsHashBase64;
-
-  late int totp;
-
-  @override
-  List<Object?> get props => [cardDetailsHashBase64, totp];
-  @override
-  Map<String, dynamic> toJson() => _$CardVerificationModelInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class AddBlueEakApplication$Mutation extends JsonSerializable
     with EquatableMixin {
   AddBlueEakApplication$Mutation();
@@ -511,25 +477,25 @@ class AddBlueEakApplication$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class BlueCardApplicationInput extends JsonSerializable with EquatableMixin {
   BlueCardApplicationInput(
-      {this.applicationType,
-      this.entitlement,
-      this.givenInformationIsCorrectAndComplete,
-      this.hasAcceptedPrivacyPolicy,
-      this.personalData});
+      {required this.applicationType,
+      required this.entitlement,
+      required this.givenInformationIsCorrectAndComplete,
+      required this.hasAcceptedPrivacyPolicy,
+      required this.personalData});
 
   factory BlueCardApplicationInput.fromJson(Map<String, dynamic> json) =>
       _$BlueCardApplicationInputFromJson(json);
 
   @JsonKey(unknownEnumValue: ApplicationType.artemisUnknown)
-  late ApplicationType? applicationType;
+  late ApplicationType applicationType;
 
-  late BlueCardEntitlementInput? entitlement;
+  late BlueCardEntitlementInput entitlement;
 
-  late bool? givenInformationIsCorrectAndComplete;
+  late bool givenInformationIsCorrectAndComplete;
 
-  late bool? hasAcceptedPrivacyPolicy;
+  late bool hasAcceptedPrivacyPolicy;
 
-  late PersonalDataInput? personalData;
+  late PersonalDataInput personalData;
 
   @override
   List<Object?> get props => [
@@ -627,22 +593,22 @@ class BlueCardServiceEntitlementInput extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class OrganizationInput extends JsonSerializable with EquatableMixin {
   OrganizationInput(
-      {this.address,
-      this.category,
-      this.contact,
-      this.name,
+      {required this.address,
+      required this.category,
+      required this.contact,
+      required this.name,
       this.website});
 
   factory OrganizationInput.fromJson(Map<String, dynamic> json) =>
       _$OrganizationInputFromJson(json);
 
-  late AddressInput? address;
+  late AddressInput address;
 
-  late String? category;
+  late String category;
 
-  late OrganizationContactInput? contact;
+  late OrganizationContactInput contact;
 
-  late String? name;
+  late String name;
 
   String? website;
 
@@ -666,13 +632,13 @@ class AddressInput extends JsonSerializable with EquatableMixin {
 
   String? addressSupplement;
 
-  late String? houseNumber;
+  late String houseNumber;
 
-  late String? location;
+  late String location;
 
-  late String? postalCode;
+  late String postalCode;
 
-  late String? street;
+  late String street;
 
   @override
   List<Object?> get props =>
@@ -684,21 +650,21 @@ class AddressInput extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class OrganizationContactInput extends JsonSerializable with EquatableMixin {
   OrganizationContactInput(
-      {this.email,
-      this.hasGivenPermission,
-      this.name,
-      this.telephone});
+      {required this.email,
+      required this.hasGivenPermission,
+      required this.name,
+      required this.telephone});
 
   factory OrganizationContactInput.fromJson(Map<String, dynamic> json) =>
       _$OrganizationContactInputFromJson(json);
 
-  late String? email;
+  late String email;
 
-  late bool? hasGivenPermission;
+  late bool hasGivenPermission;
 
-  late String? name;
+  late String name;
 
-  late String? telephone;
+  late String telephone;
 
   @override
   List<Object?> get props => [email, hasGivenPermission, name, telephone];
@@ -709,31 +675,31 @@ class OrganizationContactInput extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class WorkAtOrganizationInput extends JsonSerializable with EquatableMixin {
   WorkAtOrganizationInput(
-      {this.amountOfWork,
-      this.amountOfWorkUnit,
+      {required this.amountOfWork,
+      required this.amountOfWorkUnit,
       this.certificate,
-      this.organization,
-      this.payment,
-      this.responsibility,
-      this.workSinceDate});
+      required this.organization,
+      required this.payment,
+      required this.responsibility,
+      required this.workSinceDate});
 
   factory WorkAtOrganizationInput.fromJson(Map<String, dynamic> json) =>
       _$WorkAtOrganizationInputFromJson(json);
 
-  late double? amountOfWork;
+  late double amountOfWork;
 
   @JsonKey(unknownEnumValue: AmountOfWorkUnit.artemisUnknown)
-  late AmountOfWorkUnit? amountOfWorkUnit;
+  late AmountOfWorkUnit amountOfWorkUnit;
 
   AttachmentInput? certificate;
 
-  late OrganizationInput? organization;
+  late OrganizationInput organization;
 
-  late bool? payment;
+  late bool payment;
 
-  late String? responsibility;
+  late String responsibility;
 
-  late String? workSinceDate;
+  late String workSinceDate;
 
   @override
   List<Object?> get props => [
@@ -752,32 +718,32 @@ class WorkAtOrganizationInput extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class PersonalDataInput extends JsonSerializable with EquatableMixin {
   PersonalDataInput(
-      {this.address,
-      this.dateOfBirth,
-      this.emailAddress,
-      this.forenames,
+      {required this.address,
+      required this.dateOfBirth,
+      required this.emailAddress,
+      required this.forenames,
       this.gender,
       this.nationality,
-      this.surname,
+      required this.surname,
       this.telephone,
       this.title});
 
   factory PersonalDataInput.fromJson(Map<String, dynamic> json) =>
       _$PersonalDataInputFromJson(json);
 
-  late AddressInput? address;
+  late AddressInput address;
 
-  late String? dateOfBirth;
+  late String dateOfBirth;
 
-  late String? emailAddress;
+  late String emailAddress;
 
-  late String? forenames;
+  late String forenames;
 
   String? gender;
 
   String? nationality;
 
-  late String? surname;
+  late String surname;
 
   String? telephone;
 
@@ -821,21 +787,21 @@ class AddGoldenEakApplication$Mutation extends JsonSerializable
 class GoldenEakCardApplicationInput extends JsonSerializable
     with EquatableMixin {
   GoldenEakCardApplicationInput(
-      {this.entitlement,
-      this.givenInformationIsCorrectAndComplete,
-      this.hasAcceptedPrivacyPolicy,
-      this.personalData});
+      {required this.entitlement,
+      required this.givenInformationIsCorrectAndComplete,
+      required this.hasAcceptedPrivacyPolicy,
+      required this.personalData});
 
   factory GoldenEakCardApplicationInput.fromJson(Map<String, dynamic> json) =>
       _$GoldenEakCardApplicationInputFromJson(json);
 
-  late GoldenCardEntitlementInput? entitlement;
+  late GoldenCardEntitlementInput entitlement;
 
-  late bool? givenInformationIsCorrectAndComplete;
+  late bool givenInformationIsCorrectAndComplete;
 
-  late bool? hasAcceptedPrivacyPolicy;
+  late bool hasAcceptedPrivacyPolicy;
 
-  late PersonalDataInput? personalData;
+  late PersonalDataInput personalData;
 
   @override
   List<Object?> get props => [
@@ -870,6 +836,40 @@ class GoldenCardEntitlementInput extends JsonSerializable with EquatableMixin {
       [certificate, goldenEntitlementType, workAtOrganizations];
   @override
   Map<String, dynamic> toJson() => _$GoldenCardEntitlementInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CardVerificationByHash$Query extends JsonSerializable
+    with EquatableMixin {
+  CardVerificationByHash$Query();
+
+  factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
+      _$CardVerificationByHash$QueryFromJson(json);
+
+  late bool cardValid;
+
+  @override
+  List<Object?> get props => [cardValid];
+  @override
+  Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CardVerificationModelInput extends JsonSerializable with EquatableMixin {
+  CardVerificationModelInput(
+      {required this.cardDetailsHashBase64, required this.totp});
+
+  factory CardVerificationModelInput.fromJson(Map<String, dynamic> json) =>
+      _$CardVerificationModelInputFromJson(json);
+
+  late String cardDetailsHashBase64;
+
+  late int totp;
+
+  @override
+  List<Object?> get props => [cardDetailsHashBase64, totp];
+  @override
+  Map<String, dynamic> toJson() => _$CardVerificationModelInputToJson(this);
 }
 
 enum ApplicationType {
@@ -1458,84 +1458,18 @@ class AcceptingStoreSummaryByIdQuery extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class CardVerificationByHashArguments extends JsonSerializable
-    with EquatableMixin {
-  CardVerificationByHashArguments({required this.card});
-
-  @override
-  factory CardVerificationByHashArguments.fromJson(Map<String, dynamic> json) =>
-      _$CardVerificationByHashArgumentsFromJson(json);
-
-  late CardVerificationModelInput card;
-
-  @override
-  List<Object?> get props => [card];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CardVerificationByHashArgumentsToJson(this);
-}
-
-final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'CardVerificationByHash'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'card')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CardVerificationModelInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'verifyCard'),
-            alias: NameNode(value: 'cardValid'),
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'card'),
-                  value: VariableNode(name: NameNode(value: 'card')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CardVerificationByHashQuery extends GraphQLQuery<
-    CardVerificationByHash$Query, CardVerificationByHashArguments> {
-  CardVerificationByHashQuery({required this.variables});
-
-  @override
-  final DocumentNode document = CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'CardVerificationByHash';
-
-  @override
-  final CardVerificationByHashArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CardVerificationByHash$Query parse(Map<String, dynamic> json) =>
-      CardVerificationByHash$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class AddBlueEakApplicationArguments extends JsonSerializable
     with EquatableMixin {
   AddBlueEakApplicationArguments(
-      {this.application, this.regionId});
+      {required this.application, required this.regionId});
 
   @override
   factory AddBlueEakApplicationArguments.fromJson(Map<String, dynamic> json) =>
       _$AddBlueEakApplicationArgumentsFromJson(json);
 
-  late BlueCardApplicationInput? application;
+  late BlueCardApplicationInput application;
 
-  late int? regionId;
+  late int regionId;
 
   @override
   List<Object?> get props => [application, regionId];
@@ -1603,16 +1537,16 @@ class AddBlueEakApplicationMutation extends GraphQLQuery<
 class AddGoldenEakApplicationArguments extends JsonSerializable
     with EquatableMixin {
   AddGoldenEakApplicationArguments(
-      {this.application, this.regionId});
+      {required this.application, required this.regionId});
 
   @override
   factory AddGoldenEakApplicationArguments.fromJson(
           Map<String, dynamic> json) =>
       _$AddGoldenEakApplicationArgumentsFromJson(json);
 
-  late GoldenEakCardApplicationInput? application;
+  late GoldenEakCardApplicationInput application;
 
-  late int? regionId;
+  late int regionId;
 
   @override
   List<Object?> get props => [application, regionId];
@@ -1675,4 +1609,70 @@ class AddGoldenEakApplicationMutation extends GraphQLQuery<
   @override
   AddGoldenEakApplication$Mutation parse(Map<String, dynamic> json) =>
       AddGoldenEakApplication$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CardVerificationByHashArguments extends JsonSerializable
+    with EquatableMixin {
+  CardVerificationByHashArguments({required this.card});
+
+  @override
+  factory CardVerificationByHashArguments.fromJson(Map<String, dynamic> json) =>
+      _$CardVerificationByHashArgumentsFromJson(json);
+
+  late CardVerificationModelInput card;
+
+  @override
+  List<Object?> get props => [card];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CardVerificationByHashArgumentsToJson(this);
+}
+
+final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'CardVerificationByHash'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'card')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CardVerificationModelInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'verifyCard'),
+            alias: NameNode(value: 'cardValid'),
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'card'),
+                  value: VariableNode(name: NameNode(value: 'card')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CardVerificationByHashQuery extends GraphQLQuery<
+    CardVerificationByHash$Query, CardVerificationByHashArguments> {
+  CardVerificationByHashQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'CardVerificationByHash';
+
+  @override
+  final CardVerificationByHashArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CardVerificationByHash$Query parse(Map<String, dynamic> json) =>
+      CardVerificationByHash$Query.fromJson(json);
 }

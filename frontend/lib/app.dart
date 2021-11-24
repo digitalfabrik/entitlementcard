@@ -2,7 +2,6 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'application/application_model.dart';
 import 'entry_widget.dart';
 import 'graphql/configured_graphql_provider.dart';
 import 'identification/card_details_model.dart';
@@ -18,7 +17,6 @@ class App extends StatelessWidget {
             create: (context) => SettingsModel()..initialize()),
         ChangeNotifierProvider(
             create: (context) => CardDetailsModel()..initialize()),
-        ChangeNotifierProvider(create: (context) => ApplicationModel()),
       ], child: const EntryWidget()),
     );
   }

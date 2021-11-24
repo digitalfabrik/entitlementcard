@@ -27,7 +27,7 @@ class QrCodeScannerPage extends StatelessWidget {
         await currentOnCodeScanned(code);
       }
     } on QrCodeParseException catch (e, stackTrace) {
-      debugPrintStack(stackTrace: stackTrace, label: e?.toString());
+      debugPrintStack(stackTrace: stackTrace, label: e.toString());
     }
 
     if (Navigator.canPop(context)) Navigator.maybePop(context);

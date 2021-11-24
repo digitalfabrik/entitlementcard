@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../application/application_model.dart';
 import '../graphql/graphql_api.graphql.dart';
 import '../identification/base_card_details.dart';
 import '../identification/card_details.dart';
@@ -40,10 +39,6 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
             title: const Text('Show Intro Slides'),
             onTap: () => _showInfoSlides(context),
-          ),
-          ListTile(
-            title: const Text('Set application test data'),
-            onTap: () => _createApplicationData(context),
           ),
           ListTile(
               title: const Text('Log sample execption'),
@@ -80,54 +75,5 @@ class DevSettingsView extends StatelessWidget {
         AppRoute(
           builder: (context) => const IntroScreen(),
         ));
-  }
-
-  void _createApplicationData(BuildContext context) {
-    final applicationModel =
-        Provider.of<ApplicationModel>(context, listen: false);
-    applicationModel.regionId = 9;
-    var personalData = PersonalDataInput(
-        address: AddressInput(
-            street: "Abcstr.",
-            houseNumber: "11",
-            location: "Testhausen",
-            postalCode: "11111"),
-        dateOfBirth: "01.01.1990",
-        emailAddress: "test@example.com",
-        forenames: "Max",
-        surname: "Mustermann");
-    var organizationInput = OrganizationInput(
-        address: AddressInput(
-            street: "Musterfraustr.",
-            houseNumber: "42",
-            addressSupplement: "",
-            location: "München",
-            postalCode: "11111"),
-        category: "Bildung",
-        name: "Testorganisation",
-        website: "example.com",
-        contact: OrganizationContactInput(
-            email: "orga@example.com",
-            hasGivenPermission: true,
-            name: "Hans Peter",
-            telephone: "12345678"));
-    var workAtOrganization = WorkAtOrganizationInput(
-        amountOfWork: 20,
-        amountOfWorkUnit: AmountOfWorkUnit.hoursPerWeek,
-        payment: false,
-        responsibility: "Keine Ahnung",
-        workSinceDate: "1.1.2015",
-        organization: organizationInput);
-    var blueCardEntitlement = BlueCardEntitlementInput(
-        entitlementType: BlueCardEntitlementType.standard,
-        workAtOrganizations: <WorkAtOrganizationInput>[]);
-    blueCardEntitlement.workAtOrganizations!.add(workAtOrganization);
-    var blueCardApplicationInput = BlueCardApplicationInput(
-        applicationType: ApplicationType.firstApplication,
-        entitlement: blueCardEntitlement,
-        givenInformationIsCorrectAndComplete: true,
-        hasAcceptedPrivacyPolicy: true,
-        personalData: personalData);
-    applicationModel.setBlueCardApplication(blueCardApplicationInput);
   }
 }
