@@ -40,7 +40,7 @@ jobs:
       TERM: dumb
       JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
-    resource_class: medium
+    resource_class: large
     working_directory: ~/project/frontend
     steps:
       - checkout:
