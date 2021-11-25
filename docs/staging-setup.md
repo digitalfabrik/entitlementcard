@@ -99,6 +99,14 @@ unzip gh-pages.zip
 mv font-glyphs-gh-pages font-glyphs
 ```
 
+## Filling postgis with GeoJSON
+
+If you need a GeoJSON file in a postgis database for testing you can use the following command:
+
+```bash
+ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' user=postgres password=postgres" verguenstigungen.json
+```
+
 ## Starting the Services
 
 After starting `docker-compose` with the staging configuration, the setup should be available at port 80: `docker-compose -f docker-compose.yml -f docker-compose.staging.yml up`.
