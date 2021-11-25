@@ -127,6 +127,7 @@ jobs:
       - run:
           name: Update Pods
           command: |
+            fvm flutter precache --ios
             cd ios
             pod update # https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
