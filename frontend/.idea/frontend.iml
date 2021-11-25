@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/android" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/ios" />
-      <excludeFolder url="file://$MODULE_DIR$/.fvm" />
+      <excludeFolder url="file://$MODULE_DIR$/.fvm/flutter_sdk" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />

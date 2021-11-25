@@ -27,7 +27,6 @@ doc/api/
 .flutter-plugins-dependencies
 
 
-.fvm/
 vendor/
 schema.graphql
 .fvm/flutter_sdk
