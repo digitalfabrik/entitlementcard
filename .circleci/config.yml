@@ -181,22 +181,13 @@ jobs:
       - checkout:
           path: ~/project
       - run:
-          name: "Download glyphs"
-          command: |
-            wget -O /tmp/glyphs.zip https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
-            unzip /tmp/glyphs.zip
-            mv font-glyphs* font-glyphs
-            rm -f /tmp/glyphs.zip
-      - run:
-          name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
+          name: "Download legacy styles deb"
+          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
           name: "Move .deb to artifacts folder"
           command: |
             mkdir -p /tmp/artifacts/debs
             mv *.deb /tmp/artifacts/debs
-      - store_artifacts:
-          path: /tmp/artifacts
       - persist_to_workspace:
           root: /tmp/artifacts
           paths:
