@@ -37,9 +37,7 @@ jobs:
     docker:
       - image: circleci/android:api-30
     environment:
-      TERM: dumb
-      JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
     working_directory: ~/project/frontend
     steps:
@@ -129,7 +127,7 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build ipa --release -t lib/main_prod.dart
+            fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
 
   backend-build:
     environment:
