@@ -39,25 +39,28 @@ class DetailContent extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            if (storeDescription != null) ...[
-              Text(
-                storeDescription,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Divider(thickness: 0.7, height: 48, color: Theme.of(context).primaryColorLight),
-            ],
-            Column(
-              children: <Widget>[
-                ContactInfoRow(
-                  Icons.location_on,
-                  "${address.street}\n"
-                      "${address.postalCode} ${address.location}",
-                  "Adresse",
-                  onTap: () => MapsLauncher.launchQuery(
-                    "${address.street}, "
-                    "${address.postalCode} ${address.location}",
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (storeDescription != null) ...[
+                Text(
+                  storeDescription,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Divider(
+                    thickness: 0.7,
+                    height: 48,
+                    color: Theme.of(context).primaryColorLight),
+              ],
+              Column(
+                children: <Widget>[
+                    ContactInfoRow(
+                      Icons.location_on,
+                      "${address.street}\n"
+                          "${address.postalCode} ${address.location}",
+                      "Adresse",
+                      onTap: () =>
+                          MapsLauncher.launchQuery("${address.street}, "
+                              "${address.postalCode} ${address.location}",
                   ),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,

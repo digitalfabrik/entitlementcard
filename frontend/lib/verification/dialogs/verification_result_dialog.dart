@@ -19,7 +19,8 @@ class VerificationResultDialog extends StatelessWidget {
     final theme = Theme.of(context);
     return AlertDialog(
       title: ListTile(
-        leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
+        leading: Icon(icon,
+            color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
         title: Text(title, style: theme.textTheme.headline5),
       ),
       content: child,
