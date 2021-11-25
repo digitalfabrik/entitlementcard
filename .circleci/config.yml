@@ -125,6 +125,12 @@ jobs:
           paths:
             - .dart_tool
       - run:
+          name: Update Pods
+          command: |
+            cd ios
+            pod update # https://github.com/m0nac0/flutter-maplibre-gl/pull/9
+            pod install
+      - run:
           name: Build
           command: |
             fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
@@ -349,3 +355,6 @@ jobs:
             echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
             sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+
+https://github:
+  com/m0nac0/flutter-maplibre-gl/pull/9:
