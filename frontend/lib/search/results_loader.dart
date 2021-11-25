@@ -37,7 +37,6 @@ class ResultsLoaderState extends State<ResultsLoader> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final client = GraphQLProvider.of(context).value;
-    assert(client != null);
     if (client != _client) {
       _client = client;
     }
@@ -128,7 +127,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
                                 ? Coordinates(
                                     storeCoordinates.lat, storeCoordinates.lng)
                                 : null,
-                            item.physicalStore?.address?.location),
+                            item.physicalStore?.address.location),
                         coordinates: widget.coordinates,
                         showMapButtonOnDetails: true));
               },

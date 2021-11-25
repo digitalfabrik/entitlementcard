@@ -54,7 +54,7 @@ class IdentificationQrContentParser {
 
     final unixInt64ExpirationDate = cardActivateModel.expirationDate;
     int? unixExpirationDate;
-    if (unixInt64ExpirationDate != null && unixInt64ExpirationDate > 0) {
+    if (unixInt64ExpirationDate > 0) {
       try {
         unixExpirationDate = unixInt64ExpirationDate.toInt();
       } on Exception catch (_) {

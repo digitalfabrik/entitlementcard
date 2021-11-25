@@ -11,19 +11,15 @@ VerificationCardDetails processQrCodeContent(String rawBase64Content) {
 
 void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
   final baseCardDetails = verCardDetails.cardDetails;
-  if (baseCardDetails.fullName == null || baseCardDetails.fullName.isEmpty) {
+  if (baseCardDetails.fullName.isEmpty) {
     throw QrCodeFieldMissingException("fullName");
-  }
-  if (baseCardDetails.regionId == null) {
-    throw QrCodeFieldMissingException("regionId");
   }
   if (baseCardDetails.unixExpirationDate == null &&
       baseCardDetails.cardType.index ==
           CardActivateModel_CardType.STANDARD.value) {
     throw QrCodeFieldMissingException("expirationDate");
   }
-  if (baseCardDetails.hashSecretBase64 == null ||
-      baseCardDetails.hashSecretBase64.isEmpty) {
+  if (baseCardDetails.hashSecretBase64.isEmpty) {
     throw QrCodeFieldMissingException("hashSecretBase64");
   }
   var expirationDate = baseCardDetails.expirationDate;
@@ -33,7 +29,7 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
       throw CardExpiredException(expirationDate);
     }
   }
-  if (verCardDetails.otp == null || verCardDetails.otp <= 0) {
+  if (verCardDetails.otp <= 0) {
     throw QrCodeFieldMissingException("otp");
   }
 }

@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../../location/determine_position.dart';

@@ -92,9 +92,6 @@ class _QRViewState extends State<QrCodeScanner> {
     if (controller == null) {
       return;
     }
-    if (code == null) {
-      return;
-    }
 
     // needed because this method gets called multiple times in a row after one
     // qr code gets detected, therefore we need to protect it
@@ -104,9 +101,7 @@ class _QRViewState extends State<QrCodeScanner> {
     isProcessingCode = true;
     controller.pauseCamera();
 
-    if (widget.onCodeScanned != null) {
-      await widget.onCodeScanned(code);
-    }
+    await widget.onCodeScanned(code);
 
     // give the user time to move the camara away from the qr code
     await Future.delayed(const Duration(milliseconds: scanDelayAfterErrorMs));
