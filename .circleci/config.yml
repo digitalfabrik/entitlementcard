@@ -55,13 +55,13 @@ jobs:
             echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - flutter-1-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: |
             fvm --verbose install
       - save_cache:
-          key: flutter-1-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
       - run:
@@ -70,13 +70,14 @@ jobs:
             fvm --verbose flutter config --no-analytics
       - restore_cache:
           keys:
-            - pub-1-{{ checksum "pubspec.lock" }}-{{ arch }}
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
             fvm flutter pub get
+            fvm flutter precache --android
       - save_cache:
-          key: pub-1-{{ checksum "pubspec.lock" }}-{{ arch }}
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
           paths:
             - .dart_tool
       - run:
@@ -100,13 +101,13 @@ jobs:
             brew install fvm
       - restore_cache:
           keys:
-            - flutter-1-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: |
             fvm --verbose install
       - save_cache:
-          key: flutter-1-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
       - run:
@@ -115,19 +116,19 @@ jobs:
             fvm --verbose flutter config --no-analytics
       - restore_cache:
           keys:
-            - pub-1-{{ checksum "pubspec.lock" }}-{{ arch }}
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
             fvm flutter pub get
+            fvm flutter precache --ios
       - save_cache:
-          key: pub-1-{{ checksum "pubspec.lock" }}-{{ arch }}
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
           paths:
             - .dart_tool
       - run:
           name: Update Pods
           command: |
-            fvm flutter precache --ios
             cd ios
             pod update # https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
