@@ -55,15 +55,16 @@ jobs:
             echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: |
             fvm --verbose install
       - save_cache:
-          key: flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
+            - ~/fvm/
       - run:
           name: Configure Flutter
           command: |
@@ -101,15 +102,16 @@ jobs:
             brew install fvm
       - restore_cache:
           keys:
-            - flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: |
             fvm --verbose install
       - save_cache:
-          key: flutter-2-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
+            - ~/fvm/
       - run:
           name: Configure Flutter
           command: |
