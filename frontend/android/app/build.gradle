@@ -58,12 +58,28 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        if (!localProperties.containsKey("signing.keyAlias")) {
+            release {
+                keyAlias signingConfigs.debug.keyAlias
+                keyPassword signingConfigs.debug.keyPassword
+                storeFile signingConfigs.debug.storeFile
+                storePassword signingConfigs.debug.storePassword
+            }
+        } else {
+            release {
+                keyAlias localProperties.getProperty('signing.keyAlias')
+                keyPassword localProperties.getProperty('signing.keyPassword')
+                storeFile file(localProperties.getProperty('signing.storeFile'))
+                storePassword localProperties.getProperty('signing.storePassword')
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-
+            signingConfig signingConfigs.release
+            
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
             // The workaround is from https://github.com/flutter/flutter/issues/58479.
