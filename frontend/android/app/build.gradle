@@ -50,7 +50,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "de.nrw.it.giz.ehrensache.bayern.android"
+        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+            applicationId "app.ehrenamtskarte.floss"
+        } else {
+            applicationId "de.nrw.it.giz.ehrensache.bayern.android"
+        }
         minSdkVersion 20
         targetSdkVersion 30
         multiDexEnabled true
