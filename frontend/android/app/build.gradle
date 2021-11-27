@@ -74,7 +74,6 @@ android {
         }
     }
 
-    // Exclude mapbox-android-accounts because of its proprietary license
     applicationVariants.all { variant ->
         // Exclude mapbox-android-accounts because of its proprietary license
         variant.getCompileConfiguration().exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
@@ -84,6 +83,14 @@ android {
         if (dartEnvironmentVariables.ANDROID_FLOSS) {
             variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
             variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+        }
+    }
+    
+    packagingOptions {
+        
+        // Exclude x86 because the app size in F-Droid is limited to 30MB
+        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+            exclude 'lib/x86**'
         }
     }
 }
