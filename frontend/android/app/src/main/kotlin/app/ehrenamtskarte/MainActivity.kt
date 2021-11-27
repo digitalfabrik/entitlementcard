@@ -1,12 +1,10 @@
 package app.ehrenamtskarte
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
-import com.baseflow.geolocator.location.LocationServiceListener
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
