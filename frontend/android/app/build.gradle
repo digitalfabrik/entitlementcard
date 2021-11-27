@@ -51,7 +51,7 @@ android {
 
     defaultConfig {
         if (dartEnvironmentVariables.ANDROID_FLOSS) {
-            applicationId "app.ehrenamtskarte.floss"
+            applicationId "app.ehrenamtskarte.bayern.floss"
         } else {
             applicationId "de.nrw.it.giz.ehrensache.bayern.android"
         }
