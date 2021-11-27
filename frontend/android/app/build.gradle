@@ -21,6 +21,19 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def dartEnvironmentVariables = [
+        ANDROID_FLOSS: false,
+];
+
+if (project.hasProperty('dart-defines')) {
+    dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -63,8 +76,15 @@ android {
 
     // Exclude mapbox-android-accounts because of its proprietary license
     applicationVariants.all { variant ->
+        // Exclude mapbox-android-accounts because of its proprietary license
         variant.getCompileConfiguration().exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         variant.getRuntimeConfiguration().exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
+
+        // If we create a FLOSS build, then we want to exclude GMS
+        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+            variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+            variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+        }
     }
 }
 
