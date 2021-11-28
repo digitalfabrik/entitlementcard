@@ -52,7 +52,7 @@ class AcceptingStorePreview extends StatelessWidget {
     return AcceptingStoreSummaryModel(
         item.id,
         item.store.name,
-        item.store.description ?? "Keine Beschreibung verfübar",
+        item.store.description,
         item.store.categoryId,
         null,
         null);
