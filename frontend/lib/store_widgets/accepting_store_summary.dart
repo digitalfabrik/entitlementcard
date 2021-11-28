@@ -164,7 +164,7 @@ class StoreTextOverview extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText1),
             const SizedBox(height: 4),
-            Text(store.description ?? "",
+            Text(store.description ?? "Keine Beschreibung verfügbar",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2),

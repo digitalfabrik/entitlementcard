@@ -66,7 +66,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
       if (client == null) {
         throw Exception("GraqhQL client is not yet initialized!");
       }
-    
+
       final result = await client.query(QueryOptions(
           document: query.document, variables: query.getVariablesMap()));
       var exception = result.exception;
@@ -82,11 +82,11 @@ class ResultsLoaderState extends State<ResultsLoader> {
         }
       }
       var newData = result.data;
-      
+
       if (newData == null) {
         throw Exception("Fetched data is null.");
       }
-      
+
       var newItems = query.parse(newData).searchAcceptingStores;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
