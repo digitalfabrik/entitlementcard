@@ -25,7 +25,7 @@ List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
 List<Widget> getCopyrightText(BuildContext context) {
   return toWidgets(Theme.of(context), [
     const Paragraph(content: '''
-Der Quelltext dieser App ist unter der MIT Lizenz veröffentlicht und kann unter https://github.com/ehrenamtskarte/ehrenamtskarte/ eingesehen werden.
+Der Quelltext dieser App ist unter der MIT Lizenz veröffentlicht und kann unter https://github.com/digitalfabrik/ehrenamtskarte eingesehen werden.
 
 MIT License
 

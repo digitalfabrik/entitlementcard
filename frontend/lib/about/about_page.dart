@@ -115,7 +115,7 @@ class AboutPage extends StatelessWidget {
                 leading: const Icon(Icons.code_outlined),
                 title: const Text("Quellcode der App"),
                 onTap: () {
-                  launch("https://github.com/ehrenamtskarte/ehrenamtskarte");
+                  launch("https://github.com/digitalfabrik/ehrenamtskarte");
                 }),
             if (config.showDevSettings)
               ListTile(
