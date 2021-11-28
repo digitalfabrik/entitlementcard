@@ -8,9 +8,10 @@ import '../category_assets.dart';
 class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
   final Function(CategoryAsset, bool) onCategoryPress;
+  final int index;
 
   const FilterBarButton(
-      {Key? key, required this.asset, required this.onCategoryPress})
+      {Key? key, required this.asset, required this.onCategoryPress, required this.index})
       : super(key: key);
 
   @override
@@ -59,10 +60,24 @@ class _FilterBarButtonState extends State<FilterBarButton>
     const paddingPerElement = 8;
     const minNumberElements = 5;
     var totalWidth = MediaQuery.of(context).size.width;
-    var width = min(
-        80.0,
-        (totalWidth - minNumberElements * paddingPerElement) /
-            minNumberElements);
+
+    // Width allowing at least minNumberElements in one row
+    var smallWidth = min(
+      80.0,
+      (totalWidth - minNumberElements * paddingPerElement) / minNumberElements);
+
+    // At least 65 px are needed to fit all category names
+    var largeWidth = max(
+      65.0,
+      smallWidth);
+
+    var numLargeElementsPerRow = totalWidth ~/ largeWidth;
+    var isSecondRow = widget.index >= max(minNumberElements, numLargeElementsPerRow);
+
+    // In the second row we can use larger width as there are only 4 categories
+    var width = isSecondRow
+      ? largeWidth
+      : smallWidth;
 
     var colorTween = _colorTween;
     var animationController = _animationController;

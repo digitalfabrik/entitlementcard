@@ -33,6 +33,7 @@ class FilterBar extends StatelessWidget {
                 children: sortedCategories
                     .map((e) => FilterBarButton(
                         key: ValueKey(e.id),
+                        index: sortedCategories.indexOf(e),
                         asset: e,
                         onCategoryPress: onCategoryPress))
                     .toList()))
