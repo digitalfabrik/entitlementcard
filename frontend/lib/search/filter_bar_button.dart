@@ -11,7 +11,10 @@ class FilterBarButton extends StatefulWidget {
   final int index;
 
   const FilterBarButton(
-      {Key? key, required this.asset, required this.onCategoryPress, required this.index})
+      {Key? key,
+      required this.asset,
+      required this.onCategoryPress,
+      required this.index})
       : super(key: key);
 
   @override
@@ -67,21 +70,19 @@ class _FilterBarButtonState extends State<FilterBarButton>
     var totalWidth = MediaQuery.of(context).size.width;
 
     var smallWidth = min(
-      maxButtonWidth,
-      // Width allowing at least minNumberElements in one row
-      (totalWidth - minNumberElements * paddingPerElement) / minNumberElements);
+        maxButtonWidth,
+        // Width allowing at least minNumberElements in one row
+        (totalWidth - minNumberElements * paddingPerElement) /
+            minNumberElements);
 
-    var largeWidth = max(
-      requiredCategoryLongTitleWidth,
-      smallWidth);
+    var largeWidth = max(requiredCategoryLongTitleWidth, smallWidth);
 
     var numLargeElementsPerRow = totalWidth ~/ largeWidth;
-    var isSecondRow = widget.index >= max(minNumberElements, numLargeElementsPerRow);
+    var isSecondRow =
+        widget.index >= max(minNumberElements, numLargeElementsPerRow);
 
     // In the second row we can use larger width as there are only 4 categories
-    var width = isSecondRow
-      ? largeWidth
-      : smallWidth;
+    var width = isSecondRow ? largeWidth : smallWidth;
 
     var colorTween = _colorTween;
     var animationController = _animationController;
