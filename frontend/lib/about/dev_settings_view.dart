@@ -41,7 +41,7 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _showInfoSlides(context),
           ),
           ListTile(
-              title: const Text('Log sample execption'),
+              title: const Text('Log sample exception'),
               onTap: () => log("Sample exception.",
                   error: Exception("Sample exception..."))),
           ListTile(

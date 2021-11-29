@@ -4,15 +4,22 @@ orbs:
 workflows:
   default:
     jobs:
-      - be-build
-      - ad-build
+      - check-frontend
+      - frontend-android-build:
+          requires:
+            - check-frontend
+      - frontend-ios-build:
+          requires:
+            - check-frontend
+      - backend-build
+      - administration-build
       - martin-build
-      - be-pack:
+      - backend-pack:
           requires:
-            - be-build
-      - ad-pack:
+            - backend-build
+      - administration-pack:
           requires:
-            - ad-build
+            - administration-build
       - martin-pack:
           requires:
             - martin-build
@@ -20,8 +27,8 @@ workflows:
       - styles-pack
       - deploy:
           requires:
-            - be-pack
-            - ad-pack
+            - backend-pack
+            - administration-pack
             - styles-pack
             - martin-pack
             - meta-pack
@@ -30,10 +37,140 @@ workflows:
               only:
                 - main
 
+commands:
+  install-dart-linux:
+    steps:
+      - run:
+          name: Install Dart
+          command: |
+            wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.14.4-1_amd64.deb
+            sudo dpkg -i dart_2.14.4-1_amd64.deb
+  install-fvm-linux:
+    steps:
+      - install-dart-linux
+      - run:
+          name: Install FVM
+          command: |
+            dart pub global activate fvm
+            echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+      - run:
+          name: Install Flutter
+          command: |
+            fvm --verbose install
+      - save_cache:
+          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          paths:
+            - .fvm
+            - ~/fvm/
+      - run:
+          name: Configure Flutter
+          command: |
+            fvm --verbose flutter config --no-analytics
+  install-fvm-mac:
+    steps:
+      - run:
+          name: Install Standalone FVM (with Dart)
+          command: |
+            brew tap leoafarias/fvm
+            brew install fvm
+      - restore_cache:
+          keys:
+            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+      - run:
+          name: Install Flutter
+          command: |
+            fvm --verbose install
+      - save_cache:
+          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          paths:
+            - .fvm
+            - ~/fvm/
+      - run:
+          name: Configure Flutter
+          command: |
+            fvm --verbose flutter config --no-analytics
+
 jobs:
-  be-build:
+  check-frontend:
+    docker:
+      - image: cimg/base:2020.01
+    resource_class: small
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-dart-linux
+      - run:
+          name: Check Formatting
+          command: dart format -o none --set-exit-if-changed lib
+
+  frontend-android-build:
+    docker:
+      - image: circleci/android:api-30
     environment:
-      # Configure the JVM and Gradle to avoid OOM errors
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+    resource_class: large
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-fvm-linux
+      - restore_cache:
+          keys:
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - run:
+          name: Install Flutter Packages
+          command: |
+            fvm flutter pub get
+            fvm flutter precache --android
+      - save_cache:
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+          paths:
+            - .dart_tool
+      - run:
+          name: Build
+          command: |
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart
+      - store_artifacts:
+          path: build/app/outputs/flutter-apk/
+
+
+  frontend-ios-build:
+    macos:
+      xcode: 13.2.0
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-fvm-mac
+      - restore_cache:
+          keys:
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - run:
+          name: Install Flutter Packages
+          command: |
+            fvm flutter pub get
+            fvm flutter precache --ios
+      - save_cache:
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+          paths:
+            - .dart_tool
+      - run:
+          name: Update Pods
+          command: |
+            cd ios
+            pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
+            pod install
+      - run:
+          name: Build
+          command: |
+            fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
+
+  backend-build:
+    environment:
       _JAVA_OPTIONS: "-Xmx3g"
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker:
@@ -62,7 +199,7 @@ jobs:
           paths:
             - backend/build/distributions/*
 
-  ad-build:
+  administration-build:
     docker:
       - image: cimg/node:15.8.0
     working_directory: ~/project/administration
@@ -133,7 +270,7 @@ jobs:
           paths:
             - martin/martin
 
-  be-pack:
+  backend-pack:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/backend
@@ -153,7 +290,7 @@ jobs:
           paths:
             - debs/*.deb
 
-  ad-pack:
+  administration-pack:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/administration
@@ -181,22 +318,13 @@ jobs:
       - checkout:
           path: ~/project
       - run:
-          name: "Download glyphs"
-          command: |
-            wget -O /tmp/glyphs.zip https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
-            unzip /tmp/glyphs.zip
-            mv font-glyphs* font-glyphs
-            rm -f /tmp/glyphs.zip
-      - run:
-          name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
+          name: "Download legacy styles deb"
+          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
           name: "Move .deb to artifacts folder"
           command: |
             mkdir -p /tmp/artifacts/debs
             mv *.deb /tmp/artifacts/debs
-      - store_artifacts:
-          path: /tmp/artifacts
       - persist_to_workspace:
           root: /tmp/artifacts
           paths:

@@ -17,17 +17,12 @@ class VerificationResultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final titleText =
-        title != null ? Text(title, style: theme.textTheme.headline5) : null;
     return AlertDialog(
-      title: (icon != null)
-          ? ListTile(
-              leading: Icon(icon,
-                  color: iconColor ?? theme.colorScheme.primaryVariant,
-                  size: 30),
-              title: titleText,
-            )
-          : titleText,
+      title: ListTile(
+        leading: Icon(icon,
+            color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
+        title: Text(title, style: theme.textTheme.headline5),
+      ),
       content: child,
       actions: [
         TextButton(

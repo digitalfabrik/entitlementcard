@@ -42,11 +42,11 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
   @override
   Widget build(BuildContext context) {
     final otpCode = _otpCode;
-    
+
     if (otpCode == null) {
       return const SmallButtonSpinner();
     }
-    
+
     var time = DateTime.now().millisecondsSinceEpoch;
     final animationDuration = otpCode.validUntilMilliSeconds - time;
     return LayoutBuilder(builder: (context, constraints) {
