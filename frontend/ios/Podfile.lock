@@ -12,7 +12,7 @@ PODS:
   - MapLibre (5.12.1)
   - maplibre_gl (0.0.1):
     - Flutter
-    - MapLibre (~> 5.12.0)
+    - MapLibre (~> 5.12.1)
     - MapLibreAnnotationExtension (~> 0.0.1-beta.2)
   - MapLibreAnnotationExtension (0.0.1-beta.2):
     - MapLibre (~> 5.12.0)
@@ -98,7 +98,7 @@ SPEC CHECKSUMS:
   geolocator_apple: b741765c55dc21950e3e106e8b3584e55cf81ce5
   image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
   MapLibre: d9f0a2d2b0e0a83611bb7bcb03ef2bcd701efb56
-  maplibre_gl: 346feca6b109c20a65611c61caeb4b11251ee416
+  maplibre_gl: 9a036eeac06dcf153f84d90c33099fb40b7e15e0
   MapLibreAnnotationExtension: 6a76d7ea48a44953095fbf95331ac67c7f4fa0be
   maps_launcher: 2e5b6a2d664ec6c27f82ffa81b74228d770ab203
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb

@@ -2,12 +2,7 @@
 
 ## Development
 
-### Flutter Version
-
-Make sure you have Flutter version `2.0.6` installed,
-as we currently depend on Dart Sdk `<2.13.0`.
-
-One way to install a specific version of flutter is through [FVM - Flutter Version Management](https://fvm.app).
+### Flutter Installation
 
 To install FVM and the project Flutter version
 * Run the command `flutter pub global activate fvm`.
