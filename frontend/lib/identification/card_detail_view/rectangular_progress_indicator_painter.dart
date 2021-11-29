@@ -43,7 +43,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         // Top left arc
         var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
         var dest =
-        Offset(-strokeRadius * sin(angle), strokeRadius * (1 - cos(angle)));
+            Offset(-strokeRadius * sin(angle), strokeRadius * (1 - cos(angle)));
         path.relativeArcToPoint(dest,
             radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
@@ -57,7 +57,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         // Bottom left arc
         var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
         var dest =
-        Offset(strokeRadius * (1 - cos(angle)), strokeRadius * sin(angle));
+            Offset(strokeRadius * (1 - cos(angle)), strokeRadius * sin(angle));
         path.relativeArcToPoint(dest,
             radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
@@ -71,7 +71,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
         // Bottom right arc
         var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
         var dest =
-        Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
+            Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
         path.relativeArcToPoint(dest,
             radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
@@ -109,7 +109,7 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     circlePaint.color = valueColor;
     circlePaint.style = PaintingStyle.fill;
     final maxRadius =
-    sqrt((size.width / 2) * (size.width / 2) + size.height * size.height);
+        sqrt((size.width / 2) * (size.width / 2) + size.height * size.height);
     if (value >= delay / 2 && value <= splashDuration + delay / 2) {
       canvas.drawCircle(
           Offset(size.width / 2, 0),

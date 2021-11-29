@@ -5,7 +5,7 @@ class Configuration extends InheritedWidget {
   final String graphqlUrl;
   final bool showVerification;
   final bool showDevSettings;
-  
+
   const Configuration({
     Key? key,
     required this.mapStyleUrl,
@@ -13,7 +13,7 @@ class Configuration extends InheritedWidget {
     required this.showVerification,
     required this.showDevSettings,
     required Widget child,
-  })  : super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(covariant Configuration oldWidget) =>
@@ -23,7 +23,8 @@ class Configuration extends InheritedWidget {
       showDevSettings != oldWidget.showDevSettings;
 
   static Configuration of(BuildContext context) {
-    var configuration = context.dependOnInheritedWidgetOfExactType<Configuration>();
+    var configuration =
+        context.dependOnInheritedWidgetOfExactType<Configuration>();
     if (configuration == null) {
       throw Exception("Config was not found in component tree!");
     }

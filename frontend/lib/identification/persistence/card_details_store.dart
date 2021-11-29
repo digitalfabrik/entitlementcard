@@ -59,32 +59,29 @@ Future<CardDetails?> loadCardDetails() async {
   }
   final fullName = await storage.read(key: fullNameKey);
   final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
-  
-  var storedUnixExpirationDate =
-      await storage.read(key: unixExpirationDateKey);
+
+  var storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
   if (storedUnixExpirationDate == null) {
-    throw Exception("Can't load expiration date.") ;
+    throw Exception("Can't load expiration date.");
   }
   final unixExpirationDate = int.parse(storedUnixExpirationDate);
-  
-  
+
   final storedRegionId = await storage.read(key: regionIdKey);
   if (storedRegionId == null) {
-    throw Exception("Can't load region id.") ;
+    throw Exception("Can't load region id.");
   }
   final regionId = int.parse(storedRegionId);
 
   final storedCardType = await storage.read(key: cardTypeKey);
   if (storedCardType == null) {
-    throw Exception("Can't load region id.") ;
+    throw Exception("Can't load region id.");
   }
-  final cardType =
-      CardType.values[int.parse(storedCardType)];
+  final cardType = CardType.values[int.parse(storedCardType)];
   final totpSecret = await storage.read(key: totpSecretBase32Key);
   if (totpSecret == null) {
-    throw Exception("Can't load totp secret.") ;
+    throw Exception("Can't load totp secret.");
   }
-  
+
   return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
       regionId, totpSecret);
 }

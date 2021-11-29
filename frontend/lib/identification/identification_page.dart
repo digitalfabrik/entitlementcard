@@ -30,25 +30,25 @@ class IdentificationPage extends StatelessWidget {
           cardDetails: cardDetails,
           startActivateEak: () => _showActivateQrCode(context),
           startEakApplication: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: Text('Not yet implemented.'),
-                ));
-              },
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text('Not yet implemented.'),
+            ));
+          },
           startVerification: () => _showVerificationDialog(context, settings),
         );
       }
 
-          return NoCardView(
-            startVerification: () => _showVerificationDialog(context, settings),
-            startActivateQrCode: () => _showActivateQrCode(context),
-            startEakApplication: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text('Not yet implemented.'),
-              ));
-            },
-          );
+      return NoCardView(
+        startVerification: () => _showVerificationDialog(context, settings),
+        startActivateQrCode: () => _showActivateQrCode(context),
+        startEakApplication: () {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Not yet implemented.'),
+          ));
+        },
+      );
     });
   }
 

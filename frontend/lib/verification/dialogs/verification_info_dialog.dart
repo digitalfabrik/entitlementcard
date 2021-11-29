@@ -43,8 +43,8 @@ class VerificationInfoDialog extends StatelessWidget {
   /// and to null if the dialog was dismissed.
   static Future<bool?> show(BuildContext context) {
     return showDialog<bool>(
-        context: context,
-        builder: (_) => const VerificationInfoDialog(),
+      context: context,
+      builder: (_) => const VerificationInfoDialog(),
     );
   }
 }

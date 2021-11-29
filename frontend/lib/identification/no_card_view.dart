@@ -66,7 +66,8 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startEakApplication,
-                            child: const Text("Jetzt Ehrenamtskarte beantragen"),
+                            child:
+                                const Text("Jetzt Ehrenamtskarte beantragen"),
                           ),
                         )
                       ])),
@@ -90,7 +91,8 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startVerification,
-                            child: const Text("Jetzt Ehrenamtskarte verifizieren"),
+                            child:
+                                const Text("Jetzt Ehrenamtskarte verifizieren"),
                           ),
                         )
                       ]))

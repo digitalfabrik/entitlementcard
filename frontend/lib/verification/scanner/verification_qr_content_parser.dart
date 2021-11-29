@@ -45,9 +45,7 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
       const Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixInt64ExpirationDate = cardVerifyModel.expirationDate;
   int? unixExpirationDate;
-  if (unixInt64ExpirationDate != null) {
-    unixExpirationDate = unixInt64ExpirationDate.toInt();
-  }
+  unixExpirationDate = unixInt64ExpirationDate.toInt();
   final cardType = CardType.values[cardVerifyModel.cardType.value];
   final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
