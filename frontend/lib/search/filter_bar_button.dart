@@ -57,18 +57,22 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   Widget build(BuildContext context) {
+    const maxButtonWidth = 80.0;
     const paddingPerElement = 8;
     const minNumberElements = 5;
+
+    // At least a width of 65 is needed to fit all category names
+    const requiredCategoryLongTitleWidth = 65.0;
+
     var totalWidth = MediaQuery.of(context).size.width;
 
-    // Width allowing at least minNumberElements in one row
     var smallWidth = min(
-      80.0,
+      maxButtonWidth,
+      // Width allowing at least minNumberElements in one row
       (totalWidth - minNumberElements * paddingPerElement) / minNumberElements);
 
-    // At least 65 px are needed to fit all category names
     var largeWidth = max(
-      65.0,
+      requiredCategoryLongTitleWidth,
       smallWidth);
 
     var numLargeElementsPerRow = totalWidth ~/ largeWidth;
