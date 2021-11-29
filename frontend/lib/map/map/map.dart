@@ -65,9 +65,9 @@ class _MapState extends State<Map> implements MapController {
       var userLocation = widget.userLocation;
       var cameraPosition = userLocation != null
           ? CameraPosition(
-          target: userLocation, zoom: Map.userLocationZoomLevel)
+              target: userLocation, zoom: Map.userLocationZoomLevel)
           : const CameraPosition(
-          target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+              target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
       _mapboxView = Stack(children: [
         MaplibreMap(
@@ -89,7 +89,7 @@ class _MapState extends State<Map> implements MapController {
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
           compassViewMargins:
-          math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
         ),
         Positioned(

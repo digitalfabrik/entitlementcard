@@ -54,64 +54,65 @@ class DetailContent extends StatelessWidget {
                   ],
                   Column(
                     children: <Widget>[
+                      ContactInfoRow(
+                        Icons.location_on,
+                        "${address.street}\n"
+                            "${address.postalCode} ${address.location}",
+                        "Adresse",
+                        onTap: () =>
+                            MapsLauncher.launchQuery("${address.street}, "
+                                "${address.postalCode} ${address.location}"),
+                        iconColor: readableOnAccentColor,
+                        iconFillColor: accentColor,
+                      ),
+                      if (website != null)
                         ContactInfoRow(
-                      Icons.location_on,
-                      "${address.street}\n"
-                          "${address.postalCode} ${address.location}",
-                      "Adresse",
-                      onTap: () =>
-                          MapsLauncher.launchQuery("${address.street}, "
-                              "${address.postalCode} ${address.location}"),
-                      iconColor: readableOnAccentColor,
-                      iconFillColor: accentColor,
+                          Icons.language,
+                          prepareWebsiteUrlForDisplay(website),
+                          "Website",
+                          onTap: () =>
+                              launch(prepareWebsiteUrlForLaunch(website)),
+                          iconColor: readableOnAccentColor,
+                          iconFillColor: accentColor,
+                        ),
+                      if (telephone != null)
+                        ContactInfoRow(
+                          Icons.phone,
+                          telephone,
+                          "Telefon",
+                          onTap: () =>
+                              launch("tel:${sanitizePhoneNumber(telephone)}"),
+                          iconColor: readableOnAccentColor,
+                          iconFillColor: accentColor,
+                        ),
+                      if (email != null)
+                        ContactInfoRow(
+                          Icons.alternate_email,
+                          email,
+                          "E-Mail",
+                          onTap: () => launch("mailto:${email.trim()}"),
+                          iconColor: readableOnAccentColor,
+                          iconFillColor: accentColor,
+                        ),
+                    ],
+                  ),
+                  if (!hideShowOnMapButton) ...[
+                    Divider(
+                      thickness: 0.7,
+                      height: 48,
+                      color: Theme.of(context).primaryColorLight,
                     ),
-                  if (website != null)
-                    ContactInfoRow(
-                      Icons.language,
-                      prepareWebsiteUrlForDisplay(website),
-                      "Website",
-                      onTap: () => launch(prepareWebsiteUrlForLaunch(website)),
-                      iconColor: readableOnAccentColor,
-                      iconFillColor: accentColor,
+                    ButtonBar(
+                      children: [
+                        OutlinedButton(
+                          child: const Text("Auf Karte zeigen"),
+                          onPressed: () => _showOnMap(context),
+                        ),
+                      ],
+                      alignment: MainAxisAlignment.center,
                     ),
-                  if (telephone != null)
-                    ContactInfoRow(
-                      Icons.phone,
-                      telephone,
-                      "Telefon",
-                      onTap: () =>
-                          launch("tel:${sanitizePhoneNumber(telephone)}"),
-                      iconColor: readableOnAccentColor,
-                      iconFillColor: accentColor,
-                    ),
-                  if (email != null)
-                    ContactInfoRow(
-                      Icons.alternate_email,
-                      email,
-                      "E-Mail",
-                      onTap: () => launch("mailto:${email.trim()}"),
-                      iconColor: readableOnAccentColor,
-                      iconFillColor: accentColor,
-                    ),
-                ],
-              ),
-              if (!hideShowOnMapButton) ...[
-                Divider(
-                  thickness: 0.7,
-                  height: 48,
-                  color: Theme.of(context).primaryColorLight,
-                ),
-                ButtonBar(
-                  children: [
-                    OutlinedButton(
-                      child: const Text("Auf Karte zeigen"),
-                      onPressed: () => _showOnMap(context),
-                    ),
-                  ],
-                  alignment: MainAxisAlignment.center,
-                ),
-              ]
-            ])));
+                  ]
+                ])));
   }
 
   void _showOnMap(BuildContext context) {

@@ -68,15 +68,13 @@ class _LocationButtonState extends State<LocationButton> {
   _determinePosition(SettingsModel settings) async {
     setState(() => _status = LocationPermissionStatus.requesting);
     final requestedPosition = await determinePosition(context,
-        requestIfNotGranted: true,
-        onDisableFeature: () async {
-          await settings.setLocationFeatureEnabled(false);
-          await _showFeatureDisabled();
-        },
-        onEnableFeature: () async {
-          await settings.setLocationFeatureEnabled(true);
-        });
-    
+        requestIfNotGranted: true, onDisableFeature: () async {
+      await settings.setLocationFeatureEnabled(false);
+      await _showFeatureDisabled();
+    }, onEnableFeature: () async {
+      await settings.setLocationFeatureEnabled(true);
+    });
+
     await widget.bringCameraToUser(requestedPosition);
 
     setState(() => _status = LocationPermissionStatus.requestFinished);
