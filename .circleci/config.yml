@@ -4,15 +4,15 @@ orbs:
 workflows:
   default:
     jobs:
-      - be-build
-      - ad-build
+      - backend-build
+      - administration-build
       - martin-build
-      - be-pack:
+      - backend-pack:
           requires:
-            - be-build
-      - ad-pack:
+            - backend-build
+      - administration-pack:
           requires:
-            - ad-build
+            - administration-build
       - martin-pack:
           requires:
             - martin-build
@@ -20,8 +20,8 @@ workflows:
       - styles-pack
       - deploy:
           requires:
-            - be-pack
-            - ad-pack
+            - backend-pack
+            - administration-pack
             - styles-pack
             - martin-pack
             - meta-pack
@@ -31,7 +31,7 @@ workflows:
                 - main
 
 jobs:
-  be-build:
+  backend-build:
     environment:
       # Configure the JVM and Gradle to avoid OOM errors
       _JAVA_OPTIONS: "-Xmx3g"
@@ -62,7 +62,7 @@ jobs:
           paths:
             - backend/build/distributions/*
 
-  ad-build:
+  administration-build:
     docker:
       - image: cimg/node:15.8.0
     working_directory: ~/project/administration
@@ -133,7 +133,7 @@ jobs:
           paths:
             - martin/martin
 
-  be-pack:
+  backend-pack:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/backend
@@ -153,7 +153,7 @@ jobs:
           paths:
             - debs/*.deb
 
-  ad-pack:
+  administration-pack:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/project/administration
@@ -181,22 +181,13 @@ jobs:
       - checkout:
           path: ~/project
       - run:
-          name: "Download glyphs"
-          command: |
-            wget -O /tmp/glyphs.zip https://github.com/orangemug/font-glyphs/archive/gh-pages.zip
-            unzip /tmp/glyphs.zip
-            mv font-glyphs* font-glyphs
-            rm -f /tmp/glyphs.zip
-      - run:
-          name: "Build .deb"
-          command: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -m . -d "Mapbox styles.json with dependencies for the Ehrenamtskarte app" -n "eak-map-styles"
+          name: "Download legacy styles deb"
+          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
           name: "Move .deb to artifacts folder"
           command: |
             mkdir -p /tmp/artifacts/debs
             mv *.deb /tmp/artifacts/debs
-      - store_artifacts:
-          path: /tmp/artifacts
       - persist_to_workspace:
           root: /tmp/artifacts
           paths:
