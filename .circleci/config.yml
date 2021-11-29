@@ -4,8 +4,13 @@ orbs:
 workflows:
   default:
     jobs:
-      - frontend-android-build
-      - frontend-ios-build
+      - check-frontend
+      - frontend-android-build:
+          requires:
+            - check-frontend
+      - frontend-ios-build:
+          requires:
+            - check-frontend
       - backend-build
       - administration-build
       - martin-build
@@ -32,22 +37,17 @@ workflows:
               only:
                 - main
 
-jobs:
-  frontend-android-build:
-    docker:
-      - image: circleci/android:api-30
-    environment:
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
-    resource_class: large
-    working_directory: ~/project/frontend
+commands:
+  install-dart-linux:
     steps:
-      - checkout:
-          path: ~/project
-      - run: 
+      - run:
           name: Install Dart
           command: |
             wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.14.4-1_amd64.deb
             sudo dpkg -i dart_2.14.4-1_amd64.deb
+  install-fvm-linux:
+    steps:
+      - install-dart-linux
       - run:
           name: Install FVM
           command: |
@@ -69,32 +69,8 @@ jobs:
           name: Configure Flutter
           command: |
             fvm --verbose flutter config --no-analytics
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-      - run:
-          name: Install Flutter Packages
-          command: |
-            fvm flutter pub get
-            fvm flutter precache --android
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
-      - run:
-          name: Build
-          command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart
-      - store_artifacts:
-          path: build/app/outputs/flutter-apk/
-
-  frontend-ios-build:
-    macos:
-      xcode: 13.2.0
-    working_directory: ~/project/frontend
+  install-fvm-mac:
     steps:
-      - checkout:
-          path: ~/project
       - run:
           name: Install Standalone FVM (with Dart)
           command: |
@@ -116,6 +92,58 @@ jobs:
           name: Configure Flutter
           command: |
             fvm --verbose flutter config --no-analytics
+
+jobs:
+  check-frontend:
+    docker:
+      - image: cimg/base:2020.01
+    resource_class: small
+    steps:
+      - checkout
+      - install-dart-linux
+      - run:
+          name: Check Formatting
+          command: dart format -o none --set-exit-if-changed lib
+
+  frontend-android-build:
+    docker:
+      - image: circleci/android:api-30
+    environment:
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+    resource_class: large
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-fvm-linux
+      - restore_cache:
+          keys:
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - run:
+          name: Install Flutter Packages
+          command: |
+            fvm flutter pub get
+            fvm flutter precache --android
+      - save_cache:
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+          paths:
+            - .dart_tool
+      - run:
+          name: Build
+          command: |
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart
+      - store_artifacts:
+          path: build/app/outputs/flutter-apk/
+
+
+  frontend-ios-build:
+    macos:
+      xcode: 13.2.0
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-fvm-mac
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
