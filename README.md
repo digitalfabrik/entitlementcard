@@ -1,5 +1,6 @@
 # Digitale Ehrenamtskarte
-[![CircleCI build status](https://circleci.com/gh/ehrenamtskarte/ehrenamtskarte.svg?style=svg)](https://app.circleci.com/pipelines/github/ehrenamtskarte/ehrenamtskarte) [![Build Status](https://api.cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte.svg)](https://cirrus-ci.com/github/ehrenamtskarte/ehrenamtskarte/main) [![frontend style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://pub.dev/packages/effective_dart)
+[![CircleCI build status](https://circleci.com/gh/digitalfabrik/ehrenamtskarte.svg?style=svg)](https://app.circleci.com/pipelines/github/ehrenamtskarte/ehrenamtskarte)
+[![frontend style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://pub.dev/packages/effective_dart)
 
 > App for the 'Bayerische Ehrenamtskarte', a benefit card for volunteers in Bavaria, Germany.
 >

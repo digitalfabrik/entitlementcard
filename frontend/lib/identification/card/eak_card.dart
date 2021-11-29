@@ -25,13 +25,14 @@ class EakCard extends StatelessWidget {
   final BaseCardDetails cardDetails;
   final Region? region;
 
-  const EakCard({Key? key, required this.cardDetails, this.region}) : super(key: key);
+  const EakCard({Key? key, required this.cardDetails, this.region})
+      : super(key: key);
 
   get _formattedExpirationDate {
     final expirationDate = cardDetails.expirationDate;
     return expirationDate != null
-      ? DateFormat('dd.MM.yyyy').format(expirationDate)
-      : "unbegrenzt";
+        ? DateFormat('dd.MM.yyyy').format(expirationDate)
+        : "unbegrenzt";
   }
 
   @override
@@ -57,8 +58,7 @@ class EakCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         EakCardHeaderLogo(
-                            title: headerTitle,
-                            scaleFactor: scaleFactor),
+                            title: headerTitle, scaleFactor: scaleFactor),
                         EakCardHeaderLogo(
                           title: "Freistaat Bayern",
                           scaleFactor: scaleFactor,

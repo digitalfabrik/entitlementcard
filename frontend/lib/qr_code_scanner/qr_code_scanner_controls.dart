@@ -13,7 +13,8 @@ class QrCodeScannerControls extends StatelessWidget {
   final StreamController<CameraFacing> cameraStreamController =
       StreamController<CameraFacing>();
 
-  QrCodeScannerControls({Key? key, required this.controller}) : super(key: key) {
+  QrCodeScannerControls({Key? key, required this.controller})
+      : super(key: key) {
     updateFlashStream();
     updateCameraStream();
   }
@@ -31,7 +32,7 @@ class QrCodeScannerControls extends StatelessWidget {
         future: _tryToGetSystemFeatures(),
         builder: (context, snapshot) {
           SystemFeatures? systemFeatures = snapshot.data;
-          
+
           if (snapshot.hasData || systemFeatures == null) {
             return const Center();
           }
@@ -50,9 +51,7 @@ class QrCodeScannerControls extends StatelessWidget {
                         child: StreamBuilder<bool>(
                           stream: flashStreamController.stream,
                           builder: (ctx, snapshot) => Text(
-                              snapshot.data == null
-                                  ? "Blitz aus"
-                                  : "Blitz an",
+                              snapshot.data == null ? "Blitz aus" : "Blitz an",
                               style: const TextStyle(fontSize: 16)),
                         )),
                   ),

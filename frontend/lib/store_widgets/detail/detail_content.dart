@@ -54,18 +54,17 @@ class DetailContent extends StatelessWidget {
                   ],
                   Column(
                     children: <Widget>[
-                      if (address != null)
-                        ContactInfoRow(
-                          Icons.location_on,
-                          "${address.street}\n"
-                              "${address.postalCode} ${address.location}",
-                          "Adresse",
-                          onTap: () =>
-                              MapsLauncher.launchQuery("${address.street}, "
-                                  "${address.postalCode} ${address.location}"),
-                          iconColor: readableOnAccentColor,
-                          iconFillColor: accentColor,
-                        ),
+                      ContactInfoRow(
+                        Icons.location_on,
+                        "${address.street}\n"
+                            "${address.postalCode} ${address.location}",
+                        "Adresse",
+                        onTap: () =>
+                            MapsLauncher.launchQuery("${address.street}, "
+                                "${address.postalCode} ${address.location}"),
+                        iconColor: readableOnAccentColor,
+                        iconFillColor: accentColor,
+                      ),
                       if (website != null)
                         ContactInfoRow(
                           Icons.language,

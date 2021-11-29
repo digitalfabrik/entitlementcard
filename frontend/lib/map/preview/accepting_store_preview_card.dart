@@ -16,10 +16,8 @@ class AcceptingStorePreviewError extends StatelessWidget {
         onTap: refetch,
         child: Container(
             height: double.infinity,
-            padding:
-            const EdgeInsets.symmetric(horizontal: 16),
-            child: const ErrorMessage(
-                "Fehler beim Laden der Infos.")));
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: const ErrorMessage("Fehler beim Laden der Infos.")));
   }
 }
 
@@ -43,14 +41,14 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 child: isLoading
                     ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: const LinearProgressIndicator())
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: const LinearProgressIndicator())
                     : currentAcceptingStore == null
-                    ? AcceptingStorePreviewError(refetch: refetch)
-                    : AcceptingStoreSummary(
-                    store: currentAcceptingStore,
-                    showLocation: false,
-                    key: ValueKey(currentAcceptingStore.id),
-                    showMapButtonOnDetails: false))));
+                        ? AcceptingStorePreviewError(refetch: refetch)
+                        : AcceptingStoreSummary(
+                            store: currentAcceptingStore,
+                            showLocation: false,
+                            key: ValueKey(currentAcceptingStore.id),
+                            showMapButtonOnDetails: false))));
   }
 }

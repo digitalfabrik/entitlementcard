@@ -14,9 +14,6 @@ Color getReadableOnColorSecondary(Color backgroundColor) {
 }
 
 Color? getDarkenedColorForCategory(int categoryId) {
-  if (categoryId == null) {
-    return null;
-  }
   final categoryColor = categoryAssets[categoryId].color;
   Color? categoryColorDark;
   if (categoryColor != null) {

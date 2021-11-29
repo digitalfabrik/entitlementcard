@@ -90,3 +90,5 @@ lint/tmp/
 
 
 app/release
+
+GeneratedPluginRegistrant.java

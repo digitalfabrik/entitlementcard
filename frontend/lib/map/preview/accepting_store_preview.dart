@@ -8,7 +8,8 @@ import 'models.dart';
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {Key? key}) : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +50,7 @@ class AcceptingStorePreview extends StatelessWidget {
 
   _convertToAcceptingStoreSummary(
       AcceptingStoreSummaryById$Query$PhysicalStore item) {
-    return AcceptingStoreSummaryModel(
-        item.id,
-        item.store.name,
-        item.store.description,
-        item.store.categoryId,
-        null,
-        null);
+    return AcceptingStoreSummaryModel(item.id, item.store.name,
+        item.store.description, item.store.categoryId, null, null);
   }
 }
