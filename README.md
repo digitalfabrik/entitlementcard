@@ -65,7 +65,7 @@ Click [here](https://youtu.be/YsEAVG6efVU ) to view the video.
 
 ## Resources about the Ehrenamtskarte
 
-See [here](https://github.com/ehrenamtskarte/artefacts/blob/main/resources.md)
+See [here](https://github.com/digitalfabrik/ehrenamtskarte-artefacts)
 
 ## About the project
 
