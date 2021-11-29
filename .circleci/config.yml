@@ -98,8 +98,10 @@ jobs:
     docker:
       - image: cimg/base:2020.01
     resource_class: small
+    working_directory: ~/project/frontend
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - install-dart-linux
       - run:
           name: Check Formatting
