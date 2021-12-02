@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 import '../category_assets.dart';
 import 'filter_bar_button.dart';
@@ -32,10 +33,10 @@ class FilterBar extends StatelessWidget {
                 runSpacing: 8,
                 spacing: 4,
                 children: sortedCategories
-                    .map((e) => FilterBarButton(
-                        key: ValueKey(e.id),
-                        index: sortedCategories.indexOf(e),
-                        asset: e,
+                    .mapIndexed((index, category) => FilterBarButton(
+                        key: ValueKey(category.id),
+                        index: index,
+                        asset: category,
                         onCategoryPress: onCategoryPress))
                     .toList()))
       ])
