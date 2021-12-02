@@ -1,10 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:collection/collection.dart';
 
 import '../routing.dart';
 

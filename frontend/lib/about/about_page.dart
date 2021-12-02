@@ -6,8 +6,8 @@ import '../configuration/configuration.dart';
 import '../routing.dart';
 import 'content_tile.dart';
 import 'dev_settings_view.dart';
-import 'texts.dart';
 import 'license_page.dart';
+import 'texts.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);

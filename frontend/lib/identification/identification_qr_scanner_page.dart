@@ -1,10 +1,10 @@
-import '../widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../qr_code_scanner/qr_code_processor.dart';
 import '../qr_code_scanner/qr_code_scanner_page.dart';
 import '../qr_code_scanner/qr_parsing_error_dialog.dart';
+import '../widgets/navigation_bars.dart';
 import 'card_details_model.dart';
 import 'identification_qr_content_parser.dart';
 
