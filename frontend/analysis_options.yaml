@@ -6,27 +6,156 @@ analyzer:
     - lib/graphql/graphql_api*.dart
     - lib/identification/protobuf/*.dart
   errors:
+    # Analysis options
     missing_required_param: warning
     unused_import: error
-    prefer_const_constructors: error
-    require_trailing_commas: error
-    prefer_final_locals: error
-    prefer_const_declarations: error
-    always_declare_return_types: error
-    sort_child_properties_last: error
-    directives_ordering: error
-    prefer_if_elements_to_conditional_expressions: error
-    prefer_final_in_for_each: error
+    unnecessary_null_comparison: error
 
+    # Linting rules
+    always_declare_return_types: error
+    always_require_non_null_named_parameters: error
+    annotate_overrides: error
+    avoid_bool_literals_in_conditional_expressions: error
+    avoid_catching_errors: error
+    avoid_classes_with_only_static_members: error
+    avoid_empty_else: error
+    avoid_escaping_inner_quotes: error
+    avoid_field_initializers_in_const_classes: error
+    avoid_function_literals_in_foreach_calls: error
+    avoid_implementing_value_types: error
+    avoid_init_to_null: error
+    avoid_multiple_declarations_per_line: error
+    avoid_null_checks_in_equality_operators: error
+    avoid_positional_boolean_parameters: error
+    avoid_print: error
+    avoid_private_typedef_functions: error
+    avoid_relative_lib_imports: error
+    avoid_return_types_on_setters: error
+    avoid_returning_null_for_future: error
+    avoid_returning_null_for_void: error
+    avoid_setters_without_getters: error
+    avoid_shadowing_type_parameters: error
+    avoid_single_cascade_in_expression_statements: error
+    avoid_type_to_string: error
+    avoid_types_as_parameter_names: error
+    avoid_unnecessary_containers: error
+    avoid_unused_constructor_parameters: error
+    avoid_void_async: error
+    avoid_web_libraries_in_flutter: error
+    await_only_futures: error
+    camel_case_extensions: error
+    camel_case_types: error
+    cancel_subscriptions: error
+    cast_nullable_to_non_nullable: error
+    constant_identifier_names: error
+    control_flow_in_finally: error
+    curly_braces_in_flow_control_structures: error
+    depend_on_referenced_packages: error
+    deprecated_consistency: error
+    directives_ordering: error
+    empty_catches: error
+    empty_constructor_bodies: error
+    empty_statements: error
+    eol_at_end_of_file: error
+    exhaustive_cases: error
+    file_names: error
+    hash_and_equals: error
+    implementation_imports: error
+    invariant_booleans: error
+    iterable_contains_unrelated_type: error
+    join_return_with_assignment: error
+    leading_newlines_in_multiline_strings: error
+    library_names: error
+    library_prefixes: error
+    list_remove_unrelated_type: error
+    missing_whitespace_between_adjacent_strings: error
+    no_adjacent_strings_in_list: error
+    no_duplicate_case_values: error
+    no_logic_in_create_state: error
+    no_runtimeType_toString: error
+    non_constant_identifier_names: error
+    noop_primitive_operations: error
+    null_check_on_nullable_type_parameter: error
+    null_closures: error
+    overridden_fields: error
+    package_names: error
+    package_prefixed_library_names: error
+    parameter_assignments: error
+    prefer_asserts_in_initializer_lists: error
+    prefer_collection_literals: error
+    prefer_conditional_assignment: error
+    prefer_const_constructors: error
+    prefer_const_constructors_in_immutables: error
+    prefer_const_declarations: error
+    prefer_const_literals_to_create_immutables: error
+    prefer_constructors_over_static_methods: error
+    prefer_contains: error
+    prefer_equal_for_default_values: error
+    prefer_final_fields: error
+    prefer_final_in_for_each: error
+    prefer_final_locals: error
+    prefer_for_elements_to_map_fromIterable: error
+    prefer_function_declarations_over_variables: error
+    prefer_generic_function_type_aliases: error
+    prefer_if_elements_to_conditional_expressions: error
+    prefer_if_null_operators: error
+    prefer_initializing_formals: error
+    prefer_inlined_adds: error
+    prefer_interpolation_to_compose_strings: error
+    prefer_is_empty: error
+    prefer_is_not_empty: error
+    prefer_is_not_operator: error
+    prefer_iterable_whereType: error
+    prefer_null_aware_method_calls: error
+    prefer_spread_collections: error
+    prefer_typing_uninitialized_variables: error
+    prefer_void_to_null: error
+    provide_deprecation_message: error
+    recursive_getters: error
+    require_trailing_commas: error
+    sized_box_for_whitespace: error
+    slash_for_doc_comments: error
+    sort_child_properties_last: error
+    sort_unnamed_constructors_first: error
+    test_types_in_equals: error
+    throw_in_finally: error
+    tighten_type_of_initializing_formals: error
+    type_annotate_public_apis: error
+    type_init_formals: error
+    unnecessary_await_in_return: error
+    unnecessary_brace_in_string_interps: error
+    unnecessary_const: error
+    unnecessary_getters_setters: error
+    unnecessary_new: error
+    unnecessary_null_aware_assignments: error
+    unnecessary_null_checks: error
+    unnecessary_null_in_if_null_operators: error
+    unnecessary_nullable_for_final_variable_declarations: error
+    unnecessary_overrides: error
+    unnecessary_parenthesis: error
+    unnecessary_raw_strings: error
+    unnecessary_statements: error
+    unnecessary_string_escapes: error
+    unnecessary_string_interpolations: error
+    unnecessary_this: error
+    unrelated_type_equality_checks: error
+    unsafe_html: error
+    use_full_hex_values_for_flutter_colors: error
+    use_function_type_syntax_for_parameters: error
+    use_named_constants: error
+    use_setters_to_change_properties: error
+    use_string_buffers: error
+    use_test_throws_matchers: error
+    valid_regexps: error
+    void_checks: error
 
 linter:
   rules:
+    # Too strict rules
     avoid_redundant_argument_values: false
-    require_trailing_commas: true
-    prefer_final_locals: true
-    prefer_const_declarations: true
-    always_declare_return_types: true
-    sort_child_properties_last: true
-    directives_ordering: true
-    prefer_if_elements_to_conditional_expressions: true
-    prefer_final_in_for_each: true
+
+    # Disabling because no auto fix available
+    sort_pub_dependencies: false
+
+    # May enable later
+    use_build_context_synchronously: false
