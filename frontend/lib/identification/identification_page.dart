@@ -57,7 +57,7 @@ class IdentificationPage extends StatelessWidget {
     );
   }
 
-  void _showVerificationDialog(context, SettingsModel settings) async {
+  void _showVerificationDialog(BuildContext context, SettingsModel settings) async {
     await VerificationWorkflow.startWorkflow(context, settings);
   }
 

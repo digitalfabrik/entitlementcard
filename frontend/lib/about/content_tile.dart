@@ -15,7 +15,7 @@ class ContentTile extends StatelessWidget {
     return ListTile(leading: Icon(icon), title: Text(title), onTap: () => _showContent(context));
   }
 
-  void _showContent(context) {
+  void _showContent(BuildContext context) {
     Navigator.push(
       context,
       AppRoute(

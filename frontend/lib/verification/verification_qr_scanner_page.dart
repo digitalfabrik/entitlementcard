@@ -105,7 +105,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     }
   }
 
-  Future<void> _onError(context, String message, [Exception? exception]) async {
+  Future<void> _onError(BuildContext context, String message, [Exception? exception]) async {
     if (exception != null) {
       debugPrint("Verification failed: $exception");
     }
@@ -114,12 +114,12 @@ class VerificationQrScannerPage extends StatelessWidget {
     await NegativeVerificationResultDialog.show(context, message);
   }
 
-  Future<void> _onSuccess(context, BaseCardDetails cardDetails) async {
+  Future<void> _onSuccess(BuildContext context, BaseCardDetails cardDetails) async {
     _closeWaitingDialog(context);
     await PositiveVerificationResultDialog.show(context, cardDetails);
   }
 
-  void _openWaitingDialog(context) async {
+  void _openWaitingDialog(BuildContext context) async {
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -129,7 +129,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     Navigator.pop(context);
   }
 
-  void _closeWaitingDialog(context) {
+  void _closeWaitingDialog(BuildContext context) {
     Navigator.pop(context);
   }
 }

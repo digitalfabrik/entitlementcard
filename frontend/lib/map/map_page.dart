@@ -105,8 +105,11 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   LatLng? _getLatLngOrNull(dynamic coordinates) {
     if (coordinates is! List) return null;
-    if (!(coordinates[0] is double && coordinates[1] is double)) return null;
-    return LatLng(coordinates[1], coordinates[0]);
+    final lat = coordinates[1];
+    final lng = coordinates[0];
+    if (lat is! double || lng is! double) return null;
+
+    return LatLng(lat, lng);
   }
 
   @override

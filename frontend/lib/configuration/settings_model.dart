@@ -27,7 +27,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   // default false
-  Future<void> setFirstStart(enabled) async {
+  Future<void> setFirstStart(bool enabled) async {
     _firstStart = enabled;
     notifyListeners();
     await _preferences?.setBool("firstStart", enabled);
@@ -38,7 +38,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   // default true
-  Future<void> setHideVerificationInfo(enabled) async {
+  Future<void> setHideVerificationInfo(bool enabled) async {
     _hideVerificationInfo = enabled;
     notifyListeners();
     await _preferences?.setBool(hideVerificationInfoPropertyName, enabled);
@@ -48,7 +48,7 @@ class SettingsModel extends ChangeNotifier {
     return _preferences?.getBool("location") ?? true;
   }
 
-  Future<void> setLocationFeatureEnabled(enabled) async {
+  Future<void> setLocationFeatureEnabled(bool enabled) async {
     _locationFeatureEnabled = enabled;
     notifyListeners();
     await _preferences?.setBool("location", enabled);

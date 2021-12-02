@@ -55,8 +55,15 @@ Future<CardDetails?> loadCardDetails() async {
       "current version $currentDataVersion",
     );
   }
-  final fullName = await storage.read(key: fullNameKey);
-  final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+  final String? fullName = await storage.read(key: fullNameKey);
+  if (fullName == null) {
+    throw Exception("Can't load full name.");
+  }
+
+  final String? hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+  if (hashSecretBase64 == null) {
+    throw Exception("Can't load hash secret.");
+  }
 
   final storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
   if (storedUnixExpirationDate == null) {

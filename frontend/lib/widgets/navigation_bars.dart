@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import '../debouncer.dart';
 
 /// null means that the default bg color is chosen. other possibility: Colors.transparent
-const kBackgroundColor = null;
+const Color? kBackgroundColor = null;
 
 /// null means that the default fg color is chosen.
-const kForegroundColor = null;
+const Color? kForegroundColor = null;
 const kElevation = 0.0;
 
 class NavigationBar extends StatelessWidget {

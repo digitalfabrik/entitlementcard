@@ -22,7 +22,7 @@ class FilterBarButton extends StatefulWidget {
 class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProviderStateMixin {
   bool _selected = false;
   AnimationController? _animationController;
-  Animation? _colorTween;
+  Animation<Color?>? _colorTween;
 
   _FilterBarButtonState();
 
