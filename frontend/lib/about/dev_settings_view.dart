@@ -1,12 +1,9 @@
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../graphql/graphql_api.graphql.dart';
 import '../identification/base_card_details.dart';
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';

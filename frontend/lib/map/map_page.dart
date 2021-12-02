@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'map/map_controller.dart';

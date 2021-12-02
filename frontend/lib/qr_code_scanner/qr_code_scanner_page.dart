@@ -1,7 +1,4 @@
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'qr_code_processor.dart';
 import 'qr_code_scanner.dart';
