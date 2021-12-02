@@ -17,15 +17,17 @@ analyzer:
     sort_child_properties_last: error
     directives_ordering: error
     prefer_if_elements_to_conditional_expressions: error
+    prefer_final_in_for_each: error
 
 
 linter:
   rules:
-    - require_trailing_commas
-    - prefer_final_locals
-    - prefer_const_declarations
-    - always_declare_return_types
-    - sort_child_properties_last
-    - directives_ordering
-    - prefer_if_elements_to_conditional_expressions
-#    - avoid_redundant_argument_values: false
+    avoid_redundant_argument_values: false
+    require_trailing_commas: true
+    prefer_final_locals: true
+    prefer_const_declarations: true
+    always_declare_return_types: true
+    sort_child_properties_last: true
+    directives_ordering: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_final_in_for_each: true

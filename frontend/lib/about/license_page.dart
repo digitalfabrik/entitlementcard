@@ -29,7 +29,7 @@ class CustomLicensePage extends StatelessWidget {
           return ErrorMessage(error.toString());
         } else if (snapshot.hasData && licenses != null) {
           final licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
-            for (var packageName in entry.packages) {
+            for (final packageName in entry.packages) {
               value.add(CustomLicenseEntry(packageName, [entry.paragraphs]));
             }
             return value;
