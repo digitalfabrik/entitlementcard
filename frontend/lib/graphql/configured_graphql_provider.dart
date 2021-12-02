@@ -27,10 +27,10 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
       ),
     );
     return GraphQLProvider(
+      client: client,
       child: CacheProvider(
         child: child,
       ),
-      client: client,
     );
   }
 }

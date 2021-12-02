@@ -71,8 +71,8 @@ class AcceptingStoreSummary extends StatelessWidget {
                   children: [
                     if (currentDistance != null) DistanceText(distance: currentDistance),
                     SizedBox(
-                      child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
                       height: double.infinity,
+                      child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
                     ),
                   ],
                 ),

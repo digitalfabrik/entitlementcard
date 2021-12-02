@@ -46,6 +46,7 @@ class _LocationButtonState extends State<LocationButton> {
           onPressed:
               _locationStatus == LocationRequestStatus.requesting ? null : () => _determinePosition(true, settings),
           icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
             child: _locationStatus == LocationRequestStatus.requesting
                 ? const SmallButtonSpinner()
                 : Icon(
@@ -53,7 +54,6 @@ class _LocationButtonState extends State<LocationButton> {
                     size: 24,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
-            duration: const Duration(milliseconds: 200),
           ),
           label: Text(
             "In meiner Nähe suchen",

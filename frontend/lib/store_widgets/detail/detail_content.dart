@@ -98,13 +98,13 @@ class DetailContent extends StatelessWidget {
                 color: Theme.of(context).primaryColorLight,
               ),
               ButtonBar(
+                alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
                     child: const Text("Auf Karte zeigen"),
                     onPressed: () => _showOnMap(context),
                   ),
                 ],
-                alignment: MainAxisAlignment.center,
               ),
             ]
           ],

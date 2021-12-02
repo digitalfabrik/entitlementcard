@@ -125,11 +125,11 @@ class RichQrCode extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             child: TextButton(
+              onPressed: onMoreActionsPressed,
               child: Text(
                 "Weitere Aktionen",
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
-              onPressed: onMoreActionsPressed,
             ),
           ),
         ],

@@ -32,13 +32,13 @@ class ContactInfoRow extends StatelessWidget {
             child: Container(
               width: 42,
               height: 42,
+              color: iconFillColor ?? Theme.of(context).colorScheme.primary,
               child: Icon(
                 _icon,
                 size: 28,
                 semanticLabel: _semanticLabel,
                 color: iconColor ?? Colors.white,
               ),
-              color: iconFillColor ?? Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -53,8 +53,8 @@ class ContactInfoRow extends StatelessWidget {
     return (currentOnTap == null)
         ? row
         : InkWell(
-            child: row,
             onTap: currentOnTap,
+            child: row,
           );
   }
 }

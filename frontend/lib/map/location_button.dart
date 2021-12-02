@@ -35,15 +35,15 @@ class _LocationButtonState extends State<LocationButton> {
         heroTag: "fab_map_view",
         elevation: 1,
         backgroundColor: theme.backgroundColor,
+        onPressed: _status == LocationPermissionStatus.requestFinished ? () => _determinePosition(settings) : null,
         child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
           child: _status == LocationPermissionStatus.requestFinished
               ? (settings.locationFeatureEnabled
                   ? Icon(Icons.my_location, color: theme.colorScheme.secondary)
                   : Icon(Icons.location_disabled, color: theme.colorScheme.error))
               : const SmallButtonSpinner(),
-          duration: const Duration(milliseconds: 200),
         ),
-        onPressed: _status == LocationPermissionStatus.requestFinished ? () => _determinePosition(settings) : null,
       ),
     );
   }
