@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 /// Manually chosen aspect ratio of a card. Maybe this was determined using
 /// a ruler?

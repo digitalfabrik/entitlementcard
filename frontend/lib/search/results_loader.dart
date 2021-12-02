@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

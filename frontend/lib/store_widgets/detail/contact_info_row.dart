@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ContactInfoRow extends StatelessWidget {
   final IconData _icon;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 

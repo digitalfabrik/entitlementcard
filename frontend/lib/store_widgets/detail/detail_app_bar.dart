@@ -1,5 +1,4 @@
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
