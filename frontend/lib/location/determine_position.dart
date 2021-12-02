@@ -69,12 +69,18 @@ class RequestedPosition {
 }
 
 /// Determine the current position of the device.
-Future<RequestedPosition> determinePosition(BuildContext context,
-    {bool requestIfNotGranted = false,
-    Future<void> Function()? onDisableFeature,
-    Future<void> Function()? onEnableFeature}) async {
-  final permission = await checkAndRequestLocationPermission(context,
-      requestIfNotGranted: requestIfNotGranted, onDisableFeature: onDisableFeature, onEnableFeature: onEnableFeature);
+Future<RequestedPosition> determinePosition(
+  BuildContext context, {
+  bool requestIfNotGranted = false,
+  Future<void> Function()? onDisableFeature,
+  Future<void> Function()? onEnableFeature,
+}) async {
+  final permission = await checkAndRequestLocationPermission(
+    context,
+    requestIfNotGranted: requestIfNotGranted,
+    onDisableFeature: onDisableFeature,
+    onEnableFeature: onEnableFeature,
+  );
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
@@ -89,11 +95,13 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// Ensures all preconditions needed to determine the current position.
 /// If needed, location permissions are requested.
 ///
-Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
-    {bool requestIfNotGranted = true,
-    rationale = "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
-    Future<void> Function()? onDisableFeature,
-    Future<void> Function()? onEnableFeature}) async {
+Future<LocationStatus> checkAndRequestLocationPermission(
+  BuildContext context, {
+  bool requestIfNotGranted = true,
+  rationale = "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
+  Future<void> Function()? onDisableFeature,
+  Future<void> Function()? onEnableFeature,
+}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
@@ -135,8 +143,11 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
               await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
 
           if (result ?? false) {
-            return await checkAndRequestLocationPermission(context,
-                requestIfNotGranted: requestIfNotGranted, rationale: rationale);
+            return await checkAndRequestLocationPermission(
+              context,
+              requestIfNotGranted: requestIfNotGranted,
+              rationale: rationale,
+            );
           }
         }
 

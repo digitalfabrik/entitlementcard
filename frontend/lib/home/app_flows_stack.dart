@@ -34,7 +34,10 @@ class AppFlowsStack extends StatelessWidget {
 
   Widget _buildChildForAppFlow(AppFlow appFlow, bool isCurrentAppFlow) {
     return Focus(
-        key: ValueKey(appFlow), child: _buildNavigatorForAppFlow(appFlow), descendantsAreFocusable: isCurrentAppFlow);
+      key: ValueKey(appFlow),
+      child: _buildNavigatorForAppFlow(appFlow),
+      descendantsAreFocusable: isCurrentAppFlow,
+    );
   }
 
   Widget _buildNavigatorForAppFlow(AppFlow appFlow) {

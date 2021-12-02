@@ -13,14 +13,17 @@ class EakCardHeaderLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(4.0 * scaleFactor),
-      child: Column(children: [
-        Flexible(
+      child: Column(
+        children: [
+          Flexible(
             child: Padding(
-          padding: EdgeInsets.all(2 * scaleFactor),
-          child: logo ?? Container(),
-        )),
-        Text(title, maxLines: 1, style: TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
-      ]),
+              padding: EdgeInsets.all(2 * scaleFactor),
+              child: logo ?? Container(),
+            ),
+          ),
+          Text(title, maxLines: 1, style: TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
+        ],
+      ),
     );
   }
 }

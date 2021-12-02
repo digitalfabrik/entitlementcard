@@ -18,37 +18,43 @@ class IdentificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return Consumer<CardDetailsModel>(builder: (context, cardDetailsModel, child) {
-      if (!cardDetailsModel.isInitialized) {
-        return Container();
-      }
+    return Consumer<CardDetailsModel>(
+      builder: (context, cardDetailsModel, child) {
+        if (!cardDetailsModel.isInitialized) {
+          return Container();
+        }
 
-      var cardDetails = cardDetailsModel.cardDetails;
-      if (cardDetails != null) {
-        return CardDetailView(
-          cardDetails: cardDetails,
-          startActivateEak: () => _showActivateQrCode(context),
-          startEakApplication: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text('Not yet implemented.'),
-            ));
-          },
+        var cardDetails = cardDetailsModel.cardDetails;
+        if (cardDetails != null) {
+          return CardDetailView(
+            cardDetails: cardDetails,
+            startActivateEak: () => _showActivateQrCode(context),
+            startEakApplication: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Not yet implemented.'),
+                ),
+              );
+            },
+            startVerification: () => _showVerificationDialog(context, settings),
+          );
+        }
+
+        return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
+          startActivateQrCode: () => _showActivateQrCode(context),
+          startEakApplication: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text('Not yet implemented.'),
+              ),
+            );
+          },
         );
-      }
-
-      return NoCardView(
-        startVerification: () => _showVerificationDialog(context, settings),
-        startActivateQrCode: () => _showActivateQrCode(context),
-        startEakApplication: () {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text('Not yet implemented.'),
-          ));
-        },
-      );
-    });
+      },
+    );
   }
 
   void _showVerificationDialog(context, SettingsModel settings) async {

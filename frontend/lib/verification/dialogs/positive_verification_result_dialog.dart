@@ -18,19 +18,23 @@ class PositiveVerificationResultDialog extends StatelessWidget {
         GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
 
     return Query(
-        options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
-        builder: (result, {refetch, fetchMore}) {
-          var data = result.data;
-          var region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
-          return VerificationResultDialog(
-              title: "Karte ist gültig",
-              icon: Icons.verified_user,
-              iconColor: Colors.green,
-              child: IdCard(
-                child: EakCard(
-                    cardDetails: cardDetails, region: region != null ? Region(region.prefix, region.name) : null),
-              ));
-        });
+      options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
+      builder: (result, {refetch, fetchMore}) {
+        var data = result.data;
+        var region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
+        return VerificationResultDialog(
+          title: "Karte ist gültig",
+          icon: Icons.verified_user,
+          iconColor: Colors.green,
+          child: IdCard(
+            child: EakCard(
+              cardDetails: cardDetails,
+              region: region != null ? Region(region.prefix, region.name) : null,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   static Future<void> show(BuildContext context, BaseCardDetails cardDetails) =>

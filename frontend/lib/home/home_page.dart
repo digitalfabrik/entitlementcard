@@ -31,18 +31,27 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     appFlows = [
       AppFlow(
-          MapPage(
-            onMapCreated: (controller) => setState(() => mapPageController = controller),
-            selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
-          ),
-          Icons.map_outlined,
-          "Karte",
-          GlobalKey<NavigatorState>(debugLabel: "Map tab key")),
+        MapPage(
+          onMapCreated: (controller) => setState(() => mapPageController = controller),
+          selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
+        ),
+        Icons.map_outlined,
+        "Karte",
+        GlobalKey<NavigatorState>(debugLabel: "Map tab key"),
+      ),
       AppFlow(
-          const SearchPage(), Icons.search_outlined, "Suche", GlobalKey<NavigatorState>(debugLabel: "Search tab key")),
+        const SearchPage(),
+        Icons.search_outlined,
+        "Suche",
+        GlobalKey<NavigatorState>(debugLabel: "Search tab key"),
+      ),
       if (widget.showVerification)
-        AppFlow(const IdentificationPage(title: "Ausweisen"), Icons.remove_red_eye_outlined, "Ausweisen",
-            GlobalKey<NavigatorState>(debugLabel: "Auth tab key")),
+        AppFlow(
+          const IdentificationPage(title: "Ausweisen"),
+          Icons.remove_red_eye_outlined,
+          "Ausweisen",
+          GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
+        ),
       AppFlow(const AboutPage(), Icons.info_outline, "Über", GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
   }

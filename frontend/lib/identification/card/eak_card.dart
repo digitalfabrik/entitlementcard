@@ -35,11 +35,12 @@ class EakCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cardColor = cardDetails.cardType == CardType.gold ? goldenCardColor : blueCardColor;
-    return LayoutBuilder(builder: (context, constraints) {
-      final scaleFactor = constraints.maxWidth / 300;
-      final currentRegion = region;
-      final headerTitle = currentRegion != null ? "${currentRegion.prefix} ${currentRegion.name}" : "";
-      return Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final scaleFactor = constraints.maxWidth / 300;
+        final currentRegion = region;
+        final headerTitle = currentRegion != null ? "${currentRegion.prefix} ${currentRegion.name}" : "";
+        return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -47,33 +48,39 @@ class EakCard extends StatelessWidget {
             Container(
               color: const Color(0xf5f5f5ff),
               child: AspectRatio(
-                  aspectRatio: 6 / 1,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                aspectRatio: 6 / 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     EakCardHeaderLogo(title: headerTitle, scaleFactor: scaleFactor),
                     EakCardHeaderLogo(
                       title: "Freistaat Bayern",
                       scaleFactor: scaleFactor,
                       logo: const Image(image: AssetImage("assets/wappen-bavaria.png"), fit: BoxFit.contain),
                     )
-                  ])),
+                  ],
+                ),
+              ),
             ),
             // Body
             Flexible(
               child: Container(
                 decoration:
                     BoxDecoration(gradient: RadialGradient(colors: [cardColor.withAlpha(100), cardColor], radius: 1)),
-                child: Column(children: [
-                  Padding(
-                    padding: EdgeInsets.all(8 * scaleFactor),
-                    child: AspectRatio(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8 * scaleFactor),
+                      child: AspectRatio(
                         aspectRatio: 6 / 1.2,
                         child:
-                            SvgPicture.asset("assets/eak-lettering.svg", semanticsLabel: "Bayerische Ehrenamtskarte")),
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0 * scaleFactor),
-                      child: Column(
+                            SvgPicture.asset("assets/eak-lettering.svg", semanticsLabel: "Bayerische Ehrenamtskarte"),
+                      ),
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0 * scaleFactor),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -83,18 +90,24 @@ class EakCard extends StatelessWidget {
                               textAlign: TextAlign.start,
                             ),
                             RichText(
-                                maxLines: 1,
-                                text: TextSpan(
-                                    text: "Gültig bis: ",
-                                    style: TextStyle(fontSize: 12 * scaleFactor, color: textColor),
-                                    children: [TextSpan(text: _formattedExpirationDate)]))
-                          ]),
-                    ),
-                  )
-                ]),
+                              maxLines: 1,
+                              text: TextSpan(
+                                text: "Gültig bis: ",
+                                style: TextStyle(fontSize: 12 * scaleFactor, color: textColor),
+                                children: [TextSpan(text: _formattedExpirationDate)],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
-          ]);
-    });
+          ],
+        );
+      },
+    );
   }
 }

@@ -17,10 +17,11 @@ class ContentTile extends StatelessWidget {
 
   void _showContent(context) {
     Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => ContentPage(title: title, children: children),
-        ));
+      context,
+      AppRoute(
+        builder: (context) => ContentPage(title: title, children: children),
+      ),
+    );
   }
 }
 

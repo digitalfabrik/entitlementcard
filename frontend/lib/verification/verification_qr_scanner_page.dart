@@ -21,23 +21,28 @@ class VerificationQrScannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
     return Expanded(
-        child: Column(children: [
-      NavigationBar(
-        title: "Karte verifizieren",
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.help),
-              onPressed: () async {
-                await settings.setHideVerificationInfo(false);
-                await VerificationInfoDialog.show(context);
-              })
+      child: Column(
+        children: [
+          NavigationBar(
+            title: "Karte verifizieren",
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.help),
+                onPressed: () async {
+                  await settings.setHideVerificationInfo(false);
+                  await VerificationInfoDialog.show(context);
+                },
+              )
+            ],
+          ),
+          Expanded(
+            child: QrCodeScannerPage(
+              onCodeScanned: (code) => _handleQrCode(context, code),
+            ),
+          )
         ],
       ),
-      Expanded(
-          child: QrCodeScannerPage(
-        onCodeScanned: (code) => _handleQrCode(context, code),
-      ))
-    ]));
+    );
   }
 
   Future<void> _handleQrCode(BuildContext context, String rawQrContent) async {
@@ -49,44 +54,50 @@ class VerificationQrScannerPage extends StatelessWidget {
       final valid = await queryServerVerification(client, card);
       if (!valid) {
         await _onError(
-            context,
-            "Die zu prüfende Karte konnte vom Server nicht "
-            "verifiziert werden!");
+          context,
+          "Die zu prüfende Karte konnte vom Server nicht "
+          "verifiziert werden!",
+        );
       } else {
         await _onSuccess(context, card.cardDetails);
       }
     } on ServerVerificationException catch (e) {
       await _onError(
-          context,
-          "Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
-          "werden, da die Kommunikation mit dem Server fehlschlug.",
-          e);
+        context,
+        "Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
+        "werden, da die Kommunikation mit dem Server fehlschlug.",
+        e,
+      );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
-          context,
-          "Die eingescannte Ehrenamtskarte ist nicht gültig, "
-          "da erforderliche Daten fehlen.",
-          e);
+        context,
+        "Die eingescannte Ehrenamtskarte ist nicht gültig, "
+        "da erforderliche Daten fehlen.",
+        e,
+      );
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat("dd.MM.yyyy");
       await _onError(
-          context,
-          "Die eingescannte Karte ist bereits am "
-          "${dateFormat.format(e.expiry)} abgelaufen.",
-          e);
+        context,
+        "Die eingescannte Karte ist bereits am "
+        "${dateFormat.format(e.expiry)} abgelaufen.",
+        e,
+      );
     } on QrCodeParseException catch (e) {
       await _onError(
-          context,
-          "Der Inhalt des eingescannten Codes kann nicht verstanden "
-          "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für "
-          "die Ehrenamtskarte-App generiert wurde.",
-          e);
+        context,
+        "Der Inhalt des eingescannten Codes kann nicht verstanden "
+        "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für "
+        "die Ehrenamtskarte-App generiert wurde.",
+        e,
+      );
     } on Exception catch (e) {
       await _onError(
-          context,
-          "Ein unbekannter Fehler beim Einlesen des QR-Codes ist "
-          "aufgetreten.",
-          e);
+        context,
+        "Ein unbekannter Fehler beim Einlesen des QR-Codes ist "
+        "aufgetreten.",
+        e,
+      );
     } finally {
       // Should already be closed in any case, but we want to really be sure the
       // dialog eventually is closed.
@@ -110,10 +121,11 @@ class VerificationQrScannerPage extends StatelessWidget {
 
   void _openWaitingDialog(context) async {
     await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) =>
-            AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])));
+      barrierDismissible: false,
+      context: context,
+      builder: (context) =>
+          AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])),
+    );
     Navigator.pop(context);
   }
 

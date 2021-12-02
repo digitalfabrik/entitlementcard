@@ -14,19 +14,23 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
       GraphQLClient(
         cache: GraphQLCache(),
         link: Link.from([
-          ErrorLink(onException: (Request request, NextLink forward, LinkException exception) {
-            debugPrint(exception.toString());
-          }, onGraphQLError: (Request request, NextLink forward, Response response) {
-            debugPrint(response.errors.toString());
-          }),
+          ErrorLink(
+            onException: (Request request, NextLink forward, LinkException exception) {
+              debugPrint(exception.toString());
+            },
+            onGraphQLError: (Request request, NextLink forward, Response response) {
+              debugPrint(response.errors.toString());
+            },
+          ),
           HttpLink(Configuration.of(context).graphqlUrl)
         ]),
       ),
     );
     return GraphQLProvider(
-        child: CacheProvider(
-          child: child,
-        ),
-        client: client);
+      child: CacheProvider(
+        child: child,
+      ),
+      client: client,
+    );
   }
 }

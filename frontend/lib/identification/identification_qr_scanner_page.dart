@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import '../widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,15 +14,19 @@ class IdentificationQrScannerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Column(children: [
-      const NavigationBar(
-        title: "Karte hinzufügen",
+      child: Column(
+        children: [
+          const NavigationBar(
+            title: "Karte hinzufügen",
+          ),
+          Expanded(
+            child: QrCodeScannerPage(
+              onCodeScanned: (code) async => _onCodeScanned(context, code),
+            ),
+          )
+        ],
       ),
-      Expanded(
-          child: QrCodeScannerPage(
-        onCodeScanned: (code) async => _onCodeScanned(context, code),
-      ))
-    ]));
+    );
   }
 
   void _onCodeScanned(BuildContext context, String code) async {
@@ -31,28 +35,38 @@ class IdentificationQrScannerPage extends StatelessWidget {
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
-      await showError("Die eingescannte Karte enthält kein Ablauf-"
-          "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
-          " ist. Vermutlich ist beim Erstellen der "
-          "digitalen Ehrenamtskarte ein Fehler passiert.");
+      await showError(
+        "Die eingescannte Karte enthält kein Ablauf-"
+        "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
+        " ist. Vermutlich ist beim Erstellen der "
+        "digitalen Ehrenamtskarte ein Fehler passiert.",
+      );
     } on QRCodeInvalidTotpSecretException catch (_) {
-      await showError("Beim Verarbeiten des eingescannten Codes ist ein"
-          "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid");
+      await showError(
+        "Beim Verarbeiten des eingescannten Codes ist ein"
+        "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid",
+      );
     } on QRCodeInvalidExpiryException catch (_) {
-      await showError("Beim Verarbeiten des Ablaufdatums ist ein "
-          "unerwarteter Fehler aufgetreten.");
+      await showError(
+        "Beim Verarbeiten des Ablaufdatums ist ein "
+        "unerwarteter Fehler aufgetreten.",
+      );
     } on QRCodeInvalidFormatException catch (e, s) {
-      await showError("Der Inhalt des eingescannten Codes kann nicht "
-          "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
-          "der nicht für die Ehrenamtskarte-App generiert wurde.");
+      await showError(
+        "Der Inhalt des eingescannten Codes kann nicht "
+        "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
+        "der nicht für die Ehrenamtskarte-App generiert wurde.",
+      );
       debugPrintStack(stackTrace: s, label: e.toString());
       if (e.cause != null && e.stackTrace != null) {
         debugPrint("Caused by:");
         debugPrintStack(stackTrace: e.stackTrace, label: e.cause.toString());
       }
     } on QrCodeFieldMissingException catch (e) {
-      await showError("Der Inhalt des eingescannten Codes ist unvollständig. "
-          "(Fehlercode: ${e.missingFieldName}Missing)");
+      await showError(
+        "Der Inhalt des eingescannten Codes ist unvollständig. "
+        "(Fehlercode: ${e.missingFieldName}Missing)",
+      );
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError("Ein unerwarteter Fehler ist aufgetreten.");

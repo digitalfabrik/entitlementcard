@@ -43,9 +43,10 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar> with SingleTi
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-        painter: RectangularProgressIndicatorPainter(
-      valueColor: Theme.of(context).colorScheme.secondary,
-      value: animation.value,
-    ));
+      painter: RectangularProgressIndicatorPainter(
+        valueColor: Theme.of(context).colorScheme.secondary,
+        value: animation.value,
+      ),
+    );
   }
 }

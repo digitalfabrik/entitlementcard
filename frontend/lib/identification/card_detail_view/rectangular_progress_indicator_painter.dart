@@ -97,8 +97,11 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     circlePaint.style = PaintingStyle.fill;
     final maxRadius = sqrt((size.width / 2) * (size.width / 2) + size.height * size.height);
     if (value >= delay / 2 && value <= splashDuration + delay / 2) {
-      canvas.drawCircle(Offset(size.width / 2, 0),
-          maxRadius * (1 - Curves.easeInOut.transform((value - delay / 2) / splashDuration)), circlePaint);
+      canvas.drawCircle(
+        Offset(size.width / 2, 0),
+        maxRadius * (1 - Curves.easeInOut.transform((value - delay / 2) / splashDuration)),
+        circlePaint,
+      );
     } else if (value <= delay / 2 || value >= 1 - delay / 2) {
       canvas.drawCircle(Offset(size.width / 2, 0), maxRadius, circlePaint);
     } else if (value <= 1 - delay / 2 && value >= 1 - fadeOutDuration - delay / 2) {

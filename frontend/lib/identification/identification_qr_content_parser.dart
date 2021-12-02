@@ -78,12 +78,13 @@ class IdentificationQrContentParser {
     }
 
     final cardDetails = CardDetails(
-        cardActivateModel.fullName,
-        const Base64Encoder().convert(cardActivateModel.hashSecret),
-        unixExpirationDate,
-        cardType,
-        cardActivateModel.regionId,
-        base32TotpSecret);
+      cardActivateModel.fullName,
+      const Base64Encoder().convert(cardActivateModel.hashSecret),
+      unixExpirationDate,
+      cardType,
+      cardActivateModel.regionId,
+      base32TotpSecret,
+    );
     _cardDetailsModel.setCardDetails(cardDetails);
   }
 }

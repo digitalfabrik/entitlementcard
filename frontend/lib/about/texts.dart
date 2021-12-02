@@ -24,7 +24,8 @@ List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
 
 List<Widget> getCopyrightText(BuildContext context) {
   return toWidgets(Theme.of(context), [
-    const Paragraph(content: '''
+    const Paragraph(
+      content: '''
 Der Quelltext dieser App ist unter der MIT Lizenz veröffentlicht und kann unter https://github.com/digitalfabrik/ehrenamtskarte eingesehen werden.
 
 MIT License
@@ -35,18 +36,23 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''')
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''',
+    )
   ]);
 }
 
 List<Widget> getDataPrivacyText(BuildContext context) {
   var content = const [
-    Paragraph(content: '''
+    Paragraph(
+      content: '''
 Bei der Nutzung der App „Ehrenamtskarte“ für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind solche Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Welche Daten wir erheben und verarbeiten
-''', content: '''
+''',
+      content: '''
 Bei jedem Zugriff auf Inhalte auf ehrenamtskarte.app oder der Aktualisierung der dazugehörigen App (Android/iOS/Windows) werden folgende Nutzungsdaten anonym, d.h. ohne Zuordnung zu einer bestimmten Person oder IP-Adresse, erhoben, wenn eine aktive Internetverbindung besteht:
 
 • Datum und Uhrzeit des Abrufs;
@@ -61,17 +67,23 @@ Bei jedem Zugriff auf Inhalte auf ehrenamtskarte.app oder der Aktualisierung der
 Sonstige Daten werden bei Ihrer Nutzung nicht automatisch erhoben und nicht an unsere Server gesendet. Nach dem Grundsatz der Datenvermeidung und der Datensparsamkeit, sowie dem Grundsatz der anonymen und pseudonymen Nutzung, wird nur das Minimum an Nutzungsdaten erhoben, soweit dies für den technischen Betrieb der Apps sowie die Ermittlung der aufgerufenen Inhalte erforderlich ist.
 
 Die erhobenen Informationen können weder direkt noch mit Hilfe von Zusatzwissen auf eine bestimmte Person zurückgeführt werden. Die einzelnen Nutzer können somit nicht identifiziert werden. Wir erstellen keine Nutzungsprofile.
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Für welche Zwecke und auf welcher Rechtsgrundlage wir Ihre Daten verarbeiten
-''', content: '''
+''',
+      content: '''
 Die Nutzung der Apps ist ohne Angabe Ihrer personenbezogenen Daten möglich.
 
 Wenn Sie uns anrufen oder eine Anfrage per E-Mail stellen, verarbeiten wir die von Ihnen uns möglicherweise mitgeteilten personenbezogenen Daten nur für das berechtigte Interesse, Ihre Anfrage zu bearbeiten.
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 An wen wir Ihre Daten weitergeben
-''', content: '''
+''',
+      content: '''
 Daten, die beim Zugriff auf die Apps oder für einen speziellen Dienst erhoben werden, werden nur dann an Dritte außerhalb unseres Unternehmens übermittelt,
 
 • soweit wir gesetzlich oder durch richterliche bzw. staatsanwaltliche Anordnung dazu verpflichtet sind oder,
@@ -80,32 +92,44 @@ Daten, die beim Zugriff auf die Apps oder für einen speziellen Dienst erhoben w
 Eine Weitergabe der Daten zu kommerziellen Zwecken erfolgt nicht. Dabei gilt weiterhin, dass die Daten anonym sind, also keiner bestimmten oder bestimmbaren Person zugeordnet werden können.
 
 Eine Übermittlung der Daten in andere Staaten erfolgt nicht. Der Serverstandort ist Deutschland.
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Wie lange wir Ihre Daten aufbewahren
-''', content: '''
+''',
+      content: '''
 Die erhobenen Nutzungsdaten werden anonymisiert gespeichert solange sie für Auswertungen benötigt werden und anschließend vollständig gelöscht.
 
 Wenn Sie uns eine Anfrage über die App schicken, speichern wir Ihre personenbezogenen Daten nur solange, wie dies für die Bearbeitung der Anfrage erforderlich ist. Abschließend löschen wir Ihre personenbezogenen Daten vollständig.
 
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Ihre Rechte
-''', content: '''
+''',
+      content: '''
 Soweit wir personenbezogene Daten von Ihnen verarbeiten, haben Sie das Recht auf Auskunft über die von uns verarbeiteten personenbezogenen Daten sowie auf Berichtigung oder Löschung oder Einschränkung der Verarbeitung oder ein Widerspruchsrecht gegen die Verarbeitung. Zur Geltendmachung Ihrer Rechte wenden Sie sich einfach an die unten angegebenen Kontaktdaten.
 
 Daneben haben Sie in Bezug auf die Verarbeitung personenbezogener Daten das Recht, sich bei der zuständigen Aufsichtsbeschwerde zu beschweren.
 
 Eine ausschließlich auf einer automatisierten Verarbeitung beruhende Entscheidung findet nicht statt.
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Änderungen dieser Datenschutzerklärung
-''', content: '''
+''',
+      content: '''
 Künftig kann diese Datenschutzerklärung geändert werden. Die jeweils aktuelle Version der Datenschutzerklärung finden Sie in unserer App.
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Datenschutzbeauftragter
-''', content: '''
+''',
+      content: '''
 Wir haben einen Datenschutzbeauftragten ernannt. Dieser ist erreichbar unter:
 
 Daniel Kehne
@@ -113,10 +137,13 @@ Tür an Tür – Digitalfabrik gGmbH
 kehne@integreat-app.de
 Wertachstrasse 29
 86153 Augsburg
-'''),
-    Paragraph(title: '''
+''',
+    ),
+    Paragraph(
+      title: '''
 Kontaktdaten des Verantwortlichen
-''', content: '''
+''',
+      content: '''
 Wenn Sie uns kontaktieren möchten, etwa um eine datenschutzrechtliche Anfrage zu stellen oder Ihre Rechte geltend zu machen, können Sie uns per E-Mail, Telefon oder postalisch erreichen unter:
 
 Tür an Tür – Digitalfabrik gGmbH
@@ -125,7 +152,8 @@ Wertachstrasse 29
 digitalfabrik@tuerantuer.de
 
 Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Landesbeauftragten für den Datenschutz (https://www.datenschutz-bayern.de). 
-  ''')
+  ''',
+    )
   ];
 
   return content
@@ -143,15 +171,19 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
 
 List<Widget> getDisclaimerText(BuildContext context) {
   return toWidgets(Theme.of(context), const [
-    Paragraph(title: 'Verantwortlich im Sinne § 7 TMG:', content: '''
+    Paragraph(
+      title: 'Verantwortlich im Sinne § 7 TMG:',
+      content: '''
 Christian K. J. Diener
 Leiter Referat Öffentlichkeitsarbeit
 Telefon: 089 1261-1640
 Telefax: 089 1261-181640
 E-Mail: Oeffentlichkeitsarbeit@stmas.bayern.de
 Haftung im Sinne §§ 7 - 10 TMG
-'''),
-    Paragraph(content: '''
+''',
+    ),
+    Paragraph(
+      content: '''
 Das Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
 
 • Die App "Ehrenamtskarte" ist nach § 7 Abs. 1 TMG für die eigenen Inhalte, die es zur Nutzung bereithält, nach den allgemeinen Vorschriften verantwortlich. Die Haftung für Schäden materieller oder ideeller Art, die durch die Nutzung der Inhalte verursacht wurden, ist ausgeschlossen, sofern nicht Vorsatz oder grobe Fahrlässigkeit vorliegt.
@@ -166,13 +198,15 @@ Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird 
 • Die App "Ehrenamtskarte" hat keinen Einfluss auf die aktuelle und zukünftige Gestaltung und Inhalte der Seiten.
 
 • Die App "Ehrenamtskarte" übernimmt keine Haftung für Schäden, die aus der Benutzung der Links entstehen könnten.
-''')
+''',
+    )
   ]);
 }
 
 List<Widget> getPublisherText(BuildContext context) {
   return toWidgets(Theme.of(context), const [
-    Paragraph(content: '''
+    Paragraph(
+      content: '''
 Bayerisches Staatsministerium für Familie, Arbeit und Soziales
 Winzererstraße 9
 80797 München
@@ -196,7 +230,8 @@ E-Mail zur Ehrenamtskarte: Ehrenamtskarte@stmas.bayern.de
 Technische Umsetzung:
 Tür an Tür - Digitalfabrik gemeinnützige GmbH
 https://tuerantuer.de/digitalfabrik/
-''')
+''',
+    )
   ]);
 }
 

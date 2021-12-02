@@ -17,14 +17,14 @@ class AcceptingStoreSummary extends StatelessWidget {
   final bool showMapButtonOnDetails;
   final bool showLocation;
 
-  const AcceptingStoreSummary(
-      {Key? key,
-      required this.store,
-      this.coordinates,
-      required this.showMapButtonOnDetails,
-      this.showLocation = true,
-      this.wideDepictionThreshold = 400})
-      : super(key: key);
+  const AcceptingStoreSummary({
+    Key? key,
+    required this.store,
+    this.coordinates,
+    required this.showMapButtonOnDetails,
+    this.showLocation = true,
+    this.wideDepictionThreshold = 400,
+  }) : super(key: key);
 
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
@@ -47,46 +47,50 @@ class AcceptingStoreSummary extends StatelessWidget {
       bottom: false,
       top: false,
       child: InkWell(
-          onTap: () {
-            _openDetailView(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              children: [
-                if (useWideDepiction)
-                  CategoryIconIndicator(
-                    svgIconPath: itemCategoryAsset?.icon,
-                    categoryName: categoryName,
-                  )
-                else
-                  CategoryColorIndicator(categoryColor: categoryColor),
-                StoreTextOverview(
-                  store: store,
-                  showTownName: currentDistance == null && showLocation,
+        onTap: () {
+          _openDetailView(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            children: [
+              if (useWideDepiction)
+                CategoryIconIndicator(
+                  svgIconPath: itemCategoryAsset?.icon,
+                  categoryName: categoryName,
+                )
+              else
+                CategoryColorIndicator(categoryColor: categoryColor),
+              StoreTextOverview(
+                store: store,
+                showTownName: currentDistance == null && showLocation,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    if (currentDistance != null) DistanceText(distance: currentDistance),
+                    SizedBox(
+                      child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
+                      height: double.infinity,
+                    ),
+                  ],
                 ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      children: [
-                        if (currentDistance != null) DistanceText(distance: currentDistance),
-                        SizedBox(
-                            child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
-                            height: double.infinity),
-                      ],
-                    ))
-              ],
-            ),
-          )),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   void _openDetailView(BuildContext context) {
     Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => DetailPage(store.id, hideShowOnMapButton: !showMapButtonOnDetails),
-        ));
+      context,
+      AppRoute(
+        builder: (context) => DetailPage(store.id, hideShowOnMapButton: !showMapButtonOnDetails),
+      ),
+    );
   }
 }
 
@@ -95,12 +99,12 @@ class CategoryIconIndicator extends StatelessWidget {
   final String categoryName;
   final EdgeInsets padding;
 
-  const CategoryIconIndicator(
-      {Key? key,
-      required this.svgIconPath,
-      required this.categoryName,
-      this.padding = const EdgeInsets.symmetric(horizontal: 16)})
-      : super(key: key);
+  const CategoryIconIndicator({
+    Key? key,
+    required this.svgIconPath,
+    required this.categoryName,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -145,16 +149,25 @@ class StoreTextOverview extends StatelessWidget {
     var location = store.location;
     return Expanded(
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(store.name ?? "Akzeptanzstelle",
-                maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyText1),
-            const SizedBox(height: 4),
-            Text(store.description ?? "Keine Beschreibung verfügbar",
-                maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyText2),
-            if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
-          ]),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            store.name ?? "Akzeptanzstelle",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            store.description ?? "Keine Beschreibung verfügbar",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
+        ],
+      ),
     );
   }
 }

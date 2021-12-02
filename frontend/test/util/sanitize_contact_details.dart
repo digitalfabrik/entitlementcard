@@ -11,8 +11,10 @@ void main() {
 
     test("should remove letters", () => expect(sanitize("A12bCdE345G6h"), "123456"));
 
-    test("should remove special characters other than + and -",
-        () => expect(sanitize("?1|';2#34*…_[]^!ſ\"\n5\$%6&"), "1234-56"));
+    test(
+      "should remove special characters other than + and -",
+      () => expect(sanitize("?1|';2#34*…_[]^!ſ\"\n5\$%6&"), "1234-56"),
+    );
   });
 
   group("prepare website for display", () {

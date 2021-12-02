@@ -10,7 +10,11 @@ class NegativeVerificationResultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VerificationResultDialog(
-        title: "Nicht verifiziert", icon: Icons.error, iconColor: Colors.red, child: Text(reason));
+      title: "Nicht verifiziert",
+      icon: Icons.error,
+      iconColor: Colors.red,
+      child: Text(reason),
+    );
   }
 
   static Future<void> show(BuildContext context, String reason) =>

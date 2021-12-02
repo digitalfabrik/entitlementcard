@@ -6,9 +6,12 @@ class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startEakApplication;
 
-  const MoreActionsDialog(
-      {Key? key, required this.startActivateEak, required this.startVerification, required this.startEakApplication})
-      : super(key: key);
+  const MoreActionsDialog({
+    Key? key,
+    required this.startActivateEak,
+    required this.startVerification,
+    required this.startEakApplication,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +38,20 @@ class MoreActionsDialog extends StatelessWidget {
           },
         ),
         ListTile(
-            title: const Text("Eine digitale Ehrenamtskarte prüfen"),
-            subtitle: const Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
-            leading: const Icon(Icons.check_circle_outline, size: 36),
-            onTap: () {
-              Navigator.pop(context);
-              startVerification();
-            }),
+          title: const Text("Eine digitale Ehrenamtskarte prüfen"),
+          subtitle: const Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
+          leading: const Icon(Icons.check_circle_outline, size: 36),
+          onTap: () {
+            Navigator.pop(context);
+            startVerification();
+          },
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Abbrechen"))]),
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Abbrechen"))],
+          ),
         )
       ],
     );

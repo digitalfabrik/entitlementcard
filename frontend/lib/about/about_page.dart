@@ -85,27 +85,34 @@ class AboutPage extends StatelessWidget {
             ),
             ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
             ContentTile(
-                icon: Icons.privacy_tip_outlined, title: "Datenschutzerklärung", children: getDataPrivacyText(context)),
+              icon: Icons.privacy_tip_outlined,
+              title: "Datenschutzerklärung",
+              children: getDataPrivacyText(context),
+            ),
             ContentTile(
-                icon: Icons.info_outline,
-                title: "Haftung, Haftungsausschluss und Disclaimer",
-                children: getDisclaimerText(context)),
+              icon: Icons.info_outline,
+              title: "Haftung, Haftungsausschluss und Disclaimer",
+              children: getDisclaimerText(context),
+            ),
             ListTile(
-                leading: const Icon(Icons.book_outlined),
-                title: const Text("Software-Bibliotheken"),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      AppRoute(
-                        builder: (context) => const CustomLicensePage(),
-                      ));
-                }),
+              leading: const Icon(Icons.book_outlined),
+              title: const Text("Software-Bibliotheken"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  AppRoute(
+                    builder: (context) => const CustomLicensePage(),
+                  ),
+                );
+              },
+            ),
             ListTile(
-                leading: const Icon(Icons.code_outlined),
-                title: const Text("Quellcode der App"),
-                onTap: () {
-                  launch("https://github.com/digitalfabrik/ehrenamtskarte");
-                }),
+              leading: const Icon(Icons.code_outlined),
+              title: const Text("Quellcode der App"),
+              onTap: () {
+                launch("https://github.com/digitalfabrik/ehrenamtskarte");
+              },
+            ),
             if (config.showDevSettings)
               ListTile(
                 leading: const Icon(Icons.build),

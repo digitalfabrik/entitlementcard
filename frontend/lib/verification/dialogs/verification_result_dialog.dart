@@ -6,9 +6,13 @@ class VerificationResultDialog extends StatelessWidget {
   final IconData icon;
   final Color? iconColor;
 
-  const VerificationResultDialog(
-      {Key? key, required this.child, required this.title, required this.icon, this.iconColor})
-      : super(key: key);
+  const VerificationResultDialog({
+    Key? key,
+    required this.child,
+    required this.title,
+    required this.icon,
+    this.iconColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

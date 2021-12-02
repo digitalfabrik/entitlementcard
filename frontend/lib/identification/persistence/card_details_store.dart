@@ -24,8 +24,9 @@ Future<void> saveCardDetails(CardDetails? cardDetails) async {
       storage.write(key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
-          key: unixExpirationDateKey,
-          value: cardDetails.unixExpirationDate != null ? cardDetails.unixExpirationDate.toString() : "0"),
+        key: unixExpirationDateKey,
+        value: cardDetails.unixExpirationDate != null ? cardDetails.unixExpirationDate.toString() : "0",
+      ),
       storage.write(key: cardTypeKey, value: cardDetails.cardType.index.toString()),
       storage.write(key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
     ]);
@@ -48,9 +49,11 @@ Future<CardDetails?> loadCardDetails() async {
   }
   final dataVersion = int.parse(storedDataVersion);
   if (dataVersion != currentDataVersion) {
-    throw Exception("Can't load data because the versions don't match. "
-        "Stored version: $dataVersion, "
-        "current version $currentDataVersion");
+    throw Exception(
+      "Can't load data because the versions don't match. "
+      "Stored version: $dataVersion, "
+      "current version $currentDataVersion",
+    );
   }
   final fullName = await storage.read(key: fullNameKey);
   final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);

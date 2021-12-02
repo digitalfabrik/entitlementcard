@@ -23,15 +23,15 @@ class Map extends StatefulWidget {
   final bool locationAvailable;
   final LatLng? userLocation;
 
-  const Map(
-      {Key? key,
-      required this.onFeatureClick,
-      required this.onNoFeatureClick,
-      required this.onFeatureClickLayerFilter,
-      required this.locationAvailable,
-      required this.onMapCreated,
-      this.userLocation})
-      : super(key: key);
+  const Map({
+    Key? key,
+    required this.onFeatureClick,
+    required this.onNoFeatureClick,
+    required this.onFeatureClickLayerFilter,
+    required this.locationAvailable,
+    required this.onMapCreated,
+    this.userLocation,
+  }) : super(key: key);
 
   @override
   State createState() => _MapState();
@@ -65,45 +65,47 @@ class _MapState extends State<Map> implements MapController {
           ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
           : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
-      _mapboxView = Stack(children: [
-        MaplibreMap(
-          initialCameraPosition: cameraPosition,
-          styleString: config.mapStyleUrl,
-          // We provide our own attribution menu
-          attributionButtonMargins: const math.Point(-100, -100),
-          // The Mapbox wordmark must be shown because of legal weirdness
-          logoViewMargins: Platform.isIOS ? const math.Point(30, 5) : math.Point(30 * pixelRatio, 5 * pixelRatio),
-          myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
-          // required to prevent mapbox iOS from requesting location
-          // permissions on startup, as discussed in #249
-          myLocationRenderMode: MyLocationRenderMode.NORMAL,
-          onMapCreated: _onMapCreated,
-          onMapClick: _onMapClick,
-          compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-          compassViewPosition: CompassViewPosition.TopRight,
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          child: IconButton(
-            color: mapboxColor,
-            padding: const EdgeInsets.all(5),
-            constraints: const BoxConstraints(),
-            iconSize: 20,
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const AttributionDialog();
-                },
-              );
-            },
+      _mapboxView = Stack(
+        children: [
+          MaplibreMap(
+            initialCameraPosition: cameraPosition,
+            styleString: config.mapStyleUrl,
+            // We provide our own attribution menu
+            attributionButtonMargins: const math.Point(-100, -100),
+            // The Mapbox wordmark must be shown because of legal weirdness
+            logoViewMargins: Platform.isIOS ? const math.Point(30, 5) : math.Point(30 * pixelRatio, 5 * pixelRatio),
+            myLocationEnabled: _permissionGiven,
+            myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
+            // required to prevent mapbox iOS from requesting location
+            // permissions on startup, as discussed in #249
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+            onMapCreated: _onMapCreated,
+            onMapClick: _onMapClick,
+            compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+            compassViewPosition: CompassViewPosition.TopRight,
           ),
-        ),
-      ]);
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: IconButton(
+              color: mapboxColor,
+              padding: const EdgeInsets.all(5),
+              constraints: const BoxConstraints(),
+              iconSize: 20,
+              icon: const Icon(Icons.info_outline),
+              tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AttributionDialog();
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
     return _mapboxView ?? Container();
   }
@@ -203,8 +205,14 @@ class _MapState extends State<Map> implements MapController {
       return;
     }
 
-    var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(position.latitude, position.longitude), bearing: 0, tilt: 0, zoom: Map.userLocationZoomLevel));
+    var cameraUpdate = CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        bearing: 0,
+        tilt: 0,
+        zoom: Map.userLocationZoomLevel,
+      ),
+    );
     await _animate(controller.animateCamera(cameraUpdate));
 
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);

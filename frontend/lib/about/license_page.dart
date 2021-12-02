@@ -21,66 +21,68 @@ class CustomLicensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LicenseEntry>>(
-        future: LicenseRegistry.licenses.toList(),
-        builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {
-          var licenses = snapshot.data;
-          var error = snapshot.error;
-          if (snapshot.hasError && error != null) {
-            return ErrorMessage(error.toString());
-          } else if (snapshot.hasData && licenses != null) {
-            var licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
-              for (var packageName in entry.packages) {
-                value.add(CustomLicenseEntry(packageName, [entry.paragraphs]));
-              }
+      future: LicenseRegistry.licenses.toList(),
+      builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {
+        var licenses = snapshot.data;
+        var error = snapshot.error;
+        if (snapshot.hasError && error != null) {
+          return ErrorMessage(error.toString());
+        } else if (snapshot.hasData && licenses != null) {
+          var licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
+            for (var packageName in entry.packages) {
+              value.add(CustomLicenseEntry(packageName, [entry.paragraphs]));
+            }
+            return value;
+          });
+
+          var byPackageName = groupBy(licensesPerPackage, (CustomLicenseEntry entry) => entry.packageName);
+
+          var result = <CustomLicenseEntry>[];
+          byPackageName.forEach((String key, List<CustomLicenseEntry> value) {
+            List<Iterable<LicenseParagraph>> listOfParagraphLists = value.fold([], (value, element) {
+              value.addAll(element.licenseParagraphs);
               return value;
             });
 
-            var byPackageName = groupBy(licensesPerPackage, (CustomLicenseEntry entry) => entry.packageName);
+            result.add(CustomLicenseEntry(key, listOfParagraphLists));
+          });
 
-            var result = <CustomLicenseEntry>[];
-            byPackageName.forEach((String key, List<CustomLicenseEntry> value) {
-              List<Iterable<LicenseParagraph>> listOfParagraphLists = value.fold([], (value, element) {
-                value.addAll(element.licenseParagraphs);
-                return value;
-              });
+          result.sortBy((element) => element.packageName);
 
-              result.add(CustomLicenseEntry(key, listOfParagraphLists));
-            });
-
-            result.sortBy((element) => element.packageName);
-
-            return CustomScrollView(
-              slivers: <Widget>[
-                const SliverNavigationBar(
-                  title: "Lizenzen",
+          return CustomScrollView(
+            slivers: <Widget>[
+              const SliverNavigationBar(
+                title: "Lizenzen",
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    var license = result[index];
+                    var paragraphs = license.licenseParagraphs;
+                    return ListTile(
+                      title: Text(license.packageName),
+                      subtitle: Text(paragraphs.length.toString() + " Lizenzen"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          AppRoute(
+                            builder: (context) => SingleLicensePage(license),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  childCount: result.length,
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      var license = result[index];
-                      var paragraphs = license.licenseParagraphs;
-                      return ListTile(
-                        title: Text(license.packageName),
-                        subtitle: Text(paragraphs.length.toString() + " Lizenzen"),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              AppRoute(
-                                builder: (context) => SingleLicensePage(license),
-                              ));
-                        },
-                      );
-                    },
-                    childCount: result.length,
-                  ),
-                ),
-              ],
-            );
-          } else {
-            // loading
-            return const TopLoadingSpinner();
-          }
-        });
+              ),
+            ],
+          );
+        } else {
+          // loading
+          return const TopLoadingSpinner();
+        }
+      },
+    );
   }
 }
 

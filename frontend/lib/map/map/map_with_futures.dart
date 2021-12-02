@@ -9,13 +9,13 @@ class MapWithFutures extends StatelessWidget {
   final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
 
-  const MapWithFutures(
-      {Key? key,
-      required this.onNoFeatureClick,
-      required this.onFeatureClick,
-      required this.onFeatureClickLayerFilter,
-      required this.onMapCreated})
-      : super(key: key);
+  const MapWithFutures({
+    Key? key,
+    required this.onNoFeatureClick,
+    required this.onFeatureClick,
+    required this.onFeatureClickLayerFilter,
+    required this.onMapCreated,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

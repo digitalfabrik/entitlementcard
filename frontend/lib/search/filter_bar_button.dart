@@ -79,31 +79,40 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
     }
 
     return AnimatedBuilder(
-        animation: colorTween,
-        builder: (context, child) => RawMaterialButton(
-            elevation: 0.0,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-            constraints: BoxConstraints.tightFor(width: width, height: 70),
-            fillColor: colorTween.value,
-            onPressed: () {
-              var isSelected = !_selected;
-              setState(() {
-                _selected = isSelected;
-                animationController.animateTo(isSelected ? 1 : 0);
-                widget.onCategoryPress(widget.asset, isSelected);
-              });
-            },
-            child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Column(children: [
-                  SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(widget.asset.shortName,
-                          maxLines: 2, style: const TextStyle(fontSize: 10), textAlign: TextAlign.center),
-                    ),
-                  )
-                ]))));
+      animation: colorTween,
+      builder: (context, child) => RawMaterialButton(
+        elevation: 0.0,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+        constraints: BoxConstraints.tightFor(width: width, height: 70),
+        fillColor: colorTween.value,
+        onPressed: () {
+          var isSelected = !_selected;
+          setState(() {
+            _selected = isSelected;
+            animationController.animateTo(isSelected ? 1 : 0);
+            widget.onCategoryPress(widget.asset, isSelected);
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Column(
+            children: [
+              SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.asset.shortName,
+                    maxLines: 2,
+                    style: const TextStyle(fontSize: 10),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

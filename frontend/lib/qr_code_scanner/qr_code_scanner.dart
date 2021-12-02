@@ -45,20 +45,21 @@ class _QRViewState extends State<QrCodeScanner> {
         ),
         if (controller != null)
           Expanded(
-              flex: 1,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
-                    ),
-                    QrCodeScannerControls(controller: controller)
-                  ],
-                ),
-              ))
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                  ),
+                  QrCodeScannerControls(controller: controller)
+                ],
+              ),
+            ),
+          )
       ],
     );
   }

@@ -23,19 +23,21 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     rawProtobufData = base64Decoder.convert(rawBase64Content);
   } on Exception catch (e) {
     throw VerificationParseException(
-        internalMessage: "Failed to decode base64 string from qr code, "
-            "probably not base64 encoded. Message: ${e.toString()}",
-        cause: e);
+      internalMessage: "Failed to decode base64 string from qr code, "
+          "probably not base64 encoded. Message: ${e.toString()}",
+      cause: e,
+    );
   }
   CardVerifyModel cardVerifyModel;
   try {
     cardVerifyModel = CardVerifyModel.fromBuffer(rawProtobufData);
   } on Exception catch (e, stacktrace) {
     throw VerificationParseException(
-        internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
-            "Message: ${e.toString()}",
-        cause: e,
-        stackTrace: stacktrace);
+      internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
+          "Message: ${e.toString()}",
+      cause: e,
+      stackTrace: stacktrace,
+    );
   }
 
   final fullName = cardVerifyModel.fullName;

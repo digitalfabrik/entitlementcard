@@ -11,12 +11,15 @@ Future<bool> queryServerVerification(GraphQLClient client, VerificationCardDetai
 
 Future<bool> _queryServerVerification(GraphQLClient client, String verificationHash, int totp) async {
   final byCardDetailsHash = CardVerificationByHashQuery(
-      variables: CardVerificationByHashArguments(
-          card: CardVerificationModelInput(cardDetailsHashBase64: verificationHash, totp: totp)));
+    variables: CardVerificationByHashArguments(
+      card: CardVerificationModelInput(cardDetailsHashBase64: verificationHash, totp: totp),
+    ),
+  );
   final queryOptions = QueryOptions(
-      fetchPolicy: FetchPolicy.noCache,
-      document: byCardDetailsHash.document,
-      variables: byCardDetailsHash.getVariablesMap());
+    fetchPolicy: FetchPolicy.noCache,
+    document: byCardDetailsHash.document,
+    variables: byCardDetailsHash.getVariablesMap(),
+  );
 
   try {
     final queryResult = await client.query(queryOptions);

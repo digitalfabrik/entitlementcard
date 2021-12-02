@@ -12,13 +12,17 @@ class VerificationInfoDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text("So prüfen Sie die Echtheit einer Ehrenamtskarte"),
       content: SingleChildScrollView(
-        child: ListBody(children: const [
-          Text("Scannen Sie den QR-Code, der auf der „Ausweisen“-Seite Ihres "
+        child: ListBody(
+          children: const [
+            Text(
+              "Scannen Sie den QR-Code, der auf der „Ausweisen“-Seite Ihres "
               "Gegenübers angezeigt wird. "
               "Daraufhin wird durch eine Server-Anfrage geprüft, ob die "
               "gescannte Ehrenamtskarte gültig ist. "
-              "Dazu wird eine Internetverbindung benötigt."),
-        ]),
+              "Dazu wird eine Internetverbindung benötigt.",
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(

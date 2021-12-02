@@ -13,7 +13,13 @@ import '../routing.dart';
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
 final validEakDetails = CardDetails(
-    "Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=", 1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+  "Jane Doe",
+  "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
+  1677542400,
+  CardType.standard,
+  42,
+  "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX",
+);
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({Key? key}) : super(key: key);
@@ -38,8 +44,9 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _showInfoSlides(context),
           ),
           ListTile(
-              title: const Text('Log sample exception'),
-              onTap: () => log("Sample exception.", error: Exception("Sample exception..."))),
+            title: const Text('Log sample exception'),
+            onTap: () => log("Sample exception.", error: Exception("Sample exception...")),
+          ),
           ListTile(
             title: const Text('Inspect settings'),
             onTap: () {
@@ -65,9 +72,10 @@ class DevSettingsView extends StatelessWidget {
 
   void _showInfoSlides(BuildContext context) {
     Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => const IntroScreen(),
-        ));
+      context,
+      AppRoute(
+        builder: (context) => const IntroScreen(),
+      ),
+    );
   }
 }

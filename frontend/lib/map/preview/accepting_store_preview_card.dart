@@ -13,11 +13,13 @@ class AcceptingStorePreviewError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: refetch,
-        child: Container(
-            height: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: const ErrorMessage("Fehler beim Laden der Infos.")));
+      onTap: refetch,
+      child: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: const ErrorMessage("Fehler beim Laden der Infos."),
+      ),
+    );
   }
 }
 
@@ -33,20 +35,26 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentAcceptingStore = acceptingStore;
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: fabPadding.toDouble()),
-        child: Card(
-            margin: const EdgeInsets.all(0),
-            child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: isLoading
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 40), child: const LinearProgressIndicator())
-                    : currentAcceptingStore == null
-                        ? AcceptingStorePreviewError(refetch: refetch)
-                        : AcceptingStoreSummary(
-                            store: currentAcceptingStore,
-                            showLocation: false,
-                            key: ValueKey(currentAcceptingStore.id),
-                            showMapButtonOnDetails: false))));
+      padding: EdgeInsets.symmetric(horizontal: fabPadding.toDouble()),
+      child: Card(
+        margin: const EdgeInsets.all(0),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: isLoading
+              ? Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: const LinearProgressIndicator(),
+                )
+              : currentAcceptingStore == null
+                  ? AcceptingStorePreviewError(refetch: refetch)
+                  : AcceptingStoreSummary(
+                      store: currentAcceptingStore,
+                      showLocation: false,
+                      key: ValueKey(currentAcceptingStore.id),
+                      showMapButtonOnDetails: false,
+                    ),
+        ),
+      ),
+    );
   }
 }

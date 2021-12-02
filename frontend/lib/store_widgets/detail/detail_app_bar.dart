@@ -58,22 +58,24 @@ class DetailAppBarBottom extends StatelessWidget {
   final String? categoryName;
   final Color? accentColor;
 
-  const DetailAppBarBottom(
-      {Key? key,
-      this.title,
-      this.categoryId,
-      this.categoryName,
-      this.accentColor,
-      required this.textColorGrey,
-      required this.textColor})
-      : super(key: key);
+  const DetailAppBarBottom({
+    Key? key,
+    this.title,
+    this.categoryId,
+    this.categoryName,
+    this.accentColor,
+    required this.textColorGrey,
+    required this.textColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        alignment: Alignment.bottomLeft,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      alignment: Alignment.bottomLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
             categoryName ?? "",
             style: Theme.of(context).textTheme.bodyText2?.apply(color: textColorGrey),
@@ -86,7 +88,9 @@ class DetailAppBarBottom extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )
-        ]));
+        ],
+      ),
+    );
   }
 }
 
@@ -108,21 +112,24 @@ class DetailAppBar extends StatelessWidget {
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
     return NavigationBarWithBottom(
-        flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
-        color: accentColor,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(bottomSize),
-          // The SizedBox makes sure that the text does not move above the
-          // AppBar, but is truncated at the bottom of the "bottom" component.
-          child: SizedBox(
-              height: bottomSize,
-              child: DetailAppBarBottom(
-                  title: title,
-                  categoryId: categoryId,
-                  categoryName: categoryName,
-                  accentColor: accentColor,
-                  textColorGrey: textColorGrey,
-                  textColor: textColor)),
-        ));
+      flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
+      color: accentColor,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(bottomSize),
+        // The SizedBox makes sure that the text does not move above the
+        // AppBar, but is truncated at the bottom of the "bottom" component.
+        child: SizedBox(
+          height: bottomSize,
+          child: DetailAppBarBottom(
+            title: title,
+            categoryId: categoryId,
+            categoryName: categoryName,
+            accentColor: accentColor,
+            textColorGrey: textColorGrey,
+            textColor: textColor,
+          ),
+        ),
+      ),
+    );
   }
 }

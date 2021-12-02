@@ -22,11 +22,12 @@ class NavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        backgroundColor: kBackgroundColor,
-        foregroundColor: kForegroundColor,
-        elevation: kElevation,
-        title: Text(title),
-        actions: actions);
+      backgroundColor: kBackgroundColor,
+      foregroundColor: kForegroundColor,
+      elevation: kElevation,
+      title: Text(title),
+      actions: actions,
+    );
   }
 }
 
@@ -47,14 +48,16 @@ class NavigationBarWithBottom extends StatelessWidget {
     // Note: A SizedBox is required because AppBar contains a Column.
     // If we want to add a AppBar into a column, then we need to set its size.
     return SizedBox(
-        height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
-        child: AppBar(
-            elevation: kElevation,
-            leading: const BackButton(),
-            flexibleSpace: flexibleSpace,
-            backgroundColor: color,
-            foregroundColor: kForegroundColor,
-            bottom: bottom));
+      height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
+      child: AppBar(
+        elevation: kElevation,
+        leading: const BackButton(),
+        flexibleSpace: flexibleSpace,
+        backgroundColor: color,
+        foregroundColor: kForegroundColor,
+        bottom: bottom,
+      ),
+    );
   }
 }
 

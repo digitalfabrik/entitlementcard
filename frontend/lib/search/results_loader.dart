@@ -50,12 +50,14 @@ class ResultsLoaderState extends State<ResultsLoader> {
     var oldWidget = widget;
     try {
       var arguments = AcceptingStoresSearchArguments(
-          params: SearchParamsInput(
-              categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
-              coordinates: widget.coordinates,
-              searchText: widget.searchText,
-              limit: _pageSize,
-              offset: pageKey));
+        params: SearchParamsInput(
+          categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
+          coordinates: widget.coordinates,
+          searchText: widget.searchText,
+          limit: _pageSize,
+          offset: pageKey,
+        ),
+      );
       var query = AcceptingStoresSearchQuery(variables: arguments);
 
       var client = _client;
@@ -107,26 +109,30 @@ class ResultsLoaderState extends State<ResultsLoader> {
     return PagedSliverList<int, AcceptingStoresSearch$Query$AcceptingStore>.separated(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
-          itemBuilder: (context, item, index) {
-            var storeCoordinates = item.physicalStore?.coordinates;
-            return IntrinsicHeight(
-                child: AcceptingStoreSummary(
-                    key: ValueKey(item.id),
-                    store: AcceptingStoreSummaryModel(
-                        item.id,
-                        item.name,
-                        item.description,
-                        item.categoryId,
-                        storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
-                        item.physicalStore?.address.location),
-                    coordinates: widget.coordinates,
-                    showMapButtonOnDetails: true));
-          },
-          noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
-          firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
-          newPageErrorIndicatorBuilder: _buildErrorWithRetry,
-          newPageProgressIndicatorBuilder: _buildProgressIndicator,
-          firstPageProgressIndicatorBuilder: _buildProgressIndicator),
+        itemBuilder: (context, item, index) {
+          var storeCoordinates = item.physicalStore?.coordinates;
+          return IntrinsicHeight(
+            child: AcceptingStoreSummary(
+              key: ValueKey(item.id),
+              store: AcceptingStoreSummaryModel(
+                item.id,
+                item.name,
+                item.description,
+                item.categoryId,
+                storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
+                item.physicalStore?.address.location,
+              ),
+              coordinates: widget.coordinates,
+              showMapButtonOnDetails: true,
+            ),
+          );
+        },
+        noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
+        firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
+        newPageErrorIndicatorBuilder: _buildErrorWithRetry,
+        newPageProgressIndicatorBuilder: _buildProgressIndicator,
+        firstPageProgressIndicatorBuilder: _buildProgressIndicator,
+      ),
       separatorBuilder: (context, index) => const Divider(height: 0),
     );
   }
@@ -135,20 +141,28 @@ class ResultsLoaderState extends State<ResultsLoader> {
       const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
 
   Widget _buildErrorWithRetry(BuildContext context) => Center(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.warning, size: 60, color: Colors.orange),
-        const Text("Bitte Internetverbindung prüfen."),
-        OutlinedButton(
-          onPressed: _pagingController.retryLastFailedRequest,
-          child: const Text("Erneut versuchen"),
-        )
-      ]));
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.warning, size: 60, color: Colors.orange),
+            const Text("Bitte Internetverbindung prüfen."),
+            OutlinedButton(
+              onPressed: _pagingController.retryLastFailedRequest,
+              child: const Text("Erneut versuchen"),
+            )
+          ],
+        ),
+      );
 
   Widget _buildNoItemsFoundIndicator(BuildContext context) => Center(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-        const Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
-      ]));
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
+            const Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
+          ],
+        ),
+      );
 
   @override
   void dispose() {

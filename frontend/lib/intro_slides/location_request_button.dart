@@ -20,19 +20,25 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       final settings = context.read<SettingsModel>();
 
-      checkAndRequestLocationPermission(context,
-              requestIfNotGranted: false,
-              onDisableFeature: () => settings.setLocationFeatureEnabled(false),
-              onEnableFeature: () => settings.setLocationFeatureEnabled(true))
-          .then((LocationStatus permission) => setState(() {
-                _locationPermissionStatus = permission;
-              }));
+      checkAndRequestLocationPermission(
+        context,
+        requestIfNotGranted: false,
+        onDisableFeature: () => settings.setLocationFeatureEnabled(false),
+        onEnableFeature: () => settings.setLocationFeatureEnabled(true),
+      ).then(
+        (LocationStatus permission) => setState(() {
+          _locationPermissionStatus = permission;
+        }),
+      );
     });
   }
 
   void _onLocationButtonClicked(SettingsModel settings) async {
-    final permission = await checkAndRequestLocationPermission(context,
-        requestIfNotGranted: true, onDisableFeature: () async => await settings.setLocationFeatureEnabled(false));
+    final permission = await checkAndRequestLocationPermission(
+      context,
+      requestIfNotGranted: true,
+      onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
+    );
     setState(() {
       _locationPermissionStatus = permission;
     });

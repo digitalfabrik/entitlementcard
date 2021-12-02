@@ -15,13 +15,13 @@ class CardDetailView extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startEakApplication;
 
-  const CardDetailView(
-      {Key? key,
-      required this.cardDetails,
-      required this.startActivateEak,
-      required this.startVerification,
-      required this.startEakApplication})
-      : super(key: key);
+  const CardDetailView({
+    Key? key,
+    required this.cardDetails,
+    required this.startActivateEak,
+    required this.startVerification,
+    required this.startEakApplication,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,28 +29,34 @@ class CardDetailView extends StatelessWidget {
         GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
 
     return Query(
-        options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
-        builder: (result, {refetch, fetchMore}) {
-          var orientation = MediaQuery.of(context).orientation;
+      options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
+      builder: (result, {refetch, fetchMore}) {
+        var orientation = MediaQuery.of(context).orientation;
 
-          final fetchedData = result.data;
+        final fetchedData = result.data;
 
-          var region = result.isLoading || result.hasException || fetchedData == null
-              ? null
-              : regionsQuery.parse(fetchedData).regionsById[0];
+        var region = result.isLoading || result.hasException || fetchedData == null
+            ? null
+            : regionsQuery.parse(fetchedData).regionsById[0];
 
-          var eakCard = Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IdCard(
-                  child: EakCard(
-                      cardDetails: cardDetails, region: region != null ? Region(region.prefix, region.name) : null)));
-          var richQrCode =
-              RichQrCode(cardDetails: cardDetails, onMoreActionsPressed: () => _onMoreActionsPressed(context));
+        var eakCard = Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IdCard(
+            child: EakCard(
+              cardDetails: cardDetails,
+              region: region != null ? Region(region.prefix, region.name) : null,
+            ),
+          ),
+        );
+        var richQrCode =
+            RichQrCode(cardDetails: cardDetails, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
-          return orientation == Orientation.landscape
-              ? SafeArea(child: LayoutBuilder(builder: (context, constraints) {
-                  const qrCodeMinWidth = 280.0;
-                  return Row(
+        return orientation == Orientation.landscape
+            ? SafeArea(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    const qrCodeMinWidth = 280.0;
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,25 +65,35 @@ class CardDetailView extends StatelessWidget {
                         constraints.maxWidth > qrCodeMinWidth * 2
                             ? Flexible(child: richQrCode)
                             : ConstrainedBox(
-                                constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth), child: richQrCode)
-                      ]);
-                }))
-              : SingleChildScrollView(
-                  child: SafeArea(
-                      child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [eakCard, const SizedBox(height: 16), richQrCode]),
-                )));
-        });
+                                constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
+                                child: richQrCode,
+                              )
+                      ],
+                    );
+                  },
+                ),
+              )
+            : SingleChildScrollView(
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [eakCard, const SizedBox(height: 16), richQrCode]),
+                  ),
+                ),
+              );
+      },
+    );
   }
 
   void _onMoreActionsPressed(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) => MoreActionsDialog(
-            startActivateEak: startActivateEak,
-            startEakApplication: startEakApplication,
-            startVerification: startVerification));
+      context: context,
+      builder: (context) => MoreActionsDialog(
+        startActivateEak: startActivateEak,
+        startEakApplication: startEakApplication,
+        startVerification: startVerification,
+      ),
+    );
   }
 }
 
@@ -92,28 +108,32 @@ class RichQrCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                constraints: const BoxConstraints(maxWidth: 300),
-                child: const Text(
-                  "Mit diesem QR-Code können Sie sich"
-                  " bei Akzeptanzstellen ausweisen:",
-                  textAlign: TextAlign.center,
-                )),
-            Flexible(child: VerificationQrCodeView(cardDetails: cardDetails)),
-            Container(
-                alignment: Alignment.center,
-                child: TextButton(
-                    child: Text(
-                      "Weitere Aktionen",
-                      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                    ),
-                    onPressed: onMoreActionsPressed)),
-          ],
-        ));
+      padding: const EdgeInsets.all(4),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: const Text(
+              "Mit diesem QR-Code können Sie sich"
+              " bei Akzeptanzstellen ausweisen:",
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Flexible(child: VerificationQrCodeView(cardDetails: cardDetails)),
+          Container(
+            alignment: Alignment.center,
+            child: TextButton(
+              child: Text(
+                "Weitere Aktionen",
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+              ),
+              onPressed: onMoreActionsPressed,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -19,9 +19,18 @@ class OTPGenerator {
       Timer(Duration(milliseconds: validUntilMilliSeconds - time), onTimeout);
     }
     return OTPCode(
-        int.parse(OTP.generateTOTPCodeString(_base32TotpSecret, time,
-            algorithm: _algorithm, length: _otpLength, interval: _otpIntervalSeconds, isGoogle: true)),
-        validUntilMilliSeconds);
+      int.parse(
+        OTP.generateTOTPCodeString(
+          _base32TotpSecret,
+          time,
+          algorithm: _algorithm,
+          length: _otpLength,
+          interval: _otpIntervalSeconds,
+          isGoogle: true,
+        ),
+      ),
+      validUntilMilliSeconds,
+    );
   }
 }
 
