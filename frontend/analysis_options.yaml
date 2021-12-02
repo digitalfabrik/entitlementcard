@@ -8,6 +8,7 @@ analyzer:
   errors:
     missing_required_param: warning
     unused_import: error
+    prefer_const_constructors: error
 
 linter:
   rules:

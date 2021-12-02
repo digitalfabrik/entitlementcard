@@ -20,7 +20,7 @@ class VerificationWorkflow {
 
     // show the QR scanner that will handle the rest
     await Navigator.push(rootContext, AppRoute(builder: (context) {
-      return VerificationQrScannerPage();
+      return const VerificationQrScannerPage();
     }));
   }
 }
