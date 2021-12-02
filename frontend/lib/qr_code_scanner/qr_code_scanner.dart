@@ -84,7 +84,7 @@ class _QRViewState extends State<QrCodeScanner> {
     controller.scannedDataStream.listen(_onCodeScanned);
   }
 
-  void _onCodeScanned(Barcode scanData) async {
+  Future<void> _onCodeScanned(Barcode scanData) async {
     final controller = _controller;
     final code = scanData.code;
     if (controller == null) {

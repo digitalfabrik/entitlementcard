@@ -8,8 +8,9 @@ analyzer:
   errors:
     # Analysis options
     missing_required_param: warning
-    unused_import: error
+    unnecessary_import: error
     unnecessary_null_comparison: error
+    unused_import: error
 
     # Linting rules
     always_declare_return_types: error

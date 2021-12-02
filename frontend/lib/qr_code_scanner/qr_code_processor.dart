@@ -2,7 +2,7 @@ class QrCodeParseException implements Exception {
   final String reason;
   QrCodeParseException(this.reason);
   @override
-  String toString() => "${runtimeType.toString()}: $reason";
+  String toString() => "QrCodeParseException: $reason";
 }
 
 class QrCodeFieldMissingException extends QrCodeParseException {
