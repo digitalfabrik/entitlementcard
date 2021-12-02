@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("sanitize phone number", () {
-    final sanitize = sanitizePhoneNumber;
+    const sanitize = sanitizePhoneNumber;
 
     test("should not change valid number", () => expect(sanitize("+49-123-4567"), "+49-123-4567"));
 

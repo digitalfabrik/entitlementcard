@@ -42,7 +42,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 
 List<Widget> getDataPrivacyText(BuildContext context) {
-  final content = const [
+  const content = [
     Paragraph(
       content: '''
 Bei der Nutzung der App „Ehrenamtskarte“ für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind solche Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)

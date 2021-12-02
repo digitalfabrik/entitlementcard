@@ -11,9 +11,11 @@ analyzer:
     prefer_const_constructors: error
     require_trailing_commas: error
     prefer_final_locals: error
+    prefer_const_declarations: error
 
 linter:
   rules:
     public_member_api_docs: false
     require_trailing_commas: true
     prefer_final_locals: true
+    prefer_const_declarations: true

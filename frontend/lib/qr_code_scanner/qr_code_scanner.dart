@@ -70,7 +70,7 @@ class _QRViewState extends State<QrCodeScanner> {
 
     // QR-Codes in the scan area can be smaller than the scan area itself
     // If the scan area is too small big qr codes stop working on iOS
-    final scanArea = 300.0;
+    const scanArea = 300.0;
     final smallestDimension = min(deviceWidth, deviceHeight);
     if (smallestDimension < scanArea * 1.1) {
       return smallestDimension * 0.9;
