@@ -119,7 +119,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     await PositiveVerificationResultDialog.show(context, cardDetails);
   }
 
-  void _openWaitingDialog(BuildContext context) async {
+  Future<void> _openWaitingDialog(BuildContext context) async {
     await showDialog(
       barrierDismissible: false,
       context: context,

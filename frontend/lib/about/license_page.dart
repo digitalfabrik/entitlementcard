@@ -61,7 +61,7 @@ class CustomLicensePage extends StatelessWidget {
                     final paragraphs = license.licenseParagraphs;
                     return ListTile(
                       title: Text(license.packageName),
-                      subtitle: Text(paragraphs.length.toString() + " Lizenzen"),
+                      subtitle: Text("${paragraphs.length} Lizenzen"),
                       onTap: () {
                         Navigator.push(
                           context,

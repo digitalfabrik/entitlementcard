@@ -1,4 +1,4 @@
-final _httpRegex = RegExp(r"^https?://");
+final _httpRegex = RegExp("^https?://");
 
 String sanitizePhoneNumber(String telephone) => telephone
     .trim() // remove outer whitespace

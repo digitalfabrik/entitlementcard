@@ -29,21 +29,20 @@ class IdentificationQrScannerPage extends StatelessWidget {
     );
   }
 
-  void _onCodeScanned(BuildContext context, String code) async {
+  Future<void> _onCodeScanned(BuildContext context, String code) async {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
-    Future<void> showError(String msg) async => await QrParsingErrorDialog.showErrorDialog(context, msg);
+    Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
-      await showError(
-        "Die eingescannte Karte enthält kein Ablauf-"
-        "datum, obwohl dies für die blaue Ehrenamtskarte erforderlich"
+      await showError( "Die eingescannte Karte enthält kein Ablauf-datum, "
+        "obwohl dies für die blaue Ehrenamtskarte erforderlich"
         " ist. Vermutlich ist beim Erstellen der "
         "digitalen Ehrenamtskarte ein Fehler passiert.",
       );
     } on QRCodeInvalidTotpSecretException catch (_) {
       await showError(
-        "Beim Verarbeiten des eingescannten Codes ist ein"
+        "Beim Verarbeiten des eingescannten Codes ist ein "
         "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid",
       );
     } on QRCodeInvalidExpiryException catch (_) {

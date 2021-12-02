@@ -29,8 +29,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     paint.strokeCap = StrokeCap.round;
 
     final totalPathLength = 2 * horizontalLineLength + 2 * verticalLineLength + 4 * quarterArcLength;
-    Path createPath(double remainingPath) {
+    Path createPath(double initialPath) {
       final path = Path();
+      var remainingPath = initialPath;
       path.moveTo(size.width / 2, strokeWidth / 2);
       {
         // First half top line

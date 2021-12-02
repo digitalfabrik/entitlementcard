@@ -33,11 +33,11 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     });
   }
 
-  void _onLocationButtonClicked(SettingsModel settings) async {
+  Future<void> _onLocationButtonClicked(SettingsModel settings) async {
     final permission = await checkAndRequestLocationPermission(
       context,
       requestIfNotGranted: true,
-      onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
+      onDisableFeature: () async => settings.setLocationFeatureEnabled(false),
     );
     setState(() {
       _locationPermissionStatus = permission;

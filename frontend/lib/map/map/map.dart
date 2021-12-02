@@ -141,7 +141,7 @@ class _MapState extends State<Map> implements MapController {
         ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
-  void _onMapClick(math.Point<double> point, clickCoordinates) async {
+  Future<void> _onMapClick(math.Point<double> point, clickCoordinates) async {
     final controller = _controller;
     if (controller == null) {
       return;
