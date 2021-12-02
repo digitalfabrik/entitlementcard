@@ -28,7 +28,7 @@ class VerificationInfoDialog extends StatelessWidget {
         TextButton(
           child: const Text("Nicht mehr anzeigen"),
           onPressed: () async {
-            await settings.setHideVerificationInfo(true);
+            await settings.setHideVerificationInfo(enabled: true);
             _onDone(context);
           },
         ),

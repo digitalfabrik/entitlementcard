@@ -70,11 +70,11 @@ class _LocationButtonState extends State<LocationButton> {
       context,
       requestIfNotGranted: true,
       onDisableFeature: () async {
-        await settings.setLocationFeatureEnabled(false);
+        await settings.setLocationFeatureEnabled(enabled: false);
         await _showFeatureDisabled();
       },
       onEnableFeature: () async {
-        await settings.setLocationFeatureEnabled(true);
+        await settings.setLocationFeatureEnabled(enabled: true);
       },
     );
 

@@ -32,7 +32,7 @@ class EntryWidget extends StatelessWidget {
           if (settings.firstStart) {
             routes.addAll(<String, WidgetBuilder>{
               '/intro': (context) => IntroScreen(
-                    onFinishedCallback: () => settings.setFirstStart(false),
+                    onFinishedCallback: () => settings.setFirstStart(enabled: false),
                   ),
             });
             initialRoute = '/intro';

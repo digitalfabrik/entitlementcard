@@ -29,7 +29,7 @@ class VerificationQrScannerPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.help),
                 onPressed: () async {
-                  await settings.setHideVerificationInfo(false);
+                  await settings.setHideVerificationInfo(enabled: false);
                   await VerificationInfoDialog.show(context);
                 },
               )
