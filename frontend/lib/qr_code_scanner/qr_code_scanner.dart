@@ -13,8 +13,7 @@ typedef OnCodeScannedCallback = Future<void> Function(String code);
 class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
 
-  const QrCodeScanner({Key? key, required this.onCodeScanned})
-      : super(key: key);
+  const QrCodeScanner({Key? key, required this.onCodeScanned}) : super(key: key);
 
   @override
   State<QrCodeScanner> createState() => _QRViewState();
@@ -54,8 +53,7 @@ class _QRViewState extends State<QrCodeScanner> {
                   children: <Widget>[
                     Container(
                       margin: const EdgeInsets.all(8),
-                      child:
-                          const Text('Halten Sie die Kamera auf den QR Code.'),
+                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
                     ),
                     QrCodeScannerControls(controller: controller)
                   ],

@@ -133,10 +133,8 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
         var title = e.title;
         var content = e.content;
         return [
-          if (title != null)
-            Text(title, style: Theme.of(context).textTheme.headline6),
-          if (content != null)
-            Text(content, style: Theme.of(context).textTheme.bodyText1)
+          if (title != null) Text(title, style: Theme.of(context).textTheme.headline6),
+          if (content != null) Text(content, style: Theme.of(context).textTheme.bodyText1)
         ];
       })
       .expand((i) => i)

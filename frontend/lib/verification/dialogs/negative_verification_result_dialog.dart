@@ -5,19 +5,14 @@ import 'verification_result_dialog.dart';
 class NegativeVerificationResultDialog extends StatelessWidget {
   final String reason;
 
-  const NegativeVerificationResultDialog({Key? key, required this.reason})
-      : super(key: key);
+  const NegativeVerificationResultDialog({Key? key, required this.reason}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return VerificationResultDialog(
-        title: "Nicht verifiziert",
-        icon: Icons.error,
-        iconColor: Colors.red,
-        child: Text(reason));
+        title: "Nicht verifiziert", icon: Icons.error, iconColor: Colors.red, child: Text(reason));
   }
 
-  static Future<void> show(BuildContext context, String reason) => showDialog(
-      context: context,
-      builder: (_) => NegativeVerificationResultDialog(reason: reason));
+  static Future<void> show(BuildContext context, String reason) =>
+      showDialog(context: context, builder: (_) => NegativeVerificationResultDialog(reason: reason));
 }

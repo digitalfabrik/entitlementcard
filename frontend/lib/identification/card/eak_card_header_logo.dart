@@ -7,9 +7,7 @@ class EakCardHeaderLogo extends StatelessWidget {
   final Image? logo;
   final double scaleFactor;
 
-  const EakCardHeaderLogo(
-      {Key? key, required this.title, this.logo, required this.scaleFactor})
-      : super(key: key);
+  const EakCardHeaderLogo({Key? key, required this.title, this.logo, required this.scaleFactor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,7 @@ class EakCardHeaderLogo extends StatelessWidget {
           padding: EdgeInsets.all(2 * scaleFactor),
           child: logo ?? Container(),
         )),
-        Text(title,
-            maxLines: 1,
-            style:
-                TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
+        Text(title, maxLines: 1, style: TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
       ]),
     );
   }

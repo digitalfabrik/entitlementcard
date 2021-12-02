@@ -29,36 +29,27 @@ class IntroScreenState extends State<IntroScreen> {
           description: "Vielen Dank, dass Sie sich die App zur "
               "Bayerischen Ehrenamtskarte heruntergeladen haben!",
           pathImage: "assets/icon/icon_foreground.png",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
-          styleDescription:
-              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
+          styleDescription: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
           title: "Wo kann ich meine Ehrenamtskarte nutzen?",
-          description:
-              "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
+          description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
               " finden. Tippen Sie auf einen Standort, um mehr Informationen "
               "sehen zu können.",
           pathImage: "assets/intro_slides/map_zoom.jpeg",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
-          styleDescription:
-              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
+          styleDescription: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
     );
     slides.add(
       Slide(
           title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headline5,
           pathImage: "assets/intro_slides/search_with_location.png",
@@ -102,12 +93,8 @@ class IntroScreenState extends State<IntroScreen> {
       renderPrevBtn: const Text("Zurück"),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       showSkipBtn: false,
-      colorDot: Theme.of(context).brightness == Brightness.light
-          ? Colors.black54
-          : Colors.white38,
-      colorActiveDot: Theme.of(context).brightness == Brightness.light
-          ? Colors.black
-          : Colors.white,
+      colorDot: Theme.of(context).brightness == Brightness.light ? Colors.black54 : Colors.white38,
+      colorActiveDot: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
     );
   }
 }

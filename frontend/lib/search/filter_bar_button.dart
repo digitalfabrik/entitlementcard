@@ -10,11 +10,7 @@ class FilterBarButton extends StatefulWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
   final int index;
 
-  const FilterBarButton(
-      {Key? key,
-      required this.asset,
-      required this.onCategoryPress,
-      required this.index})
+  const FilterBarButton({Key? key, required this.asset, required this.onCategoryPress, required this.index})
       : super(key: key);
 
   @override
@@ -23,8 +19,7 @@ class FilterBarButton extends StatefulWidget {
   }
 }
 
-class _FilterBarButtonState extends State<FilterBarButton>
-    with SingleTickerProviderStateMixin {
+class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProviderStateMixin {
   bool _selected = false;
   AnimationController? _animationController;
   Animation? _colorTween;
@@ -33,8 +28,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   void initState() {
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 400));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
 
     super.initState();
   }
@@ -44,9 +38,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
     var animationController = _animationController;
 
     if (animationController != null) {
-      _colorTween = ColorTween(
-              begin: Theme.of(context).backgroundColor,
-              end: Theme.of(context).primaryColorLight)
+      _colorTween = ColorTween(begin: Theme.of(context).backgroundColor, end: Theme.of(context).primaryColorLight)
           .animate(animationController);
       super.didChangeDependencies();
     }
@@ -67,8 +59,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
     const minNumberElements = 5;
     var totalWidth = MediaQuery.of(context).size.width;
 
-    var totalWidthWithoutPadding =
-        totalWidth - minNumberElements * paddingPerElement;
+    var totalWidthWithoutPadding = totalWidth - minNumberElements * paddingPerElement;
     var availableElementWidth = totalWidthWithoutPadding / minNumberElements;
 
     var smallWidth = min(maxElementWidth, availableElementWidth);
@@ -91,8 +82,7 @@ class _FilterBarButtonState extends State<FilterBarButton>
         animation: colorTween,
         builder: (context, child) => RawMaterialButton(
             elevation: 0.0,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             constraints: BoxConstraints.tightFor(width: width, height: 70),
             fillColor: colorTween.value,
             onPressed: () {
@@ -106,15 +96,12 @@ class _FilterBarButtonState extends State<FilterBarButton>
             child: Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Column(children: [
-                  SvgPicture.asset(widget.asset.icon,
-                      width: 40.0, semanticsLabel: widget.asset.name),
+                  SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
                       child: Text(widget.asset.shortName,
-                          maxLines: 2,
-                          style: const TextStyle(fontSize: 10),
-                          textAlign: TextAlign.center),
+                          maxLines: 2, style: const TextStyle(fontSize: 10), textAlign: TextAlign.center),
                     ),
                   )
                 ]))));

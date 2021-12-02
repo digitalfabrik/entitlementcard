@@ -12,9 +12,7 @@ class ResultsLoader extends StatefulWidget {
   final String? searchText;
   final List<int> categoryIds;
 
-  const ResultsLoader(
-      {Key? key, this.coordinates, this.searchText, required this.categoryIds})
-      : super(key: key);
+  const ResultsLoader({Key? key, this.coordinates, this.searchText, required this.categoryIds}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ResultsLoaderState();
@@ -24,8 +22,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
   static const _pageSize = 20;
   GraphQLClient? _client;
 
-  final PagingController<int, AcceptingStoresSearch$Query$AcceptingStore>
-      _pagingController = PagingController(firstPageKey: 0);
+  final PagingController<int, AcceptingStoresSearch$Query$AcceptingStore> _pagingController =
+      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
@@ -53,8 +51,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
     try {
       var arguments = AcceptingStoresSearchArguments(
           params: SearchParamsInput(
-              categoryIds:
-                  widget.categoryIds.isEmpty ? null : widget.categoryIds,
+              categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
               coordinates: widget.coordinates,
               searchText: widget.searchText,
               limit: _pageSize,
@@ -66,8 +63,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
         throw Exception("GraqhQL client is not yet initialized!");
       }
 
-      final result = await client.query(QueryOptions(
-          document: query.document, variables: query.getVariablesMap()));
+      final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
       var exception = result.exception;
       if (result.hasException && exception != null) {
         throw exception;
@@ -108,41 +104,35 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int,
-        AcceptingStoresSearch$Query$AcceptingStore>.separated(
+    return PagedSliverList<int, AcceptingStoresSearch$Query$AcceptingStore>.separated(
       pagingController: _pagingController,
-      builderDelegate:
-          PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
-              itemBuilder: (context, item, index) {
-                var storeCoordinates = item.physicalStore?.coordinates;
-                return IntrinsicHeight(
-                    child: AcceptingStoreSummary(
-                        key: ValueKey(item.id),
-                        store: AcceptingStoreSummaryModel(
-                            item.id,
-                            item.name,
-                            item.description,
-                            item.categoryId,
-                            storeCoordinates != null
-                                ? Coordinates(
-                                    storeCoordinates.lat, storeCoordinates.lng)
-                                : null,
-                            item.physicalStore?.address.location),
-                        coordinates: widget.coordinates,
-                        showMapButtonOnDetails: true));
-              },
-              noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
-              firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
-              newPageErrorIndicatorBuilder: _buildErrorWithRetry,
-              newPageProgressIndicatorBuilder: _buildProgressIndicator,
-              firstPageProgressIndicatorBuilder: _buildProgressIndicator),
+      builderDelegate: PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
+          itemBuilder: (context, item, index) {
+            var storeCoordinates = item.physicalStore?.coordinates;
+            return IntrinsicHeight(
+                child: AcceptingStoreSummary(
+                    key: ValueKey(item.id),
+                    store: AcceptingStoreSummaryModel(
+                        item.id,
+                        item.name,
+                        item.description,
+                        item.categoryId,
+                        storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
+                        item.physicalStore?.address.location),
+                    coordinates: widget.coordinates,
+                    showMapButtonOnDetails: true));
+          },
+          noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
+          firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          newPageErrorIndicatorBuilder: _buildErrorWithRetry,
+          newPageProgressIndicatorBuilder: _buildProgressIndicator,
+          firstPageProgressIndicatorBuilder: _buildProgressIndicator),
       separatorBuilder: (context, index) => const Divider(height: 0),
     );
   }
 
-  Widget _buildProgressIndicator(BuildContext context) => const Center(
-      child: Padding(
-          padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+  Widget _buildProgressIndicator(BuildContext context) =>
+      const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
 
   Widget _buildErrorWithRetry(BuildContext context) => Center(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -156,8 +146,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Widget _buildNoItemsFoundIndicator(BuildContext context) => Center(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.search_off,
-            size: 60, color: Theme.of(context).disabledColor),
+        Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
         const Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
       ]));
 

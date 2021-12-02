@@ -19,11 +19,7 @@ class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
   final void Function(int? id) selectAcceptingStore;
 
-  const MapPage(
-      {Key? key,
-      required this.onMapCreated,
-      required this.selectAcceptingStore})
-      : super(key: key);
+  const MapPage({Key? key, required this.onMapCreated, required this.selectAcceptingStore}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -59,8 +55,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   }
 
   @override
-  Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
-      {bool selectedAcceptingStoreInMap = false}) async {
+  Future<void> showAcceptingStore(PhysicalStoreFeatureData data, {bool selectedAcceptingStoreInMap = false}) async {
     final controller = _controller;
 
     if (controller == null) {
@@ -96,11 +91,9 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   }
 
   Future<void> _onFeatureClick(dynamic feature) async =>
-      showAcceptingStore(_extractPhysicalStoreData(feature),
-          selectedAcceptingStoreInMap: true);
+      showAcceptingStore(_extractPhysicalStoreData(feature), selectedAcceptingStoreInMap: true);
 
-  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) =>
-      PhysicalStoreFeatureData(
+  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) => PhysicalStoreFeatureData(
         _getIntOrNull(feature["properties"]["id"]),
         _getLatLngOrNull(feature["geometry"]["coordinates"]),
         _getIntOrNull(feature["properties"]["categoryId"]),

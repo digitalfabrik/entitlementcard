@@ -21,18 +21,13 @@ Future<void> saveCardDetails(CardDetails? cardDetails) async {
     await Future.wait([
       storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
       storage.write(key: fullNameKey, value: cardDetails.fullName),
-      storage.write(
-          key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
+      storage.write(key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
           key: unixExpirationDateKey,
-          value: cardDetails.unixExpirationDate != null
-              ? cardDetails.unixExpirationDate.toString()
-              : "0"),
-      storage.write(
-          key: cardTypeKey, value: cardDetails.cardType.index.toString()),
-      storage.write(
-          key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
+          value: cardDetails.unixExpirationDate != null ? cardDetails.unixExpirationDate.toString() : "0"),
+      storage.write(key: cardTypeKey, value: cardDetails.cardType.index.toString()),
+      storage.write(key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
     ]);
   } else {
     await Future.wait([
@@ -82,6 +77,5 @@ Future<CardDetails?> loadCardDetails() async {
     throw Exception("Can't load totp secret.");
   }
 
-  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
-      regionId, totpSecret);
+  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId, totpSecret);
 }

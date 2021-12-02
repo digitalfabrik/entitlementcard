@@ -37,10 +37,7 @@ class _SearchPageState extends State<SearchPage> {
                       "Suchresultate".toUpperCase(),
                       style: const TextStyle(color: Colors.grey),
                     ),
-                    const Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Divider()))
+                    const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))
                   ]))),
           ResultsLoader(
               searchText: searchFieldText,
@@ -49,8 +46,8 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       LocationButton(
-        setCoordinates: (position) => setState(() => _coordinates =
-            CoordinatesInput(lat: position.latitude, lng: position.longitude)),
+        setCoordinates: (position) =>
+            setState(() => _coordinates = CoordinatesInput(lat: position.latitude, lng: position.longitude)),
       )
     ]);
   }

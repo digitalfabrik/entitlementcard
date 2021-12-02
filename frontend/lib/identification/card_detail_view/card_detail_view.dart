@@ -25,35 +25,27 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final regionsQuery = GetRegionsByIdQuery(
-        variables: GetRegionsByIdArguments(
-            ids: IdsParamsInput(ids: [cardDetails.regionId])));
+    final regionsQuery =
+        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
 
     return Query(
-        options: QueryOptions(
-            document: regionsQuery.document,
-            variables: regionsQuery.getVariablesMap()),
+        options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           var orientation = MediaQuery.of(context).orientation;
 
           final fetchedData = result.data;
 
-          var region =
-              result.isLoading || result.hasException || fetchedData == null
-                  ? null
-                  : regionsQuery.parse(fetchedData).regionsById[0];
+          var region = result.isLoading || result.hasException || fetchedData == null
+              ? null
+              : regionsQuery.parse(fetchedData).regionsById[0];
 
           var eakCard = Padding(
               padding: const EdgeInsets.all(8.0),
               child: IdCard(
                   child: EakCard(
-                      cardDetails: cardDetails,
-                      region: region != null
-                          ? Region(region.prefix, region.name)
-                          : null)));
-          var richQrCode = RichQrCode(
-              cardDetails: cardDetails,
-              onMoreActionsPressed: () => _onMoreActionsPressed(context));
+                      cardDetails: cardDetails, region: region != null ? Region(region.prefix, region.name) : null)));
+          var richQrCode =
+              RichQrCode(cardDetails: cardDetails, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
           return orientation == Orientation.landscape
               ? SafeArea(child: LayoutBuilder(builder: (context, constraints) {
@@ -67,20 +59,14 @@ class CardDetailView extends StatelessWidget {
                         constraints.maxWidth > qrCodeMinWidth * 2
                             ? Flexible(child: richQrCode)
                             : ConstrainedBox(
-                                constraints: const BoxConstraints.tightFor(
-                                    width: qrCodeMinWidth),
-                                child: richQrCode)
+                                constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth), child: richQrCode)
                       ]);
                 }))
               : SingleChildScrollView(
                   child: SafeArea(
                       child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-                    eakCard,
-                    const SizedBox(height: 16),
-                    richQrCode
-                  ]),
+                  child: Column(children: [eakCard, const SizedBox(height: 16), richQrCode]),
                 )));
         });
   }
@@ -100,11 +86,7 @@ class RichQrCode extends StatelessWidget {
   final CardDetails cardDetails;
   final bool compact;
 
-  const RichQrCode(
-      {Key? key,
-      required this.onMoreActionsPressed,
-      required this.cardDetails,
-      this.compact = false})
+  const RichQrCode({Key? key, required this.onMoreActionsPressed, required this.cardDetails, this.compact = false})
       : super(key: key);
 
   @override
@@ -128,8 +110,7 @@ class RichQrCode extends StatelessWidget {
                 child: TextButton(
                     child: Text(
                       "Weitere Aktionen",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary),
+                      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                     ),
                     onPressed: onMoreActionsPressed)),
           ],

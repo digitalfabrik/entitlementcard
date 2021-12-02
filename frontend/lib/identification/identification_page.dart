@@ -18,8 +18,7 @@ class IdentificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return Consumer<CardDetailsModel>(
-        builder: (context, cardDetailsModel, child) {
+    return Consumer<CardDetailsModel>(builder: (context, cardDetailsModel, child) {
       if (!cardDetailsModel.isInitialized) {
         return Container();
       }
@@ -57,7 +56,6 @@ class IdentificationPage extends StatelessWidget {
   }
 
   void _showActivateQrCode(BuildContext context) {
-    Navigator.push(context,
-        AppRoute(builder: (context) => const IdentificationQrScannerPage()));
+    Navigator.push(context, AppRoute(builder: (context) => const IdentificationQrScannerPage()));
   }
 }

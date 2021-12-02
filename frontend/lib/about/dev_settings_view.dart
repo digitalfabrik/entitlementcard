@@ -12,8 +12,8 @@ import '../routing.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
-    1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+final validEakDetails = CardDetails(
+    "Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=", 1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({Key? key}) : super(key: key);
@@ -39,16 +39,14 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
               title: const Text('Log sample exception'),
-              onTap: () => log("Sample exception.",
-                  error: Exception("Sample exception..."))),
+              onTap: () => log("Sample exception.", error: Exception("Sample exception..."))),
           ListTile(
             title: const Text('Inspect settings'),
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) => SimpleDialog(
-                    title: const Text("Settings"),
-                    children: [Text(settings.toString())]),
+                builder: (context) =>
+                    SimpleDialog(title: const Text("Settings"), children: [Text(settings.toString())]),
               );
             },
           ),
@@ -62,8 +60,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _setValidEakData(BuildContext context) async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .setCardDetails(validEakDetails);
+    Provider.of<CardDetailsModel>(context, listen: false).setCardDetails(validEakDetails);
   }
 
   void _showInfoSlides(BuildContext context) {

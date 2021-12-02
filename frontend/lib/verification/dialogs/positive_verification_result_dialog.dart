@@ -10,41 +10,29 @@ import 'verification_result_dialog.dart';
 class PositiveVerificationResultDialog extends StatelessWidget {
   final BaseCardDetails cardDetails;
 
-  const PositiveVerificationResultDialog({Key? key, required this.cardDetails})
-      : super(key: key);
+  const PositiveVerificationResultDialog({Key? key, required this.cardDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final regionsQuery = GetRegionsByIdQuery(
-        variables: GetRegionsByIdArguments(
-            ids: IdsParamsInput(ids: [cardDetails.regionId])));
+    final regionsQuery =
+        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
 
     return Query(
-        options: QueryOptions(
-            document: regionsQuery.document,
-            variables: regionsQuery.getVariablesMap()),
+        options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           var data = result.data;
-          var region = result.isConcrete && data != null
-              ? regionsQuery.parse(data).regionsById[0]
-              : null;
+          var region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
           return VerificationResultDialog(
               title: "Karte ist gültig",
               icon: Icons.verified_user,
               iconColor: Colors.green,
               child: IdCard(
                 child: EakCard(
-                    cardDetails: cardDetails,
-                    region: region != null
-                        ? Region(region.prefix, region.name)
-                        : null),
+                    cardDetails: cardDetails, region: region != null ? Region(region.prefix, region.name) : null),
               ));
         });
   }
 
   static Future<void> show(BuildContext context, BaseCardDetails cardDetails) =>
-      showDialog(
-          context: context,
-          builder: (_) =>
-              PositiveVerificationResultDialog(cardDetails: cardDetails));
+      showDialog(context: context, builder: (_) => PositiveVerificationResultDialog(cardDetails: cardDetails));
 }

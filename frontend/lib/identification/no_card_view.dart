@@ -6,20 +6,14 @@ class NoCardView extends StatelessWidget {
   final VoidCallback startEakApplication;
 
   const NoCardView(
-      {Key? key,
-      required this.startVerification,
-      required this.startActivateQrCode,
-      required this.startEakApplication})
+      {Key? key, required this.startVerification, required this.startActivateQrCode, required this.startEakApplication})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    var isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
-    Widget wrapIntrinsic(Widget widget) => isLandscape
-        ? IntrinsicHeight(child: widget)
-        : IntrinsicWidth(child: widget);
+    Widget wrapIntrinsic(Widget widget) => isLandscape ? IntrinsicHeight(child: widget) : IntrinsicWidth(child: widget);
 
     return SingleChildScrollView(
         child: SafeArea(
@@ -28,8 +22,7 @@ class NoCardView extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(30.0),
-            child: Icon(Icons.contact_support_outlined,
-                size: 100, color: Theme.of(context).colorScheme.secondary),
+            child: Icon(Icons.contact_support_outlined, size: 100, color: Theme.of(context).colorScheme.secondary),
           ),
           const SizedBox(height: 12),
           wrapIntrinsic(
@@ -42,8 +35,7 @@ class NoCardView extends StatelessWidget {
                       constraints: const BoxConstraints(maxWidth: 300),
                       child: Column(children: [
                         Text("Sie sind ehrenamtlich engagiert …",
-                            style: Theme.of(context).textTheme.headline6,
-                            textAlign: TextAlign.center),
+                            style: Theme.of(context).textTheme.headline6, textAlign: TextAlign.center),
                         const SizedBox(height: 24, width: 24),
                         const Text(
                             "… und haben bereits einen Aktivierungscode"
@@ -53,8 +45,7 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startActivateQrCode,
-                            child:
-                                const Text("Jetzt Aktivierungscode einscannen"),
+                            child: const Text("Jetzt Aktivierungscode einscannen"),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -66,14 +57,11 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startEakApplication,
-                            child:
-                                const Text("Jetzt Ehrenamtskarte beantragen"),
+                            child: const Text("Jetzt Ehrenamtskarte beantragen"),
                           ),
                         )
                       ])),
-                  isLandscape
-                      ? const VerticalDivider(width: 80)
-                      : const Divider(height: 30),
+                  isLandscape ? const VerticalDivider(width: 80) : const Divider(height: 30),
                   ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 300),
                       child: Column(children: [
@@ -91,8 +79,7 @@ class NoCardView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
                             onPressed: startVerification,
-                            child:
-                                const Text("Jetzt Ehrenamtskarte verifizieren"),
+                            child: const Text("Jetzt Ehrenamtskarte verifizieren"),
                           ),
                         )
                       ]))

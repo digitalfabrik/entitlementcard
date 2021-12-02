@@ -62,8 +62,7 @@ class IdentificationQrContentParser {
       }
     }
 
-    if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD &&
-        unixExpirationDate == null) {
+    if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD && unixExpirationDate == null) {
       throw QRCodeMissingExpiryException();
     }
 
@@ -73,8 +72,7 @@ class IdentificationQrContentParser {
     }
     String? base32TotpSecret;
     try {
-      base32TotpSecret =
-          base32.encode(Uint8List.fromList(cardActivateModel.totpSecret));
+      base32TotpSecret = base32.encode(Uint8List.fromList(cardActivateModel.totpSecret));
     } on Exception catch (_) {
       throw QRCodeInvalidTotpSecretException();
     }

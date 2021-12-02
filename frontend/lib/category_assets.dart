@@ -23,10 +23,7 @@ class CategoryAsset {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CategoryAsset &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
+      identical(this, other) || other is CategoryAsset && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -97,10 +94,5 @@ const List<CategoryAsset> categoryAssets = [
       detailIcon: "assets/detail_headers/8_essen.svg",
       color: Color(0xFF197489)),
   CategoryAsset(
-      id: 9,
-      name: 'Anderes',
-      shortName: "Anderes",
-      icon: "assets/category_icons/9.svg",
-      detailIcon: null,
-      color: null),
+      id: 9, name: 'Anderes', shortName: "Anderes", icon: "assets/category_icons/9.svg", detailIcon: null, color: null),
 ];

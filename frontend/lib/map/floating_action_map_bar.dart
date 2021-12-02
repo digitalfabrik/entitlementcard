@@ -11,10 +11,7 @@ class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
   final int? selectedAcceptingStoreId;
 
-  const FloatingActionMapBar(
-      {Key? key,
-      required this.bringCameraToUser,
-      required this.selectedAcceptingStoreId})
+  const FloatingActionMapBar({Key? key, required this.bringCameraToUser, required this.selectedAcceptingStoreId})
       : super(key: key);
 
   @override

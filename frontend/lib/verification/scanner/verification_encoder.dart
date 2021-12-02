@@ -6,8 +6,7 @@ import '../../identification/base_card_details.dart';
 import '../../identification/protobuf/card_verify_model.pb.dart';
 import '../verification_card_details.dart';
 
-String encodeVerificationCardDetails(
-    VerificationCardDetails verificationCardDetails) {
+String encodeVerificationCardDetails(VerificationCardDetails verificationCardDetails) {
   final cardDetails = verificationCardDetails.cardDetails;
 
   final cardVerifyModel = CardVerifyModel(
@@ -25,8 +24,7 @@ String encodeVerificationCardDetails(
 VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
   const base64Decoder = Base64Decoder();
 
-  final cardVerifyModel =
-      CardVerifyModel.fromBuffer(base64Decoder.convert(base64Data));
+  final cardVerifyModel = CardVerifyModel.fromBuffer(base64Decoder.convert(base64Data));
 
   final fullName = cardVerifyModel.fullName;
   final randomBytes = const Base64Encoder().convert(cardVerifyModel.hashSecret);
@@ -35,8 +33,5 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
   final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
 
-  return VerificationCardDetails(
-      BaseCardDetails(
-          fullName, randomBytes, unixExpirationTime, cardType, regionId),
-      otp);
+  return VerificationCardDetails(BaseCardDetails(fullName, randomBytes, unixExpirationTime, cardType, regionId), otp);
 }

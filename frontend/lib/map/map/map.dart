@@ -57,17 +57,13 @@ class _MapState extends State<Map> implements MapController {
     final config = Configuration.of(context);
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var compassMargin = Platform.isIOS
-        ? statusBarHeight / pixelRatio
-        : statusBarHeight * pixelRatio;
+    var compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
     if (_mapboxView == null || !_isAnimating) {
       var userLocation = widget.userLocation;
       var cameraPosition = userLocation != null
-          ? CameraPosition(
-              target: userLocation, zoom: Map.userLocationZoomLevel)
-          : const CameraPosition(
-              target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+          ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
+          : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
       _mapboxView = Stack(children: [
         MaplibreMap(
@@ -76,20 +72,15 @@ class _MapState extends State<Map> implements MapController {
           // We provide our own attribution menu
           attributionButtonMargins: const math.Point(-100, -100),
           // The Mapbox wordmark must be shown because of legal weirdness
-          logoViewMargins: Platform.isIOS
-              ? const math.Point(30, 5)
-              : math.Point(30 * pixelRatio, 5 * pixelRatio),
+          logoViewMargins: Platform.isIOS ? const math.Point(30, 5) : math.Point(30 * pixelRatio, 5 * pixelRatio),
           myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven
-              ? MyLocationTrackingMode.Tracking
-              : MyLocationTrackingMode.None,
+          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
           // required to prevent mapbox iOS from requesting location
           // permissions on startup, as discussed in #249
           myLocationRenderMode: MyLocationRenderMode.NORMAL,
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
-          compassViewMargins:
-              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+          compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
         ),
         Positioned(
@@ -120,8 +111,7 @@ class _MapState extends State<Map> implements MapController {
   void _onMapCreated(MaplibreMapController controller) {
     _controller = controller;
     if (widget.locationAvailable) {
-      _controller
-          ?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+      _controller?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
     final onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
@@ -145,8 +135,8 @@ class _MapState extends State<Map> implements MapController {
   @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
-    _symbol = await _controller?.addSymbol(SymbolOptions(
-        iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+    _symbol = await _controller
+        ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
   void _onMapClick(math.Point<double> point, clickCoordinates) async {
@@ -161,26 +151,17 @@ class _MapState extends State<Map> implements MapController {
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
     var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
-    var rect = Rect.fromCenter(
-        center: Offset(point.x, point.y),
-        width: touchTargetSize,
-        height: touchTargetSize);
+    var rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
-    var jsonFeatures = await controller.queryRenderedFeaturesInRect(
-        rect, widget.onFeatureClickLayerFilter, null);
-    var features = jsonFeatures
-        .where((x) =>
-            x["properties"] != null && x["properties"]["categoryId"] != null)
-        .toList();
+    var jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
+    var features = jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
     if (features.isNotEmpty) {
       var mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {
         var cA = a["geometry"]["coordinates"];
         var cB = b["geometry"]["coordinates"];
-        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) +
-            math.pow(cA[1] - mapPoint.latitude, 2));
-        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) +
-            math.pow(cB[1] - mapPoint.latitude, 2));
+        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) + math.pow(cA[1] - mapPoint.latitude, 2));
+        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) + math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
 
@@ -203,16 +184,14 @@ class _MapState extends State<Map> implements MapController {
   }
 
   @override
-  Future<void> bringCameraToLocation(LatLng location,
-      {double? zoomLevel}) async {
+  Future<void> bringCameraToLocation(LatLng location, {double? zoomLevel}) async {
     final controller = _controller;
     if (controller == null) {
       return;
     }
 
-    final update = zoomLevel != null
-        ? CameraUpdate.newLatLngZoom(location, zoomLevel)
-        : CameraUpdate.newLatLng(location);
+    final update =
+        zoomLevel != null ? CameraUpdate.newLatLngZoom(location, zoomLevel) : CameraUpdate.newLatLng(location);
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
     await _animate(controller.animateCamera(update));
   }
@@ -225,14 +204,10 @@ class _MapState extends State<Map> implements MapController {
     }
 
     var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        bearing: 0,
-        tilt: 0,
-        zoom: Map.userLocationZoomLevel));
+        target: LatLng(position.latitude, position.longitude), bearing: 0, tilt: 0, zoom: Map.userLocationZoomLevel));
     await _animate(controller.animateCamera(cameraUpdate));
 
-    await controller
-        .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     if (!_permissionGiven) {
       setState(() => _permissionGiven = true);
     }

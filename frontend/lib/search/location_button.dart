@@ -9,8 +9,7 @@ import '../widgets/small_button_spinner.dart';
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
 
-  const LocationButton({Key? key, required this.setCoordinates})
-      : super(key: key);
+  const LocationButton({Key? key, required this.setCoordinates}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LocationButtonState();
@@ -44,9 +43,8 @@ class _LocationButtonState extends State<LocationButton> {
               heroTag: "fab_search_view",
               backgroundColor: Theme.of(context).backgroundColor,
               elevation: 1,
-              onPressed: _locationStatus == LocationRequestStatus.requesting
-                  ? null
-                  : () => _determinePosition(true, settings),
+              onPressed:
+                  _locationStatus == LocationRequestStatus.requesting ? null : () => _determinePosition(true, settings),
               icon: AnimatedSwitcher(
                   child: _locationStatus == LocationRequestStatus.requesting
                       ? const SmallButtonSpinner()
@@ -70,20 +68,16 @@ class _LocationButtonState extends State<LocationButton> {
     var requiredPosition = userInteract
         ? await determinePosition(context,
             requestIfNotGranted: true,
-            onDisableFeature: () async =>
-                await settings.setLocationFeatureEnabled(false),
+            onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
             onEnableFeature: () async {
               await settings.setLocationFeatureEnabled(true);
             })
         : await determinePosition(context,
-                requestIfNotGranted: false,
-                onDisableFeature: () async =>
-                    await settings.setLocationFeatureEnabled(false),
-                onEnableFeature: () async {
-                  await settings.setLocationFeatureEnabled(true);
-                })
-            .timeout(const Duration(milliseconds: 2000),
-                onTimeout: () => RequestedPosition.unknown());
+            requestIfNotGranted: false,
+            onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
+            onEnableFeature: () async {
+              await settings.setLocationFeatureEnabled(true);
+            }).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
 
     var position = requiredPosition.position;
     if (position != null) {

@@ -21,7 +21,6 @@ class IdCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
-            child:
-                AspectRatio(aspectRatio: creditCardAspectRatio, child: child)));
+            child: AspectRatio(aspectRatio: creditCardAspectRatio, child: child)));
   }
 }

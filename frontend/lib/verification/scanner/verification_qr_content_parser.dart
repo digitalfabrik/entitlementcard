@@ -11,8 +11,7 @@ class VerificationParseException extends QrCodeParseException {
   final Exception cause;
   final StackTrace? stackTrace;
 
-  VerificationParseException(
-      {required this.internalMessage, required this.cause, this.stackTrace})
+  VerificationParseException({required this.internalMessage, required this.cause, this.stackTrace})
       : super(internalMessage);
 }
 
@@ -33,16 +32,14 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     cardVerifyModel = CardVerifyModel.fromBuffer(rawProtobufData);
   } on Exception catch (e, stacktrace) {
     throw VerificationParseException(
-        internalMessage:
-            "Failed to parse CardVerifyModel from base64 encoded data. "
+        internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
             "Message: ${e.toString()}",
         cause: e,
         stackTrace: stacktrace);
   }
 
   final fullName = cardVerifyModel.fullName;
-  final hashSecretBase64 =
-      const Base64Encoder().convert(cardVerifyModel.hashSecret);
+  final hashSecretBase64 = const Base64Encoder().convert(cardVerifyModel.hashSecret);
   final unixInt64ExpirationDate = cardVerifyModel.expirationDate;
   int? unixExpirationDate;
   unixExpirationDate = unixInt64ExpirationDate.toInt();
@@ -50,7 +47,6 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
   final regionId = cardVerifyModel.regionId;
   final otp = cardVerifyModel.otp;
 
-  final baseCardDetails = BaseCardDetails(
-      fullName, hashSecretBase64, unixExpirationDate, cardType, regionId);
+  final baseCardDetails = BaseCardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId);
   return VerificationCardDetails(baseCardDetails, otp);
 }

@@ -39,12 +39,10 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             Center(
-              child: Text(packageInfo.appName,
-                  style: Theme.of(context).textTheme.headline5),
+              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.headline5),
             ),
             Center(
-              child: Text(packageInfo.version,
-                  style: Theme.of(context).textTheme.bodyText2),
+              child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyText2),
             ),
             const Divider(
               height: 40,
@@ -56,20 +54,18 @@ class AboutPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Center(
-                      child: Text("Herausgeber",
-                          style: Theme.of(context).textTheme.subtitle2),
+                      child: Text("Herausgeber", style: Theme.of(context).textTheme.subtitle2),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Text(publisherAddress,
-                          style: Theme.of(context).textTheme.bodyText1),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: Text(publisherAddress, style: Theme.of(context).textTheme.bodyText1),
                     ),
                     Text(
                       "Mehr Informationen",
-                      style: Theme.of(context).textTheme.bodyText2?.merge(
-                          TextStyle(
-                              color: Theme.of(context).colorScheme.secondary)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          ?.merge(TextStyle(color: Theme.of(context).colorScheme.secondary)),
                     ),
                   ],
                 ),
@@ -78,9 +74,7 @@ class AboutPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ContentPage(
-                        title: "Herausgeber",
-                        children: getPublisherText(context)),
+                    builder: (context) => ContentPage(title: "Herausgeber", children: getPublisherText(context)),
                   ),
                 );
               },
@@ -89,14 +83,9 @@ class AboutPage extends StatelessWidget {
               height: 40,
               thickness: 1,
             ),
+            ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
             ContentTile(
-                icon: Icons.copyright,
-                title: "Lizenz",
-                children: getCopyrightText(context)),
-            ContentTile(
-                icon: Icons.privacy_tip_outlined,
-                title: "Datenschutzerklärung",
-                children: getDataPrivacyText(context)),
+                icon: Icons.privacy_tip_outlined, title: "Datenschutzerklärung", children: getDataPrivacyText(context)),
             ContentTile(
                 icon: Icons.info_outline,
                 title: "Haftung, Haftungsausschluss und Disclaimer",
@@ -123,9 +112,8 @@ class AboutPage extends StatelessWidget {
                 title: const Text("Entwickleroptionen"),
                 onTap: () => showDialog(
                   context: context,
-                  builder: (context) => const SimpleDialog(
-                      title: Text("Entwickleroptionen"),
-                      children: [DevSettingsView()]),
+                  builder: (context) =>
+                      const SimpleDialog(title: Text("Entwickleroptionen"), children: [DevSettingsView()]),
                 ),
               )
           ];

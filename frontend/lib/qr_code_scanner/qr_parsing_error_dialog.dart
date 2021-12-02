@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class QrParsingErrorDialog extends StatelessWidget {
   final String message;
 
-  const QrParsingErrorDialog({Key? key, required this.message})
-      : super(key: key);
+  const QrParsingErrorDialog({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,7 @@ class QrParsingErrorDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> showErrorDialog(
-      BuildContext context, String message) async {
+  static Future<void> showErrorDialog(BuildContext context, String message) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!

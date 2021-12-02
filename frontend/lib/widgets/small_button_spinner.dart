@@ -7,9 +7,6 @@ class SmallButtonSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
         padding: EdgeInsets.all(4),
-        child: SizedBox(
-            height: 16,
-            width: 16,
-            child: CircularProgressIndicator(strokeWidth: 2)));
+        child: SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2)));
   }
 }

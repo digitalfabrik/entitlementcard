@@ -7,11 +7,7 @@ class VerificationResultDialog extends StatelessWidget {
   final Color? iconColor;
 
   const VerificationResultDialog(
-      {Key? key,
-      required this.child,
-      required this.title,
-      required this.icon,
-      this.iconColor})
+      {Key? key, required this.child, required this.title, required this.icon, this.iconColor})
       : super(key: key);
 
   @override
@@ -19,16 +15,11 @@ class VerificationResultDialog extends StatelessWidget {
     final theme = Theme.of(context);
     return AlertDialog(
       title: ListTile(
-        leading: Icon(icon,
-            color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
+        leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
         title: Text(title, style: theme.textTheme.headline5),
       ),
       content: child,
-      actions: [
-        TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"))
-      ],
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK"))],
     );
   }
 }

@@ -17,8 +17,7 @@ class NavigationBar extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
 
-  const NavigationBar({Key? key, required this.title, this.actions})
-      : super(key: key);
+  const NavigationBar({Key? key, required this.title, this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +47,7 @@ class NavigationBarWithBottom extends StatelessWidget {
     // Note: A SizedBox is required because AppBar contains a Column.
     // If we want to add a AppBar into a column, then we need to set its size.
     return SizedBox(
-        height: MediaQuery.of(context).padding.top +
-            bottom.preferredSize.height +
-            kToolbarHeight,
+        height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
         child: AppBar(
             elevation: kElevation,
             leading: const BackButton(),
@@ -79,15 +76,12 @@ class SliverNavigationBar extends StatelessWidget {
 
 class SliverSearchNavigationBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
-  final Debouncer debouncer =
-      Debouncer(delay: const Duration(milliseconds: 50));
+  final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchNavigationBar({Key? key, required this.onChanged})
-      : super(key: key);
+  SliverSearchNavigationBar({Key? key, required this.onChanged}) : super(key: key);
 
   @override
-  _SliverSearchNavigationBarState createState() =>
-      _SliverSearchNavigationBarState();
+  _SliverSearchNavigationBarState createState() => _SliverSearchNavigationBarState();
 }
 
 class _SliverSearchNavigationBarState extends State<SliverSearchNavigationBar> {

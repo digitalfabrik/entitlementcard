@@ -16,52 +16,24 @@ export 'card_verify_model.pbenum.dart';
 
 class CardVerifyModel extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'CardVerifyModel',
+      const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CardVerifyModel',
       createEmptyInstance: create)
-    ..aOS(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'fullName',
-        protoName: 'fullName')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'expirationDate',
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fullName', protoName: 'fullName')
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expirationDate',
         protoName: 'expirationDate')
     ..e<CardVerifyModel_CardType>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'cardType',
-        $pb.PbFieldType.OE,
+        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cardType', $pb.PbFieldType.OE,
         protoName: 'cardType',
         defaultOrMaker: CardVerifyModel_CardType.STANDARD,
         valueOf: CardVerifyModel_CardType.valueOf,
         enumValues: CardVerifyModel_CardType.values)
     ..a<$core.int>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'regionId',
-        $pb.PbFieldType.O3,
+        4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'regionId', $pb.PbFieldType.O3,
         protoName: 'regionId')
     ..a<$core.List<$core.int>>(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'hashSecret',
-        $pb.PbFieldType.OY,
+        6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hashSecret', $pb.PbFieldType.OY,
         protoName: 'hashSecret')
-    ..a<$core.int>(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'otp',
-        $pb.PbFieldType.O3)
+    ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'otp', $pb.PbFieldType.O3)
     ..hasRequiredFields = false;
 
   CardVerifyModel._() : super();
@@ -97,8 +69,7 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   factory CardVerifyModel.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory CardVerifyModel.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+  factory CardVerifyModel.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
@@ -114,11 +85,10 @@ class CardVerifyModel extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static CardVerifyModel create() => CardVerifyModel._();
   CardVerifyModel createEmptyInstance() => create();
-  static $pb.PbList<CardVerifyModel> createRepeated() =>
-      $pb.PbList<CardVerifyModel>();
+  static $pb.PbList<CardVerifyModel> createRepeated() => $pb.PbList<CardVerifyModel>();
   @$core.pragma('dart2js:noInline')
-  static CardVerifyModel getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CardVerifyModel>(create);
+  static CardVerifyModel getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardVerifyModel>(create);
   static CardVerifyModel? _defaultInstance;
 
   @$pb.TagNumber(1)

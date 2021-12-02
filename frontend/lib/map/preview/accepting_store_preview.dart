@@ -8,17 +8,14 @@ import 'models.dart';
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {Key? key})
-      : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final query = AcceptingStoreSummaryByIdQuery(
-        variables: AcceptingStoreSummaryByIdArguments(
-            ids: IdsParamsInput(ids: [acceptingStoreId])));
+        variables: AcceptingStoreSummaryByIdArguments(ids: IdsParamsInput(ids: [acceptingStoreId])));
     return Query(
-        options: QueryOptions(
-            document: query.document, variables: query.getVariablesMap()),
+        options: QueryOptions(document: query.document, variables: query.getVariablesMap()),
         builder: (result, {refetch, fetchMore}) {
           try {
             final exception = result.exception;
@@ -38,19 +35,16 @@ class AcceptingStorePreview extends StatelessWidget {
               throw Exception("ID not found");
             }
             return AcceptingStorePreviewCard(
-                isLoading: false,
-                acceptingStore: _convertToAcceptingStoreSummary(stores[0]));
+                isLoading: false, acceptingStore: _convertToAcceptingStoreSummary(stores[0]));
           } on Exception catch (e) {
             debugPrint(e.toString());
-            return AcceptingStorePreviewCard(
-                isLoading: false, refetch: refetch);
+            return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);
           }
         });
   }
 
-  _convertToAcceptingStoreSummary(
-      AcceptingStoreSummaryById$Query$PhysicalStore item) {
-    return AcceptingStoreSummaryModel(item.id, item.store.name,
-        item.store.description, item.store.categoryId, null, null);
+  _convertToAcceptingStoreSummary(AcceptingStoreSummaryById$Query$PhysicalStore item) {
+    return AcceptingStoreSummaryModel(
+        item.id, item.store.name, item.store.description, item.store.categoryId, null, null);
   }
 }

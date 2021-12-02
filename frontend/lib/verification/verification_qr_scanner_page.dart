@@ -112,10 +112,8 @@ class VerificationQrScannerPage extends StatelessWidget {
     await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (context) => AlertDialog(
-            title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [CircularProgressIndicator()])));
+        builder: (context) =>
+            AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])));
     Navigator.pop(context);
   }
 

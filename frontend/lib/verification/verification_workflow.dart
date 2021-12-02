@@ -7,12 +7,10 @@ import 'dialogs/verification_info_dialog.dart';
 class VerificationWorkflow {
   VerificationWorkflow._(); // hide the constructor
 
-  static Future<void> startWorkflow(
-          BuildContext context, SettingsModel settings) =>
+  static Future<void> startWorkflow(BuildContext context, SettingsModel settings) =>
       VerificationWorkflow._().showInfoAndQrScanner(context, settings);
 
-  Future<void> showInfoAndQrScanner(
-      BuildContext rootContext, SettingsModel settings) async {
+  Future<void> showInfoAndQrScanner(BuildContext rootContext, SettingsModel settings) async {
     if (await settings.hideVerificationInfo != true) {
       // show info dialog and cancel if it is not accepted
       if (await VerificationInfoDialog.show(rootContext) != true) return;

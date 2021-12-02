@@ -64,9 +64,7 @@ class RequestedPosition {
 
   LatLng? toLatLng() {
     final currentPosition = position;
-    return currentPosition != null
-        ? LatLng(currentPosition.latitude, currentPosition.longitude)
-        : null;
+    return currentPosition != null ? LatLng(currentPosition.latitude, currentPosition.longitude) : null;
   }
 }
 
@@ -76,9 +74,7 @@ Future<RequestedPosition> determinePosition(BuildContext context,
     Future<void> Function()? onDisableFeature,
     Future<void> Function()? onEnableFeature}) async {
   final permission = await checkAndRequestLocationPermission(context,
-      requestIfNotGranted: requestIfNotGranted,
-      onDisableFeature: onDisableFeature,
-      onEnableFeature: onEnableFeature);
+      requestIfNotGranted: requestIfNotGranted, onDisableFeature: onDisableFeature, onEnableFeature: onEnableFeature);
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
@@ -95,16 +91,13 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 ///
 Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
     {bool requestIfNotGranted = true,
-    rationale =
-        "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
+    rationale = "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
     Future<void> Function()? onDisableFeature,
     Future<void> Function()? onEnableFeature}) async {
   var serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
-      final result = await showDialog(
-          context: context,
-          builder: (context) => const LocationServiceDialog());
+      final result = await showDialog(context: context, builder: (context) => const LocationServiceDialog());
       if (result) {
         await Geolocator.openLocationSettings();
       }
@@ -138,9 +131,8 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         // your App should show an explanatory UI now.
 
         if (rationale != null) {
-          final result = await showDialog(
-              context: context,
-              builder: (context) => RationaleDialog(rationale: rationale));
+          final result =
+              await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
 
           if (result ?? false) {
             return await checkAndRequestLocationPermission(context,
@@ -183,7 +175,6 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
   }
 }
 
-Future<void> openSettingsToGrantPermissions(
-    BuildContext userInteractContext) async {
+Future<void> openSettingsToGrantPermissions(BuildContext userInteractContext) async {
   await Geolocator.openAppSettings();
 }

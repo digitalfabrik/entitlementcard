@@ -40,8 +40,6 @@ ThemeData get darkTheme {
     ),
   );
   return theme.copyWith(
-    appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        color: theme.colorScheme.primary),
+    appBarTheme: AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light, color: theme.colorScheme.primary),
   );
 }

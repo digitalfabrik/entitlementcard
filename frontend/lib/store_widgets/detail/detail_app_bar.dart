@@ -12,8 +12,7 @@ const double bottomSize = 100;
 class DetailAppBarBackButton extends StatelessWidget {
   final Color textColor;
 
-  const DetailAppBarBackButton({Key? key, required this.textColor})
-      : super(key: key);
+  const DetailAppBarBackButton({Key? key, required this.textColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +35,7 @@ class DetailAppBarHeaderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     var currentCategoryId = categoryId;
 
-    if (currentCategoryId != null &&
-        currentCategoryId <= categoryAssets.length) {
+    if (currentCategoryId != null && currentCategoryId <= categoryAssets.length) {
       var currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
       if (currentDetailIcon != null) {
         return SvgPicture.asset(
@@ -78,17 +76,13 @@ class DetailAppBarBottom extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             categoryName ?? "",
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2
-                ?.apply(color: textColorGrey),
+            style: Theme.of(context).textTheme.bodyText2?.apply(color: textColorGrey),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             title ?? "",
-            style:
-                Theme.of(context).textTheme.headline6?.apply(color: textColor),
+            style: Theme.of(context).textTheme.headline6?.apply(color: textColor),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )
@@ -109,8 +103,7 @@ class DetailAppBar extends StatelessWidget {
     final categoryName = matchingStore.store.category.name;
     final title = matchingStore.store.name ?? "Akzeptanzstelle";
 
-    final backgroundColor =
-        accentColor ?? Theme.of(context).colorScheme.primary;
+    final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 

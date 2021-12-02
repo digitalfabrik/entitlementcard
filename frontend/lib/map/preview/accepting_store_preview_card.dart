@@ -26,8 +26,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   final void Function()? refetch;
   final AcceptingStoreSummaryModel? acceptingStore;
 
-  const AcceptingStorePreviewCard(
-      {Key? key, required this.isLoading, this.acceptingStore, this.refetch})
+  const AcceptingStorePreviewCard({Key? key, required this.isLoading, this.acceptingStore, this.refetch})
       : super(key: key);
 
   @override
@@ -41,8 +40,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 child: isLoading
                     ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: const LinearProgressIndicator())
+                        padding: const EdgeInsets.symmetric(horizontal: 40), child: const LinearProgressIndicator())
                     : currentAcceptingStore == null
                         ? AcceptingStorePreviewError(refetch: refetch)
                         : AcceptingStoreSummary(

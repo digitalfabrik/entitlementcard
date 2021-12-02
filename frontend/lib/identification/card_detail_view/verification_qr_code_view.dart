@@ -50,31 +50,24 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
     var time = DateTime.now().millisecondsSinceEpoch;
     final animationDuration = otpCode.validUntilMilliSeconds - time;
     return LayoutBuilder(builder: (context, constraints) {
-      var padding =
-          min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
-      return Consumer<CardDetailsModel>(
-          builder: (context, cardDetailsModel, child) {
+      var padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
+      return Consumer<CardDetailsModel>(builder: (context, cardDetailsModel, child) {
         return ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
             child: Material(
                 clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(padding / 2)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding / 2)),
                 child: Stack(children: [
                   Padding(
                       padding: EdgeInsets.all(padding),
                       child: QrImage(
-                          data: encodeVerificationCardDetails(
-                              VerificationCardDetails(
-                                  widget.cardDetails, otpCode.code)),
+                          data:
+                              encodeVerificationCardDetails(VerificationCardDetails(widget.cardDetails, otpCode.code)),
                           version: QrVersions.auto,
-                          foregroundColor:
-                              Theme.of(context).textTheme.bodyText2?.color,
+                          foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
                           gapless: false)),
                   Positioned.fill(
-                      child: AnimatedProgressbar(
-                          initialProgress:
-                              Duration(milliseconds: animationDuration))),
+                      child: AnimatedProgressbar(initialProgress: Duration(milliseconds: animationDuration))),
                 ])));
       });
     });
