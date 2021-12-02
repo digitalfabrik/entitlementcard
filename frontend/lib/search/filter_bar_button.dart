@@ -60,26 +60,23 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   Widget build(BuildContext context) {
-    const maxButtonWidth = 80.0;
+    // At least a width of 65 is needed to fit all category names
+    const requiredTitleWidth = 65.0;
+    const maxElementWidth = 80.0;
     const paddingPerElement = 8;
     const minNumberElements = 5;
-
-    // At least a width of 65 is needed to fit all category names
-    const requiredCategoryLongTitleWidth = 65.0;
-
     var totalWidth = MediaQuery.of(context).size.width;
 
-    var smallWidth = min(
-        maxButtonWidth,
-        // Width allowing at least minNumberElements in one row
-        (totalWidth - minNumberElements * paddingPerElement) /
-            minNumberElements);
+    var totalWidthWithoutPadding =
+        totalWidth - minNumberElements * paddingPerElement;
+    var availableElementWidth = totalWidthWithoutPadding / minNumberElements;
 
-    var largeWidth = max(requiredCategoryLongTitleWidth, smallWidth);
+    var smallWidth = min(maxElementWidth, availableElementWidth);
+    var largeWidth = max(requiredTitleWidth, smallWidth);
 
-    var numLargeElementsPerRow = totalWidth ~/ largeWidth;
-    var isSecondRow =
-        widget.index >= max(minNumberElements, numLargeElementsPerRow);
+    var numSmallElementsPerRow = totalWidth ~/ smallWidth;
+    var numElementsFirstRow = max(minNumberElements, numSmallElementsPerRow);
+    var isSecondRow = widget.index >= numElementsFirstRow;
 
     // In the second row we can use larger width as there are only 4 categories
     var width = isSecondRow ? largeWidth : smallWidth;
