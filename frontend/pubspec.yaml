@@ -78,7 +78,6 @@ dev_dependencies:
   artemis: '>=6.0.0' # only if you're using ArtemisClient!
   json_annotation: ^4.1.0
   gql: '>=0.12.3 <1.0.0'
-  flutter_lints: ^1.0.4
   lint: ^1.7.2
 
 flutter_icons:
