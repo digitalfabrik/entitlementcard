@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 import '../category_assets.dart';
 import 'filter_bar_button.dart';
@@ -10,8 +11,9 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var sortedCategories = [...categoryAssets];
-    sortedCategories.sort((a, b) => a.id.compareTo(b.id));
     sortedCategories.removeLast();
+    sortedCategories
+        .sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
     return SliverToBoxAdapter(
         child: Column(children: [
       Padding(
@@ -31,9 +33,10 @@ class FilterBar extends StatelessWidget {
                 runSpacing: 8,
                 spacing: 4,
                 children: sortedCategories
-                    .map((e) => FilterBarButton(
-                        key: ValueKey(e.id),
-                        asset: e,
+                    .mapIndexed((index, category) => FilterBarButton(
+                        key: ValueKey(category.id),
+                        index: index,
+                        asset: category,
                         onCategoryPress: onCategoryPress))
                     .toList()))
       ])

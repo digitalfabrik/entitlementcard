@@ -8,9 +8,13 @@ import '../category_assets.dart';
 class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
   final Function(CategoryAsset, bool) onCategoryPress;
+  final int index;
 
   const FilterBarButton(
-      {Key? key, required this.asset, required this.onCategoryPress})
+      {Key? key,
+      required this.asset,
+      required this.onCategoryPress,
+      required this.index})
       : super(key: key);
 
   @override
@@ -56,13 +60,26 @@ class _FilterBarButtonState extends State<FilterBarButton>
 
   @override
   Widget build(BuildContext context) {
+    // At least a width of 65 is needed to fit all category names
+    const requiredTitleWidth = 65.0;
+    const maxElementWidth = 80.0;
     const paddingPerElement = 8;
     const minNumberElements = 5;
     var totalWidth = MediaQuery.of(context).size.width;
-    var width = min(
-        80.0,
-        (totalWidth - minNumberElements * paddingPerElement) /
-            minNumberElements);
+
+    var totalWidthWithoutPadding =
+        totalWidth - minNumberElements * paddingPerElement;
+    var availableElementWidth = totalWidthWithoutPadding / minNumberElements;
+
+    var smallWidth = min(maxElementWidth, availableElementWidth);
+    var largeWidth = max(requiredTitleWidth, smallWidth);
+
+    var numSmallElementsPerRow = totalWidth ~/ smallWidth;
+    var numElementsFirstRow = max(minNumberElements, numSmallElementsPerRow);
+    var isSecondRow = widget.index >= numElementsFirstRow;
+
+    // In the second row we can use larger width as there are only 4 categories
+    var width = isSecondRow ? largeWidth : smallWidth;
 
     var colorTween = _colorTween;
     var animationController = _animationController;
