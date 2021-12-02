@@ -8,7 +8,7 @@ String sanitizePhoneNumber(String telephone) => telephone
 String prepareWebsiteUrlForDisplay(String website) => website.trim().replaceAll(_httpRegex, "");
 
 String prepareWebsiteUrlForLaunch(String website) {
-  var trimmed = website.trim();
+  final trimmed = website.trim();
   if (_httpRegex.hasMatch(trimmed)) {
     return trimmed;
   } else {

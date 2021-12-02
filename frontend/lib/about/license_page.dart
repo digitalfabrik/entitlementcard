@@ -23,23 +23,23 @@ class CustomLicensePage extends StatelessWidget {
     return FutureBuilder<List<LicenseEntry>>(
       future: LicenseRegistry.licenses.toList(),
       builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {
-        var licenses = snapshot.data;
-        var error = snapshot.error;
+        final licenses = snapshot.data;
+        final error = snapshot.error;
         if (snapshot.hasError && error != null) {
           return ErrorMessage(error.toString());
         } else if (snapshot.hasData && licenses != null) {
-          var licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
+          final licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
             for (var packageName in entry.packages) {
               value.add(CustomLicenseEntry(packageName, [entry.paragraphs]));
             }
             return value;
           });
 
-          var byPackageName = groupBy(licensesPerPackage, (CustomLicenseEntry entry) => entry.packageName);
+          final byPackageName = groupBy(licensesPerPackage, (CustomLicenseEntry entry) => entry.packageName);
 
-          var result = <CustomLicenseEntry>[];
+          final result = <CustomLicenseEntry>[];
           byPackageName.forEach((String key, List<CustomLicenseEntry> value) {
-            List<Iterable<LicenseParagraph>> listOfParagraphLists = value.fold([], (value, element) {
+            final List<Iterable<LicenseParagraph>> listOfParagraphLists = value.fold([], (value, element) {
               value.addAll(element.licenseParagraphs);
               return value;
             });
@@ -57,8 +57,8 @@ class CustomLicensePage extends StatelessWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    var license = result[index];
-                    var paragraphs = license.licenseParagraphs;
+                    final license = result[index];
+                    final paragraphs = license.licenseParagraphs;
                     return ListTile(
                       title: Text(license.packageName),
                       subtitle: Text(paragraphs.length.toString() + " Lizenzen"),
@@ -102,7 +102,7 @@ class SingleLicensePage extends StatelessWidget {
           (Iterable<LicenseParagraph> paragraphs) => SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                var paragraph = paragraphs.toList()[index];
+                final paragraph = paragraphs.toList()[index];
 
                 return Text("\t" * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyText1);
               },

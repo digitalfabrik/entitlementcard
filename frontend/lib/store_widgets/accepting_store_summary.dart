@@ -29,8 +29,8 @@ class AcceptingStoreSummary extends StatelessWidget {
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
   double? get _distance {
-    var storedCoordinates = store.coordinates;
-    var currentCoordinates = coordinates;
+    final storedCoordinates = store.coordinates;
+    final currentCoordinates = coordinates;
     if (currentCoordinates == null || storedCoordinates == null) return null;
     return calcDistance(currentCoordinates.lat, currentCoordinates.lng, storedCoordinates.lat, storedCoordinates.lng);
   }
@@ -42,7 +42,7 @@ class AcceptingStoreSummary extends StatelessWidget {
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
-    var currentDistance = _distance;
+    final currentDistance = _distance;
     return SafeArea(
       bottom: false,
       top: false,
@@ -108,7 +108,7 @@ class CategoryIconIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var currentSvgIconPath = svgIconPath;
+    final currentSvgIconPath = svgIconPath;
     return Padding(
       padding: padding,
       child: currentSvgIconPath != null
@@ -146,7 +146,7 @@ class StoreTextOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var location = store.location;
+    final location = store.location;
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

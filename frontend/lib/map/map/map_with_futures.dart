@@ -27,7 +27,7 @@ class MapWithFutures extends StatelessWidget {
           return const Center();
         }
 
-        var position = snapshot.data;
+        final position = snapshot.data;
 
         return Map(
           onFeatureClick: onFeatureClick,

@@ -33,10 +33,10 @@ class DetailAppBarHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var currentCategoryId = categoryId;
+    final currentCategoryId = categoryId;
 
     if (currentCategoryId != null && currentCategoryId <= categoryAssets.length) {
-      var currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
+      final currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
       if (currentDetailIcon != null) {
         return SvgPicture.asset(
           currentDetailIcon,
@@ -101,7 +101,7 @@ class DetailAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var categoryId = matchingStore.store.category.id;
+    final categoryId = matchingStore.store.category.id;
 
     final accentColor = getDarkenedColorForCategory(categoryId);
     final categoryName = matchingStore.store.category.name;

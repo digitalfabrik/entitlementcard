@@ -21,9 +21,9 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
   if (baseCardDetails.hashSecretBase64.isEmpty) {
     throw QrCodeFieldMissingException("hashSecretBase64");
   }
-  var expirationDate = baseCardDetails.expirationDate;
+  final expirationDate = baseCardDetails.expirationDate;
   if (expirationDate != null) {
-    var now = DateTime.now();
+    final now = DateTime.now();
     if (expirationDate.isBefore(now)) {
       throw CardExpiredException(expirationDate);
     }

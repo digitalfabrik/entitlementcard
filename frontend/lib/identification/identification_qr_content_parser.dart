@@ -39,7 +39,7 @@ class IdentificationQrContentParser {
 
     CardActivateModel cardActivateModel;
     try {
-      var rawProtobufData = base64Decoder.convert(rawBase64Content);
+      final rawProtobufData = base64Decoder.convert(rawBase64Content);
       cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);

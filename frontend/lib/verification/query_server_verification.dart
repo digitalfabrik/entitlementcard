@@ -23,11 +23,11 @@ Future<bool> _queryServerVerification(GraphQLClient client, String verificationH
 
   try {
     final queryResult = await client.query(queryOptions);
-    var exception = queryResult.exception;
+    final exception = queryResult.exception;
     if (exception != null && queryResult.hasException) {
       throw exception;
     }
-    var data = queryResult.data;
+    final data = queryResult.data;
 
     if (data == null) {
       return false;

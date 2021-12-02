@@ -19,7 +19,7 @@ class _AnimatedProgressbarState extends State<AnimatedProgressbar> with SingleTi
   @override
   void initState() {
     super.initState();
-    var beginValue = 1 - widget.initialProgress.inMicroseconds / AnimatedProgressbar.totalDuration.inMicroseconds;
+    final beginValue = 1 - widget.initialProgress.inMicroseconds / AnimatedProgressbar.totalDuration.inMicroseconds;
     controller = AnimationController(duration: AnimatedProgressbar.totalDuration, vsync: this)
       ..addListener(() => setState(() {}))
       ..value = beginValue;

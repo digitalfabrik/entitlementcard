@@ -10,8 +10,10 @@ analyzer:
     unused_import: error
     prefer_const_constructors: error
     require_trailing_commas: error
+    prefer_final_locals: error
 
 linter:
   rules:
     public_member_api_docs: false
     require_trailing_commas: true
+    prefer_final_locals: true

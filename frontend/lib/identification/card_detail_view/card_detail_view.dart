@@ -31,15 +31,15 @@ class CardDetailView extends StatelessWidget {
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
-        var orientation = MediaQuery.of(context).orientation;
+        final orientation = MediaQuery.of(context).orientation;
 
         final fetchedData = result.data;
 
-        var region = result.isLoading || result.hasException || fetchedData == null
+        final region = result.isLoading || result.hasException || fetchedData == null
             ? null
             : regionsQuery.parse(fetchedData).regionsById[0];
 
-        var eakCard = Padding(
+        final eakCard = Padding(
           padding: const EdgeInsets.all(8.0),
           child: IdCard(
             child: EakCard(
@@ -48,7 +48,7 @@ class CardDetailView extends StatelessWidget {
             ),
           ),
         );
-        var richQrCode =
+        final richQrCode =
             RichQrCode(cardDetails: cardDetails, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
         return orientation == Orientation.landscape

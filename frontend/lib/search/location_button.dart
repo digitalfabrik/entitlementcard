@@ -24,7 +24,7 @@ class _LocationButtonState extends State<LocationButton> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      var settings = context.read<SettingsModel>();
+      final settings = context.read<SettingsModel>();
       _determinePosition(false, settings);
     });
   }
@@ -68,7 +68,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _determinePosition(bool userInteract, settings) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    var requiredPosition = userInteract
+    final requiredPosition = userInteract
         ? await determinePosition(
             context,
             requestIfNotGranted: true,
@@ -86,7 +86,7 @@ class _LocationButtonState extends State<LocationButton> {
             },
           ).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
 
-    var position = requiredPosition.position;
+    final position = requiredPosition.position;
     if (position != null) {
       widget.setCoordinates(position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);

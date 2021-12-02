@@ -35,7 +35,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
 
   @override
   void didChangeDependencies() {
-    var animationController = _animationController;
+    final animationController = _animationController;
 
     if (animationController != null) {
       _colorTween = ColorTween(begin: Theme.of(context).backgroundColor, end: Theme.of(context).primaryColorLight)
@@ -57,23 +57,23 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
     const maxElementWidth = 80.0;
     const paddingPerElement = 8;
     const minNumberElements = 5;
-    var totalWidth = MediaQuery.of(context).size.width;
+    final totalWidth = MediaQuery.of(context).size.width;
 
-    var totalWidthWithoutPadding = totalWidth - minNumberElements * paddingPerElement;
-    var availableElementWidth = totalWidthWithoutPadding / minNumberElements;
+    final totalWidthWithoutPadding = totalWidth - minNumberElements * paddingPerElement;
+    final availableElementWidth = totalWidthWithoutPadding / minNumberElements;
 
-    var smallWidth = min(maxElementWidth, availableElementWidth);
-    var largeWidth = max(requiredTitleWidth, smallWidth);
+    final smallWidth = min(maxElementWidth, availableElementWidth);
+    final largeWidth = max(requiredTitleWidth, smallWidth);
 
-    var numSmallElementsPerRow = totalWidth ~/ smallWidth;
-    var numElementsFirstRow = max(minNumberElements, numSmallElementsPerRow);
-    var isSecondRow = widget.index >= numElementsFirstRow;
+    final numSmallElementsPerRow = totalWidth ~/ smallWidth;
+    final numElementsFirstRow = max(minNumberElements, numSmallElementsPerRow);
+    final isSecondRow = widget.index >= numElementsFirstRow;
 
     // In the second row we can use larger width as there are only 4 categories
-    var width = isSecondRow ? largeWidth : smallWidth;
+    final width = isSecondRow ? largeWidth : smallWidth;
 
-    var colorTween = _colorTween;
-    var animationController = _animationController;
+    final colorTween = _colorTween;
+    final animationController = _animationController;
     if (colorTween == null || animationController == null) {
       return const Center();
     }
@@ -86,7 +86,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
         constraints: BoxConstraints.tightFor(width: width, height: 70),
         fillColor: colorTween.value,
         onPressed: () {
-          var isSelected = !_selected;
+          final isSelected = !_selected;
           setState(() {
             _selected = isSelected;
             animationController.animateTo(isSelected ? 1 : 0);

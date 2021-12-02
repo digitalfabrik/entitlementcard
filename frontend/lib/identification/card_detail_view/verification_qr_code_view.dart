@@ -47,11 +47,11 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
       return const SmallButtonSpinner();
     }
 
-    var time = DateTime.now().millisecondsSinceEpoch;
+    final time = DateTime.now().millisecondsSinceEpoch;
     final animationDuration = otpCode.validUntilMilliSeconds - time;
     return LayoutBuilder(
       builder: (context, constraints) {
-        var padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
+        final padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
         return Consumer<CardDetailsModel>(
           builder: (context, cardDetailsModel, child) {
             return ConstrainedBox(

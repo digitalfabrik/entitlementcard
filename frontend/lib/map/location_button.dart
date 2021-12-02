@@ -23,7 +23,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
     final settings = Provider.of<SettingsModel>(context);
 
     return Container(
@@ -49,7 +49,7 @@ class _LocationButtonState extends State<LocationButton> {
   }
 
   _showFeatureDisabled() async {
-    var messengerState = ScaffoldMessenger.of(context);
+    final messengerState = ScaffoldMessenger.of(context);
     messengerState.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,

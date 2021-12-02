@@ -58,7 +58,7 @@ Future<CardDetails?> loadCardDetails() async {
   final fullName = await storage.read(key: fullNameKey);
   final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
 
-  var storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
+  final storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
   if (storedUnixExpirationDate == null) {
     throw Exception("Can't load expiration date.");
   }

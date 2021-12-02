@@ -18,7 +18,7 @@ class QrCodeScannerPage extends StatelessWidget {
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
-    var currentOnCodeScanned = onCodeScanned;
+    final currentOnCodeScanned = onCodeScanned;
     try {
       if (currentOnCodeScanned != null) {
         await currentOnCodeScanned(code);

@@ -102,7 +102,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
-  var serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
       final result = await showDialog(context: context, builder: (context) => const LocationServiceDialog());
@@ -117,7 +117,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   }
 
   if (requestIfNotGranted) {
-    var permission = await Geolocator.checkPermission();
+    final permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
@@ -162,7 +162,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         return LocationPermission.deniedForever.toLocationStatus();
       }
 
-      var status = requestResult.toLocationStatus();
+      final status = requestResult.toLocationStatus();
 
       if (status.isPermissionGranted() && onEnableFeature != null) {
         await onEnableFeature();
@@ -171,14 +171,14 @@ Future<LocationStatus> checkAndRequestLocationPermission(
       return status;
     }
 
-    var status = permission.toLocationStatus();
+    final status = permission.toLocationStatus();
     if (status.isPermissionGranted() && onEnableFeature != null) {
       await onEnableFeature();
     }
     return status;
   } else {
-    var permission = await Geolocator.checkPermission();
-    var status = permission.toLocationStatus();
+    final permission = await Geolocator.checkPermission();
+    final status = permission.toLocationStatus();
     if (status.isPermissionGranted() && onEnableFeature != null) {
       await onEnableFeature();
     }

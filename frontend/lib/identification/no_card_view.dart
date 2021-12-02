@@ -14,7 +14,7 @@ class NoCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     Widget wrapIntrinsic(Widget widget) => isLandscape ? IntrinsicHeight(child: widget) : IntrinsicWidth(child: widget);
 

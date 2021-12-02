@@ -66,9 +66,9 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
     widget.selectAcceptingStore(data.id);
 
-    var coordinates = data.coordinates;
+    final coordinates = data.coordinates;
     if (coordinates != null) {
-      var categoryId = data.categoryId;
+      final categoryId = data.categoryId;
       if (categoryId != null) {
         await controller.setSymbol(coordinates, categoryId);
       }
@@ -117,7 +117,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       return;
     }
 
-    var position = data.position;
+    final position = data.position;
     if (position != null) {
       await controller.bringCameraToUser(position);
     }

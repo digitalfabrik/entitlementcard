@@ -27,7 +27,7 @@ class QrCodeScannerControls extends StatelessWidget {
     return FutureBuilder<SystemFeatures>(
       future: _tryToGetSystemFeatures(),
       builder: (context, snapshot) {
-        SystemFeatures? systemFeatures = snapshot.data;
+        final SystemFeatures? systemFeatures = snapshot.data;
 
         if (snapshot.hasData || systemFeatures == null) {
           return const Center();

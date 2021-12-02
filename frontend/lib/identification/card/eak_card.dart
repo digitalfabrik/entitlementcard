@@ -34,7 +34,7 @@ class EakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cardColor = cardDetails.cardType == CardType.gold ? goldenCardColor : blueCardColor;
+    final cardColor = cardDetails.cardType == CardType.gold ? goldenCardColor : blueCardColor;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;

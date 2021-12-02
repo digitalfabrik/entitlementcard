@@ -20,7 +20,7 @@ class AboutPage extends StatelessWidget {
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
         List<Widget> children;
-        var packageInfo = snapshot.data;
+        final packageInfo = snapshot.data;
         if (snapshot.hasData && packageInfo != null) {
           children = [
             Container(height: 20),

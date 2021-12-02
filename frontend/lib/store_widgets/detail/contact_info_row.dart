@@ -24,7 +24,7 @@ class ContactInfoRow extends StatelessWidget {
     if (_description.isEmpty) {
       return const SizedBox(width: 0, height: 0);
     }
-    var row = Row(
+    final row = Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 6, bottom: 6, right: 16),
@@ -49,7 +49,7 @@ class ContactInfoRow extends StatelessWidget {
         ),
       ],
     );
-    var currentOnTap = onTap;
+    final currentOnTap = onTap;
     return (currentOnTap == null)
         ? row
         : InkWell(

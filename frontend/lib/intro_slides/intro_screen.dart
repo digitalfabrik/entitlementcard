@@ -80,7 +80,7 @@ class IntroScreenState extends State<IntroScreen> {
   }
 
   void onDonePress() {
-    var onFinishedCallback = widget.onFinishedCallback;
+    final onFinishedCallback = widget.onFinishedCallback;
     if (onFinishedCallback != null) {
       onFinishedCallback();
     }

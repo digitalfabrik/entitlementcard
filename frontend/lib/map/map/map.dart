@@ -55,13 +55,13 @@ class _MapState extends State<Map> implements MapController {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-    var statusBarHeight = MediaQuery.of(context).padding.top;
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
     if (_mapboxView == null || !_isAnimating) {
-      var userLocation = widget.userLocation;
-      var cameraPosition = userLocation != null
+      final userLocation = widget.userLocation;
+      final cameraPosition = userLocation != null
           ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
           : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
@@ -128,7 +128,7 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Future<void> removeSymbol() async {
-    var symbol = _symbol;
+    final symbol = _symbol;
     if (symbol == null) return;
     await _controller?.removeSymbol(symbol);
     _symbol = null;
@@ -150,25 +150,25 @@ class _MapState extends State<Map> implements MapController {
     final onFeatureClick = widget.onFeatureClick;
     final onNoFeatureClick = widget.onNoFeatureClick;
 
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
-    var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
-    var rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
+    final touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
+    final rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
-    var jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
-    var features = jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
+    final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
+    final features = jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
     if (features.isNotEmpty) {
-      var mapPoint = await controller.toLatLng(point);
+      final mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {
-        var cA = a["geometry"]["coordinates"];
-        var cB = b["geometry"]["coordinates"];
-        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) + math.pow(cA[1] - mapPoint.latitude, 2));
-        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) + math.pow(cB[1] - mapPoint.latitude, 2));
+        final cA = a["geometry"]["coordinates"];
+        final cB = b["geometry"]["coordinates"];
+        final dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) + math.pow(cA[1] - mapPoint.latitude, 2));
+        final dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) + math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
 
       features.sort(distSort);
-      var featureInfo = features[0];
+      final featureInfo = features[0];
       if (featureInfo != null) {
         if (onFeatureClick != null) {
           onFeatureClick(featureInfo);
@@ -205,7 +205,7 @@ class _MapState extends State<Map> implements MapController {
       return;
     }
 
-    var cameraUpdate = CameraUpdate.newCameraPosition(
+    final cameraUpdate = CameraUpdate.newCameraPosition(
       CameraPosition(
         target: LatLng(position.latitude, position.longitude),
         bearing: 0,

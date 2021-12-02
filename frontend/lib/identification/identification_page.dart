@@ -24,7 +24,7 @@ class IdentificationPage extends StatelessWidget {
           return Container();
         }
 
-        var cardDetails = cardDetailsModel.cardDetails;
+        final cardDetails = cardDetailsModel.cardDetails;
         if (cardDetails != null) {
           return CardDetailView(
             cardDetails: cardDetails,

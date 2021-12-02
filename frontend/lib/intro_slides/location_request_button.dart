@@ -47,7 +47,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    var status = _locationPermissionStatus;
+    final status = _locationPermissionStatus;
     if (status == null) {
       return const ElevatedButton(
         onPressed: null,

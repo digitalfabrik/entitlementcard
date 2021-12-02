@@ -15,9 +15,9 @@ String hashVerificationCardDetails(VerificationCardDetails verificationCardDetai
 }
 
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
-  var buffer = Uint8List(16).buffer;
-  var data = ByteData.view(buffer);
-  var unixExpirationDate = cardDetails.unixExpirationDate;
+  final buffer = Uint8List(16).buffer;
+  final data = ByteData.view(buffer);
+  final unixExpirationDate = cardDetails.unixExpirationDate;
   if (unixExpirationDate != null) {
     data.setInt64(0, unixExpirationDate, Endian.little);
   }

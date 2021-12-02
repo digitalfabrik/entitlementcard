@@ -31,7 +31,7 @@ class AcceptingStorePreview extends StatelessWidget {
             return const AcceptingStorePreviewCard(isLoading: true);
           }
 
-          var stores = query.parse(fetchedData).physicalStoresById;
+          final stores = query.parse(fetchedData).physicalStoresById;
           if (stores.isEmpty) {
             throw Exception("ID not found");
           }

@@ -20,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    var currentCoordinatesInput = _coordinates;
+    final currentCoordinatesInput = _coordinates;
     return Stack(
       children: [
         CustomScrollView(

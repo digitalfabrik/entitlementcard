@@ -47,9 +47,9 @@ class ResultsLoaderState extends State<ResultsLoader> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    var oldWidget = widget;
+    final oldWidget = widget;
     try {
-      var arguments = AcceptingStoresSearchArguments(
+      final arguments = AcceptingStoresSearchArguments(
         params: SearchParamsInput(
           categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
           coordinates: widget.coordinates,
@@ -58,15 +58,15 @@ class ResultsLoaderState extends State<ResultsLoader> {
           offset: pageKey,
         ),
       );
-      var query = AcceptingStoresSearchQuery(variables: arguments);
+      final query = AcceptingStoresSearchQuery(variables: arguments);
 
-      var client = _client;
+      final client = _client;
       if (client == null) {
         throw Exception("GraqhQL client is not yet initialized!");
       }
 
       final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
-      var exception = result.exception;
+      final exception = result.exception;
       if (result.hasException && exception != null) {
         throw exception;
       }
@@ -78,13 +78,13 @@ class ResultsLoaderState extends State<ResultsLoader> {
           return await _fetchPage(pageKey);
         }
       }
-      var newData = result.data;
+      final newData = result.data;
 
       if (newData == null) {
         throw Exception("Fetched data is null.");
       }
 
-      var newItems = query.parse(newData).searchAcceptingStores;
+      final newItems = query.parse(newData).searchAcceptingStores;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -110,7 +110,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
         itemBuilder: (context, item, index) {
-          var storeCoordinates = item.physicalStore?.coordinates;
+          final storeCoordinates = item.physicalStore?.coordinates;
           return IntrinsicHeight(
             child: AcceptingStoreSummary(
               key: ValueKey(item.id),

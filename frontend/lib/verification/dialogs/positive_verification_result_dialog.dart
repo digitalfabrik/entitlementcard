@@ -20,8 +20,8 @@ class PositiveVerificationResultDialog extends StatelessWidget {
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
-        var data = result.data;
-        var region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
+        final data = result.data;
+        final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
         return VerificationResultDialog(
           title: "Karte ist gültig",
           icon: Icons.verified_user,

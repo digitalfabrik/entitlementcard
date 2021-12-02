@@ -11,8 +11,8 @@ class Paragraph {
 List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
   return paragraphs
       .map((e) {
-        var title = e.title;
-        var content = e.content;
+        final title = e.title;
+        final content = e.content;
         return [
           if (title != null) Text(title, style: theme.textTheme.headline6),
           if (content != null) Text(content, style: theme.textTheme.bodyText1)
@@ -42,7 +42,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 
 List<Widget> getDataPrivacyText(BuildContext context) {
-  var content = const [
+  final content = const [
     Paragraph(
       content: '''
 Bei der Nutzung der App „Ehrenamtskarte“ für Smartphones und der Web-Application (zusammen „Apps“) erhebt die Tür an Tür – Digitalfabrik gGmbH (von nun an „Digitalfabrik“ oder „wir“) als Verantwortlicher Daten. In dieser Datenschutzerklärung erläutern wir, wie wir die erhobenen Daten verarbeiten. Personenbezogene Daten sind solche Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen.)
@@ -158,8 +158,8 @@ Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Lan
 
   return content
       .map((e) {
-        var title = e.title;
-        var content = e.content;
+        final title = e.title;
+        final content = e.content;
         return [
           if (title != null) Text(title, style: Theme.of(context).textTheme.headline6),
           if (content != null) Text(content, style: Theme.of(context).textTheme.bodyText1)

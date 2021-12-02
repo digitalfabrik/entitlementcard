@@ -28,13 +28,13 @@ class DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final contact = acceptingStore.store.contact;
-    var currentAccentColor = accentColor;
+    final currentAccentColor = accentColor;
     final readableOnAccentColor = currentAccentColor == null ? null : getReadableOnColor(currentAccentColor);
 
-    var storeDescription = acceptingStore.store.description;
-    var website = contact.website;
-    var telephone = contact.telephone;
-    var email = contact.email;
+    final storeDescription = acceptingStore.store.description;
+    final website = contact.website;
+    final telephone = contact.telephone;
+    final email = contact.email;
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),

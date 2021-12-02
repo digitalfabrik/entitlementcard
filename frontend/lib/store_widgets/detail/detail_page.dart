@@ -22,8 +22,8 @@ class DetailPage extends StatelessWidget {
     return Query(
       options: QueryOptions(document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
-        var exception = result.exception;
-        var data = result.data;
+        final exception = result.exception;
+        final data = result.data;
 
         if (result.hasException && exception != null) {
           return DetailErrorMessage(message: "Fehler beim Laden der Daten", refetch: refetch);

@@ -16,7 +16,7 @@ class FloatingActionMapBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _selectedAcceptingStoreId = selectedAcceptingStoreId;
+    final _selectedAcceptingStoreId = selectedAcceptingStoreId;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
