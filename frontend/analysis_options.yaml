@@ -16,7 +16,7 @@ analyzer:
     always_declare_return_types: error
     sort_child_properties_last: error
     directives_ordering: error
-#    prefer_if_elements_to_conditional_expressions: error
+    prefer_if_elements_to_conditional_expressions: error
 
 
 linter:
@@ -27,5 +27,5 @@ linter:
     - always_declare_return_types
     - sort_child_properties_last
     - directives_ordering
-#    - prefer_if_elements_to_conditional_expressions
+    - prefer_if_elements_to_conditional_expressions
 #    - avoid_redundant_argument_values: false

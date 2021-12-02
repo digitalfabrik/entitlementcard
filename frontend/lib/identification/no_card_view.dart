@@ -72,7 +72,7 @@ class NoCardView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  isLandscape ? const VerticalDivider(width: 80) : const Divider(height: 30),
+                  if (isLandscape) const VerticalDivider(width: 80) else const Divider(height: 30),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 300),
                     child: Column(
