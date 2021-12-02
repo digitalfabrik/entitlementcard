@@ -102,10 +102,13 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - install-dart-linux
+      - install-fvm-linux
       - run:
           name: Check Formatting
-          command: dart format -o none --set-exit-if-changed lib
+          command: dart format -l 120 -o none --set-exit-if-changed .
+      - run:
+          name: Check Analyzer and Linting
+          command: fvm flutter analyze --fatal-infos --fatal-warnings
 
   frontend-android-build:
     docker:
