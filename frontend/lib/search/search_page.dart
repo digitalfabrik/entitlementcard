@@ -60,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  _onCategoryPress(CategoryAsset asset, bool isSelected) {
+  void _onCategoryPress(CategoryAsset asset, bool isSelected) {
     setState(() {
       if (isSelected) {
         _selectedCategories.add(asset);

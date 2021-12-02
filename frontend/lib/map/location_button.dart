@@ -48,7 +48,7 @@ class _LocationButtonState extends State<LocationButton> {
     );
   }
 
-  _showFeatureDisabled() async {
+  Future<void> _showFeatureDisabled() async {
     final messengerState = ScaffoldMessenger.of(context);
     messengerState.showSnackBar(
       SnackBar(
@@ -64,7 +64,7 @@ class _LocationButtonState extends State<LocationButton> {
     );
   }
 
-  _determinePosition(SettingsModel settings) async {
+  Future<void> _determinePosition(SettingsModel settings) async {
     setState(() => _status = LocationPermissionStatus.requesting);
     final requestedPosition = await determinePosition(
       context,

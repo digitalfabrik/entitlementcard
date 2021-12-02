@@ -27,7 +27,7 @@ class EakCard extends StatelessWidget {
 
   const EakCard({Key? key, required this.cardDetails, this.region}) : super(key: key);
 
-  get _formattedExpirationDate {
+  String get _formattedExpirationDate {
     final expirationDate = cardDetails.expirationDate;
     return expirationDate != null ? DateFormat('dd.MM.yyyy').format(expirationDate) : "unbegrenzt";
   }

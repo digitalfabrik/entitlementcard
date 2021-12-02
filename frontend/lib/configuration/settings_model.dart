@@ -54,11 +54,11 @@ class SettingsModel extends ChangeNotifier {
     await _preferences?.setBool("location", enabled);
   }
 
-  get firstStart => _firstStart;
+  bool get firstStart => _firstStart;
 
-  get hideVerificationInfo => _hideVerificationInfo;
+  bool get hideVerificationInfo => _hideVerificationInfo;
 
-  get locationFeatureEnabled => _locationFeatureEnabled;
+  bool get locationFeatureEnabled => _locationFeatureEnabled;
 
   @override
   String toString() {

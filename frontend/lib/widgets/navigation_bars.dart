@@ -127,7 +127,7 @@ class _SliverSearchNavigationBarState extends State<SliverSearchNavigationBar> {
     textEditingController.dispose();
   }
 
-  _onSearchPressed() {
+  void _onSearchPressed() {
     if (focusNode.hasPrimaryFocus) {
       focusNode.nextFocus();
     } else {
@@ -135,11 +135,11 @@ class _SliverSearchNavigationBarState extends State<SliverSearchNavigationBar> {
     }
   }
 
-  _onSearchFieldTextChanged(String text) {
+  void _onSearchFieldTextChanged(String text) {
     widget.debouncer.run(() => widget.onChanged(text));
   }
 
-  _clearInput() {
+  void _clearInput() {
     textEditingController.clear();
     _onSearchFieldTextChanged(textEditingController.value.text);
   }

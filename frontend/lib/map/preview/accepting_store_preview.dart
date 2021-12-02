@@ -47,7 +47,7 @@ class AcceptingStorePreview extends StatelessWidget {
     );
   }
 
-  _convertToAcceptingStoreSummary(AcceptingStoreSummaryById$Query$PhysicalStore item) {
+  AcceptingStoreSummaryModel _convertToAcceptingStoreSummary(AcceptingStoreSummaryById$Query$PhysicalStore item) {
     return AcceptingStoreSummaryModel(
       item.id,
       item.store.name,

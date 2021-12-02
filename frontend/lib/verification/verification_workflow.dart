@@ -11,7 +11,7 @@ class VerificationWorkflow {
       VerificationWorkflow._().showInfoAndQrScanner(context, settings);
 
   Future<void> showInfoAndQrScanner(BuildContext rootContext, SettingsModel settings) async {
-    if (await settings.hideVerificationInfo != true) {
+    if (settings.hideVerificationInfo != true) {
       // show info dialog and cancel if it is not accepted
       if (await VerificationInfoDialog.show(rootContext) != true) return;
     }

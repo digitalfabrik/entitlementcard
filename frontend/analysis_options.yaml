@@ -1,4 +1,5 @@
 include: package:flutter_lints/flutter.yaml
+#include: package:lint/analysis_options.yaml
 
 analyzer:
   exclude:
@@ -12,10 +13,11 @@ analyzer:
     require_trailing_commas: error
     prefer_final_locals: error
     prefer_const_declarations: error
+    always_declare_return_types: error
 
 linter:
   rules:
-    public_member_api_docs: false
-    require_trailing_commas: true
-    prefer_final_locals: true
-    prefer_const_declarations: true
+    - require_trailing_commas
+    - prefer_final_locals
+    - prefer_const_declarations
+    - always_declare_return_types
