@@ -35,7 +35,8 @@ class IdentificationQrScannerPage extends StatelessWidget {
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
-      await showError( "Die eingescannte Karte enthält kein Ablauf-datum, "
+      await showError(
+        "Die eingescannte Karte enthält kein Ablauf-datum, "
         "obwohl dies für die blaue Ehrenamtskarte erforderlich"
         " ist. Vermutlich ist beim Erstellen der "
         "digitalen Ehrenamtskarte ein Fehler passiert.",

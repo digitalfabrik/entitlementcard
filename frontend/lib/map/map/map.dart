@@ -156,7 +156,8 @@ class _MapState extends State<Map> implements MapController {
     final rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
     final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
-    final features = jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
+    final features =
+        jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
     if (features.isNotEmpty) {
       final mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {

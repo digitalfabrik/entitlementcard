@@ -61,10 +61,13 @@ class CardDetailView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Flexible(child: eakCard),
-                        if (constraints.maxWidth > qrCodeMinWidth * 2) Flexible(child: richQrCode) else ConstrainedBox(
-                                constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
-                                child: richQrCode,
-                              )
+                        if (constraints.maxWidth > qrCodeMinWidth * 2)
+                          Flexible(child: richQrCode)
+                        else
+                          ConstrainedBox(
+                            constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
+                            child: richQrCode,
+                          )
                       ],
                     );
                   },

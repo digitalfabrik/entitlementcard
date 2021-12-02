@@ -97,14 +97,16 @@ Future<RequestedPosition> determinePosition(
 Future<LocationStatus> checkAndRequestLocationPermission(
   BuildContext context, {
   bool requestIfNotGranted = true,
-  String rationale = "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
+  String rationale =
+      "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
   final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
-      final bool? result = await showDialog<bool>(context: context, builder: (context) => const LocationServiceDialog());
+      final bool? result =
+          await showDialog<bool>(context: context, builder: (context) => const LocationServiceDialog());
       // TODO: Is this check correct? Both buttons in LocationServiceDialog return true
       if (result == true) {
         await Geolocator.openLocationSettings();
@@ -138,8 +140,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        final result =
-        await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
+        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
 
         if (result == true) {
           return checkAndRequestLocationPermission(
