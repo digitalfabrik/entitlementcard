@@ -160,5 +160,5 @@ linter:
     # Disabling because no auto fix available
     sort_pub_dependencies: false
 
-    # May enable later
+    # TODO: Enable in #435
     use_build_context_synchronously: false
