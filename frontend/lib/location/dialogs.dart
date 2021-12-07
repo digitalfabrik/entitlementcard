@@ -34,7 +34,7 @@ class RationaleDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(child: const Text("Berechtigung erteilen"), onPressed: () => Navigator.of(context).pop(true)),
-        TextButton(child: const Text("Abbrechen"), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: const Text("Abbrechen"), onPressed: () => Navigator.of(context).pop(false))
       ],
     );
   }

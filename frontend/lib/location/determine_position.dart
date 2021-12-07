@@ -107,7 +107,6 @@ Future<LocationStatus> checkAndRequestLocationPermission(
     if (requestIfNotGranted) {
       final bool? result =
           await showDialog<bool>(context: context, builder: (context) => const LocationServiceDialog());
-      // TODO: Is this check correct? Both buttons in LocationServiceDialog return true
       if (result == true) {
         await Geolocator.openLocationSettings();
       }
