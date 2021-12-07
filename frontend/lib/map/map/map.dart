@@ -161,11 +161,9 @@ class _MapState extends State<Map> implements MapController {
     if (features.isNotEmpty) {
       final mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {
-        final cA = a["geometry"]["coordinates"];
-        final cB = b["geometry"]["coordinates"];
-        // ignore: argument_type_not_assignable
+        final cA = a["geometry"]["coordinates"] as List<double>;
+        final cB = b["geometry"]["coordinates"] as List<double>;
         final dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) + math.pow(cA[1] - mapPoint.latitude, 2));
-        // ignore: argument_type_not_assignable
         final dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) + math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
