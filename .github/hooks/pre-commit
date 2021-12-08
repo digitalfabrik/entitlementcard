@@ -8,8 +8,13 @@
 FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.dart" | sed 's| |\\ |g')
 [ -z "$FILES" ] && exit 0
 
+if [ ! -x "$(command -v fvm)" ]; then
+  echo "You need to install fvm in order to commit and format files"
+  exit 1
+fi
+
 # Prettify all selected files
-echo "$FILES" | xargs dart format -l 120
+echo "$FILES" | xargs fvm flutter format -l 120
 
 # Add back the modified/prettified files to staging
 echo "$FILES" | xargs git add
