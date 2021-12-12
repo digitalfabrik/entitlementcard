@@ -15,7 +15,6 @@ analyzer:
     unused_import: error
 
     # Linting rules
-    always_declare_return_types: error
     always_require_non_null_named_parameters: error
     annotate_overrides: error
     avoid_bool_literals_in_conditional_expressions: error
@@ -155,6 +154,7 @@ analyzer:
 linter:
   rules:
     # Too strict rules
+    always_declare_return_types: false
     avoid_redundant_argument_values: false
 
     # Disabling because no auto fix available

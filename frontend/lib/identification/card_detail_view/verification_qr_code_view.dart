@@ -33,7 +33,7 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
     _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
   }
 
-  void _resetQrCode() {
+  _resetQrCode() {
     setState(() {
       _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
     });
