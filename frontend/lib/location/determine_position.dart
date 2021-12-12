@@ -1,9 +1,6 @@
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-import 'package:provider/provider.dart';
 
 import 'dialogs.dart';
 
@@ -66,21 +63,23 @@ class RequestedPosition {
 
   LatLng? toLatLng() {
     final currentPosition = position;
-    return currentPosition != null
-        ? LatLng(currentPosition.latitude, currentPosition.longitude)
-        : null;
+    return currentPosition != null ? LatLng(currentPosition.latitude, currentPosition.longitude) : null;
   }
 }
 
 /// Determine the current position of the device.
-Future<RequestedPosition> determinePosition(BuildContext context,
-    {bool requestIfNotGranted = false,
-    Future<void> Function()? onDisableFeature,
-    Future<void> Function()? onEnableFeature}) async {
-  final permission = await checkAndRequestLocationPermission(context,
-      requestIfNotGranted: requestIfNotGranted,
-      onDisableFeature: onDisableFeature,
-      onEnableFeature: onEnableFeature);
+Future<RequestedPosition> determinePosition(
+  BuildContext context, {
+  bool requestIfNotGranted = false,
+  Future<void> Function()? onDisableFeature,
+  Future<void> Function()? onEnableFeature,
+}) async {
+  final permission = await checkAndRequestLocationPermission(
+    context,
+    requestIfNotGranted: requestIfNotGranted,
+    onDisableFeature: onDisableFeature,
+    onEnableFeature: onEnableFeature,
+  );
 
   if (!permission.isPermissionGranted()) {
     return RequestedPosition.unknown();
@@ -95,19 +94,20 @@ Future<RequestedPosition> determinePosition(BuildContext context,
 /// Ensures all preconditions needed to determine the current position.
 /// If needed, location permissions are requested.
 ///
-Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
-    {bool requestIfNotGranted = true,
-    rationale =
-        "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
-    Future<void> Function()? onDisableFeature,
-    Future<void> Function()? onEnableFeature}) async {
-  var serviceEnabled = await Geolocator.isLocationServiceEnabled();
+Future<LocationStatus> checkAndRequestLocationPermission(
+  BuildContext context, {
+  bool requestIfNotGranted = true,
+  String rationale =
+      "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
+  Future<void> Function()? onDisableFeature,
+  Future<void> Function()? onEnableFeature,
+}) async {
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
-      final result = await showDialog(
-          context: context,
-          builder: (context) => const LocationServiceDialog());
-      if (result) {
+      final bool? result =
+          await showDialog<bool>(context: context, builder: (context) => const LocationServiceDialog());
+      if (result == true) {
         await Geolocator.openLocationSettings();
       }
     }
@@ -118,7 +118,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
   }
 
   if (requestIfNotGranted) {
-    var permission = await Geolocator.checkPermission();
+    final permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
@@ -139,15 +139,14 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        if (rationale != null) {
-          final result = await showDialog(
-              context: context,
-              builder: (context) => RationaleDialog(rationale: rationale));
+        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
 
-          if (result ?? false) {
-            return await checkAndRequestLocationPermission(context,
-                requestIfNotGranted: requestIfNotGranted, rationale: rationale);
-          }
+        if (result == true) {
+          return checkAndRequestLocationPermission(
+            context,
+            requestIfNotGranted: requestIfNotGranted,
+            rationale: rationale,
+          );
         }
 
         return LocationPermission.denied.toLocationStatus();
@@ -161,7 +160,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
         return LocationPermission.deniedForever.toLocationStatus();
       }
 
-      var status = requestResult.toLocationStatus();
+      final status = requestResult.toLocationStatus();
 
       if (status.isPermissionGranted() && onEnableFeature != null) {
         await onEnableFeature();
@@ -170,14 +169,14 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
       return status;
     }
 
-    var status = permission.toLocationStatus();
+    final status = permission.toLocationStatus();
     if (status.isPermissionGranted() && onEnableFeature != null) {
       await onEnableFeature();
     }
     return status;
   } else {
-    var permission = await Geolocator.checkPermission();
-    var status = permission.toLocationStatus();
+    final permission = await Geolocator.checkPermission();
+    final status = permission.toLocationStatus();
     if (status.isPermissionGranted() && onEnableFeature != null) {
       await onEnableFeature();
     }
@@ -185,7 +184,6 @@ Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,
   }
 }
 
-Future<void> openSettingsToGrantPermissions(
-    BuildContext userInteractContext) async {
+Future<void> openSettingsToGrantPermissions(BuildContext userInteractContext) async {
   await Geolocator.openAppSettings();
 }

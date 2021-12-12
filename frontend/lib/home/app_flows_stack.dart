@@ -7,9 +7,7 @@ class AppFlowsStack extends StatelessWidget {
   final int currentIndex;
   final List<AppFlow> appFlows;
 
-  const AppFlowsStack(
-      {Key? key, required this.currentIndex, required this.appFlows})
-      : super(key: key);
+  const AppFlowsStack({Key? key, required this.currentIndex, required this.appFlows}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +27,23 @@ class AppFlowsStack extends StatelessWidget {
   List<Widget> _buildChildren() {
     return appFlows
         .asMap()
-        .map((index, appFlow) => MapEntry(
-            index, _buildChildForAppFlow(appFlow, index == currentIndex)))
+        .map((index, appFlow) => MapEntry(index, _buildChildForAppFlow(appFlow, index == currentIndex)))
         .values
         .toList(growable: false);
   }
 
   Widget _buildChildForAppFlow(AppFlow appFlow, bool isCurrentAppFlow) {
     return Focus(
-        key: ValueKey(appFlow),
-        child: _buildNavigatorForAppFlow(appFlow),
-        descendantsAreFocusable: isCurrentAppFlow);
+      key: ValueKey(appFlow),
+      descendantsAreFocusable: isCurrentAppFlow,
+      child: _buildNavigatorForAppFlow(appFlow),
+    );
   }
 
   Widget _buildNavigatorForAppFlow(AppFlow appFlow) {
     return Navigator(
       key: appFlow.navigatorKey,
-      onGenerateRoute: (settings) =>
-          AppRoute(settings: settings, builder: (context) => appFlow.widget),
+      onGenerateRoute: (settings) => AppRoute(settings: settings, builder: (context) => appFlow.widget),
     );
   }
 }

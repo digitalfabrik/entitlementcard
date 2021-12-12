@@ -1,7 +1,4 @@
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'qr_code_processor.dart';
 import 'qr_code_scanner.dart';
@@ -16,12 +13,12 @@ class QrCodeScannerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return QrCodeScanner(
-      onCodeScanned: (code) async => await _onCodeScanned(context, code),
+      onCodeScanned: (code) async => _onCodeScanned(context, code),
     );
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
-    var currentOnCodeScanned = onCodeScanned;
+    final currentOnCodeScanned = onCodeScanned;
     try {
       if (currentOnCodeScanned != null) {
         await currentOnCodeScanned(code);

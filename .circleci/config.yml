@@ -43,8 +43,8 @@ commands:
       - run:
           name: Install Dart
           command: |
-            wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.14.4-1_amd64.deb
-            sudo dpkg -i dart_2.14.4-1_amd64.deb
+            wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.15.0-1_amd64.deb
+            sudo dpkg -i dart_2.15.0-1_amd64.deb
   install-fvm-linux:
     steps:
       - install-dart-linux
@@ -102,10 +102,13 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - install-dart-linux
+      - install-fvm-linux
       - run:
           name: Check Formatting
-          command: dart format -o none --set-exit-if-changed lib
+          command: dart format -l 120 -o none --set-exit-if-changed .
+      - run:
+          name: Check Analyzer and Linting
+          command: fvm flutter analyze --fatal-infos --fatal-warnings
 
   frontend-android-build:
     docker:

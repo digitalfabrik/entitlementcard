@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
@@ -25,45 +23,39 @@ class IntroScreenState extends State<IntroScreen> {
     slides.clear();
     slides.add(
       Slide(
-          title: "Willkommen!",
-          description: "Vielen Dank, dass Sie sich die App zur "
-              "Bayerischen Ehrenamtskarte heruntergeladen haben!",
-          pathImage: "assets/icon/icon_foreground.png",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
-          maxLineTitle: 3,
-          styleTitle: theme.textTheme.headline5,
-          styleDescription:
-              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
+        title: "Willkommen!",
+        description: "Vielen Dank, dass Sie sich die App zur "
+            "Bayerischen Ehrenamtskarte heruntergeladen haben!",
+        pathImage: "assets/icon/icon_foreground.png",
+        backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
+        maxLineTitle: 3,
+        styleTitle: theme.textTheme.headline5,
+        styleDescription: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2),
+      ),
     );
     slides.add(
       Slide(
-          title: "Wo kann ich meine Ehrenamtskarte nutzen?",
-          description:
-              "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
-              " finden. Tippen Sie auf einen Standort, um mehr Informationen "
-              "sehen zu können.",
-          pathImage: "assets/intro_slides/map_zoom.jpeg",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
-          maxLineTitle: 3,
-          styleTitle: theme.textTheme.headline5,
-          styleDescription:
-              theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2)),
+        title: "Wo kann ich meine Ehrenamtskarte nutzen?",
+        description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
+            " finden. Tippen Sie auf einen Standort, um mehr Informationen "
+            "sehen zu können.",
+        pathImage: "assets/intro_slides/map_zoom.jpeg",
+        backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
+        maxLineTitle: 3,
+        styleTitle: theme.textTheme.headline5,
+        styleDescription: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2),
+      ),
     );
     slides.add(
       Slide(
-          title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-          backgroundColor: theme.brightness == Brightness.light
-              ? const Color(0xffECECEC)
-              : theme.backgroundColor,
-          maxLineTitle: 3,
-          styleTitle: theme.textTheme.headline5,
-          pathImage: "assets/intro_slides/search_with_location.png",
-          widgetDescription: Center(
-            child: Column(children: [
+        title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
+        backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
+        maxLineTitle: 3,
+        styleTitle: theme.textTheme.headline5,
+        pathImage: "assets/intro_slides/search_with_location.png",
+        widgetDescription: Center(
+          child: Column(
+            children: [
               Text(
                 "Wir können Ihren Standort auf der Karte anzeigen"
                 " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
@@ -78,13 +70,15 @@ class IntroScreenState extends State<IntroScreen> {
                 padding: EdgeInsets.all(15),
                 child: LocationRequestButton(),
               )
-            ]),
-          )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   void onDonePress() {
-    var onFinishedCallback = widget.onFinishedCallback;
+    final onFinishedCallback = widget.onFinishedCallback;
     if (onFinishedCallback != null) {
       onFinishedCallback();
     }
@@ -102,12 +96,8 @@ class IntroScreenState extends State<IntroScreen> {
       renderPrevBtn: const Text("Zurück"),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       showSkipBtn: false,
-      colorDot: Theme.of(context).brightness == Brightness.light
-          ? Colors.black54
-          : Colors.white38,
-      colorActiveDot: Theme.of(context).brightness == Brightness.light
-          ? Colors.black
-          : Colors.white,
+      colorDot: Theme.of(context).brightness == Brightness.light ? Colors.black54 : Colors.white38,
+      colorActiveDot: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
     );
   }
 }

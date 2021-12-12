@@ -47,36 +47,39 @@ class _VerificationQrCodeViewState extends State<VerificationQrCodeView> {
       return const SmallButtonSpinner();
     }
 
-    var time = DateTime.now().millisecondsSinceEpoch;
+    final time = DateTime.now().millisecondsSinceEpoch;
     final animationDuration = otpCode.validUntilMilliSeconds - time;
-    return LayoutBuilder(builder: (context, constraints) {
-      var padding =
-          min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
-      return Consumer<CardDetailsModel>(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
+        return Consumer<CardDetailsModel>(
           builder: (context, cardDetailsModel, child) {
-        return ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
-            child: Material(
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
+              child: Material(
                 clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(padding / 2)),
-                child: Stack(children: [
-                  Padding(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding / 2)),
+                child: Stack(
+                  children: [
+                    Padding(
                       padding: EdgeInsets.all(padding),
                       child: QrImage(
-                          data: encodeVerificationCardDetails(
-                              VerificationCardDetails(
-                                  widget.cardDetails, otpCode.code)),
-                          version: QrVersions.auto,
-                          foregroundColor:
-                              Theme.of(context).textTheme.bodyText2?.color,
-                          gapless: false)),
-                  Positioned.fill(
-                      child: AnimatedProgressbar(
-                          initialProgress:
-                              Duration(milliseconds: animationDuration))),
-                ])));
-      });
-    });
+                        data: encodeVerificationCardDetails(VerificationCardDetails(widget.cardDetails, otpCode.code)),
+                        version: QrVersions.auto,
+                        foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
+                        gapless: false,
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: AnimatedProgressbar(initialProgress: Duration(milliseconds: animationDuration)),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

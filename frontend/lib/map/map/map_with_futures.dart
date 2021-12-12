@@ -9,26 +9,25 @@ class MapWithFutures extends StatelessWidget {
   final OnMapCreatedCallback onMapCreated;
   final List<String> onFeatureClickLayerFilter;
 
-  const MapWithFutures(
-      {Key? key,
-      required this.onNoFeatureClick,
-      required this.onFeatureClick,
-      required this.onFeatureClickLayerFilter,
-      required this.onMapCreated})
-      : super(key: key);
+  const MapWithFutures({
+    Key? key,
+    required this.onNoFeatureClick,
+    required this.onFeatureClick,
+    required this.onFeatureClickLayerFilter,
+    required this.onMapCreated,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: determinePosition(context, requestIfNotGranted: false).timeout(
-          const Duration(milliseconds: 400),
-          onTimeout: () => RequestedPosition.unknown()),
+      future: determinePosition(context, requestIfNotGranted: false)
+          .timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition.unknown()),
       builder: (context, AsyncSnapshot<RequestedPosition> snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
           return const Center();
         }
 
-        var position = snapshot.data;
+        final position = snapshot.data;
 
         return Map(
           onFeatureClick: onFeatureClick,

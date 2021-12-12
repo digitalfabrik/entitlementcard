@@ -17,83 +17,80 @@ class AcceptingStoreSummary extends StatelessWidget {
   final bool showMapButtonOnDetails;
   final bool showLocation;
 
-  const AcceptingStoreSummary(
-      {Key? key,
-      required this.store,
-      this.coordinates,
-      required this.showMapButtonOnDetails,
-      this.showLocation = true,
-      this.wideDepictionThreshold = 400})
-      : super(key: key);
+  const AcceptingStoreSummary({
+    Key? key,
+    required this.store,
+    this.coordinates,
+    required this.showMapButtonOnDetails,
+    this.showLocation = true,
+    this.wideDepictionThreshold = 400,
+  }) : super(key: key);
 
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
   double? get _distance {
-    var storedCoordinates = store.coordinates;
-    var currentCoordinates = coordinates;
+    final storedCoordinates = store.coordinates;
+    final currentCoordinates = coordinates;
     if (currentCoordinates == null || storedCoordinates == null) return null;
-    return calcDistance(currentCoordinates.lat, currentCoordinates.lng,
-        storedCoordinates.lat, storedCoordinates.lng);
+    return calcDistance(currentCoordinates.lat, currentCoordinates.lng, storedCoordinates.lat, storedCoordinates.lng);
   }
 
   @override
   Widget build(BuildContext context) {
-    final itemCategoryAsset = store.categoryId < categoryAssets.length
-        ? categoryAssets[store.categoryId]
-        : null;
+    final itemCategoryAsset = store.categoryId < categoryAssets.length ? categoryAssets[store.categoryId] : null;
     final categoryName = itemCategoryAsset?.name ?? "Unbekannte Kategorie";
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
-    var currentDistance = _distance;
+    final currentDistance = _distance;
     return SafeArea(
       bottom: false,
       top: false,
       child: InkWell(
-          onTap: () {
-            _openDetailView(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              children: [
-                if (useWideDepiction)
-                  CategoryIconIndicator(
-                    svgIconPath: itemCategoryAsset?.icon,
-                    categoryName: categoryName,
-                  )
-                else
-                  CategoryColorIndicator(categoryColor: categoryColor),
-                StoreTextOverview(
-                  store: store,
-                  showTownName: currentDistance == null && showLocation,
+        onTap: () {
+          _openDetailView(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            children: [
+              if (useWideDepiction)
+                CategoryIconIndicator(
+                  svgIconPath: itemCategoryAsset?.icon,
+                  categoryName: categoryName,
+                )
+              else
+                CategoryColorIndicator(categoryColor: categoryColor),
+              StoreTextOverview(
+                store: store,
+                showTownName: currentDistance == null && showLocation,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    if (currentDistance != null) DistanceText(distance: currentDistance),
+                    SizedBox(
+                      height: double.infinity,
+                      child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
+                    ),
+                  ],
                 ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      children: [
-                        if (currentDistance != null)
-                          DistanceText(distance: currentDistance),
-                        SizedBox(
-                            child: Icon(Icons.keyboard_arrow_right,
-                                size: 30.0,
-                                color: Theme.of(context).disabledColor),
-                            height: double.infinity),
-                      ],
-                    ))
-              ],
-            ),
-          )),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   void _openDetailView(BuildContext context) {
     Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => DetailPage(store.id,
-              hideShowOnMapButton: !showMapButtonOnDetails),
-        ));
+      context,
+      AppRoute(
+        builder: (context) => DetailPage(store.id, hideShowOnMapButton: !showMapButtonOnDetails),
+      ),
+    );
   }
 }
 
@@ -102,21 +99,20 @@ class CategoryIconIndicator extends StatelessWidget {
   final String categoryName;
   final EdgeInsets padding;
 
-  const CategoryIconIndicator(
-      {Key? key,
-      required this.svgIconPath,
-      required this.categoryName,
-      this.padding = const EdgeInsets.symmetric(horizontal: 16)})
-      : super(key: key);
+  const CategoryIconIndicator({
+    Key? key,
+    required this.svgIconPath,
+    required this.categoryName,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var currentSvgIconPath = svgIconPath;
+    final currentSvgIconPath = svgIconPath;
     return Padding(
       padding: padding,
       child: currentSvgIconPath != null
-          ? SvgPicture.asset(currentSvgIconPath,
-              width: 30, semanticsLabel: categoryName)
+          ? SvgPicture.asset(currentSvgIconPath, width: 30, semanticsLabel: categoryName)
           : const Icon(
               Icons.info,
               size: 30,
@@ -128,8 +124,7 @@ class CategoryIconIndicator extends StatelessWidget {
 class CategoryColorIndicator extends StatelessWidget {
   final Color? categoryColor;
 
-  const CategoryColorIndicator({Key? key, this.categoryColor})
-      : super(key: key);
+  const CategoryColorIndicator({Key? key, this.categoryColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -147,30 +142,32 @@ class StoreTextOverview extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
   final bool showTownName;
 
-  const StoreTextOverview(
-      {Key? key, required this.store, this.showTownName = false})
-      : super(key: key);
+  const StoreTextOverview({Key? key, required this.store, this.showTownName = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var location = store.location;
+    final location = store.location;
     return Expanded(
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(store.name ?? "Akzeptanzstelle",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1),
-            const SizedBox(height: 4),
-            Text(store.description ?? "Keine Beschreibung verfügbar",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText2),
-            if (showTownName && location != null)
-              Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
-          ]),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            store.name ?? "Akzeptanzstelle",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            store.description ?? "Keine Beschreibung verfügbar",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
+        ],
+      ),
     );
   }
 }
@@ -193,8 +190,7 @@ class DistanceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(_formatDistance(distance),
-          maxLines: 1, style: Theme.of(context).textTheme.bodyText2),
+      child: Text(_formatDistance(distance), maxLines: 1, style: Theme.of(context).textTheme.bodyText2),
     );
   }
 }
@@ -207,8 +203,7 @@ double calcDistance(double lat1, double lng1, double lat2, double lng2) {
   final deltaPhi = (lat2 - lat1) * pi / 180;
   final deltaLambda = (lng2 - lng1) * pi / 180;
 
-  final a = sin(deltaPhi / 2) * sin(deltaPhi / 2) +
-      cos(phi1) * cos(phi2) * sin(deltaLambda / 2) * sin(deltaLambda / 2);
+  final a = sin(deltaPhi / 2) * sin(deltaPhi / 2) + cos(phi1) * cos(phi2) * sin(deltaLambda / 2) * sin(deltaLambda / 2);
   final c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
   return R * c; // in metres

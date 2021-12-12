@@ -21,18 +21,14 @@ Future<void> saveCardDetails(CardDetails? cardDetails) async {
     await Future.wait([
       storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
       storage.write(key: fullNameKey, value: cardDetails.fullName),
-      storage.write(
-          key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
+      storage.write(key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
-          key: unixExpirationDateKey,
-          value: cardDetails.unixExpirationDate != null
-              ? cardDetails.unixExpirationDate.toString()
-              : "0"),
-      storage.write(
-          key: cardTypeKey, value: cardDetails.cardType.index.toString()),
-      storage.write(
-          key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
+        key: unixExpirationDateKey,
+        value: cardDetails.unixExpirationDate != null ? cardDetails.unixExpirationDate.toString() : "0",
+      ),
+      storage.write(key: cardTypeKey, value: cardDetails.cardType.index.toString()),
+      storage.write(key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),
     ]);
   } else {
     await Future.wait([
@@ -53,14 +49,23 @@ Future<CardDetails?> loadCardDetails() async {
   }
   final dataVersion = int.parse(storedDataVersion);
   if (dataVersion != currentDataVersion) {
-    throw Exception("Can't load data because the versions don't match. "
-        "Stored version: $dataVersion, "
-        "current version $currentDataVersion");
+    throw Exception(
+      "Can't load data because the versions don't match. "
+      "Stored version: $dataVersion, "
+      "current version $currentDataVersion",
+    );
   }
-  final fullName = await storage.read(key: fullNameKey);
-  final hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+  final String? fullName = await storage.read(key: fullNameKey);
+  if (fullName == null) {
+    throw Exception("Can't load full name.");
+  }
 
-  var storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
+  final String? hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
+  if (hashSecretBase64 == null) {
+    throw Exception("Can't load hash secret.");
+  }
+
+  final storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
   if (storedUnixExpirationDate == null) {
     throw Exception("Can't load expiration date.");
   }
@@ -82,6 +87,5 @@ Future<CardDetails?> loadCardDetails() async {
     throw Exception("Can't load totp secret.");
   }
 
-  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType,
-      regionId, totpSecret);
+  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId, totpSecret);
 }

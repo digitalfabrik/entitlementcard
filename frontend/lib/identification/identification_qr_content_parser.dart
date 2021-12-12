@@ -39,7 +39,7 @@ class IdentificationQrContentParser {
 
     CardActivateModel cardActivateModel;
     try {
-      var rawProtobufData = base64Decoder.convert(rawBase64Content);
+      final rawProtobufData = base64Decoder.convert(rawBase64Content);
       cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);
@@ -62,8 +62,7 @@ class IdentificationQrContentParser {
       }
     }
 
-    if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD &&
-        unixExpirationDate == null) {
+    if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD && unixExpirationDate == null) {
       throw QRCodeMissingExpiryException();
     }
 
@@ -73,19 +72,19 @@ class IdentificationQrContentParser {
     }
     String? base32TotpSecret;
     try {
-      base32TotpSecret =
-          base32.encode(Uint8List.fromList(cardActivateModel.totpSecret));
+      base32TotpSecret = base32.encode(Uint8List.fromList(cardActivateModel.totpSecret));
     } on Exception catch (_) {
       throw QRCodeInvalidTotpSecretException();
     }
 
     final cardDetails = CardDetails(
-        cardActivateModel.fullName,
-        const Base64Encoder().convert(cardActivateModel.hashSecret),
-        unixExpirationDate,
-        cardType,
-        cardActivateModel.regionId,
-        base32TotpSecret);
+      cardActivateModel.fullName,
+      const Base64Encoder().convert(cardActivateModel.hashSecret),
+      unixExpirationDate,
+      cardType,
+      cardActivateModel.regionId,
+      base32TotpSecret,
+    );
     _cardDetailsModel.setCardDetails(cardDetails);
   }
 }

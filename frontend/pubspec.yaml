@@ -60,6 +60,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  collection: ^1.15.0
+  meta: ^1.7.0
+  http: ^0.13.4
+  equatable: ^2.0.3
+  fixnum: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -72,10 +77,8 @@ dev_dependencies:
   # graphQL type generation
   artemis: '>=6.0.0' # only if you're using ArtemisClient!
   json_annotation: ^4.1.0
-  equatable: ^2.0.3
-  meta: '>=1.0.0 <2.0.0' # only if you have non nullable fields
   gql: '>=0.12.3 <1.0.0'
-  flutter_lints: ^1.0.4
+  lint: ^1.7.2
 
 flutter_icons:
   android: 'launcher_icon'

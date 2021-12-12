@@ -8,7 +8,7 @@ class AttributionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var color = Theme.of(context).colorScheme.primary;
+    final color = Theme.of(context).colorScheme.primary;
     return SimpleDialog(
       title: const Text('Kartendaten'),
       children: [

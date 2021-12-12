@@ -14,18 +14,23 @@ class OTPGenerator {
   OTPCode generateOTP([VoidCallback? onTimeout]) {
     final time = DateTime.now().millisecondsSinceEpoch;
     const intervalMilliSeconds = _otpIntervalSeconds * 1000;
-    final validUntilMilliSeconds =
-        (time ~/ intervalMilliSeconds + 1) * intervalMilliSeconds;
+    final validUntilMilliSeconds = (time ~/ intervalMilliSeconds + 1) * intervalMilliSeconds;
     if (onTimeout != null) {
       Timer(Duration(milliseconds: validUntilMilliSeconds - time), onTimeout);
     }
     return OTPCode(
-        int.parse(OTP.generateTOTPCodeString(_base32TotpSecret, time,
-            algorithm: _algorithm,
-            length: _otpLength,
-            interval: _otpIntervalSeconds,
-            isGoogle: true)),
-        validUntilMilliSeconds);
+      int.parse(
+        OTP.generateTOTPCodeString(
+          _base32TotpSecret,
+          time,
+          algorithm: _algorithm,
+          length: _otpLength,
+          interval: _otpIntervalSeconds,
+          isGoogle: true,
+        ),
+      ),
+      validUntilMilliSeconds,
+    );
   }
 }
 

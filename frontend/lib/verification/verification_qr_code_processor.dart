@@ -15,16 +15,15 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
     throw QrCodeFieldMissingException("fullName");
   }
   if (baseCardDetails.unixExpirationDate == null &&
-      baseCardDetails.cardType.index ==
-          CardActivateModel_CardType.STANDARD.value) {
+      baseCardDetails.cardType.index == CardActivateModel_CardType.STANDARD.value) {
     throw QrCodeFieldMissingException("expirationDate");
   }
   if (baseCardDetails.hashSecretBase64.isEmpty) {
     throw QrCodeFieldMissingException("hashSecretBase64");
   }
-  var expirationDate = baseCardDetails.expirationDate;
+  final expirationDate = baseCardDetails.expirationDate;
   if (expirationDate != null) {
-    var now = DateTime.now();
+    final now = DateTime.now();
     if (expirationDate.isBefore(now)) {
       throw CardExpiredException(expirationDate);
     }

@@ -16,52 +16,25 @@ export 'card_activate_model.pbenum.dart';
 
 class CardActivateModel extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'CardActivateModel',
+      const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CardActivateModel',
       createEmptyInstance: create)
-    ..aOS(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'fullName',
-        protoName: 'fullName')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'expirationDate',
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fullName', protoName: 'fullName')
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expirationDate',
         protoName: 'expirationDate')
     ..e<CardActivateModel_CardType>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'cardType',
-        $pb.PbFieldType.OE,
+        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cardType', $pb.PbFieldType.OE,
         protoName: 'cardType',
         defaultOrMaker: CardActivateModel_CardType.STANDARD,
         valueOf: CardActivateModel_CardType.valueOf,
         enumValues: CardActivateModel_CardType.values)
     ..a<$core.int>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'regionId',
-        $pb.PbFieldType.O3,
+        4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'regionId', $pb.PbFieldType.O3,
         protoName: 'regionId')
     ..a<$core.List<$core.int>>(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'totpSecret',
-        $pb.PbFieldType.OY,
+        5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'totpSecret', $pb.PbFieldType.OY,
         protoName: 'totpSecret')
     ..a<$core.List<$core.int>>(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'hashSecret',
-        $pb.PbFieldType.OY,
+        6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hashSecret', $pb.PbFieldType.OY,
         protoName: 'hashSecret')
     ..hasRequiredFields = false;
 
@@ -98,8 +71,7 @@ class CardActivateModel extends $pb.GeneratedMessage {
   factory CardActivateModel.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory CardActivateModel.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+  factory CardActivateModel.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
@@ -115,11 +87,10 @@ class CardActivateModel extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static CardActivateModel create() => CardActivateModel._();
   CardActivateModel createEmptyInstance() => create();
-  static $pb.PbList<CardActivateModel> createRepeated() =>
-      $pb.PbList<CardActivateModel>();
+  static $pb.PbList<CardActivateModel> createRepeated() => $pb.PbList<CardActivateModel>();
   @$core.pragma('dart2js:noInline')
-  static CardActivateModel getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CardActivateModel>(create);
+  static CardActivateModel getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardActivateModel>(create);
   static CardActivateModel? _defaultInstance;
 
   @$pb.TagNumber(1)

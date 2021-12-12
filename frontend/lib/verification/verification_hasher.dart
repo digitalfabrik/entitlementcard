@@ -6,12 +6,8 @@ import 'package:crypto/crypto.dart';
 import '../identification/base_card_details.dart';
 import 'verification_card_details.dart';
 
-String hashVerificationCardDetails(
-    VerificationCardDetails verificationCardDetails) {
-  final hasher = Hmac(
-      sha256,
-      const Base64Decoder()
-          .convert(verificationCardDetails.cardDetails.hashSecretBase64));
+String hashVerificationCardDetails(VerificationCardDetails verificationCardDetails) {
+  final hasher = Hmac(sha256, const Base64Decoder().convert(verificationCardDetails.cardDetails.hashSecretBase64));
 
   final byteList = cardDetailsToBinary(verificationCardDetails.cardDetails);
   final result = hasher.convert(byteList);
@@ -19,9 +15,9 @@ String hashVerificationCardDetails(
 }
 
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
-  var buffer = Uint8List(16).buffer;
-  var data = ByteData.view(buffer);
-  var unixExpirationDate = cardDetails.unixExpirationDate;
+  final buffer = Uint8List(16).buffer;
+  final data = ByteData.view(buffer);
+  final unixExpirationDate = cardDetails.unixExpirationDate;
   if (unixExpirationDate != null) {
     data.setInt64(0, unixExpirationDate, Endian.little);
   }

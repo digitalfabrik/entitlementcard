@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'map/map_controller.dart';
@@ -20,11 +19,7 @@ class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
   final void Function(int? id) selectAcceptingStore;
 
-  const MapPage(
-      {Key? key,
-      required this.onMapCreated,
-      required this.selectAcceptingStore})
-      : super(key: key);
+  const MapPage({Key? key, required this.onMapCreated, required this.selectAcceptingStore}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -45,23 +40,24 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      MapWithFutures(
-        onFeatureClick: _onFeatureClick,
-        onNoFeatureClick: stopShowingAcceptingStore,
-        onFeatureClickLayerFilter: const ["physical_stores"],
-        onMapCreated: (controller) {
-          controller.setTelemetryEnabled(enabled: false);
-          setState(() => _controller = controller);
-          widget.onMapCreated(this);
-        },
-      ),
-    ]);
+    return Stack(
+      children: [
+        MapWithFutures(
+          onFeatureClick: _onFeatureClick,
+          onNoFeatureClick: stopShowingAcceptingStore,
+          onFeatureClickLayerFilter: const ["physical_stores"],
+          onMapCreated: (controller) {
+            controller.setTelemetryEnabled(enabled: false);
+            setState(() => _controller = controller);
+            widget.onMapCreated(this);
+          },
+        ),
+      ],
+    );
   }
 
   @override
-  Future<void> showAcceptingStore(PhysicalStoreFeatureData data,
-      {bool selectedAcceptingStoreInMap = false}) async {
+  Future<void> showAcceptingStore(PhysicalStoreFeatureData data, {bool selectedAcceptingStoreInMap = false}) async {
     final controller = _controller;
 
     if (controller == null) {
@@ -70,9 +66,9 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
     widget.selectAcceptingStore(data.id);
 
-    var coordinates = data.coordinates;
+    final coordinates = data.coordinates;
     if (coordinates != null) {
-      var categoryId = data.categoryId;
+      final categoryId = data.categoryId;
       if (categoryId != null) {
         await controller.setSymbol(coordinates, categoryId);
       }
@@ -97,11 +93,9 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   }
 
   Future<void> _onFeatureClick(dynamic feature) async =>
-      showAcceptingStore(_extractPhysicalStoreData(feature),
-          selectedAcceptingStoreInMap: true);
+      showAcceptingStore(_extractPhysicalStoreData(feature), selectedAcceptingStoreInMap: true);
 
-  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) =>
-      PhysicalStoreFeatureData(
+  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) => PhysicalStoreFeatureData(
         _getIntOrNull(feature["properties"]["id"]),
         _getLatLngOrNull(feature["geometry"]["coordinates"]),
         _getIntOrNull(feature["properties"]["categoryId"]),
@@ -111,8 +105,11 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   LatLng? _getLatLngOrNull(dynamic coordinates) {
     if (coordinates is! List) return null;
-    if (!(coordinates[0] is double && coordinates[1] is double)) return null;
-    return LatLng(coordinates[1], coordinates[0]);
+    final lat = coordinates[1];
+    final lng = coordinates[0];
+    if (lat is! double || lng is! double) return null;
+
+    return LatLng(lat, lng);
   }
 
   @override
@@ -123,7 +120,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       return;
     }
 
-    var position = data.position;
+    final position = data.position;
     if (position != null) {
       await controller.bringCameraToUser(position);
     }

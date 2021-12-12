@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -13,8 +12,7 @@ typedef OnCodeScannedCallback = Future<void> Function(String code);
 class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
 
-  const QrCodeScanner({Key? key, required this.onCodeScanned})
-      : super(key: key);
+  const QrCodeScanner({Key? key, required this.onCodeScanned}) : super(key: key);
 
   @override
   State<QrCodeScanner> createState() => _QRViewState();
@@ -46,21 +44,21 @@ class _QRViewState extends State<QrCodeScanner> {
         ),
         if (controller != null)
           Expanded(
-              flex: 1,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child:
-                          const Text('Halten Sie die Kamera auf den QR Code.'),
-                    ),
-                    QrCodeScannerControls(controller: controller)
-                  ],
-                ),
-              ))
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                  ),
+                  QrCodeScannerControls(controller: controller)
+                ],
+              ),
+            ),
+          )
       ],
     );
   }
@@ -71,7 +69,7 @@ class _QRViewState extends State<QrCodeScanner> {
 
     // QR-Codes in the scan area can be smaller than the scan area itself
     // If the scan area is too small big qr codes stop working on iOS
-    var scanArea = 300.0;
+    const scanArea = 300.0;
     final smallestDimension = min(deviceWidth, deviceHeight);
     if (smallestDimension < scanArea * 1.1) {
       return smallestDimension * 0.9;
@@ -86,9 +84,9 @@ class _QRViewState extends State<QrCodeScanner> {
     controller.scannedDataStream.listen(_onCodeScanned);
   }
 
-  void _onCodeScanned(Barcode scanData) async {
+  Future<void> _onCodeScanned(Barcode scanData) async {
     final controller = _controller;
-    var code = scanData.code;
+    final code = scanData.code;
     if (controller == null) {
       return;
     }

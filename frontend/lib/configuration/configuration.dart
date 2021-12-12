@@ -23,8 +23,7 @@ class Configuration extends InheritedWidget {
       showDevSettings != oldWidget.showDevSettings;
 
   static Configuration of(BuildContext context) {
-    var configuration =
-        context.dependOnInheritedWidgetOfExactType<Configuration>();
+    final configuration = context.dependOnInheritedWidgetOfExactType<Configuration>();
     if (configuration == null) {
       throw Exception("Config was not found in component tree!");
     }

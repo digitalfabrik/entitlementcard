@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 ThemeData get lightTheme {
   final defaultTypography = Typography.blackMountainView;
-  var lightTheme = ThemeData.from(
+  final lightTheme = ThemeData.from(
     colorScheme: const ColorScheme.light(
       primary: Color(0xff5f5384),
       secondary: Color(0xff5f5384),
@@ -26,7 +26,7 @@ ThemeData get lightTheme {
 
 ThemeData get darkTheme {
   final defaultTypography = Typography.whiteMountainView;
-  var theme = ThemeData.from(
+  final theme = ThemeData.from(
     colorScheme: const ColorScheme.dark(
       primary: Color(0xff8377A9),
       secondary: Color(0xff8377A9),
@@ -40,8 +40,6 @@ ThemeData get darkTheme {
     ),
   );
   return theme.copyWith(
-    appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        color: theme.colorScheme.primary),
+    appBarTheme: AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light, color: theme.colorScheme.primary),
   );
 }

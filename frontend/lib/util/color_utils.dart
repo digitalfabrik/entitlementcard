@@ -8,9 +8,7 @@ Color getReadableOnColor(Color backgroundColor) {
 }
 
 Color getReadableOnColorSecondary(Color backgroundColor) {
-  return backgroundColor.computeLuminance() > 0.5
-      ? Colors.black54
-      : Colors.white54;
+  return backgroundColor.computeLuminance() > 0.5 ? Colors.black54 : Colors.white54;
 }
 
 Color? getDarkenedColorForCategory(int categoryId) {

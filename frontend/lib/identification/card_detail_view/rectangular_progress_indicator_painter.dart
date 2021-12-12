@@ -28,11 +28,10 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     paint.color = valueColor;
     paint.strokeCap = StrokeCap.round;
 
-    final totalPathLength = 2 * horizontalLineLength +
-        2 * verticalLineLength +
-        4 * quarterArcLength;
-    Path createPath(double remainingPath) {
-      var path = Path();
+    final totalPathLength = 2 * horizontalLineLength + 2 * verticalLineLength + 4 * quarterArcLength;
+    Path createPath(double initialPath) {
+      final path = Path();
+      var remainingPath = initialPath;
       path.moveTo(size.width / 2, strokeWidth / 2);
       {
         // First half top line
@@ -41,11 +40,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
       }
       {
         // Top left arc
-        var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
-        var dest =
-            Offset(-strokeRadius * sin(angle), strokeRadius * (1 - cos(angle)));
-        path.relativeArcToPoint(dest,
-            radius: const Radius.circular(strokeRadius), clockwise: false);
+        final angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
+        final dest = Offset(-strokeRadius * sin(angle), strokeRadius * (1 - cos(angle)));
+        path.relativeArcToPoint(dest, radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -55,11 +52,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
       }
       {
         // Bottom left arc
-        var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
-        var dest =
-            Offset(strokeRadius * (1 - cos(angle)), strokeRadius * sin(angle));
-        path.relativeArcToPoint(dest,
-            radius: const Radius.circular(strokeRadius), clockwise: false);
+        final angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
+        final dest = Offset(strokeRadius * (1 - cos(angle)), strokeRadius * sin(angle));
+        path.relativeArcToPoint(dest, radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -69,11 +64,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
       }
       {
         // Bottom right arc
-        var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
-        var dest =
-            Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
-        path.relativeArcToPoint(dest,
-            radius: const Radius.circular(strokeRadius), clockwise: false);
+        final angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
+        final dest = Offset(strokeRadius * sin(angle), -strokeRadius * (1 - cos(angle)));
+        path.relativeArcToPoint(dest, radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -83,11 +76,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
       }
       {
         // Top right arc
-        var angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
-        var dest = Offset(
-            -strokeRadius * (1 - cos(angle)), -strokeRadius * sin(angle));
-        path.relativeArcToPoint(dest,
-            radius: const Radius.circular(strokeRadius), clockwise: false);
+        final angle = min(remainingPath / quarterArcLength, 1.0) * pi / 2;
+        final dest = Offset(-strokeRadius * (1 - cos(angle)), -strokeRadius * sin(angle));
+        path.relativeArcToPoint(dest, radius: const Radius.circular(strokeRadius), clockwise: false);
         remainingPath = max(remainingPath - quarterArcLength, 0);
       }
       {
@@ -97,34 +88,26 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
       return path;
     }
 
-    var remainingPath = max(
-        totalPathLength * (value - delay / 2 - splashDuration) / (1 - delay),
-        0.0);
+    final remainingPath = max(totalPathLength * (value - delay / 2 - splashDuration) / (1 - delay), 0.0);
 
     canvas.drawPath(createPath(remainingPath), paint);
-    canvas.drawPath(
-        createPath(totalPathLength), paint..color = paint.color.withAlpha(30));
+    canvas.drawPath(createPath(totalPathLength), paint..color = paint.color.withAlpha(30));
     // Draw splash effect
-    var circlePaint = Paint();
+    final circlePaint = Paint();
     circlePaint.color = valueColor;
     circlePaint.style = PaintingStyle.fill;
-    final maxRadius =
-        sqrt((size.width / 2) * (size.width / 2) + size.height * size.height);
+    final maxRadius = sqrt((size.width / 2) * (size.width / 2) + size.height * size.height);
     if (value >= delay / 2 && value <= splashDuration + delay / 2) {
       canvas.drawCircle(
-          Offset(size.width / 2, 0),
-          maxRadius *
-              (1 -
-                  Curves.easeInOut
-                      .transform((value - delay / 2) / splashDuration)),
-          circlePaint);
+        Offset(size.width / 2, 0),
+        maxRadius * (1 - Curves.easeInOut.transform((value - delay / 2) / splashDuration)),
+        circlePaint,
+      );
     } else if (value <= delay / 2 || value >= 1 - delay / 2) {
       canvas.drawCircle(Offset(size.width / 2, 0), maxRadius, circlePaint);
-    } else if (value <= 1 - delay / 2 &&
-        value >= 1 - fadeOutDuration - delay / 2) {
-      circlePaint.color = valueColor.withOpacity(1 -
-          Curves.easeInOut
-              .transform((1 - (value + delay / 2)) / fadeOutDuration));
+    } else if (value <= 1 - delay / 2 && value >= 1 - fadeOutDuration - delay / 2) {
+      circlePaint.color =
+          valueColor.withOpacity(1 - Curves.easeInOut.transform((1 - (value + delay / 2)) / fadeOutDuration));
       canvas.drawCircle(Offset(size.width / 2, 0), maxRadius, circlePaint);
     }
   }

@@ -1,12 +1,9 @@
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../graphql/graphql_api.graphql.dart';
 import '../identification/base_card_details.dart';
 import '../identification/card_details.dart';
 import '../identification/card_details_model.dart';
@@ -15,8 +12,14 @@ import '../routing.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final validEakDetails = CardDetails("Jane Doe", "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
-    1677542400, CardType.standard, 42, "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+final validEakDetails = CardDetails(
+  "Jane Doe",
+  "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
+  1677542400,
+  CardType.standard,
+  42,
+  "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX",
+);
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({Key? key}) : super(key: key);
@@ -41,17 +44,16 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _showInfoSlides(context),
           ),
           ListTile(
-              title: const Text('Log sample exception'),
-              onTap: () => log("Sample exception.",
-                  error: Exception("Sample exception..."))),
+            title: const Text('Log sample exception'),
+            onTap: () => log("Sample exception.", error: Exception("Sample exception...")),
+          ),
           ListTile(
             title: const Text('Inspect settings'),
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) => SimpleDialog(
-                    title: const Text("Settings"),
-                    children: [Text(settings.toString())]),
+                builder: (context) =>
+                    SimpleDialog(title: const Text("Settings"), children: [Text(settings.toString())]),
               );
             },
           ),
@@ -65,15 +67,15 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _setValidEakData(BuildContext context) async {
-    Provider.of<CardDetailsModel>(context, listen: false)
-        .setCardDetails(validEakDetails);
+    Provider.of<CardDetailsModel>(context, listen: false).setCardDetails(validEakDetails);
   }
 
   void _showInfoSlides(BuildContext context) {
     Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => const IntroScreen(),
-        ));
+      context,
+      AppRoute(
+        builder: (context) => const IntroScreen(),
+      ),
+    );
   }
 }

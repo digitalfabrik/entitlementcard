@@ -7,27 +7,27 @@ import 'package:flutter/material.dart';
 import '../debouncer.dart';
 
 /// null means that the default bg color is chosen. other possibility: Colors.transparent
-const kBackgroundColor = null;
+const Color? kBackgroundColor = null;
 
 /// null means that the default fg color is chosen.
-const kForegroundColor = null;
+const Color? kForegroundColor = null;
 const kElevation = 0.0;
 
 class NavigationBar extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
 
-  const NavigationBar({Key? key, required this.title, this.actions})
-      : super(key: key);
+  const NavigationBar({Key? key, required this.title, this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        backgroundColor: kBackgroundColor,
-        foregroundColor: kForegroundColor,
-        elevation: kElevation,
-        title: Text(title),
-        actions: actions);
+      backgroundColor: kBackgroundColor,
+      foregroundColor: kForegroundColor,
+      elevation: kElevation,
+      title: Text(title),
+      actions: actions,
+    );
   }
 }
 
@@ -48,16 +48,16 @@ class NavigationBarWithBottom extends StatelessWidget {
     // Note: A SizedBox is required because AppBar contains a Column.
     // If we want to add a AppBar into a column, then we need to set its size.
     return SizedBox(
-        height: MediaQuery.of(context).padding.top +
-            bottom.preferredSize.height +
-            kToolbarHeight,
-        child: AppBar(
-            elevation: kElevation,
-            leading: const BackButton(),
-            flexibleSpace: flexibleSpace,
-            backgroundColor: color,
-            foregroundColor: kForegroundColor,
-            bottom: bottom));
+      height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
+      child: AppBar(
+        elevation: kElevation,
+        leading: const BackButton(),
+        flexibleSpace: flexibleSpace,
+        backgroundColor: color,
+        foregroundColor: kForegroundColor,
+        bottom: bottom,
+      ),
+    );
   }
 }
 
@@ -79,15 +79,12 @@ class SliverNavigationBar extends StatelessWidget {
 
 class SliverSearchNavigationBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
-  final Debouncer debouncer =
-      Debouncer(delay: const Duration(milliseconds: 50));
+  final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchNavigationBar({Key? key, required this.onChanged})
-      : super(key: key);
+  SliverSearchNavigationBar({Key? key, required this.onChanged}) : super(key: key);
 
   @override
-  _SliverSearchNavigationBarState createState() =>
-      _SliverSearchNavigationBarState();
+  _SliverSearchNavigationBarState createState() => _SliverSearchNavigationBarState();
 }
 
 class _SliverSearchNavigationBarState extends State<SliverSearchNavigationBar> {

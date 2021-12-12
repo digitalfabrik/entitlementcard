@@ -23,15 +23,15 @@ class Map extends StatefulWidget {
   final bool locationAvailable;
   final LatLng? userLocation;
 
-  const Map(
-      {Key? key,
-      required this.onFeatureClick,
-      required this.onNoFeatureClick,
-      required this.onFeatureClickLayerFilter,
-      required this.locationAvailable,
-      required this.onMapCreated,
-      this.userLocation})
-      : super(key: key);
+  const Map({
+    Key? key,
+    required this.onFeatureClick,
+    required this.onNoFeatureClick,
+    required this.onFeatureClickLayerFilter,
+    required this.locationAvailable,
+    required this.onMapCreated,
+    this.userLocation,
+  }) : super(key: key);
 
   @override
   State createState() => _MapState();
@@ -55,64 +55,57 @@ class _MapState extends State<Map> implements MapController {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-    var statusBarHeight = MediaQuery.of(context).padding.top;
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var compassMargin = Platform.isIOS
-        ? statusBarHeight / pixelRatio
-        : statusBarHeight * pixelRatio;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
     if (_mapboxView == null || !_isAnimating) {
-      var userLocation = widget.userLocation;
-      var cameraPosition = userLocation != null
-          ? CameraPosition(
-              target: userLocation, zoom: Map.userLocationZoomLevel)
-          : const CameraPosition(
-              target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+      final userLocation = widget.userLocation;
+      final cameraPosition = userLocation != null
+          ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
+          : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
-      _mapboxView = Stack(children: [
-        MaplibreMap(
-          initialCameraPosition: cameraPosition,
-          styleString: config.mapStyleUrl,
-          // We provide our own attribution menu
-          attributionButtonMargins: const math.Point(-100, -100),
-          // The Mapbox wordmark must be shown because of legal weirdness
-          logoViewMargins: Platform.isIOS
-              ? const math.Point(30, 5)
-              : math.Point(30 * pixelRatio, 5 * pixelRatio),
-          myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven
-              ? MyLocationTrackingMode.Tracking
-              : MyLocationTrackingMode.None,
-          // required to prevent mapbox iOS from requesting location
-          // permissions on startup, as discussed in #249
-          myLocationRenderMode: MyLocationRenderMode.NORMAL,
-          onMapCreated: _onMapCreated,
-          onMapClick: _onMapClick,
-          compassViewMargins:
-              math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-          compassViewPosition: CompassViewPosition.TopRight,
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          child: IconButton(
-            color: mapboxColor,
-            padding: const EdgeInsets.all(5),
-            constraints: const BoxConstraints(),
-            iconSize: 20,
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const AttributionDialog();
-                },
-              );
-            },
+      _mapboxView = Stack(
+        children: [
+          MaplibreMap(
+            initialCameraPosition: cameraPosition,
+            styleString: config.mapStyleUrl,
+            // We provide our own attribution menu
+            attributionButtonMargins: const math.Point(-100, -100),
+            // The Mapbox wordmark must be shown because of legal weirdness
+            logoViewMargins: Platform.isIOS ? const math.Point(30, 5) : math.Point(30 * pixelRatio, 5 * pixelRatio),
+            myLocationEnabled: _permissionGiven,
+            myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
+            // required to prevent mapbox iOS from requesting location
+            // permissions on startup, as discussed in #249
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+            onMapCreated: _onMapCreated,
+            onMapClick: _onMapClick,
+            compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+            compassViewPosition: CompassViewPosition.TopRight,
           ),
-        ),
-      ]);
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: IconButton(
+              color: mapboxColor,
+              padding: const EdgeInsets.all(5),
+              constraints: const BoxConstraints(),
+              iconSize: 20,
+              icon: const Icon(Icons.info_outline),
+              tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AttributionDialog();
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
     return _mapboxView ?? Container();
   }
@@ -120,8 +113,7 @@ class _MapState extends State<Map> implements MapController {
   void _onMapCreated(MaplibreMapController controller) {
     _controller = controller;
     if (widget.locationAvailable) {
-      _controller
-          ?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+      _controller?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
     final onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
@@ -136,7 +128,7 @@ class _MapState extends State<Map> implements MapController {
 
   @override
   Future<void> removeSymbol() async {
-    var symbol = _symbol;
+    final symbol = _symbol;
     if (symbol == null) return;
     await _controller?.removeSymbol(symbol);
     _symbol = null;
@@ -145,11 +137,11 @@ class _MapState extends State<Map> implements MapController {
   @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
-    _symbol = await _controller?.addSymbol(SymbolOptions(
-        iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+    _symbol = await _controller
+        ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
   }
 
-  void _onMapClick(math.Point<double> point, clickCoordinates) async {
+  Future<void> _onMapClick(math.Point<double> point, clickCoordinates) async {
     final controller = _controller;
     if (controller == null) {
       return;
@@ -158,34 +150,26 @@ class _MapState extends State<Map> implements MapController {
     final onFeatureClick = widget.onFeatureClick;
     final onNoFeatureClick = widget.onNoFeatureClick;
 
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
-    var touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
-    var rect = Rect.fromCenter(
-        center: Offset(point.x, point.y),
-        width: touchTargetSize,
-        height: touchTargetSize);
+    final touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
+    final rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
-    var jsonFeatures = await controller.queryRenderedFeaturesInRect(
-        rect, widget.onFeatureClickLayerFilter, null);
-    var features = jsonFeatures
-        .where((x) =>
-            x["properties"] != null && x["properties"]["categoryId"] != null)
-        .toList();
+    final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
+    final features =
+        jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
     if (features.isNotEmpty) {
-      var mapPoint = await controller.toLatLng(point);
+      final mapPoint = await controller.toLatLng(point);
       int distSort(a, b) {
-        var cA = a["geometry"]["coordinates"];
-        var cB = b["geometry"]["coordinates"];
-        var dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) +
-            math.pow(cA[1] - mapPoint.latitude, 2));
-        var dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) +
-            math.pow(cB[1] - mapPoint.latitude, 2));
+        final cA = a["geometry"]["coordinates"] as List<double>;
+        final cB = b["geometry"]["coordinates"] as List<double>;
+        final dA = math.sqrt(math.pow(cA[0] - mapPoint.longitude, 2) + math.pow(cA[1] - mapPoint.latitude, 2));
+        final dB = math.sqrt(math.pow(cB[0] - mapPoint.longitude, 2) + math.pow(cB[1] - mapPoint.latitude, 2));
         return dA < dB ? -1 : 1;
       }
 
       features.sort(distSort);
-      var featureInfo = features[0];
+      final featureInfo = features[0];
       if (featureInfo != null) {
         if (onFeatureClick != null) {
           onFeatureClick(featureInfo);
@@ -203,16 +187,14 @@ class _MapState extends State<Map> implements MapController {
   }
 
   @override
-  Future<void> bringCameraToLocation(LatLng location,
-      {double? zoomLevel}) async {
+  Future<void> bringCameraToLocation(LatLng location, {double? zoomLevel}) async {
     final controller = _controller;
     if (controller == null) {
       return;
     }
 
-    final update = zoomLevel != null
-        ? CameraUpdate.newLatLngZoom(location, zoomLevel)
-        : CameraUpdate.newLatLng(location);
+    final update =
+        zoomLevel != null ? CameraUpdate.newLatLngZoom(location, zoomLevel) : CameraUpdate.newLatLng(location);
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
     await _animate(controller.animateCamera(update));
   }
@@ -224,15 +206,17 @@ class _MapState extends State<Map> implements MapController {
       return;
     }
 
-    var cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
+    final cameraUpdate = CameraUpdate.newCameraPosition(
+      CameraPosition(
         target: LatLng(position.latitude, position.longitude),
         bearing: 0,
         tilt: 0,
-        zoom: Map.userLocationZoomLevel));
+        zoom: Map.userLocationZoomLevel,
+      ),
+    );
     await _animate(controller.animateCamera(cameraUpdate));
 
-    await controller
-        .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     if (!_permissionGiven) {
       setState(() => _permissionGiven = true);
     }

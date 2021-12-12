@@ -20,21 +20,25 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       final settings = context.read<SettingsModel>();
 
-      checkAndRequestLocationPermission(context,
-              requestIfNotGranted: false,
-              onDisableFeature: () => settings.setLocationFeatureEnabled(false),
-              onEnableFeature: () => settings.setLocationFeatureEnabled(true))
-          .then((LocationStatus permission) => setState(() {
-                _locationPermissionStatus = permission;
-              }));
+      checkAndRequestLocationPermission(
+        context,
+        requestIfNotGranted: false,
+        onDisableFeature: () => settings.setLocationFeatureEnabled(enabled: false),
+        onEnableFeature: () => settings.setLocationFeatureEnabled(enabled: true),
+      ).then(
+        (LocationStatus permission) => setState(() {
+          _locationPermissionStatus = permission;
+        }),
+      );
     });
   }
 
-  void _onLocationButtonClicked(SettingsModel settings) async {
-    final permission = await checkAndRequestLocationPermission(context,
-        requestIfNotGranted: true,
-        onDisableFeature: () async =>
-            await settings.setLocationFeatureEnabled(false));
+  Future<void> _onLocationButtonClicked(SettingsModel settings) async {
+    final permission = await checkAndRequestLocationPermission(
+      context,
+      requestIfNotGranted: true,
+      onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
+    );
     setState(() {
       _locationPermissionStatus = permission;
     });
@@ -43,7 +47,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    var status = _locationPermissionStatus;
+    final status = _locationPermissionStatus;
     if (status == null) {
       return const ElevatedButton(
         onPressed: null,
