@@ -43,8 +43,8 @@ commands:
       - run:
           name: Install Dart
           command: |
-            wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.14.4-1_amd64.deb
-            sudo dpkg -i dart_2.14.4-1_amd64.deb
+            wget https://storage.googleapis.com/dart-archive/channels/stable/release/latest/linux_packages/dart_2.15.0-1_amd64.deb
+            sudo dpkg -i dart_2.15.0-1_amd64.deb
   install-fvm-linux:
     steps:
       - install-dart-linux
