@@ -1,15 +1,14 @@
-
 import 'package:flutter/services.dart';
 
-class LocationFFI {
-  static const platform = MethodChannel('app.ehrenamtskarte/location');
+const platform = MethodChannel('app.ehrenamtskarte/location');
 
-  static Future<bool> isLocationServiceEnabled() async {
-    try {
-      final bool result = await platform.invokeMethod('isLocationServiceEnabled');
-      return result;
-    } on PlatformException catch (e) {
-      throw "Failed to get state of location services: '${e.message}'.";
-    }
+/// Checks whether location services are enabled 
+/// without using Google Play Services
+Future<bool> isNonGoogleLocationServiceEnabled() async {
+  try {
+    final bool result = await platform.invokeMethod('isLocationServiceEnabled') as bool;
+    return result;
+  } on PlatformException catch (e) {
+    throw "Failed to get state of location services: '${e.message}'.";
   }
 }

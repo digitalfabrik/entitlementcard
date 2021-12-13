@@ -87,10 +87,8 @@ Future<RequestedPosition> determinePosition(
     return RequestedPosition.unknown();
   }
 
-  var position = await Geolocator.getLastKnownPosition(
-      forceAndroidLocationManager: EnvironmentConfig.ANDROID_FLOSS);
-  position ??= await Geolocator.getCurrentPosition(
-      forceAndroidLocationManager: EnvironmentConfig.ANDROID_FLOSS);
+  var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
 
   return RequestedPosition(position);
 }
@@ -99,15 +97,16 @@ Future<RequestedPosition> determinePosition(
 /// If needed, location permissions are requested.
 ///
 
-Future<LocationStatus> checkAndRequestLocationPermission(BuildContext context,{
+Future<LocationStatus> checkAndRequestLocationPermission(
+  BuildContext context, {
   bool requestIfNotGranted = true,
   String rationale =
       "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
-  final serviceEnabled = EnvironmentConfig.ANDROID_FLOSS
-      ? await LocationFFI.isLocationServiceEnabled()
+  final serviceEnabled = EnvironmentConfig.androidFloss
+      ? await isNonGoogleLocationServiceEnabled()
       : await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
