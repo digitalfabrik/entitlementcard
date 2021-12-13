@@ -5,6 +5,9 @@ workflows:
   default:
     jobs:
       - check-frontend
+      - frontend-android-floss-build:
+          requires:
+            - check-frontend      
       - frontend-android-build:
           requires:
             - check-frontend
@@ -140,6 +143,35 @@ jobs:
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
+  frontend-android-floss-build:
+    docker:
+      - image: circleci/android:api-30
+    environment:
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+    resource_class: large
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - install-fvm-linux
+      - restore_cache:
+          keys:
+            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - run:
+          name: Install Flutter Packages
+          command: |
+            fvm flutter pub get
+            fvm flutter precache --android
+      - save_cache:
+          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+          paths:
+            - .dart_tool
+      - run:
+          name: Build
+          command: |
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart --dart-define=ANDROID_FLOSS=true --dart-define=SHRINK_NATIVE=true
+      - store_artifacts:
+          path: build/app/outputs/flutter-apk/
 
   frontend-ios-build:
     macos:
