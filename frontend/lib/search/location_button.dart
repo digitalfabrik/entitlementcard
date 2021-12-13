@@ -66,23 +66,23 @@ class _LocationButtonState extends State<LocationButton> {
     }
   }
 
-  Future<void> _determinePosition(bool userInteract, settings) async {
+  Future<void> _determinePosition(bool userInteract, SettingsModel settings) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     final requiredPosition = userInteract
         ? await determinePosition(
             context,
             requestIfNotGranted: true,
-            onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
+            onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
             onEnableFeature: () async {
-              await settings.setLocationFeatureEnabled(true);
+              await settings.setLocationFeatureEnabled(enabled: true);
             },
           )
         : await determinePosition(
             context,
             requestIfNotGranted: false,
-            onDisableFeature: () async => await settings.setLocationFeatureEnabled(false),
+            onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
             onEnableFeature: () async {
-              await settings.setLocationFeatureEnabled(true);
+              await settings.setLocationFeatureEnabled(enabled: true);
             },
           ).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
 
