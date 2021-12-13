@@ -105,7 +105,7 @@ jobs:
       - install-fvm-linux
       - run:
           name: Check Formatting
-          command: dart format -l 120 -o none --set-exit-if-changed .
+          command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
           name: Check Analyzer and Linting
           command: fvm flutter analyze --fatal-infos --fatal-warnings
