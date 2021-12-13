@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 const platform = MethodChannel('app.ehrenamtskarte/location');
 
-/// Checks whether location services are enabled 
+/// Checks whether location services are enabled
 /// without using Google Play Services
 Future<bool> isNonGoogleLocationServiceEnabled() async {
   try {
