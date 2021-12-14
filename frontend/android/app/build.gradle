@@ -63,11 +63,13 @@ android {
     }
 
     signingConfigs {
-        localProps {
-            keyAlias localProperties.getProperty('signing.keyAlias')
-            keyPassword localProperties.getProperty('signing.keyPassword')
-            storeFile file(localProperties.getProperty('signing.storeFile'))
-            storePassword localProperties.getProperty('signing.storePassword')
+        if (localProperties.containsKey("signing.keyAlias")) {
+            localProps {
+                keyAlias localProperties.getProperty('signing.keyAlias')
+                keyPassword localProperties.getProperty('signing.keyPassword')
+                storeFile file(localProperties.getProperty('signing.storeFile'))
+                storePassword localProperties.getProperty('signing.storePassword')
+            }
         }
     }
 
