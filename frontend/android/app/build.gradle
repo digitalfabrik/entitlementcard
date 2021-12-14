@@ -63,26 +63,22 @@ android {
     }
 
     signingConfigs {
-        if (!localProperties.containsKey("signing.keyAlias")) {
-            release {
-                keyAlias signingConfigs.debug.keyAlias
-                keyPassword signingConfigs.debug.keyPassword
-                storeFile signingConfigs.debug.storeFile
-                storePassword signingConfigs.debug.storePassword
-            }
-        } else {
-            release {
-                keyAlias localProperties.getProperty('signing.keyAlias')
-                keyPassword localProperties.getProperty('signing.keyPassword')
-                storeFile file(localProperties.getProperty('signing.storeFile'))
-                storePassword localProperties.getProperty('signing.storePassword')
-            }
+        localProps {
+            keyAlias localProperties.getProperty('signing.keyAlias')
+            keyPassword localProperties.getProperty('signing.keyPassword')
+            storeFile file(localProperties.getProperty('signing.storeFile'))
+            storePassword localProperties.getProperty('signing.storePassword')
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            if (localProperties.containsKey("signing.keyAlias")) {
+                signingConfig signingConfigs.localProps
+            } else {
+                signingConfig signingConfigs.debug
+            }
+
             
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
