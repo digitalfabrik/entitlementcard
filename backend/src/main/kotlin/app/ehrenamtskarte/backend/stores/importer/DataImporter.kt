@@ -11,6 +11,7 @@ object DataImporter {
             Unit.addStep(Download(logger), logger) { logger.info("== Download raw data ==" )}
                 .addStep(Filter(logger), logger) { logger.info("== Filter raw data ==") }
                 .addStep(Map(logger), logger) { logger.info("== Map raw to internal data ==") }
+                .addStep(Sanitize(logger), logger) { logger.info("== Sanitize data ==") }
                 .addStep(Encode(logger), logger) { logger.info("== Handle encoding issues ==") }
                 .addStep(Store(logger, manualImport), logger) { logger.info("== Store remaining data to db ==") }
         }
