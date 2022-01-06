@@ -16,7 +16,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
                 it.name!!.trim(),
                 COUNTRY_CODE,
                 it.location!!.trim(),
-                it.postalCode.clean(),
+                cleanPostalCode(it.postalCode),
                 it.street.clean(),
                 it.houseNumber.clean(),
                 it.longitude!!.replace(",", ".").toDouble(),
@@ -40,6 +40,12 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
     private fun String?.clean(): String? {
         return this?.replaceNa()?.trim()
+    }
+
+    private fun cleanPostalCode(postalCode: String?): String? {
+        if (postalCode == null) return null
+        val fiveDigitRegex = """\d{5}""".toRegex()
+        return fiveDigitRegex.find(postalCode)?.value
     }
 
 }
