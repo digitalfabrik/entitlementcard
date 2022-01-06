@@ -28,6 +28,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
         input.map { store ->
             if (store.street != null && store.street.contains(STREET_EXCLUDE_PATTERN)) return@map store
 
+            val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
             val postalCode = store.postalCode
 
             val postalCodeFeature = if (postalCode != null) {
@@ -38,7 +39,9 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
                 // Postal code invalid. If we find a feature with matching address and coordinates use its postal code.
                 val features = queryFeatures(store)
                 val feature = features.firstOrNull { store.isCloseTo(it) }
-                return@map store.copy(postalCode = feature?.postalCode() ?: postalCode)
+                val newPostalCode = feature?.postalCode() ?: postalCode
+                logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
+                return@map store.copy(postalCode = newPostalCode)
             }
 
             if (!store.isCloseTo(postalCodeFeature)) {
@@ -48,14 +51,30 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
 
                 if (feature?.postalCode() == store.postalCode) {
                     // Match by postal code, wrong coordinates
+                    val oldCoordinates = "${store.latitude}, ${store.longitude}"
+                    val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
+                    logger.info("Coordinates of '$storeInfo' was changed from '$oldCoordinates' to '$newCoordinates'")
                     return@map store.copy(longitude = feature.longitude(), latitude = feature.latitude())
                 }
                 // Match by coordinates, wrong postal code
-                return@map store.copy(postalCode = feature?.postalCode() ?: postalCode)
+                val newPostalCode = feature?.postalCode() ?: postalCode
+                logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
+                return@map store.copy(postalCode = newPostalCode)
             }
 
             store
-        }.filter { it.isInBoundingBox(stateFeature) && it.postalCode != null }
+        }.filter {
+            if (!it.isInBoundingBox(stateFeature)) {
+                logger.info("'${it.name}, ${it.location}' was filtered out because it is outside of $STATE")
+                return@filter false
+            }
+            if (it.postalCode == null) {
+                // Probably because it is outside of the state but inside the bounding box of the state
+                logger.info("'${it.name}, ${it.location}' was filtered out because its postal code is null")
+                return@filter false
+            }
+            true
+        }
     }
 
     private fun AcceptingStore.isCloseTo(feature: Feature): Boolean {
@@ -120,7 +139,9 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     private suspend fun queryFeatures(store: AcceptingStore): List<Feature> {
         val street = store.street
         val houseNumber = store.houseNumber
-        val address = if (street != null || houseNumber != null) listOfNotNull(houseNumber, street).joinToString(" ") else null
+        val address = if (street != null || houseNumber != null) {
+            listOfNotNull(houseNumber, street).joinToString(" ")
+        } else null
 
         val baseParameters = listOf(Pair("state", STATE), Pair("city", store.location))
 
