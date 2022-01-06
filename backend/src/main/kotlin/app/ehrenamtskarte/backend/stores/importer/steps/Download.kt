@@ -20,9 +20,8 @@ class Download(private val logger: Logger) : PipelineStep<Unit, List<LbeAcceptin
             val url = System.getProperty("app.import.xml")
 
             val client = HttpClient()
-            var response: String?
-            runBlocking {
-                response = client.request<String> {
+            val response = runBlocking {
+                client.request<String> {
                     url(url)
                     method = HttpMethod.Get
                 }
