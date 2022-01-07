@@ -27,7 +27,7 @@ suspend fun queryFeatures(params: List<Pair<String, String>>): List<Feature> {
         val response = client.request<String> {
             url {
                 protocol = URLProtocol.HTTP
-                host = "nominatim.maps.tuerantuer.org"
+                host = System.getProperty("app.geocoding.host")
                 path("nominatim", "search")
                 parameters.append("format", "geojson")
                 parameters.append("addressdetails", "1")
