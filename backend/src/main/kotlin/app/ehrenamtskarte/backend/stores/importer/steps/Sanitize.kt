@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.common.STATE
+import app.ehrenamtskarte.backend.stores.geocoding.calculateDistanceInKm
 import app.ehrenamtskarte.backend.stores.geocoding.queryFeatures
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -8,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
-import kotlin.math.*
 
 const val DISTANCE_THRESHOLD_IN_KM = 5
 
@@ -72,7 +72,12 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     }
 
     private fun AcceptingStore.isCloseTo(feature: Feature): Boolean {
-        return isInBoundingBox(feature) || distanceKm(feature) <= DISTANCE_THRESHOLD_IN_KM
+        return isInBoundingBox(feature) || calculateDistanceInKm(
+            latitude,
+            longitude,
+            feature.latitude(),
+            feature.longitude()
+        ) <= DISTANCE_THRESHOLD_IN_KM
     }
 
     private fun AcceptingStore.isInBoundingBox(feature: Feature): Boolean {
@@ -80,29 +85,10 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
         return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
     }
 
-    private fun AcceptingStore.distanceKm(feature: Feature): Double {
-        // Adjusted from https://www.movable-type.co.uk/scripts/latlong.html by Chris Veness licensed under MIT
-        val earthRadiusKm = 6371
-
-        val distanceLatitude = (latitude - feature.latitude()).degreesToRadians()
-        val distanceLongitude = (longitude - feature.longitude()).degreesToRadians()
-
-        val latitudeRadians1 = latitude.degreesToRadians()
-        val latitudeRadians2 = feature.latitude().degreesToRadians()
-
-        val a = sin(distanceLatitude / 2) * sin(distanceLatitude / 2) +
-                sin(distanceLongitude / 2) * sin(distanceLongitude / 2) * cos(latitudeRadians1) * cos(latitudeRadians2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return earthRadiusKm * c
-    }
-
-
     private fun Feature.latitude(): Double = (geometry as Point).coordinates.latitude
     private fun Feature.longitude(): Double = (geometry as Point).coordinates.longitude
     private fun Feature.postalCode(): String? = address()["postcode"]
     private fun Feature.address(): LinkedHashMap<String, String> =
         this.getProperty<LinkedHashMap<String, String>>("address")
-
-    private fun Double.degreesToRadians(): Double = this * Math.PI / 180
 
 }
