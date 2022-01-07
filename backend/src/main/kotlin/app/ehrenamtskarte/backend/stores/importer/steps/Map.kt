@@ -1,12 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.common.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
-
-const val COUNTRY_CODE = "de"
 
 class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
 
