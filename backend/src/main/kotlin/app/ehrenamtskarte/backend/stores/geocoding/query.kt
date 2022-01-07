@@ -12,11 +12,7 @@ import org.geojson.FeatureCollection
 import java.io.File
 
 suspend fun queryFeatures(params: List<Pair<String, String>>): List<Feature> {
-    val fileName = params.joinToString("_") { it.second }
-        .replace(" ", "_")
-        .replace("/", "")
-        .replace(".", "")
-
+    val fileName = cacheFileName(params)
     val file = File("${System.getProperty("user.dir")}/data/nominatim/v1/$fileName.json")
 
     val geoJson = if (file.exists()) {
@@ -63,4 +59,14 @@ suspend fun queryFeatures(store: AcceptingStore): List<Feature> {
     }
 
     return queryFeatures(baseParameters)
+}
+
+private fun cacheFileName(params: List<Pair<String, String>>): String {
+    // Use the joined parameter values as file name and sanitize it
+    return params.joinToString("_") { it.second }.sanitizeFileName()
+}
+
+private fun String.sanitizeFileName(): String {
+    // Replace whitespaces with '_' and remove all chars that are not letters, digits, '-' or '_'
+    return replace(" ", "_").filter { it.isLetterOrDigit() || it == '_' || it == '-' }
 }
