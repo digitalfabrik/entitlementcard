@@ -38,7 +38,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
                 return@map store.copy(postalCode = newPostalCode)
             }
 
-            if (!store.isCloseTo(postalCodeFeature)) {
+            if (!store.isInBoundingBox(postalCodeFeature)) {
                 // Postal code OR coordinates invalid. Use coordinates/postal code of best match for address.
                 val features = queryFeatures(store)
                 val feature = features.firstOrNull { store.isCloseTo(it) || postalCode == it.postalCode() }
