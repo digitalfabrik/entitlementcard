@@ -6,14 +6,14 @@ import org.slf4j.Logger
 data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
     private val invalidLocations = arrayOf("Musterhausen")
 
-    private fun String?.isNull(): Boolean {
+    private fun String?.isUnavailable(): Boolean {
         return this.isNullOrBlank() || matchesNa(this)
     }
 
     private fun filterName(): Boolean {
         val name = store.name
 
-        return if (name.isNull()) {
+        return if (name.isUnavailable()) {
             logger.info("'$store' was filtered out because name '$name' is invalid")
             false
         } else {
@@ -24,7 +24,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
     private fun filterLocation(): Boolean {
         val location = store.location
 
-        return if (location.isNull() || invalidLocations.contains(location)) {
+        return if (location.isUnavailable() || invalidLocations.contains(location)) {
             logger.info("'${store.name}' was filtered out because location '$location' is invalid")
             false
         } else {
@@ -32,7 +32,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
         }
     }
 
-    private fun filterLongitudeAndLatitude() = if (store.longitude.isNull() || store.latitude.isNull()) {
+    private fun filterLongitudeAndLatitude() = if (store.longitude.isUnavailable() || store.latitude.isUnavailable()) {
         logger.info("'${store.name}' was filtered out because longitude '${store.longitude}' or latitude '${store.latitude}' are invalid")
         false
     } else {
