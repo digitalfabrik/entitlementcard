@@ -16,7 +16,7 @@ import kotlin.math.*
 
 const val STATE = "Bayern"
 
-const val DISTANCE_THRESHOLD = 5
+const val DISTANCE_THRESHOLD_IN_KM = 5
 
 // Postal code lookup fails/does not really make sense for a "Postfach"
 const val STREET_EXCLUDE_PATTERN = "Postfach"
@@ -35,7 +35,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
                 query(listOf(Pair("postalcode", postalCode))).firstOrNull()
             } else null
 
-            if (postalCode == null || postalCodeFeature == null) {
+            if (postalCodeFeature == null) {
                 // Postal code invalid. If we find a feature with matching address and coordinates use its postal code.
                 val features = queryFeatures(store)
                 val feature = features.firstOrNull { store.isCloseTo(it) }
@@ -49,7 +49,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
                 val features = queryFeatures(store)
                 val feature = features.firstOrNull { store.isCloseTo(it) || postalCode == it.postalCode() }
 
-                if (feature?.postalCode() == store.postalCode) {
+                if (feature != null && feature.postalCode() == store.postalCode) {
                     // Match by postal code, wrong coordinates
                     val oldCoordinates = "${store.latitude}, ${store.longitude}"
                     val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
@@ -78,7 +78,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     }
 
     private fun AcceptingStore.isCloseTo(feature: Feature): Boolean {
-        return isInBoundingBox(feature) || distanceKm(feature) <= DISTANCE_THRESHOLD
+        return isInBoundingBox(feature) || distanceKm(feature) <= DISTANCE_THRESHOLD_IN_KM
     }
 
     private fun AcceptingStore.isInBoundingBox(feature: Feature): Boolean {
@@ -87,17 +87,17 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     }
 
     private fun AcceptingStore.distanceKm(feature: Feature): Double {
-        // Taken from https://stackoverflow.com/a/365853
+        // Adjusted from https://www.movable-type.co.uk/scripts/latlong.html by Chris Veness licensed under MIT
         val earthRadiusKm = 6371
 
         val distanceLatitude = (latitude - feature.latitude()).degreesToRadians()
         val distanceLongitude = (longitude - feature.longitude()).degreesToRadians()
 
-        val latitudeRadians = latitude.degreesToRadians()
+        val latitudeRadians1 = latitude.degreesToRadians()
         val latitudeRadians2 = feature.latitude().degreesToRadians()
 
         val a = sin(distanceLatitude / 2) * sin(distanceLatitude / 2) +
-                sin(distanceLongitude / 2) * sin(distanceLongitude / 2) * cos(latitudeRadians) * cos(latitudeRadians2)
+                sin(distanceLongitude / 2) * sin(distanceLongitude / 2) * cos(latitudeRadians1) * cos(latitudeRadians2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return earthRadiusKm * c
     }
@@ -111,6 +111,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
         val file = File("${System.getProperty("user.dir")}/data/nominatim/v1/$fileName.json")
 
         val geoJson = if (file.exists()) {
+            // Use a cached version on disk.
             file.readText()
         } else {
             val client = HttpClient()
@@ -139,17 +140,15 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     private suspend fun queryFeatures(store: AcceptingStore): List<Feature> {
         val street = store.street
         val houseNumber = store.houseNumber
-        val address = if (street != null || houseNumber != null) {
-            listOfNotNull(houseNumber, street).joinToString(" ")
-        } else null
 
         val baseParameters = listOf(Pair("state", STATE), Pair("city", store.location))
 
-        if (address != null) {
+        if (street != null && houseNumber != null) {
+            val address = listOf(houseNumber, street).joinToString(" ")
             val features = query(baseParameters.plus(Pair("street", address)))
             if (features.isNotEmpty()) return features
         }
-        if (street != null && street != address) {
+        if (street != null) {
             val features = query(baseParameters.plus(Pair("street", street)))
             if (features.isNotEmpty()) return features
         }
