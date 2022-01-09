@@ -17,7 +17,7 @@ import java.io.File
  */
 suspend fun queryFeatures(params: List<Pair<String, String>>): List<Feature> {
     val fileName = cacheFileName(params)
-    val file = File("${System.getProperty("user.dir")}/data/nominatim/v1/$fileName.json")
+    val file = File("${System.getProperty("app.data")}/nominatim/v1/$fileName.json")
 
     val geoJson = if (file.exists()) {
         // Use a cached version on disk.
