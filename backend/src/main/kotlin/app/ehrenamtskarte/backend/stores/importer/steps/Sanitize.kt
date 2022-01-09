@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.common.STATE
-import app.ehrenamtskarte.backend.stores.geocoding.calculateDistanceInKm
+import app.ehrenamtskarte.backend.stores.geocoding.isCloseTo
 import app.ehrenamtskarte.backend.stores.geocoding.queryFeatures
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -10,7 +10,7 @@ import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
 
-const val DISTANCE_THRESHOLD_IN_KM = 5
+const val DISTANCE_THRESHOLD_IN_KM = 1.0
 
 // Postal code lookup fails/does not really make sense for a "Postfach"
 const val STREET_EXCLUDE_PATTERN = "Postfach"
@@ -32,7 +32,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
             if (postalCodeFeature == null) {
                 // Postal code invalid. If we find a feature with matching address and coordinates use its postal code.
                 val features = queryFeatures(store)
-                val feature = features.firstOrNull { store.isCloseTo(it) }
+                val feature = features.firstOrNull { store.isCloseToBoundingBox(it) }
                 val newPostalCode = feature?.postalCode() ?: postalCode
                 logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
                 return@map store.copy(postalCode = newPostalCode)
@@ -41,7 +41,7 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
             if (!store.isInBoundingBox(postalCodeFeature)) {
                 // Postal code OR coordinates invalid. Use coordinates/postal code of best match for address.
                 val features = queryFeatures(store)
-                val feature = features.firstOrNull { store.isCloseTo(it) || postalCode == it.postalCode() }
+                val feature = features.firstOrNull { store.isCloseToBoundingBox(it) || postalCode == it.postalCode() }
 
                 if (feature != null && feature.postalCode() == store.postalCode) {
                     // Match by postal code, wrong coordinates
@@ -71,13 +71,8 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
         }
     }
 
-    private fun AcceptingStore.isCloseTo(feature: Feature): Boolean {
-        return isInBoundingBox(feature) || calculateDistanceInKm(
-            latitude,
-            longitude,
-            feature.latitude(),
-            feature.longitude()
-        ) <= DISTANCE_THRESHOLD_IN_KM
+    private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
+        return isCloseTo(feature.bbox.toList(), latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
     }
 
     private fun AcceptingStore.isInBoundingBox(feature: Feature): Boolean {
