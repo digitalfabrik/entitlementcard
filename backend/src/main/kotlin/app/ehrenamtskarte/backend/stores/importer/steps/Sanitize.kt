@@ -18,47 +18,10 @@ const val STREET_EXCLUDE_PATTERN = "Postfach"
 class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        val stateFeature = queryFeatures(listOf(Pair("state", STATE))).first()
-        input.map { store ->
-            if (store.street != null && store.street.contains(STREET_EXCLUDE_PATTERN)) return@map store
+        val stateBbox = queryFeatures(listOf(Pair("state", STATE))).first().bbox
 
-            val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-            val postalCode = store.postalCode
-
-            val postalCodeFeature = if (postalCode != null) {
-                queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()
-            } else null
-
-            if (postalCodeFeature == null) {
-                // Postal code invalid. If we find a feature with matching address and coordinates use its postal code.
-                val features = queryFeatures(store)
-                val feature = features.firstOrNull { store.isCloseToBoundingBox(it) }
-                val newPostalCode = feature?.postalCode() ?: postalCode
-                logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
-                return@map store.copy(postalCode = newPostalCode)
-            }
-
-            if (!store.isInBoundingBox(postalCodeFeature)) {
-                // Postal code OR coordinates invalid. Use coordinates/postal code of best match for address.
-                val features = queryFeatures(store)
-                val feature = features.firstOrNull { store.isCloseToBoundingBox(it) || postalCode == it.postalCode() }
-
-                if (feature != null && feature.postalCode() == store.postalCode) {
-                    // Match by postal code, wrong coordinates
-                    val oldCoordinates = "${store.latitude}, ${store.longitude}"
-                    val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
-                    logger.info("Coordinates of '$storeInfo' was changed from '$oldCoordinates' to '$newCoordinates'")
-                    return@map store.copy(longitude = feature.longitude(), latitude = feature.latitude())
-                }
-                // Match by coordinates, wrong postal code
-                val newPostalCode = feature?.postalCode() ?: postalCode
-                logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
-                return@map store.copy(postalCode = newPostalCode)
-            }
-
-            store
-        }.filter {
-            if (!it.isInBoundingBox(stateFeature)) {
+        input.map { it.sanitize() }.filter {
+            if (!it.isInBoundingBox(stateBbox)) {
                 logger.info("'${it.name}, ${it.location}' was filtered out because it is outside of $STATE")
                 return@filter false
             }
@@ -71,12 +34,60 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
         }
     }
 
-    private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
-        return isCloseTo(feature.bbox.toList(), latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
+    /**
+     * Sanitize the postal code and the coordinates of the [AcceptingStore] using forward geocoding.
+     * If the coordinates are not inside the bounding box of the postal code, one of those is wrong.
+     * Then query by the address and use the coordinates OR postal code of the first match to sanitize the store data.
+     */
+    private suspend fun AcceptingStore.sanitize(): AcceptingStore {
+        if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
+
+        val storeInfo = listOfNotNull(name, location, street, houseNumber).joinToString()
+
+        val postalCodeBbox = if (postalCode != null) {
+            queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
+        } else null
+
+        // Postal code invalid
+        if (postalCodeBbox == null) {
+            val features = queryFeatures(this)
+            val feature = features.firstOrNull { isCloseToBoundingBox(it) }
+            val newPostalCode = feature?.postalCode() ?: postalCode
+            logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
+
+            return copy(postalCode = newPostalCode)
+        }
+
+        // Postal code OR coordinates invalid
+        if (!isInBoundingBox(postalCodeBbox)) {
+            val features = queryFeatures(this)
+            val feature = features.firstOrNull { isCloseToBoundingBox(it) || postalCode == it.postalCode() }
+
+            // Match by postal code -> replace wrong coordinates
+            if (feature != null && feature.postalCode() == postalCode) {
+                val oldCoordinates = "$latitude, $longitude"
+                val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
+                logger.info("Coordinates of '$storeInfo' was changed from '$oldCoordinates' to '$newCoordinates'")
+
+                return copy(longitude = feature.longitude(), latitude = feature.latitude())
+            }
+
+            // Match by coordinates -> replace wrong postal code
+            val newPostalCode = feature?.postalCode() ?: postalCode
+            logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
+
+            return copy(postalCode = newPostalCode)
+        }
+
+        // Data seems to be correct
+        return this
     }
 
-    private fun AcceptingStore.isInBoundingBox(feature: Feature): Boolean {
-        val bbox = feature.bbox
+    private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
+        return isCloseTo(feature.bbox, latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
+    }
+
+    private fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
         return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
     }
 
