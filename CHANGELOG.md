@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+
 - Fixed the web preview of the MapLibre map. (#401)
 - Improved .gitignore. (#406)
 - Refactored app structure to conform with the Flutter API. (#408, #414)
@@ -14,7 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed warnings which are emitted when building the app. (#425)
 - Added a fallback text for the description of Akzeptanzstellen (#428)
 - Prevent line breaks in category names (#429)
-- 
+- Invalid postal codes are now fixed for some accepting stores (#392)
+- Invalid coordinates are now fixed for some accepting stores (#392)
+
 ### Added
 - Enabled Dart null safety. (#398)
 - Implemented custom license page. (#409)
@@ -29,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed application module from the frontend. It is still available in the backend. (#411)
+- Accepting stores without a valid location are now filtered out (#392)
+
 
 ## [2.0.2] - 53 - 2021-10-19
 ### Changed
