@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+### Added
+### Changed
+### Removed
+
+## [2.1.0] - 54 - 2022-01-11
+### Fixed
 
 - Fixed the web preview of the MapLibre map. (#401)
 - Improved .gitignore. (#406)
