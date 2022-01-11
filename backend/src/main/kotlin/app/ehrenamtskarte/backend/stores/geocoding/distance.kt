@@ -13,9 +13,9 @@ fun isCloseTo(bbox: DoubleArray, latitude: Double, longitude: Double, thresholdI
     val deltaLatitude = thresholdInKm / kmPerLatitudeDegree
     val deltaLongitude = thresholdInKm / kmPerLongitudeDegree
 
-    val xInBounds = max(bbox[0] - longitude, longitude - bbox[2]) <= deltaLongitude
-    val yInBounds = max(bbox[1] - latitude, latitude - bbox[3]) <= deltaLatitude
-    return xInBounds && yInBounds
+    val longitudeInBounds = max(bbox[0] - longitude, longitude - bbox[2]) <= deltaLongitude
+    val latitudeInBounds = max(bbox[1] - latitude, latitude - bbox[3]) <= deltaLatitude
+    return longitudeInBounds && latitudeInBounds
 }
 
 private fun Double.degreesToRadians(): Double = this * Math.PI / 180
