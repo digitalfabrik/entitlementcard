@@ -21,6 +21,19 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def dartEnvironmentVariables = [
+        ANDROID_FLOSS: false,
+];
+
+if (project.hasProperty('dart-defines')) {
+    dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -37,7 +50,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "de.nrw.it.giz.ehrensache.bayern.android"
+        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+            applicationId "app.ehrenamtskarte.bayern.floss"
+        } else {
+            applicationId "de.nrw.it.giz.ehrensache.bayern.android"
+        }
         minSdkVersion 20
         targetSdkVersion 30
         multiDexEnabled true
@@ -45,12 +62,26 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        if (localProperties.containsKey("signing.keyAlias")) {
+            localProps {
+                keyAlias localProperties.getProperty('signing.keyAlias')
+                keyPassword localProperties.getProperty('signing.keyPassword')
+                storeFile file(localProperties.getProperty('signing.storeFile'))
+                storePassword localProperties.getProperty('signing.storePassword')
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            if (localProperties.containsKey("signing.keyAlias")) {
+                signingConfig signingConfigs.localProps
+            } else {
+                signingConfig signingConfigs.debug
+            }
 
+            
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
             // The workaround is from https://github.com/flutter/flutter/issues/58479.
@@ -61,10 +92,20 @@ android {
         }
     }
 
-    // Exclude mapbox-android-accounts because of its proprietary license
     applicationVariants.all { variant ->
-        variant.getCompileConfiguration().exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
-        variant.getRuntimeConfiguration().exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
+        // If we create a FLOSS build, then we want to exclude GMS
+        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+            variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+            variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+        }
+    }
+    
+    packagingOptions {
+        
+        // Exclude x86 because the app size in F-Droid is limited to 30MB
+        if (dartEnvironmentVariables.EXCLUDE_X86) {
+            exclude 'lib/x86**'
+        }
     }
 }
 

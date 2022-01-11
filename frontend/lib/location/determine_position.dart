@@ -1,8 +1,10 @@
+import 'package:ehrenamtskarte/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'dialogs.dart';
+import 'location_ffi.dart';
 
 enum LocationStatus {
   /// This is the initial state on both Android and iOS, but on Android the
@@ -85,8 +87,8 @@ Future<RequestedPosition> determinePosition(
     return RequestedPosition.unknown();
   }
 
-  var position = await Geolocator.getLastKnownPosition();
-  position ??= await Geolocator.getCurrentPosition();
+  var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
 
   return RequestedPosition(position);
 }
@@ -94,6 +96,7 @@ Future<RequestedPosition> determinePosition(
 /// Ensures all preconditions needed to determine the current position.
 /// If needed, location permissions are requested.
 ///
+
 Future<LocationStatus> checkAndRequestLocationPermission(
   BuildContext context, {
   bool requestIfNotGranted = true,
@@ -102,7 +105,9 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
-  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  final serviceEnabled = EnvironmentConfig.androidFloss
+      ? await isNonGoogleLocationServiceEnabled()
+      : await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
       final bool? result =
@@ -119,7 +124,6 @@ Future<LocationStatus> checkAndRequestLocationPermission(
 
   if (requestIfNotGranted) {
     final permission = await Geolocator.checkPermission();
-
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       // This happens only on iOS
