@@ -30,7 +30,7 @@ class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object AcceptingStores : IntIdTable() {
-    val name = varchar("name", 150).nullable()
+    val name = varchar("name", 150)
     val description = varchar("description", 2500).nullable()
     val contactId = reference("contactId", Contacts)
     val categoryId = reference("categoryId", Categories)
@@ -61,9 +61,9 @@ class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
 
 object Addresses : IntIdTable() {
     val street = varchar("street", 200).nullable()
-    val postalCode = varchar("postalCode", 10).nullable()
-    val location = varchar("location", 200).nullable()
-    val countryCode = varchar("countryCode", 2).nullable()
+    val postalCode = varchar("postalCode", 10)
+    val location = varchar("location", 200)
+    val countryCode = varchar("countryCode", 2)
 }
 
 class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
