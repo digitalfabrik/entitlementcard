@@ -169,7 +169,7 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart --dart-define=ANDROID_FLOSS=true --dart-define=SHRINK_NATIVE=true
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart --dart-define=ANDROID_FLOSS=true --dart-define=EXCLUDE_X86=true
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 

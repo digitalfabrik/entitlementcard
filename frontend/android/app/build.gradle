@@ -103,7 +103,7 @@ android {
     packagingOptions {
         
         // Exclude x86 because the app size in F-Droid is limited to 30MB
-        if (dartEnvironmentVariables.SHRINK_NATIVE) {
+        if (dartEnvironmentVariables.EXCLUDE_X86) {
             exclude 'lib/x86**'
         }
     }
