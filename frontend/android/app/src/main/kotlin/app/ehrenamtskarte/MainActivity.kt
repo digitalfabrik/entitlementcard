@@ -1,13 +1,32 @@
 package app.ehrenamtskarte
 
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
+import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
+    private val CHANNEL = "app.ehrenamtskarte/location"
+
+    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+                call, result ->
+            if (call.method == "isLocationServiceEnabled") {
+                val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+                val gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                result.success(gpsEnabled || networkEnabled)
+            } else {
+                result.notImplemented()
+            }
+        }
+    }
 
     private fun resetApp() {
         val m = packageManager

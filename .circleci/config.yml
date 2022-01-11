@@ -6,6 +6,13 @@ workflows:
     jobs:
       - check-frontend
       - frontend-android-build:
+          floss: true
+          x86: false
+          requires:
+            - check-frontend      
+      - frontend-android-build:
+          floss: false
+          x86: true
           requires:
             - check-frontend
       - frontend-ios-build:
@@ -105,7 +112,7 @@ jobs:
       - install-fvm-linux
       - run:
           name: Check Formatting
-          command: dart format -l 120 -o none --set-exit-if-changed .
+          command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
           name: Check Analyzer and Linting
           command: fvm flutter analyze --fatal-infos --fatal-warnings
@@ -113,6 +120,15 @@ jobs:
   frontend-android-build:
     docker:
       - image: circleci/android:api-30
+    parameters:
+      floss:
+        description: "Build a floss build"
+        default: false
+        type: boolean     
+      x86:
+        description: "Build for x86 architecture"
+        default: true
+        type: boolean
     environment:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
@@ -136,9 +152,10 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart <<# parameters.floss >> --dart-define=ANDROID_FLOSS=true <</ parameters.floss >><<^ parameters.x86 >> --dart-define=EXCLUDE_X86=true <</ parameters.x86 >>
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
+
 
 
   frontend-ios-build:
