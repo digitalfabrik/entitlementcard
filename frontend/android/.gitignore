@@ -75,6 +75,8 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+play-store-credentials.json
+
 # Version control
 vcs.xml
 
