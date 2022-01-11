@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 ### Added
+- Add metadata for F-Droid via a fastlane structure (#448)
 ### Changed
 
 ## [2.0.2] - 53 - 2021-10-19
