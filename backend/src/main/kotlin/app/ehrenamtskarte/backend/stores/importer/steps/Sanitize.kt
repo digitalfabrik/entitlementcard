@@ -48,18 +48,8 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
             queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
         } else null
 
-        // Postal code invalid
-        if (postalCodeBbox == null) {
-            val features = queryFeatures(this)
-            val feature = features.firstOrNull { isCloseToBoundingBox(it) }
-            val newPostalCode = feature?.postalCode() ?: postalCode
-            logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
-
-            return copy(postalCode = newPostalCode)
-        }
-
         // Postal code OR coordinates invalid
-        if (!isInBoundingBox(postalCodeBbox)) {
+        if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox)) {
             val features = queryFeatures(this)
             val feature = features.firstOrNull { isCloseToBoundingBox(it) || postalCode == it.postalCode() }
 
