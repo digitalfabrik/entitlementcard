@@ -7,6 +7,8 @@ import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
 const val COUNTRY_CODE = "de"
+const val MISCELLANEOUS_CATEGORY = 9
+const val ALTERNATIVE_MISCELLANEOUS_CATEGORY = 99
 
 class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
 
@@ -35,7 +37,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
     private fun categoryId(category: String): Int {
         val int = category.toInt()
-        return if (int == 99) 9 else int
+        return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
     }
 
     private fun String?.clean(): String? {
