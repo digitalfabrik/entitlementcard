@@ -5,10 +5,14 @@ workflows:
   default:
     jobs:
       - check-frontend
-      - frontend-android-floss-build:
+      - frontend-android-build:
+          floss: true
+          x86: false
           requires:
             - check-frontend      
       - frontend-android-build:
+          floss: false
+          x86: true
           requires:
             - check-frontend
       - frontend-ios-build:
@@ -116,6 +120,15 @@ jobs:
   frontend-android-build:
     docker:
       - image: circleci/android:api-30
+    parameters:
+      floss:
+        description: "Build a floss build"
+        default: false
+        type: boolean     
+      x86:
+        description: "Build for x86 architecture"
+        default: true
+        type: boolean
     environment:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
@@ -139,39 +152,11 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart <<# parameters.floss >> --dart-define=ANDROID_FLOSS=true <</ parameters.floss >><<^ parameters.x86 >> --dart-define=EXCLUDE_X86=true <</ parameters.x86 >>
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
-  frontend-android-floss-build:
-    docker:
-      - image: circleci/android:api-30
-    environment:
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
-    resource_class: large
-    working_directory: ~/project/frontend
-    steps:
-      - checkout:
-          path: ~/project
-      - install-fvm-linux
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-      - run:
-          name: Install Flutter Packages
-          command: |
-            fvm flutter pub get
-            fvm flutter precache --android
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
-      - run:
-          name: Build
-          command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart --dart-define=ANDROID_FLOSS=true --dart-define=EXCLUDE_X86=true
-      - store_artifacts:
-          path: build/app/outputs/flutter-apk/
+
 
   frontend-ios-build:
     macos:
