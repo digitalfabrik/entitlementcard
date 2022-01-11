@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer
 
+import app.ehrenamtskarte.backend.stores.importer.steps.ALTERNATIVE_MISCELLANEOUS_CATEGORY
+import app.ehrenamtskarte.backend.stores.importer.steps.MISCELLANEOUS_CATEGORY
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
@@ -41,7 +43,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
 
     private fun filterCategory(): Boolean {
         val category = store.category
-        val validCategories = (0..9) + listOf(99)
+        val validCategories = (0..MISCELLANEOUS_CATEGORY) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY)
         val valid = category?.toIntOrNull() in validCategories
 
         if (!valid)

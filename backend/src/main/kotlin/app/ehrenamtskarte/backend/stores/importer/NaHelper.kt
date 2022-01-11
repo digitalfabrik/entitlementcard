@@ -5,7 +5,7 @@ private val unspecifiedNoteRegex = Regex("""^\s*(n\.?\s*A\.?|)\s*$""")
 fun matchesNa(needle: String) = unspecifiedNoteRegex.matches(needle)
 
 /**
- * Replaces notes for unspecified entries with `null` and trims the String otherwise.
+ * Replaces notes for unspecified entries with `null`.
  *
  * Such a note consists of the letters "nA" (in that order), potentially with dots like "n.A." and/or stuffed with
  * whitespace (e.g. " n A. "), or of whitespace only.
