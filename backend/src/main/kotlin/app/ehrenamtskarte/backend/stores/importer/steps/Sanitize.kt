@@ -1,10 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.common.STATE
+import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseTo
-import app.ehrenamtskarte.backend.stores.geocoding.queryFeatures
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
 import org.geojson.Feature
 import org.geojson.Point
@@ -15,10 +16,11 @@ const val DISTANCE_THRESHOLD_IN_KM = 1.0
 // Postal code lookup fails/does not really make sense for a "Postfach"
 const val STREET_EXCLUDE_PATTERN = "Postfach"
 
-class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
+class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
+    private val featureFetcher = FeatureFetcher(httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        val stateBbox = queryFeatures(listOf(Pair("state", STATE))).first().bbox
+        val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox
 
         input.map { it.sanitize() }.filter {
             if (!it.isInBoundingBox(stateBbox)) {
@@ -44,12 +46,12 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
 
 
         val postalCodeBbox = if (postalCode != null) {
-            queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
+            featureFetcher.queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
         } else null
 
         // Postal code OR coordinates invalid
         if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox)) {
-            val features = queryFeatures(this)
+            val features = featureFetcher.queryFeatures(this)
             val feature = features.firstOrNull { isCloseToBoundingBox(it) || postalCode == it.postalCode() }
 
             // Match by postal code -> replace wrong coordinates
