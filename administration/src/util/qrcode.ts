@@ -84,18 +84,3 @@ export const drawjsPDF = (text: string, x: number, y: number, size: number, pdfD
             }
         }, size, hints)
 }
-
-export const drawSVGPath = (text: string, size: number, pdfDocument: jsPDF) => {
-    const hints = new Map()
-    hints.set(EncodeHintType.MARGIN, 0)
-    hints.set(EncodeHintType.QR_VERSION, 7) // 224 characters
-
-    let pathData = ""
-    createQRCode(text, (x: number, y: number, size: number) => {
-            return pathData += 'M' + x + ',' + y + ' v' + size + ' h' + size + ' v' + (-size) + ' Z ';
-        },
-        (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
-            return pathData += 'M' + rectX + ',' + rectY + ' v' + rectHeight + ' h' + rectWidth + ' v' + (-rectHeight) + ' Z ';
-        }, size, hints)
-    return pathData
-}
