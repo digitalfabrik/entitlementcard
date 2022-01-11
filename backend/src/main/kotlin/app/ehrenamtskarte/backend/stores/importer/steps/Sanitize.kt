@@ -42,7 +42,6 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
 
-        val storeInfo = listOfNotNull(name, location, street, houseNumber).joinToString()
 
         val postalCodeBbox = if (postalCode != null) {
             queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
@@ -57,14 +56,15 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
             if (feature != null && feature.postalCode() == postalCode) {
                 val oldCoordinates = "$latitude, $longitude"
                 val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
-                logger.info("Coordinates of '$storeInfo' was changed from '$oldCoordinates' to '$newCoordinates'")
+
+                logChange(this, "Coordinates", oldCoordinates, newCoordinates)
 
                 return copy(longitude = feature.longitude(), latitude = feature.latitude())
             }
 
             // Match by coordinates -> replace wrong postal code
             val newPostalCode = feature?.postalCode() ?: postalCode
-            logger.info("Postal code of '$storeInfo' was changed from '$postalCode' to '$newPostalCode'")
+            logChange(this, "Postal code", postalCode, newPostalCode)
 
             return copy(postalCode = newPostalCode)
         }
@@ -79,6 +79,16 @@ class Sanitize(private val logger: Logger) : PipelineStep<List<AcceptingStore>, 
 
     private fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
         return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
+    }
+
+    private fun logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
+        val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
+
+        if (oldValue == newValue) {
+            logger.info("$property of '$storeInfo' could not be improved, keeping '$oldValue'")
+        } else {
+            logger.info("$property of '$storeInfo' changed from '$oldValue' to '$newValue'")
+        }
     }
 
     private fun Feature.latitude(): Double = (geometry as Point).coordinates.latitude
