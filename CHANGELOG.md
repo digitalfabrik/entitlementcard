@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Invalid postal codes are now fixed for some accepting stores (#392)
+- Invalid coordinates are now fixed for some accepting stores (#392)
 ### Added
 ### Changed
+- Accepting stores without a valid location are now filtered out (#392)
 
 ## [2.0.2] - 53 - 2021-10-19
 ### Changed
