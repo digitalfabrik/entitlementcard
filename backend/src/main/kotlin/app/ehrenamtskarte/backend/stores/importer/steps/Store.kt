@@ -2,16 +2,16 @@ package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.stores.database.*
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
-import app.ehrenamtskarte.backend.stores.importer.types.ImportAcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import org.slf4j.Logger
 
-class StoreToDatabase(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<ImportAcceptingStore>, Unit>() {
+class Store(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<AcceptingStore>, Unit>() {
 
-    override fun execute(acceptingStores: List<ImportAcceptingStore>) {
+    override fun execute(input: List<AcceptingStore>) {
         transaction {
             try {
                 PhysicalStores.deleteAll()
@@ -19,9 +19,9 @@ class StoreToDatabase(private val logger: Logger, private val manualImport: Bool
                 Contacts.deleteAll()
                 Addresses.deleteAll()
 
-                for ((done, acceptingStore) in acceptingStores.withIndex()) {
+                for ((done, acceptingStore) in input.withIndex()) {
                     val address = AddressEntity.new {
-                        street = acceptingStore.street
+                        street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode
                         locaction = acceptingStore.location
                         countryCode = acceptingStore.countryCode
@@ -43,7 +43,7 @@ class StoreToDatabase(private val logger: Logger, private val manualImport: Bool
                         coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
                     }
                     if (manualImport)
-                        drawSuccessBar(done, acceptingStores.size)
+                        drawSuccessBar(done, input.size)
                 }
             } catch (e: Exception) {
                 logger.info("Unknown exception while storing to db", e)
