@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented custom license page. (#409)
 - Added a CircleCI setup for building the app on iOS and Android. (#423)
 - Added a floss build which can be published on F-Droid. (#427)
+- Add metadata for F-Droid via a fastlane structure (#448)
 
 ### Changed
 - Refactored permission handling to conform with Android guidelines. It is very similar to Google Maps now. (#396, #404)

@@ -1,0 +1,2 @@
+* Standortabfrage auf den Intro Slides verbessert
+* Akzeptanzpartner können nun besser auf der Karte ausgewählt werden
