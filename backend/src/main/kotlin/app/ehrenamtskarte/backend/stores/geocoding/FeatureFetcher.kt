@@ -9,38 +9,25 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import org.geojson.Feature
 import org.geojson.FeatureCollection
-import java.io.File
 
 class FeatureFetcher(private val httpClient: HttpClient) {
     /**
      * Returns geocoding features matching the given [params].
-     * The responses of the geocoding backend are cached as json files in a cache directory.
      */
     suspend fun queryFeatures(params: List<Pair<String, String>>): List<Feature> {
-        val fileName = cacheFileName(params)
-        val file = File("${System.getProperty("app.data")}/nominatim/v1/$fileName.json")
-
-        val geoJson = if (file.exists()) {
-            // Use a cached version on disk.
-            file.readText()
-        } else {
-            val response = httpClient.request<String> {
-                url {
-                    protocol = URLProtocol.HTTP
-                    host = System.getProperty("app.geocoding.host")
-                    path("nominatim", "search")
-                    parameters.append("format", "geojson")
-                    parameters.append("addressdetails", "1")
-                    parameters.append("countrycodes", COUNTRY_CODE)
-                    params.forEach {
-                        parameters.append(it.first, it.second)
-                    }
+        val geoJson =  httpClient.request<String> {
+            url {
+                protocol = URLProtocol.HTTP
+                host = System.getProperty("app.geocoding.host")
+                path("nominatim", "search")
+                parameters.append("format", "geojson")
+                parameters.append("addressdetails", "1")
+                parameters.append("countrycodes", COUNTRY_CODE)
+                params.forEach {
+                    parameters.append(it.first, it.second)
                 }
-                method = HttpMethod.Get
             }
-            file.parentFile.mkdirs()
-            file.writeText(response)
-            response
+            method = HttpMethod.Get
         }
 
         return ObjectMapper().readValue<FeatureCollection>(geoJson, FeatureCollection::class.java).features
@@ -68,21 +55,5 @@ class FeatureFetcher(private val httpClient: HttpClient) {
         }
 
         return queryFeatures(baseParameters)
-    }
-
-    /**
-     * Returns the sanitized file name from the joined [parameters] values
-     */
-    private fun cacheFileName(parameters: List<Pair<String, String>>): String {
-        return parameters.joinToString("_") { it.second }.sanitizeFileName()
-    }
-
-    /**
-     * Returns the sanitized [String]:
-     * - whitespaces are replaced with '_'
-     * - all chars that are not letters, digits, '-' or '_' are removed
-     */
-    private fun String.sanitizeFileName(): String {
-        return replace(" ", "_").filter { it.isLetterOrDigit() || it == '_' || it == '-' }
     }
 }
