@@ -27,6 +27,11 @@ class DetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
+    final street = address.street;
+    final location = "${address.postalCode} ${address.location}";
+    final addressString = "${street != null ? "$street\n" : ""}$location";
+    final mapQueryString = "${street != null ? "$street, " : ""}$location";
+
     final contact = acceptingStore.store.contact;
     final currentAccentColor = accentColor;
     final readableOnAccentColor = currentAccentColor == null ? null : getReadableOnColor(currentAccentColor);
@@ -52,13 +57,9 @@ class DetailContent extends StatelessWidget {
               children: <Widget>[
                 ContactInfoRow(
                   Icons.location_on,
-                  "${address.street}\n"
-                      "${address.postalCode} ${address.location}",
+                  addressString,
                   "Adresse",
-                  onTap: () => MapsLauncher.launchQuery(
-                    "${address.street}, "
-                    "${address.postalCode} ${address.location}",
-                  ),
+                  onTap: () => MapsLauncher.launchQuery(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),

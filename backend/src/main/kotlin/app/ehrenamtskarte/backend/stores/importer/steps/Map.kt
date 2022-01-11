@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.common.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
-const val COUNTRY_CODE = "de"
 const val MISCELLANEOUS_CATEGORY = 9
 const val ALTERNATIVE_MISCELLANEOUS_CATEGORY = 99
 

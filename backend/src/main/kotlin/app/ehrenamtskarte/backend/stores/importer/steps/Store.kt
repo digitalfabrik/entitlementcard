@@ -19,7 +19,11 @@ class Store(private val logger: Logger, private val manualImport: Boolean) : Pip
                 Contacts.deleteAll()
                 Addresses.deleteAll()
 
-                for ((done, acceptingStore) in input.withIndex()) {
+                input.forEachIndexed { done, acceptingStore ->
+                    if (acceptingStore.postalCode == null) {
+                        logger.info("Skipping '${acceptingStore.name}' because its postal code is null.")
+                        return@forEachIndexed
+                    }
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode
