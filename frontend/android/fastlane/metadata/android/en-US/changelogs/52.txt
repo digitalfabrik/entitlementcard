@@ -1,0 +1,2 @@
+* Improve location settings in the intro slides
+* Selection of Akzeptanzpartner on the map has been improved
