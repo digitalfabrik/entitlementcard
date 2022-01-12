@@ -195,21 +195,21 @@
 		0B1FA7F126DBD06400D4AEA7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0BE935D1274FD4CA004AF690 /* connectivity_plus.framework */,
-				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */,
-				0BE935D3274FD4CA004AF690 /* geolocator_apple.framework */,
-				0B1FA80C26DBD06400D4AEA7 /* image_picker.framework */,
-				0B330E3A27143BA80011A908 /* maplibre_gl.framework */,
-				0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension.framework */,
-				0B1FA81426DBD06400D4AEA7 /* maps_launcher.framework */,
-				0B1FA81626DBD06400D4AEA7 /* MTBBarcodeScanner.framework */,
-				0B1FA81826DBD06400D4AEA7 /* package_info.framework */,
-				0B1FA81A26DBD06400D4AEA7 /* path_provider.framework */,
-				0B1FA81C26DBD06400D4AEA7 /* Pods_Runner.framework */,
-				0B1FA81E26DBD06400D4AEA7 /* qr_code_scanner.framework */,
-				0B1FA82026DBD06400D4AEA7 /* Reachability.framework */,
-				0B1FA82226DBD06400D4AEA7 /* shared_preferences.framework */,
-				0B1FA82426DBD06400D4AEA7 /* url_launcher.framework */,
+				0BE935D1274FD4CA004AF690 /* connectivity_plus */,
+				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */,
+				0BE935D3274FD4CA004AF690 /* geolocator_apple */,
+				0B1FA80C26DBD06400D4AEA7 /* image_picker */,
+				0B330E3A27143BA80011A908 /* maplibre_gl */,
+				0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension */,
+				0B1FA81426DBD06400D4AEA7 /* maps_launcher */,
+				0B1FA81626DBD06400D4AEA7 /* MTBBarcodeScanner */,
+				0B1FA81826DBD06400D4AEA7 /* package_info */,
+				0B1FA81A26DBD06400D4AEA7 /* path_provider */,
+				0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */,
+				0B1FA81E26DBD06400D4AEA7 /* qr_code_scanner */,
+				0B1FA82026DBD06400D4AEA7 /* Reachability */,
+				0B1FA82226DBD06400D4AEA7 /* shared_preferences */,
+				0B1FA82426DBD06400D4AEA7 /* url_launcher */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -380,107 +380,122 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */ = {
+		0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = flutter_secure_storage;
 			path = flutter_secure_storage.framework;
 			remoteRef = 0B1FA80726DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA80C26DBD06400D4AEA7 /* image_picker.framework */ = {
+		0B1FA80C26DBD06400D4AEA7 /* image_picker */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = image_picker;
 			path = image_picker.framework;
 			remoteRef = 0B1FA80B26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81426DBD06400D4AEA7 /* maps_launcher.framework */ = {
+		0B1FA81426DBD06400D4AEA7 /* maps_launcher */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = maps_launcher;
 			path = maps_launcher.framework;
 			remoteRef = 0B1FA81326DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81626DBD06400D4AEA7 /* MTBBarcodeScanner.framework */ = {
+		0B1FA81626DBD06400D4AEA7 /* MTBBarcodeScanner */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = MTBBarcodeScanner;
 			path = MTBBarcodeScanner.framework;
 			remoteRef = 0B1FA81526DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81826DBD06400D4AEA7 /* package_info.framework */ = {
+		0B1FA81826DBD06400D4AEA7 /* package_info */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = package_info;
 			path = package_info.framework;
 			remoteRef = 0B1FA81726DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81A26DBD06400D4AEA7 /* path_provider.framework */ = {
+		0B1FA81A26DBD06400D4AEA7 /* path_provider */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = path_provider;
 			path = path_provider.framework;
 			remoteRef = 0B1FA81926DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81C26DBD06400D4AEA7 /* Pods_Runner.framework */ = {
+		0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = "Pods-Runner";
 			path = Pods_Runner.framework;
 			remoteRef = 0B1FA81B26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81E26DBD06400D4AEA7 /* qr_code_scanner.framework */ = {
+		0B1FA81E26DBD06400D4AEA7 /* qr_code_scanner */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = qr_code_scanner;
 			path = qr_code_scanner.framework;
 			remoteRef = 0B1FA81D26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA82026DBD06400D4AEA7 /* Reachability.framework */ = {
+		0B1FA82026DBD06400D4AEA7 /* Reachability */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = Reachability;
 			path = Reachability.framework;
 			remoteRef = 0B1FA81F26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA82226DBD06400D4AEA7 /* shared_preferences.framework */ = {
+		0B1FA82226DBD06400D4AEA7 /* shared_preferences */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = shared_preferences;
 			path = shared_preferences.framework;
 			remoteRef = 0B1FA82126DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA82426DBD06400D4AEA7 /* url_launcher.framework */ = {
+		0B1FA82426DBD06400D4AEA7 /* url_launcher */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = url_launcher;
 			path = url_launcher.framework;
 			remoteRef = 0B1FA82326DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B330E3A27143BA80011A908 /* maplibre_gl.framework */ = {
+		0B330E3A27143BA80011A908 /* maplibre_gl */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = maplibre_gl;
 			path = maplibre_gl.framework;
 			remoteRef = 0B330E3927143BA80011A908 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension.framework */ = {
+		0B330E3C27143BA80011A908 /* MapLibreAnnotationExtension */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = MapLibreAnnotationExtension;
 			path = MapLibreAnnotationExtension.framework;
 			remoteRef = 0B330E3B27143BA80011A908 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0BE935D1274FD4CA004AF690 /* connectivity_plus.framework */ = {
+		0BE935D1274FD4CA004AF690 /* connectivity_plus */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = connectivity_plus;
 			path = connectivity_plus.framework;
 			remoteRef = 0BE935D0274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0BE935D3274FD4CA004AF690 /* geolocator_apple.framework */ = {
+		0BE935D3274FD4CA004AF690 /* geolocator_apple */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = geolocator_apple;
 			path = geolocator_apple.framework;
 			remoteRef = 0BE935D2274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -953,7 +968,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 7272KE28TJ;
@@ -973,7 +988,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.nrw.it.ehrensachebayern;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore de.nrw.it.ehrensachebayern";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development de.nrw.it.ehrensachebayern";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
