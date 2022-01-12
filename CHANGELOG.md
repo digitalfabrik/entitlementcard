@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Fixed fastlane metadata structure to confirm to F-Droid requirements.
 ### Added
 ### Changed
 ### Removed
+
+## [2.1.1] - 55 - 2022-01-12
+### Fixed
+- Fixed fastlane metadata structure to confirm to F-Droid requirements.
 
 ## [2.1.0] - 54 - 2022-01-11
 ### Fixed
