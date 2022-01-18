@@ -53,7 +53,7 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
         } else null
 
         // Postal code OR coordinates invalid
-        if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox) || longitude == null || latitude == null) {
+        if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox)) {
             val features = featureFetcher.queryFeatures(this)
             val feature = features.firstOrNull { isCloseToBoundingBox(it) || postalCode == it.postalCode() }
 
