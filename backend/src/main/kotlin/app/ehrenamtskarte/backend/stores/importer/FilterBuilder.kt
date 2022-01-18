@@ -34,13 +34,6 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
         }
     }
 
-    private fun filterLongitudeAndLatitude() = if (store.longitude.isUnavailable() || store.latitude.isUnavailable()) {
-        logger.info("'${store.name}' was filtered out because longitude '${store.longitude}' or latitude '${store.latitude}' are invalid")
-        false
-    } else {
-        true
-    }
-
     private fun filterCategory(): Boolean {
         val category = store.category
         val validCategories = (0..MISCELLANEOUS_CATEGORY) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY)
@@ -53,7 +46,7 @@ data class FilterBuilder(val store: LbeAcceptingStore, val logger: Logger) {
     }
 
     fun filter(): Boolean {
-        return filterName() && filterCategory() && filterLocation() && filterLongitudeAndLatitude()
+        return filterName() && filterCategory() && filterLocation()
     }
 
 }

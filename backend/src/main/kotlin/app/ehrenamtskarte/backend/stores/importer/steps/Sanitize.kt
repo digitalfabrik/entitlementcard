@@ -23,6 +23,10 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
         val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox
 
         input.map { it.sanitize() }.filter {
+            if (it.longitude == null || it.latitude == null) {
+                logger.info("'${it.name}, ${it.location}' was filtered out because longitude or latitude are null")
+                return@filter false
+            }
             if (!it.isInBoundingBox(stateBbox)) {
                 logger.info("'${it.name}, ${it.location}' was filtered out because it is outside of $STATE")
                 return@filter false
@@ -44,13 +48,12 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
 
-
         val postalCodeBbox = if (postalCode != null) {
             featureFetcher.queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
         } else null
 
         // Postal code OR coordinates invalid
-        if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox)) {
+        if (postalCodeBbox == null || !isInBoundingBox(postalCodeBbox) || longitude == null || latitude == null) {
             val features = featureFetcher.queryFeatures(this)
             val feature = features.firstOrNull { isCloseToBoundingBox(it) || postalCode == it.postalCode() }
 
@@ -76,10 +79,12 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
     }
 
     private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
+        if (latitude == null || longitude == null) return false
         return isCloseTo(feature.bbox, latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
     }
 
     private fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
+        if (latitude == null || longitude == null) return false
         return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
     }
 
