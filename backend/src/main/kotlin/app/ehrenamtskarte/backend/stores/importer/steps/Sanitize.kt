@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.common.STATE
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
-import app.ehrenamtskarte.backend.stores.geocoding.isCloseTo
+import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
+import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import io.ktor.client.HttpClient
@@ -11,8 +11,6 @@ import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
 
-const val DISTANCE_THRESHOLD_IN_KM = 1.0
-
 // Postal code lookup fails/does not really make sense for a "Postfach"
 const val STREET_EXCLUDE_PATTERN = "Postfach"
 
@@ -20,24 +18,7 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
     private val featureFetcher = FeatureFetcher(httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox
-
-        input.map { it.sanitize() }.filter {
-            if (it.longitude == null || it.latitude == null) {
-                logger.info("'${it.name}, ${it.location}' was filtered out because longitude or latitude are null")
-                return@filter false
-            }
-            if (!it.isInBoundingBox(stateBbox)) {
-                logger.info("'${it.name}, ${it.location}' was filtered out because it is outside of $STATE")
-                return@filter false
-            }
-            if (it.postalCode == null) {
-                // Probably because it is outside of the state but inside the bounding box of the state
-                logger.info("'${it.name}, ${it.location}' was filtered out because its postal code is null")
-                return@filter false
-            }
-            true
-        }
+        input.map { it.sanitize() }
     }
 
     /**
@@ -76,16 +57,6 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
 
         // Data seems to be correct
         return this
-    }
-
-    private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
-        if (latitude == null || longitude == null) return false
-        return isCloseTo(feature.bbox, latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
-    }
-
-    private fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
-        if (latitude == null || longitude == null) return false
-        return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
     }
 
     private fun logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
