@@ -43,10 +43,12 @@ class CustomLicensePage extends StatelessWidget {
               return value;
             });
 
-            result.add(CustomLicenseEntry(key, listOfParagraphLists));
+            if (key.isNotEmpty) {
+              result.add(CustomLicenseEntry(key, listOfParagraphLists));
+            }
           });
 
-          result.sortBy((element) => element.packageName);
+          result.sortBy((element) => element.packageName.toLowerCase());
 
           return CustomScrollView(
             slivers: <Widget>[
