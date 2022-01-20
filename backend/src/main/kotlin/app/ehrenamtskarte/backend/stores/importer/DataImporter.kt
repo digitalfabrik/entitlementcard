@@ -14,7 +14,7 @@ object DataImporter {
                 .addStep(PreSanitizeFilter(logger), logger) { logger.info("== Filter raw data ==") }
                 .addStep(Map(logger), logger) { logger.info("== Map raw to internal data ==") }
                 .addStep(Sanitize(logger, httpClient), logger) { logger.info("== Sanitize data ==") }
-                .addStep(PostSanitizeFilter(logger, httpClient), logger) { logger.info("== Filter raw data ==") }
+                .addStep(PostSanitizeFilter(logger, httpClient), logger) { logger.info("== Filter sanitized data ==") }
                 .addStep(Encode(logger), logger) { logger.info("== Handle encoding issues ==") }
                 .addStep(Store(logger, manualImport), logger) { logger.info("== Store remaining data to db ==") }
         }
