@@ -11,7 +11,7 @@ object DataImporter {
         val logger = LoggerFactory.getLogger(DataImporter::class.java)
         val pipe = {
             Unit.addStep(Download(logger, httpClient), logger) { logger.info("== Download raw data ==" )}
-                .addStep(Filter(logger), logger) { logger.info("== Filter raw data ==") }
+                .addStep(PreSanitizeFilter(logger), logger) { logger.info("== Filter raw data ==") }
                 .addStep(Map(logger), logger) { logger.info("== Map raw to internal data ==") }
                 .addStep(Sanitize(logger, httpClient), logger) { logger.info("== Sanitize data ==") }
                 .addStep(Encode(logger), logger) { logger.info("== Handle encoding issues ==") }
