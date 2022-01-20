@@ -1,4 +1,5 @@
 git_url("git@github.com:Integreat/app-credentials.git")
+git_branch("main")
 
 storage_mode("git")
 
