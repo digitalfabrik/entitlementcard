@@ -7,6 +7,7 @@ data class AcceptingStore(
     val postalCode: String?,
     val street: String?,
     val houseNumber: String?,
+    val additionalAddressInformation: String?,
     val longitude: Double?,
     val latitude: Double?,
     val categoryId: Int,
