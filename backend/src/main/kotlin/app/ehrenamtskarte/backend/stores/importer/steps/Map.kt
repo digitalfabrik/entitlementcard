@@ -13,6 +13,7 @@ const val MISCELLANEOUS_CATEGORY = 9
 const val ALTERNATIVE_MISCELLANEOUS_CATEGORY = 99
 
 class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
+    private val houseNumberRegex = houseNumberRegex()
 
     override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
         try {
@@ -39,9 +40,13 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
     }
 
     private fun houseNumberRegex(): Regex {
+        // House number prefix, e.g. "B[200]", "H[7]" (mostly in industrial parks)
+        @Language("RegExp")
+        val houseNumberPrefix = """[A-Z]?"""
+
         // House number range, e.g. "[5] - 7", "[2]+3" or "[11] und 12"
         @Language("RegExp")
-        val houseNumberRange = """\s?(-|\+|u\.|und)\s?[0-9]+"""
+        val houseNumberRange = """\s?(-|\+|u\.|und|/)\s?[0-9]+"""
 
         // Additional house number info, e.g. "[13] 1/2" or "[1] 3/4" (must not be followed by another digit)
         @Language("RegExp")
@@ -49,26 +54,45 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
         // Additional house number info, e.g. "[12]a" or "[2] B" (must be followed by a whitespace or the end of the string)
         @Language("RegExp")
-        val houseNumberAdditionLetter = """\s?[a-zA-Z]$|\s"""
+        val houseNumberAdditionLetter = """\s?[a-zA-Z]($|\s)"""
 
-        return """[0-9]+(($houseNumberRange)|($houseNumberAdditionFraction)|($houseNumberAdditionLetter))?""".toRegex()
+        return """$houseNumberPrefix[0-9]+(($houseNumberRange)|($houseNumberAdditionFraction)|($houseNumberAdditionLetter))?""".toRegex()
     }
 
     private fun AcceptingStore.sanitizeStreetHouseNumber(): AcceptingStore {
-        val indexOfDigitInStreet = street?.indexOfFirst { it.isDigit() } ?: -1
-        if (street == null || indexOfDigitInStreet < 0) return this
+        val isStreetPolluted = street?.find { it.isDigit() } != null
+        val isHouseNumberPolluted = houseNumber != null && !houseNumberRegex.matches(houseNumber)
 
-        val cleanedStreet = street.substring(0, indexOfDigitInStreet).trim() // Everything before the first digit
-        val splitHouseNumber = street.substring(indexOfDigitInStreet).trim() // Everything after the first digit
+        if (isStreetPolluted || isHouseNumberPolluted) {
+            val address = listOfNotNull(street, houseNumber).joinToString(" ").replace(Regex("""\s{2,}"""), " ")
+            val match = houseNumberRegex.find(address)
 
-        val regex = houseNumberRegex()
-        val completeHouseNumber = if (houseNumber != null && splitHouseNumber != houseNumber) "$splitHouseNumber $houseNumber" else splitHouseNumber
-        val cleanedHouseNumber = regex.find(completeHouseNumber)!!.value.toLowerCase().trim()
+            if (match == null) {
+                // No house number, the whole address is the street
+                logger.logChange(this, "Address", "$street|$houseNumber", address)
+                return copy(street = address, houseNumber = null)
+            }
 
-        // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
-        val additionalInformation = regex.replaceFirst(completeHouseNumber, "").trim { !it.isLetterOrDigit() }.replaceNa()
+            val cleanStreet = address.substring(0, match.range.first).trim()
+            val cleanHouseNumber = match.value.toLowerCase().trim()
 
-        return copy(street = cleanedStreet, houseNumber = cleanedHouseNumber, additionalAddressInformation = additionalInformation)
+            // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
+            val cleanAdditionalInformation = if (match.range.last < address.length - 1) {
+                val additionalInformation =
+                    address.substring(match.range.last + 1).trim { !it.isLetterOrDigit() }.clean()
+                if (additionalInformation != cleanHouseNumber) additionalInformation else null
+            } else null
+
+            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, cleanAdditionalInformation).joinToString("|")
+            logger.logChange(this, "Address", "$street|$houseNumber", newAddress)
+
+            return copy(
+                street = cleanStreet,
+                houseNumber = cleanHouseNumber,
+                additionalAddressInformation = cleanAdditionalInformation
+            )
+        }
+        return this
     }
 
     private fun String?.safeToDouble(): Double? {
