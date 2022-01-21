@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
@@ -43,30 +44,20 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
                 val oldCoordinates = "$latitude, $longitude"
                 val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
 
-                logChange(this, "Coordinates", oldCoordinates, newCoordinates)
+                logger.logChange(this, "Coordinates", oldCoordinates, newCoordinates)
 
                 return copy(longitude = feature.longitude(), latitude = feature.latitude())
             }
 
             // Match by coordinates -> replace wrong postal code
             val newPostalCode = feature?.postalCode() ?: postalCode
-            logChange(this, "Postal code", postalCode, newPostalCode)
+            logger.logChange(this, "Postal code", postalCode, newPostalCode)
 
             return copy(postalCode = newPostalCode)
         }
 
         // Data seems to be correct
         return this
-    }
-
-    private fun logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
-        val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-
-        if (oldValue == newValue) {
-            logger.info("$property of '$storeInfo' could not be improved, keeping '$oldValue'")
-        } else {
-            logger.info("$property of '$storeInfo' changed from '$oldValue' to '$newValue'")
-        }
     }
 
     private fun Feature.latitude(): Double = (geometry as Point).coordinates.latitude
