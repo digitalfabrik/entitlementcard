@@ -7,7 +7,7 @@ fun Logger.logChange(storeInfo: String, property: String, oldValue: String?, new
     if (oldValue == newValue) {
         info("$property of '$storeInfo' could not be improved, keeping '$oldValue'")
     } else {
-        info("$property of '$storeInfo' changed from '$oldValue' to '$newValue'")
+        info("$property of '$storeInfo' changed to '$newValue' from '$oldValue'")
     }
 }
 

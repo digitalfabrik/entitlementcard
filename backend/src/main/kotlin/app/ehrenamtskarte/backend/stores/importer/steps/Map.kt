@@ -69,7 +69,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
             if (match == null) {
                 // No house number, the whole address is the street
-                logger.logChange(this, "Address", "$street|$houseNumber", address)
+                logger.logChange("$name, $location", "Address", "$street|$houseNumber", address)
                 return copy(street = address, houseNumber = null)
             }
 
@@ -84,7 +84,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
             } else null
 
             val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, cleanAdditionalInformation).joinToString("|")
-            logger.logChange(this, "Address", "$street|$houseNumber", newAddress)
+            logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)
 
             return copy(
                 street = cleanStreet,
