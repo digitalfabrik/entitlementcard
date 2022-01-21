@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.common.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
@@ -19,7 +20,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
                 it.name!!.trim(),
                 COUNTRY_CODE,
                 it.location!!.trim(),
-                cleanPostalCode(it.postalCode),
+                it.cleanPostalCode(),
                 it.street.clean(),
                 it.houseNumber.clean(),
                 null,
@@ -83,10 +84,15 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
         return this?.replaceNa()?.trim()
     }
 
-    private fun cleanPostalCode(postalCode: String?): String? {
-        if (postalCode == null) return null
-        val fiveDigitRegex = """\d{5}""".toRegex()
-        return fiveDigitRegex.find(postalCode)?.value
+    private fun LbeAcceptingStore.cleanPostalCode(): String? {
+        val oldPostalCode = postalCode ?: return null
+        val fiveDigitRegex = """[0-9]{5}""".toRegex()
+
+        val newPostalCode = fiveDigitRegex.find(oldPostalCode)?.value
+        if (newPostalCode != oldPostalCode.clean()) {
+            logger.logChange("$name, $location", "Postal code", oldPostalCode, newPostalCode)
+        }
+        return newPostalCode
     }
 
 }
