@@ -40,23 +40,23 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
     }
 
     private fun houseNumberRegex(): Regex {
-        // House number prefix, e.g. "B[200]", "H[7]" (mostly in industrial parks)
+        // E.g. "B[200]", "H[7]" (mostly in industrial parks)
         @Language("RegExp")
-        val houseNumberPrefix = """[A-Z]?"""
+        val prefix = """[A-Z]?"""
 
-        // House number range, e.g. "[5] - 7", "[2]+3" or "[11] und 12"
+        // E.g. "[5] - 7", "[2]+3" or "[11] und 12"
         @Language("RegExp")
-        val houseNumberRange = """\s?(-|\+|u\.|und|/)\s?[0-9]+"""
+        val range = """\s?(-|\+|u\.|und|/)\s?[0-9]+"""
 
-        // Additional house number info, e.g. "[13] 1/2" or "[1] 3/4" (must not be followed by another digit)
+        // E.g. "[13] 1/2" or "[1] 3/4"
         @Language("RegExp")
-        val houseNumberAdditionFraction = """\s?[0-9]/[0-9]"""
+        val fraction = """\s?[0-9]/[0-9]"""
 
-        // Additional house number info, e.g. "[12]a" or "[2] B" (must be followed by a whitespace or the end of the string)
+        // E.g. "[12]a" or "[2] B" (must be followed by a whitespace or the end of the string)
         @Language("RegExp")
-        val houseNumberAdditionLetter = """\s?[a-zA-Z]($|\s)"""
+        val letter = """\s?[a-zA-Z]($|\s)"""
 
-        return """$houseNumberPrefix[0-9]+(($houseNumberRange)|($houseNumberAdditionFraction)|($houseNumberAdditionLetter))?""".toRegex()
+        return Regex("""$prefix[0-9]+(($range)|($fraction)|($letter))?""")
     }
 
     private fun AcceptingStore.sanitizeStreetHouseNumber(): AcceptingStore {
@@ -64,33 +64,28 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
         val isHouseNumberPolluted = houseNumber != null && !houseNumberRegex.matches(houseNumber)
 
         if (isStreetPolluted || isHouseNumberPolluted) {
-            val address = listOfNotNull(street, houseNumber).joinToString(" ").replace(Regex("""\s{2,}"""), " ")
-            val match = houseNumberRegex.find(address)
+            val address = listOfNotNull(street, houseNumber).joinToString(" ")
+            val houseNumberMatch = houseNumberRegex.find(address)
 
-            if (match == null) {
+            if (houseNumberMatch == null) {
                 // No house number, the whole address is the street
                 logger.logChange("$name, $location", "Address", "$street|$houseNumber", address)
                 return copy(street = address, houseNumber = null)
             }
 
-            val cleanStreet = address.substring(0, match.range.first).trim()
-            val cleanHouseNumber = match.value.toLowerCase().trim()
+            val cleanStreet = address.substring(0, houseNumberMatch.range.first).trim()
+            val cleanHouseNumber = houseNumberMatch.value.toLowerCase().trim()
 
             // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
-            val cleanAdditionalInformation = if (match.range.last < address.length - 1) {
-                val additionalInformation =
-                    address.substring(match.range.last + 1).trim { !it.isLetterOrDigit() }.clean()
-                if (additionalInformation != cleanHouseNumber) additionalInformation else null
+            val residue = if (houseNumberMatch.range.last < address.length - 1) {
+                val res = address.substring(houseNumberMatch.range.last + 1).trim { !it.isLetterOrDigit() }.clean()
+                if (res != cleanHouseNumber) res else null
             } else null
 
-            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, cleanAdditionalInformation).joinToString("|")
+            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).joinToString("|")
             logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)
 
-            return copy(
-                street = cleanStreet,
-                houseNumber = cleanHouseNumber,
-                additionalAddressInformation = cleanAdditionalInformation
-            )
+            return copy(street = cleanStreet, houseNumber = cleanHouseNumber, additionalAddressInformation = residue)
         }
         return this
     }
@@ -110,7 +105,7 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
     private fun LbeAcceptingStore.cleanPostalCode(): String? {
         val oldPostalCode = postalCode ?: return null
-        val fiveDigitRegex = """[0-9]{5}""".toRegex()
+        val fiveDigitRegex = Regex("""[0-9]{5}""")
 
         val newPostalCode = fiveDigitRegex.find(oldPostalCode)?.value
         if (newPostalCode != oldPostalCode.clean()) {
