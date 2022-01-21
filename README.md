@@ -7,6 +7,10 @@
 >
 > App for Android & iOS + Backend + Administration Web Portal - **100% Open Source**.
 
+[<img src="https://f-droid.org/badge/get-it-on.png"
+      alt="Get it on F-Droid"
+      height="80">](https://f-droid.org/packages/app.ehrenamtskarte.bayern.floss/)
+
 English | [Deutsch](docs/de/readme.md)
 
 ## Getting Started
