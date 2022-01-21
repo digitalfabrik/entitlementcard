@@ -21,8 +21,8 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
                 cleanPostalCode(it.postalCode),
                 it.street.clean(),
                 it.houseNumber.clean(),
-                it.longitude!!.replace(",", ".").toDouble(),
-                it.latitude!!.replace(",", ".").toDouble(),
+                it.longitude.safeToDouble(),
+                it.latitude.safeToDouble(),
                 categoryId(it.category!!),
                 it.email.clean(),
                 it.telephone.clean(),
@@ -33,6 +33,10 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
             logger.info("Exception occurred while mapping $it", e)
             null
         }
+    }
+
+    private fun String?.safeToDouble(): Double? {
+        return this?.clean()?.replace(",", ".")?.toDouble()
     }
 
     private fun categoryId(category: String): Int {

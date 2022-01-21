@@ -44,7 +44,7 @@ class Store(private val logger: Logger, private val manualImport: Boolean) : Pip
                     PhysicalStoreEntity.new {
                         storeId = storeEntity.id
                         addressId = address.id
-                        coordinates = Point(acceptingStore.longitude, acceptingStore.latitude)
+                        coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
                     }
                     if (manualImport)
                         drawSuccessBar(done, input.size)
