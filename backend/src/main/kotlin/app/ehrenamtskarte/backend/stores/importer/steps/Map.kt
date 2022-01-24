@@ -44,10 +44,10 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
         return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
     }
 
-    private fun String?.clean(removeSubsequentSpaces: Boolean = true): String? {
+    private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
         val trimmed = this?.replaceNa()?.trim()
-        if (removeSubsequentSpaces) {
-            return trimmed?.replace(Regex(""" {2,}"""), " ")
+        if (removeSubsequentWhitespaces) {
+            return trimmed?.replace(Regex("""\s{2,}"""), " ")
         }
         return trimmed
     }
