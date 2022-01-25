@@ -31,12 +31,14 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
 
     final currentOrientation = MediaQuery.of(context).orientation;
     final isOverDrawingSquare = currentOrientation != _lastBuildOrientation;
-
     if (isOverDrawingSquare) {
+      // Delay setState by 2 frames. If we delay only by one frame, then Flutter is able to optimize this away.
       WidgetsBinding.instance!.addPostFrameCallback(
-        (_) => setState(() {
-          _lastBuildOrientation = currentOrientation;
-        }),
+        (_) => WidgetsBinding.instance!.addPostFrameCallback(
+          (_) => setState(() {
+            _lastBuildOrientation = currentOrientation;
+          }),
+        ),
       );
     }
 
