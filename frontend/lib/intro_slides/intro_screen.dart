@@ -82,7 +82,7 @@ class IntroScreenState extends State<IntroScreen> {
     if (onFinishedCallback != null) {
       onFinishedCallback();
     }
-    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacementNamed("/");
   }
 
   @override

@@ -31,6 +31,7 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
 
     final currentOrientation = MediaQuery.of(context).orientation;
     final isOverDrawingSquare = currentOrientation != _lastBuildOrientation;
+
     if (isOverDrawingSquare) {
       // Delay setState by 2 frames. If we delay only by one frame, then Flutter is able to optimize this away.
       WidgetsBinding.instance!.addPostFrameCallback(
@@ -42,13 +43,15 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
       );
     }
 
-    final width = isOverDrawingSquare ? maximum : null;
-    final height = isOverDrawingSquare ? maximum : null;
+    final width = isOverDrawingSquare ? maximum : MediaQuery.of(context).size.width;
+    final height = isOverDrawingSquare ? maximum : MediaQuery.of(context).size.height;
 
     return OverflowBox(
       alignment: Alignment.topLeft,
       maxHeight: height,
       maxWidth: width,
+      minWidth: width,
+      minHeight: height,
       child: widget.child,
     );
   }

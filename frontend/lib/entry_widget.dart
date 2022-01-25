@@ -27,15 +27,19 @@ class EntryWidget extends StatelessWidget {
           return ErrorMessage(error.toString());
         } else if (snapshot.hasData && settings != null) {
           final routes = <String, WidgetBuilder>{};
-          String? initialRoute;
+          String initialRoute = '/';
+
+          routes.addAll(<String, WidgetBuilder>{
+            'intro': (context) => IntroScreen(
+                  onFinishedCallback: () => settings.setFirstStart(enabled: false),
+                ),
+            '/': (context) => HomePage(
+                  showVerification: configuration.showVerification,
+                )
+          });
 
           if (settings.firstStart) {
-            routes.addAll(<String, WidgetBuilder>{
-              '/intro': (context) => IntroScreen(
-                    onFinishedCallback: () => settings.setFirstStart(enabled: false),
-                  ),
-            });
-            initialRoute = '/intro';
+            initialRoute = 'intro';
           }
 
           return MaterialApp(
@@ -43,7 +47,6 @@ class EntryWidget extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
-            initialRoute: initialRoute,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
@@ -53,9 +56,7 @@ class EntryWidget extends StatelessWidget {
             ],
             supportedLocales: const [Locale('de')],
             locale: const Locale('de'),
-            home: HomePage(
-              showVerification: configuration.showVerification,
-            ),
+            initialRoute: initialRoute,
             routes: routes,
           );
         } else {
