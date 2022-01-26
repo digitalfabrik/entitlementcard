@@ -43,8 +43,8 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
       );
     }
 
-    final width = isOverDrawingSquare ? maximum : MediaQuery.of(context).size.width;
-    final height = isOverDrawingSquare ? maximum : MediaQuery.of(context).size.height;
+    final width = isOverDrawingSquare ? maximum : null;
+    final height = isOverDrawingSquare ? maximum : null;
 
     return OverflowBox(
       alignment: Alignment.topLeft,
