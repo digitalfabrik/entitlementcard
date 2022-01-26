@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 /// A widget which resizes the child widget twice when the orientation changes.
 ///
 /// * Firstly, the child put in a container with the following constraints:
-///   `width = height = max(screenWidth, screenHeight)`. This creates a square.
+///   `width = height = max(parentMaxWidth, parentMaxHeight)`. This creates a square.
 /// * Secondly, the child is resized to
-///   `width = parentWidth, height = parentHeight. This sizes the child according to the parent constraints. This
+///   `width = parentMaxWidth, height = parentMaxHeight. This sizes the child according to the parent constraints. This
 ///   resize only happens if the child is already initialized. If it is not yet initialized then the resize is delayed.
 class ScreenParentResizer extends StatelessWidget {
   final Widget child;
