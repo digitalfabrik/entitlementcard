@@ -65,6 +65,12 @@ export function generatePdf(models: CardActivateModel[], region: Region) {
         unit: 'mm',
         format: 'a4'
     });
+    
+    let response = uint8ArrayToBase64(new Uint8Array(await (await fetch("/pdf-fonts/NotoSans-Regular.ttf")).arrayBuffer()));
+    
+    doc.addFileToVFS("NotoSans-Regular.ttf", response);
+    doc.addFont("NotoSans-Regular.ttf", "NotoSans-Regular", "normal");
+    doc.setFont("NotoSans-Regular")
 
     for (let k = 0; k < models.length; k++) {
         addLetter(doc, models[k], region)
