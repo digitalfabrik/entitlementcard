@@ -111,6 +111,13 @@ ogr2ogr -f "PostgreSQL" PG:"dbname=ehrenamtskarte host='localhost' port='5432' u
 
 After starting `docker-compose` with the staging configuration, the setup should be available at port 80: `docker-compose -f docker-compose.yml -f docker-compose.staging.yml up`.
 
+## Admin Account Creation
+
+It is possible to create an admin account by running:
+```bash
+ ./gradlew run --args="create-admin <email> <password>"
+```
+
 ## Importing EAK data on staging
 
 To import the EAK data using docker, run the following:

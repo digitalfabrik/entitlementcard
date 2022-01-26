@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.common.database
 
+import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -30,6 +31,10 @@ class Database {
             }
         }
 
+        fun createAccount(email: String, password: String) {
+            AdministratorsRepository.insert(email, password)
+        }
+        
         fun setup(logging: Boolean) {
             Database().db
 
