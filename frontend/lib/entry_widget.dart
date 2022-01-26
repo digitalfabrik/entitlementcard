@@ -10,6 +10,9 @@ import 'home/home_page.dart';
 import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
 
+const introRouteName = "/intro";
+const homeRouteName = "/home";
+
 class EntryWidget extends StatelessWidget {
   const EntryWidget({Key? key}) : super(key: key);
 
@@ -26,21 +29,16 @@ class EntryWidget extends StatelessWidget {
         if (snapshot.hasError && error != null) {
           return ErrorMessage(error.toString());
         } else if (snapshot.hasData && settings != null) {
-          final routes = <String, WidgetBuilder>{};
-          String initialRoute = '/';
-
-          routes.addAll(<String, WidgetBuilder>{
-            'intro': (context) => IntroScreen(
+          final routes = <String, WidgetBuilder>{
+            introRouteName: (context) => IntroScreen(
                   onFinishedCallback: () => settings.setFirstStart(enabled: false),
                 ),
-            '/': (context) => HomePage(
+            homeRouteName: (context) => HomePage(
                   showVerification: configuration.showVerification,
                 )
-          });
+          };
 
-          if (settings.firstStart) {
-            initialRoute = 'intro';
-          }
+          final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;
 
           return MaterialApp(
             title: 'Ehrenamtskarte',

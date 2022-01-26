@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/entry_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
@@ -82,7 +83,7 @@ class IntroScreenState extends State<IntroScreen> {
     if (onFinishedCallback != null) {
       onFinishedCallback();
     }
-    Navigator.of(context).pushReplacementNamed("/");
+    Navigator.of(context).pushReplacementNamed(homeRouteName);
   }
 
   @override
