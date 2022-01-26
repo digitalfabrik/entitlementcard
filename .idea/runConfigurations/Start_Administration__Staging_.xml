@@ -1,12 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start React" type="js.build_tools.npm">
+  <configuration default="false" name="Start Administration (Staging)" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/administration/package.json" />
     <command value="run" />
     <scripts>
       <script value="start" />
     </scripts>
     <node-interpreter value="project" />
-    <envs />
+    <envs>
+      <env name="REACT_APP_API_BASE_URL" value="https://api.staging.ehrenamtskarte.app" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>
