@@ -47,6 +47,7 @@ class _MapState extends State<Map> implements MapController {
   bool _permissionGiven = false;
   Widget? _currentMapLibreView;
   bool _isAnimating = false;
+  bool _isMapInitialized = false;
 
   @override
   void didChangeDependencies() {
@@ -117,7 +118,12 @@ class _MapState extends State<Map> implements MapController {
 
     // Apply ScreenParentResizer only on android
     // https://github.com/flutter-mapbox-gl/maps/issues/195
-    return defaultTargetPlatform == TargetPlatform.android ? ScreenParentResizer(child: maplibreView) : maplibreView;
+    return defaultTargetPlatform == TargetPlatform.android
+        ? ScreenParentResizer(
+            childInitialized: _isMapInitialized,
+            child: maplibreView,
+          )
+        : maplibreView;
   }
 
   void _onMapCreated(MaplibreMapController controller) {
@@ -125,6 +131,11 @@ class _MapState extends State<Map> implements MapController {
     if (widget.locationAvailable) {
       _controller?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
+
+    setState(() {
+      _isMapInitialized = true;
+    });
+
     final onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(this);
