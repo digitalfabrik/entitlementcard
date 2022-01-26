@@ -8,21 +8,47 @@ import 'package:flutter/material.dart';
 /// * Secondly, the child is resized to
 ///   `width = parentWidth, height = parentHeight. This sizes the child according to the parent constraints. This
 ///   resize only happens if the child is already initialized. If it is not yet initialized then the resize is delayed.
-class ScreenParentResizer extends StatefulWidget {
-  final Widget? child;
+class ScreenParentResizer extends StatelessWidget {
+  final Widget child;
   final bool childInitialized;
 
   const ScreenParentResizer({
     Key? key,
-    required Widget this.child,
+    required this.child,
     required this.childInitialized,
   }) : super(key: key);
 
   @override
-  State createState() => _ScreenParentResizer();
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return _InnerScreenParentResizer(
+          childInitialized: childInitialized,
+          constraints: constraints,
+          child: child,
+        );
+      },
+    );
+  }
 }
 
-class _ScreenParentResizer extends State<ScreenParentResizer> {
+class _InnerScreenParentResizer extends StatefulWidget {
+  final Widget? child;
+  final bool childInitialized;
+  final BoxConstraints constraints;
+
+  const _InnerScreenParentResizer({
+    Key? key,
+    required Widget this.child,
+    required this.childInitialized,
+    required this.constraints,
+  }) : super(key: key);
+
+  @override
+  State createState() => _InnerScreenParentResizerState();
+}
+
+class _InnerScreenParentResizerState extends State<_InnerScreenParentResizer> {
   Orientation? _lastBuildOrientation;
   Orientation? _initialOrientationUpdate;
 
@@ -41,8 +67,8 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
   @override
   Widget build(BuildContext context) {
     final maximum = max(
-      MediaQuery.of(context).size.width,
-      MediaQuery.of(context).size.height,
+      widget.constraints.maxWidth,
+      widget.constraints.maxHeight,
     );
 
     final currentOrientation = MediaQuery.of(context).orientation;
@@ -66,8 +92,6 @@ class _ScreenParentResizer extends State<ScreenParentResizer> {
       alignment: Alignment.topLeft,
       maxHeight: height,
       maxWidth: width,
-      minWidth: width,
-      minHeight: height,
       child: widget.child,
     );
   }
