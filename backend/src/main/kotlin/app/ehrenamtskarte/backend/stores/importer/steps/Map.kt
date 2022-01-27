@@ -15,19 +15,19 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
     override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
         try {
             AcceptingStore(
-                it.name!!.trim(),
+                it.name.clean()!!,
                 COUNTRY_CODE,
-                it.location!!.trim(),
+                it.location.clean()!!,
                 cleanPostalCode(it.postalCode),
                 it.street.clean(),
                 it.houseNumber.clean(),
-                it.longitude!!.replace(",", ".").toDouble(),
-                it.latitude!!.replace(",", ".").toDouble(),
+                it.longitude.safeToDouble(),
+                it.latitude.safeToDouble(),
                 categoryId(it.category!!),
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
-                it.discount.clean()
+                it.discount.clean(false)
             )
         } catch (e: Exception) {
             logger.info("Exception occurred while mapping $it", e)
@@ -35,13 +35,21 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
         }
     }
 
+    private fun String?.safeToDouble(): Double? {
+        return this?.clean()?.replace(",", ".")?.toDouble()
+    }
+
     private fun categoryId(category: String): Int {
         val int = category.toInt()
         return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
     }
 
-    private fun String?.clean(): String? {
-        return this?.replaceNa()?.trim()
+    private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
+        val trimmed = this?.replaceNa()?.trim()
+        if (removeSubsequentWhitespaces) {
+            return trimmed?.replace(Regex("""\s{2,}"""), " ")
+        }
+        return trimmed
     }
 
     private fun cleanPostalCode(postalCode: String?): String? {
