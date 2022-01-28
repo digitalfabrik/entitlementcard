@@ -15,7 +15,7 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
         try {
             if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it
 
-            it.sanitizeStreetHouseNumber().sanitizePostalCode()
+            it.sanitizePostalCode().sanitizeStreetHouseNumber()
         } catch (e: Exception) {
             logger.info("Exception occurred while sanitizing the address of $it", e)
             null
@@ -65,7 +65,7 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
                 if (res != cleanHouseNumber) res else null
             } else null
 
-            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).joinToString("|")
+            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).filterNot { it.isEmpty() }.joinToString("|")
             logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)
 
             return copy(street = cleanStreet, houseNumber = cleanHouseNumber, additionalAddressInformation = residue)
