@@ -13,7 +13,7 @@ import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
-class Download(private val logger: Logger, private val httpClient: HttpClient) : PipelineStep<Unit, List<LbeAcceptingStore>>() {
+class DownloadLbe(private val logger: Logger, private val httpClient: HttpClient) : PipelineStep<Unit, List<LbeAcceptingStore>>() {
 
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {

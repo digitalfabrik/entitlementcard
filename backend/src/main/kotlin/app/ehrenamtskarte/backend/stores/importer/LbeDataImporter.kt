@@ -4,14 +4,14 @@ import app.ehrenamtskarte.backend.stores.importer.steps.*
 import io.ktor.client.HttpClient
 import org.slf4j.LoggerFactory
 
-object DataImporter {
+object LbeDataImporter {
     private val httpClient = HttpClient()
 
     fun import(manualImport: Boolean): Boolean {
-        val logger = LoggerFactory.getLogger(DataImporter::class.java)
+        val logger = LoggerFactory.getLogger(LbeDataImporter::class.java)
         val pipe = {
-            Unit.addStep(Download(logger, httpClient), logger) { logger.info("== Download raw data ==" )}
-                .addStep(FilterLbe(logger), logger) { logger.info("== Filter raw data ==") }
+            Unit.addStep(DownloadLbe(logger, httpClient), logger) { logger.info("== Download lbe data ==" )}
+                .addStep(FilterLbe(logger), logger) { logger.info("== Filter lbe data ==") }
                 .addStep(Map(logger), logger) { logger.info("== Map raw to internal data ==") }
                 .addStep(SanitizeGeocode(logger, httpClient), logger) { logger.info("== Sanitize data ==") }
                 .addStep(PostSanitizeFilter(logger, httpClient), logger) { logger.info("== Filter sanitized data ==") }
