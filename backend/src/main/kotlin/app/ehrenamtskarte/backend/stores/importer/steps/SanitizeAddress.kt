@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.common.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -12,6 +13,8 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
 
     override fun execute(input: List<AcceptingStore>) = input.mapNotNull {
         try {
+            if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it
+
             it.sanitizeStreetHouseNumber().sanitizePostalCode()
         } catch (e: Exception) {
             logger.info("Exception occurred while sanitizing the address of $it", e)
