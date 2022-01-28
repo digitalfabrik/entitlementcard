@@ -12,8 +12,9 @@ object LbeDataImporter {
         val pipe = {
             Unit.addStep(DownloadLbe(logger, httpClient), logger) { logger.info("== Download lbe data ==" )}
                 .addStep(FilterLbe(logger), logger) { logger.info("== Filter lbe data ==") }
-                .addStep(Map(logger), logger) { logger.info("== Map raw to internal data ==") }
-                .addStep(SanitizeGeocode(logger, httpClient), logger) { logger.info("== Sanitize data ==") }
+                .addStep(MapFromLbe(logger), logger) { logger.info("== Map lbe to internal data ==") }
+                .addStep(SanitizeAddress(logger), logger) { logger.info("== Sanitize address ==") }
+                .addStep(SanitizeGeocode(logger, httpClient), logger) { logger.info("== Sanitize data with geocoding ==") }
                 .addStep(PostSanitizeFilter(logger, httpClient), logger) { logger.info("== Filter sanitized data ==") }
                 .addStep(Encode(logger), logger) { logger.info("== Handle encoding issues ==") }
                 .addStep(Store(logger, manualImport), logger) { logger.info("== Store remaining data to db ==") }
