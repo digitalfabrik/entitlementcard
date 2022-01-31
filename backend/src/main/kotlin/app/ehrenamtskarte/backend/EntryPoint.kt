@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend
 import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
-import app.ehrenamtskarte.backend.stores.importer.DataImporter
+import app.ehrenamtskarte.backend.stores.importer.LbeDataImporter
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.ProgramResult
@@ -28,7 +28,7 @@ class Entry : CliktCommand() {
             Database.setup(!production)
             if (importFlag) {
                 println("Importing data from Lbe")
-                if (!DataImporter.import(!production)) {
+                if (!LbeDataImporter.import(!production)) {
                     throw ProgramResult(statusCode = 5)
                 }
             } else {

@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.matchesNa
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
-class PreSanitizeFilter(private val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>() {
+class FilterLbe(private val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>() {
     private val invalidLocations = arrayOf("Musterhausen")
 
     override fun execute(input: List<LbeAcceptingStore>): List<LbeAcceptingStore> = input.filter { filterLbe(it) }

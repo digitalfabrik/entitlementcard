@@ -1,40 +1,23 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.common.COUNTRY_CODE
+import app.ehrenamtskarte.backend.common.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
-import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 
-const val MISCELLANEOUS_CATEGORY = 9
-const val ALTERNATIVE_MISCELLANEOUS_CATEGORY = 99
-
-class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
+class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val houseNumberRegex = houseNumberRegex()
+    private val postalCodeRegex = Regex("""[0-9]{5}""")
 
-    override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
+    override fun execute(input: List<AcceptingStore>) = input.mapNotNull {
         try {
-            AcceptingStore(
-                it.name.clean()!!,
-                COUNTRY_CODE,
-                it.location.clean()!!,
-                it.cleanPostalCode(),
-                it.street.clean(),
-                it.houseNumber.clean(),
-                null,
-                it.longitude.safeToDouble(),
-                it.latitude.safeToDouble(),
-                categoryId(it.category!!),
-                it.email.clean(),
-                it.telephone.clean(),
-                it.homepage.clean(),
-                it.discount.clean(false)
-            ).sanitizeStreetHouseNumber()
+            if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it
+
+            it.sanitizePostalCode().sanitizeStreetHouseNumber()
         } catch (e: Exception) {
-            logger.info("Exception occurred while mapping $it", e)
+            logger.info("Exception occurred while sanitizing the address of $it", e)
             null
         }
     }
@@ -78,11 +61,11 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
 
             // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
             val residue = if (houseNumberMatch.range.last < address.length - 1) {
-                val res = address.substring(houseNumberMatch.range.last + 1).trim { !it.isLetterOrDigit() }.clean()
+                val res = address.substring(houseNumberMatch.range.last + 1).trim { !it.isLetterOrDigit() }
                 if (res != cleanHouseNumber) res else null
             } else null
 
-            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).joinToString("|")
+            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).filterNot { it.isEmpty() }.joinToString("|")
             logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)
 
             return copy(street = cleanStreet, houseNumber = cleanHouseNumber, additionalAddressInformation = residue)
@@ -90,32 +73,14 @@ class Map(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, Li
         return this
     }
 
-    private fun String?.safeToDouble(): Double? {
-        return this?.clean()?.replace(",", ".")?.toDouble()
-    }
+    private fun AcceptingStore.sanitizePostalCode(): AcceptingStore {
+        val oldPostalCode = postalCode ?: return this
 
-    private fun categoryId(category: String): Int {
-        val int = category.toInt()
-        return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
-    }
-
-    private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-        val trimmed = this?.replaceNa()?.trim()
-        if (removeSubsequentWhitespaces) {
-            return trimmed?.replace(Regex("""\s{2,}"""), " ")
-        }
-        return trimmed
-    }
-
-    private fun LbeAcceptingStore.cleanPostalCode(): String? {
-        val oldPostalCode = postalCode ?: return null
-        val fiveDigitRegex = Regex("""[0-9]{5}""")
-
-        val newPostalCode = fiveDigitRegex.find(oldPostalCode)?.value
-        if (newPostalCode != oldPostalCode.clean()) {
+        val newPostalCode = postalCodeRegex.find(oldPostalCode)?.value
+        if (newPostalCode != oldPostalCode) {
             logger.logChange("$name, $location", "Postal code", oldPostalCode, newPostalCode)
         }
-        return newPostalCode
+        return copy(postalCode = newPostalCode)
     }
 
 }

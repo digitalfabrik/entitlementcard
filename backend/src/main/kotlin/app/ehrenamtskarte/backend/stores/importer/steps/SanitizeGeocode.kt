@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.common.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
@@ -12,10 +13,7 @@ import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
 
-// Postal code lookup fails/does not really make sense for a "Postfach"
-const val STREET_EXCLUDE_PATTERN = "Postfach"
-
-class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
+class SanitizeGeocode(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val featureFetcher = FeatureFetcher(httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
