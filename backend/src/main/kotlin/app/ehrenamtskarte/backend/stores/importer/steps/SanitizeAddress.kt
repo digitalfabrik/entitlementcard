@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.common.STREET_EXCLUDE_PATTERN
+import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore

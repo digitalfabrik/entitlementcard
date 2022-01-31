@@ -1,15 +1,14 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.common.COUNTRY_CODE
+import app.ehrenamtskarte.backend.stores.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
+import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
+import app.ehrenamtskarte.backend.stores.MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
-
-const val MISCELLANEOUS_CATEGORY = 9
-const val ALTERNATIVE_MISCELLANEOUS_CATEGORY = 99
 
 class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
     override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
@@ -42,7 +41,7 @@ class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingSto
 
     private fun categoryId(category: String): Int {
         val int = category.toInt()
-        return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
+        return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID) MISCELLANEOUS_CATEGORY_ID else int
     }
 
     private fun String.decodeSpecialCharacters(): String {
