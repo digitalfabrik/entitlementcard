@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
+import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
 
 const val MISCELLANEOUS_CATEGORY = 9
@@ -44,8 +45,15 @@ class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingSto
         return if (int == ALTERNATIVE_MISCELLANEOUS_CATEGORY) MISCELLANEOUS_CATEGORY else int
     }
 
+    private fun String.decodeSpecialCharacters(): String {
+        // We often get a double encoded string, i.e. &amp;amp;
+        return StringEscapeUtils
+            .unescapeHtml4(StringEscapeUtils.unescapeHtml4(this))
+            .replace("<br/>", "\n")
+    }
+
     private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-        val trimmed = this?.replaceNa()?.trim()
+        val trimmed = this?.replaceNa()?.trim()?.decodeSpecialCharacters()
         if (removeSubsequentWhitespaces) {
             return trimmed?.replace(Regex("""\s{2,}"""), " ")
         }
