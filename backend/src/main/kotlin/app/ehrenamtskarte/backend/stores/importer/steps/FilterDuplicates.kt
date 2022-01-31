@@ -8,7 +8,9 @@ import org.slf4j.Logger
 class FilterDuplicates(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
-        val groups = input.groupBy { it.name + it.postalCode + it.street }
+        val groups = input.groupBy {
+            (it.name + it.postalCode + it.street).toLowerCase().filter { char -> char.isLetterOrDigit() }
+        }
 
         val nonDuplicatedStores = groups.filter { it.value.size == 1 }.values.flatten()
         val duplicatedStores = groups.filter { it.value.size > 1 }.map { it.value }
