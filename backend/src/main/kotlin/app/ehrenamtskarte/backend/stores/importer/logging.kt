@@ -12,6 +12,13 @@ fun Logger.logChange(storeInfo: String, property: String, oldValue: String?, new
 }
 
 fun Logger.logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
-    val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-    logChange(storeInfo, property, oldValue, newValue)
+    logChange(storeInfo(store), property, oldValue, newValue)
+}
+
+fun Logger.logRemoveDuplicates(store: AcceptingStore, count: Int) {
+    info("Removed duplicates ($count) of '${storeInfo(store)}'")
+}
+
+private fun storeInfo(store: AcceptingStore): String {
+    return listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
 }
