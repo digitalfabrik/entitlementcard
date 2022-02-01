@@ -12,8 +12,15 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import java.io.File
 
 class Entry : CliktCommand() {
+    companion object {
+        fun isProductionEnvironment(): Boolean {
+            return System.getProperty("app.production", "").isNotEmpty()
+        }
+    }
+
     override fun run() {
     }
+
 }
 
 class GraphQLExport : CliktCommand(name = "graphql-export") {
@@ -27,7 +34,7 @@ class GraphQLExport : CliktCommand(name = "graphql-export") {
 
 class Import : CliktCommand(help = "Imports stores from a configured data source. Various properties must be set.") {
     override fun run() {
-        val production = System.getProperty("app.production", "").isNotEmpty()
+        val production = Entry.isProductionEnvironment()
         Database.setup(!production)
         if (!DataImporter.import(!production)) {
             throw ProgramResult(statusCode = 5)
@@ -35,17 +42,17 @@ class Import : CliktCommand(help = "Imports stores from a configured data source
     }
 }
 
-class CreateAdmin : CliktCommand(help =  "Creates an admin account with the specified email and password") {
+class CreateAdmin : CliktCommand(help = "Creates an admin account with the specified email and password") {
     private val email by argument(
         help = "The email"
     )
-    
+
     private val password by argument(
         help = "The password"
     )
-    
+
     override fun run() {
-        val production = System.getProperty("app.production", "").isNotEmpty()
+        val production = Entry.isProductionEnvironment()
         Database.setup(!production)
         Database.createAccount(email, password)
     }
@@ -53,7 +60,7 @@ class CreateAdmin : CliktCommand(help =  "Creates an admin account with the spec
 
 class Execute : CliktCommand(help = "Starts the webserver") {
     override fun run() {
-        val production = System.getProperty("app.production", "").isNotEmpty()
+        val production = Entry.isProductionEnvironment()
         Database.setup(!production)
         WebService().start(production)
     }
