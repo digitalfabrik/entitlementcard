@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Generate GraphQL Schema" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Import" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -17,7 +17,7 @@
         <list>
           <option value="run" />
           <option value="run" />
-          <option value="--args=&quot;graphql-export ../specs/backend-api.graphql&quot;" />
+          <option value="--args=&quot;import&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
