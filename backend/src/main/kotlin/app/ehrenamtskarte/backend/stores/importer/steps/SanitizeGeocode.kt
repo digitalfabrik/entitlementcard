@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.common.STATE
+import app.ehrenamtskarte.backend.common.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
-import app.ehrenamtskarte.backend.stores.geocoding.isCloseTo
+import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
+import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
@@ -11,29 +13,11 @@ import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
 
-const val DISTANCE_THRESHOLD_IN_KM = 1.0
-
-// Postal code lookup fails/does not really make sense for a "Postfach"
-const val STREET_EXCLUDE_PATTERN = "Postfach"
-
-class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
+class SanitizeGeocode(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val featureFetcher = FeatureFetcher(httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox
-
-        input.map { it.sanitize() }.filter {
-            if (!it.isInBoundingBox(stateBbox)) {
-                logger.info("'${it.name}, ${it.location}' was filtered out because it is outside of $STATE")
-                return@filter false
-            }
-            if (it.postalCode == null) {
-                // Probably because it is outside of the state but inside the bounding box of the state
-                logger.info("'${it.name}, ${it.location}' was filtered out because its postal code is null")
-                return@filter false
-            }
-            true
-        }
+        input.map { it.sanitize() }
     }
 
     /**
@@ -43,7 +27,6 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
      */
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
-
 
         val postalCodeBbox = if (postalCode != null) {
             featureFetcher.queryFeatures(listOf(Pair("postalcode", postalCode))).firstOrNull()?.bbox
@@ -59,38 +42,20 @@ class Sanitize(private val logger: Logger, httpClient: HttpClient) : PipelineSte
                 val oldCoordinates = "$latitude, $longitude"
                 val newCoordinates = "${feature.latitude()}, ${feature.longitude()}"
 
-                logChange(this, "Coordinates", oldCoordinates, newCoordinates)
+                logger.logChange(this, "Coordinates", oldCoordinates, newCoordinates)
 
                 return copy(longitude = feature.longitude(), latitude = feature.latitude())
             }
 
             // Match by coordinates -> replace wrong postal code
             val newPostalCode = feature?.postalCode() ?: postalCode
-            logChange(this, "Postal code", postalCode, newPostalCode)
+            logger.logChange(this, "Postal code", postalCode, newPostalCode)
 
             return copy(postalCode = newPostalCode)
         }
 
         // Data seems to be correct
         return this
-    }
-
-    private fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
-        return isCloseTo(feature.bbox, latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
-    }
-
-    private fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
-        return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
-    }
-
-    private fun logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
-        val storeInfo = listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-
-        if (oldValue == newValue) {
-            logger.info("$property of '$storeInfo' could not be improved, keeping '$oldValue'")
-        } else {
-            logger.info("$property of '$storeInfo' changed from '$oldValue' to '$newValue'")
-        }
     }
 
     private fun Feature.latitude(): Double = (geometry as Point).coordinates.latitude

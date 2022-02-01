@@ -10,6 +10,9 @@ import 'home/home_page.dart';
 import 'intro_slides/intro_screen.dart';
 import 'themes.dart';
 
+const introRouteName = "/intro";
+const homeRouteName = "/home";
+
 class EntryWidget extends StatelessWidget {
   const EntryWidget({Key? key}) : super(key: key);
 
@@ -26,24 +29,22 @@ class EntryWidget extends StatelessWidget {
         if (snapshot.hasError && error != null) {
           return ErrorMessage(error.toString());
         } else if (snapshot.hasData && settings != null) {
-          final routes = <String, WidgetBuilder>{};
-          String? initialRoute;
+          final routes = <String, WidgetBuilder>{
+            introRouteName: (context) => IntroScreen(
+                  onFinishedCallback: () => settings.setFirstStart(enabled: false),
+                ),
+            homeRouteName: (context) => HomePage(
+                  showVerification: configuration.showVerification,
+                )
+          };
 
-          if (settings.firstStart) {
-            routes.addAll(<String, WidgetBuilder>{
-              '/intro': (context) => IntroScreen(
-                    onFinishedCallback: () => settings.setFirstStart(enabled: false),
-                  ),
-            });
-            initialRoute = '/intro';
-          }
+          final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;
 
           return MaterialApp(
             title: 'Ehrenamtskarte',
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
-            initialRoute: initialRoute,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
@@ -53,9 +54,7 @@ class EntryWidget extends StatelessWidget {
             ],
             supportedLocales: const [Locale('de')],
             locale: const Locale('de'),
-            home: HomePage(
-              showVerification: configuration.showVerification,
-            ),
+            initialRoute: initialRoute,
             routes: routes,
           );
         } else {

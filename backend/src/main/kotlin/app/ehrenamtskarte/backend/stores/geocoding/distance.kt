@@ -1,6 +1,26 @@
 package app.ehrenamtskarte.backend.stores.geocoding
 
+import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import org.geojson.Feature
 import kotlin.math.*
+
+const val DISTANCE_THRESHOLD_IN_KM = 1.0
+
+/**
+ * Returns whether the accepting store is closer than [DISTANCE_THRESHOLD_IN_KM] to the bounding box of the [feature]
+ */
+fun AcceptingStore.isCloseToBoundingBox(feature: Feature): Boolean {
+    if (latitude == null || longitude == null) return false
+    return isCloseTo(feature.bbox, latitude, longitude, DISTANCE_THRESHOLD_IN_KM)
+}
+
+/**
+ * Returns whether the accepting store is positioned inside the bounding box [bbox]
+ */
+fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
+    if (latitude == null || longitude == null) return false
+    return bbox[0] <= longitude && longitude <= bbox[2] && bbox[1] <= latitude && latitude <= bbox[3]
+}
 
 /**
  * Returns whether [latitude] and [longitude] are closer than [thresholdInKm] to the bounding box [bbox]

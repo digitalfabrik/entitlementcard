@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -7,6 +8,7 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 import '../../configuration/configuration.dart';
 import 'attribution_dialog.dart';
 import 'map_controller.dart';
+import 'screen_parent_resizer.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
@@ -43,8 +45,9 @@ class _MapState extends State<Map> implements MapController {
   MaplibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
-  Stack? _mapboxView;
+  Widget? _currentMapLibreView;
   bool _isAnimating = false;
+  bool _isMapInitialized = false;
 
   @override
   void didChangeDependencies() {
@@ -59,13 +62,16 @@ class _MapState extends State<Map> implements MapController {
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
     final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
-    if (_mapboxView == null || !_isAnimating) {
+    final Widget? currentMapLibreView = _currentMapLibreView;
+    final Widget maplibreView;
+
+    if (currentMapLibreView == null || !_isAnimating) {
       final userLocation = widget.userLocation;
       final cameraPosition = userLocation != null
           ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
           : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
 
-      _mapboxView = Stack(
+      maplibreView = Stack(
         children: [
           MaplibreMap(
             initialCameraPosition: cameraPosition,
@@ -106,8 +112,18 @@ class _MapState extends State<Map> implements MapController {
           ),
         ],
       );
+    } else {
+      maplibreView = currentMapLibreView;
     }
-    return _mapboxView ?? Container();
+
+    // Apply ScreenParentResizer only on android
+    // https://github.com/flutter-mapbox-gl/maps/issues/195
+    return defaultTargetPlatform == TargetPlatform.android
+        ? ScreenParentResizer(
+            childInitialized: _isMapInitialized,
+            child: maplibreView,
+          )
+        : maplibreView;
   }
 
   void _onMapCreated(MaplibreMapController controller) {
@@ -115,6 +131,11 @@ class _MapState extends State<Map> implements MapController {
     if (widget.locationAvailable) {
       _controller?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     }
+
+    setState(() {
+      _isMapInitialized = true;
+    });
+
     final onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(this);
