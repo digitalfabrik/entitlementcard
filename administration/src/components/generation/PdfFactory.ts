@@ -6,6 +6,29 @@ import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {format, fromUnixTime} from "date-fns";
 import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 
+type TTFFont = {
+    /**
+     * Name of the font. This should not include whitespaces.
+     */
+    name: string
+    /**
+     * Style of the font stored in `data` field. If in doubt use "normal" here.
+     */
+    fontStyle: string
+    /**
+     * TTF file encoded as base64 string
+     */
+    data: string
+}
+
+export async function loadTTFFont(name: string, fontStyle: string, path: string): Promise<TTFFont> {
+    return {
+        name,
+        fontStyle,
+        data: uint8ArrayToBase64(new Uint8Array(await (await fetch(path)).arrayBuffer()))
+    }
+}
+
 function addLetter(doc: jsPDF, model: CardActivateModel, region: Region) {
     const pageSize = doc.internal.pageSize
     const {width, height} = {width: pageSize.getWidth(), height: pageSize.getHeight()}
@@ -59,18 +82,17 @@ Aussteller: ${region.prefix} ${region.name}`,
     });
 }
 
-export function generatePdf(models: CardActivateModel[], region: Region) {
+export function generatePdf(font: TTFFont, models: CardActivateModel[], region: Region) {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
     });
-    
-    let response = uint8ArrayToBase64(new Uint8Array(await (await fetch("/pdf-fonts/NotoSans-Regular.ttf")).arrayBuffer()));
-    
-    doc.addFileToVFS("NotoSans-Regular.ttf", response);
-    doc.addFont("NotoSans-Regular.ttf", "NotoSans-Regular", "normal");
-    doc.setFont("NotoSans-Regular")
+
+    let fontFileName = `${font.name}.ttf`;
+    doc.addFileToVFS(fontFileName, font.data);
+    doc.addFont(fontFileName, font.name, font.fontStyle);
+    doc.setFont(font.name)
 
     for (let k = 0; k < models.length; k++) {
         addLetter(doc, models[k], region)

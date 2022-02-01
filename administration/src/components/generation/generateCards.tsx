@@ -7,7 +7,7 @@ import generateHashFromCardDetails from "../../util/generateHashFromCardDetails"
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {addCard, addCardVariables} from "../../graphql/verification/__generated__/addCard";
 import {ADD_CARD} from "../../graphql/verification/mutations";
-import {generatePdf} from "./PdfFactory";
+import {generatePdf, loadTTFFont} from "./PdfFactory";
 import {ApolloClient} from "@apollo/client";
 import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 
@@ -39,7 +39,9 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
     const fail = results.find(result => result.errors || !result.data?.success)
     if (fail) throw Error(JSON.stringify(fail))
 
-    return generatePdf(activateModels, region)
+    const font = await loadTTFFont("NotoSans", "normal", "/pdf-fonts/NotoSans-Regular.ttf");
+
+    return generatePdf(font, activateModels, region)
 }
 
 export default generateCards
