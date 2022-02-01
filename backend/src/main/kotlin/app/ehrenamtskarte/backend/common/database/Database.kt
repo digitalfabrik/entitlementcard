@@ -32,7 +32,9 @@ class Database {
         }
 
         fun createAccount(email: String, password: String) {
-            AdministratorsRepository.insert(email, password)
+            transaction {
+                AdministratorsRepository.insert(email, password)     
+            }
         }
         
         fun setup(logging: Boolean) {
