@@ -9,4 +9,4 @@ FROM openjdk:8-jre-slim
 
 WORKDIR /backend
 COPY --from=build /output/* .
-ENTRYPOINT ["./bin/backend"]
+ENTRYPOINT ["./bin/backend", "execute"]

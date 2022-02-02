@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Backend" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Create Admin Account" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -16,7 +16,8 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;execute&quot;" />
+          <option value="run" />
+          <option value="--args=&quot;create-admin admin@example.com admin&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
