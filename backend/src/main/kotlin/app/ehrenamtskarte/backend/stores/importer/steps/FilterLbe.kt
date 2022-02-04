@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.stores.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
+import app.ehrenamtskarte.backend.stores.MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.matchesNa
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
@@ -40,7 +42,7 @@ class FilterLbe(private val logger: Logger): PipelineStep<List<LbeAcceptingStore
     }
 
     private fun LbeAcceptingStore.isValidCategory(): Boolean {
-        val validCategories = (0..MISCELLANEOUS_CATEGORY) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY)
+        val validCategories = (0..MISCELLANEOUS_CATEGORY_ID) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID)
         val valid = category?.toIntOrNull() in validCategories
 
         if (!valid)

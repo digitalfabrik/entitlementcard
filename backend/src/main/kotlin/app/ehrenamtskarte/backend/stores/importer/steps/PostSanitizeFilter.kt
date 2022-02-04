@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
-import app.ehrenamtskarte.backend.common.STATE
+import app.ehrenamtskarte.backend.stores.STATE
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore

@@ -16,7 +16,7 @@ object LbeDataImporter {
                 .addStep(SanitizeAddress(logger), logger) { logger.info("== Sanitize address ==") }
                 .addStep(SanitizeGeocode(logger, httpClient), logger) { logger.info("== Sanitize data with geocoding ==") }
                 .addStep(PostSanitizeFilter(logger, httpClient), logger) { logger.info("== Filter sanitized data ==") }
-                .addStep(Encode(logger), logger) { logger.info("== Handle encoding issues ==") }
+                .addStep(FilterDuplicates(logger), logger) { logger.info("== Filter duplicated data ==") }
                 .addStep(Store(logger, manualImport), logger) { logger.info("== Store remaining data to db ==") }
         }
 
