@@ -7,7 +7,7 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-ExecStart=/opt/ehrenamtskarte/backend/bin/backend
+ExecStart=/opt/ehrenamtskarte/backend/bin/backend execute
 Restart=on-failure
 RestartSec=5s
 

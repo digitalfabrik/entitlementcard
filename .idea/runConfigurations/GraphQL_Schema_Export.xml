@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Backend with import" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="GraphQL Schema Export" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -9,13 +9,15 @@
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="run --args=&quot;--import&quot;" />
+      <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
           <option value="run" />
+          <option value="run" />
+          <option value="--args=&quot;graphql-export ../specs/backend-api.graphql&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
