@@ -17,6 +17,10 @@ ThemeData get lightTheme {
     ),
   );
   return lightTheme.copyWith(
+    textSelectionTheme: const TextSelectionThemeData(
+      selectionHandleColor: Colors.white,
+      selectionColor: Color(0xFF505050),
+    ),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       color: lightTheme.colorScheme.primary,
@@ -40,6 +44,10 @@ ThemeData get darkTheme {
     ),
   );
   return theme.copyWith(
+    textSelectionTheme: const TextSelectionThemeData(
+      selectionHandleColor: Colors.white,
+      selectionColor: Color(0xFF505050),
+    ),
     appBarTheme: AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light, color: theme.colorScheme.primary),
   );
 }
