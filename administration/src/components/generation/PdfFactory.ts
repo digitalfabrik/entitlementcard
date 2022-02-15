@@ -87,7 +87,7 @@ function checkForeignText(doc: jsPDF, text: string): string | null {
     let font = doc.getFont();
     
     for (let i = 0; i < text.length; i++) {
-        if (font.metadata.characterToGlyph(text.charCodeAt(i)) == 0) {
+        if (font.metadata.characterToGlyph(text.charCodeAt(i)) === 0) {
             return text.charAt(i)
         }
     }

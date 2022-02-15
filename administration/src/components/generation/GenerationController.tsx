@@ -48,7 +48,6 @@ const GenerationController = () => {
                         break;
                 }
             } else {
-
                 AppToaster.show({message: "Etwas ist schiefgegangen.", intent: "danger"})
             }
             setMode(Mode.input)
