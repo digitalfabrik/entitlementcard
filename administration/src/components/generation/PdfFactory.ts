@@ -5,6 +5,7 @@ import {CardActivateModel} from "../../generated/compiled";
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {format, fromUnixTime} from "date-fns";
 import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
+import {Exception} from "../../exception";
 
 type TTFFont = {
     /**
@@ -82,6 +83,18 @@ Aussteller: ${region.prefix} ${region.name}`,
     });
 }
 
+function checkForeignText(doc: jsPDF, text: string): string | null {
+    let font = doc.getFont();
+    
+    for (let i = 0; i < text.length; i++) {
+        if (font.metadata.characterToGlyph(text.charCodeAt(i)) == 0) {
+            return text.charAt(i)
+        }
+    }
+
+    return null
+}
+
 export function generatePdf(font: TTFFont, models: CardActivateModel[], region: Region) {
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -95,6 +108,16 @@ export function generatePdf(font: TTFFont, models: CardActivateModel[], region: 
     doc.setFont(font.name)
 
     for (let k = 0; k < models.length; k++) {
+        let model = models[k];
+        let unsupportedChar = checkForeignText(doc, model.fullName);
+        
+        if (unsupportedChar) {
+            throw new Exception({
+                type: "unicode",
+                unsupportedChar
+            })
+        }
+        
         addLetter(doc, models[k], region)
         if (k !== models.length - 1)
             doc.addPage()
@@ -107,5 +130,12 @@ export function generatePdf(font: TTFFont, models: CardActivateModel[], region: 
         creator: "Bayern"
     });
 
-    return new Blob([doc.output('blob')], {type: "application/pdf"})
+    try {
+        let output = doc.output('blob');
+        return new Blob([output], {type: "application/pdf"})
+    } catch {
+        throw new Exception({
+            type: "pdf-generation",
+        })
+    }
 }

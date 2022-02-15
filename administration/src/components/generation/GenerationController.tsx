@@ -9,6 +9,7 @@ import downloadDataUri from "../../util/downloadDataUri";
 import generateCards from "./generateCards";
 import RegionSelector from "../RegionSelector";
 import {RegionContext} from "../../RegionProvider";
+import {Exception} from "../../exception";
 
 enum Mode {
     input,
@@ -37,7 +38,19 @@ const GenerationController = () => {
             setMode(Mode.finished)
         } catch (e) {
             console.error(e)
-            AppToaster.show({message: "Etwas ist schiefgegangen.", intent: "danger"})
+            if (e instanceof Exception) {
+                switch (e.data.type) {
+                    case "pdf-generation":
+                        AppToaster.show({message: "Etwas ist schiefgegangen beim erstellen der PDF.", intent: "danger"})
+                        break;
+                    case "unicode":
+                        AppToaster.show({message: `Ein Zeichen konnte nicht in der PDF eingebunden werden: ${e.data.unsupportedChar}`, intent: "danger"})
+                        break;
+                }
+            } else {
+
+                AppToaster.show({message: "Etwas ist schiefgegangen.", intent: "danger"})
+            }
             setMode(Mode.input)
         }
     }
