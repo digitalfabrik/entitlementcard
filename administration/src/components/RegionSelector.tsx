@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {Button, Menu, MenuItem, PopoverPosition, Spinner} from "@blueprintjs/core";
+import {Button, Menu, MenuItem, Spinner} from "@blueprintjs/core";
 import {RegionContext} from "../RegionProvider";
 import {useQuery} from "@apollo/client";
 import {GET_REGIONS} from "../graphql/regions/queries";
@@ -38,7 +38,6 @@ const RegionSelector = () => {
                          items={regions}
                          itemRenderer={itemRenderer}
                          filterable={false}
-                         popoverProps={{placement: PopoverPosition.TOP}}
                          itemListRenderer={renderMenu}
                          onItemSelect={setRegion}>
         <span>Region: <Button text={activeItem ? getTitle(activeItem) : 'Auswählen...'}
