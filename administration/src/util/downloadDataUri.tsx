@@ -13,6 +13,7 @@ function downloadDataUri(blob: Blob, fileName: string) {
         downloadLink.download = fileName;
         downloadLink.click();
     } else {
+        // @ts-ignore msSaveBlob is a non-standard symbol
         window.navigator.msSaveBlob(blob, fileName)
     }
 }
