@@ -62,7 +62,7 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
             // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
             val residue = if (houseNumberMatch.range.last < address.length - 1) {
                 val res = address.substring(houseNumberMatch.range.last + 1).trim { !it.isLetterOrDigit() }
-                if (res != cleanHouseNumber) res else null
+                if (res != cleanHouseNumber && res.isNotEmpty()) res else null
             } else null
 
             val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).filterNot { it.isEmpty() }.joinToString("|")

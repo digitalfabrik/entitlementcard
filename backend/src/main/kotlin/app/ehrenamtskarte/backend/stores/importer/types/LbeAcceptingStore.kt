@@ -39,5 +39,11 @@ data class LbeAcceptingStore(
         var discount: String?,
         @JsonProperty("kategorie")
         @JacksonXmlCData
-        var category: String?
+        var category: String?,
+        @JsonProperty("p_eak_agentur_id")
+        @JacksonXmlCData
+        var freinetId: String?,
+        @JsonProperty("anbieter_name")
+        @JacksonXmlCData
+        var districtName: String?
 )
