@@ -5,7 +5,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
 import {setContext} from '@apollo/client/link/context'
-import {HashRouter, NavLink, Route} from "react-router-dom";
+import {HashRouter, NavLink, Route, Routes} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
@@ -51,19 +51,20 @@ const App = () => <AuthProvider>
                         <HashRouter>
                             <Navigation onSignOut={onSignOut}/>
                             <Main>
-                                <Route exact path={"/"}>
-                                    <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                <Routes>
+                                    <Route path={"/"} element={<div
+                                        style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                                         <H3>Wählen Sie eine Aktion aus:</H3>
-                                        <NavLink to={"/applications"}><Button style={{ marginBottom: '10px'}} icon="form" text="Eingehende Anträge"/></NavLink>
-                                        <NavLink to={"/eak-generation"}><Button icon="people" text="Karten erstellen"/></NavLink>
-                                    </div>
-                                </Route>
-                                <Route exact path={"/applications"}>
-                                    <ApplicationsController token={authData.token}/>
-                                </Route>
-                                <Route path={"/eak-generation"}>
-                                    <GenerationController/>
-                                </Route>
+                                        <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
+                                                                              icon="form"
+                                                                              text="Eingehende Anträge"/></NavLink>
+                                        <NavLink to={"/eak-generation"}><Button icon="people"
+                                                                                text="Karten erstellen"/></NavLink>
+                                    </div>}/>
+                                    <Route path={"/applications"}
+                                           element={<ApplicationsController token={authData.token}/>}/>
+                                    <Route path={"/eak-generation"} element={<GenerationController/>}/>
+                                </Routes>
                             </Main>
                         </HashRouter>
                     </RegionProvider>
