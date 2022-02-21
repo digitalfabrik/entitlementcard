@@ -78,8 +78,8 @@ class _MapState extends State<Map> implements MapController {
             styleString: config.mapStyleUrl,
             // We provide our own attribution menu
             attributionButtonMargins: const math.Point(-100, -100),
-            // The Mapbox wordmark must be shown because of legal weirdness
-            logoViewMargins: Platform.isIOS ? const math.Point(30, 5) : math.Point(30 * pixelRatio, 5 * pixelRatio),
+            // There is no way to remove the logo, so set the margins to a really large value to hide it
+            logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
             myLocationEnabled: _permissionGiven,
             myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
             // required to prevent mapbox iOS from requesting location
