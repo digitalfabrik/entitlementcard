@@ -15,6 +15,8 @@ data class AcceptingStore(
     val telephone: String?,
     val website: String?,
     val discount: String?,
+    val freinetId: Int?,
+    val districtName: String?,
     val streetWithHouseNumber: String? =
         if (street != null || houseNumber != null) listOfNotNull(street, houseNumber).joinToString(" ")
         else null

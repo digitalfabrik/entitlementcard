@@ -31,6 +31,8 @@ class FilterDuplicates(private val logger: Logger) : PipelineStep<List<Accepting
         val email = lastValue("emails") { it.email }
         val telephone = lastValue("telephones") { it.telephone }
         val additionalAddressInformation = lastValue("additional address information") { it.additionalAddressInformation }
+        val freinetId = lastValue("freinet id") { it.freinetId }
+        val districtName = lastValue("district name") { it.districtName }
 
         // The coordinates are often just cut after some digits so use the one with the best precision
         val longitude = mapNotNull { it.longitude }.maxBy { it.toString().length }
@@ -53,7 +55,9 @@ class FilterDuplicates(private val logger: Logger) : PipelineStep<List<Accepting
             email,
             telephone,
             website,
-            discounts
+            discounts,
+            freinetId,
+            districtName
         )
     }
 

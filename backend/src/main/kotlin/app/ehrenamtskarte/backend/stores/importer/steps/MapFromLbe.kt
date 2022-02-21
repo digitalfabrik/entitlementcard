@@ -27,7 +27,9 @@ class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingSto
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
-                it.discount.clean(false)
+                it.discount.clean(false),
+                it.freinetId.clean()?.toInt(),
+                it.districtName.clean()
             )
         } catch (e: Exception) {
             logger.info("Exception occurred while mapping $it", e)
