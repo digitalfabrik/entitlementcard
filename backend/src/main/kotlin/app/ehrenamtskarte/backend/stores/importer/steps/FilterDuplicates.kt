@@ -23,6 +23,8 @@ class FilterDuplicates(private val logger: Logger) : PipelineStep<List<Accepting
         val store = last()
 
         logger.logRemoveDuplicates(store, size - 1)
+        val issuers = map { "'${it.districtName ?: it.freinetId.toString()}'" }.toSet().joinToString()
+        logger.info("Duplicates issued by $issuers")
 
         val location = lastValue("locations") { it.location }
         val categoryId = lastValue("categoryIds") { it.categoryId }
@@ -31,8 +33,6 @@ class FilterDuplicates(private val logger: Logger) : PipelineStep<List<Accepting
         val email = lastValue("emails") { it.email }
         val telephone = lastValue("telephones") { it.telephone }
         val additionalAddressInformation = lastValue("additional address information") { it.additionalAddressInformation }
-        val freinetId = lastValue("freinet id") { it.freinetId }
-        val districtName = lastValue("district name") { it.districtName }
 
         // The coordinates are often just cut after some digits so use the one with the best precision
         val longitude = mapNotNull { it.longitude }.maxBy { it.toString().length }
@@ -56,8 +56,8 @@ class FilterDuplicates(private val logger: Logger) : PipelineStep<List<Accepting
             telephone,
             website,
             discounts,
-            freinetId,
-            districtName
+            store.freinetId,
+            store.districtName
         )
     }
 
