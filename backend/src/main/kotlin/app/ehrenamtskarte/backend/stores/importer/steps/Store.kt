@@ -11,6 +11,10 @@ import org.slf4j.Logger
 
 class Store(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<AcceptingStore>, Unit>() {
 
+    /**
+     * Stores the given [input] to the database.
+     * Longitude, latitude and postal code of [AcceptingStore] must not be null.
+     */
     override fun execute(input: List<AcceptingStore>) {
         transaction {
             try {
@@ -20,13 +24,9 @@ class Store(private val logger: Logger, private val manualImport: Boolean) : Pip
                 Addresses.deleteAll()
 
                 input.forEachIndexed { done, acceptingStore ->
-                    if (acceptingStore.postalCode == null) {
-                        logger.info("Skipping '${acceptingStore.name}' because its postal code is null.")
-                        return@forEachIndexed
-                    }
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
-                        postalCode = acceptingStore.postalCode
+                        postalCode = acceptingStore.postalCode!!
                         locaction = acceptingStore.location
                         countryCode = acceptingStore.countryCode
                     }
