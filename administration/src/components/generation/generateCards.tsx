@@ -36,7 +36,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
         cardInputs.map(card =>
             client.mutate<addCard, addCardVariables>({mutation: ADD_CARD, variables: {card}}))
     )
-    const fail = results.find(result => result.errors || !result.data?.success)
+    const fail = results.find(result => !result.data?.success)
     if (fail) throw Error(JSON.stringify(fail))
 
     const font = await loadTTFFont("NotoSans", "normal", "/pdf-fonts/NotoSans-Regular.ttf");

@@ -7,7 +7,7 @@ import AddEakButton from "./AddEakButton";
 import styled from "styled-components";
 import FlipMove from 'react-flip-move'
 import {add} from 'date-fns';
-import {Prompt} from "react-router-dom";
+import {usePrompt} from "../../util/blocker-prompt";
 
 let idCounter = 0;
 
@@ -72,10 +72,10 @@ const GenerationForm = (props: Props) => {
 
     const allCardsValid = cardCreationModels.reduce((acc, model) => acc && isValid(model), true)
 
+    usePrompt("Falls Sie fortfahren, werden alle Eingaben verworfen.", cardCreationModels.length !== 0);
+    
     return (
         <>
-            <Prompt message={"Falls Sie fortfahren, werden alle Eingaben verworfen."}
-                    when={cardCreationModels.length !== 0}/>
             <ButtonBar stickyTop={0}>
                 <Tooltip>
                     <Button icon="export" text="QR-Codes drucken" intent="success" onClick={props.confirm}
