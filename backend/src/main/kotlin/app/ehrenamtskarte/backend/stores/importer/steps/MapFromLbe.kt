@@ -10,7 +10,12 @@ import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
 
+/**
+ * Maps [LbeAcceptingStore] to [AcceptingStore].
+ * Properties are cleaned, decoded and converted to the correct types.
+ */
 class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
+
     override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
         try {
             AcceptingStore(

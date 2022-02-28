@@ -9,6 +9,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import org.slf4j.Logger
 
+/**
+ * Stores the given [AcceptingStore] to the database.
+ * Longitude, latitude and postal code of [AcceptingStore] must not be null.
+ */
 class Store(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<AcceptingStore>, Unit>() {
 
     override fun execute(input: List<AcceptingStore>) {
@@ -20,13 +24,9 @@ class Store(private val logger: Logger, private val manualImport: Boolean) : Pip
                 Addresses.deleteAll()
 
                 input.forEachIndexed { done, acceptingStore ->
-                    if (acceptingStore.postalCode == null) {
-                        logger.info("Skipping '${acceptingStore.name}' because its postal code is null.")
-                        return@forEachIndexed
-                    }
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
-                        postalCode = acceptingStore.postalCode
+                        postalCode = acceptingStore.postalCode!!
                         locaction = acceptingStore.location
                         countryCode = acceptingStore.countryCode
                     }

@@ -7,6 +7,11 @@ import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 
+/**
+ * Sanitizes the addresses of the [AcceptingStore].
+ * Postal codes are mapped to either the first five digits (german postcode format) or null.
+ * Street and house numbers are correctly separated.
+ */
 class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val houseNumberRegex = houseNumberRegex()
     private val postalCodeRegex = Regex("""[0-9]{5}""")
@@ -42,6 +47,12 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
         return Regex("""$prefix[0-9]+(($range)|($fraction)|($letter))?""")
     }
 
+    /**
+     * Correctly separates the street and house number properties.
+     * Excess information is moved to the [AcceptingStore.additionalAddressInformation] property.
+     * Examples: 'Untere'|'Zell' -> 'Untere Zell'|null, 'Am Römerbad 17'|'a' -> 'Am Römerbad'|'17 a',
+     *   'Rückermainstr. 2; 1.'|'OG' -> 'Rückermainstr.'|'2'|'1. OG'
+     */
     private fun AcceptingStore.sanitizeStreetHouseNumber(): AcceptingStore {
         val isStreetPolluted = street?.find { it.isDigit() } != null
         val isHouseNumberPolluted = houseNumber != null && !houseNumberRegex.matches(houseNumber)
@@ -73,6 +84,10 @@ class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingS
         return this
     }
 
+    /**
+     * Maps the postal code to the first five digits or null.
+     * Examples: '86150' -> '86150', 'Augsburg 86161 Rathausplatz' -> '86161', 'A-1234' -> null
+     */
     private fun AcceptingStore.sanitizePostalCode(): AcceptingStore {
         val oldPostalCode = postalCode ?: return this
 
