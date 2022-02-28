@@ -7,15 +7,15 @@ import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 
+/**
+ * Sanitizes the addresses of the [AcceptingStore].
+ * Postal codes are mapped to either the first five digits (german postcode format) or null.
+ * Street and house numbers are correctly separated.
+ */
 class SanitizeAddress(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val houseNumberRegex = houseNumberRegex()
     private val postalCodeRegex = Regex("""[0-9]{5}""")
 
-    /**
-     * Sanitizes the addresses of the [input].
-     * Postal codes are mapped to either the first five digits (german postcode format) or null.
-     * Street and house numbers are correctly separated.
-     */
     override fun execute(input: List<AcceptingStore>) = input.mapNotNull {
         try {
             if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it

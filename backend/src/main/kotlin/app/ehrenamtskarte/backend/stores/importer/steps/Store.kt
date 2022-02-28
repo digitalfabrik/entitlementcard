@@ -9,12 +9,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import org.slf4j.Logger
 
+/**
+ * Stores the given [AcceptingStore] to the database.
+ * Longitude, latitude and postal code of [AcceptingStore] must not be null.
+ */
 class Store(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<AcceptingStore>, Unit>() {
 
-    /**
-     * Stores the given [input] to the database.
-     * Longitude, latitude and postal code of [AcceptingStore] must not be null.
-     */
     override fun execute(input: List<AcceptingStore>) {
         transaction {
             try {

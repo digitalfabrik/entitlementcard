@@ -9,13 +9,13 @@ import io.ktor.client.*
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
+/**
+ * Filters [AcceptingStore] to prepare storing to the database.
+ * Stores without longitude, latitude or postal code or outside the states bounding box are removed.
+ */
 class PostSanitizeFilter(private val logger: Logger, httpClient: HttpClient): PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val featureFetcher = FeatureFetcher(httpClient)
 
-    /**
-     * Filters the [input] preparing storing to the database.
-     * Stores without longitude, latitude or postal code or outside the states bounding box are removed.
-     */
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
         val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox
 
