@@ -9,5 +9,8 @@ assignees: ''
 
 As a user I want XYZ such that XYZ.
 
-Acceptance Criteria:
+## Acceptance Criteria:
  - [ ] Criteria 1...
+
+## Technical Tasks:
+ - [ ] Task 1...
