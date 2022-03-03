@@ -7,6 +7,10 @@ import app.ehrenamtskarte.backend.stores.importer.matchesNa
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
+/**
+ * Filter and removes [LbeAcceptingStore] with invalid data.
+ * These are especially stores without name, location or an invalid category.
+ */
 class FilterLbe(private val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>() {
     private val invalidLocations = arrayOf("Musterhausen")
 

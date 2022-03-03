@@ -13,6 +13,11 @@ import org.geojson.Feature
 import org.geojson.Point
 import org.slf4j.Logger
 
+/**
+ * Sanitize the postal code and the coordinates of the [AcceptingStore] using forward geocoding.
+ * If the coordinates are not inside the bounding box of the postal code, one of those is wrong.
+ * Then query by the address and use the coordinates OR postal code of the first match to sanitize the store data.
+ */
 class SanitizeGeocode(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
     private val featureFetcher = FeatureFetcher(httpClient)
 
@@ -20,11 +25,6 @@ class SanitizeGeocode(private val logger: Logger, httpClient: HttpClient) : Pipe
         input.map { it.sanitize() }
     }
 
-    /**
-     * Sanitize the postal code and the coordinates of the [AcceptingStore] using forward geocoding.
-     * If the coordinates are not inside the bounding box of the postal code, one of those is wrong.
-     * Then query by the address and use the coordinates OR postal code of the first match to sanitize the store data.
-     */
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
 

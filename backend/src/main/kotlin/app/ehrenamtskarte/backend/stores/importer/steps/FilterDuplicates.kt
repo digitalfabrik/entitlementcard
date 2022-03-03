@@ -5,6 +5,11 @@ import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.slf4j.Logger
 
+/**
+ * Filters and removes duplicates.
+ * For duplicates to be detected an exact match of name, postal code and street is necessary.
+ * The properties of the last accepting store are used if there are multiple valid properties.
+ */
 class FilterDuplicates(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
