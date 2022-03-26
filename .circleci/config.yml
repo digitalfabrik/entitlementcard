@@ -43,6 +43,7 @@ workflows:
             branches:
               only:
                 - main
+                - whitelabel
 
 commands:
   install-dart-linux:
