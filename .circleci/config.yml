@@ -33,6 +33,8 @@ workflows:
       - meta-pack
       - styles-pack
       - deploy:
+          context:
+            - berechtigungskarte-apt
           requires:
             - backend-pack
             - administration-pack
@@ -403,7 +405,7 @@ jobs:
           at: /tmp/workspace
       - add_ssh_keys:
           fingerprints:
-            - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
+            - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
       - run:
           name: "SFTP upload"
           command: |
