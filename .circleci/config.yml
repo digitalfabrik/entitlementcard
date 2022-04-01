@@ -411,4 +411,4 @@ jobs:
           command: |
             echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.berechtigungskarte.de:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
