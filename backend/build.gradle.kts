@@ -59,6 +59,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:1.4.0")
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2")
     implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+")
     implementation ("de.grundid.opendatalab:geojson-jackson:1.14")
 

@@ -1,0 +1,15 @@
+production: true
+postgres:
+  url: jdbc:postgresql://localhost:5432/ehrenamtskarte
+  user: postgres
+  password: postgres
+geocoding:
+  host: nominatim.maps.tuerantuer.org
+server:
+  host: 0.0.0.0
+  port: 7000
+  dataDirectory: ./data
+projects:
+  - id: bayern.ehrenamtskarte.app
+    importUrl: https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/akzeptanzstellen/app-daten.xml
+    pipelineName: lbe-bayern
