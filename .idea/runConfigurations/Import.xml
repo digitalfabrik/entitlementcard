@@ -17,7 +17,7 @@
         <list>
           <option value="run" />
           <option value="run" />
-          <option value="--args=&quot;import&quot;" />
+          <option value="--args=&quot;--config /etc/entitlementcard/config.yml --project-id bayern.ehrenamtskarte.app import&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />

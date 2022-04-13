@@ -16,7 +16,7 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;execute&quot;" />
+          <option value="--args=&quot;--config /etc/entitlementcard/config.yml --project-id bayern.ehrenamtskarte.app execute&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
