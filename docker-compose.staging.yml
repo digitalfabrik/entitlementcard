@@ -3,7 +3,6 @@ services:
   backend:
     build: ./backend/
     environment:
-      - BACKEND_OPTS=-Dapp.postgres.url=jdbc:postgresql://db-postgis:5432/ehrenamtskarte -Dapp.postgres.user=postgres -Dapp.postgres.password=postgres -Dapp.data=/data
       - JWT_SECRET=Hello world! # WARNING: This makes it possible for anyone to create JWT tokens for staging!
     depends_on:
       - db-postgis
