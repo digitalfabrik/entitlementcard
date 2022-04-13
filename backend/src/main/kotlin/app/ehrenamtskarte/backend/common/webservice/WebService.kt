@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.application.webservice.registerApplicationJavalinHandler
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File
@@ -8,15 +9,14 @@ import kotlin.math.pow
 
 class WebService {
     companion object {
-        private const val DEFAULT_PORT = "7000"
         private val MIN_FREE_STORAGE = 2.0.pow(30)
     }
 
-    fun start(production: Boolean) {
-        val host = System.getProperty("app.host", "0.0.0.0")
-        val port = Integer.parseInt(System.getProperty("app.port", DEFAULT_PORT))
-        val dataDirectory = System.getProperty("app.data", null)
-            ?: throw Error("Property app.data is required!")
+    fun start(config: BackendConfiguration) {
+        val production = config.production
+        val host = config.server.host
+        val port = Integer.parseInt(config.server.port)
+        val dataDirectory = config.server.dataDirectory
 
         val applicationData = File(dataDirectory, "applications")
 
@@ -33,7 +33,7 @@ class WebService {
         if (applicationData.usableSpace < MIN_FREE_STORAGE) {
             throw Error("You need at least 1GiB free storage for the application data!")
         }
-        
+
         val app = Javalin.create { cfg ->
             if (!production) {
                 cfg.enableDevLogging()
@@ -54,7 +54,7 @@ class WebService {
             }
             graphQLHandler.handle(ctx, applicationData)
         }
-        
+
         registerApplicationJavalinHandler(app, applicationData)
     }
 }

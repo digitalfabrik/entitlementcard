@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.STATE
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
@@ -13,8 +14,8 @@ import org.slf4j.Logger
  * Filters [AcceptingStore] to prepare storing to the database.
  * Stores without longitude, latitude or postal code or outside the states bounding box are removed.
  */
-class PostSanitizeFilter(private val logger: Logger, httpClient: HttpClient): PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
-    private val featureFetcher = FeatureFetcher(httpClient)
+class PostSanitizeFilter(config: BackendConfiguration, private val logger: Logger, httpClient: HttpClient): PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
+    private val featureFetcher = FeatureFetcher(config, httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
         val stateBbox = featureFetcher.queryFeatures(listOf(Pair("state", STATE))).first().bbox

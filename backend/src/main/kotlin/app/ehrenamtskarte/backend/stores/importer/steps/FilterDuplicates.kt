@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -10,7 +11,7 @@ import org.slf4j.Logger
  * For duplicates to be detected an exact match of name, postal code and street is necessary.
  * The properties of the last accepting store are used if there are multiple valid properties.
  */
-class FilterDuplicates(private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
+class FilterDuplicates(config: BackendConfiguration, private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
         // Group by name + postal code + street to detect duplicates

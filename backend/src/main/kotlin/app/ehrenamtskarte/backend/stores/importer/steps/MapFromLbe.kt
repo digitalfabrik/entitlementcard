@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.MISCELLANEOUS_CATEGORY_ID
@@ -14,7 +15,7 @@ import org.slf4j.Logger
  * Maps [LbeAcceptingStore] to [AcceptingStore].
  * Properties are cleaned, decoded and converted to the correct types.
  */
-class MapFromLbe(private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>() {
+class MapFromLbe(config: BackendConfiguration, private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>(config) {
 
     override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
         try {
