@@ -37,6 +37,7 @@ if (project.hasProperty('dart-defines')) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: "buildConfigs.gradle"
 
 android {
     compileSdkVersion 31
@@ -49,7 +50,15 @@ android {
         disable 'InvalidPackage'
     }
 
+    def buildConfigName = determineBuildConfigName()
+    // def buildConfig = createBuildConfig(buildConfigName)
+
     defaultConfig {
+
+        setupResourceValues(buildConfigName, {
+            String type, String name, String value -> resValue(type, name, value)
+        })
+
         if (dartEnvironmentVariables.ANDROID_FLOSS) {
             applicationId "app.ehrenamtskarte.bayern.floss"
         } else {
