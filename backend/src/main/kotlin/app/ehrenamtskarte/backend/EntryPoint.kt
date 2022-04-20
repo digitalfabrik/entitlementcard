@@ -18,7 +18,7 @@ import java.io.File
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true).required()
-    private val projectId by option().required()
+    private val projectId by option()
 
     override fun run() {
         currentContext.obj = BackendConfiguration.from(config, projectId)

@@ -23,12 +23,12 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val projectId: String
+    val projectId: String?
 ) {
     val project = projects.find { it.id == projectId } ?: throw Exception("Invalid projectId '$projectId' passed!")
 
     companion object {
-        fun from(file: File, projectId: String): BackendConfiguration {
+        fun from(file: File, projectId: String?): BackendConfiguration {
             val mapper = ObjectMapper(YAMLFactory())
             mapper.registerModule(KotlinModule())
 
