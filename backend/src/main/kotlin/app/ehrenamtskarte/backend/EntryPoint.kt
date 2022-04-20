@@ -11,17 +11,38 @@ import com.github.ajalt.clikt.core.ProgramResult
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
+import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import java.io.File
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true).required()
-    private val projectId by option()
+
+    // Options to overwrite sp
+    private val production by option().choice("true", "false").convert { it.toBoolean() }
+    private val postgresUrl by option()
+    private val postgresUser by option()
+    private val postgresPassword by option()
+    private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
+    private val geocodingHost by option()
 
     override fun run() {
-        currentContext.obj = BackendConfiguration.from(config, projectId)
+        val backendConfiguration = BackendConfiguration.from(config)
+        currentContext.obj = backendConfiguration.copy(
+            production = production ?: backendConfiguration.production,
+            postgres = backendConfiguration.postgres.copy(
+                url = postgresUrl ?: backendConfiguration.postgres.url,
+                user = postgresUser ?: backendConfiguration.postgres.user,
+                password = postgresPassword ?: backendConfiguration.postgres.password
+            ),
+            geocoding = backendConfiguration.geocoding.copy(
+                enabled = geocoding ?: backendConfiguration.geocoding.enabled,
+                host = geocodingHost ?: backendConfiguration.geocoding.host
+            )
+        )
     }
 }
 
@@ -35,14 +56,31 @@ class GraphQLExport : CliktCommand(name = "graphql-export") {
     }
 }
 
-class Import : CliktCommand(help = "Imports stores from a configured data source. Various properties must be set.") {
+class ImportSingle : CliktCommand(help = "Imports stores for all projects.") {
+    private val config by requireObject<BackendConfiguration>()
+    private val projectId by argument()
+    private val importUrl by option()
+
+    override fun run() {
+        val projects = config.projects.map { if (it.id == projectId && importUrl != null) it.copy(importUrl = importUrl!!) else it }
+        val singleProjectConfig = config.copy(projectId = projectId, projects = projects)
+
+        Database.setup(singleProjectConfig)
+        if (!LbeDataImporter.import(singleProjectConfig)) {
+            throw ProgramResult(statusCode = 5)
+        }
+    }
+}
+
+class Import : CliktCommand(help = "Imports stores for all projects.") {
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
         Database.setup(config)
-        if (!LbeDataImporter.import(config)) {
-            throw ProgramResult(statusCode = 5)
-        }
+        // Run import for all projects and exit with status code if one import failed
+        config.projects
+            .map { LbeDataImporter.import(config.copy(projectId = it.id)) }
+            .forEach { success -> if (!success) throw ProgramResult(statusCode = 5) }
     }
 }
 
@@ -67,4 +105,4 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
-fun main(args: Array<String>) = Entry().subcommands(Execute(), Import(), CreateAdmin(), GraphQLExport()).main(args)
+fun main(args: Array<String>) = Entry().subcommands(Execute(), Import(), ImportSingle(), CreateAdmin(), GraphQLExport()).main(args)

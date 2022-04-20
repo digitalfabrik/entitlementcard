@@ -4,6 +4,7 @@ postgres:
   user: postgres
   password: postgres
 geocoding:
+  enabled: true
   host: nominatim.maps.tuerantuer.org
 server:
   host: 0.0.0.0

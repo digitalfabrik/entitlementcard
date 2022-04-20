@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.File
 
 data class PostgresConfig(val url: String, val user: String, val password: String)
-data class GeocodingConfig(val host: String)
+data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class ProjectConfig(val id: String, val importUrl: String, val pipelineName: String)
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
 data class GeneralBackendConfiguration(
@@ -23,12 +23,12 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val projectId: String?
+    val projectId: String? = null
 ) {
     val project = projects.find { it.id == projectId } ?: throw Exception("Invalid projectId '$projectId' passed!")
 
     companion object {
-        fun from(file: File, projectId: String?): BackendConfiguration {
+        fun from(file: File): BackendConfiguration {
             val mapper = ObjectMapper(YAMLFactory())
             mapper.registerModule(KotlinModule())
 
@@ -41,8 +41,7 @@ data class BackendConfiguration(
                 postgres = generalBackendConfiguration.postgres,
                 geocoding = generalBackendConfiguration.geocoding,
                 server = generalBackendConfiguration.server,
-                projects = generalBackendConfiguration.projects,
-                projectId = projectId
+                projects = generalBackendConfiguration.projects
             )
         }
     }
