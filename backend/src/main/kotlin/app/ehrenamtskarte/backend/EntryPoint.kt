@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
-import app.ehrenamtskarte.backend.stores.importer.LbeDataImporter
+import app.ehrenamtskarte.backend.stores.importer.pipelines.Importer
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.ProgramResult
@@ -67,7 +67,7 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
         val newConfig = config.copy(projects = projects)
 
         Database.setup(newConfig)
-        if (!LbeDataImporter.import(newConfig.toImportConfig(projectId))) {
+        if (!Importer.import(newConfig.toImportConfig(projectId))) {
             throw ProgramResult(statusCode = 5)
         }
     }
@@ -80,7 +80,7 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
         Database.setup(config)
         // Run import for all projects and exit with status code if one import failed
         config.projects
-            .map { LbeDataImporter.import(config.toImportConfig(it.id)) }
+            .map { Importer.import(config.toImportConfig(it.id)) }
             .forEach { success -> if (!success) throw ProgramResult(statusCode = 5) }
     }
 }
