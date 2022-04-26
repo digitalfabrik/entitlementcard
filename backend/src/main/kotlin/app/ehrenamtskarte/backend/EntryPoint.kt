@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
-import app.ehrenamtskarte.backend.stores.importer.pipelines.Importer
+import app.ehrenamtskarte.backend.stores.importer.Importer
 import com.expediagroup.graphql.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.ProgramResult
