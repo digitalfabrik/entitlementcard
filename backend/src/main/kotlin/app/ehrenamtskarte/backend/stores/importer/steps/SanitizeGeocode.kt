@@ -22,9 +22,10 @@ import org.slf4j.Logger
 class SanitizeGeocode(config: BackendConfiguration, private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     private val featureFetcher = FeatureFetcher(config, httpClient)
 
-    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        input.map { it.sanitize() }
-    }
+    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =
+        if (config.geocoding.enabled) runBlocking {
+            input.map { it.sanitize() }
+        } else input
 
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
