@@ -21,19 +21,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def dartEnvironmentVariables = [
-        ANDROID_FLOSS: false,
-];
-
-if (project.hasProperty('dart-defines')) {
-    dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
-            .split(',')
-            .collectEntries { entry ->
-                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
-                [(pair.first()): pair.last()]
-            }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -51,7 +38,7 @@ android {
     }
 
     def buildConfigName = determineBuildConfigName()
-    // def buildConfig = createBuildConfig(buildConfigName)
+    def buildConfig = createBuildConfig(buildConfigName)
 
     defaultConfig {
 
@@ -59,11 +46,8 @@ android {
             String type, String name, String value -> resValue(type, name, value)
         })
 
-        if (dartEnvironmentVariables.ANDROID_FLOSS) {
-            applicationId "app.ehrenamtskarte.bayern.floss"
-        } else {
-            applicationId "de.nrw.it.giz.ehrensache.bayern.android"
-        }
+        applicationId buildConfig.applicationId
+
         minSdkVersion 20
         targetSdkVersion 30
         multiDexEnabled true
@@ -103,7 +87,7 @@ android {
 
     applicationVariants.all { variant ->
         // If we create a FLOSS build, then we want to exclude GMS
-        if (dartEnvironmentVariables.ANDROID_FLOSS) {
+        if (buildConfig.excludeLocationPlayServices) {
             variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
             variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
         }
@@ -112,7 +96,7 @@ android {
     packagingOptions {
         
         // Exclude x86 because the app size in F-Droid is limited to 30MB
-        if (dartEnvironmentVariables.EXCLUDE_X86) {
+        if (buildConfig.featureFlags.excludeX86) {
             exclude 'lib/x86**'
         }
     }
