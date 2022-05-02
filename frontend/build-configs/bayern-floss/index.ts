@@ -19,7 +19,6 @@ let bayernFloss: BuildConfigType = {
     ios: {
         ...bayern.ios,
         ...bayernFlossCommon,
-        bundleIdentifier: "app.ehrenamtskarte.bayern.floss"
     }
 }
 

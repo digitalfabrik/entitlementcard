@@ -21,7 +21,7 @@ let bayern: BuildConfigType = {
     },
     ios: {
         ...bayernCommon,
-        bundleIdentifier: "de.nrw.it.giz.ehrensache.bayern.android"
+        bundleIdentifier: "de.nrw.it.ehrensachebayern"
     }
 };
 
