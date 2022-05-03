@@ -37,3 +37,5 @@ vendor
 
 fastlane/report.xml
 fastlane/screenshots
+
+buildConfig.tmp.xcconfig
