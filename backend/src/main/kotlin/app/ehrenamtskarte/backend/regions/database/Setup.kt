@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
+// TODO #538: The regions should be dynamically fetched instead of being hardcoded here
 private val eakRegions = listOf(
     listOf(
         "Landkreis",
@@ -382,6 +383,7 @@ fun setupDatabase() {
             // Project ids and therefore the mock regions should never change
             // Therefore we only need to create the mock region if not already existing
             if (dbRegions.none { it.regionIdentifier == project.regionIdentifier() }) {
+                // TODO #538: Perhaps no mock region will be needed anymore
                 RegionEntity.new {
                     projectId = project.id
                     name = project.project
