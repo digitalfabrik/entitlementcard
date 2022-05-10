@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.Regions.name
 import app.ehrenamtskarte.backend.stores.database.*
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
@@ -19,6 +21,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
 
     override fun execute(input: List<AcceptingStore>) {
         transaction {
+            val region = RegionEntity.find { name eq config.project.id }.first()
             try {
                 PhysicalStores.deleteAll()
                 AcceptingStores.deleteAll()
@@ -44,6 +47,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
                     }
                     PhysicalStoreEntity.new {
+                        regionId = region.id
                         storeId = storeEntity.id
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)

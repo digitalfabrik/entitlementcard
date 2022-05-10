@@ -10,7 +10,7 @@ import org.dataloader.DataLoaderRegistry
 
 
 private fun createDataLoaderRegistry(): DataLoaderRegistry {
-    val dataLoaderRegistry = DataLoaderRegistry();
+    val dataLoaderRegistry = DataLoaderRegistry()
     dataLoaderRegistry.register(CONTACT_LOADER_NAME, contactLoader)
     dataLoaderRegistry.register(CATEGORY_LOADER_NAME, categoryLoader)
     dataLoaderRegistry.register(ACCEPTING_STORE_LOADER_NAME, acceptingStoreLoader)
