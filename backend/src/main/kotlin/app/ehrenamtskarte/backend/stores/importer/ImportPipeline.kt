@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import org.slf4j.Logger
 
 abstract class PipelineStep<In, Out> (protected val config: ImportConfig) {
