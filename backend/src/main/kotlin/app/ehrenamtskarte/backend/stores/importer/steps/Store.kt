@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.database.*
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.jetbrains.exposed.dao.id.EntityID
@@ -13,7 +15,7 @@ import org.slf4j.Logger
  * Stores the given [AcceptingStore] to the database.
  * Longitude, latitude and postal code of [AcceptingStore] must not be null.
  */
-class Store(private val logger: Logger, private val manualImport: Boolean) : PipelineStep<List<AcceptingStore>, Unit>() {
+class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<List<AcceptingStore>, Unit>(config) {
 
     override fun execute(input: List<AcceptingStore>) {
         transaction {
@@ -46,8 +48,9 @@ class Store(private val logger: Logger, private val manualImport: Boolean) : Pip
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
                     }
-                    if (manualImport)
+                    if (!config.backendConfig.production) {
                         drawSuccessBar(done, input.size)
+                    }
                 }
             } catch (e: Exception) {
                 logger.info("Unknown exception while storing to db", e)

@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.common.database
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -33,15 +34,18 @@ class Database {
 
         fun createAccount(email: String, password: String) {
             transaction {
-                AdministratorsRepository.insert(email, password)     
+                AdministratorsRepository.insert(email, password)
             }
         }
-        
-        fun setup(logging: Boolean) {
-            Database().db
+
+        fun setup(config: BackendConfiguration) {
+            connect(
+                config.postgres.url, driver = "org.postgresql.Driver",
+                user = config.postgres.user, password = config.postgres.password
+            )
 
             transaction {
-                if (logging) {
+                if (!config.production) {
                     addLogger(StdOutSqlLogger)
                 }
                 setupDatabaseForRegions(Companion::executeScript)
@@ -51,12 +55,5 @@ class Database {
                 setupDatabaseForAuth()
             }
         }
-    }
-
-    val db by lazy {
-        connect(
-            System.getProperty("app.postgres.url"), driver = "org.postgresql.Driver",
-            user = System.getProperty("app.postgres.user"), password = System.getProperty("app.postgres.password")
-        )
     }
 }

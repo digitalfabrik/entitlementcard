@@ -16,7 +16,6 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="run" />
           <option value="--args=&quot;graphql-export ../specs/backend-api.graphql&quot;" />
         </list>
       </option>

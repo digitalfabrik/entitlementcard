@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -18,12 +20,13 @@ import org.slf4j.Logger
  * If the coordinates are not inside the bounding box of the postal code, one of those is wrong.
  * Then query by the address and use the coordinates OR postal code of the first match to sanitize the store data.
  */
-class SanitizeGeocode(private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>() {
-    private val featureFetcher = FeatureFetcher(httpClient)
+class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
+    private val featureFetcher = FeatureFetcher(config, httpClient)
 
-    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        input.map { it.sanitize() }
-    }
+    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =
+        if (config.backendConfig.geocoding.enabled) runBlocking {
+            input.map { it.sanitize() }
+        } else input
 
     private suspend fun AcceptingStore.sanitize(): AcceptingStore {
         if (street?.contains(STREET_EXCLUDE_PATTERN) == true) return this
