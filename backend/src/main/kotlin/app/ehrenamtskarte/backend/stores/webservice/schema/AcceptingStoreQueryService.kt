@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
@@ -16,8 +17,8 @@ import java.util.concurrent.CompletableFuture
 class AcceptingStoreQueryService {
 
     @GraphQLDescription("Return list of all accepting stores.")
-    fun physicalStores(): List<PhysicalStore> = transaction {
-        PhysicalStoresRepository.findAll().map {
+    fun physicalStores(project: String = DEFAULT_PROJECT): List<PhysicalStore> = transaction {
+        PhysicalStoresRepository.findAll(project).map {
             PhysicalStore(
                 it.id.value,
                 it.storeId.value,
@@ -37,6 +38,7 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
     fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
         AcceptingStoresRepository.findBySearch(
+            params.project,
             params.searchText,
             params.categoryIds,
             params.coordinates,
@@ -49,6 +51,7 @@ class AcceptingStoreQueryService {
 }
 
 data class SearchParams(
+    val project: String = DEFAULT_PROJECT,
     val searchText: String?,
     val categoryIds: List<Int>?,
     val coordinates: Coordinates?,

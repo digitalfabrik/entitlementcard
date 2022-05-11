@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.dataloader.REGION_LOADER_NAME
@@ -13,8 +14,8 @@ import java.util.concurrent.CompletableFuture
 class RegionsQueryService {
 
     @GraphQLDescription("Return list of all regions.")
-    fun regions(): List<Region> = transaction {
-        RegionsRepository.findAll().map {
+    fun regions(project: String = DEFAULT_PROJECT): List<Region> = transaction {
+        RegionsRepository.findAll(project).map {
             Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
         }
     }
