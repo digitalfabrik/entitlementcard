@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.types.LbeData
@@ -14,11 +15,11 @@ import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
-class DownloadLbe(config: BackendConfiguration, private val logger: Logger, private val httpClient: HttpClient) : PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
+class DownloadLbe(config: ImportConfig, private val logger: Logger, private val httpClient: HttpClient) : PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
 
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {
-            val url = config.project.importUrl
+            val url = config.findProject().importUrl
 
             val response = runBlocking {
                 httpClient.request<String> {

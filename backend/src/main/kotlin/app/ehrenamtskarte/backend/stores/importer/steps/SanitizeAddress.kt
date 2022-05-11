@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.stores.importer.steps
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -13,7 +14,7 @@ import org.slf4j.Logger
  * Postal codes are mapped to either the first five digits (german postcode format) or null.
  * Street and house numbers are correctly separated.
  */
-class SanitizeAddress(config: BackendConfiguration, private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
+class SanitizeAddress(config: ImportConfig, private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     private val houseNumberRegex = houseNumberRegex()
     private val postalCodeRegex = Regex("""[0-9]{5}""")
 

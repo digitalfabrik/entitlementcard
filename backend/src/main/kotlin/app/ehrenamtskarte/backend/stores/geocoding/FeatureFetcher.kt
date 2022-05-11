@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.stores.geocoding
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.STATE
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
@@ -11,7 +12,7 @@ import io.ktor.http.*
 import org.geojson.Feature
 import org.geojson.FeatureCollection
 
-class FeatureFetcher(private val config: BackendConfiguration, private val httpClient: HttpClient) {
+class FeatureFetcher(private val config: ImportConfig, private val httpClient: HttpClient) {
     /**
      * Returns geocoding features matching the given [params].
      */

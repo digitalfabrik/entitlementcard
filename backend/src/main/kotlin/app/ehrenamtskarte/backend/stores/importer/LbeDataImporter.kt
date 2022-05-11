@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 object LbeDataImporter {
     private val httpClient = HttpClient()
 
-    fun import(config: BackendConfiguration): Boolean {
+    fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(LbeDataImporter::class.java)
         val pipe = {
             Unit.addStep(DownloadLbe(config, logger, httpClient), logger) { logger.info("== Download lbe data ==" )}

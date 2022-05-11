@@ -63,10 +63,10 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
     override fun run() {
         val projects =
             config.projects.map { if (it.id == projectId && importUrl != null) it.copy(importUrl = importUrl!!) else it }
-        val singleProjectConfig = config.copy(projectId = projectId, projects = projects)
+        val newConfig = config.copy(projects = projects)
 
-        Database.setup(singleProjectConfig)
-        if (!LbeDataImporter.import(singleProjectConfig)) {
+        Database.setup(newConfig)
+        if (!LbeDataImporter.import(newConfig.toImportConfig(projectId))) {
             throw ProgramResult(statusCode = 5)
         }
     }
@@ -79,7 +79,7 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
         Database.setup(config)
         // Run import for all projects and exit with status code if one import failed
         config.projects
-            .map { LbeDataImporter.import(config.copy(projectId = it.id)) }
+            .map { LbeDataImporter.import(config.toImportConfig(it.id)) }
             .forEach { success -> if (!success) throw ProgramResult(statusCode = 5) }
     }
 }

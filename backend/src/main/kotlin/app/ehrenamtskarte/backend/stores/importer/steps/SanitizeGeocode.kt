@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -19,7 +20,7 @@ import org.slf4j.Logger
  * If the coordinates are not inside the bounding box of the postal code, one of those is wrong.
  * Then query by the address and use the coordinates OR postal code of the first match to sanitize the store data.
  */
-class SanitizeGeocode(config: BackendConfiguration, private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
+class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClient: HttpClient) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     private val featureFetcher = FeatureFetcher(config, httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =

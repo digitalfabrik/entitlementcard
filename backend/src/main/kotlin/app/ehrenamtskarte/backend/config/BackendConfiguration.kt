@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.config
 
+import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -24,11 +25,11 @@ data class BackendConfiguration(
     val server: ServerConfig,
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
-    val projects: List<ProjectConfig>,
-    val projectId: String? = null
+    val projects: List<ProjectConfig>
 ) {
-    val project by lazy {
-        projects.find { it.id == projectId } ?: throw Exception("Invalid projectId '$projectId' passed!")
+
+    fun toImportConfig(projectId: String): ImportConfig {
+        return ImportConfig(this, projectId)
     }
 
     companion object {
