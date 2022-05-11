@@ -11,8 +11,9 @@ import com.github.ajalt.clikt.core.ProgramResult
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.options.flag
+import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import java.io.File
 
@@ -20,25 +21,25 @@ class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
 
     // Options to overwrite single properties of the config
-    private val production by option().flag("--no-production", default = false)
+    private val production by option().choice("true", "false").convert { it.toBoolean() }
     private val postgresUrl by option()
     private val postgresUser by option()
     private val postgresPassword by option()
-    private val geocoding by option().flag("--no-geocoding", default = true)
+    private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
 
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(config)
 
         currentContext.obj = backendConfiguration.copy(
-            production = production,
+            production = production ?: backendConfiguration.production,
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,
                 password = postgresPassword ?: backendConfiguration.postgres.password
             ),
             geocoding = backendConfiguration.geocoding.copy(
-                enabled = geocoding,
+                enabled = geocoding ?: backendConfiguration.geocoding.enabled,
                 host = geocodingHost ?: backendConfiguration.geocoding.host
             )
         )
