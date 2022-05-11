@@ -6,14 +6,15 @@ import app.ehrenamtskarte.backend.stores.importer.pipelines.SozialpassNuernberg
 import org.slf4j.LoggerFactory
 
 object Importer {
-    fun import(config: BackendConfiguration): Boolean {
+    fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(Importer::class.java)
 
         return try {
-            when (config.project.pipelineName) {
+            val project = config.findProject()
+            when (project.pipelineName) {
                 "EhrenamtskarteBayern" -> EhrenamtskarteBayern.import(config, logger)
                 "SozialpassNuernberg" -> SozialpassNuernberg.import(config, logger)
-                else -> throw Error("Invalid pipeline name '${config.project.pipelineName}'!")
+                else -> throw Error("Invalid pipeline name '${project.pipelineName}'!")
             }
             logger.info("== Pipeline successfully finished ==")
             true
