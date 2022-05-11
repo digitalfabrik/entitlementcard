@@ -29,7 +29,7 @@ data class BackendConfiguration(
 ) {
 
     fun toImportConfig(projectId: String): ImportConfig {
-        return ImportConfig(this, projectId)
+        return ImportConfig(this.copy(), projectId)
     }
 
     companion object {

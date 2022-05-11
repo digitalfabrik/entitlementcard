@@ -24,7 +24,7 @@ class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClie
     private val featureFetcher = FeatureFetcher(config, httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =
-        if (config.geocoding.enabled) runBlocking {
+        if (config.backendConfig.geocoding.enabled) runBlocking {
             input.map { it.sanitize() }
         } else input
 

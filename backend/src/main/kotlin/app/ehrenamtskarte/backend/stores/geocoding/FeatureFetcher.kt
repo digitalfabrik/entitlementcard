@@ -20,7 +20,7 @@ class FeatureFetcher(private val config: ImportConfig, private val httpClient: H
         val geoJson =  httpClient.request<String> {
             url {
                 protocol = URLProtocol.HTTP
-                host = config.geocoding.host
+                host = config.backendConfig.geocoding.host
                 path("nominatim", "search")
                 parameters.append("format", "geojson")
                 parameters.append("addressdetails", "1")

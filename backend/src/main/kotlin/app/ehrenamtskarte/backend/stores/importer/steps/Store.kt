@@ -48,7 +48,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
                     }
-                    if (!config.production) {
+                    if (!config.backendConfig.production) {
                         drawSuccessBar(done, input.size)
                     }
                 }
