@@ -19,8 +19,7 @@ val acceptingStoreLoader = DataLoader<Int, AcceptingStore?> { ids ->
                     .find { AcceptingStores.id inList ids }
                     .sortByKeys({ it.id.value }, ids)
                     .map {
-                        if (it == null) null
-                        else AcceptingStore(
+                        AcceptingStore(
                             it.id.value,
                             it.name,
                             it.description,

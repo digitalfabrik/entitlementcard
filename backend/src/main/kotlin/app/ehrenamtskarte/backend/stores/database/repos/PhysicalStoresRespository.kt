@@ -21,7 +21,7 @@ object PhysicalStoresRepository {
         val query = (Projects innerJoin Regions innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)
             .select { Projects.project eq project and (PhysicalStores.id inList ids) }
-        return PhysicalStoreEntity.wrapRows(query).sortByKeys({ it.id.value }, ids).filterNotNull()
+        return PhysicalStoreEntity.wrapRows(query).sortByKeys({ it.id.value }, ids)
     }
 
 }

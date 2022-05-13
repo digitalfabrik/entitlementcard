@@ -18,10 +18,7 @@ val regionLoader = DataLoader<Int, Region?> { ids ->
                 RegionEntity
                     .find { Regions.id inList ids }
                     .sortByKeys({ it.id.value }, ids)
-                    .map {
-                        if (it == null) null
-                        else Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
-                    }
+                    .map { Region(it.id.value, it.prefix, it.name, it.regionIdentifier) }
             }
         }
     }

@@ -20,8 +20,7 @@ val physicalStoreLoader = DataLoader<Int, PhysicalStore?> { ids ->
                     .find { PhysicalStores.id inList ids }
                     .sortByKeys({ it.id.value }, ids)
                     .map {
-                        if (it == null) null
-                        else PhysicalStore(
+                        PhysicalStore(
                             it.id.value,
                             it.storeId.value,
                             it.addressId.value,
