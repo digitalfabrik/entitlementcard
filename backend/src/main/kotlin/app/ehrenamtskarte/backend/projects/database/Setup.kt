@@ -12,13 +12,6 @@ fun setupDatabase(config: BackendConfiguration) {
     transaction {
         val dbProjects = ProjectEntity.all()
 
-        // Delete projects not existing anymore in database
-        dbProjects.forEach { dbProject ->
-            if (config.projects.none { it.id == dbProject.project }) {
-                dbProject.delete()
-            }
-        }
-
         // Create missing projects in database
         config.projects.forEach { projectConfig ->
             if (dbProjects.none { it.project == projectConfig.id }) {

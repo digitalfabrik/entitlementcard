@@ -5,10 +5,9 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ReferenceOption
 
 object Regions : IntIdTable() {
-    val projectId = reference("projectId", Projects, onDelete = ReferenceOption.CASCADE)
+    val projectId = reference("projectId", Projects)
     val regionIdentifier = char("regionIdentifier", 5).uniqueIndex() // 5-stelliger Kreisschlüssel
     val website = varchar("website", 400)
     val name = varchar("name", 100)

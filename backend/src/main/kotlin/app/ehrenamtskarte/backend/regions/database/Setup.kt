@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.regions.database
 
+import app.ehrenamtskarte.backend.common.webservice.EAK_PROJECT
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -368,15 +369,6 @@ fun setupDatabase() {
     transaction {
         val projects = ProjectEntity.all()
         val dbRegions = RegionEntity.all()
-
-        // Delete old regions in database
-        dbRegions.forEach { dbRegion ->
-            val isEakRegion = eakRegions.any { it[2] == dbRegion.regionIdentifier }
-            val isProjectRegion = projects.any { it.regionIdentifier() == dbRegion.regionIdentifier }
-            if (!isEakRegion && !isProjectRegion) {
-                dbRegion.delete()
-            }
-        }
 
         // Create a mock region for each project to save the stores to
         projects.forEach { project ->
