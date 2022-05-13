@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.regions.webservice.dataloader
 
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
@@ -13,10 +15,13 @@ val regionLoader = DataLoader<Int, Region?> { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {
-                RegionsRepository.findByIds(ids).map {
-                    if (it == null) null
-                    else Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
-                }
+                RegionEntity
+                    .find { Regions.id inList ids }
+                    .sortByKeys({ it.id.value }, ids)
+                    .map {
+                        if (it == null) null
+                        else Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
+                    }
             }
         }
     }

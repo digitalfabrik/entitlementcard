@@ -13,8 +13,8 @@ val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    fun verifyCardHash(cardHash: ByteArray, totp: Int): Boolean {
-        val card = transaction { CardRepository.findByHashModel(cardHash) } ?: return false
+    fun verifyCardHash(project: String, cardHash: ByteArray, totp: Int): Boolean {
+        val card = transaction { CardRepository.findByHashModel(project, cardHash) } ?: return false
         return verifyCard(card, totp)
     }
 

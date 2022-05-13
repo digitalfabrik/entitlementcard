@@ -1,17 +1,13 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.PHYSICAL_STORE_LOADER_NAME
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
 import com.expediagroup.graphql.annotations.GraphQLDescription
-import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.concurrent.CompletableFuture
 
 @Suppress("unused")
 class AcceptingStoreQueryService {
@@ -29,16 +25,21 @@ class AcceptingStoreQueryService {
     }
 
     @GraphQLDescription("Returns list of all accepting stores queried by ids.")
-    fun physicalStoresById(
-        params: IdsParams,
-        environment: DataFetchingEnvironment
-    ): CompletableFuture<List<PhysicalStore>> =
-        environment.getDataLoader<Int, PhysicalStore>(PHYSICAL_STORE_LOADER_NAME).loadMany(params.ids)
+    fun physicalStoresById(project: String = DEFAULT_PROJECT, ids: List<Int>): List<PhysicalStore> = transaction {
+        PhysicalStoresRepository.findByIds(project, ids).map {
+            PhysicalStore(
+                it.id.value,
+                it.storeId.value,
+                it.addressId.value,
+                Coordinates(it.coordinates.x, it.coordinates.y)
+            )
+        }
+    }
 
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
-    fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = transaction {
+    fun searchAcceptingStores(project: String = DEFAULT_PROJECT, params: SearchParams): List<AcceptingStore> = transaction {
         AcceptingStoresRepository.findBySearch(
-            params.project,
+            project,
             params.searchText,
             params.categoryIds,
             params.coordinates,
@@ -51,7 +52,6 @@ class AcceptingStoreQueryService {
 }
 
 data class SearchParams(
-    val project: String = DEFAULT_PROJECT,
     val searchText: String?,
     val categoryIds: List<Int>?,
     val coordinates: Coordinates?,

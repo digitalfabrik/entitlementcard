@@ -1,12 +1,8 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
-import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
-import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
-import app.ehrenamtskarte.backend.stores.database.AcceptingStores
-import app.ehrenamtskarte.backend.stores.database.Addresses
-import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.stores.database.*
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -14,9 +10,12 @@ import org.postgis.Point
 
 object AcceptingStoresRepository {
 
-    fun findByIds(ids: List<Int>) =
-        AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
-
+    fun findByIds(project: String, ids: List<Int>): List<AcceptingStoreEntity> {
+        val query = (Projects innerJoin Regions innerJoin PhysicalStores innerJoin AcceptingStores)
+            .slice(AcceptingStores.columns)
+            .select { Projects.project eq project and (AcceptingStores.id inList ids) }
+        return AcceptingStoreEntity.wrapRows(query).toList()
+    }
 
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
