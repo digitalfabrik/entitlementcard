@@ -387,7 +387,8 @@ fun setupDatabase() {
         }
 
         // Create or update eak regions in database
-        val eakProject = projects.first { it.project == "bayern.ehrenamtskarte.app" }
+        val eakProject = projects.firstOrNull { it.project == EAK_PROJECT }
+            ?: throw Error("Required project '$EAK_PROJECT' not found!")
         eakRegions.forEach { eakRegion ->
             val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] }
             if (dbRegion == null) {
