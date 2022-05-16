@@ -21,7 +21,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
 
     override fun execute(input: List<AcceptingStore>) {
         transaction {
-            // TODO #538: The right region should be used instead of the mock region
+            // TODO #538: The right region should be used instead of the dummy region
             val region = RegionEntity.find { name eq config.findProject().id }.first()
             try {
                 PhysicalStores.deleteAll()
