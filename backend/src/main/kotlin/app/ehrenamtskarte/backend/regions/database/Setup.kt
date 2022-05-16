@@ -18,13 +18,13 @@ fun setupDatabase() {
         projects.forEach { project ->
             // Project ids and therefore the dummy regions should never change
             // Therefore, we only need to create the dummy region if it does not already exist
-            if (dbRegions.none { it.regionIdentifier == project.regionIdentifier() }) {
+            if (dbRegions.none { it.name == project.project }) {
                 // TODO #538: Perhaps no dummy region will be needed anymore
                 RegionEntity.new {
                     projectId = project.id
                     name = project.project
                     prefix = ""
-                    regionIdentifier = project.regionIdentifier()
+                    regionIdentifier = null
                     website = ""
                 }
             }
@@ -50,8 +50,4 @@ fun setupDatabase() {
             }
         }
     }
-}
-
-private fun ProjectEntity.regionIdentifier(): String {
-    return project.hashCode().toString().slice(0..4)
 }

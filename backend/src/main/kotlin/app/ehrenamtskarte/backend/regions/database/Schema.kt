@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object Regions : IntIdTable() {
     val projectId = reference("projectId", Projects)
-    val regionIdentifier = char("regionIdentifier", 5).uniqueIndex() // 5-stelliger Kreisschlüssel
+    val regionIdentifier = char("regionIdentifier", 5).uniqueIndex().nullable() // 5-stelliger Kreisschlüssel
     val website = varchar("website", 400)
     val name = varchar("name", 100)
     val prefix = varchar("prefix", 30) // Usually "Stadt" or "Landkreis"
