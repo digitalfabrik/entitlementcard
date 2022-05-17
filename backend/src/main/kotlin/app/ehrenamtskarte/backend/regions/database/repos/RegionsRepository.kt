@@ -9,18 +9,21 @@ import org.jetbrains.exposed.sql.select
 
 object RegionsRepository {
 
-    fun findAll(project: String): List<RegionEntity> {
+    fun findAllInProject(project: String): List<RegionEntity> {
         val query = (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project }
         return RegionEntity.wrapRows(query).toList()
     }
 
-    fun findByIds(project: String, ids: List<Int>): List<RegionEntity> {
+    fun findByIdsInProject(project: String, ids: List<Int>): List<RegionEntity?> {
         val query = (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project and (Regions.id inList ids) }
-        return RegionEntity.wrapRows(query).sortByKeys({ it.id.value }, ids).filterNotNull()
+        return RegionEntity.wrapRows(query).sortByKeys({ it.id.value }, ids)
     }
+
+    fun findByIds(ids: List<Int>) =
+        RegionEntity.find { Regions.id inList ids }.sortByKeys({ it.id.value }, ids)
 
 }

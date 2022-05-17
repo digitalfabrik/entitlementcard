@@ -10,18 +10,20 @@ import org.jetbrains.exposed.sql.select
 
 object PhysicalStoresRepository {
 
-    fun findAll(project: String): List<PhysicalStoreEntity> {
+    fun findAllInProject(project: String): List<PhysicalStoreEntity> {
         val query = (Projects innerJoin Regions innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)
             .select { Projects.project eq project }
         return PhysicalStoreEntity.wrapRows(query).toList()
     }
 
-    fun findByIds(project: String, ids: List<Int>): List<PhysicalStoreEntity> {
+    fun findByIdsInProject(project: String, ids: List<Int>): List<PhysicalStoreEntity?> {
         val query = (Projects innerJoin Regions innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)
             .select { Projects.project eq project and (PhysicalStores.id inList ids) }
         return PhysicalStoreEntity.wrapRows(query).sortByKeys({ it.id.value }, ids)
     }
 
+    fun findByIds(ids: List<Int>) =
+        PhysicalStoreEntity.find { PhysicalStores.id inList ids }.sortByKeys({ it.id.value }, ids)
 }

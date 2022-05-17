@@ -12,9 +12,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class AcceptingStoreQueryService {
 
-    @GraphQLDescription("Return list of all accepting stores.")
-    fun physicalStores(project: String = DEFAULT_PROJECT): List<PhysicalStore> = transaction {
-        PhysicalStoresRepository.findAll(project).map {
+    @GraphQLDescription("Returns list of all accepting stores in the given project.")
+    fun physicalStoresInProject(project: String): List<PhysicalStore> = transaction {
+        PhysicalStoresRepository.findAllInProject(project).map {
             PhysicalStore(
                 it.id.value,
                 it.storeId.value,
@@ -24,10 +24,11 @@ class AcceptingStoreQueryService {
         }
     }
 
-    @GraphQLDescription("Returns list of all accepting stores queried by ids.")
-    fun physicalStoresById(project: String = DEFAULT_PROJECT, ids: List<Int>): List<PhysicalStore> = transaction {
-        PhysicalStoresRepository.findByIds(project, ids).map {
-            PhysicalStore(
+    @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
+    fun physicalStoresByIdInProject(project: String, ids: List<Int>): List<PhysicalStore?> = transaction {
+        PhysicalStoresRepository.findByIdsInProject(project, ids).map {
+            if (it == null) null
+            else PhysicalStore(
                 it.id.value,
                 it.storeId.value,
                 it.addressId.value,
@@ -36,8 +37,8 @@ class AcceptingStoreQueryService {
         }
     }
 
-    @GraphQLDescription("Search for accepting stores using searchText and categoryIds.")
-    fun searchAcceptingStores(project: String = DEFAULT_PROJECT, params: SearchParams): List<AcceptingStore> = transaction {
+    @GraphQLDescription("Search for accepting stores in the given project using searchText and categoryIds.")
+    fun searchAcceptingStoresInProject(project: String, params: SearchParams): List<AcceptingStore> = transaction {
         AcceptingStoresRepository.findBySearch(
             project,
             params.searchText,
@@ -49,6 +50,18 @@ class AcceptingStoreQueryService {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresInProject"))
+    @GraphQLDescription("Return list of all accepting stores in the eak bayern project.")
+    fun physicalStores(): List<PhysicalStore> = physicalStoresInProject(DEFAULT_PROJECT)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresByIdInProject"))
+    @GraphQLDescription("Returns list of all accepting stores queried by ids in the eak bayern project.")
+    fun physicalStoresById(ids: List<Int>) = physicalStoresByIdInProject(DEFAULT_PROJECT, ids)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("searchAcceptingStoresInProject"))
+    @GraphQLDescription("Search for accepting stores using searchText and categoryIds in the eak bayern project.")
+    fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = searchAcceptingStoresInProject(DEFAULT_PROJECT, params)
 }
 
 data class SearchParams(

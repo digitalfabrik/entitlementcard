@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
+import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.stores.database.*
@@ -10,7 +11,7 @@ import org.postgis.Point
 
 object AcceptingStoresRepository {
 
-    fun findByIds(project: String, ids: List<Int>): List<AcceptingStoreEntity> {
+    fun findByIdsInProject(project: String, ids: List<Int>): List<AcceptingStoreEntity> {
         val query = (Projects innerJoin Regions innerJoin PhysicalStores innerJoin AcceptingStores)
             .slice(AcceptingStores.columns)
             .select { Projects.project eq project and (AcceptingStores.id inList ids) }
@@ -63,6 +64,9 @@ object AcceptingStoresRepository {
             .let { AcceptingStoreEntity.wrapRows(it) }
             .limit(limit, offset)
     }
+
+    fun findByIds(ids: List<Int>) =
+        AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
 }
 
 
