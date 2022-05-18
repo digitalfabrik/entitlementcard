@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.database
 
+import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -46,6 +47,7 @@ class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object PhysicalStores : IntIdTable() {
+    val regionId = reference("regionId", Regions)
     val coordinates = point("coordinates")
     val addressId = reference("addressId", Addresses)
     val storeId = reference("storeId", AcceptingStores)
@@ -54,6 +56,7 @@ object PhysicalStores : IntIdTable() {
 class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PhysicalStoreEntity>(PhysicalStores)
 
+    var regionId by PhysicalStores.regionId
     var storeId by PhysicalStores.storeId
     var addressId by PhysicalStores.addressId
     var coordinates by PhysicalStores.coordinates

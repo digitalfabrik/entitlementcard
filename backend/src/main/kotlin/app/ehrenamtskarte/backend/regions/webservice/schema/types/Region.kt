@@ -5,5 +5,5 @@ data class Region(
     val id: Int,
     val prefix: String,
     val name: String,
-    val regionIdentifier: String
+    val regionIdentifier: String?
 )
