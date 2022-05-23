@@ -1,16 +1,23 @@
 package app.ehrenamtskarte.backend.verification.database.repos
 
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import java.time.LocalDateTime
 
 object CardRepository {
 
-    fun findByHashModel(hashModel: ByteArray) =
-        CardEntity.find { Cards.cardDetailsHash eq hashModel }
+    fun findByHashModel(project: String, hashModel: ByteArray): CardEntity? {
+        val query = (Projects innerJoin Regions innerJoin Cards)
+            .slice(Cards.columns)
+            .select { Projects.project eq project and (Cards.cardDetailsHash eq hashModel) }
             .singleOrNull()
+        return if (query == null) null else CardEntity.wrapRow(query)
+    }
 
     fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime?, regionId: Int) =
         CardEntity.new {
