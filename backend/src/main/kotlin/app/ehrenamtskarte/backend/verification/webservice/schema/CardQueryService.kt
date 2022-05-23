@@ -8,8 +8,12 @@ import org.postgresql.util.Base64
 
 @Suppress("unused")
 class CardQueryService {
-    @GraphQLDescription("Returns whether there is a card with that hash registered for that this TOTP is currently valid")
-    fun verifyCard(project: String = DEFAULT_PROJECT, card: CardVerificationModel): Boolean {
+    @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid")
+    fun verifyCardInProject(project: String, card: CardVerificationModel): Boolean {
         return CardVerifier.verifyCardHash(project, Base64.decode(card.cardDetailsHashBase64), card.totp)
     }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("verifyCardInProject"))
+    @GraphQLDescription("Returns whether there is a card with that hash registered for that this TOTP is currently valid")
+    fun verifyCard(card: CardVerificationModel): Boolean = verifyCardInProject(DEFAULT_PROJECT, card)
 }
