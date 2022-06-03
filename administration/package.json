@@ -15,7 +15,7 @@
     "fast-text-encoding": "^1.0.3",
     "jspdf": "^2.5.1",
     "long": "^5.2.0",
-    "protobufjs": "^6.11.2",
+    "protobufjs": "^6.11.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-flip-move": "^3.0.4",
