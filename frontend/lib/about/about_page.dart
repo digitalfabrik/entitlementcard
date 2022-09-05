@@ -1,16 +1,15 @@
+import 'package:ehrenamtskarte/about/content_tile.dart';
+import 'package:ehrenamtskarte/about/dev_settings_view.dart';
+import 'package:ehrenamtskarte/about/license_page.dart';
+import 'package:ehrenamtskarte/about/texts.dart';
+import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../configuration/configuration.dart';
-import '../routing.dart';
-import 'content_tile.dart';
-import 'dev_settings_view.dart';
-import 'license_page.dart';
-import 'texts.dart';
-
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {

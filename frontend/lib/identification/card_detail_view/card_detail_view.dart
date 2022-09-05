@@ -1,12 +1,11 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/identification/card/eak_card.dart';
+import 'package:ehrenamtskarte/identification/card/id_card.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/verification_qr_code_view.dart';
+import 'package:ehrenamtskarte/identification/card_details.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../../graphql/graphql_api.dart';
-import '../card/eak_card.dart';
-import '../card/id_card.dart';
-import '../card_details.dart';
-import 'more_actions_dialog.dart';
-import 'verification_qr_code_view.dart';
 
 class CardDetailView extends StatelessWidget {
   final CardDetails cardDetails;
@@ -15,12 +14,12 @@ class CardDetailView extends StatelessWidget {
   final VoidCallback startEakApplication;
 
   const CardDetailView({
-    Key? key,
+    super.key,
     required this.cardDetails,
     required this.startActivateEak,
     required this.startVerification,
     required this.startEakApplication,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +101,7 @@ class RichQrCode extends StatelessWidget {
   final CardDetails cardDetails;
   final bool compact;
 
-  const RichQrCode({Key? key, required this.onMoreActionsPressed, required this.cardDetails, this.compact = false})
-      : super(key: key);
+  const RichQrCode({super.key, required this.onMoreActionsPressed, required this.cardDetails, this.compact = false});
 
   @override
   Widget build(BuildContext context) {

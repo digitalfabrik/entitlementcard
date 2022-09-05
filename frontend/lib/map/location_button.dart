@@ -1,14 +1,13 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../location/determine_position.dart';
-import '../widgets/small_button_spinner.dart';
 
 class LocationButton extends StatefulWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
 
-  const LocationButton({Key? key, required this.bringCameraToUser}) : super(key: key);
+  const LocationButton({super.key, required this.bringCameraToUser});
 
   @override
   State<StatefulWidget> createState() {

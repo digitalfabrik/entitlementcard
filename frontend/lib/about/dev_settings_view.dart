@@ -1,14 +1,13 @@
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/card_details.dart';
+import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../identification/base_card_details.dart';
-import '../identification/card_details.dart';
-import '../identification/card_details_model.dart';
-import '../intro_slides/intro_screen.dart';
-import '../routing.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
@@ -22,7 +21,7 @@ final validEakDetails = CardDetails(
 );
 
 class DevSettingsView extends StatelessWidget {
-  const DevSettingsView({Key? key}) : super(key: key);
+  const DevSettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {

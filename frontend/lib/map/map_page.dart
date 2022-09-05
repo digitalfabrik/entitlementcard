@@ -1,9 +1,8 @@
 import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/map/map/map_controller.dart';
+import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-
-import 'map/map_controller.dart';
-import 'map/map_with_futures.dart';
 
 class PhysicalStoreFeatureData {
   final int? id;
@@ -19,7 +18,7 @@ class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
   final void Function(int? id) selectAcceptingStore;
 
-  const MapPage({Key? key, required this.onMapCreated, required this.selectAcceptingStore}) : super(key: key);
+  const MapPage({super.key, required this.onMapCreated, required this.selectAcceptingStore});
 
   @override
   State<StatefulWidget> createState() {

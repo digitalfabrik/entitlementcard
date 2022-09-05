@@ -1,7 +1,6 @@
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/card_details.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../base_card_details.dart';
-import '../card_details.dart';
 
 const dataVersionKey = "dataVersion";
 const fullNameKey = "fullName";

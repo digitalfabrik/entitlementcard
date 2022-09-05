@@ -1,7 +1,7 @@
+import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/map/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../../location/determine_position.dart';
-import 'map.dart';
 
 class MapWithFutures extends StatelessWidget {
   final OnFeatureClickCallback onFeatureClick;
@@ -10,12 +10,12 @@ class MapWithFutures extends StatelessWidget {
   final List<String> onFeatureClickLayerFilter;
 
   const MapWithFutures({
-    Key? key,
+    super.key,
     required this.onNoFeatureClick,
     required this.onFeatureClick,
     required this.onFeatureClickLayerFilter,
     required this.onMapCreated,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

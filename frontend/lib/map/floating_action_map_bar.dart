@@ -11,12 +11,11 @@ class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
   final int? selectedAcceptingStoreId;
 
-  const FloatingActionMapBar({Key? key, required this.bringCameraToUser, required this.selectedAcceptingStoreId})
-      : super(key: key);
+  const FloatingActionMapBar({super.key, required this.bringCameraToUser, required this.selectedAcceptingStoreId});
 
   @override
   Widget build(BuildContext context) {
-    final _selectedAcceptingStoreId = selectedAcceptingStoreId;
+    final finalSelectedAcceptingStoreId = selectedAcceptingStoreId;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -31,10 +30,10 @@ class FloatingActionMapBar extends StatelessWidget {
           child: IntrinsicHeight(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              child: _selectedAcceptingStoreId != null
+              child: finalSelectedAcceptingStoreId != null
                   ? Container(
                       padding: EdgeInsets.only(top: fabPadding.toDouble()),
-                      child: AcceptingStorePreview(_selectedAcceptingStoreId),
+                      child: AcceptingStorePreview(finalSelectedAcceptingStoreId),
                     )
                   : null,
             ),

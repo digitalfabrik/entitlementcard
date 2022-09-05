@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
-
-import '../category_assets.dart';
-import 'filter_bar_button.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
-  const FilterBar({Key? key, required this.onCategoryPress}) : super(key: key);
+  const FilterBar({super.key, required this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class EakCardHeaderLogo extends StatelessWidget {
   final Image? logo;
   final double scaleFactor;
 
-  const EakCardHeaderLogo({Key? key, required this.title, this.logo, required this.scaleFactor}) : super(key: key);
+  const EakCardHeaderLogo({super.key, required this.title, this.logo, required this.scaleFactor});
 
   @override
   Widget build(BuildContext context) {

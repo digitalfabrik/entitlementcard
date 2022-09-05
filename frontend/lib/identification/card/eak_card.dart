@@ -1,10 +1,9 @@
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/card/eak_card_header_logo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-
-import '../base_card_details.dart';
-import 'eak_card_header_logo.dart';
 
 const blueCardColor = Color(0xffcfeaff);
 const goldenCardColor = Color(0xffcab374);
@@ -24,7 +23,7 @@ class EakCard extends StatelessWidget {
   final BaseCardDetails cardDetails;
   final Region? region;
 
-  const EakCard({Key? key, required this.cardDetails, this.region}) : super(key: key);
+  const EakCard({super.key, required this.cardDetails, this.region});
 
   String get _formattedExpirationDate {
     final expirationDate = cardDetails.expirationDate;

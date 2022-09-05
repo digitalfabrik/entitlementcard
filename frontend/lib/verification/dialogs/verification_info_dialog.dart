@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
-  const VerificationInfoDialog({Key? key}) : super(key: key);
+  const VerificationInfoDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

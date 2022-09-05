@@ -13,10 +13,10 @@ class ScreenParentResizer extends StatelessWidget {
   final bool childInitialized;
 
   const ScreenParentResizer({
-    Key? key,
+    super.key,
     required this.child,
     required this.childInitialized,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,10 @@ class _InnerScreenParentResizer extends StatefulWidget {
   final BoxConstraints constraints;
 
   const _InnerScreenParentResizer({
-    Key? key,
     required Widget this.child,
     required this.childInitialized,
     required this.constraints,
-  }) : super(key: key);
+  });
 
   @override
   State createState() => _InnerScreenParentResizerState();

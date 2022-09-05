@@ -1,19 +1,18 @@
+import 'package:ehrenamtskarte/about/about_page.dart';
+import 'package:ehrenamtskarte/home/app_flow.dart';
+import 'package:ehrenamtskarte/home/app_flows_stack.dart';
+import 'package:ehrenamtskarte/identification/identification_page.dart';
+import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
+import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
-
-import '../about/about_page.dart';
-import '../identification/identification_page.dart';
-import '../map/floating_action_map_bar.dart';
-import '../map/map_page.dart';
-import '../search/search_page.dart';
-import 'app_flow.dart';
-import 'app_flows_stack.dart';
 
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
   final bool showVerification;
 
-  const HomePage({Key? key, required this.showVerification}) : super(key: key);
+  const HomePage({super.key, required this.showVerification});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> {
 class HomePageData extends InheritedWidget {
   final Future<void> Function(PhysicalStoreFeatureData) navigateToMapTab;
 
-  const HomePageData({Key? key, required this.navigateToMapTab, required Widget child}) : super(key: key, child: child);
+  const HomePageData({super.key, required this.navigateToMapTab, required super.child});
 
   static HomePageData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HomePageData>();

@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:math' as math;
+
+import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/map/map/attribution_dialog.dart';
+import 'package:ehrenamtskarte/map/map/map_controller.dart';
+import 'package:ehrenamtskarte/map/map/screen_parent_resizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-
-import '../../configuration/configuration.dart';
-import 'attribution_dialog.dart';
-import 'map_controller.dart';
-import 'screen_parent_resizer.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
@@ -26,14 +26,14 @@ class Map extends StatefulWidget {
   final LatLng? userLocation;
 
   const Map({
-    Key? key,
+    super.key,
     required this.onFeatureClick,
     required this.onNoFeatureClick,
     required this.onFeatureClickLayerFilter,
     required this.locationAvailable,
     required this.onMapCreated,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   @override
   State createState() => _MapState();

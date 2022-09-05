@@ -1,15 +1,14 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../location/determine_position.dart';
-import '../widgets/small_button_spinner.dart';
-
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
 
-  const LocationButton({Key? key, required this.setCoordinates}) : super(key: key);
+  const LocationButton({super.key, required this.setCoordinates});
 
   @override
   State<StatefulWidget> createState() => _LocationButtonState();
@@ -23,7 +22,7 @@ class _LocationButtonState extends State<LocationButton> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final settings = context.read<SettingsModel>();
       _determinePosition(false, settings);
     });

@@ -1,10 +1,9 @@
+import 'package:ehrenamtskarte/map/map/attribution_dialog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'attribution_dialog_item.dart';
-
 class AttributionDialog extends StatelessWidget {
-  const AttributionDialog({Key? key}) : super(key: key);
+  const AttributionDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
