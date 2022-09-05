@@ -14,7 +14,7 @@ Color? getDarkenedColorForCategory(int categoryId) {
   final categoryColor = categoryAssets[categoryId].color;
   Color? categoryColorDark;
   if (categoryColor != null) {
-    categoryColorDark = TinyColor(categoryColor).darken().color;
+    categoryColorDark = TinyColor.fromColor(categoryColor).darken().color;
   }
   return categoryColorDark;
 }

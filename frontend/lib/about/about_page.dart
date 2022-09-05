@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -109,7 +109,7 @@ class AboutPage extends StatelessWidget {
               leading: const Icon(Icons.code_outlined),
               title: const Text("Quellcode der App"),
               onTap: () {
-                launch("https://github.com/digitalfabrik/ehrenamtskarte");
+                launchUrlString("https://github.com/digitalfabrik/ehrenamtskarte");
               },
             ),
             if (config.showDevSettings)

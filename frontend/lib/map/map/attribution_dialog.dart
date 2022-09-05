@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/map/map/attribution_dialog_item.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AttributionDialog extends StatelessWidget {
   const AttributionDialog({super.key});
@@ -16,7 +16,7 @@ class AttributionDialog extends StatelessWidget {
           color: color,
           text: 'OpenStreetMap Mitwirkende',
           onPressed: () {
-            launch("https://www.openstreetmap.org/copyright");
+            launchUrlString("https://www.openstreetmap.org/copyright");
           },
         ),
         AttributionDialogItem(
@@ -24,7 +24,7 @@ class AttributionDialog extends StatelessWidget {
           color: color,
           text: 'OpenMapTiles',
           onPressed: () {
-            launch("https://openmaptiles.org/");
+            launchUrlString("https://openmaptiles.org/");
           },
         ),
         AttributionDialogItem(
@@ -32,7 +32,7 @@ class AttributionDialog extends StatelessWidget {
           color: color,
           text: 'Natural Earth',
           onPressed: () {
-            launch("https://naturalearthdata.com/");
+            launchUrlString("https://naturalearthdata.com/");
           },
         ),
         AttributionDialogItem(
@@ -40,7 +40,7 @@ class AttributionDialog extends StatelessWidget {
           color: color,
           text: 'LBE Bayern',
           onPressed: () {
-            launch("https://www.lbe.bayern.de/");
+            launchUrlString("https://www.lbe.bayern.de/");
           },
         )
       ],

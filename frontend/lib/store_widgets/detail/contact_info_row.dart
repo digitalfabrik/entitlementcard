@@ -21,7 +21,7 @@ class ContactInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_description.isEmpty) {
-      return const SizedBox(width: 0, height: 0);
+      return const SizedBox.shrink();
     }
     final row = Row(
       children: [

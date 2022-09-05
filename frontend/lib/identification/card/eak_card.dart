@@ -43,7 +43,7 @@ class EakCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Header
-            Container(
+            ColoredBox(
               color: const Color(0xf5f5f5ff),
               child: AspectRatio(
                 aspectRatio: 6 / 1,
@@ -62,7 +62,7 @@ class EakCard extends StatelessWidget {
             ),
             // Body
             Flexible(
-              child: Container(
+              child: DecoratedBox(
                 decoration:
                     BoxDecoration(gradient: RadialGradient(colors: [cardColor.withAlpha(100), cardColor], radius: 1)),
                 child: Column(
