@@ -42,6 +42,8 @@ extension GeolocatorExtension on LocationPermission {
         return LocationStatus.whileInUse;
       case LocationPermission.always:
         return LocationStatus.always;
+      case LocationPermission.unableToDetermine:
+        return LocationStatus.notSupported;
     }
   }
 }

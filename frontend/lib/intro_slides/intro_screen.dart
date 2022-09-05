@@ -1,7 +1,6 @@
 import 'package:ehrenamtskarte/entry_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/slide_object.dart';
 
 import 'location_request_button.dart';
 

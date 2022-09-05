@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData get lightTheme {
-  final defaultTypography = Typography.blackMountainView;
+  const defaultTypography = Typography.blackMountainView;
   final lightTheme = ThemeData.from(
     colorScheme: const ColorScheme.light(
       primary: Color(0xff5f5384),
@@ -29,7 +29,7 @@ ThemeData get lightTheme {
 }
 
 ThemeData get darkTheme {
-  final defaultTypography = Typography.whiteMountainView;
+  const defaultTypography = Typography.whiteMountainView;
   final theme = ThemeData.from(
     colorScheme: const ColorScheme.dark(
       primary: Color(0xff8377A9),

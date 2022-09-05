@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/localization/form_builder_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +49,6 @@ class EntryWidget extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-              FormBuilderLocalizations.delegate,
             ],
             supportedLocales: const [Locale('de')],
             locale: const Locale('de'),

@@ -87,7 +87,7 @@ class _QRViewState extends State<QrCodeScanner> {
   Future<void> _onCodeScanned(Barcode scanData) async {
     final controller = _controller;
     final code = scanData.code;
-    if (controller == null) {
+    if (controller == null || code == null) {
       return;
     }
 

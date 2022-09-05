@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart' as nav_bars;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          NavigationBar(
+          nav_bars.NavigationBar(
             title: "Karte verifizieren",
             actions: [
               IconButton(
