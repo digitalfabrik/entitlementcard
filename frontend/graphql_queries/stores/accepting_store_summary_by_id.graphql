@@ -1,4 +1,4 @@
-query AcceptingStoreSummaryById($ids: IdsParamsInput!) {
+query AcceptingStoreSummaryById($ids: [Int!]!) {
     physicalStoresById(params: $ids) {
         id,
         store {
