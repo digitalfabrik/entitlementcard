@@ -29,7 +29,7 @@ class MapWithFutures extends StatelessWidget {
 
         final position = snapshot.data;
 
-        return Map(
+        return MapContainer(
           onFeatureClick: onFeatureClick,
           onNoFeatureClick: onNoFeatureClick,
           locationAvailable: position?.isAvailable() ?? false,

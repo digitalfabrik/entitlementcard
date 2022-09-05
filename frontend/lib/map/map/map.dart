@@ -9,12 +9,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:tuple/tuple.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
 typedef OnMapCreatedCallback = void Function(MapController controller);
 
-class Map extends StatefulWidget {
+class MapContainer extends StatefulWidget {
   static const double userLocationZoomLevel = 13;
   static const double bavariaZoomLevel = 6;
   static const LatLng centerOfBavaria = LatLng(48.949444, 11.395);
@@ -25,7 +26,7 @@ class Map extends StatefulWidget {
   final bool locationAvailable;
   final LatLng? userLocation;
 
-  const Map({
+  const MapContainer({
     super.key,
     required this.onFeatureClick,
     required this.onNoFeatureClick,
@@ -36,12 +37,12 @@ class Map extends StatefulWidget {
   });
 
   @override
-  State createState() => _MapState();
+  State createState() => _MapContainerState();
 }
 
 const mapboxColor = Color(0xFF979897);
 
-class _MapState extends State<Map> implements MapController {
+class _MapContainerState extends State<MapContainer> implements MapController {
   MaplibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
@@ -68,8 +69,8 @@ class _MapState extends State<Map> implements MapController {
     if (currentMapLibreView == null || !_isAnimating) {
       final userLocation = widget.userLocation;
       final cameraPosition = userLocation != null
-          ? CameraPosition(target: userLocation, zoom: Map.userLocationZoomLevel)
-          : const CameraPosition(target: Map.centerOfBavaria, zoom: Map.bavariaZoomLevel);
+          ? CameraPosition(target: userLocation, zoom: MapContainer.userLocationZoomLevel)
+          : const CameraPosition(target: MapContainer.centerOfBavaria, zoom: MapContainer.bavariaZoomLevel);
 
       maplibreView = Stack(
         children: [
@@ -103,9 +104,7 @@ class _MapState extends State<Map> implements MapController {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) {
-                    return const AttributionDialog();
-                  },
+                  builder: (context) => const AttributionDialog(),
                 );
               },
             ),
@@ -167,6 +166,7 @@ class _MapState extends State<Map> implements MapController {
     if (controller == null) {
       return;
     }
+    final targetLatLng = await controller.toLatLng(point);
 
     final onFeatureClick = widget.onFeatureClick;
     final onNoFeatureClick = widget.onNoFeatureClick;
@@ -177,32 +177,54 @@ class _MapState extends State<Map> implements MapController {
     final rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
     final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
-    final features =
-        jsonFeatures.where((x) => x["properties"] != null && x["properties"]["categoryId"] != null).toList();
-    if (features.isNotEmpty) {
-      final mapPoint = await controller.toLatLng(point);
-      int distSort(a, b) {
-        final cA = a["geometry"]["coordinates"];
-        final cB = b["geometry"]["coordinates"];
-        final longitudeA = cA[0] as double;
-        final latitudeA = cA[1] as double;
-        final longitudeB = cB[0] as double;
-        final latitudeB = cB[1] as double;
-        final dA = math.sqrt(math.pow(longitudeA - mapPoint.longitude, 2) + math.pow(latitudeA - mapPoint.latitude, 2));
-        final dB = math.sqrt(math.pow(longitudeB - mapPoint.longitude, 2) + math.pow(latitudeB - mapPoint.latitude, 2));
-        return dA < dB ? -1 : 1;
-      }
+    final features = jsonFeatures.map((e) => e as Map<String, dynamic>).where((x) {
+      if (x["properties"] == null) return false;
+      final properties = x["properties"] as Map<String, dynamic>;
+      if (properties["categoryId"] == null) return false;
+      return true;
+    }).toList();
 
-      features.sort(distSort);
-      final featureInfo = features[0];
-      if (featureInfo != null) {
-        if (onFeatureClick != null) {
-          onFeatureClick(featureInfo);
-        }
-      }
+    if (features.isNotEmpty && onFeatureClick != null) {
+      final feature = _getClosestFeature(features, targetLatLng);
+      onFeatureClick(feature);
     } else if (onNoFeatureClick != null) {
       onNoFeatureClick();
     }
+  }
+
+  dynamic _getClosestFeature(List<dynamic> features, LatLng target) {
+
+    LatLng extractLatLngFromFeature(dynamic rawFeature) {
+      final feature = rawFeature as Map<String, dynamic>;
+      final geometry = feature["geometry"] as Map<String, dynamic>;
+      final coordinates = geometry["coordinates"] as List<dynamic>;
+      final latitude = coordinates[1] as double;
+      final longitude = coordinates[0] as double;
+      return LatLng(latitude, longitude);
+    }
+
+    double calculateDistance(LatLng point1, LatLng point2) {
+      // We use the equirectangular distance approximation for a very fast comparison.
+      // LatLng encodes degrees, so we need to convert to radians.
+      const double degreeToRadians = 180.0 / math.pi;
+      const double earthRadius = 6371; // radius of the earth in km
+      final double x = (point2.longitude - point1.longitude) *
+          degreeToRadians *
+          math.cos(0.5 * (point2.latitude + point1.latitude) * degreeToRadians);
+      final double y = (point2.latitude - point1.latitude) * degreeToRadians;
+      return earthRadius * math.sqrt(x * x + y * y);
+    }
+
+    final minimalDistanceFeature = features.fold(null, (Tuple2<dynamic, double>? currentFeatureWithDistance, dynamic nextFeature) {
+      final nextFeatureLatLng = extractLatLngFromFeature(nextFeature);
+      final nextFeatureDistance = calculateDistance(nextFeatureLatLng, target);
+      if (currentFeatureWithDistance != null && currentFeatureWithDistance.item2 < nextFeatureDistance) {
+        return currentFeatureWithDistance;
+      }
+      return Tuple2(nextFeature, nextFeatureDistance);
+    });
+
+    return minimalDistanceFeature?.item1;
   }
 
   Future<void> _animate(Future F) async {
@@ -236,7 +258,7 @@ class _MapState extends State<Map> implements MapController {
         target: LatLng(position.latitude, position.longitude),
         bearing: 0,
         tilt: 0,
-        zoom: Map.userLocationZoomLevel,
+        zoom: MapContainer.userLocationZoomLevel,
       ),
     );
     await _animate(controller.animateCamera(cameraUpdate));
