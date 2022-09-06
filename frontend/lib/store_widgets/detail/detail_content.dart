@@ -67,7 +67,8 @@ class DetailContent extends StatelessWidget {
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
                     "Website",
-                    onTap: () => launchUrlString(prepareWebsiteUrlForLaunch(website)),
+                    onTap: () =>
+                        launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -76,7 +77,8 @@ class DetailContent extends StatelessWidget {
                     Icons.phone,
                     telephone,
                     "Telefon",
-                    onTap: () => launchUrlString("tel:${sanitizePhoneNumber(telephone)}"),
+                    onTap: () =>
+                        launchUrlString("tel:${sanitizePhoneNumber(telephone)}", mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -85,7 +87,7 @@ class DetailContent extends StatelessWidget {
                     Icons.alternate_email,
                     email,
                     "E-Mail",
-                    onTap: () => launchUrlString("mailto:${email.trim()}"),
+                    onTap: () => launchUrlString("mailto:${email.trim()}", mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
