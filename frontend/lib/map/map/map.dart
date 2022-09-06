@@ -193,7 +193,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   }
 
   dynamic _getClosestFeature(List<dynamic> features, LatLng target) {
-
     LatLng extractLatLngFromFeature(dynamic rawFeature) {
       final feature = rawFeature as Map<String, dynamic>;
       final geometry = feature["geometry"] as Map<String, dynamic>;
@@ -215,7 +214,8 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       return earthRadius * math.sqrt(x * x + y * y);
     }
 
-    final minimalDistanceFeature = features.fold(null, (Tuple2<dynamic, double>? currentFeatureWithDistance, dynamic nextFeature) {
+    final minimalDistanceFeature =
+        features.fold(null, (Tuple2<dynamic, double>? currentFeatureWithDistance, dynamic nextFeature) {
       final nextFeatureLatLng = extractLatLngFromFeature(nextFeature);
       final nextFeatureDistance = calculateDistance(nextFeatureLatLng, target);
       if (currentFeatureWithDistance != null && currentFeatureWithDistance.item2 < nextFeatureDistance) {
