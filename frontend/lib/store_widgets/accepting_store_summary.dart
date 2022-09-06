@@ -1,14 +1,13 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-
-import '../category_assets.dart';
-import '../graphql/graphql_api.dart';
-import '../map/preview/models.dart';
-import '../routing.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
@@ -18,13 +17,13 @@ class AcceptingStoreSummary extends StatelessWidget {
   final bool showLocation;
 
   const AcceptingStoreSummary({
-    Key? key,
+    super.key,
     required this.store,
     this.coordinates,
     required this.showMapButtonOnDetails,
     this.showLocation = true,
     this.wideDepictionThreshold = 400,
-  }) : super(key: key);
+  });
 
   /// Returns the distance between `coordinates` and the physical store,
   /// or `null` if `coordinates` or `item.physicalStore` is `null`
@@ -100,11 +99,11 @@ class CategoryIconIndicator extends StatelessWidget {
   final EdgeInsets padding;
 
   const CategoryIconIndicator({
-    Key? key,
+    super.key,
     required this.svgIconPath,
     required this.categoryName,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +123,7 @@ class CategoryIconIndicator extends StatelessWidget {
 class CategoryColorIndicator extends StatelessWidget {
   final Color? categoryColor;
 
-  const CategoryColorIndicator({Key? key, this.categoryColor}) : super(key: key);
+  const CategoryColorIndicator({super.key, this.categoryColor});
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +141,7 @@ class StoreTextOverview extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
   final bool showTownName;
 
-  const StoreTextOverview({Key? key, required this.store, this.showTownName = false}) : super(key: key);
+  const StoreTextOverview({super.key, required this.store, this.showTownName = false});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +174,7 @@ class StoreTextOverview extends StatelessWidget {
 class DistanceText extends StatelessWidget {
   final double distance;
 
-  const DistanceText({Key? key, required this.distance}) : super(key: key);
+  const DistanceText({super.key, required this.distance});
 
   static String _formatDistance(double d) {
     if (d < 1) {

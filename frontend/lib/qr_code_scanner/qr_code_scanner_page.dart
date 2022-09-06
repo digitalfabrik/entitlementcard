@@ -1,14 +1,13 @@
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
-
-import 'qr_code_processor.dart';
-import 'qr_code_scanner.dart';
 
 typedef OnHelpClickedCallback = void Function();
 
 class QrCodeScannerPage extends StatelessWidget {
   final OnCodeScannedCallback? onCodeScanned;
 
-  const QrCodeScannerPage({Key? key, this.onCodeScanned}) : super(key: key);
+  const QrCodeScannerPage({super.key, this.onCodeScanned});
 
   @override
   Widget build(BuildContext context) {

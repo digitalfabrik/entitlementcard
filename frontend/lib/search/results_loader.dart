@@ -1,17 +1,16 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import '../graphql/graphql_api.dart';
-import '../map/preview/models.dart';
-import '../store_widgets/accepting_store_summary.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
   final String? searchText;
   final List<int> categoryIds;
 
-  const ResultsLoader({Key? key, this.coordinates, this.searchText, required this.categoryIds}) : super(key: key);
+  const ResultsLoader({super.key, this.coordinates, this.searchText, required this.categoryIds});
 
   @override
   State<StatefulWidget> createState() => ResultsLoaderState();

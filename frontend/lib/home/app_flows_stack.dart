@@ -1,13 +1,12 @@
+import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
-
-import 'app_flow.dart';
 
 class AppFlowsStack extends StatelessWidget {
   final int currentIndex;
   final List<AppFlow> appFlows;
 
-  const AppFlowsStack({Key? key, required this.currentIndex, required this.appFlows}) : super(key: key);
+  const AppFlowsStack({super.key, required this.currentIndex, required this.appFlows});
 
   @override
   Widget build(BuildContext context) {

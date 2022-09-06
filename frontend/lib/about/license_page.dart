@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../routing.dart';
 
 class CustomLicenseEntry {
   final String packageName;
@@ -15,7 +14,7 @@ class CustomLicenseEntry {
 }
 
 class CustomLicensePage extends StatelessWidget {
-  const CustomLicensePage({Key? key}) : super(key: key);
+  const CustomLicensePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class CustomLicensePage extends StatelessWidget {
 class SingleLicensePage extends StatelessWidget {
   final CustomLicenseEntry licenseEntry;
 
-  const SingleLicensePage(this.licenseEntry, {Key? key}) : super(key: key);
+  const SingleLicensePage(this.licenseEntry, {super.key});
 
   @override
   Widget build(BuildContext context) {

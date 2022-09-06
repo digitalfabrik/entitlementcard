@@ -1,9 +1,8 @@
 import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/map/map/map_controller.dart';
+import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-
-import 'map/map_controller.dart';
-import 'map/map_with_futures.dart';
 
 class PhysicalStoreFeatureData {
   final int? id;
@@ -19,7 +18,7 @@ class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
   final void Function(int? id) selectAcceptingStore;
 
-  const MapPage({Key? key, required this.onMapCreated, required this.selectAcceptingStore}) : super(key: key);
+  const MapPage({super.key, required this.onMapCreated, required this.selectAcceptingStore});
 
   @override
   State<StatefulWidget> createState() {
@@ -95,11 +94,16 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   Future<void> _onFeatureClick(dynamic feature) async =>
       showAcceptingStore(_extractPhysicalStoreData(feature), selectedAcceptingStoreInMap: true);
 
-  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic feature) => PhysicalStoreFeatureData(
-        _getIntOrNull(feature["properties"]["id"]),
-        _getLatLngOrNull(feature["geometry"]["coordinates"]),
-        _getIntOrNull(feature["properties"]["categoryId"]),
-      );
+  PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic rawFeature) {
+    final feature = rawFeature as Map<String, dynamic>;
+    final properties = feature["properties"] as Map<String, dynamic>;
+
+    return PhysicalStoreFeatureData(
+      _getIntOrNull(properties["id"]),
+      _getLatLngOrNull(properties["coordinates"]),
+      _getIntOrNull(properties["categoryId"]),
+    );
+  }
 
   int? _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
 

@@ -1,9 +1,8 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-import 'qr_code_scanner_controls.dart';
 
 const scanDelayAfterErrorMs = 500;
 
@@ -12,7 +11,7 @@ typedef OnCodeScannedCallback = Future<void> Function(String code);
 class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
 
-  const QrCodeScanner({Key? key, required this.onCodeScanned}) : super(key: key);
+  const QrCodeScanner({super.key, required this.onCodeScanned});
 
   @override
   State<QrCodeScanner> createState() => _QRViewState();
@@ -87,7 +86,7 @@ class _QRViewState extends State<QrCodeScanner> {
   Future<void> _onCodeScanned(Barcode scanData) async {
     final controller = _controller;
     final code = scanData.code;
-    if (controller == null) {
+    if (controller == null || code == null) {
       return;
     }
 

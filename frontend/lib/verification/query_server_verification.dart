@@ -1,8 +1,7 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/verification/verification_card_details.dart';
+import 'package:ehrenamtskarte/verification/verification_hasher.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../graphql/graphql_api.dart';
-import 'verification_card_details.dart';
-import 'verification_hasher.dart';
 
 Future<bool> queryServerVerification(GraphQLClient client, VerificationCardDetails cardDetails) async {
   final hash = hashVerificationCardDetails(cardDetails);

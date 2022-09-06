@@ -1,12 +1,11 @@
+import 'package:ehrenamtskarte/identification/card_detail_view/rectangular_progress_indicator_painter.dart';
 import 'package:flutter/material.dart';
-
-import 'rectangular_progress_indicator_painter.dart';
 
 class AnimatedProgressbar extends StatefulWidget {
   final Duration initialProgress;
   static const Duration totalDuration = Duration(seconds: 30);
 
-  const AnimatedProgressbar({Key? key, required this.initialProgress}) : super(key: key);
+  const AnimatedProgressbar({super.key, required this.initialProgress});
 
   @override
   _AnimatedProgressbarState createState() => _AnimatedProgressbarState();

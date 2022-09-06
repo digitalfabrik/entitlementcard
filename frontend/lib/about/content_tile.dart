@@ -1,14 +1,13 @@
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/material.dart';
-
-import '../routing.dart';
 
 class ContentTile extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final IconData icon;
 
-  const ContentTile({Key? key, required this.title, required this.children, required this.icon}) : super(key: key);
+  const ContentTile({super.key, required this.title, required this.children, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class ContentPage extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const ContentPage({Key? key, required this.title, required this.children}) : super(key: key);
+  const ContentPage({super.key, required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {

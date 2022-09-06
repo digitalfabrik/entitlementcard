@@ -12,16 +12,16 @@ class ContactInfoRow extends StatelessWidget {
     this._icon,
     this._description,
     this._semanticLabel, {
-    Key? key,
+    super.key,
     this.onTap,
     this.iconColor,
     this.iconFillColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     if (_description.isEmpty) {
-      return const SizedBox(width: 0, height: 0);
+      return const SizedBox.shrink();
     }
     final row = Row(
       children: [

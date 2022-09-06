@@ -16,7 +16,7 @@ Once installed, you can run any flutter command simply by prefixing it with `fvm
 
 To upgrade the flutter version 
 * Run `fvm use x.y.z`
-* Adjust the version specified in `pubspec.yaml`, in `.cirrus.yml` and at the top of this file. 
+* Adjust the version specified in `pubspec.yaml`. 
 
 To disable analytics by flutter run:
 * `fvm flutter config --no-analytics`

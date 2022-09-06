@@ -1,4 +1,4 @@
-query getRegionsById($ids: IdsParamsInput!) {
+query getRegionsById($ids: [Int!]!) {
     regionsById(params: $ids) {
         id,
         prefix,

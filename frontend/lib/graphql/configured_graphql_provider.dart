@@ -1,12 +1,11 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../configuration/configuration.dart';
 
 class ConfiguredGraphQlProvider extends StatelessWidget {
   final Widget child;
 
-  const ConfiguredGraphQlProvider({Key? key, required this.child}) : super(key: key);
+  const ConfiguredGraphQlProvider({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +16,11 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
           ErrorLink(
             onException: (Request request, NextLink forward, LinkException exception) {
               debugPrint(exception.toString());
+              return null;
             },
             onGraphQLError: (Request request, NextLink forward, Response response) {
               debugPrint(response.errors.toString());
+              return null;
             },
           ),
           HttpLink(Configuration.of(context).graphqlUrl)

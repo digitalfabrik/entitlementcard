@@ -7,19 +7,19 @@ class VerificationResultDialog extends StatelessWidget {
   final Color? iconColor;
 
   const VerificationResultDialog({
-    Key? key,
+    super.key,
     required this.child,
     required this.title,
     required this.icon,
     this.iconColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
       title: ListTile(
-        leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryVariant, size: 30),
+        leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryContainer, size: 30),
         title: Text(title, style: theme.textTheme.headline5),
       ),
       content: child,

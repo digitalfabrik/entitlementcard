@@ -1,7 +1,6 @@
+import 'package:ehrenamtskarte/app.dart';
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:flutter/material.dart';
-
-import 'app.dart';
-import 'configuration/configuration.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,11 +1,10 @@
+import 'package:ehrenamtskarte/verification/dialogs/verification_result_dialog.dart';
 import 'package:flutter/material.dart';
-
-import 'verification_result_dialog.dart';
 
 class NegativeVerificationResultDialog extends StatelessWidget {
   final String reason;
 
-  const NegativeVerificationResultDialog({Key? key, required this.reason}) : super(key: key);
+  const NegativeVerificationResultDialog({super.key, required this.reason});
 
   @override
   Widget build(BuildContext context) {

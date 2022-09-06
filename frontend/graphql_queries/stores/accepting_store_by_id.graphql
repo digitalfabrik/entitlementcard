@@ -1,4 +1,4 @@
-query AcceptingStoreById($ids: IdsParamsInput!) {
+query AcceptingStoreById($ids: [Int!]!) {
     physicalStoresById(params: $ids) {
         id,
         coordinates {

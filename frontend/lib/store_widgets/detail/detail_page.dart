@@ -1,19 +1,18 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
+import 'package:ehrenamtskarte/store_widgets/detail/detail_content.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
+import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../../graphql/graphql_api.dart';
-import '../../graphql/graphql_api.graphql.dart';
-import '../../util/color_utils.dart';
-import '../../widgets/error_message.dart';
-import 'detail_content.dart';
 
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
 
-  const DetailPage(this._acceptingStoreId, {Key? key, this.hideShowOnMapButton = false}) : super(key: key);
+  const DetailPage(this._acceptingStoreId, {super.key, this.hideShowOnMapButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class DetailErrorMessage extends StatelessWidget {
   final String message;
   final Future<QueryResult?> Function()? refetch;
 
-  const DetailErrorMessage({Key? key, required this.message, this.refetch}) : super(key: key);
+  const DetailErrorMessage({super.key, required this.message, this.refetch});
 
   @override
   Widget build(BuildContext context) {
