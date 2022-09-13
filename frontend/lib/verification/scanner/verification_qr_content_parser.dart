@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../../identification/base_card_details.dart';
-import '../../identification/protobuf/card_verify_model.pb.dart';
-import '../../qr_code_scanner/qr_code_processor.dart';
-import '../verification_card_details.dart';
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/protobuf/card_verify_model.pb.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/verification/verification_card_details.dart';
 
 class VerificationParseException extends QrCodeParseException {
   final String internalMessage;

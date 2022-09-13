@@ -6,11 +6,11 @@ class NoCardView extends StatelessWidget {
   final VoidCallback startEakApplication;
 
   const NoCardView({
-    Key? key,
+    super.key,
     required this.startVerification,
     required this.startActivateQrCode,
     required this.startEakApplication,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -19,9 +19,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     const delay = 0.01;
     const fadeOutDuration = 0.03;
     const strokeRadius = radius - strokeWidth / 2;
+    const quarterArcLength = pi * strokeRadius / 2;
     final verticalLineLength = size.height - strokeWidth - 2 * strokeRadius;
     final horizontalLineLength = size.width - strokeWidth - 2 * strokeRadius;
-    final quarterArcLength = pi * strokeRadius / 2;
     final paint = Paint();
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = strokeWidth;

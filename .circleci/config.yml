@@ -34,7 +34,7 @@ workflows:
       - styles-pack
       - deploy:
           context:
-            - berechtigungskarte-apt
+            - entitlementcard-apt
           requires:
             - backend-pack
             - administration-pack

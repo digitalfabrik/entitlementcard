@@ -1,17 +1,15 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../category_assets.dart';
 
 class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
   final Function(CategoryAsset, bool) onCategoryPress;
   final int index;
 
-  const FilterBarButton({Key? key, required this.asset, required this.onCategoryPress, required this.index})
-      : super(key: key);
+  const FilterBarButton({super.key, required this.asset, required this.onCategoryPress, required this.index});
 
   @override
   State<StatefulWidget> createState() {

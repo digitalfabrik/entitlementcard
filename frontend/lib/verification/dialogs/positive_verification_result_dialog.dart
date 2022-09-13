@@ -1,16 +1,15 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/card/eak_card.dart';
+import 'package:ehrenamtskarte/identification/card/id_card.dart';
+import 'package:ehrenamtskarte/verification/dialogs/verification_result_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../../graphql/graphql_api.dart';
-import '../../identification/base_card_details.dart';
-import '../../identification/card/eak_card.dart';
-import '../../identification/card/id_card.dart';
-import 'verification_result_dialog.dart';
 
 class PositiveVerificationResultDialog extends StatelessWidget {
   final BaseCardDetails cardDetails;
 
-  const PositiveVerificationResultDialog({Key? key, required this.cardDetails}) : super(key: key);
+  const PositiveVerificationResultDialog({super.key, required this.cardDetails});
 
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,17 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
+import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/identification_qr_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/no_card_view.dart';
+import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/verification/verification_workflow.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../routing.dart';
-import '../verification/verification_workflow.dart';
-import 'card_detail_view/card_detail_view.dart';
-import 'card_details_model.dart';
-import 'identification_qr_scanner_page.dart';
-import 'no_card_view.dart';
 
 class IdentificationPage extends StatelessWidget {
   final String title;
 
-  const IdentificationPage({Key? key, required this.title}) : super(key: key);
+  const IdentificationPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

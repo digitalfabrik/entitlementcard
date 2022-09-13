@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/identification_qr_content_parser.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_parsing_error_dialog.dart';
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import '../qr_code_scanner/qr_code_processor.dart';
-import '../qr_code_scanner/qr_code_scanner_page.dart';
-import '../qr_code_scanner/qr_parsing_error_dialog.dart';
-import '../widgets/navigation_bars.dart';
-import 'card_details_model.dart';
-import 'identification_qr_content_parser.dart';
-
 class IdentificationQrScannerPage extends StatelessWidget {
-  const IdentificationQrScannerPage({Key? key}) : super(key: key);
+  const IdentificationQrScannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {

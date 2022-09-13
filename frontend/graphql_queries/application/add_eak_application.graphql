@@ -1,7 +1,0 @@
-mutation AddBlueEakApplication($application: BlueCardApplicationInput!, $regionId: Int!) {
-    addBlueEakApplication(application: $application, regionId: $regionId)
-}
-
-mutation AddGoldenEakApplication($application: GoldenEakCardApplicationInput!, $regionId: Int!) {
-    addGoldenEakApplication(application: $application, regionId: $regionId)
-}

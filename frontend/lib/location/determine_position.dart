@@ -1,10 +1,9 @@
 import 'package:ehrenamtskarte/environment.dart';
+import 'package:ehrenamtskarte/location/dialogs.dart';
+import 'package:ehrenamtskarte/location/location_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-
-import 'dialogs.dart';
-import 'location_ffi.dart';
 
 enum LocationStatus {
   /// This is the initial state on both Android and iOS, but on Android the
@@ -42,6 +41,8 @@ extension GeolocatorExtension on LocationPermission {
         return LocationStatus.whileInUse;
       case LocationPermission.always:
         return LocationStatus.always;
+      case LocationPermission.unableToDetermine:
+        return LocationStatus.notSupported;
     }
   }
 }

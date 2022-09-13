@@ -7,13 +7,13 @@ class Configuration extends InheritedWidget {
   final bool showDevSettings;
 
   const Configuration({
-    Key? key,
+    super.key,
     required this.mapStyleUrl,
     required this.graphqlUrl,
     required this.showVerification,
     required this.showDevSettings,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   @override
   bool updateShouldNotify(covariant Configuration oldWidget) =>

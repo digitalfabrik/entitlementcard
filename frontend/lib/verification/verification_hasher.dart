@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
-import '../identification/base_card_details.dart';
-import 'verification_card_details.dart';
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/verification/verification_card_details.dart';
 
 String hashVerificationCardDetails(VerificationCardDetails verificationCardDetails) {
   final hasher = Hmac(sha256, const Base64Decoder().convert(verificationCardDetails.cardDetails.hashSecretBase64));

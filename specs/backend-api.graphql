@@ -102,25 +102,37 @@ type Query {
   categories: [Category!]!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
-  "Return list of all accepting stores."
-  physicalStores: [PhysicalStore!]!
-  "Returns list of all accepting stores queried by ids."
-  physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
-  "Return list of all regions."
-  regions: [Region!]!
-  "Returns regions queried by ids."
-  regionsById(params: IdsParamsInput!): [Region!]!
-  "Search for accepting stores using searchText and categoryIds."
-  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
+  "Return list of all accepting stores in the eak bayern project."
+  physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
+  "Returns list of all accepting stores queried by ids in the eak bayern project."
+  physicalStoresById(ids: [Int!]!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
+  "Returns list of all accepting stores in the given project queried by ids."
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
+  "Returns list of all accepting stores in the given project."
+  physicalStoresInProject(project: String!): [PhysicalStore!]!
+  "Return list of all regions in the eak bayern project."
+  regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
+  "Returns regions queried by ids in the eak bayern project."
+  regionsById(ids: [Int!]!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
+  "Returns regions queried by ids in the given project."
+  regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Return list of all regions in the given project."
+  regionsInProject(project: String!): [Region!]!
+  "Search for accepting stores using searchText and categoryIds in the eak bayern project."
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
+  "Search for accepting stores in the given project using searchText and categoryIds."
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
-  verifyCard(card: CardVerificationModelInput!): Boolean!
+  verifyCard(card: CardVerificationModelInput!): Boolean! @deprecated(reason : "Deprecated in favor of project specific query, replace with verifyCardInProject")
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"
+  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
 }
 
 type Region {
   id: Int!
   name: String!
   prefix: String!
-  regionIdentifier: String!
+  regionIdentifier: String
 }
 
 type SignInPayload {
@@ -231,10 +243,6 @@ input GoldenEakCardApplicationInput {
   givenInformationIsCorrectAndComplete: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
-}
-
-input IdsParamsInput {
-  ids: [Int!]!
 }
 
 input OrganizationContactInput {

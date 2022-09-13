@@ -2,9 +2,8 @@
 /// used like the apple navigation bars.
 library navigation_bars;
 
+import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
-
-import '../debouncer.dart';
 
 /// null means that the default bg color is chosen. other possibility: Colors.transparent
 const Color? kBackgroundColor = null;
@@ -17,7 +16,7 @@ class NavigationBar extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
 
-  const NavigationBar({Key? key, required this.title, this.actions}) : super(key: key);
+  const NavigationBar({super.key, required this.title, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +36,11 @@ class NavigationBarWithBottom extends StatelessWidget {
   final PreferredSizeWidget bottom;
 
   const NavigationBarWithBottom({
-    Key? key,
+    super.key,
     required this.flexibleSpace,
     this.color,
     required this.bottom,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +63,7 @@ class NavigationBarWithBottom extends StatelessWidget {
 class SliverNavigationBar extends StatelessWidget {
   final String title;
 
-  const SliverNavigationBar({Key? key, required this.title}) : super(key: key);
+  const SliverNavigationBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +80,7 @@ class SliverSearchNavigationBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchNavigationBar({Key? key, required this.onChanged}) : super(key: key);
+  SliverSearchNavigationBar({super.key, required this.onChanged});
 
   @override
   _SliverSearchNavigationBarState createState() => _SliverSearchNavigationBarState();

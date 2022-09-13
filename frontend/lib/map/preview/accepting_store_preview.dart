@@ -1,14 +1,13 @@
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../../graphql/graphql_api.dart';
-import 'accepting_store_preview_card.dart';
-import 'models.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {Key? key}) : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -754,6 +754,7 @@ enum ApplicationType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum BlueCardEntitlementType {
   @JsonValue('JULEICA')
   juleica,
@@ -764,6 +765,7 @@ enum BlueCardEntitlementType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum AmountOfWorkUnit {
   @JsonValue('HOURS_PER_WEEK')
   hoursPerWeek,
@@ -772,6 +774,7 @@ enum AmountOfWorkUnit {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum GoldenCardEntitlementType {
   @JsonValue('HONOR_BY_MINISTER_PRESIDENT')
   honorByMinisterPresident,

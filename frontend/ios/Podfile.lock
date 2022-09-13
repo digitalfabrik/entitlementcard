@@ -1,35 +1,33 @@
 PODS:
   - connectivity_plus (0.0.1):
     - Flutter
-    - Reachability
+    - ReachabilitySwift
   - Flutter (1.0.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
-  - image_picker (0.0.1):
-    - Flutter
-  - MapLibre (5.12.1)
+  - MapLibre (5.12.2)
   - maplibre_gl (0.0.1):
     - Flutter
-    - MapLibre (~> 5.12.1)
+    - MapLibre (~> 5.12.2)
     - MapLibreAnnotationExtension (~> 0.0.1-beta.2)
   - MapLibreAnnotationExtension (0.0.1-beta.2):
     - MapLibre (~> 5.12.0)
   - maps_launcher (0.0.1):
     - Flutter
   - MTBBarcodeScanner (5.0.11)
-  - package_info (0.0.1):
+  - package_info_plus (0.4.5):
     - Flutter
-  - path_provider (0.0.1):
+  - path_provider_ios (0.0.1):
     - Flutter
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - Reachability (3.2)
-  - shared_preferences (0.0.1):
+  - ReachabilitySwift (5.0.0)
+  - shared_preferences_ios (0.0.1):
     - Flutter
-  - url_launcher (0.0.1):
+  - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -37,21 +35,23 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
-  - image_picker (from `.symlinks/plugins/image_picker/ios`)
-  - MapLibre (from `https://github.com/m0nac0/maplibre-cocoapods.git`)
+  - MapLibre
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
-  - MapLibreAnnotationExtension (from `https://github.com/m0nac0/maplibre-annotation-extension.git`)
+  - MapLibreAnnotationExtension
   - maps_launcher (from `.symlinks/plugins/maps_launcher/ios`)
-  - package_info (from `.symlinks/plugins/package_info/ios`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
+  https://github.com/m0nac0/flutter-maplibre-podspecs.git:
+    - MapLibre
+    - MapLibreAnnotationExtension
   trunk:
     - MTBBarcodeScanner
-    - Reachability
+    - ReachabilitySwift
 
 EXTERNAL SOURCES:
   connectivity_plus:
@@ -62,53 +62,38 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
-  image_picker:
-    :path: ".symlinks/plugins/image_picker/ios"
-  MapLibre:
-    :git: https://github.com/m0nac0/maplibre-cocoapods.git
   maplibre_gl:
     :path: ".symlinks/plugins/maplibre_gl/ios"
-  MapLibreAnnotationExtension:
-    :git: https://github.com/m0nac0/maplibre-annotation-extension.git
   maps_launcher:
     :path: ".symlinks/plugins/maps_launcher/ios"
-  package_info:
-    :path: ".symlinks/plugins/package_info/ios"
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
-  url_launcher:
-    :path: ".symlinks/plugins/url_launcher/ios"
-
-CHECKOUT OPTIONS:
-  MapLibre:
-    :commit: 552f0bf90755f6e00cb5882a5c0c89bd4d8633d0
-    :git: https://github.com/m0nac0/maplibre-cocoapods.git
-  MapLibreAnnotationExtension:
-    :commit: d7dee65155fd50bfab7f94a484eac05ff09beea9
-    :git: https://github.com/m0nac0/maplibre-annotation-extension.git
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: 5f0eb61093bec56935f21a1699dd2758bc895587
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
-  geolocator_apple: b741765c55dc21950e3e106e8b3584e55cf81ce5
-  image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
-  MapLibre: d9f0a2d2b0e0a83611bb7bcb03ef2bcd701efb56
-  maplibre_gl: 9a036eeac06dcf153f84d90c33099fb40b7e15e0
-  MapLibreAnnotationExtension: 6a76d7ea48a44953095fbf95331ac67c7f4fa0be
+  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  MapLibre: 5aa820115d91293a4d09e681e7470f88bd34b672
+  maplibre_gl: 2a0ce99f40b3a133b0e8b40b5ef37e0562165399
+  MapLibreAnnotationExtension: bc7f1041206218d7d24ba0908e3145cd54b86664
   maps_launcher: 2e5b6a2d664ec6c27f82ffa81b74228d770ab203
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
-  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  path_provider: d1e9807085df1f9cc9318206cd649dc0b76be3de
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  shared_preferences: 5033afbb22d372e15aff8ff766df9021b845f273
-  url_launcher: b6e016d912f04be9f5bf6e8e82dc599b7ba59649
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: f0b902f9ef6181437f65ba78f9f4013a240332b6
+PODFILE CHECKSUM: 0fa3383a235346277d3d57c6fad80526eda80904
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

@@ -7,7 +7,7 @@ const creditCardAspectRatio = 86 / 54;
 class IdCard extends StatelessWidget {
   final Widget child;
 
-  const IdCard({Key? key, required this.child}) : super(key: key);
+  const IdCard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

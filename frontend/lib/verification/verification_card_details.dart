@@ -1,4 +1,4 @@
-import '../identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/base_card_details.dart';
 
 class VerificationCardDetails {
   final BaseCardDetails cardDetails;

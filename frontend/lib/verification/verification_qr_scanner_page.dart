@@ -1,21 +1,20 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/verification/dialogs/negative_verification_result_dialog.dart';
+import 'package:ehrenamtskarte/verification/dialogs/positive_verification_result_dialog.dart';
+import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
+import 'package:ehrenamtskarte/verification/query_server_verification.dart';
+import 'package:ehrenamtskarte/verification/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/widgets/navigation_bars.dart' as nav_bars;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../qr_code_scanner/qr_code_processor.dart';
-import '../qr_code_scanner/qr_code_scanner_page.dart';
-import 'dialogs/negative_verification_result_dialog.dart';
-import 'dialogs/positive_verification_result_dialog.dart';
-import 'dialogs/verification_info_dialog.dart';
-import 'query_server_verification.dart';
-import 'verification_qr_code_processor.dart';
-
 class VerificationQrScannerPage extends StatelessWidget {
-  const VerificationQrScannerPage({Key? key}) : super(key: key);
+  const VerificationQrScannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          NavigationBar(
+          nav_bars.NavigationBar(
             title: "Karte verifizieren",
             actions: [
               IconButton(

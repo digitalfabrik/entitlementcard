@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LocationServiceDialog extends StatelessWidget {
-  const LocationServiceDialog({Key? key}) : super(key: key);
+  const LocationServiceDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +19,7 @@ class LocationServiceDialog extends StatelessWidget {
 class RationaleDialog extends StatelessWidget {
   final String _rationale;
 
-  const RationaleDialog({Key? key, required String rationale})
-      : _rationale = rationale,
-        super(key: key);
+  const RationaleDialog({super.key, required String rationale}) : _rationale = rationale;
 
   @override
   Widget build(BuildContext context) {
