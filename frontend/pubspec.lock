@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "2.1.0"
   build:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: build
       url: "https://pub.dartlang.org"
@@ -239,6 +239,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.8"
+  df_build_config:
+    dependency: "direct dev"
+    description:
+      path: "pubs/build_config"
+      relative: true
+    source: path
+    version: "2.2.0-alpha.1"
   effective_dart:
     dependency: "direct dev"
     description:
@@ -1036,7 +1043,7 @@ packages:
     source: hosted
     version: "0.2.8"
   source_gen:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: source_gen
       url: "https://pub.dartlang.org"

@@ -1,0 +1,17 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
+builders:
+  # name of the builder
+  df_build_config:
+    # library URI containing the builder
+    import: "package:df_build_config/config_builder.dart"
+    # Name of the function in the above library to call.
+    builder_factories: ["configBuilder"]
+    # The mapping from the source extension to the generated file extension
+    build_extensions: {".ts": [".config_builder.g.part"]}
+    
+    # Will automatically run on any package that depends on it
+    auto_apply: root_package
+    # Generate the output to a hidden cache dir
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
