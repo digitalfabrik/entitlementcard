@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+
 class MyGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) async {
@@ -19,12 +20,14 @@ class MyBuilder extends Builder {
   FutureOr<void> build(BuildStep buildStep) {
     print("AAAAAAA");
     print(buildStep.inputId);
+    buildStep.writeAsString(buildStep.allowedOutputs.first,  "class Test {}");
   }
 
   @override
   // TODO: implement buildExtensions
-  Map<String, List<String>> get buildExtensions => {".ts": [".config_builder.g.part"]};
+  Map<String, List<String>> get buildExtensions => {".yaml": [".dart"]};
 }
+
 
 Builder configBuilder(BuilderOptions options) {
   print("BBBBBBB");

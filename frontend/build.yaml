@@ -8,12 +8,12 @@ targets:
       - lib/$lib$
       - graphql_queries/**
       - schema.graphql
-      - build-configs/**
+      - lib/build_config.yaml
     builders:
       df_build_config:
         generate_for:
           include: 
-            - "build-configs/**/index.ts"
+            - "**/*.yaml"
         enabled: True
       artemis:
         options:

@@ -28,6 +28,7 @@ doc/api/
 
 
 vendor/
-schema.graphql
 .fvm/flutter_sdk
 runConfigurations.xml
+
+lib/build_config.dart

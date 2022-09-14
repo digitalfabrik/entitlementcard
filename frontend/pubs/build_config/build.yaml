@@ -7,11 +7,10 @@ builders:
     # Name of the function in the above library to call.
     builder_factories: ["configBuilder"]
     # The mapping from the source extension to the generated file extension
-    build_extensions: {".ts": [".config_builder.g.part"]}
-    
+    build_extensions: {".yaml": [".dart"]}
     # Will automatically run on any package that depends on it
     auto_apply: root_package
     # Generate the output to a hidden cache dir
-    build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
+    build_to: source
+    applies_builders: []
 
