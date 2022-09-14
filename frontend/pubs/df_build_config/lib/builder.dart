@@ -19,6 +19,10 @@ void pair_to_const(String k, dynamic v, StringBuffer buffer) {
     buffer.write("const ");
     buffer.write('bool ${k} = ${v}');
     buffer.write(";\n");
+  } else if (v is int) {
+    buffer.write("const ");
+    buffer.write('int ${k} = ${v}');
+    buffer.write(";\n");
   } else {
     throw "invalid type ${v.runtimeType}";
   }
