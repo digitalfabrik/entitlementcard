@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/entry_widget.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';

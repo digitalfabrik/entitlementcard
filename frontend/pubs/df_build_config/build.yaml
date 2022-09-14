@@ -3,12 +3,11 @@ builders:
   # name of the builder
   df_build_config:
     # library URI containing the builder
-    import: "package:df_build_config/config_builder.dart"
+    import: "package:df_build_config/builder.dart"
     # Name of the function in the above library to call.
     builder_factories: ["configBuilder"]
     # The mapping from the source extension to the generated file extension
     build_extensions: {".yaml": [".dart"]}
-    # Will automatically run on any package that depends on it
     auto_apply: root_package
     # Generate the output to a hidden cache dir
     build_to: source

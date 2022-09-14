@@ -31,4 +31,4 @@ vendor/
 .fvm/flutter_sdk
 runConfigurations.xml
 
-lib/build_config.dart
+lib/build_config/build_config.dart
