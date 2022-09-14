@@ -21,7 +21,6 @@ void pair_to_const(String k, dynamic v, StringBuffer buffer) {
     buffer.write(";\n");
   } else {
     throw "invalid type ${v.runtimeType}";
-    
   }
 }
 
