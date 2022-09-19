@@ -51,7 +51,7 @@ commands:
     steps:
       - run:
           name: Install app-toolbelt
-          command: sudo npm install -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+          command: sudo npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
   install-dart-linux:
     steps:
       - run:
