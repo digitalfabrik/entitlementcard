@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 class Configuration extends InheritedWidget {
   final String mapStyleUrl;
   final String graphqlUrl;
+  final String projectId;
   final bool showVerification;
   final bool showDevSettings;
 
@@ -10,6 +11,7 @@ class Configuration extends InheritedWidget {
     super.key,
     required this.mapStyleUrl,
     required this.graphqlUrl,
+    required this.projectId,
     required this.showVerification,
     required this.showDevSettings,
     required super.child,
@@ -19,6 +21,7 @@ class Configuration extends InheritedWidget {
   bool updateShouldNotify(covariant Configuration oldWidget) =>
       mapStyleUrl != oldWidget.mapStyleUrl ||
       graphqlUrl != oldWidget.graphqlUrl ||
+      projectId != oldWidget.projectId ||
       showVerification != oldWidget.showVerification ||
       showDevSettings != oldWidget.showDevSettings;
 

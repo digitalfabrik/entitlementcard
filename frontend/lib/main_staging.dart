@@ -9,6 +9,8 @@ Future<void> main() async {
       mapStyleUrl:
           "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=https://tiles.staging.ehrenamtskarte.app",
       graphqlUrl: "https://api.staging.ehrenamtskarte.app",
+      projectId: "bayern.ehrenamtskarte.app",
+      // TODO: Replace this with the projectId from the build config.
       showVerification: true,
       showDevSettings: true,
       child: App(),
