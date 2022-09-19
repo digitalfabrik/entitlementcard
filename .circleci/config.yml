@@ -201,6 +201,7 @@ jobs:
       - checkout:
           path: ~/project
       - install-fvm-mac
+      - install-app-toolbelt
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
