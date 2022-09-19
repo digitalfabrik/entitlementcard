@@ -47,6 +47,11 @@ workflows:
                 - whitelabel
 
 commands:
+  install-app-toolbelt:
+    steps:
+      - run:
+          name: Install app-toolbelt
+          command: npm install -g https://github.com/digitalfabrik/app-toolbelt
   install-dart-linux:
     steps:
       - run:
@@ -57,6 +62,7 @@ commands:
   install-fvm-linux:
     steps:
       - install-dart-linux
+      - install-app-toolbelt
       - run:
           name: Install FVM
           command: |
@@ -112,6 +118,10 @@ jobs:
       - checkout:
           path: ~/project
       - install-fvm-linux
+      - install-app-toolbelt
+      - run:
+          name: Install Flutter Packages
+          command: fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
@@ -139,6 +149,7 @@ jobs:
       - checkout:
           path: ~/project
       - install-fvm-linux
+      - install-app-toolbelt
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
