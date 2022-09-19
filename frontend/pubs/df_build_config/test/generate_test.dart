@@ -5,7 +5,6 @@ import 'package:df_build_config/builder.dart';
 
 void main() {
   test('Counter value should be incremented', () {
-    
     final json = """
     {"appName":"Ehrenamt","appIcon":"","backendUrl":"","featureFlags":{"developerFriendly":false},"bundleIdentifier":"de.nrw.it.ehrensachebayern"}
     """;
@@ -13,8 +12,7 @@ void main() {
     var output = new StringBuffer();
     generateDataModel("BuildConfig", jsonDecode(json) as Map<String, dynamic>, output);
     // language=dart
-    expect(output.toString(),
-"""
+    expect(output.toString(), """
 class FeatureFlags {
   bool get developerFriendly => false;
 

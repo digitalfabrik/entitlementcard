@@ -9,7 +9,7 @@ Future<void> main() async {
   } else {
     debugPrint("Developers were harmed while developing this app.");
   }
-  
+
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const Configuration(

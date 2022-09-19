@@ -28,7 +28,6 @@ ${fields}
 }
 
 """);
- 
 }
 
 void pair_to_field(String k, dynamic v, StringBuffer root, StringBuffer output) {
@@ -69,7 +68,7 @@ class MyBuilder extends Builder {
     var dataModel = StringBuffer();
 
     generateDataModel("BuildConfig", json, dataModel);
-    
+
     dataModel.write("""
 const BuildConfig buildConfig = BuildConfig();
 """);
