@@ -111,7 +111,7 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/node:18.9.0
+      - image: cimg/node:16.17.0
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -246,7 +246,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:18.9.0
+      - image: cimg/node:16.17.0
     working_directory: ~/project/administration
     steps:
       - checkout:
