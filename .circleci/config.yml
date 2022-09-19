@@ -47,11 +47,20 @@ workflows:
                 - whitelabel
 
 commands:
-  install-app-toolbelt:
+  setup-npm-global:
     steps:
       - run:
+          name: Setup npm
+          command: |
+            mkdir ~/.npm-global
+            npm config set prefix '~/.npm-global'
+            echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
+  install-app-toolbelt:
+    steps:
+      - setup-npm-global
+      - run:
           name: Install app-toolbelt
-          command: sudo npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+          command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
   install-dart-linux:
     steps:
       - run:
