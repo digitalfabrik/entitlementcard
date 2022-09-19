@@ -111,7 +111,7 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/node:18.9.0
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -136,7 +136,7 @@ jobs:
 
   frontend-android-build:
     docker:
-      - image: circleci/android:api-30
+      - image: cimg/android:2022.09.2-node
     parameters:
       buildConfig:
         description: "Name of the build config to use"
@@ -177,7 +177,7 @@ jobs:
 
   frontend-ios-build:
     macos:
-      xcode: 13.2.0
+      xcode: 14.0.0
     parameters:
       buildConfig:
         description: "Name of the build config to use"
@@ -219,7 +219,7 @@ jobs:
       _JAVA_OPTIONS: "-Xmx3g"
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker:
-      - image: circleci/openjdk:11.0.3-jdk-stretch
+      - image: cimg/openjdk:11.0.16-node
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -246,7 +246,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:15.8.0
+      - image: cimg/node:18.9.0
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -274,7 +274,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: rust:1.50.0
+      - image: cimg/rust:1.63.0
     working_directory: ~/martin
     steps:
       - run:
@@ -317,7 +317,7 @@ jobs:
 
   backend-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -337,7 +337,7 @@ jobs:
 
   administration-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -357,7 +357,7 @@ jobs:
 
   styles-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/map-tiles/styles
     steps:
       - checkout:
@@ -377,7 +377,7 @@ jobs:
 
   martin-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
@@ -403,7 +403,7 @@ jobs:
 
   meta-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -421,7 +421,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     steps:
       - attach_workspace:
           at: /tmp/workspace
