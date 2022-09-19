@@ -153,6 +153,7 @@ jobs:
         description: "Name of the build config to use"
         type: string
     environment:
+      BUILD_CONFIG_NAME: << parameters.buildConfig >>
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
     working_directory: ~/project/frontend
@@ -176,7 +177,7 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=<< parameters.buildConfig >>"
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
@@ -194,6 +195,8 @@ jobs:
         description: "Name of the build config to use"
         type: string
     working_directory: ~/project/frontend
+    environment:
+      BUILD_CONFIG_NAME: << parameters.buildConfig >>
     steps:
       - checkout:
           path: ~/project
@@ -219,10 +222,11 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=<< parameters.buildConfig >>"
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
+            app-toolbelt v0 build-config write-xcconfig "$BUILD_CONFIG_NAME" ios --directory ios/
             fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
 
   backend-build:
