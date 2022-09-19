@@ -1,15 +1,18 @@
 import {CardCreationModel} from "./CardCreationModel";
 import {CardType} from "../../models/CardType";
-import {CardActivateModel} from "../../generated/compiled";
+import {CardActivateModel} from "../../generated/protobuf";
 import generateCardActivateModel from "../../util/generateCardActivateModel";
-import {CardGenerationModelInput} from "../../../__generated__/globalTypes";
 import generateHashFromCardDetails from "../../util/generateHashFromCardDetails";
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
-import {addCard, addCardVariables} from "../../graphql/verification/__generated__/addCard";
-import {ADD_CARD} from "../../graphql/verification/mutations";
 import {generatePdf, loadTTFFont} from "./PdfFactory";
 import {ApolloClient} from "@apollo/client";
-import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
+import {
+    AddCardDocument,
+    AddCardMutation,
+    AddCardMutationVariables,
+    CardGenerationModelInput,
+    Region
+} from "../../generated/graphql";
 
 const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], region: Region) => {
     const activateModels = cardCreationModels.map(model => {
@@ -34,7 +37,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
         }))
     const results = await Promise.all(
         cardInputs.map(card =>
-            client.mutate<addCard, addCardVariables>({mutation: ADD_CARD, variables: {card}}))
+            client.mutate<AddCardMutation, AddCardMutationVariables>({mutation: AddCardDocument, variables: {card}}))
     )
     const fail = results.find(result => !result.data?.success)
     if (fail) throw Error(JSON.stringify(fail))

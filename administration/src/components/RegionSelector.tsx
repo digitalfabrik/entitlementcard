@@ -2,9 +2,8 @@ import React, {useContext} from "react";
 import {Button, Menu, MenuItem, Spinner} from "@blueprintjs/core";
 import {RegionContext} from "../RegionProvider";
 import {useQuery} from "@apollo/client";
-import {GET_REGIONS} from "../graphql/regions/queries";
 import {ItemListRenderer, ItemRenderer, Select} from "@blueprintjs/select";
-import {getRegions_regions as Region} from "../graphql/regions/__generated__/getRegions";
+import {GetRegionsDocument, GetRegionsQuery, Region} from "../generated/graphql";
 
 const RegionSelect = Select.ofType<Region>()
 
@@ -29,7 +28,7 @@ const itemRenderer: ItemRenderer<Region> = (region, {handleClick, modifiers}) =>
 
 const RegionSelector = () => {
     const [region, setRegion] = useContext(RegionContext)
-    const {loading, error, data, refetch} = useQuery(GET_REGIONS)
+    const {loading, error, data, refetch} = useQuery<GetRegionsQuery>(GetRegionsDocument)
     if (loading) return <Spinner/>
     if (error || !data) return <Button icon="repeat" onClick={refetch}/>
     const regions = data.regions

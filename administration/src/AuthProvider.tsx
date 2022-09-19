@@ -1,8 +1,5 @@
 import {createContext, ReactNode, useState} from "react"
-import {
-    signIn_signInPayload as SignInPayload,
-    signIn_signInPayload_user as Administrator
-} from "./graphql/auth/__generated__/signIn";
+import {Administrator, SignInPayload} from "./generated/graphql";
 
 export interface AuthContextData {
     token: string,
