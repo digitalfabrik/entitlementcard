@@ -301,8 +301,8 @@ jobs:
       - run:
           name: "Install OpenSSL"
           command: |
-            apt update
-            apt install -y openssl libssl-dev
+            sudo apt update
+            sudo apt install -y openssl libssl-dev
       - run:
           name: "Build"
           command: |
