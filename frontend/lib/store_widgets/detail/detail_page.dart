@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
@@ -16,8 +17,9 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final projectId = Configuration.of(context).projectId;
     final byIdQuery =
-        AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(ids: IdsParamsInput(ids: [_acceptingStoreId])));
+        AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: [_acceptingStoreId]));
     return Query(
       options: QueryOptions(document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
@@ -27,19 +29,23 @@ class DetailPage extends StatelessWidget {
         if (result.hasException && exception != null) {
           return DetailErrorMessage(message: "Fehler beim Laden der Daten", refetch: refetch);
         } else if (result.isNotLoading && data != null) {
-          final matchingStores = byIdQuery.parse(data).physicalStoresById;
-          if (matchingStores.isEmpty) {
+          final matchingStores = byIdQuery.parse(data).physicalStoresByIdInProject;
+          if (matchingStores.length != 1) {
+            return DetailErrorMessage(message: "Fehler beim Laden der Daten.", refetch: refetch);
+          }
+          final matchingStore = matchingStores.first;
+          if (matchingStore == null) {
             return const DetailErrorMessage(message: "Akzeptanzstelle nicht gefunden.");
           }
-          final categoryId = matchingStores.first.store.category.id;
+          final categoryId = matchingStore.store.category.id;
           final accentColor = getDarkenedColorForCategory(categoryId);
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DetailAppBar(matchingStores.first),
+              DetailAppBar(matchingStore),
               Expanded(
                 child: DetailContent(
-                  matchingStores.first,
+                  matchingStore,
                   hideShowOnMapButton: hideShowOnMapButton,
                   accentColor: accentColor,
                 ),

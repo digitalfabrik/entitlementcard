@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card/eak_card.dart';
 import 'package:ehrenamtskarte/identification/card/id_card.dart';
@@ -23,8 +24,9 @@ class CardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final projectId = Configuration.of(context).projectId;
     final regionsQuery =
-        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
+        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(project: projectId, ids: [cardDetails.regionId]));
 
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
@@ -35,7 +37,7 @@ class CardDetailView extends StatelessWidget {
 
         final region = result.isLoading || result.hasException || fetchedData == null
             ? null
-            : regionsQuery.parse(fetchedData).regionsById[0];
+            : regionsQuery.parse(fetchedData).regionsByIdInProject[0];
 
         final eakCard = Padding(
           padding: const EdgeInsets.all(8.0),

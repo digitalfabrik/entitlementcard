@@ -7,7 +7,9 @@ Future<void> main() async {
   runApp(
     const Configuration(
       mapStyleUrl: "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=http://localhost:5002",
-      graphqlUrl: "http://localhost:7000",
+      graphqlUrl: "http://10.0.2.2:7000",
+      projectId: "bayern.ehrenamtskarte.app",
+      // TODO: Replace this with the projectId from the build config.
       showVerification: true,
       showDevSettings: true,
       child: App(),
