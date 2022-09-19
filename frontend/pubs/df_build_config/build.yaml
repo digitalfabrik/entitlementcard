@@ -1,0 +1,16 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
+builders:
+  # name of the builder
+  df_build_config:
+    # library URI containing the builder
+    import: "package:df_build_config/builder.dart"
+    # Name of the function in the above library to call.
+    builder_factories: ["configBuilder"]
+    # The mapping from the source extension to the generated file extension
+    build_extensions: {".yaml": [".dart"]}
+    auto_apply: root_package
+    # We would have liked to use "cache" here so we do not need to git-ignore the output of this builder.
+    # Using "cache" is blocked by this issue: https://github.com/flutter/flutter/issues/91214
+    build_to: source
+    applies_builders: []
+

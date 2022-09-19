@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Ehrenamt</string>
+	<string>$(BUILD_CONFIG_APP_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Ehrenamtskarte</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -22,13 +22,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Einlesen von QR-Codes und Abfotografieren von Dokumenten für das Bewerbungsformular.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Anhängen von Bildern für das Bewerbungsformular.</string>

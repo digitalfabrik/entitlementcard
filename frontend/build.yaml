@@ -1,10 +1,18 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
 targets:
   $default:
     sources:
-      - lib/**
+      - $package$
+      - lib/$lib$
       - graphql_queries/**
       - schema.graphql
+      - lib/build_config/build_config.yaml
     builders:
+      df_build_config:
+        generate_for:
+          include: 
+            - "lib/build_config/build_config.yaml"
+        enabled: True
       artemis:
         options:
           schema_mapping:

@@ -6,16 +6,15 @@ workflows:
     jobs:
       - check-frontend
       - frontend-android-build:
-          floss: true
-          x86: false
+          buildConfig: "bayern-floss"
           requires:
-            - check-frontend      
+            - check-frontend
       - frontend-android-build:
-          floss: false
-          x86: true
+          buildConfig: "bayern"
           requires:
             - check-frontend
       - frontend-ios-build:
+          buildConfig: "bayern"
           requires:
             - check-frontend
       - backend-build
@@ -48,6 +47,20 @@ workflows:
                 - whitelabel
 
 commands:
+  setup-npm-global:
+    steps:
+      - run:
+          name: Setup npm
+          command: |
+            mkdir -p ~/.npm-global
+            npm config set prefix '~/.npm-global'
+            echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
+  install-app-toolbelt:
+    steps:
+      - setup-npm-global
+      - run:
+          name: Install app-toolbelt
+          command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
   install-dart-linux:
     steps:
       - run:
@@ -58,6 +71,7 @@ commands:
   install-fvm-linux:
     steps:
       - install-dart-linux
+      - install-app-toolbelt
       - run:
           name: Install FVM
           command: |
@@ -106,33 +120,40 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/node:16.17.0
     resource_class: small
     working_directory: ~/project/frontend
     steps:
       - checkout:
           path: ~/project
       - install-fvm-linux
+      - install-app-toolbelt
+      - run:
+          name: Install Flutter Packages
+          command: fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
+          name: Build Runner
+          command: |
+            # Statically use "bayern" build config for analyzing here
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=bayern"
+      - run:
           name: Check Analyzer and Linting
-          command: fvm flutter analyze --fatal-infos --fatal-warnings
+          command: |
+            fvm flutter analyze --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
 
   frontend-android-build:
     docker:
-      - image: circleci/android:api-30
+      - image: cimg/android:2022.09.2-node
     parameters:
-      floss:
-        description: "Build a floss build"
-        default: false
-        type: boolean     
-      x86:
-        description: "Build for x86 architecture"
-        default: true
-        type: boolean
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
     environment:
+      BUILD_CONFIG_NAME: << parameters.buildConfig >>
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
     working_directory: ~/project/frontend
@@ -140,6 +161,7 @@ jobs:
       - checkout:
           path: ~/project
       - install-fvm-linux
+      - install-app-toolbelt
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
@@ -153,9 +175,13 @@ jobs:
           paths:
             - .dart_tool
       - run:
+          name: Build Runner
+          command: |
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+      - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart <<# parameters.floss >> --dart-define=ANDROID_FLOSS=true <</ parameters.floss >><<^ parameters.x86 >> --dart-define=EXCLUDE_X86=true <</ parameters.x86 >>
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -163,12 +189,19 @@ jobs:
 
   frontend-ios-build:
     macos:
-      xcode: 13.2.0
+      xcode: 14.0.0
+    parameters:
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
     working_directory: ~/project/frontend
+    environment:
+      BUILD_CONFIG_NAME: << parameters.buildConfig >>
     steps:
       - checkout:
           path: ~/project
       - install-fvm-mac
+      - install-app-toolbelt
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
@@ -188,8 +221,13 @@ jobs:
             pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
       - run:
+          name: Build Runner
+          command: |
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+      - run:
           name: Build
           command: |
+            app-toolbelt v0 build-config write-xcconfig "$BUILD_CONFIG_NAME" ios --directory ios/
             fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
 
   backend-build:
@@ -197,7 +235,7 @@ jobs:
       _JAVA_OPTIONS: "-Xmx3g"
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker:
-      - image: circleci/openjdk:11.0.3-jdk-stretch
+      - image: cimg/openjdk:11.0.16-node
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -224,7 +262,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:15.8.0
+      - image: cimg/node:16.17.0
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -252,7 +290,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: rust:1.50.0
+      - image: cimg/rust:1.63.0
     working_directory: ~/martin
     steps:
       - run:
@@ -270,8 +308,8 @@ jobs:
       - run:
           name: "Install OpenSSL"
           command: |
-            apt update
-            apt install -y openssl libssl-dev
+            sudo apt update
+            sudo apt install -y openssl libssl-dev
       - run:
           name: "Build"
           command: |
@@ -295,7 +333,7 @@ jobs:
 
   backend-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -315,7 +353,7 @@ jobs:
 
   administration-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -335,7 +373,7 @@ jobs:
 
   styles-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/map-tiles/styles
     steps:
       - checkout:
@@ -355,7 +393,7 @@ jobs:
 
   martin-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
@@ -381,7 +419,7 @@ jobs:
 
   meta-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -399,7 +437,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     steps:
       - attach_workspace:
           at: /tmp/workspace
