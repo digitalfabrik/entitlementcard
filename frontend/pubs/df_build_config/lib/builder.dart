@@ -1,28 +1,49 @@
 library build_config;
 
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:build/build.dart';
 
-void pair_to_const(String k, dynamic v, StringBuffer buffer) {
+String capitalize(String subject, [bool lowerRest = false]) {
+  if (lowerRest) {
+    return subject[0].toUpperCase() + subject.substring(1).toLowerCase();
+  } else {
+    return subject[0].toUpperCase() + subject.substring(1);
+  }
+}
+
+void generateDataModel(String name, Map<String, dynamic> json, StringBuffer output) {
+  var root = StringBuffer();
+
+  var fields = StringBuffer();
+
+  json.forEach((key, value) => pair_to_field(key, value, root, fields));
+
+  output.write("""
+${root}class ${name} {
+${fields}
+  const ${name}();
+}
+
+""");
+ 
+}
+
+void pair_to_field(String k, dynamic v, StringBuffer root, StringBuffer output) {
   if (v is Map) {
-    final map = v as Map<String, dynamic>;
-    map.forEach((key, value) => pair_to_const(key, value, buffer));
+    final json = v as Map<String, dynamic>;
+
+    var name = capitalize(k);
+    output.write('  ${name} get ${k} => const ${name}();\n');
+    json.forEach((key, value) => generateDataModel(name, json, root));
   } else if (v is String) {
-    buffer.write("const ");
-    buffer.write('String ${k} = "${v}"');
-    buffer.write(";\n");
+    output.write('  String get ${k} => "${v}";\n');
   } else if (v is bool) {
-    buffer.write("const ");
-    buffer.write('bool ${k} = ${v}');
-    buffer.write(";\n");
+    output.write('  bool get ${k} => ${v};\n');
   } else if (v is int) {
-    buffer.write("const ");
-    buffer.write('int ${k} = ${v}');
-    buffer.write(";\n");
+    output.write('  int get ${k} => ${v};\n');
   } else {
     throw "invalid type ${v.runtimeType}";
   }
@@ -40,25 +61,20 @@ class MyBuilder extends Builder {
     final exitCode = process.exitCode;
     final stdErr = process.stderr.toString();
 
-    if (exitCode != 0) {
+    if (exitCode != 0 || stdErr.isNotEmpty) {
       throw "Failed to execute app-toolbelt. Exit code ${exitCode}: ${stdErr}";
     }
 
-    if (stdErr.isNotEmpty) {
-      throw "Failed to execute app-toolbelt. Exit code ${exitCode}: ${stdErr}";
-    }
+    Map<String, dynamic> json = jsonDecode(process.stdout.toString()) as Map<String, dynamic>;
+    var dataModel = StringBuffer();
 
-    Map<String, dynamic> output = jsonDecode(process.stdout.toString()) as Map<String, dynamic>;
+    generateDataModel("BuildConfig", json, dataModel);
+    
+    dataModel.write("""
+const BuildConfig buildConfig = BuildConfig();
+    """);
 
-    var buffer = StringBuffer();
-
-    output.forEach((k, v) => pair_to_const(k, v, buffer));
-
-    buildStep.writeAsString(buildStep.allowedOutputs.first, """
-${buffer}
-class Test {     
-}    
-""");
+    buildStep.writeAsString(buildStep.allowedOutputs.first, dataModel.toString());
   }
 
   @override
