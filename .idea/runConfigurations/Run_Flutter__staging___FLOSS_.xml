@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Flutter (staging) (FLOSS)" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=BUILD_CONFIG_NAME=bayern-floss" />
-    <option name="attachArgs" value="--dart-define=BUILD_CONFIG_NAME=bayern-floss" />
-    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main_staging.dart" />
-    <method v="2" />
-  </configuration>
-</component>
