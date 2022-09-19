@@ -1,0 +1,15 @@
+name: df_build_config
+description: Adds compatability for build configs
+version: 0.0.1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  source_gen: ^1.0.0
+  build: ^2.0.0
+  test: '>=1.0.0'
+  logging: ^1.0.2
+  lint: ^1.7.2
+
+
