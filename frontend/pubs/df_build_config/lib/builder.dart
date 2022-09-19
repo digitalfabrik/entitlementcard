@@ -33,13 +33,27 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
 
     final name = capitalize(k);
     output.write('  $name get $k => const $name();\n');
-    json.forEach((key, value) => generateDataModel(name, json, root));
+    generateDataModel(name, json, root);
   } else if (v is String) {
     output.write('  String get $k => "$v";\n');
   } else if (v is bool) {
     output.write('  bool get $k => $v;\n');
   } else if (v is int) {
     output.write('  int get $k => $v;\n');
+  } else if (v is List) {
+    final list = v as List<dynamic>;
+    
+    if (list.isEmpty) {
+      output.write('  List<dynamic> get $k => [];\n');
+    } else {
+      final element = list.first;
+
+      if (element is int) {
+        output.write('  List<int> get $k => $v;\n');
+      } else {
+        throw "invalid list ${list.runtimeType}";
+      }
+    }
   } else {
     throw "invalid type ${v.runtimeType}";
   }
@@ -52,7 +66,7 @@ class BuildConfigBuilder extends Builder {
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
-    final arguments = <String>["v0", "build-config", "to-json", name, "ios"];
+    final arguments = <String>["v0", "build-config", "to-json", name, "common"];
     final process = await Process.run("app-toolbelt", arguments, runInShell: true);
     final exitCode = process.exitCode;
     final stdErr = process.stderr.toString();
