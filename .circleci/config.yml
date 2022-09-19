@@ -141,7 +141,9 @@ jobs:
             fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=bayern"
       - run:
           name: Check Analyzer and Linting
-          command: fvm flutter analyze --fatal-infos --fatal-warnings
+          command: |
+            fvm flutter analyze --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
 
   frontend-android-build:
     docker:

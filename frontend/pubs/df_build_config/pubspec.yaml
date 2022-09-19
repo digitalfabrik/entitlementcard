@@ -9,5 +9,7 @@ dependencies:
   source_gen: ^1.0.0
   build: ^2.0.0
   test: '>=1.0.0'
+  logging: ^1.0.2
+  lint: ^1.7.2
 
 

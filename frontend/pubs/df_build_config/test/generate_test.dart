@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:test/test.dart';
 import 'package:df_build_config/builder.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('Counter value should be incremented', () {
-    final json = """
+    const json = """
     {"appName":"Ehrenamt","appIcon":"","backendUrl":"","featureFlags":{"developerFriendly":false},"bundleIdentifier":"de.nrw.it.ehrensachebayern"}
     """;
 
-    var output = new StringBuffer();
+    final output = StringBuffer();
     generateDataModel("BuildConfig", jsonDecode(json) as Map<String, dynamic>, output);
     // language=dart
     expect(output.toString(), """
