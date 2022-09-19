@@ -4,7 +4,7 @@ import 'package:df_build_config/builder.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Counter value should be incremented', () {
+  test('Generated build config should stay the same', () {
     const json = """
     {"appName":"Ehrenamt","appIcon":"","backendUrl":"","featureFlags":{"developerFriendly":false},"bundleIdentifier":"de.nrw.it.ehrensachebayern"}
     """;
