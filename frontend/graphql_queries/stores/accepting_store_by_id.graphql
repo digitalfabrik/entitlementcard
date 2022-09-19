@@ -1,5 +1,5 @@
-query AcceptingStoreById($ids: [Int!]!) {
-    physicalStoresById(params: $ids) {
+query AcceptingStoreById($project: String!, $ids: [Int!]!) {
+    physicalStoresByIdInProject(project: $project, params: $ids) {
         id,
         coordinates {
             lat,

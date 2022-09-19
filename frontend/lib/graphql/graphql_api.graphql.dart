@@ -10,208 +10,91 @@ import 'upload_parser.dart';
 part 'graphql_api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class GetRegionsById$Query$Region extends JsonSerializable with EquatableMixin {
-  GetRegionsById$Query$Region();
+class CardVerificationByHash$Query extends JsonSerializable with EquatableMixin {
+  CardVerificationByHash$Query();
 
-  factory GetRegionsById$Query$Region.fromJson(Map<String, dynamic> json) =>
-      _$GetRegionsById$Query$RegionFromJson(json);
+  factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
+      _$CardVerificationByHash$QueryFromJson(json);
 
-  late int id;
-
-  late String prefix;
-
-  late String name;
+  @Deprecated('Deprecated in favor of project specific query, replace with verifyCardInProject')
+  late bool cardValid;
 
   @override
-  List<Object?> get props => [id, prefix, name];
+  List<Object?> get props => [cardValid];
+
   @override
-  Map<String, dynamic> toJson() => _$GetRegionsById$Query$RegionToJson(this);
+  Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class GetRegionsById$Query extends JsonSerializable with EquatableMixin {
-  GetRegionsById$Query();
+class CardVerificationModelInput extends JsonSerializable with EquatableMixin {
+  CardVerificationModelInput({required this.cardDetailsHashBase64, required this.totp});
 
-  factory GetRegionsById$Query.fromJson(Map<String, dynamic> json) => _$GetRegionsById$QueryFromJson(json);
+  factory CardVerificationModelInput.fromJson(Map<String, dynamic> json) => _$CardVerificationModelInputFromJson(json);
 
-  late List<GetRegionsById$Query$Region> regionsById;
+  late String cardDetailsHashBase64;
+
+  late int totp;
 
   @override
-  List<Object?> get props => [regionsById];
+  List<Object?> get props => [cardDetailsHashBase64, totp];
+
   @override
-  Map<String, dynamic> toJson() => _$GetRegionsById$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$CardVerificationModelInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class IdsParamsInput extends JsonSerializable with EquatableMixin {
-  IdsParamsInput({required this.ids});
+class AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore extends JsonSerializable with EquatableMixin {
+  AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore();
 
-  factory IdsParamsInput.fromJson(Map<String, dynamic> json) => _$IdsParamsInputFromJson(json);
-
-  late List<int> ids;
-
-  @override
-  List<Object?> get props => [ids];
-  @override
-  Map<String, dynamic> toJson() => _$IdsParamsInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class GetRegions$Query$Region extends JsonSerializable with EquatableMixin {
-  GetRegions$Query$Region();
-
-  factory GetRegions$Query$Region.fromJson(Map<String, dynamic> json) => _$GetRegions$Query$RegionFromJson(json);
-
-  late int id;
-
-  late String prefix;
-
-  late String name;
-
-  @override
-  List<Object?> get props => [id, prefix, name];
-  @override
-  Map<String, dynamic> toJson() => _$GetRegions$Query$RegionToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class GetRegions$Query extends JsonSerializable with EquatableMixin {
-  GetRegions$Query();
-
-  factory GetRegions$Query.fromJson(Map<String, dynamic> json) => _$GetRegions$QueryFromJson(json);
-
-  late List<GetRegions$Query$Region> regions;
-
-  @override
-  List<Object?> get props => [regions];
-  @override
-  Map<String, dynamic> toJson() => _$GetRegions$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address extends JsonSerializable with EquatableMixin {
-  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address();
-
-  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(json);
-
-  String? location;
-
-  @override
-  List<Object?> get props => [location];
-  @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates extends JsonSerializable
-    with EquatableMixin {
-  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates();
-
-  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesFromJson(json);
-
-  late double lat;
-
-  late double lng;
-
-  @override
-  List<Object?> get props => [lat, lng];
-  @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore extends JsonSerializable with EquatableMixin {
-  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore();
-
-  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreFromJson(json);
-
-  late AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address address;
-
-  late AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates coordinates;
-
-  @override
-  List<Object?> get props => [address, coordinates];
-  @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearch$Query$AcceptingStore extends JsonSerializable with EquatableMixin {
-  AcceptingStoresSearch$Query$AcceptingStore();
-
-  factory AcceptingStoresSearch$Query$AcceptingStore.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearch$Query$AcceptingStoreFromJson(json);
-
-  late int id;
+  factory AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(json);
 
   String? name;
 
   String? description;
 
-  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore? physicalStore;
-
   late int categoryId;
 
   @override
-  List<Object?> get props => [id, name, description, physicalStore, categoryId];
+  List<Object?> get props => [name, description, categoryId];
+
   @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearch$Query extends JsonSerializable with EquatableMixin {
-  AcceptingStoresSearch$Query();
+class AcceptingStoreSummaryById$Query$PhysicalStore extends JsonSerializable with EquatableMixin {
+  AcceptingStoreSummaryById$Query$PhysicalStore();
 
-  factory AcceptingStoresSearch$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearch$QueryFromJson(json);
+  factory AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(json);
 
-  late List<AcceptingStoresSearch$Query$AcceptingStore> searchAcceptingStores;
+  late int id;
+
+  late AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore store;
 
   @override
-  List<Object?> get props => [searchAcceptingStores];
+  List<Object?> get props => [id, store];
+
   @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class SearchParamsInput extends JsonSerializable with EquatableMixin {
-  SearchParamsInput({this.categoryIds, this.coordinates, this.limit, this.offset, this.searchText});
+class AcceptingStoreSummaryById$Query extends JsonSerializable with EquatableMixin {
+  AcceptingStoreSummaryById$Query();
 
-  factory SearchParamsInput.fromJson(Map<String, dynamic> json) => _$SearchParamsInputFromJson(json);
+  factory AcceptingStoreSummaryById$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryById$QueryFromJson(json);
 
-  List<int>? categoryIds;
-
-  CoordinatesInput? coordinates;
-
-  int? limit;
-
-  int? offset;
-
-  String? searchText;
+  late List<AcceptingStoreSummaryById$Query$PhysicalStore?> physicalStoresByIdInProject;
 
   @override
-  List<Object?> get props => [categoryIds, coordinates, limit, offset, searchText];
-  @override
-  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CoordinatesInput extends JsonSerializable with EquatableMixin {
-  CoordinatesInput({required this.lat, required this.lng});
-
-  factory CoordinatesInput.fromJson(Map<String, dynamic> json) => _$CoordinatesInputFromJson(json);
-
-  late double lat;
-
-  late double lng;
+  List<Object?> get props => [physicalStoresByIdInProject];
 
   @override
-  List<Object?> get props => [lat, lng];
-  @override
-  Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -227,6 +110,7 @@ class AcceptingStoreById$Query$PhysicalStore$Coordinates extends JsonSerializabl
 
   @override
   List<Object?> get props => [lat, lng];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStore$CoordinatesToJson(this);
 }
@@ -248,6 +132,7 @@ class AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Contact extends Json
 
   @override
   List<Object?> get props => [id, email, telephone, website];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$ContactToJson(this);
 }
@@ -265,6 +150,7 @@ class AcceptingStoreById$Query$PhysicalStore$AcceptingStore$Category extends Jso
 
   @override
   List<Object?> get props => [id, name];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStore$AcceptingStore$CategoryToJson(this);
 }
@@ -288,6 +174,7 @@ class AcceptingStoreById$Query$PhysicalStore$AcceptingStore extends JsonSerializ
 
   @override
   List<Object?> get props => [id, name, description, contact, category];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStore$AcceptingStoreToJson(this);
 }
@@ -307,6 +194,7 @@ class AcceptingStoreById$Query$PhysicalStore$Address extends JsonSerializable wi
 
   @override
   List<Object?> get props => [street, postalCode, location];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStore$AddressToJson(this);
 }
@@ -328,6 +216,7 @@ class AcceptingStoreById$Query$PhysicalStore extends JsonSerializable with Equat
 
   @override
   List<Object?> get props => [id, coordinates, store, address];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$Query$PhysicalStoreToJson(this);
 }
@@ -338,689 +227,414 @@ class AcceptingStoreById$Query extends JsonSerializable with EquatableMixin {
 
   factory AcceptingStoreById$Query.fromJson(Map<String, dynamic> json) => _$AcceptingStoreById$QueryFromJson(json);
 
-  late List<AcceptingStoreById$Query$PhysicalStore> physicalStoresById;
+  late List<AcceptingStoreById$Query$PhysicalStore?> physicalStoresByIdInProject;
 
   @override
-  List<Object?> get props => [physicalStoresById];
+  List<Object?> get props => [physicalStoresByIdInProject];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreById$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore extends JsonSerializable with EquatableMixin {
-  AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore();
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address extends JsonSerializable with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address();
 
-  factory AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreFromJson(json);
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressFromJson(json);
+
+  String? location;
+
+  @override
+  List<Object?> get props => [location];
+
+  @override
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$AddressToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates extends JsonSerializable
+    with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesFromJson(json);
+
+  late double lat;
+
+  late double lng;
+
+  @override
+  List<Object?> get props => [lat, lng];
+
+  @override
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$CoordinatesToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore extends JsonSerializable with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreFromJson(json);
+
+  late AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Address address;
+
+  late AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore$Coordinates coordinates;
+
+  @override
+  List<Object?> get props => [address, coordinates];
+
+  @override
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStore$PhysicalStoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AcceptingStoresSearch$Query$AcceptingStore extends JsonSerializable with EquatableMixin {
+  AcceptingStoresSearch$Query$AcceptingStore();
+
+  factory AcceptingStoresSearch$Query$AcceptingStore.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$Query$AcceptingStoreFromJson(json);
+
+  late int id;
 
   String? name;
 
   String? description;
 
+  AcceptingStoresSearch$Query$AcceptingStore$PhysicalStore? physicalStore;
+
   late int categoryId;
 
   @override
-  List<Object?> get props => [name, description, categoryId];
+  List<Object?> get props => [id, name, description, physicalStore, categoryId];
+
   @override
-  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStoreToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$Query$AcceptingStoreToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoreSummaryById$Query$PhysicalStore extends JsonSerializable with EquatableMixin {
-  AcceptingStoreSummaryById$Query$PhysicalStore();
+class AcceptingStoresSearch$Query extends JsonSerializable with EquatableMixin {
+  AcceptingStoresSearch$Query();
 
-  factory AcceptingStoreSummaryById$Query$PhysicalStore.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoreSummaryById$Query$PhysicalStoreFromJson(json);
+  factory AcceptingStoresSearch$Query.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearch$QueryFromJson(json);
+
+  late List<AcceptingStoresSearch$Query$AcceptingStore> searchAcceptingStoresInProject;
+
+  @override
+  List<Object?> get props => [searchAcceptingStoresInProject];
+
+  @override
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearch$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SearchParamsInput extends JsonSerializable with EquatableMixin {
+  SearchParamsInput({this.categoryIds, this.coordinates, this.limit, this.offset, this.searchText});
+
+  factory SearchParamsInput.fromJson(Map<String, dynamic> json) => _$SearchParamsInputFromJson(json);
+
+  List<int>? categoryIds;
+
+  CoordinatesInput? coordinates;
+
+  int? limit;
+
+  int? offset;
+
+  String? searchText;
+
+  @override
+  List<Object?> get props => [categoryIds, coordinates, limit, offset, searchText];
+
+  @override
+  Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CoordinatesInput extends JsonSerializable with EquatableMixin {
+  CoordinatesInput({required this.lat, required this.lng});
+
+  factory CoordinatesInput.fromJson(Map<String, dynamic> json) => _$CoordinatesInputFromJson(json);
+
+  late double lat;
+
+  late double lng;
+
+  @override
+  List<Object?> get props => [lat, lng];
+
+  @override
+  Map<String, dynamic> toJson() => _$CoordinatesInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetRegionsById$Query$Region extends JsonSerializable with EquatableMixin {
+  GetRegionsById$Query$Region();
+
+  factory GetRegionsById$Query$Region.fromJson(Map<String, dynamic> json) =>
+      _$GetRegionsById$Query$RegionFromJson(json);
 
   late int id;
 
-  late AcceptingStoreSummaryById$Query$PhysicalStore$AcceptingStore store;
-
-  @override
-  List<Object?> get props => [id, store];
-  @override
-  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$Query$PhysicalStoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AcceptingStoreSummaryById$Query extends JsonSerializable with EquatableMixin {
-  AcceptingStoreSummaryById$Query();
-
-  factory AcceptingStoreSummaryById$Query.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoreSummaryById$QueryFromJson(json);
-
-  late List<AcceptingStoreSummaryById$Query$PhysicalStore> physicalStoresById;
-
-  @override
-  List<Object?> get props => [physicalStoresById];
-  @override
-  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryById$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AddBlueEakApplication$Mutation extends JsonSerializable with EquatableMixin {
-  AddBlueEakApplication$Mutation();
-
-  factory AddBlueEakApplication$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$AddBlueEakApplication$MutationFromJson(json);
-
-  late bool addBlueEakApplication;
-
-  @override
-  List<Object?> get props => [addBlueEakApplication];
-  @override
-  Map<String, dynamic> toJson() => _$AddBlueEakApplication$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class BlueCardApplicationInput extends JsonSerializable with EquatableMixin {
-  BlueCardApplicationInput(
-      {required this.applicationType,
-      required this.entitlement,
-      required this.givenInformationIsCorrectAndComplete,
-      required this.hasAcceptedPrivacyPolicy,
-      required this.personalData});
-
-  factory BlueCardApplicationInput.fromJson(Map<String, dynamic> json) => _$BlueCardApplicationInputFromJson(json);
-
-  @JsonKey(unknownEnumValue: ApplicationType.artemisUnknown)
-  late ApplicationType applicationType;
-
-  late BlueCardEntitlementInput entitlement;
-
-  late bool givenInformationIsCorrectAndComplete;
-
-  late bool hasAcceptedPrivacyPolicy;
-
-  late PersonalDataInput personalData;
-
-  @override
-  List<Object?> get props =>
-      [applicationType, entitlement, givenInformationIsCorrectAndComplete, hasAcceptedPrivacyPolicy, personalData];
-  @override
-  Map<String, dynamic> toJson() => _$BlueCardApplicationInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class BlueCardEntitlementInput extends JsonSerializable with EquatableMixin {
-  BlueCardEntitlementInput(
-      {this.copyOfJuleica,
-      required this.entitlementType,
-      this.juleicaExpirationDate,
-      this.juleicaNumber,
-      this.serviceEntitlement,
-      this.workAtOrganizations});
-
-  factory BlueCardEntitlementInput.fromJson(Map<String, dynamic> json) => _$BlueCardEntitlementInputFromJson(json);
-
-  AttachmentInput? copyOfJuleica;
-
-  @JsonKey(unknownEnumValue: BlueCardEntitlementType.artemisUnknown)
-  late BlueCardEntitlementType entitlementType;
-
-  String? juleicaExpirationDate;
-
-  String? juleicaNumber;
-
-  BlueCardServiceEntitlementInput? serviceEntitlement;
-
-  List<WorkAtOrganizationInput>? workAtOrganizations;
-
-  @override
-  List<Object?> get props =>
-      [copyOfJuleica, entitlementType, juleicaExpirationDate, juleicaNumber, serviceEntitlement, workAtOrganizations];
-  @override
-  Map<String, dynamic> toJson() => _$BlueCardEntitlementInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AttachmentInput extends JsonSerializable with EquatableMixin {
-  AttachmentInput({required this.data, required this.fileName});
-
-  factory AttachmentInput.fromJson(Map<String, dynamic> json) => _$AttachmentInputFromJson(json);
-
-  @JsonKey(fromJson: fromGraphQLUploadToDartMultipartFile, toJson: fromDartMultipartFileToGraphQLUpload)
-  late MultipartFile data;
-
-  late String fileName;
-
-  @override
-  List<Object?> get props => [data, fileName];
-  @override
-  Map<String, dynamic> toJson() => _$AttachmentInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class BlueCardServiceEntitlementInput extends JsonSerializable with EquatableMixin {
-  BlueCardServiceEntitlementInput({this.certificate, required this.organization, this.responsibility});
-
-  factory BlueCardServiceEntitlementInput.fromJson(Map<String, dynamic> json) =>
-      _$BlueCardServiceEntitlementInputFromJson(json);
-
-  AttachmentInput? certificate;
-
-  late OrganizationInput organization;
-
-  String? responsibility;
-
-  @override
-  List<Object?> get props => [certificate, organization, responsibility];
-  @override
-  Map<String, dynamic> toJson() => _$BlueCardServiceEntitlementInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class OrganizationInput extends JsonSerializable with EquatableMixin {
-  OrganizationInput(
-      {required this.address, required this.category, required this.contact, required this.name, this.website});
-
-  factory OrganizationInput.fromJson(Map<String, dynamic> json) => _$OrganizationInputFromJson(json);
-
-  late AddressInput address;
-
-  late String category;
-
-  late OrganizationContactInput contact;
+  late String prefix;
 
   late String name;
 
-  String? website;
+  @override
+  List<Object?> get props => [id, prefix, name];
 
   @override
-  List<Object?> get props => [address, category, contact, name, website];
-  @override
-  Map<String, dynamic> toJson() => _$OrganizationInputToJson(this);
+  Map<String, dynamic> toJson() => _$GetRegionsById$Query$RegionToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AddressInput extends JsonSerializable with EquatableMixin {
-  AddressInput(
-      {this.addressSupplement,
-      required this.houseNumber,
-      required this.location,
-      required this.postalCode,
-      required this.street});
+class GetRegionsById$Query extends JsonSerializable with EquatableMixin {
+  GetRegionsById$Query();
 
-  factory AddressInput.fromJson(Map<String, dynamic> json) => _$AddressInputFromJson(json);
+  factory GetRegionsById$Query.fromJson(Map<String, dynamic> json) => _$GetRegionsById$QueryFromJson(json);
 
-  String? addressSupplement;
-
-  late String houseNumber;
-
-  late String location;
-
-  late String postalCode;
-
-  late String street;
+  late List<GetRegionsById$Query$Region?> regionsByIdInProject;
 
   @override
-  List<Object?> get props => [addressSupplement, houseNumber, location, postalCode, street];
+  List<Object?> get props => [regionsByIdInProject];
+
   @override
-  Map<String, dynamic> toJson() => _$AddressInputToJson(this);
+  Map<String, dynamic> toJson() => _$GetRegionsById$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class OrganizationContactInput extends JsonSerializable with EquatableMixin {
-  OrganizationContactInput(
-      {required this.email, required this.hasGivenPermission, required this.name, required this.telephone});
+class GetRegions$Query$Region extends JsonSerializable with EquatableMixin {
+  GetRegions$Query$Region();
 
-  factory OrganizationContactInput.fromJson(Map<String, dynamic> json) => _$OrganizationContactInputFromJson(json);
+  factory GetRegions$Query$Region.fromJson(Map<String, dynamic> json) => _$GetRegions$Query$RegionFromJson(json);
 
-  late String email;
+  late int id;
 
-  late bool hasGivenPermission;
+  late String prefix;
 
   late String name;
 
-  late String telephone;
+  @override
+  List<Object?> get props => [id, prefix, name];
 
   @override
-  List<Object?> get props => [email, hasGivenPermission, name, telephone];
-  @override
-  Map<String, dynamic> toJson() => _$OrganizationContactInputToJson(this);
+  Map<String, dynamic> toJson() => _$GetRegions$Query$RegionToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class WorkAtOrganizationInput extends JsonSerializable with EquatableMixin {
-  WorkAtOrganizationInput(
-      {required this.amountOfWork,
-      required this.amountOfWorkUnit,
-      this.certificate,
-      required this.organization,
-      required this.payment,
-      required this.responsibility,
-      required this.workSinceDate});
+class GetRegions$Query extends JsonSerializable with EquatableMixin {
+  GetRegions$Query();
 
-  factory WorkAtOrganizationInput.fromJson(Map<String, dynamic> json) => _$WorkAtOrganizationInputFromJson(json);
+  factory GetRegions$Query.fromJson(Map<String, dynamic> json) => _$GetRegions$QueryFromJson(json);
 
-  late double amountOfWork;
-
-  @JsonKey(unknownEnumValue: AmountOfWorkUnit.artemisUnknown)
-  late AmountOfWorkUnit amountOfWorkUnit;
-
-  AttachmentInput? certificate;
-
-  late OrganizationInput organization;
-
-  late bool payment;
-
-  late String responsibility;
-
-  late String workSinceDate;
+  late List<GetRegions$Query$Region> regionsInProject;
 
   @override
-  List<Object?> get props =>
-      [amountOfWork, amountOfWorkUnit, certificate, organization, payment, responsibility, workSinceDate];
+  List<Object?> get props => [regionsInProject];
+
   @override
-  Map<String, dynamic> toJson() => _$WorkAtOrganizationInputToJson(this);
+  Map<String, dynamic> toJson() => _$GetRegions$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class PersonalDataInput extends JsonSerializable with EquatableMixin {
-  PersonalDataInput(
-      {required this.address,
-      required this.dateOfBirth,
-      required this.emailAddress,
-      required this.forenames,
-      this.gender,
-      this.nationality,
-      required this.surname,
-      this.telephone,
-      this.title});
-
-  factory PersonalDataInput.fromJson(Map<String, dynamic> json) => _$PersonalDataInputFromJson(json);
-
-  late AddressInput address;
-
-  late String dateOfBirth;
-
-  late String emailAddress;
-
-  late String forenames;
-
-  String? gender;
-
-  String? nationality;
-
-  late String surname;
-
-  String? telephone;
-
-  String? title;
+class CardVerificationByHashArguments extends JsonSerializable with EquatableMixin {
+  CardVerificationByHashArguments({required this.card});
 
   @override
-  List<Object?> get props =>
-      [address, dateOfBirth, emailAddress, forenames, gender, nationality, surname, telephone, title];
+  factory CardVerificationByHashArguments.fromJson(Map<String, dynamic> json) =>
+      _$CardVerificationByHashArgumentsFromJson(json);
+
+  late CardVerificationModelInput card;
+
   @override
-  Map<String, dynamic> toJson() => _$PersonalDataInputToJson(this);
+  List<Object?> get props => [card];
+
+  @override
+  Map<String, dynamic> toJson() => _$CardVerificationByHashArgumentsToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class AddGoldenEakApplication$Mutation extends JsonSerializable with EquatableMixin {
-  AddGoldenEakApplication$Mutation();
-
-  factory AddGoldenEakApplication$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$AddGoldenEakApplication$MutationFromJson(json);
-
-  late bool addGoldenEakApplication;
-
-  @override
-  List<Object?> get props => [addGoldenEakApplication];
-  @override
-  Map<String, dynamic> toJson() => _$AddGoldenEakApplication$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class GoldenEakCardApplicationInput extends JsonSerializable with EquatableMixin {
-  GoldenEakCardApplicationInput(
-      {required this.entitlement,
-      required this.givenInformationIsCorrectAndComplete,
-      required this.hasAcceptedPrivacyPolicy,
-      required this.personalData});
-
-  factory GoldenEakCardApplicationInput.fromJson(Map<String, dynamic> json) =>
-      _$GoldenEakCardApplicationInputFromJson(json);
-
-  late GoldenCardEntitlementInput entitlement;
-
-  late bool givenInformationIsCorrectAndComplete;
-
-  late bool hasAcceptedPrivacyPolicy;
-
-  late PersonalDataInput personalData;
-
-  @override
-  List<Object?> get props =>
-      [entitlement, givenInformationIsCorrectAndComplete, hasAcceptedPrivacyPolicy, personalData];
-  @override
-  Map<String, dynamic> toJson() => _$GoldenEakCardApplicationInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class GoldenCardEntitlementInput extends JsonSerializable with EquatableMixin {
-  GoldenCardEntitlementInput({this.certificate, required this.goldenEntitlementType, this.workAtOrganizations});
-
-  factory GoldenCardEntitlementInput.fromJson(Map<String, dynamic> json) => _$GoldenCardEntitlementInputFromJson(json);
-
-  AttachmentInput? certificate;
-
-  @JsonKey(unknownEnumValue: GoldenCardEntitlementType.artemisUnknown)
-  late GoldenCardEntitlementType goldenEntitlementType;
-
-  List<WorkAtOrganizationInput>? workAtOrganizations;
-
-  @override
-  List<Object?> get props => [certificate, goldenEntitlementType, workAtOrganizations];
-  @override
-  Map<String, dynamic> toJson() => _$GoldenCardEntitlementInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CardVerificationByHash$Query extends JsonSerializable with EquatableMixin {
-  CardVerificationByHash$Query();
-
-  factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
-      _$CardVerificationByHash$QueryFromJson(json);
-
-  late bool cardValid;
-
-  @override
-  List<Object?> get props => [cardValid];
-  @override
-  Map<String, dynamic> toJson() => _$CardVerificationByHash$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CardVerificationModelInput extends JsonSerializable with EquatableMixin {
-  CardVerificationModelInput({required this.cardDetailsHashBase64, required this.totp});
-
-  factory CardVerificationModelInput.fromJson(Map<String, dynamic> json) => _$CardVerificationModelInputFromJson(json);
-
-  late String cardDetailsHashBase64;
-
-  late int totp;
-
-  @override
-  List<Object?> get props => [cardDetailsHashBase64, totp];
-  @override
-  Map<String, dynamic> toJson() => _$CardVerificationModelInputToJson(this);
-}
-
-enum ApplicationType {
-  @JsonValue('FIRST_APPLICATION')
-  firstApplication,
-  @JsonValue('RENEWAL_APPLICATION')
-  renewalApplication,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
-enum BlueCardEntitlementType {
-  @JsonValue('JULEICA')
-  juleica,
-  @JsonValue('SERVICE')
-  service,
-  @JsonValue('STANDARD')
-  standard,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
-enum AmountOfWorkUnit {
-  @JsonValue('HOURS_PER_WEEK')
-  hoursPerWeek,
-  @JsonValue('HOURS_PER_YEAR')
-  hoursPerYear,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
-enum GoldenCardEntitlementType {
-  @JsonValue('HONOR_BY_MINISTER_PRESIDENT')
-  honorByMinisterPresident,
-  @JsonValue('SERVICE_AWARD')
-  serviceAward,
-  @JsonValue('STANDARD')
-  standard,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
-@JsonSerializable(explicitToJson: true)
-class GetRegionsByIdArguments extends JsonSerializable with EquatableMixin {
-  GetRegionsByIdArguments({required this.ids});
-
-  @override
-  factory GetRegionsByIdArguments.fromJson(Map<String, dynamic> json) => _$GetRegionsByIdArgumentsFromJson(json);
-
-  late IdsParamsInput ids;
-
-  @override
-  List<Object?> get props => [ids];
-  @override
-  Map<String, dynamic> toJson() => _$GetRegionsByIdArgumentsToJson(this);
-}
-
-final GET_REGIONS_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT_OPERATION_NAME = 'CardVerificationByHash';
+final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'getRegionsById'),
+      name: NameNode(value: 'CardVerificationByHash'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'ids')),
-            type: NamedTypeNode(name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'card')),
+            type: NamedTypeNode(name: NameNode(value: 'CardVerificationModelInput'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'regionsById'),
-            alias: null,
+            name: NameNode(value: 'verifyCard'),
+            alias: NameNode(value: 'cardValid'),
             arguments: [
-              ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'ids')))
+              ArgumentNode(name: NameNode(value: 'card'), value: VariableNode(name: NameNode(value: 'card')))
             ],
             directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'prefix'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null)
-            ]))
+            selectionSet: null)
       ]))
 ]);
 
-class GetRegionsByIdQuery extends GraphQLQuery<GetRegionsById$Query, GetRegionsByIdArguments> {
-  GetRegionsByIdQuery({required this.variables});
+class CardVerificationByHashQuery extends GraphQLQuery<CardVerificationByHash$Query, CardVerificationByHashArguments> {
+  CardVerificationByHashQuery({required this.variables});
 
   @override
-  final DocumentNode document = GET_REGIONS_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document = CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'getRegionsById';
+  final String operationName = CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
-  final GetRegionsByIdArguments variables;
+  final CardVerificationByHashArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
-  @override
-  GetRegionsById$Query parse(Map<String, dynamic> json) => GetRegionsById$Query.fromJson(json);
-}
-
-final GET_REGIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'getRegions'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'regions'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'prefix'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null)
-            ]))
-      ]))
-]);
-
-class GetRegionsQuery extends GraphQLQuery<GetRegions$Query, JsonSerializable> {
-  GetRegionsQuery();
 
   @override
-  final DocumentNode document = GET_REGIONS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'getRegions';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  GetRegions$Query parse(Map<String, dynamic> json) => GetRegions$Query.fromJson(json);
+  CardVerificationByHash$Query parse(Map<String, dynamic> json) => CardVerificationByHash$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoresSearchArguments extends JsonSerializable with EquatableMixin {
-  AcceptingStoresSearchArguments({required this.params});
+class AcceptingStoreSummaryByIdArguments extends JsonSerializable with EquatableMixin {
+  AcceptingStoreSummaryByIdArguments({required this.project, required this.ids});
 
   @override
-  factory AcceptingStoresSearchArguments.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoresSearchArgumentsFromJson(json);
+  factory AcceptingStoreSummaryByIdArguments.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
 
-  late SearchParamsInput params;
+  late String project;
+
+  late List<int> ids;
 
   @override
-  List<Object?> get props => [params];
+  List<Object?> get props => [project, ids];
+
   @override
-  Map<String, dynamic> toJson() => _$AcceptingStoresSearchArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryByIdArgumentsToJson(this);
 }
 
-final ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT = DocumentNode(definitions: [
+final ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'AcceptingStoreSummaryById';
+final ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'AcceptingStoresSearch'),
+      name: NameNode(value: 'AcceptingStoreSummaryById'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'params')),
-            type: NamedTypeNode(name: NameNode(value: 'SearchParamsInput'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'ids')),
+            type: ListTypeNode(type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'searchAcceptingStores'),
+            name: NameNode(value: 'physicalStoresByIdInProject'),
             alias: null,
             arguments: [
-              ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'params')))
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
+              ArgumentNode(name: NameNode(value: 'ids'), value: VariableNode(name: NameNode(value: 'ids')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'description'), alias: null, arguments: [], directives: [], selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'physicalStore'),
+                  name: NameNode(value: 'store'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FieldNode(
-                        name: NameNode(value: 'address'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'location'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null)
-                        ])),
+                        name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null),
                     FieldNode(
-                        name: NameNode(value: 'coordinates'),
+                        name: NameNode(value: 'description'),
                         alias: null,
                         arguments: [],
                         directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'lat'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'lng'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null)
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'categoryId'), alias: null, arguments: [], directives: [], selectionSet: null)
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'categoryId'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ]))
             ]))
       ]))
 ]);
 
-class AcceptingStoresSearchQuery extends GraphQLQuery<AcceptingStoresSearch$Query, AcceptingStoresSearchArguments> {
-  AcceptingStoresSearchQuery({required this.variables});
+class AcceptingStoreSummaryByIdQuery
+    extends GraphQLQuery<AcceptingStoreSummaryById$Query, AcceptingStoreSummaryByIdArguments> {
+  AcceptingStoreSummaryByIdQuery({required this.variables});
 
   @override
-  final DocumentNode document = ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT;
+  final DocumentNode document = ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'AcceptingStoresSearch';
+  final String operationName = ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
-  final AcceptingStoresSearchArguments variables;
+  final AcceptingStoreSummaryByIdArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
+
   @override
-  AcceptingStoresSearch$Query parse(Map<String, dynamic> json) => AcceptingStoresSearch$Query.fromJson(json);
+  AcceptingStoreSummaryById$Query parse(Map<String, dynamic> json) => AcceptingStoreSummaryById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
 class AcceptingStoreByIdArguments extends JsonSerializable with EquatableMixin {
-  AcceptingStoreByIdArguments({required this.ids});
+  AcceptingStoreByIdArguments({required this.project, required this.ids});
 
   @override
   factory AcceptingStoreByIdArguments.fromJson(Map<String, dynamic> json) =>
       _$AcceptingStoreByIdArgumentsFromJson(json);
 
-  late IdsParamsInput ids;
+  late String project;
+
+  late List<int> ids;
 
   @override
-  List<Object?> get props => [ids];
+  List<Object?> get props => [project, ids];
+
   @override
   Map<String, dynamic> toJson() => _$AcceptingStoreByIdArgumentsToJson(this);
 }
 
+final ACCEPTING_STORE_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'AcceptingStoreById';
 final ACCEPTING_STORE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
       name: NameNode(value: 'AcceptingStoreById'),
       variableDefinitions: [
         VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'ids')),
-            type: NamedTypeNode(name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
+            type: ListTypeNode(type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'physicalStoresById'),
+            name: NameNode(value: 'physicalStoresByIdInProject'),
             alias: null,
             arguments: [
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
               ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'ids')))
             ],
             directives: [],
@@ -1140,289 +754,267 @@ class AcceptingStoreByIdQuery extends GraphQLQuery<AcceptingStoreById$Query, Acc
   final DocumentNode document = ACCEPTING_STORE_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'AcceptingStoreById';
+  final String operationName = ACCEPTING_STORE_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final AcceptingStoreByIdArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
+
   @override
   AcceptingStoreById$Query parse(Map<String, dynamic> json) => AcceptingStoreById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AcceptingStoreSummaryByIdArguments extends JsonSerializable with EquatableMixin {
-  AcceptingStoreSummaryByIdArguments({required this.ids});
+class AcceptingStoresSearchArguments extends JsonSerializable with EquatableMixin {
+  AcceptingStoresSearchArguments({required this.project, required this.params});
 
   @override
-  factory AcceptingStoreSummaryByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$AcceptingStoreSummaryByIdArgumentsFromJson(json);
+  factory AcceptingStoresSearchArguments.fromJson(Map<String, dynamic> json) =>
+      _$AcceptingStoresSearchArgumentsFromJson(json);
 
-  late IdsParamsInput ids;
+  late String project;
+
+  late SearchParamsInput params;
 
   @override
-  List<Object?> get props => [ids];
+  List<Object?> get props => [project, params];
+
   @override
-  Map<String, dynamic> toJson() => _$AcceptingStoreSummaryByIdArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$AcceptingStoresSearchArgumentsToJson(this);
 }
 
-final ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+final ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT_OPERATION_NAME = 'AcceptingStoresSearch';
+final ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'AcceptingStoreSummaryById'),
+      name: NameNode(value: 'AcceptingStoresSearch'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'ids')),
-            type: NamedTypeNode(name: NameNode(value: 'IdsParamsInput'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'params')),
+            type: NamedTypeNode(name: NameNode(value: 'SearchParamsInput'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'physicalStoresById'),
+            name: NameNode(value: 'searchAcceptingStoresInProject'),
             alias: null,
             arguments: [
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
+              ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'params')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'description'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'physicalStore'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'address'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FieldNode(
+                              name: NameNode(value: 'location'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null)
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'coordinates'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FieldNode(
+                              name: NameNode(value: 'lat'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null),
+                          FieldNode(
+                              name: NameNode(value: 'lng'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null)
+                        ]))
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'categoryId'), alias: null, arguments: [], directives: [], selectionSet: null)
+            ]))
+      ]))
+]);
+
+class AcceptingStoresSearchQuery extends GraphQLQuery<AcceptingStoresSearch$Query, AcceptingStoresSearchArguments> {
+  AcceptingStoresSearchQuery({required this.variables});
+
+  @override
+  final DocumentNode document = ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = ACCEPTING_STORES_SEARCH_QUERY_DOCUMENT_OPERATION_NAME;
+
+  @override
+  final AcceptingStoresSearchArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+
+  @override
+  AcceptingStoresSearch$Query parse(Map<String, dynamic> json) => AcceptingStoresSearch$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetRegionsByIdArguments extends JsonSerializable with EquatableMixin {
+  GetRegionsByIdArguments({required this.project, required this.ids});
+
+  @override
+  factory GetRegionsByIdArguments.fromJson(Map<String, dynamic> json) => _$GetRegionsByIdArgumentsFromJson(json);
+
+  late String project;
+
+  late List<int> ids;
+
+  @override
+  List<Object?> get props => [project, ids];
+
+  @override
+  Map<String, dynamic> toJson() => _$GetRegionsByIdArgumentsToJson(this);
+}
+
+final GET_REGIONS_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'getRegionsById';
+final GET_REGIONS_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'getRegionsById'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'ids')),
+            type: ListTypeNode(type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'regionsByIdInProject'),
+            alias: null,
+            arguments: [
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
               ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'ids')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'store'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null),
-                    FieldNode(
-                        name: NameNode(value: 'description'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null),
-                    FieldNode(
-                        name: NameNode(value: 'categoryId'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ]))
+                  name: NameNode(value: 'prefix'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null)
             ]))
       ]))
 ]);
 
-class AcceptingStoreSummaryByIdQuery
-    extends GraphQLQuery<AcceptingStoreSummaryById$Query, AcceptingStoreSummaryByIdArguments> {
-  AcceptingStoreSummaryByIdQuery({required this.variables});
+class GetRegionsByIdQuery extends GraphQLQuery<GetRegionsById$Query, GetRegionsByIdArguments> {
+  GetRegionsByIdQuery({required this.variables});
 
   @override
-  final DocumentNode document = ACCEPTING_STORE_SUMMARY_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document = GET_REGIONS_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'AcceptingStoreSummaryById';
+  final String operationName = GET_REGIONS_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
-  final AcceptingStoreSummaryByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  AcceptingStoreSummaryById$Query parse(Map<String, dynamic> json) => AcceptingStoreSummaryById$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class AddBlueEakApplicationArguments extends JsonSerializable with EquatableMixin {
-  AddBlueEakApplicationArguments({required this.application, required this.regionId});
-
-  @override
-  factory AddBlueEakApplicationArguments.fromJson(Map<String, dynamic> json) =>
-      _$AddBlueEakApplicationArgumentsFromJson(json);
-
-  late BlueCardApplicationInput application;
-
-  late int regionId;
-
-  @override
-  List<Object?> get props => [application, regionId];
-  @override
-  Map<String, dynamic> toJson() => _$AddBlueEakApplicationArgumentsToJson(this);
-}
-
-final ADD_BLUE_EAK_APPLICATION_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'AddBlueEakApplication'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'application')),
-            type: NamedTypeNode(name: NameNode(value: 'BlueCardApplicationInput'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'regionId')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'addBlueEakApplication'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'application'), value: VariableNode(name: NameNode(value: 'application'))),
-              ArgumentNode(name: NameNode(value: 'regionId'), value: VariableNode(name: NameNode(value: 'regionId')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class AddBlueEakApplicationMutation
-    extends GraphQLQuery<AddBlueEakApplication$Mutation, AddBlueEakApplicationArguments> {
-  AddBlueEakApplicationMutation({required this.variables});
-
-  @override
-  final DocumentNode document = ADD_BLUE_EAK_APPLICATION_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'AddBlueEakApplication';
-
-  @override
-  final AddBlueEakApplicationArguments variables;
+  final GetRegionsByIdArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
+
   @override
-  AddBlueEakApplication$Mutation parse(Map<String, dynamic> json) => AddBlueEakApplication$Mutation.fromJson(json);
+  GetRegionsById$Query parse(Map<String, dynamic> json) => GetRegionsById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class AddGoldenEakApplicationArguments extends JsonSerializable with EquatableMixin {
-  AddGoldenEakApplicationArguments({required this.application, required this.regionId});
+class GetRegionsArguments extends JsonSerializable with EquatableMixin {
+  GetRegionsArguments({required this.project});
 
   @override
-  factory AddGoldenEakApplicationArguments.fromJson(Map<String, dynamic> json) =>
-      _$AddGoldenEakApplicationArgumentsFromJson(json);
+  factory GetRegionsArguments.fromJson(Map<String, dynamic> json) => _$GetRegionsArgumentsFromJson(json);
 
-  late GoldenEakCardApplicationInput application;
-
-  late int regionId;
+  late String project;
 
   @override
-  List<Object?> get props => [application, regionId];
+  List<Object?> get props => [project];
+
   @override
-  Map<String, dynamic> toJson() => _$AddGoldenEakApplicationArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$GetRegionsArgumentsToJson(this);
 }
 
-final ADD_GOLDEN_EAK_APPLICATION_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'AddGoldenEakApplication'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'application')),
-            type: NamedTypeNode(name: NameNode(value: 'GoldenEakCardApplicationInput'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'regionId')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'addGoldenEakApplication'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'application'), value: VariableNode(name: NameNode(value: 'application'))),
-              ArgumentNode(name: NameNode(value: 'regionId'), value: VariableNode(name: NameNode(value: 'regionId')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class AddGoldenEakApplicationMutation
-    extends GraphQLQuery<AddGoldenEakApplication$Mutation, AddGoldenEakApplicationArguments> {
-  AddGoldenEakApplicationMutation({required this.variables});
-
-  @override
-  final DocumentNode document = ADD_GOLDEN_EAK_APPLICATION_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'AddGoldenEakApplication';
-
-  @override
-  final AddGoldenEakApplicationArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  AddGoldenEakApplication$Mutation parse(Map<String, dynamic> json) => AddGoldenEakApplication$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CardVerificationByHashArguments extends JsonSerializable with EquatableMixin {
-  CardVerificationByHashArguments({required this.card});
-
-  @override
-  factory CardVerificationByHashArguments.fromJson(Map<String, dynamic> json) =>
-      _$CardVerificationByHashArgumentsFromJson(json);
-
-  late CardVerificationModelInput card;
-
-  @override
-  List<Object?> get props => [card];
-  @override
-  Map<String, dynamic> toJson() => _$CardVerificationByHashArgumentsToJson(this);
-}
-
-final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
+final GET_REGIONS_QUERY_DOCUMENT_OPERATION_NAME = 'getRegions';
+final GET_REGIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'CardVerificationByHash'),
+      name: NameNode(value: 'getRegions'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'card')),
-            type: NamedTypeNode(name: NameNode(value: 'CardVerificationModelInput'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'verifyCard'),
-            alias: NameNode(value: 'cardValid'),
+            name: NameNode(value: 'regionsInProject'),
+            alias: null,
             arguments: [
-              ArgumentNode(name: NameNode(value: 'card'), value: VariableNode(name: NameNode(value: 'card')))
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project')))
             ],
             directives: [],
-            selectionSet: null)
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(name: NameNode(value: 'id'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'prefix'), alias: null, arguments: [], directives: [], selectionSet: null),
+              FieldNode(name: NameNode(value: 'name'), alias: null, arguments: [], directives: [], selectionSet: null)
+            ]))
       ]))
 ]);
 
-class CardVerificationByHashQuery extends GraphQLQuery<CardVerificationByHash$Query, CardVerificationByHashArguments> {
-  CardVerificationByHashQuery({required this.variables});
+class GetRegionsQuery extends GraphQLQuery<GetRegions$Query, GetRegionsArguments> {
+  GetRegionsQuery({required this.variables});
 
   @override
-  final DocumentNode document = CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT;
+  final DocumentNode document = GET_REGIONS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'CardVerificationByHash';
+  final String operationName = GET_REGIONS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
-  final CardVerificationByHashArguments variables;
+  final GetRegionsArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
+
   @override
-  CardVerificationByHash$Query parse(Map<String, dynamic> json) => CardVerificationByHash$Query.fromJson(json);
+  GetRegions$Query parse(Map<String, dynamic> json) => GetRegions$Query.fromJson(json);
 }

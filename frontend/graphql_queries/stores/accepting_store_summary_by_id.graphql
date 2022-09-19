@@ -1,5 +1,5 @@
-query AcceptingStoreSummaryById($ids: [Int!]!) {
-    physicalStoresById(params: $ids) {
+query AcceptingStoreSummaryById($project: String!, $ids: [Int!]!) {
+    physicalStoresByIdInProject(project: $project, ids: $ids) {
         id,
         store {
             name
