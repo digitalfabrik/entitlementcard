@@ -310,11 +310,13 @@ Map<String, dynamic> _$GetRegions$QueryToJson(GetRegions$Query instance) => <Str
 
 CardVerificationByHashArguments _$CardVerificationByHashArgumentsFromJson(Map<String, dynamic> json) =>
     CardVerificationByHashArguments(
+      project: json['project'] as String,
       card: CardVerificationModelInput.fromJson(json['card'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CardVerificationByHashArgumentsToJson(CardVerificationByHashArguments instance) =>
     <String, dynamic>{
+      'project': instance.project,
       'card': instance.card.toJson(),
     };
 

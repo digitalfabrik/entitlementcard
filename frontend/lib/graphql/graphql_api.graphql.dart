@@ -16,7 +16,6 @@ class CardVerificationByHash$Query extends JsonSerializable with EquatableMixin 
   factory CardVerificationByHash$Query.fromJson(Map<String, dynamic> json) =>
       _$CardVerificationByHash$QueryFromJson(json);
 
-  @Deprecated('Deprecated in favor of project specific query, replace with verifyCardInProject')
   late bool cardValid;
 
   @override
@@ -347,7 +346,6 @@ class SearchParamsInput extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [categoryIds, coordinates, limit, offset, searchText];
-
   @override
   Map<String, dynamic> toJson() => _$SearchParamsInputToJson(this);
 }
@@ -384,7 +382,6 @@ class GetRegionsById$Query$Region extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [id, prefix, name];
-
   @override
   Map<String, dynamic> toJson() => _$GetRegionsById$Query$RegionToJson(this);
 }
@@ -440,16 +437,18 @@ class GetRegions$Query extends JsonSerializable with EquatableMixin {
 
 @JsonSerializable(explicitToJson: true)
 class CardVerificationByHashArguments extends JsonSerializable with EquatableMixin {
-  CardVerificationByHashArguments({required this.card});
+  CardVerificationByHashArguments({required this.project, required this.card});
 
   @override
   factory CardVerificationByHashArguments.fromJson(Map<String, dynamic> json) =>
       _$CardVerificationByHashArgumentsFromJson(json);
 
+  late String project;
+
   late CardVerificationModelInput card;
 
   @override
-  List<Object?> get props => [card];
+  List<Object?> get props => [project, card];
 
   @override
   Map<String, dynamic> toJson() => _$CardVerificationByHashArgumentsToJson(this);
@@ -462,6 +461,11 @@ final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
       name: NameNode(value: 'CardVerificationByHash'),
       variableDefinitions: [
         VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'project')),
+            type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'card')),
             type: NamedTypeNode(name: NameNode(value: 'CardVerificationModelInput'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
@@ -470,9 +474,10 @@ final CARD_VERIFICATION_BY_HASH_QUERY_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'verifyCard'),
+            name: NameNode(value: 'verifyCardInProject'),
             alias: NameNode(value: 'cardValid'),
             arguments: [
+              ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
               ArgumentNode(name: NameNode(value: 'card'), value: VariableNode(name: NameNode(value: 'card')))
             ],
             directives: [],
@@ -635,7 +640,7 @@ final ACCEPTING_STORE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [
               ArgumentNode(name: NameNode(value: 'project'), value: VariableNode(name: NameNode(value: 'project'))),
-              ArgumentNode(name: NameNode(value: 'params'), value: VariableNode(name: NameNode(value: 'ids')))
+              ArgumentNode(name: NameNode(value: 'ids'), value: VariableNode(name: NameNode(value: 'ids')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
@@ -894,7 +899,6 @@ class GetRegionsByIdArguments extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [project, ids];
-
   @override
   Map<String, dynamic> toJson() => _$GetRegionsByIdArgumentsToJson(this);
 }
@@ -965,7 +969,6 @@ class GetRegionsArguments extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [project];
-
   @override
   Map<String, dynamic> toJson() => _$GetRegionsArgumentsToJson(this);
 }
