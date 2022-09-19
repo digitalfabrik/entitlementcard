@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Flutter (prod+nuernberg)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=environment=production --flavor Nuernberg -PBUILD_CONFIG_NAME=nuernberg" />
+    <option name="attachArgs" value="--dart-define=environment=production" />
+    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main.dart" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Select &quot;nuernberg&quot;" run_configuration_type="ShConfigurationType" />
+    </method>
+  </configuration>
+</component>
