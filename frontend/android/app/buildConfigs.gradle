@@ -1,3 +1,6 @@
+// Copied from: https://github.com/digitalfabrik/integreat-app/blob/0d256a7d05afa5650389999d33e3a50b74fe4120/native/android/app/buildConfigs.gradle
+// Provides functions to load and parse build configs.
+
 import groovy.json.JsonSlurper
 
 static def isWindows() {
