@@ -6,16 +6,15 @@ workflows:
     jobs:
       - check-frontend
       - frontend-android-build:
-          floss: true
-          x86: false
+          buildConfig: "bayern-floss"
           requires:
-            - check-frontend      
+            - check-frontend
       - frontend-android-build:
-          floss: false
-          x86: true
+          buildConfig: "bayern"
           requires:
             - check-frontend
       - frontend-ios-build:
+          buildConfig: "bayern"
           requires:
             - check-frontend
       - backend-build
@@ -117,6 +116,11 @@ jobs:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
+          name: Build Runner
+          command: |
+            # Statically use "bayern" build config for analyzing here
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=bayern"
+      - run:
           name: Check Analyzer and Linting
           command: fvm flutter analyze --fatal-infos --fatal-warnings
 
@@ -124,14 +128,9 @@ jobs:
     docker:
       - image: circleci/android:api-30
     parameters:
-      floss:
-        description: "Build a floss build"
-        default: false
-        type: boolean     
-      x86:
-        description: "Build for x86 architecture"
-        default: true
-        type: boolean
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
     environment:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
@@ -153,9 +152,13 @@ jobs:
           paths:
             - .dart_tool
       - run:
+          name: Build Runner
+          command: |
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=<< parameters.buildConfig >>"
+      - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart <<# parameters.floss >> --dart-define=ANDROID_FLOSS=true <</ parameters.floss >><<^ parameters.x86 >> --dart-define=EXCLUDE_X86=true <</ parameters.x86 >>
+            fvm --verbose flutter build apk --release -t lib/main_prod.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -164,6 +167,10 @@ jobs:
   frontend-ios-build:
     macos:
       xcode: 13.2.0
+    parameters:
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
     working_directory: ~/project/frontend
     steps:
       - checkout:
@@ -187,6 +194,10 @@ jobs:
             cd ios
             pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
+      - run:
+          name: Build Runner
+          command: |
+            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
