@@ -72,7 +72,7 @@ class MyBuilder extends Builder {
     
     dataModel.write("""
 const BuildConfig buildConfig = BuildConfig();
-    """);
+""");
 
     buildStep.writeAsString(buildStep.allowedOutputs.first, dataModel.toString());
   }
