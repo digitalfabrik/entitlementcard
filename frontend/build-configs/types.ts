@@ -1,17 +1,34 @@
 type BuildConfigType = {
+    common: CommonBuildConfigType
     android: AndroidBuildConfigType,
     ios: iOSBuildConfigType,
 }
 
 export type FeatureFlagsType = {
-    // Enables additional debugging output for devs (i18n, redux, hidden cities, version).
-    developerFriendly: boolean
+    verification: boolean
+}
+
+export type ThemeType = {
+    primaryColor: string,
+    secondaryColor: string
 }
 
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
-    backendUrl: string
+    projectId: string
+    mapDataHost: {
+        staging: string,
+        production: string,
+        local: string,
+    },
+    backendUrl: {
+        staging: string,
+        production: string,
+        local: string,
+    }
+    theme: ThemeType
+    categories: number[]
     featureFlags: FeatureFlagsType
 }
 
@@ -19,8 +36,8 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
     // Shows the app icon as splash screen on app start.
     applicationId: string
     featureFlags: {
-        excludeLocationPlayServices: boolean 
-        excludeX86: boolean 
+        excludeLocationPlayServices: boolean
+        excludeX86: boolean
     }
 }
 
