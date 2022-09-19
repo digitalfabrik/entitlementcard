@@ -45,10 +45,10 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
   }
 }
 
-class MyBuilder extends Builder {
+class BuildConfigBuilder extends Builder {
   String name;
 
-  MyBuilder({required this.name});
+  BuildConfigBuilder({required this.name});
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
@@ -91,5 +91,5 @@ Builder configBuilder(BuilderOptions options) {
     throw "Build config name is not a string.";
   }
 
-  return MyBuilder(name: name);
+  return BuildConfigBuilder(name: name);
 }
