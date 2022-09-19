@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
@@ -46,8 +47,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Future<void> _fetchPage(int pageKey) async {
     final oldWidget = widget;
+    final projectId = Configuration.of(context).projectId;
     try {
       final arguments = AcceptingStoresSearchArguments(
+        project: projectId,
         params: SearchParamsInput(
           categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
           coordinates: widget.coordinates,
@@ -82,7 +85,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
         throw Exception("Fetched data is null.");
       }
 
-      final newItems = query.parse(newData).searchAcceptingStores;
+      final newItems = query.parse(newData).searchAcceptingStoresInProject;
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);

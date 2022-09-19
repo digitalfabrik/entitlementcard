@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
@@ -50,7 +51,8 @@ class VerificationQrScannerPage extends StatelessWidget {
     final client = GraphQLProvider.of(context).value;
     try {
       final card = processQrCodeContent(rawQrContent);
-      final valid = await queryServerVerification(client, card);
+      final projectId = Configuration.of(context).projectId;
+      final valid = await queryServerVerification(client, projectId, card);
       if (!valid) {
         await _onError(
           context,

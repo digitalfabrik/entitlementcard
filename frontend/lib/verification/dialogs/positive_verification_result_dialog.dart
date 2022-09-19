@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/identification/card/eak_card.dart';
@@ -13,14 +14,15 @@ class PositiveVerificationResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final projectId = Configuration.of(context).projectId;
     final regionsQuery =
-        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(ids: IdsParamsInput(ids: [cardDetails.regionId])));
+        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(project: projectId, ids: [cardDetails.regionId]));
 
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
       builder: (result, {refetch, fetchMore}) {
         final data = result.data;
-        final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsById[0] : null;
+        final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         return VerificationResultDialog(
           title: "Karte ist gültig",
           icon: Icons.verified_user,
