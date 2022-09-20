@@ -1,11 +1,11 @@
 import {jsPDF} from "jspdf";
 import logo from "./logo";
 import {drawjsPDF} from "../../util/qrcode";
-import {CardActivateModel} from "../../generated/compiled";
+import {CardActivateModel} from "../../generated/protobuf";
 import uint8ArrayToBase64 from "../../util/uint8ArrayToBase64";
 import {format, fromUnixTime} from "date-fns";
-import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
 import {Exception} from "../../exception";
+import {Region} from "../../generated/graphql";
 
 type TTFFont = {
     /**

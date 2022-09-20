@@ -73,7 +73,7 @@ const GenerationForm = (props: Props) => {
     const allCardsValid = cardCreationModels.reduce((acc, model) => acc && isValid(model), true)
 
     usePrompt("Falls Sie fortfahren, werden alle Eingaben verworfen.", cardCreationModels.length !== 0);
-    
+
     return (
         <>
             <ButtonBar stickyTop={0}>
@@ -84,6 +84,7 @@ const GenerationForm = (props: Props) => {
                     {cardCreationModels.length === 0 && "Legen Sie zunächst eine Karte an."}
                 </Tooltip>
             </ButtonBar>
+            { /* @ts-ignore */}
             <FormsWrapper>
                 {cardCreationModels.map(model => <FormColumn key={model.id}>
                     <EakForm model={model} onUpdate={newModel => updateModel(model, newModel)}/>

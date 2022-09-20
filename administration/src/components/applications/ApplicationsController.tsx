@@ -3,18 +3,18 @@ import {Button, Card, H3, Spinner} from "@blueprintjs/core";
 import {useQuery} from "@apollo/client";
 import RegionSelector from "../RegionSelector";
 import {RegionContext} from "../../RegionProvider";
-import {GET_APPLICATIONS} from "../../graphql/applications/queries";
-import {
-    getApplications,
-    getApplicationsVariables
-} from "../../graphql/applications/__generated__/getApplications";
 import ApplicationsOverview from "./ApplicationsOverview";
-import {getRegions_regions as Region} from "../../graphql/regions/__generated__/getRegions";
+import {
+    GetApplicationsDocument,
+    GetApplicationsQuery,
+    GetApplicationsQueryVariables,
+    Region
+} from "../../generated/graphql";
 
 const ApplicationsController = (props: { region: Region, token: string }) => {
     const {loading, error, data, refetch} =
-        useQuery<getApplications, getApplicationsVariables>(
-            GET_APPLICATIONS, {variables: {regionId: props.region.id}, onError: error => console.error(error)},
+        useQuery<GetApplicationsQuery, GetApplicationsQueryVariables>(
+            GetApplicationsDocument, {variables: {regionId: props.region.id}, onError: error => console.error(error)},
         )
     if (loading) return <Spinner/>
     else if (error || !data) return <Card>

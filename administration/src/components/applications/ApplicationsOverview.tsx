@@ -3,11 +3,16 @@ import {Alert, Button, Card, H4, IResizeEntry, ResizeSensor} from "@blueprintjs/
 import {format} from "date-fns";
 import React, {FunctionComponent, useState} from "react";
 import styled from "styled-components";
-import {getApplications_applications as Application} from "../../graphql/applications/__generated__/getApplications";
 import JsonFieldView, {JsonField} from "./JsonFieldView";
-import {DELETE_APPLICATION} from "../../graphql/applications/mutations";
 import {AppToaster} from "../AppToaster";
 import FlipMove from "react-flip-move";
+import {
+    DeleteApplicationDocument,
+    DeleteApplicationMutation,
+    DeleteApplicationMutationVariables, GetApplicationsQuery
+} from "../../generated/graphql";
+
+type Application = GetApplicationsQuery["applications"][number]
 
 interface Props {
     applications: Application[],
@@ -52,7 +57,7 @@ const ApplicationView: FunctionComponent<{ application: Application, token: stri
         const [collapsed, setCollapsed] = useState(false)
         const [height, setHeight] = useState(0)
         const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-        const [deleteApplication, {loading}] = useMutation(DELETE_APPLICATION, {
+        const [deleteApplication, {loading}] = useMutation<DeleteApplicationMutation, DeleteApplicationMutationVariables>(DeleteApplicationDocument, {
             onError: (error) => {
                 console.error(error)
                 AppToaster.show({intent: "danger", message: "Etwas ist schief gelaufen."})
@@ -119,6 +124,7 @@ class ApplicationViewComponent extends React.Component<{ application: Applicatio
 const ApplicationsOverview = (props: Props) => {
     const [updatedApplications, setUpdatedApplications] = useState(props.applications)
 
+    // @ts-ignore
     return <FlipMove style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
         {updatedApplications.map(application =>
             <ApplicationViewComponent key={application.id} application={application} token={props.token}

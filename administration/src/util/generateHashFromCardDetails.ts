@@ -1,4 +1,5 @@
-import {CardActivateModel} from "../generated/compiled";
+import Long from "long";
+import {CardActivateModel} from "../generated/protobuf";
 import isIE11 from "./isIE11";
 
 export interface CardDetails {

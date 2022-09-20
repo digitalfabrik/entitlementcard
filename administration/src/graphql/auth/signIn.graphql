@@ -1,0 +1,9 @@
+mutation signIn($authData: AuthDataInput!) {
+    signInPayload: signIn(authData: $authData) {
+        user {
+            id,
+            email
+        },
+        token
+    }
+}
