@@ -1,5 +1,5 @@
 import {getUnixTime} from "date-fns";
-import {CardActivateModel} from "../generated/compiled";
+import {CardActivateModel} from "../generated/protobuf";
 import isIE11 from "./isIE11";
 import getRandomValues from "./getRandomValues";
 import Long from "long";
