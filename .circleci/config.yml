@@ -66,8 +66,8 @@ commands:
       - run:
           name: Install Dart
           command: |
-            wget https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
-            sudo dpkg -i dart_2.15.1-1_amd64.deb
+            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
+            sudo dpkg -i dart.deb
   install-fvm-linux:
     steps:
       - install-dart-linux
@@ -380,7 +380,7 @@ jobs:
           path: ~/project
       - run:
           name: "Download legacy styles deb"
-          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
+          command: curl -o eak-map-styles_0.4785-1_all.deb https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
           name: "Move .deb to artifacts folder"
           command: |
