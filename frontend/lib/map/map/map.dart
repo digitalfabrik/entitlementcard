@@ -90,6 +90,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             onMapClick: _onMapClick,
             compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
             compassViewPosition: CompassViewPosition.TopRight,
+            minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
           ),
           Positioned(
             bottom: 0,
