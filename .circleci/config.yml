@@ -290,7 +290,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: cimg/rust:1.63.0
+      - image: rust:bullseye
     working_directory: ~/martin
     steps:
       - run:
@@ -333,7 +333,7 @@ jobs:
 
   backend-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -353,7 +353,7 @@ jobs:
 
   administration-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -373,7 +373,7 @@ jobs:
 
   styles-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/map-tiles/styles
     steps:
       - checkout:
@@ -393,7 +393,7 @@ jobs:
 
   martin-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
@@ -419,7 +419,7 @@ jobs:
 
   meta-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
