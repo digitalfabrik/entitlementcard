@@ -181,7 +181,7 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main_prod.dart
+            fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -228,7 +228,7 @@ jobs:
           name: Build
           command: |
             app-toolbelt v0 build-config write-xcconfig "$BUILD_CONFIG_NAME" ios --directory ios/
-            fvm --verbose flutter build ios --dart-define=environment=production --no-codesign --release -t lib/main_prod.dart
+            fvm --verbose flutter build ios --dart-define=environment=production --no-codesign --release -t lib/main.dart
 
   backend-build:
     environment:
