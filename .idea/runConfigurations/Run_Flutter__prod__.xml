@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Flutter (prod) " type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=environment=production" />
-    <option name="attachArgs" value="--dart-define=environment=production" />
-    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main.dart" />
-    <method v="2" />
-  </configuration>
-</component>
