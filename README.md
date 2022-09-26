@@ -23,6 +23,7 @@ English | [Deutsch](docs/de/readme.md)
 * [Production Setup](./docs/production-setup.md)
 * [GraphQL Code Generation](./docs/graphql_generation.md)
 * [Protobuf Code Generation](./docs/protobuf-generation.md)
+* [Domains & Projects](./docs/domains-projects.md)
 
 ## What is a _Ehrenamtskarte_?
 
