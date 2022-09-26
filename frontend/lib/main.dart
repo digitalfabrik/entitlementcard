@@ -14,12 +14,14 @@ Future<void> main() async {
 
   final graphqlUrl = isProduction() ? buildConfig.backendUrl.production : isLocal() ? buildConfig.backendUrl.local : buildConfig.backendUrl.showcase;
 
+  final projectId = isProduction() ? buildConfig.projectId.production : isLocal() ? buildConfig.projectId.local : buildConfig.projectId.showcase;
+
   runApp(
     Configuration(
       mapStyleUrl:
           "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=$mapDataHost",
       graphqlUrl: graphqlUrl,
-      projectId: buildConfig.projectId,
+      projectId: projectId,
       showVerification: buildConfig.featureFlags.verification,
       showDevSettings: kDebugMode,
       child: const App(),
