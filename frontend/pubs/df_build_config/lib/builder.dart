@@ -42,7 +42,7 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
     output.write('  int get $k => $v;\n');
   } else if (v is List) {
     final list = v as List<dynamic>;
-    
+
     if (list.isEmpty) {
       output.write('  List<dynamic> get $k => [];\n');
     } else {

@@ -7,19 +7,30 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   debugPrint("Environment: $appEnvironment");
-  
-  final mapDataHost = isProduction() ? buildConfig.mapDataHost.production : isLocal() ? buildConfig.mapDataHost.local : buildConfig.mapDataHost.showcase;
 
-  final graphqlUrl = isProduction() ? buildConfig.backendUrl.production : isLocal() ? buildConfig.backendUrl.local : buildConfig.backendUrl.showcase;
+  final mapDataHost = isProduction()
+      ? buildConfig.mapDataHost.production
+      : isLocal()
+          ? buildConfig.mapDataHost.local
+          : buildConfig.mapDataHost.showcase;
 
-  final projectId = isProduction() ? buildConfig.projectId.production : isLocal() ? buildConfig.projectId.local : buildConfig.projectId.showcase;
+  final graphqlUrl = isProduction()
+      ? buildConfig.backendUrl.production
+      : isLocal()
+          ? buildConfig.backendUrl.local
+          : buildConfig.backendUrl.showcase;
+
+  final projectId = isProduction()
+      ? buildConfig.projectId.production
+      : isLocal()
+          ? buildConfig.projectId.local
+          : buildConfig.projectId.showcase;
 
   runApp(
     Configuration(
-      mapStyleUrl:
-          "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=$mapDataHost",
+      mapStyleUrl: "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=$mapDataHost",
       graphqlUrl: graphqlUrl,
       projectId: projectId,
       showVerification: buildConfig.featureFlags.verification,
