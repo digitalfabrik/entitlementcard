@@ -1,3 +1,6 @@
+# The contents of this file are currently unused.
+# The file itself must exist in order to enable the generation of build_config.dart next to this file.
+# The dart build system is uses this file.
 enabled:
   - bayern
   - bayern-floss

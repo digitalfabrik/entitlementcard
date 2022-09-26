@@ -1,11 +1,13 @@
-import BuildConfigType from "../types";
+import BuildConfigType, {CommonBuildConfigType} from "../types";
 import bayern, {bayernCommon} from "../bayern";
 
-let bayernFlossCommon = {
+let bayernFlossCommon: CommonBuildConfigType = {
+    ...bayernCommon,
     appName: "Ehrenamt FLOSS",
 };
 
 let bayernFloss: BuildConfigType = {
+    common: bayernFlossCommon,
     android: {
         ...bayern.android,
         ...bayernFlossCommon,

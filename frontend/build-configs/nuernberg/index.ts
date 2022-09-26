@@ -1,14 +1,14 @@
 import BuildConfigType, {CommonBuildConfigType} from "../types";
 
-export const bayernCommon: CommonBuildConfigType = {
-    appName: "Ehrenamt",
+export const nuernbergCommon: CommonBuildConfigType = {
+    appName: "Sozialpass",
     appIcon: "",
     projectId: {
-        production: "bayern.ehrenamtskarte.app",
+        production: "nuernberg.sozialpass.app",
         showcase: "showcase.entitlementcard.app",
-        local: "bayern.ehrenamtskarte.app"
+        local: "nuernberg.sozialpass.app"
     },
-    categories: [1, 2, 3],
+    categories: [],
     theme: {
         primaryColor: "#123456",
         secondaryColor: "#123456"
@@ -24,25 +24,25 @@ export const bayernCommon: CommonBuildConfigType = {
         local: "http://10.0.2.2:7000",
     },
     featureFlags: {
-        verification: false,
+        verification: true,
     }
 };
 
-let bayern: BuildConfigType = {
-    common: bayernCommon,
+let nuernberg: BuildConfigType = {
+    common: nuernbergCommon,
     android: {
-        ...bayernCommon,
-        applicationId: "de.nrw.it.giz.ehrensache.bayern.android",
+        ...nuernbergCommon,
+        applicationId: "app.entitlementcard.nuernberg",
         featureFlags: {
-            ...bayernCommon.featureFlags,
+            ...nuernbergCommon.featureFlags,
             excludeLocationPlayServices: false,
             excludeX86: false
         }
     },
     ios: {
-        ...bayernCommon,
+        ...nuernbergCommon,
         bundleIdentifier: "de.nrw.it.ehrensachebayern"
     }
 };
 
-export default bayern
+export default nuernberg

@@ -66,8 +66,8 @@ commands:
       - run:
           name: Install Dart
           command: |
-            wget https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
-            sudo dpkg -i dart_2.15.1-1_amd64.deb
+            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
+            sudo dpkg -i dart.deb
   install-fvm-linux:
     steps:
       - install-dart-linux
@@ -181,7 +181,7 @@ jobs:
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart
+            fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -228,7 +228,7 @@ jobs:
           name: Build
           command: |
             app-toolbelt v0 build-config write-xcconfig "$BUILD_CONFIG_NAME" ios --directory ios/
-            fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
+            fvm --verbose flutter build ios --dart-define=environment=production --no-codesign --release -t lib/main.dart
 
   backend-build:
     environment:
@@ -290,7 +290,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: cimg/rust:1.63.0
+      - image: rust:bullseye
     working_directory: ~/martin
     steps:
       - run:
@@ -308,8 +308,8 @@ jobs:
       - run:
           name: "Install OpenSSL"
           command: |
-            sudo apt update
-            sudo apt install -y openssl libssl-dev
+            apt update
+            apt install -y openssl libssl-dev
       - run:
           name: "Build"
           command: |
@@ -333,7 +333,7 @@ jobs:
 
   backend-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -353,7 +353,7 @@ jobs:
 
   administration-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -373,14 +373,19 @@ jobs:
 
   styles-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/map-tiles/styles
     steps:
       - checkout:
           path: ~/project
       - run:
+          name: "Setup dependencies"
+          command: |
+            apt-get update
+            apt-get install -y curl
+      - run:
           name: "Download legacy styles deb"
-          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
+          command: curl -o eak-map-styles_0.4785-1_all.deb https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
           name: "Move .deb to artifacts folder"
           command: |
@@ -393,7 +398,7 @@ jobs:
 
   martin-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
@@ -419,7 +424,7 @@ jobs:
 
   meta-pack:
     docker:
-      - image: cimg/base:2022.09
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
