@@ -116,11 +116,11 @@ class GraphQLHandler(
      * Execute a query against schema
      */
     fun handle(context: Context, applicationData: File) {
-        val (payload, files) = getPayload(context)
-        val graphQLContext = getGraphQLContext(context, files, applicationData)
-
         // Execute the query against the schema
         try {
+            val (payload, files) = getPayload(context)
+            val graphQLContext = getGraphQLContext(context, files, applicationData)
+            
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =
                 ExecutionInput.Builder()
@@ -135,6 +135,8 @@ class GraphQLHandler(
 
             // write response as json
             context.json(result)
+        } catch (e: IOException) {
+            context.res.sendError(500)
         } catch (e: UnauthorizedException) {
             context.res.sendError(401)
         } catch (e: ExecutionException) {
