@@ -1,4 +1,4 @@
-production: true
+production: false
 postgres:
   url: jdbc:postgresql://localhost:5432/ehrenamtskarte
   user: postgres
@@ -17,3 +17,6 @@ projects:
   - id: nuernberg.sozialpass.app
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
+  - id: showcase.entitlementcard.app
+    importUrl: https://example.com
+    pipelineName: Showcase Berechtigungskarte
