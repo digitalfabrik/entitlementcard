@@ -6,6 +6,6 @@ COPY ./administration /app/druckerei
 
 RUN npm install
 
-ENV REACT_APP_API_BASE_URL=https://api.staging.ehrenamtskarte.app
+ENV REACT_APP_API_BASE_URL=https://api.ehrenamtskarte.app
 # start app
 CMD ["npm", "run", "start"]

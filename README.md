@@ -19,7 +19,6 @@ English | [Deutsch](docs/de/readme.md)
 
 ## Documentation
 
-* [Staging Setup](./docs/staging-setup.md)
 * [Production Setup](./docs/production-setup.md)
 * [GraphQL Code Generation](./docs/graphql_generation.md)
 * [Protobuf Code Generation](./docs/protobuf-generation.md)
