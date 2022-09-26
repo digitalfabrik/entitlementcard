@@ -13,6 +13,7 @@ object Importer {
             when (project.pipelineName) {
                 "EhrenamtskarteBayern" -> EhrenamtskarteBayern.import(config, logger)
                 "SozialpassNuernberg" -> SozialpassNuernberg.import(config, logger)
+                "Nop" -> {}
                 else -> throw Error("Invalid pipeline name '${project.pipelineName}'!")
             }
             logger.info("== Pipeline successfully finished ==")
