@@ -41,17 +41,15 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
   } else if (v is int) {
     output.write('  int get $k => $v;\n');
   } else if (v is List) {
-    final list = v as List<dynamic>;
-
-    if (list.isEmpty) {
+    if (v.isEmpty) {
       output.write('  List<dynamic> get $k => [];\n');
     } else {
-      final element = list.first;
+      final element = v.first;
 
       if (element is int) {
         output.write('  List<int> get $k => $v;\n');
       } else {
-        throw "invalid list ${list.runtimeType}";
+        throw "invalid list ${v.runtimeType}";
       }
     }
   } else {
