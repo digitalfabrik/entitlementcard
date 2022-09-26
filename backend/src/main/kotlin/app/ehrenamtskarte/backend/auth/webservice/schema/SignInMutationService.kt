@@ -13,9 +13,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class SignInMutationService {
     @GraphQLDescription("Signs in an administrator")
-    fun signIn(authData: AuthData): SignInPayload {
+    fun signIn(project: String, authData: AuthData): SignInPayload {
         val administratorEntity = transaction {
-            AdministratorsRepository.findByAuthData(authData.email, authData.password)
+            AdministratorsRepository.findByAuthData(project, authData.email, authData.password)
         } ?: throw GraphQLKotlinException("Invalid credentials")
         val administrator = Administrator(administratorEntity.id.value, administratorEntity.email)
         val token = JwtService.createToken(administrator)

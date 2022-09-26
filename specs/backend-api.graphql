@@ -85,7 +85,7 @@ type Mutation {
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Signs in an administrator"
-  signIn(authData: AuthDataInput!): SignInPayload!
+  signIn(authData: AuthDataInput!, project: String!): SignInPayload!
 }
 
 type PhysicalStore {
