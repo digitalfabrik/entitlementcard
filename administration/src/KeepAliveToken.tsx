@@ -1,9 +1,10 @@
 import {useMutation} from "@apollo/client";
 import {Button, Classes, Dialog} from "@blueprintjs/core";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {AuthContextData} from "./AuthProvider";
 import {AppToaster} from "./components/AppToaster";
 import {SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload} from "./generated/graphql";
+import {ProjectConfigContext} from "./project-configs/ProjectConfigContext";
 
 interface Props {
     authData: AuthContextData,
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const KeepAliveToken = (props: Props) => {
+    const projectId = useContext(ProjectConfigContext).projectId
     const [timeLeft, setTimeLeft] = useState(Math.round((props.authData.expiry.valueOf() - Date.now()) / 1000))
     useEffect(() => {
         setTimeout(() => setTimeLeft(Math.round((props.authData.expiry.valueOf() - Date.now()) / 1000)), 1000)
@@ -24,6 +26,7 @@ const KeepAliveToken = (props: Props) => {
     })
     const extendLogin = () => signIn({
         variables: {
+            project: projectId,
             authData: {
                 email: props.authData.administrator.email,
                 password: props.authData.password

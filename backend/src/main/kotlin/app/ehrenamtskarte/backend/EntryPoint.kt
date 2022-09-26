@@ -88,12 +88,13 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
 class CreateAdmin : CliktCommand(help = "Creates an admin account with the specified email and password") {
     private val config by requireObject<BackendConfiguration>()
 
+    private val project by argument()
     private val email by argument()
     private val password by argument()
 
     override fun run() {
         Database.setup(config)
-        Database.createAccount(email, password)
+        Database.createAccount(project, email, password)
     }
 }
 

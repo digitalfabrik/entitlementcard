@@ -1,10 +1,11 @@
 import {useMutation} from "@apollo/client";
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import LoginForm from "./LoginForm";
 import {AppToaster} from "../AppToaster";
 import {Card, H2} from "@blueprintjs/core";
 import {SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload} from "../../generated/graphql";
+import {ProjectConfigContext} from "../../project-configs/ProjectConfigContext";
 
 interface Props {
     onSignIn: (payload: SignInPayload, password: string) => void
@@ -24,12 +25,18 @@ interface State {
 }
 
 const Login = (props: Props) => {
+    const config = useContext(ProjectConfigContext)
     const [state, setState] = React.useState<State>({email: "", password: ""})
     const [signIn, mutationState] = useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, {
         onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload, state.password),
         onError: () => AppToaster.show({intent: "danger", message: "Login fehlgeschlagen."})
     })
-    const onSubmit = () => signIn({variables: {authData: {email: state.email, password: state.password}}})
+    const onSubmit = () => signIn({
+        variables: {
+            project: config.projectId,
+            authData: {email: state.email, password: state.password}
+        }
+    })
 
     return <Center>
         <Card>

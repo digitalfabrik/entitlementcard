@@ -1,5 +1,5 @@
-mutation signIn($authData: AuthDataInput!) {
-    signInPayload: signIn(authData: $authData) {
+mutation signIn($project: String!, $authData: AuthDataInput!) {
+    signInPayload: signIn(project: $project, authData: $authData) {
         user {
             id,
             email

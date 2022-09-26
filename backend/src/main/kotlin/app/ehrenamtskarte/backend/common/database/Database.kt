@@ -34,9 +34,9 @@ class Database {
             }
         }
 
-        fun createAccount(email: String, password: String) {
+        fun createAccount(project: String, email: String, password: String) {
             transaction {
-                AdministratorsRepository.insert(email, password)
+                AdministratorsRepository.insert(project, email, password)
             }
         }
 
