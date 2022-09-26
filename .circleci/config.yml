@@ -379,6 +379,11 @@ jobs:
       - checkout:
           path: ~/project
       - run:
+          name: "Setup dependencies"
+          command: |
+            apt-get update
+            apt-get install -y curl
+      - run:
           name: "Download legacy styles deb"
           command: curl -o eak-map-styles_0.4785-1_all.deb https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
       - run:
