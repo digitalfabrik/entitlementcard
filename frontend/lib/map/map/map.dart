@@ -75,22 +75,23 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       maplibreView = Stack(
         children: [
           MaplibreMap(
-              initialCameraPosition: cameraPosition,
-              styleString: config.mapStyleUrl,
-              // We provide our own attribution menu
-              attributionButtonMargins: const math.Point(-100, -100),
-              // There is no way to remove the logo, so set the margins to a really large value to hide it
-              logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
-              myLocationEnabled: _permissionGiven,
-              myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
-              // required to prevent mapbox iOS from requesting location
-              // permissions on startup, as discussed in #249
-              myLocationRenderMode: MyLocationRenderMode.NORMAL,
-              onMapCreated: _onMapCreated,
-              onMapClick: _onMapClick,
-              compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-              compassViewPosition: CompassViewPosition.TopRight,
-              minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0)),
+            initialCameraPosition: cameraPosition,
+            styleString: config.mapStyleUrl,
+            // We provide our own attribution menu
+            attributionButtonMargins: const math.Point(-100, -100),
+            // There is no way to remove the logo, so set the margins to a really large value to hide it
+            logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
+            myLocationEnabled: _permissionGiven,
+            myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
+            // required to prevent mapbox iOS from requesting location
+            // permissions on startup, as discussed in #249
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+            onMapCreated: _onMapCreated,
+            onMapClick: _onMapClick,
+            compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+            compassViewPosition: CompassViewPosition.TopRight,
+            minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
+          ),
           Positioned(
             bottom: 0,
             left: 0,
