@@ -3,20 +3,24 @@ import BuildConfigType, {CommonBuildConfigType} from "../types";
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
     appIcon: "",
-    projectId: "bayern.ehrenamtskarte.app",
+    projectId: {
+        production: "bayern.ehrenamtskarte.app",
+        showcase: "showcase.entitlementcard.app",
+        local: "bayern.ehrenamtskarte.app"
+    },
     categories: [1, 2, 3],
     theme: {
         primaryColor: "#123456",
         secondaryColor: "#123456"
     },
     mapDataHost: {
-        staging: "https://tiles.staging.bayern.entitlementcard.app",
-        production: "https://tiles.bayern.entitlementcard.app",
+        production: "https://tiles.entitlementcard.app",
+        showcase: "https://tiles.entitlementcard.app",
         local: "http://localhost:5002",
     },
     backendUrl: {
-        staging: "https://api.staging.bayern.entitlementcard.app",
-        production: "https://api.bayern.entitlementcard.app",
+        production: "https://api.entitlementcard.app",
+        showcase: "https://api.entitlementcard.app",
         local: "http://10.0.2.2:7000",
     },
     featureFlags: {

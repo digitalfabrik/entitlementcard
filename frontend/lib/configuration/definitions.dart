@@ -8,6 +8,6 @@ bool isLocal() {
   return appEnvironment == "local";
 }
 
-bool isStaging() {
-  return appEnvironment == "staging";
+bool isShowcase() {
+  return appEnvironment == "showcase";
 }

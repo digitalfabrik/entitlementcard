@@ -16,14 +16,18 @@ export type ThemeType = {
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
-    projectId: string
+    projectId: {
+        showcase: string,
+        production: string,
+        local: string,
+    },
     mapDataHost: {
-        staging: string,
+        showcase: string,
         production: string,
         local: string,
     },
     backendUrl: {
-        staging: string,
+        showcase: string,
         production: string,
         local: string,
     }

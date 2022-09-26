@@ -3,20 +3,24 @@ import BuildConfigType, {CommonBuildConfigType} from "../types";
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Sozialpass",
     appIcon: "",
-    projectId: "nuernberg.entitlementcard.app",
+    projectId: {
+        production: "nuernberg.sozialpass.app",
+        showcase: "showcase.entitlementcard.app",
+        local: "nuernberg.sozialpass.app"
+    },
     categories: [],
     theme: {
         primaryColor: "#123456",
         secondaryColor: "#123456"
     },
     mapDataHost: {
-        staging: "https://tiles.staging.nuernberg.entitlementcard.app",
-        production: "https://tiles.nuernberg.entitlementcard.app",
+        production: "https://tiles.entitlementcard.app",
+        showcase: "https://tiles.entitlementcard.app",
         local: "http://localhost:5002",
     },
     backendUrl: {
-        staging: "https://api.staging.nuernberg.entitlementcard.app",
-        production: "https://api.nuernberg.entitlementcard.app",
+        production: "https://api.entitlementcard.app",
+        showcase: "https://api.entitlementcard.app",
         local: "http://10.0.2.2:7000",
     },
     featureFlags: {

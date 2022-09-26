@@ -10,9 +10,9 @@ Future<void> main() async {
   
   debugPrint("Environment: $appEnvironment");
   
-  final mapDataHost = isProduction() ? buildConfig.mapDataHost.production : isLocal() ? buildConfig.mapDataHost.local : buildConfig.mapDataHost.staging;
+  final mapDataHost = isProduction() ? buildConfig.mapDataHost.production : isLocal() ? buildConfig.mapDataHost.local : buildConfig.mapDataHost.showcase;
 
-  final graphqlUrl = isProduction() ? buildConfig.backendUrl.production : isLocal() ? buildConfig.backendUrl.local : buildConfig.backendUrl.staging;
+  final graphqlUrl = isProduction() ? buildConfig.backendUrl.production : isLocal() ? buildConfig.backendUrl.local : buildConfig.backendUrl.showcase;
 
   runApp(
     Configuration(
