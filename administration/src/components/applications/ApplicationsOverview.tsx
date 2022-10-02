@@ -4,7 +4,7 @@ import {format} from "date-fns";
 import React, {FunctionComponent, useState} from "react";
 import styled from "styled-components";
 import JsonFieldView, {JsonField} from "./JsonFieldView";
-import {AppToaster} from "../AppToaster";
+import {getAppToaster} from "../AppToaster";
 import FlipMove from "react-flip-move";
 import {
     DeleteApplicationDocument,
@@ -60,13 +60,13 @@ const ApplicationView: FunctionComponent<{ application: Application, token: stri
         const [deleteApplication, {loading}] = useMutation<DeleteApplicationMutation, DeleteApplicationMutationVariables>(DeleteApplicationDocument, {
             onError: (error) => {
                 console.error(error)
-                AppToaster.show({intent: "danger", message: "Etwas ist schief gelaufen."})
+                getAppToaster().show({intent: "danger", message: "Etwas ist schief gelaufen."})
             },
             onCompleted: ({deleted}: { deleted: boolean }) => {
                 if (deleted) gotDeleted()
                 else {
                     console.error("Delete operation returned false.")
-                    AppToaster.show({intent: "danger", message: "Etwas ist schief gelaufen."})
+                    getAppToaster().show({intent: "danger", message: "Etwas ist schief gelaufen."})
                 }
             }
         });

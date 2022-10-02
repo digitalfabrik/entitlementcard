@@ -2,7 +2,7 @@ import {useMutation} from "@apollo/client";
 import React, {useContext} from "react";
 import styled from "styled-components";
 import LoginForm from "./LoginForm";
-import {AppToaster} from "../AppToaster";
+import {getAppToaster} from "../AppToaster";
 import {Card, H2} from "@blueprintjs/core";
 import {SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload} from "../../generated/graphql";
 import {ProjectConfigContext} from "../../project-configs/ProjectConfigContext";
@@ -29,7 +29,7 @@ const Login = (props: Props) => {
     const [state, setState] = React.useState<State>({email: "", password: ""})
     const [signIn, mutationState] = useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, {
         onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload, state.password),
-        onError: () => AppToaster.show({intent: "danger", message: "Login fehlgeschlagen."})
+        onError: () => getAppToaster().show({intent: "danger", message: "Login fehlgeschlagen."})
     })
     const onSubmit = () => signIn({
         variables: {

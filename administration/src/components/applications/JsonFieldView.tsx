@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Icon} from "@blueprintjs/core";
-import {AppToaster} from "../AppToaster";
+import {getAppToaster} from "../AppToaster";
 import downloadDataUri from "../../util/downloadDataUri";
 import { FunctionComponent } from "react";
 
@@ -38,7 +38,7 @@ const JsonFieldView: FunctionComponent<{ jsonField: JsonField, baseUrl: string, 
         const attachement = props.jsonField.value
         const downloadUrl = `${props.baseUrl}/file/${attachement.fileIndex}`
         const onClick = () => {
-            AppToaster.show({message: `Lädt ${attachement.fileName}...`, intent: 'primary'})
+            getAppToaster().show({message: `Lädt ${attachement.fileName}...`, intent: 'primary'})
             fetch(downloadUrl, {headers: {authorization: `Bearer ${props.token}`}})
                 .then(result => {
                     if (result.status === 200)
@@ -49,7 +49,7 @@ const JsonFieldView: FunctionComponent<{ jsonField: JsonField, baseUrl: string, 
                     const file = new File([result], attachement.fileName)
                     downloadDataUri(file, attachement.fileName)
                 })
-                .catch(() => AppToaster.show({message: 'Etwas ist schiefgelaufen.', intent: 'danger'}))
+                .catch(() => getAppToaster().show({message: 'Etwas ist schiefgelaufen.', intent: 'danger'}))
         }
         return <p>
             {props.jsonField.translations.de}:&nbsp;<Button icon='download' onClick={onClick}>

@@ -2,7 +2,7 @@ import {useMutation} from "@apollo/client";
 import {Button, Classes, Dialog} from "@blueprintjs/core";
 import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {AuthContextData} from "./AuthProvider";
-import {AppToaster} from "./components/AppToaster";
+import {getAppToaster} from "./components/AppToaster";
 import {SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload} from "./generated/graphql";
 import {ProjectConfigContext} from "./project-configs/ProjectConfigContext";
 
@@ -22,7 +22,7 @@ const KeepAliveToken = (props: Props) => {
 
     const [signIn, mutationState] = useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, {
         onCompleted: (payload) => props.onSignIn(payload.signInPayload, props.authData.password),
-        onError: () => AppToaster.show({intent: "danger", message: "Etwas ist schief gelaufen."})
+        onError: () => getAppToaster().show({intent: "danger", message: "Etwas ist schief gelaufen."})
     })
     const extendLogin = () => signIn({
         variables: {
