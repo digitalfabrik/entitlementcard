@@ -5,13 +5,13 @@ import {AuthContext} from "../../AuthProvider";
 import {NavLink} from "react-router-dom";
 
 const HomeController = () => {
-    const [authContext, _] = useContext(AuthContext)
+    const [authContext,] = useContext(AuthContext)
     const role = authContext?.administrator.role
 
     return <div
         style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
         <H3>Wählen Sie eine Aktion aus:</H3>
-        {(role == Role.RegionAdmin || role == Role.RegionManager)
+        {(role === Role.RegionAdmin || role === Role.RegionManager)
             ? <>
                 <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
                                                       icon="form"
@@ -20,7 +20,7 @@ const HomeController = () => {
                                                         text="Karten erstellen"/></NavLink>
             </>
             : null}
-        {(role == Role.ProjectAdmin)
+        {(role === Role.ProjectAdmin || role === Role.RegionAdmin)
             ? <NavLink to={"/users"}><Button style={{marginBottom: '10px'}}
                                              icon="people"
                                              text="Benutzer verwalten"/></NavLink>

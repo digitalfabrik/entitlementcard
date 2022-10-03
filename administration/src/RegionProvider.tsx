@@ -9,15 +9,15 @@ export const RegionContext = createContext<Region | null>(null)
 
 const RegionProvider = ({children}: { children: ReactNode }) => {
     const {projectId} = useContext(ProjectConfigContext)
-    const [authContextData, _] = useContext(AuthContext)
+    const [authContextData,] = useContext(AuthContext)
     const userRegionId = authContextData?.administrator.regionId
     const {loading, error, data, refetch} = useQuery<GetRegionsQuery, GetRegionsQueryVariables>(GetRegionsDocument, {
         variables: {project: projectId}
     })
     if (loading) return <Spinner/>
     if (error || !data) return <Button icon="repeat" onClick={() => refetch()}/>
-    const region = data.regions.find(region => region.id == userRegionId)
-    if (!region && typeof userRegionId == "number") {
+    const region = data.regions.find(region => region.id === userRegionId)
+    if (!region && typeof userRegionId === "number") {
         return <>
             <p>Your region was not found.</p>
             <Button icon="repeat" onClick={() => refetch()}/>

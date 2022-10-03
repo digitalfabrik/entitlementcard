@@ -12,7 +12,7 @@ interface Props {
 
 const Navigation = (props: Props) => {
     const region = useContext(RegionContext)
-    const [authContextData, _] = useContext(AuthContext)
+    const [authContextData,] = useContext(AuthContext)
     const role = authContextData?.administrator.role
     return (
         <Navbar>
@@ -23,14 +23,14 @@ const Navigation = (props: Props) => {
                     <Navbar.Divider/></>
                 }
                 <NavLink to={"/"}><Button minimal icon="home" text="Home"/></NavLink>
-                {(role == Role.RegionAdmin || role == Role.RegionManager)
+                {(role === Role.RegionAdmin || role === Role.RegionManager)
                     ? <>
                         <NavLink to={"/applications"}><Button minimal icon="form" text="Eingehende Anträge"/></NavLink>
                         <NavLink to={"/eak-generation"}><Button minimal icon="id-number"
                                                                 text="Karten erstellen"/></NavLink>
                     </>
                     : null}
-                {(role == Role.ProjectAdmin)
+                {(role === Role.ProjectAdmin || role === Role.RegionAdmin)
                     ? <>
                         <NavLink to={"/users"}><Button minimal icon="people" text="Benutzer verwalten"/></NavLink>
                     </>
