@@ -49,6 +49,8 @@ type Address {
 type Administrator {
   email: String!
   id: Int!
+  regionId: Int
+  role: Role!
 }
 
 type ApplicationView {
@@ -148,6 +150,13 @@ enum GoldenCardEntitlementType {
   HONOR_BY_MINISTER_PRESIDENT
   SERVICE_AWARD
   STANDARD
+}
+
+enum Role {
+  NO_RIGHTS
+  PROJECT_ADMIN
+  REGION_ADMIN
+  REGION_MANAGER
 }
 
 "Long type"
