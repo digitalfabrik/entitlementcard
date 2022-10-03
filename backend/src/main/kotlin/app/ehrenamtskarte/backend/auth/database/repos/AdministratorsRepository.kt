@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.auth.database.repos
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
+import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -32,7 +33,7 @@ object AdministratorsRepository {
         }
     }
 
-    fun insert(project: String, email: String, password: String) {
+    fun insert(project: String, email: String, password: String, role: Role) {
         val projectId = ProjectEntity.find { Projects.project eq project }.firstOrNull()?.id
             ?: throw IllegalArgumentException("Project does not exist.")
 
@@ -40,6 +41,7 @@ object AdministratorsRepository {
             this.email = email
             this.projectId = projectId
             this.passwordHash = PasswordCrypto.hashPasswort(password)
+            this.role = role.db_value
         }
     }
 }

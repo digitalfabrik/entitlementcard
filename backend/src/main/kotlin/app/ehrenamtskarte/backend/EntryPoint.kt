@@ -89,12 +89,13 @@ class CreateAdmin : CliktCommand(help = "Creates an admin account with the speci
     private val config by requireObject<BackendConfiguration>()
 
     private val project by argument()
+    private val role by argument()
     private val email by argument()
     private val password by argument()
 
     override fun run() {
         Database.setup(config)
-        Database.createAccount(project, email, password)
+        Database.createAccount(project, email, password, role)
     }
 }
 
