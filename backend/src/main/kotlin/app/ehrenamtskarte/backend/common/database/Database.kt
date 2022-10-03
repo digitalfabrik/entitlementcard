@@ -36,10 +36,16 @@ class Database {
             }
         }
 
-        fun createAccount(project: String, email: String, password: String, roleDbValue: String) {
+        fun createAccount(
+            project: String,
+            email: String,
+            password: String,
+            roleDbValue: String,
+            projectId: Int? = null
+        ) {
             val role = Role.fromDbValue(roleDbValue) ?: throw IllegalArgumentException("Invalid role '${roleDbValue}'.")
             transaction {
-                AdministratorsRepository.insert(project, email, password, role)
+                AdministratorsRepository.insert(project, email, password, role, projectId)
             }
         }
 
