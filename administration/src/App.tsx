@@ -5,7 +5,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
 import {setContext} from '@apollo/client/link/context'
-import {HashRouter, NavLink, Route, Routes} from "react-router-dom";
+import {HashRouter, Route, Routes} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
@@ -13,8 +13,8 @@ import AuthProvider, {AuthContext} from "./AuthProvider";
 import Login from './components/auth/Login';
 import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
-import {Button, H3} from '@blueprintjs/core';
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
+import HomeController from "./components/home/HomeController";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -54,15 +54,7 @@ const App = () => <ProjectConfigProvider>
                                 <Navigation onSignOut={onSignOut}/>
                                 <Main>
                                     <Routes>
-                                        <Route path={"/"} element={<div
-                                            style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                                            <H3>Wählen Sie eine Aktion aus:</H3>
-                                            <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
-                                                                                  icon="form"
-                                                                                  text="Eingehende Anträge"/></NavLink>
-                                            <NavLink to={"/eak-generation"}><Button icon="people"
-                                                                                    text="Karten erstellen"/></NavLink>
-                                        </div>}/>
+                                        <Route path={"/"} element={<HomeController/>}/>
                                         <Route path={"/applications"}
                                                element={<ApplicationsController token={authData.token}/>}/>
                                         <Route path={"/eak-generation"} element={<GenerationController/>}/>

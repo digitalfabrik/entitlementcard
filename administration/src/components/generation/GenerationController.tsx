@@ -7,7 +7,6 @@ import {AppToaster} from "../AppToaster";
 import GenerationFinished from "./GenerationFinished";
 import downloadDataUri from "../../util/downloadDataUri";
 import generateCards from "./generateCards";
-import RegionSelector from "../RegionSelector";
 import {RegionContext} from "../../RegionProvider";
 import {Exception} from "../../exception";
 
@@ -20,13 +19,12 @@ enum Mode {
 const GenerationController = () => {
     const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([]);
     const client = useApolloClient();
-    const [region] = useContext(RegionContext)
+    const region = useContext(RegionContext)
     const [mode, setMode] = useState(Mode.input);
 
     if (region === null) {
         return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <p>Bitte wählen Sie zunächst Ihre Region aus:</p>
-            <RegionSelector/>
+            <p>Sie sind nicht berechtigt, Karten auszustellen.</p>
         </div>
     }
 
