@@ -1,13 +1,14 @@
 import {Position, Toaster} from "@blueprintjs/core";
-import {createRoot} from "react-dom/client";
+import {createContext, ReactElement, useContext, useState} from "react";
 
-/** Singleton toaster instance. Create separate instances for different options. */
-let toasterRef: Toaster | null
-createRoot(document.getElementById("toaster")!).render(
-    <Toaster ref={ref => {
-        toasterRef = ref
-    }} position={Position.TOP}/>
-)
-export const getAppToaster = () => {
-    return toasterRef!
+const ToasterContext = createContext<Toaster | null>(null)
+
+export const useAppToaster = (): Toaster | null => useContext(ToasterContext)
+
+export const AppToasterProvider = (props: { children: ReactElement }) => {
+    const [toaster, setToaster] = useState<Toaster | null>(null)
+    return <ToasterContext.Provider value={toaster}>
+        <Toaster ref={setToaster} position={Position.TOP}/>
+        {props.children}
+    </ToasterContext.Provider>
 }

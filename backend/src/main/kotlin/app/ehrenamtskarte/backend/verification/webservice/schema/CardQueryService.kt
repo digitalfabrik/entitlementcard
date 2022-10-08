@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
-import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
 import com.expediagroup.graphql.annotations.GraphQLDescription
@@ -12,8 +11,4 @@ class CardQueryService {
     fun verifyCardInProject(project: String, card: CardVerificationModel): Boolean {
         return CardVerifier.verifyCardHash(project, Base64.decode(card.cardDetailsHashBase64), card.totp)
     }
-
-    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("verifyCardInProject"))
-    @GraphQLDescription("Returns whether there is a card with that hash registered for that this TOTP is currently valid")
-    fun verifyCard(card: CardVerificationModel): Boolean = verifyCardInProject(DEFAULT_PROJECT, card)
 }

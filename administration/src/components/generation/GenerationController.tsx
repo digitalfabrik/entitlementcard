@@ -3,7 +3,7 @@ import {Spinner} from "@blueprintjs/core";
 import {CardCreationModel} from "./CardCreationModel";
 import GenerationForm from "./GenerationForm";
 import {useApolloClient} from "@apollo/client";
-import {getAppToaster} from "../AppToaster";
+import {useAppToaster} from "../AppToaster";
 import GenerationFinished from "./GenerationFinished";
 import downloadDataUri from "../../util/downloadDataUri";
 import generateCards from "./generateCards";
@@ -22,6 +22,7 @@ const GenerationController = () => {
     const client = useApolloClient();
     const [region] = useContext(RegionContext)
     const [mode, setMode] = useState(Mode.input);
+    const appToaster = useAppToaster()
 
     if (region === null) {
         return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -41,20 +42,20 @@ const GenerationController = () => {
             if (e instanceof Exception) {
                 switch (e.data.type) {
                     case "pdf-generation":
-                        getAppToaster().show({
+                        appToaster?.show({
                             message: "Etwas ist schiefgegangen beim erstellen der PDF.",
                             intent: "danger"
                         })
                         break;
                     case "unicode":
-                        getAppToaster().show({
+                        appToaster?.show({
                             message: `Ein Zeichen konnte nicht in der PDF eingebunden werden: ${e.data.unsupportedChar}`,
                             intent: "danger"
                         })
                         break;
                 }
             } else {
-                getAppToaster().show({message: "Etwas ist schiefgegangen.", intent: "danger"})
+                appToaster?.show({message: "Etwas ist schiefgegangen.", intent: "danger"})
             }
             setMode(Mode.input)
         }
