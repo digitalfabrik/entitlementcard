@@ -15,6 +15,7 @@ import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
 import {Button, H3} from '@blueprintjs/core';
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
+import {AppToasterProvider} from "./components/AppToaster";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -44,38 +45,40 @@ const Main = styled.div`
 `
 
 const App = () => <ProjectConfigProvider>
-    <AuthProvider>
-        <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
-            <ApolloProvider client={createClient(authData?.token)}>{
-                authData !== null && authData.expiry > new Date()
-                    ? <KeepAliveToken authData={authData} onSignIn={onSignIn} onSignOut={onSignOut}>
-                        <RegionProvider>
-                            <HashRouter>
-                                <Navigation onSignOut={onSignOut}/>
-                                <Main>
-                                    <Routes>
-                                        <Route path={"/"} element={<div
-                                            style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                                            <H3>Wählen Sie eine Aktion aus:</H3>
-                                            <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
-                                                                                  icon="form"
-                                                                                  text="Eingehende Anträge"/></NavLink>
-                                            <NavLink to={"/eak-generation"}><Button icon="people"
-                                                                                    text="Karten erstellen"/></NavLink>
-                                        </div>}/>
-                                        <Route path={"/applications"}
-                                               element={<ApplicationsController token={authData.token}/>}/>
-                                        <Route path={"/eak-generation"} element={<GenerationController/>}/>
-                                    </Routes>
-                                </Main>
-                            </HashRouter>
-                        </RegionProvider>
-                    </KeepAliveToken>
-                    : <Login onSignIn={onSignIn}/>
-            }</ApolloProvider>
-        )}
-        </AuthContext.Consumer>
-    </AuthProvider>
+    <AppToasterProvider>
+        <AuthProvider>
+            <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
+                <ApolloProvider client={createClient(authData?.token)}>{
+                    authData !== null && authData.expiry > new Date()
+                        ? <KeepAliveToken authData={authData} onSignIn={onSignIn} onSignOut={onSignOut}>
+                            <RegionProvider>
+                                <HashRouter>
+                                    <Navigation onSignOut={onSignOut}/>
+                                    <Main>
+                                        <Routes>
+                                            <Route path={"/"} element={<div
+                                                style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                                                <H3>Wählen Sie eine Aktion aus:</H3>
+                                                <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
+                                                                                      icon="form"
+                                                                                      text="Eingehende Anträge"/></NavLink>
+                                                <NavLink to={"/eak-generation"}><Button icon="people"
+                                                                                        text="Karten erstellen"/></NavLink>
+                                            </div>}/>
+                                            <Route path={"/applications"}
+                                                   element={<ApplicationsController token={authData.token}/>}/>
+                                            <Route path={"/eak-generation"} element={<GenerationController/>}/>
+                                        </Routes>
+                                    </Main>
+                                </HashRouter>
+                            </RegionProvider>
+                        </KeepAliveToken>
+                        : <Login onSignIn={onSignIn}/>
+                }</ApolloProvider>
+            )}
+            </AuthContext.Consumer>
+        </AuthProvider>
+    </AppToasterProvider>
 </ProjectConfigProvider>
 
 export default App;
