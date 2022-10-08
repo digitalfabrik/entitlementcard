@@ -27,8 +27,8 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     val replaceWith = IntNode(value)
     when (node) {
         is ArrayNode -> node[
-                lastPath.toIntOrNull()
-                    ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer.")
+            lastPath.toIntOrNull()
+                ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer.")
         ] =
             replaceWith
 

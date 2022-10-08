@@ -4,12 +4,13 @@ import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepositor
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
+import org.dataloader.DataLoaderFactory
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.CompletableFuture
 
 const val ACCEPTING_STORE_LOADER_NAME = "ACCEPTING_STORE_LOADER"
 
-val acceptingStoreLoader = DataLoader<Int, AcceptingStore?> { ids ->
+val acceptingStoreLoader: DataLoader<Int, AcceptingStore?> = DataLoaderFactory.newDataLoader { ids ->
     CompletableFuture.supplyAsync {
         runBlocking {
             transaction {

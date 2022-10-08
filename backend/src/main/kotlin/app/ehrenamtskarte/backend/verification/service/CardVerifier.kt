@@ -20,8 +20,8 @@ object CardVerifier {
 
     private fun verifyCard(card: CardEntity, totp: Int): Boolean =
         card.expirationDate?.isAfter(LocalDateTime.now()) ?: true &&
-                !card.revoked &&
-                isTotpValid(totp, card.totpSecret)
+            !card.revoked &&
+            isTotpValid(totp, card.totpSecret)
 
     private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
         if (generateTotp(secret) == totp) return true
@@ -37,7 +37,8 @@ object CardVerifier {
 
     private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
         val totpGenerator = TimeBasedOneTimePasswordGenerator(
-            TIME_STEP, TOTP_LENGTH,
+            TIME_STEP,
+            TOTP_LENGTH,
             TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256
         )
         val key = SecretKeySpec(secret, totpGenerator.algorithm)

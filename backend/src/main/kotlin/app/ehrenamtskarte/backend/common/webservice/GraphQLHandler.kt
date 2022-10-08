@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException
 class GraphQLHandler(
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
-                stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
+            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config
@@ -63,8 +63,9 @@ class GraphQLHandler(
                 val files = servlet.parts.filter { substitutions.containsKey(it.name) }
                 substitutions.forEach { (key, paths) ->
                     val index = files.indexOfFirst { it.name == key }
-                    if (index == -1 || key == "operations" || key == "map")
+                    if (index == -1 || key == "operations" || key == "map") {
                         throw IllegalArgumentException("Part with key '$key' not found or invalid!")
+                    }
                     paths.forEach { path -> operations.substitute(path, index, mapper) }
                 }
                 return Pair(mapper.readValue(mapper.treeAsTokens(operations)), files)

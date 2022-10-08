@@ -33,9 +33,9 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
             } else {
                 throw CoercingParseValueException(
                     "Expected type " +
-                            Int::class.java.name +
-                            " but was " +
-                            input.javaClass.name
+                        Int::class.java.name +
+                        " but was " +
+                        input.javaClass.name
                 )
             }
         }

@@ -18,7 +18,9 @@ data class GoldenCardEntitlement(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "entitlement", mapOf("de" to "Berechtigungsgrund"), Type.Array,
+            "entitlement",
+            mapOf("de" to "Berechtigungsgrund"),
+            Type.Array,
             listOf(
                 when (goldenEntitlementType) {
                     GoldenCardEntitlementType.HONOR_BY_MINISTER_PRESIDENT -> JsonField(
@@ -37,11 +39,12 @@ data class GoldenCardEntitlement(
                             )
                         )
                     )
+
                     GoldenCardEntitlementType.SERVICE_AWARD -> JsonField(
                         "serviceAwardEntitlement",
                         mapOf(
                             "de" to "Inhaber:in einer Dienstauszeichnung des Freistaats Bayern nach Feuer- und" +
-                                    " Hilfsorganisationengesetz"
+                                " Hilfsorganisationengesetz"
                         ),
                         Type.Attachment,
                         listOf(
@@ -53,6 +56,7 @@ data class GoldenCardEntitlement(
                             )
                         )
                     )
+
                     GoldenCardEntitlementType.STANDARD -> JsonField(
                         "standardEntitlement",
                         mapOf("de" to "Ehrenamtliches Engagement bei Verein oder Organisation"),
