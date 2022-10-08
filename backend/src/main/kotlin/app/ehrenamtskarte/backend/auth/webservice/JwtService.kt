@@ -7,8 +7,7 @@ import io.javalin.http.Context
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.*
-import kotlin.NoSuchElementException
+import java.util.Date
 
 object JwtService {
     private val secret by lazy {

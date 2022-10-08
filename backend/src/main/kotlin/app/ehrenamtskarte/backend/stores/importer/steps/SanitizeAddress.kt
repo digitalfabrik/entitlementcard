@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
-import java.util.*
+import java.util.Locale
 
 /**
  * Sanitizes the addresses of the [AcceptingStore].

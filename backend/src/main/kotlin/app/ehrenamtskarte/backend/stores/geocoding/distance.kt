@@ -1,8 +1,9 @@
 package app.ehrenamtskarte.backend.stores.geocoding
 
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import kotlin.math.cos
+import kotlin.math.max
 import org.geojson.Feature
-import kotlin.math.*
 
 const val DISTANCE_THRESHOLD_IN_KM = 1.0
 

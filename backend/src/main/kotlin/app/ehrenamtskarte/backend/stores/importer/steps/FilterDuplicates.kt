@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.slf4j.Logger
-import java.util.*
+import java.util.Locale
 
 /**
  * Filters and removes duplicates.

@@ -6,7 +6,11 @@ import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
-import com.auth0.jwt.exceptions.*
+import com.auth0.jwt.exceptions.AlgorithmMismatchException
+import com.auth0.jwt.exceptions.InvalidClaimException
+import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.exceptions.SignatureVerificationException
+import com.auth0.jwt.exceptions.TokenExpiredException
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

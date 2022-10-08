@@ -6,9 +6,11 @@ import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.request.request
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpMethod
+import io.ktor.http.URLProtocol
+import io.ktor.http.path
 import org.geojson.Feature
 import org.geojson.FeatureCollection
 

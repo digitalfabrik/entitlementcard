@@ -25,7 +25,7 @@ data class GoldenCardEntitlement(
                         "honorByMinisterPresidentEntitlement",
                         mapOf(
                             "de" to "Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt" +
-                                    " des Bayerischen Ministerpräsidenten"
+                                " des Bayerischen Ministerpräsidenten"
                         ),
                         Type.Attachment,
                         listOf(

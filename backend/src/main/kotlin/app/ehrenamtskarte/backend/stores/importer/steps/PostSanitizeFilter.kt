@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
