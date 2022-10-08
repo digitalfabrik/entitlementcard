@@ -3,7 +3,7 @@ import React, {useContext} from "react";
 import styled from "styled-components";
 import LoginForm from "./LoginForm";
 import {useAppToaster} from "../AppToaster";
-import {Card, H2} from "@blueprintjs/core";
+import {Card, H2, H3, H4} from "@blueprintjs/core";
 import {SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload} from "../../generated/graphql";
 import {ProjectConfigContext} from "../../project-configs/ProjectConfigContext";
 
@@ -41,7 +41,9 @@ const Login = (props: Props) => {
 
     return <Center>
         <Card>
-            <H2>Ehrenamtskarte Verwaltung</H2>
+            <H2>{config.name}</H2>
+            <H3>Verwaltung</H3>
+            <H4>Login</H4>
             <LoginForm password={state.password} email={state.email} setEmail={email => setState({...state, email})}
                        setPassword={password => setState({...state, password})}
                        onSubmit={onSubmit} loading={mutationState.loading}/>

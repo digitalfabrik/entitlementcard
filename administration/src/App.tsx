@@ -15,6 +15,7 @@ import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
 import {Button, H3} from '@blueprintjs/core';
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
+import MetaTagsManager from "./components/MetaTagsManager";
 import {AppToasterProvider} from "./components/AppToaster";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
@@ -45,6 +46,7 @@ const Main = styled.div`
 `
 
 const App = () => <ProjectConfigProvider>
+    <MetaTagsManager/>
     <AppToasterProvider>
         <AuthProvider>
             <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
@@ -57,7 +59,11 @@ const App = () => <ProjectConfigProvider>
                                     <Main>
                                         <Routes>
                                             <Route path={"/"} element={<div
-                                                style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    flexDirection: 'column'
+                                                }}>
                                                 <H3>Wählen Sie eine Aktion aus:</H3>
                                                 <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
                                                                                       icon="form"
