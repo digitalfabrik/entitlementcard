@@ -36,14 +36,18 @@ class WebService {
 
         val app = Javalin.create { cfg ->
             if (!production) {
-                cfg.enableDevLogging()
-                cfg.enableCorsForAllOrigins()
+                cfg.plugins.enableDevLogging()
+                cfg.plugins.enableCors { cors -> cors.add { it.anyHost() } }
             }
-            cfg.addStaticFiles("/graphiql", "/graphiql", Location.CLASSPATH)
+            cfg.staticFiles.add {
+                it.directory = "/graphiql"
+                it.hostedPath = "/graphiql"
+                it.location = Location.CLASSPATH
+            }
         }.start(host, port)
 
-        println("Server is running at http://${host}:${port}")
-        println("Goto http://${host}:${port}/graphiql for a graphical editor")
+        println("Server is running at http://$host:$port")
+        println("Goto http://$host:$port/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
 

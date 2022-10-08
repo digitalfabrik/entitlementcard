@@ -39,4 +39,3 @@ fun isCloseTo(bbox: DoubleArray, latitude: Double, longitude: Double, thresholdI
 }
 
 private fun Double.degreesToRadians(): Double = this * Math.PI / 180
-

@@ -3,10 +3,23 @@ package app.ehrenamtskarte.backend.stores.database.repos
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
-import app.ehrenamtskarte.backend.stores.database.*
+import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
+import app.ehrenamtskarte.backend.stores.database.AcceptingStores
+import app.ehrenamtskarte.backend.stores.database.Addresses
+import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ComparisonOp
+import org.jetbrains.exposed.sql.CustomFunction
+import org.jetbrains.exposed.sql.DoubleColumnType
+import org.jetbrains.exposed.sql.Expression
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.OrOp
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.doubleParam
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.stringParam
 import org.postgis.Point
 
 object AcceptingStoresRepository {
@@ -69,7 +82,6 @@ object AcceptingStoresRepository {
         AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
 }
 
-
 // Postgres' "like" operation uses case sensitive comparison by default.
 // Postgres has a builtin "ilike" operation which does case sensitive comparison.
 class InsensitiveLikeOp(expr1: Expression<*>, expr2: Expression<*>) : ComparisonOp(expr1, expr2, "ILIKE")
@@ -82,4 +94,3 @@ class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
 
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
     CustomFunction<Point>("ST_MakePoint", DoubleColumnType(), expr1, expr2)
-

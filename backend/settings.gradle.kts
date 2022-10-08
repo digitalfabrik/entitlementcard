@@ -8,5 +8,3 @@
  */
 
 rootProject.name = "backend"
-
-

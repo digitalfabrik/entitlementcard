@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import com.expediagroup.graphql.SchemaGeneratorConfig
-import com.expediagroup.graphql.TopLevelObject
-import com.expediagroup.graphql.hooks.NoopSchemaGeneratorHooks
+import com.expediagroup.graphql.generator.SchemaGeneratorConfig
+import com.expediagroup.graphql.generator.TopLevelObject
+import com.expediagroup.graphql.generator.hooks.NoopSchemaGeneratorHooks
 import org.dataloader.DataLoaderRegistry
 
 data class GraphQLParams(

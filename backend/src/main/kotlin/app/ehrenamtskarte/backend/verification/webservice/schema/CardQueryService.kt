@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.postgresql.util.Base64
 
 @Suppress("unused")

@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.slf4j.Logger
+import java.util.*
 
 /**
  * Filters and removes duplicates.
@@ -17,7 +17,7 @@ class FilterDuplicates(config: ImportConfig, private val logger: Logger) : Pipel
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
         // Group by name + postal code + street to detect duplicates
         val groups = input.groupBy {
-            (it.name + it.postalCode + it.street).toLowerCase().filter { char -> char.isLetterOrDigit() }
+            (it.name + it.postalCode + it.street).lowercase(Locale.GERMAN).filter { char -> char.isLetterOrDigit() }
         }
 
         return groups.values.map { it.deduplicate() }
@@ -68,7 +68,7 @@ class FilterDuplicates(config: ImportConfig, private val logger: Logger) : Pipel
         )
     }
 
-    private fun <T: Any> List<AcceptingStore>.lastValue(property: String, transform: (AcceptingStore) -> T?): T? {
+    private fun <T : Any> List<AcceptingStore>.lastValue(property: String, transform: (AcceptingStore) -> T?): T? {
         val uniqueValues = mapNotNull { transform(it) }.toSet()
 
         if (uniqueValues.size > 1) {
@@ -77,5 +77,4 @@ class FilterDuplicates(config: ImportConfig, private val logger: Logger) : Pipel
 
         return uniqueValues.lastOrNull()
     }
-
 }

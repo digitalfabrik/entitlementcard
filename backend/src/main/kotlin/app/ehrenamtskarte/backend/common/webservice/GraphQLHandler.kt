@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
 import com.auth0.jwt.exceptions.*
-import com.expediagroup.graphql.SchemaGeneratorConfig
-import com.expediagroup.graphql.toSchema
+import com.expediagroup.graphql.generator.SchemaGeneratorConfig
+import com.expediagroup.graphql.generator.toSchema
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import graphql.ExceptionWhileDataFetching
@@ -17,10 +17,10 @@ import graphql.ExecutionResult
 import graphql.GraphQL
 import io.javalin.http.Context
 import io.javalin.http.util.MultipartUtil
+import jakarta.servlet.http.Part
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutionException
-import javax.servlet.http.Part
 
 class GraphQLHandler(
     private val graphQLParams: GraphQLParams =
@@ -46,9 +46,9 @@ class GraphQLHandler(
             if (!context.isMultipart()) {
                 Pair(mapper.readValue(context.body()), emptyList())
             } else {
-                val servlet = context.req
+                val servlet = context.req()
                 MultipartUtil.preUploadFunction(servlet)
-                val partsMap = servlet.parts.map { it.name to it }.toMap()
+                val partsMap = servlet.parts.associateBy { it.name }
                 val operationsJson =
                     partsMap["operations"]?.inputStream ?: throw IOException("Missing operations part.")
                 val operations = mapper.readTree(operationsJson)
@@ -96,14 +96,15 @@ class GraphQLHandler(
         try {
             // if data is null, get data will fail exceptionally
             result["data"] = executionResult.getData<Any>()
-        } catch (e: Exception) {}
+        } catch (_: Exception) {
+        }
 
         return result
     }
 
     private fun getGraphQLContext(context: Context, files: List<Part>, applicationData: File) =
         try {
-            GraphQLContext(applicationData,JwtService.verifyRequest(context), files)
+            GraphQLContext(applicationData, JwtService.verifyRequest(context), files)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
@@ -120,7 +121,7 @@ class GraphQLHandler(
         try {
             val (payload, files) = getPayload(context)
             val graphQLContext = getGraphQLContext(context, files, applicationData)
-            
+
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =
                 ExecutionInput.Builder()
@@ -136,12 +137,12 @@ class GraphQLHandler(
             // write response as json
             context.json(result)
         } catch (e: IOException) {
-            context.res.sendError(500)
+            context.res().sendError(500)
         } catch (e: UnauthorizedException) {
-            context.res.sendError(401)
+            context.res().sendError(401)
         } catch (e: ExecutionException) {
             e.printStackTrace()
-            context.res.sendError(500)
+            context.res().sendError(500)
         }
     }
 }

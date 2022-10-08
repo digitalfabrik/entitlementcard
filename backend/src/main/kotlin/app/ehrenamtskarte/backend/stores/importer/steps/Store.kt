@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions.name
 import app.ehrenamtskarte.backend.stores.database.*
@@ -74,5 +73,4 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
             println("[$bar$remaining]")
         }
     }
-
 }

@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.Table
 import org.postgis.PGgeometry
 import org.postgis.Point
 
-
 class GeometryColumnType(val srid: Int = 4326) : ColumnType() {
     override fun sqlType() = "GEOMETRY(Point, $srid)"
     override fun valueFromDB(value: Any) = if (value is PGgeometry) value.geometry else value
@@ -19,5 +18,5 @@ class GeometryColumnType(val srid: Int = 4326) : ColumnType() {
     }
 }
 
-fun Table.point(name: String, srid: Int = 4326) : Column<Point>
-        = registerColumn(name, GeometryColumnType(srid))
+fun Table.point(name: String, srid: Int = 4326): Column<Point> =
+    registerColumn(name, GeometryColumnType(srid))

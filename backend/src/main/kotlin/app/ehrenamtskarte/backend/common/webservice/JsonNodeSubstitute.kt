@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 
 fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
-    val paths = path.split(".");
+    val paths = path.split(".")
     var node = this
 
     for (fieldOrIndex in paths.subList(0, paths.size - 1)) {
@@ -26,10 +26,13 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     val lastPath = paths.last()
     val replaceWith = IntNode(value)
     when (node) {
-        is ArrayNode -> node[lastPath.toIntOrNull()
-            ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer.")] =
+        is ArrayNode -> node[
+                lastPath.toIntOrNull()
+                    ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer.")
+        ] =
             replaceWith
+
         is ObjectNode -> node.set<ObjectNode>(lastPath, replaceWith)
-        else -> throw  IllegalStateException("Expected ArrayNode or ObjectNode.")
+        else -> throw IllegalStateException("Expected ArrayNode or ObjectNode.")
     }
 }

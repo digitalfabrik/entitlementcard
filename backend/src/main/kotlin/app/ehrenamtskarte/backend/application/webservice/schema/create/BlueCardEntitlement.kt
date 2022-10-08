@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.AttachmentV
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class BlueCardEntitlementType {
     JULEICA,
@@ -35,9 +35,7 @@ data class BlueCardServiceEntitlement(
             )
         )
     }
-
 }
-
 
 @GraphQLDescription(
     """Entitlement for blue EAK.
@@ -59,35 +57,38 @@ data class BlueCardEntitlement(
             name = "blueCardEntitlement",
             translations = mapOf("de" to "Berechtigungsgrund"),
             type = Type.Array,
-            value = listOf(when (entitlementType) {
-                BlueCardEntitlementType.JULEICA -> JsonField(
-                    name = "juleicaEntitlement",
-                    type = Type.Array,
-                    translations = mapOf("de" to "Juleica-Inhaber:in"),
-                    value = listOf(
-                        JsonField("juleicaNumber", mapOf("de" to "Kartennummer"), Type.String, juleicaNumber!!),
-                        JsonField(
-                            "juleicaExpiration",
-                            mapOf("de" to "Karte gültig bis"),
-                            Type.String,
-                            juleicaExpirationDate!!
-                        ),
-                        JsonField(
-                            "copyOfJuleica",
-                            mapOf("de" to "Scan der Karte"),
-                            Type.Attachment,
-                            AttachmentView.from(copyOfJuleica!!)
+            value = listOf(
+                when (entitlementType) {
+                    BlueCardEntitlementType.JULEICA -> JsonField(
+                        name = "juleicaEntitlement",
+                        type = Type.Array,
+                        translations = mapOf("de" to "Juleica-Inhaber:in"),
+                        value = listOf(
+                            JsonField("juleicaNumber", mapOf("de" to "Kartennummer"), Type.String, juleicaNumber!!),
+                            JsonField(
+                                "juleicaExpiration",
+                                mapOf("de" to "Karte gültig bis"),
+                                Type.String,
+                                juleicaExpirationDate!!
+                            ),
+                            JsonField(
+                                "copyOfJuleica",
+                                mapOf("de" to "Scan der Karte"),
+                                Type.Attachment,
+                                AttachmentView.from(copyOfJuleica!!)
+                            )
                         )
                     )
-                )
-                BlueCardEntitlementType.SERVICE -> serviceEntitlement!!.toJsonField()
-                BlueCardEntitlementType.STANDARD -> JsonField(
-                    name = "standardEntitlement",
-                    type = Type.Array,
-                    translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
-                    value = workAtOrganizations!!.map { it.toJsonField() }
-                )
-            })
+
+                    BlueCardEntitlementType.SERVICE -> serviceEntitlement!!.toJsonField()
+                    BlueCardEntitlementType.STANDARD -> JsonField(
+                        name = "standardEntitlement",
+                        type = Type.Array,
+                        translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
+                        value = workAtOrganizations!!.map { it.toJsonField() }
+                    )
+                }
+            )
         )
     }
 }

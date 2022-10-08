@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 
-data class GoldenEakCardApplication(
+data class GoldenCardApplication(
     val personalData: PersonalData,
     val entitlement: GoldenCardEntitlement,
     val hasAcceptedPrivacyPolicy: Boolean,
@@ -12,7 +12,8 @@ data class GoldenEakCardApplication(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "golden-card-application", mapOf("de" to "Antrag auf goldene Ehrenamtskarte"), Type.Array, listOf(
+            "golden-card-application", mapOf("de" to "Antrag auf goldene Ehrenamtskarte"), Type.Array,
+            listOf(
                 personalData.toJsonField(),
                 entitlement.toJsonField(),
                 JsonField(

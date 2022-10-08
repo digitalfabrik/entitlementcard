@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
@@ -10,26 +9,26 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
-import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
-class DownloadLbe(config: ImportConfig, private val logger: Logger, private val httpClient: HttpClient) : PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
+class DownloadLbe(config: ImportConfig, private val logger: Logger, private val httpClient: HttpClient) :
+    PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
 
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {
             val url = config.findProject().importUrl
 
             val response = runBlocking {
-                httpClient.request<String> {
-                    url(url)
+                httpClient.request(url) {
                     method = HttpMethod.Get
-                }
+                }.bodyAsText()
             }
 
             val xmlMapper = XmlMapper()
-            xmlMapper.registerModule(KotlinModule())
+            xmlMapper.registerModule(KotlinModule.Builder().build())
             xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             val lbeData = xmlMapper.readValue(response, LbeData::class.java)
 
@@ -39,5 +38,4 @@ class DownloadLbe(config: ImportConfig, private val logger: Logger, private val 
             throw e
         }
     }
-
 }
