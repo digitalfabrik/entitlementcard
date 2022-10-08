@@ -15,7 +15,7 @@ import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
 import {Button, H3} from '@blueprintjs/core';
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
-import {MetaTagsManager} from "./components/MetaTagsManager";
+import MetaTagsManager from "./components/MetaTagsManager";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
