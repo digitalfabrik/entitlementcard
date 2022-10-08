@@ -1,7 +1,7 @@
-import {ReactElement, useContext, useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {ProjectConfigContext} from "../project-configs/ProjectConfigContext";
 
-const MetaTagsManager = (props: { children: ReactElement }) => {
+const MetaTagsManager = () => {
     const config = useContext(ProjectConfigContext)
     useEffect(
         () => {
@@ -17,7 +17,7 @@ const MetaTagsManager = (props: { children: ReactElement }) => {
         },
         [config]
     )
-    return props.children
+    return null
 }
 
 export default MetaTagsManager
