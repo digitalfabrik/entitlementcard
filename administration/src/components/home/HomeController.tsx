@@ -5,8 +5,7 @@ import {AuthContext} from "../../AuthProvider";
 import {NavLink} from "react-router-dom";
 
 const HomeController = () => {
-    const [authContext,] = useContext(AuthContext)
-    const role = authContext?.administrator.role
+    const role = useContext(AuthContext).data?.administrator.role
 
     return <div
         style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>

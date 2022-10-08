@@ -12,8 +12,7 @@ interface Props {
 
 const Navigation = (props: Props) => {
     const region = useContext(RegionContext)
-    const [authContextData,] = useContext(AuthContext)
-    const role = authContextData?.administrator.role
+    const role = useContext(AuthContext).data?.administrator.role
     return (
         <Navbar>
             <Navbar.Group>

@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useState} from "react"
+import {createContext, ReactNode, useMemo, useState} from "react"
 import {Administrator, SignInPayload} from "./generated/graphql";
 
 export interface AuthContextData {
@@ -12,11 +12,11 @@ const noop = () => {
 }
 
 export const AuthContext =
-    createContext<[
-        AuthContextData | null,
-        (payload: SignInPayload, password: string) => void,
-        () => void]>
-    ([null, noop, noop])
+    createContext<{
+        data: AuthContextData | null,
+        signIn: (payload: SignInPayload, password: string) => void,
+        signOut: () => void
+    }>({data: null, signIn: noop, signOut: noop})
 
 const getExpiryFromToken = (token: string) => {
     const payload: { exp: number } = JSON.parse(atob(token.split('.')[1]))
@@ -32,11 +32,17 @@ const convertToAuthContextData: (payload: SignInPayload, password: string) => Au
 
 const AuthProvider = ({children}: { children: ReactNode }) => {
     const [authContextData, setAuthContextData] = useState<AuthContextData | null>(null)
-    const onLogIn = (payload: SignInPayload, password: string) =>
-        setAuthContextData(convertToAuthContextData(payload, password))
-    const onLogOut = () => setAuthContextData(null)
+    const contextValue = useMemo(
+        () => ({
+            data: authContextData,
+            signIn: (payload: SignInPayload, password: string) =>
+                setAuthContextData(convertToAuthContextData(payload, password)),
+            signOut: () => setAuthContextData(null)
+        }),
+        [authContextData]
+    )
 
-    return <AuthContext.Provider value={[authContextData, onLogIn, onLogOut]}>
+    return <AuthContext.Provider value={contextValue}>
         {children}
     </AuthContext.Provider>
 }

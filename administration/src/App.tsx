@@ -45,13 +45,13 @@ const Main = styled.div`
 
 const App = () => <ProjectConfigProvider>
     <AuthProvider>
-        <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
+        <AuthContext.Consumer>{({data: authData, signIn, signOut}) => (
             <ApolloProvider client={createClient(authData?.token)}>{
                 authData !== null && authData.expiry > new Date()
-                    ? <KeepAliveToken authData={authData} onSignIn={onSignIn} onSignOut={onSignOut}>
+                    ? <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
                         <RegionProvider>
                             <HashRouter>
-                                <Navigation onSignOut={onSignOut}/>
+                                <Navigation onSignOut={signOut}/>
                                 <Main>
                                     <Routes>
                                         <Route path={"/"} element={<HomeController/>}/>
@@ -63,7 +63,7 @@ const App = () => <ProjectConfigProvider>
                             </HashRouter>
                         </RegionProvider>
                     </KeepAliveToken>
-                    : <Login onSignIn={onSignIn}/>
+                    : <Login onSignIn={signIn}/>
             }</ApolloProvider>
         )}
         </AuthContext.Consumer>

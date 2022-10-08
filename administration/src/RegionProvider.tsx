@@ -9,8 +9,7 @@ export const RegionContext = createContext<Region | null>(null)
 
 const RegionProvider = ({children}: { children: ReactNode }) => {
     const {projectId} = useContext(ProjectConfigContext)
-    const [authContextData,] = useContext(AuthContext)
-    const userRegionId = authContextData?.administrator.regionId
+    const userRegionId = useContext(AuthContext).data?.administrator.regionId
     const {loading, error, data, refetch} = useQuery<GetRegionsQuery, GetRegionsQueryVariables>(GetRegionsDocument, {
         variables: {project: projectId}
     })
