@@ -11,7 +11,7 @@ object Administrators : IntIdTable() {
     val email = varchar("email", 100).uniqueIndex()
     val projectId = reference("projectId", Projects)
     val regionId = optReference("regionId", Regions)
-    val role = varchar("role", 50)
+    val role = varchar("role", 32)
     val passwordHash = binary("passwordHash")
 }
 
