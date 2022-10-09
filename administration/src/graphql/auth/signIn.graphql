@@ -2,7 +2,9 @@ mutation signIn($project: String!, $authData: AuthDataInput!) {
     signInPayload: signIn(project: $project, authData: $authData) {
         user {
             id,
-            email
+            email,
+            regionId,
+            role
         },
         token
     }

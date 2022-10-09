@@ -2,6 +2,8 @@ package app.ehrenamtskarte.backend.auth.webservice.dataloader
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
+import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderFactory
@@ -16,7 +18,10 @@ val administratorLoader: DataLoader<Int, Administrator?> = DataLoaderFactory.new
             transaction {
                 AdministratorsRepository.findByIds(ids).map {
                     if (it == null) null
-                    else Administrator(it.id.value, it.email)
+                    else {
+                        val role = Role.fromDbValue(it.role) ?: throw GraphQLKotlinException("Invalid role.")
+                        Administrator(it.id.value, it.email, it.regionId?.value, role)
+                    }
                 }
             }
         }

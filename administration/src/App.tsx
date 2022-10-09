@@ -5,7 +5,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from "@apollo/client";
 import {setContext} from '@apollo/client/link/context'
-import {HashRouter, NavLink, Route, Routes} from "react-router-dom";
+import {HashRouter, Route, Routes} from "react-router-dom";
 import GenerationController from "./components/generation/GenerationController";
 import styled from "styled-components";
 import RegionProvider from "./RegionProvider";
@@ -13,8 +13,8 @@ import AuthProvider, {AuthContext} from "./AuthProvider";
 import Login from './components/auth/Login';
 import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
-import {Button, H3} from '@blueprintjs/core';
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
+import HomeController from "./components/home/HomeController";
 import MetaTagsManager from "./components/MetaTagsManager";
 import {AppToasterProvider} from "./components/AppToaster";
 
@@ -49,28 +49,16 @@ const App = () => <ProjectConfigProvider>
     <MetaTagsManager/>
     <AppToasterProvider>
         <AuthProvider>
-            <AuthContext.Consumer>{([authData, onSignIn, onSignOut]) => (
+            <AuthContext.Consumer>{({data: authData, signIn, signOut}) => (
                 <ApolloProvider client={createClient(authData?.token)}>{
                     authData !== null && authData.expiry > new Date()
-                        ? <KeepAliveToken authData={authData} onSignIn={onSignIn} onSignOut={onSignOut}>
+                        ? <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
                             <RegionProvider>
                                 <HashRouter>
-                                    <Navigation onSignOut={onSignOut}/>
+                                    <Navigation onSignOut={signOut}/>
                                     <Main>
                                         <Routes>
-                                            <Route path={"/"} element={<div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'column'
-                                                }}>
-                                                <H3>Wählen Sie eine Aktion aus:</H3>
-                                                <NavLink to={"/applications"}><Button style={{marginBottom: '10px'}}
-                                                                                      icon="form"
-                                                                                      text="Eingehende Anträge"/></NavLink>
-                                                <NavLink to={"/eak-generation"}><Button icon="people"
-                                                                                        text="Karten erstellen"/></NavLink>
-                                            </div>}/>
+                                            <Route path={"/"} element={<HomeController/>}/>
                                             <Route path={"/applications"}
                                                    element={<ApplicationsController token={authData.token}/>}/>
                                             <Route path={"/eak-generation"} element={<GenerationController/>}/>
@@ -79,7 +67,7 @@ const App = () => <ProjectConfigProvider>
                                 </HashRouter>
                             </RegionProvider>
                         </KeepAliveToken>
-                        : <Login onSignIn={onSignIn}/>
+                        : <Login onSignIn={signIn}/>
                 }</ApolloProvider>
             )}
             </AuthContext.Consumer>

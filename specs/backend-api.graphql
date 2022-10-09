@@ -49,6 +49,8 @@ type Address {
 type Administrator {
   email: String!
   id: Int!
+  regionId: Int
+  role: Role!
 }
 
 type ApplicationView {
@@ -81,7 +83,7 @@ type Mutation {
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
+  addGoldenEakApplication(application: GoldenCardApplicationInput!, regionId: Int!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Signs in an administrator"
@@ -148,6 +150,13 @@ enum GoldenCardEntitlementType {
   HONOR_BY_MINISTER_PRESIDENT
   SERVICE_AWARD
   STANDARD
+}
+
+enum Role {
+  NO_RIGHTS
+  PROJECT_ADMIN
+  REGION_ADMIN
+  REGION_MANAGER
 }
 
 "A 64-bit signed integer"
@@ -220,17 +229,17 @@ input CoordinatesInput {
   lng: Float!
 }
 
-input GoldenCardEntitlementInput {
-  certificate: AttachmentInput
-  goldenEntitlementType: GoldenCardEntitlementType!
-  workAtOrganizations: [WorkAtOrganizationInput!]
-}
-
-input GoldenEakCardApplicationInput {
+input GoldenCardApplicationInput {
   entitlement: GoldenCardEntitlementInput!
   givenInformationIsCorrectAndComplete: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
+}
+
+input GoldenCardEntitlementInput {
+  certificate: AttachmentInput
+  goldenEntitlementType: GoldenCardEntitlementType!
+  workAtOrganizations: [WorkAtOrganizationInput!]
 }
 
 input OrganizationContactInput {

@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {Button, Card, H3, Spinner} from "@blueprintjs/core";
 import {useQuery} from "@apollo/client";
-import RegionSelector from "../RegionSelector";
 import {RegionContext} from "../../RegionProvider";
 import ApplicationsOverview from "./ApplicationsOverview";
 import {
@@ -25,12 +24,11 @@ const ApplicationsController = (props: { region: Region, token: string }) => {
 };
 
 const ControllerWithRegion = (props: { token: string }) => {
-    const [region] = useContext(RegionContext)
+    const region = useContext(RegionContext)
 
     if (region === null) {
         return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <p>Bitte wählen Sie zunächst Ihre Region aus:</p>
-            <RegionSelector/>
+            <p>Sie sind nicht berechtigt, Anträge einzusehen.</p>
         </div>
     } else {
         return <ApplicationsController region={region} token={props.token}/>

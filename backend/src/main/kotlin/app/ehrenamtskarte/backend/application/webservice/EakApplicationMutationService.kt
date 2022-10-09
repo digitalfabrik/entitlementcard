@@ -1,9 +1,13 @@
 package app.ehrenamtskarte.backend.application.webservice
 
+import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
 import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
+import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 
@@ -48,7 +52,17 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getLocalContext<GraphQLContext>()
-        context.enforceSignedIn()
+        val jwtPayload = context.enforceSignedIn()
+
+        val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
+        // We throw an UnauthorizedException here, as we do not know whether there was an application with id
+        // `applicationId` and whether this application was contained in the user's project & region.
+
+        val user = AdministratorEntity.findById(jwtPayload.userId)
+        if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
+            throw UnauthorizedException()
+        }
+
         return EakApplicationRepository.delete(applicationId, context)
     }
 }
