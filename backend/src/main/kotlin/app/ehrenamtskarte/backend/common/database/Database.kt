@@ -41,7 +41,7 @@ class Database {
             roleDbValue: String,
             projectId: Int? = null
         ) {
-            val role = Role.fromDbValue(roleDbValue) ?: throw IllegalArgumentException("Invalid role '${roleDbValue}'.")
+            val role = Role.fromDbValue(roleDbValue) ?: throw IllegalArgumentException("Invalid role '$roleDbValue'.")
             transaction {
                 AdministratorsRepository.insert(project, email, password, role, projectId)
             }
@@ -49,8 +49,10 @@ class Database {
 
         fun setup(config: BackendConfiguration) {
             connect(
-                config.postgres.url, driver = "org.postgresql.Driver",
-                user = config.postgres.user, password = config.postgres.password
+                config.postgres.url,
+                driver = "org.postgresql.Driver",
+                user = config.postgres.user,
+                password = config.postgres.password
             )
 
             transaction {

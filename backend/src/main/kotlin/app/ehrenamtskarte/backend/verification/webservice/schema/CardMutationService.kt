@@ -30,7 +30,9 @@ class CardMutationService {
                 Base64.decode(card.cardDetailsHashBase64),
                 Base64.decode(card.totpSecretBase64),
                 if (card.expirationDate > 0) LocalDateTime.ofEpochSecond(
-                    card.expirationDate, 0, ZoneOffset.UTC
+                    card.expirationDate,
+                    0,
+                    ZoneOffset.UTC
                 ) else null,
                 card.regionId
             )
@@ -38,4 +40,3 @@ class CardMutationService {
         return true
     }
 }
-

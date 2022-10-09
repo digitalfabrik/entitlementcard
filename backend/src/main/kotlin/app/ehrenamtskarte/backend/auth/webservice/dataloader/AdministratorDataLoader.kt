@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.auth.webservice.dataloader
 
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
-import com.expediagroup.graphql.exceptions.GraphQLKotlinException
+import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
 import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderFactory

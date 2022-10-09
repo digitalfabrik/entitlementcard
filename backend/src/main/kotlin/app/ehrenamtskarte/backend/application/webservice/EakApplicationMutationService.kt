@@ -16,7 +16,9 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Stores a new blue digital EAK")
     fun addBlueEakApplication(
-        regionId: Int, application: BlueCardApplication, dfe: DataFetchingEnvironment
+        regionId: Int,
+        application: BlueCardApplication,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getLocalContext<GraphQLContext>()
         EakApplicationRepository.addEakApplication(
@@ -30,7 +32,9 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Stores a new golden digital EAK")
     fun addGoldenEakApplication(
-        regionId: Int, application: GoldenCardApplication, dfe: DataFetchingEnvironment
+        regionId: Int,
+        application: GoldenCardApplication,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getLocalContext<GraphQLContext>()
         EakApplicationRepository.addEakApplication(
@@ -44,7 +48,7 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
-         applicationId: Int,
+        applicationId: Int,
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getLocalContext<GraphQLContext>()
@@ -53,7 +57,6 @@ class EakApplicationMutationService {
         // We throw an UnauthorizedException here, as we do not know whether there was an application with id
         // `applicationId` and whether this application was contained in the user's project & region.
         val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-
 
         val user = AdministratorEntity.findById(jwtPayload.userId)
         if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
