@@ -54,9 +54,9 @@ class EakApplicationMutationService {
         val context = dfe.getLocalContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
 
+        val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
         // We throw an UnauthorizedException here, as we do not know whether there was an application with id
         // `applicationId` and whether this application was contained in the user's project & region.
-        val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
 
         val user = AdministratorEntity.findById(jwtPayload.userId)
         if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
