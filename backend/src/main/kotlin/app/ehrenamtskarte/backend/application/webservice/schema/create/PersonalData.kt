@@ -17,7 +17,8 @@ data class PersonalData(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "personalData", mapOf("de" to "Persönliche Daten"), Type.Array, listOfNotNull(
+            "personalData", mapOf("de" to "Persönliche Daten"), Type.Array,
+            listOfNotNull(
                 if (title != null) JsonField("title", mapOf("de" to "Titel"), Type.String, title) else null,
                 JsonField("forenames", mapOf("de" to "Vorname(n)"), Type.String, forenames),
                 JsonField("surname", mapOf("de" to "Nachname"), Type.String, surname),

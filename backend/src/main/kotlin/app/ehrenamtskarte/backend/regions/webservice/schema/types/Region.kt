@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema.types
 
-
 data class Region(
     val id: Int,
     val prefix: String,

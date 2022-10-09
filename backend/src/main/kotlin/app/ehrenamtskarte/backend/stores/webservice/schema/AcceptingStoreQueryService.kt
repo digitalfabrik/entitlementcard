@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")

@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
@@ -13,7 +12,8 @@ import org.slf4j.Logger
  * Filter and removes [LbeAcceptingStore] with invalid data.
  * These are especially stores without name, location or an invalid category.
  */
-class FilterLbe(config: ImportConfig, private val logger: Logger): PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>(config) {
+class FilterLbe(config: ImportConfig, private val logger: Logger) :
+    PipelineStep<List<LbeAcceptingStore>, List<LbeAcceptingStore>>(config) {
     private val invalidLocations = arrayOf("Musterhausen")
 
     override fun execute(input: List<LbeAcceptingStore>): List<LbeAcceptingStore> = input.filter { filterLbe(it) }
@@ -56,5 +56,4 @@ class FilterLbe(config: ImportConfig, private val logger: Logger): PipelineStep<
 
         return valid
     }
-
 }

@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 
 object PhysicalStoresRepository {

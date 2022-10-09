@@ -15,6 +15,8 @@ import KeepAliveToken from "./KeepAliveToken";
 import ApplicationsController from "./components/applications/ApplicationsController";
 import {ProjectConfigProvider} from './project-configs/ProjectConfigContext';
 import HomeController from "./components/home/HomeController";
+import MetaTagsManager from "./components/MetaTagsManager";
+import {AppToasterProvider} from "./components/AppToaster";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -44,30 +46,33 @@ const Main = styled.div`
 `
 
 const App = () => <ProjectConfigProvider>
-    <AuthProvider>
-        <AuthContext.Consumer>{({data: authData, signIn, signOut}) => (
-            <ApolloProvider client={createClient(authData?.token)}>{
-                authData !== null && authData.expiry > new Date()
-                    ? <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-                        <RegionProvider>
-                            <HashRouter>
-                                <Navigation onSignOut={signOut}/>
-                                <Main>
-                                    <Routes>
-                                        <Route path={"/"} element={<HomeController/>}/>
-                                        <Route path={"/applications"}
-                                               element={<ApplicationsController token={authData.token}/>}/>
-                                        <Route path={"/eak-generation"} element={<GenerationController/>}/>
-                                    </Routes>
-                                </Main>
-                            </HashRouter>
-                        </RegionProvider>
-                    </KeepAliveToken>
-                    : <Login onSignIn={signIn}/>
-            }</ApolloProvider>
-        )}
-        </AuthContext.Consumer>
-    </AuthProvider>
+    <MetaTagsManager/>
+    <AppToasterProvider>
+        <AuthProvider>
+            <AuthContext.Consumer>{({data: authData, signIn, signOut}) => (
+                <ApolloProvider client={createClient(authData?.token)}>{
+                    authData !== null && authData.expiry > new Date()
+                        ? <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
+                            <RegionProvider>
+                                <HashRouter>
+                                    <Navigation onSignOut={signOut}/>
+                                    <Main>
+                                        <Routes>
+                                            <Route path={"/"} element={<HomeController/>}/>
+                                            <Route path={"/applications"}
+                                                   element={<ApplicationsController token={authData.token}/>}/>
+                                            <Route path={"/eak-generation"} element={<GenerationController/>}/>
+                                        </Routes>
+                                    </Main>
+                                </HashRouter>
+                            </RegionProvider>
+                        </KeepAliveToken>
+                        : <Login onSignIn={signIn}/>
+                }</ApolloProvider>
+            )}
+            </AuthContext.Consumer>
+        </AuthProvider>
+    </AppToasterProvider>
 </ProjectConfigProvider>
 
 export default App;

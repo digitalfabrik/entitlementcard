@@ -6,7 +6,8 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGenerationModel
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.util.Base64
 import java.time.LocalDateTime
@@ -15,8 +16,8 @@ import java.time.ZoneOffset
 @Suppress("unused")
 class CardMutationService {
     @GraphQLDescription("Stores a new digital EAK")
-    fun addCard(context: GraphQLContext, card: CardGenerationModel): Boolean {
-        val jwtPayload = context.enforceSignedIn()
+    fun addCard(dfe: DataFetchingEnvironment, card: CardGenerationModel): Boolean {
+        val jwtPayload = dfe.getLocalContext<GraphQLContext>().enforceSignedIn()
 
         val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
         val targetedRegionId = card.regionId

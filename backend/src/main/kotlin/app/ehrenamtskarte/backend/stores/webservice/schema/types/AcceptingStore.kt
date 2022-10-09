@@ -6,7 +6,6 @@ import app.ehrenamtskarte.backend.stores.webservice.dataloader.PHYSICAL_STORE_BY
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 
-
 data class AcceptingStore(
     val id: Int,
     val name: String?,

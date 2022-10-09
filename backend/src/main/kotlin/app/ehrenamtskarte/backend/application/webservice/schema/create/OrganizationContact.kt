@@ -12,7 +12,8 @@ data class OrganizationContact(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "organizationContact", mapOf("de" to "Kontaktperson der Organisation"), Type.Array, listOf(
+            "organizationContact", mapOf("de" to "Kontaktperson der Organisation"), Type.Array,
+            listOf(
                 JsonField("name", mapOf("de" to "Name"), Type.String, name),
                 JsonField("telephone", mapOf("de" to "Telefonnummer"), Type.String, telephone),
                 JsonField("email", mapOf("de" to "Email-Adresse"), Type.String, email),
@@ -25,5 +26,4 @@ data class OrganizationContact(
             )
         )
     }
-
 }

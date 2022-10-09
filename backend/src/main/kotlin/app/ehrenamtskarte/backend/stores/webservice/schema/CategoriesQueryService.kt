@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.stores.webservice.schema
 
 import app.ehrenamtskarte.backend.stores.database.repos.CategoriesRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Category
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")

@@ -39,7 +39,8 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 8. Create an admin account using `./gradlew run --args="create-admin <email> <password>"`
 9. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 10. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
-11. Take a look at the backend: [http://localhost:7000](http://localhost:7000) (The public version is available at api.ehrenamtskarte.app)
+11. Take a look at the backend: [http://localhost:7000](http://localhost:7000) (The public version is available at
+    api.entitlementcard.app)
 
 ## Dumping and restoring the database through docker
 

@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-import app.ehrenamtskarte.backend.config.*
+import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.ProjectConfig
 
 data class ImportConfig(val backendConfig: BackendConfiguration, val projectId: String) {
 

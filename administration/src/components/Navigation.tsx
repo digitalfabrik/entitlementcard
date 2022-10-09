@@ -5,18 +5,20 @@ import {Alignment} from "@blueprintjs/core/lib/esm/common/alignment";
 import {RegionContext} from "../RegionProvider";
 import {AuthContext} from "../AuthProvider";
 import {Role} from "../generated/graphql";
+import {ProjectConfigContext} from "../project-configs/ProjectConfigContext";
 
 interface Props {
     onSignOut: () => void
 }
 
 const Navigation = (props: Props) => {
+    const config = useContext(ProjectConfigContext)
     const region = useContext(RegionContext)
     const role = useContext(AuthContext).data?.administrator.role
     return (
         <Navbar>
             <Navbar.Group>
-                <Navbar.Heading>Ehrenamtskarte Administration</Navbar.Heading>
+                <Navbar.Heading>{config.name} Verwaltung</Navbar.Heading>
                 <Navbar.Divider/>
                 {region == null ? null : <><span>{region?.name ?? ""}</span>
                     <Navbar.Divider/></>

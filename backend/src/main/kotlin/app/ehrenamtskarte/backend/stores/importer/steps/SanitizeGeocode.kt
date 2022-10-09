@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
@@ -66,5 +65,4 @@ class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClie
     private fun Feature.postalCode(): String? = address()["postcode"]
     private fun Feature.address(): LinkedHashMap<String, String> =
         this.getProperty<LinkedHashMap<String, String>>("address")
-
 }

@@ -3,10 +3,9 @@ package app.ehrenamtskarte.backend.verification.webservice
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import app.ehrenamtskarte.backend.verification.webservice.schema.CardMutationService
 import app.ehrenamtskarte.backend.verification.webservice.schema.CardQueryService
-import com.expediagroup.graphql.SchemaGeneratorConfig
-import com.expediagroup.graphql.TopLevelObject
+import com.expediagroup.graphql.generator.SchemaGeneratorConfig
+import com.expediagroup.graphql.generator.TopLevelObject
 import org.dataloader.DataLoaderRegistry
-
 
 private fun createDataLoaderRegistry(): DataLoaderRegistry {
     val dataLoaderRegistry = DataLoaderRegistry()
