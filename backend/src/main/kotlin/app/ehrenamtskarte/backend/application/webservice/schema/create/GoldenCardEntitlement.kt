@@ -5,7 +5,6 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 
-
 enum class GoldenCardEntitlementType {
     SERVICE_AWARD,
     STANDARD,
@@ -19,13 +18,16 @@ data class GoldenCardEntitlement(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "entitlement", mapOf("de" to "Berechtigungsgrund"), Type.Array, listOf(
+            "entitlement",
+            mapOf("de" to "Berechtigungsgrund"),
+            Type.Array,
+            listOf(
                 when (goldenEntitlementType) {
                     GoldenCardEntitlementType.HONOR_BY_MINISTER_PRESIDENT -> JsonField(
                         "honorByMinisterPresidentEntitlement",
                         mapOf(
-                            "de" to "Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt"
-                                    + " des Bayerischen Ministerpräsidenten"
+                            "de" to "Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt" +
+                                " des Bayerischen Ministerpräsidenten"
                         ),
                         Type.Attachment,
                         listOf(
@@ -37,11 +39,12 @@ data class GoldenCardEntitlement(
                             )
                         )
                     )
+
                     GoldenCardEntitlementType.SERVICE_AWARD -> JsonField(
                         "serviceAwardEntitlement",
                         mapOf(
-                            "de" to "Inhaber:in einer Dienstauszeichnung des Freistaats Bayern nach Feuer- und"
-                                    + " Hilfsorganisationengesetz"
+                            "de" to "Inhaber:in einer Dienstauszeichnung des Freistaats Bayern nach Feuer- und" +
+                                " Hilfsorganisationengesetz"
                         ),
                         Type.Attachment,
                         listOf(
@@ -53,6 +56,7 @@ data class GoldenCardEntitlement(
                             )
                         )
                     )
+
                     GoldenCardEntitlementType.STANDARD -> JsonField(
                         "standardEntitlement",
                         mapOf("de" to "Ehrenamtliches Engagement bei Verein oder Organisation"),

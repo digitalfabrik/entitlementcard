@@ -4,10 +4,9 @@ import app.ehrenamtskarte.backend.auth.webservice.dataloader.ADMINISTRATOR_LOADE
 import app.ehrenamtskarte.backend.auth.webservice.dataloader.administratorLoader
 import app.ehrenamtskarte.backend.auth.webservice.schema.SignInMutationService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
-import com.expediagroup.graphql.SchemaGeneratorConfig
-import com.expediagroup.graphql.TopLevelObject
+import com.expediagroup.graphql.generator.SchemaGeneratorConfig
+import com.expediagroup.graphql.generator.TopLevelObject
 import org.dataloader.DataLoaderRegistry
-
 
 private fun createDataLoaderRegistry(): DataLoaderRegistry {
     val dataLoader = DataLoaderRegistry()

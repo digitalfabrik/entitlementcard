@@ -2,7 +2,8 @@ package app.ehrenamtskarte.backend.stores.geocoding
 
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.geojson.Feature
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.max
 
 const val DISTANCE_THRESHOLD_IN_KM = 1.0
 
@@ -39,4 +40,3 @@ fun isCloseTo(bbox: DoubleArray, latitude: Double, longitude: Double, thresholdI
 }
 
 private fun Double.degreesToRadians(): Double = this * Math.PI / 180
-

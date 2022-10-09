@@ -13,7 +13,8 @@ data class Address(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "address", mapOf("de" to "Adresse"), Type.Array, listOfNotNull(
+            "address", mapOf("de" to "Adresse"), Type.Array,
+            listOfNotNull(
                 JsonField("street", mapOf("de" to "Straße"), Type.String, street),
                 JsonField("houseNumber", mapOf("de" to "Hausnummer"), Type.String, houseNumber),
                 if (addressSupplement != null)
@@ -24,5 +25,4 @@ data class Address(
             )
         )
     }
-
 }

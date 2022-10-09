@@ -18,10 +18,9 @@ abstract class PipelineStep<In, Out> (protected val config: ImportConfig) {
     }
 
     abstract fun execute(input: In): Out
-
 }
 
 fun <In, Out> In.addStep(step: PipelineStep<In, Out>, logger: Logger, callback: () -> Unit): Out {
     callback()
-    return step.execute( this, logger)
+    return step.execute(this, logger)
 }

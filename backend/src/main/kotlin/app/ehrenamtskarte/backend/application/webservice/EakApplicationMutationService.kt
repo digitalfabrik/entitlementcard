@@ -2,9 +2,10 @@ package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
-import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import graphql.schema.DataFetchingEnvironment
 
 @Suppress("unused")
 class EakApplicationMutationService {
@@ -13,27 +14,40 @@ class EakApplicationMutationService {
     fun addBlueEakApplication(
         regionId: Int,
         application: BlueCardApplication,
-        graphQLContext: GraphQLContext
+        dfe: DataFetchingEnvironment
     ): Boolean {
-        EakApplicationRepository.addEakApplication(regionId, application, graphQLContext, EakApplicationRepository::validateBlueApplication)
+        val context = dfe.getLocalContext<GraphQLContext>()
+        EakApplicationRepository.addEakApplication(
+            regionId,
+            application,
+            context,
+            EakApplicationRepository::validateBlueApplication
+        )
         return true
     }
 
     @GraphQLDescription("Stores a new golden digital EAK")
     fun addGoldenEakApplication(
         regionId: Int,
-        application: GoldenEakCardApplication,
-        graphQLContext: GraphQLContext
+        application: GoldenCardApplication,
+        dfe: DataFetchingEnvironment
     ): Boolean {
-        EakApplicationRepository.addEakApplication(regionId, application, graphQLContext, EakApplicationRepository::validateGoldenApplication)
+        val context = dfe.getLocalContext<GraphQLContext>()
+        EakApplicationRepository.addEakApplication(
+            regionId,
+            application,
+            context,
+            EakApplicationRepository::validateGoldenApplication
+        )
         return true
     }
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
-        context: GraphQLContext,
-        applicationId: Int
+        applicationId: Int,
+        dfe: DataFetchingEnvironment
     ): Boolean {
+        val context = dfe.getLocalContext<GraphQLContext>()
         context.enforceSignedIn()
         return EakApplicationRepository.delete(applicationId, context)
     }

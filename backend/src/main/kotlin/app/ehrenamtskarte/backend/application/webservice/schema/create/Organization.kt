@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 data class Organization(
     val name: String,
@@ -15,7 +15,8 @@ data class Organization(
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "organization", mapOf("de" to "Organisation/Verein"), Type.Array, listOfNotNull(
+            "organization", mapOf("de" to "Organisation/Verein"), Type.Array,
+            listOfNotNull(
                 JsonField("name", mapOf("de" to "Name"), Type.String, name),
                 address.toJsonField(),
                 if (website != null)

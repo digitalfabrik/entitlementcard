@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Attachment
-import com.expediagroup.graphql.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 enum class Type {
     String,

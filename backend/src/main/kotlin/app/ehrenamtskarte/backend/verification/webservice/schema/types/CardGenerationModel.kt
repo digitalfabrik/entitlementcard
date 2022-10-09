@@ -6,4 +6,3 @@ data class CardGenerationModel constructor(
     val expirationDate: Long,
     val regionId: Int
 )
-
