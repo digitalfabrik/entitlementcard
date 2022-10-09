@@ -47,7 +47,7 @@ class WebService {
         }.start(host, port)
 
         println("Server is running at http://$host:$port")
-        println("Goto http://$host:$port/graphiql for a graphical editor")
+        println("Goto http://$host:$port/graphiql/ for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
 

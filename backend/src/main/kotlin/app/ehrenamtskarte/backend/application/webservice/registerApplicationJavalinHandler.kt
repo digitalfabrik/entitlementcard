@@ -5,7 +5,7 @@ import io.javalin.Javalin
 import java.io.File
 
 fun registerApplicationJavalinHandler(javalin: Javalin, applicationData: File) {
-    javalin.get("/application/:applicationId/file/:fileIndex") { ctx ->
+    javalin.get("/application/{applicationId}/file/{fileIndex}") { ctx ->
         if (JwtService.verifyRequest(ctx) !== null) {
             val applicationId = ctx.pathParam("applicationId")
             val fileIndex = ctx.pathParam("fileIndex")
