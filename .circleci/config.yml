@@ -276,7 +276,8 @@ jobs:
       - run: |
           npm run generate-graphql
           npm run generate-protobuf
-          npm run-script build
+          npm run lint
+          npm run build
       - save_cache:
           paths:
             - node_modules
