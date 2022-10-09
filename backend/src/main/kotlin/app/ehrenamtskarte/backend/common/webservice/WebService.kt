@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.application.webservice.registerApplicationJavalinHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File
@@ -46,6 +47,7 @@ class WebService {
         println("Goto http://${host}:${port}/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
+        val mapStyleHandler = MapStyleHandler()
 
         app.post("/") { ctx ->
             if (!production) {
@@ -53,6 +55,14 @@ class WebService {
                 ctx.header("Access-Control-Allow-Origin: *")
             }
             graphQLHandler.handle(ctx, applicationData)
+        }
+
+        app.get("/map/style") { ctx ->
+            if (!production) {
+                ctx.header("Access-Control-Allow-Headers: Authorization")
+                ctx.header("Access-Control-Allow-Origin: *")
+            }
+            mapStyleHandler.handle(ctx)
         }
 
         registerApplicationJavalinHandler(app, applicationData)
