@@ -2,7 +2,7 @@ import React from 'react'
 import Navigation from './components/Navigation'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import GenerationController from './components/generation/GenerationController'
 import styled from 'styled-components'
 import RegionProvider from './RegionProvider'
@@ -15,6 +15,8 @@ import HomeController from './components/home/HomeController'
 import MetaTagsManager from './components/MetaTagsManager'
 import { AppToasterProvider } from './components/AppToaster'
 import UserSettingsController from './components/user-settings/UserSettingsController'
+import ResetPasswordController from './components/auth/ResetPasswordController'
+import ForgotPasswordController from './components/auth/ForgotPasswordController'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -53,25 +55,37 @@ const App = () => (
         <AuthContext.Consumer>
           {({ data: authData, signIn, signOut }) => (
             <ApolloProvider client={createClient(authData?.token)}>
-              {authData !== null && authData.expiry > new Date() ? (
-                <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-                  <RegionProvider>
-                    <HashRouter>
-                      <Navigation onSignOut={signOut} />
-                      <Main>
-                        <Routes>
-                          <Route path={'/'} element={<HomeController />} />
-                          <Route path={'/applications'} element={<ApplicationsController token={authData.token} />} />
-                          <Route path={'/eak-generation'} element={<GenerationController />} />
-                          <Route path={'/user-settings'} element={<UserSettingsController />} />
-                        </Routes>
-                      </Main>
-                    </HashRouter>
-                  </RegionProvider>
-                </KeepAliveToken>
-              ) : (
-                <Login onSignIn={signIn} />
-              )}
+              <BrowserRouter>
+                <Routes>
+                  <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
+                  <Route path={'/reset-password/:resetPasswordHash'} element={<ResetPasswordController />} />
+                  <Route
+                    path={'*'}
+                    element={
+                      authData === null || authData.expiry <= new Date() ? (
+                        <Login onSignIn={signIn} />
+                      ) : (
+                        <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
+                          <RegionProvider>
+                            <Navigation onSignOut={signOut} />
+                            <Main>
+                              <Routes>
+                                <Route
+                                  path={'/applications'}
+                                  element={<ApplicationsController token={authData.token} />}
+                                />
+                                <Route path={'/eak-generation'} element={<GenerationController />} />
+                                <Route path={'/user-settings'} element={<UserSettingsController />} />
+                                <Route path={'*'} element={<HomeController />} />
+                              </Routes>
+                            </Main>
+                          </RegionProvider>
+                        </KeepAliveToken>
+                      )
+                    }
+                  />
+                </Routes>
+              </BrowserRouter>
             </ApolloProvider>
           )}
         </AuthContext.Consumer>

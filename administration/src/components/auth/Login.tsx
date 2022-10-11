@@ -1,19 +1,11 @@
 import React, { useContext } from 'react'
-import styled from 'styled-components'
 import LoginForm from './LoginForm'
 import { useAppToaster } from '../AppToaster'
 import { Card, H2, H3, H4 } from '@blueprintjs/core'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import StandaloneCenter from "../StandaloneCenter";
 
-
-const Center = styled('div')`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
 
 interface State {
   email: string
@@ -37,8 +29,8 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
     })
 
   return (
-    <Center>
-      <Card>
+    <StandaloneCenter>
+      <Card style={{ width: '100%', maxWidth: '500px' }}>
         <H2>{config.name}</H2>
         <H3>Verwaltung</H3>
         <H4>Login</H4>
@@ -51,7 +43,7 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
           loading={mutationState.loading}
         />
       </Card>
-    </Center>
+    </StandaloneCenter>
   )
 }
 

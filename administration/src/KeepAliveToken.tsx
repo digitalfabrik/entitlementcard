@@ -16,20 +16,21 @@ interface Props {
 const computeSecondsLeft = (authData: AuthData) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
 const KeepAliveToken = (props: Props) => {
+  const { authData, onSignOut } = props
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useContext(AuthContext).data!.administrator.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(props.authData))
   useEffect(() => {
-    setSecondsLeft(computeSecondsLeft(props.authData))
+    setSecondsLeft(computeSecondsLeft(authData))
     const interval = setInterval(() => {
-      const timeLeft = computeSecondsLeft(props.authData)
+      const timeLeft = computeSecondsLeft(authData)
       setSecondsLeft(Math.max(timeLeft, 0))
       if (timeLeft <= 0) {
-        props.onSignOut()
+        onSignOut()
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [props.authData, props.onSignOut])
+  }, [authData, onSignOut])
   const appToaster = useAppToaster()
 
   const [password, setPassword] = useState('')
