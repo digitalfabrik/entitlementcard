@@ -10,7 +10,7 @@ fun setupDatabase(executeScript: (path: String) -> Unit) {
         PhysicalStores,
         Addresses
     )
-    
+
     executeScript("sql/martin_setup.sql")
     executeScript("sql/create_categories.sql")
 }

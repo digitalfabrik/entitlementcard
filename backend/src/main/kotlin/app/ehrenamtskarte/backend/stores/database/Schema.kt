@@ -59,7 +59,7 @@ object PhysicalStores : IntIdTable() {
 
 class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PhysicalStoreEntity>(PhysicalStores)
-    
+
     var storeId by PhysicalStores.storeId
     var addressId by PhysicalStores.addressId
     var coordinates by PhysicalStores.coordinates

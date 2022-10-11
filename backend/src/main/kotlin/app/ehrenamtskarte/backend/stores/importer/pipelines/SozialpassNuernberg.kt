@@ -43,7 +43,7 @@ object SozialpassNuernberg : Pipeline {
                 PhysicalStoreEntity.new {
                     storeId = storeEntity.id
                     addressId = address.id
-                    coordinates = Point(11.061859, 	49.460983)
+                    coordinates = Point(11.061859, 49.460983)
                 }
             } catch (e: Exception) {
                 logger.info("Unknown exception while storing to db", e)
@@ -51,6 +51,5 @@ object SozialpassNuernberg : Pipeline {
                 throw e
             }
         }
-        
     }
 }
