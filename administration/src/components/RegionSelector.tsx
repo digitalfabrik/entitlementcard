@@ -1,8 +1,7 @@
 import React, { useContext } from 'react'
 import { Button, Menu, MenuItem, Spinner } from '@blueprintjs/core'
-import { useQuery } from '@apollo/client'
 import { ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
-import { GetRegionsDocument, GetRegionsQuery, GetRegionsQueryVariables, Region } from '../generated/graphql'
+import { Region, useGetRegionsQuery } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
 const RegionSelect = Select.ofType<Region>()
@@ -32,7 +31,7 @@ const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) 
 
 const RegionSelector = (props: { onRegionSelect: (region: Region) => void; activeRegionId: number }) => {
   const projectId = useContext(ProjectConfigContext).projectId
-  const { loading, error, data, refetch } = useQuery<GetRegionsQuery, GetRegionsQueryVariables>(GetRegionsDocument, {
+  const { loading, error, data, refetch } = useGetRegionsQuery({
     variables: { project: projectId },
   })
   if (loading) return <Spinner />

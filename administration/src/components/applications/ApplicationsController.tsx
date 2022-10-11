@@ -1,20 +1,14 @@
 import React, { useContext } from 'react'
 import { Button, Card, H3, Spinner } from '@blueprintjs/core'
-import { useQuery } from '@apollo/client'
 import { RegionContext } from '../../RegionProvider'
 import ApplicationsOverview from './ApplicationsOverview'
-import {
-  GetApplicationsDocument,
-  GetApplicationsQuery,
-  GetApplicationsQueryVariables,
-  Region,
-} from '../../generated/graphql'
+import { Region, useGetApplicationsQuery } from '../../generated/graphql'
 
 const ApplicationsController = (props: { region: Region; token: string }) => {
-  const { loading, error, data, refetch } = useQuery<GetApplicationsQuery, GetApplicationsQueryVariables>(
-    GetApplicationsDocument,
-    { variables: { regionId: props.region.id }, onError: error => console.error(error) }
-  )
+  const { loading, error, data, refetch } = useGetApplicationsQuery({
+    variables: { regionId: props.region.id },
+    onError: error => console.error(error),
+  })
   if (loading) return <Spinner />
   else if (error || !data)
     return (
