@@ -61,7 +61,7 @@ class WebService {
             graphQLHandler.handle(ctx, applicationData)
         }
 
-        app.get("/project/:project_id/map") { ctx ->
+        app.get("/project/{project_id}/map") { ctx ->
             if (!production) {
                 ctx.header("Access-Control-Allow-Headers: Authorization")
                 ctx.header("Access-Control-Allow-Origin: *")

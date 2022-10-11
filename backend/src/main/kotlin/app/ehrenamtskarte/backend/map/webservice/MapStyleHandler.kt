@@ -85,12 +85,12 @@ class MapStyleHandler(config: BackendConfiguration) {
 
     fun handle(context: Context) {
         try {
-            val projectId: String = context.pathParam("project_id") ?: throw NullPointerException()
+            val projectId: String = context.pathParam("project_id")
             val style: String = this.styles[projectId]!!
             context.result(style)
             context.contentType("application/json")
         } catch (e: IOException) {
-            context.res.sendError(500)
+            context.res().sendError(500)
         } catch (e: Throwable) {
             println(e)
         }
