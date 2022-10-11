@@ -4,10 +4,10 @@ postgres:
   user: postgres
   password: postgres
 map:
-  #baseUrl: https://tiles.entitlementcard.app/rpc/physical_stores/{z}/{x}/{y}.pbf
-  baseUrl: https://localhost:3000/rpc/physical_stores/{z}/{x}/{y}.pbf
+  # baseUrl: https://tiles.entitlementcard.app/rpc/physical_stores/{z}/{x}/{y}.pbf
+  baseUrl: http://localhost:5002/rpc/physical_stores/{z}/{x}/{y}.pbf
 geocoding:
-  enabled: true
+  enabled: false
   host: nominatim.maps.tuerantuer.org
 server:
   host: 0.0.0.0
