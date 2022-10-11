@@ -26,9 +26,3 @@ function_sources:
     schema: public
 
     function: physical_stores
-
-  physical_stores_clustered:
-    id: physical_stores_clustered
-    schema: public
-
-    function: physical_stores_clustered
