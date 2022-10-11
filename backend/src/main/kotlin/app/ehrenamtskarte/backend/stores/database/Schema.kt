@@ -74,6 +74,6 @@ class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
 
     var street by Addresses.street
     var postalCode by Addresses.postalCode
-    var locaction by Addresses.location
+    var location by Addresses.location
     var countryCode by Addresses.countryCode
 }
