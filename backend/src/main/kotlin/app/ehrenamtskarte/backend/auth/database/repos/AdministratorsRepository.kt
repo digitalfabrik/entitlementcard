@@ -61,4 +61,13 @@ object AdministratorsRepository {
             this.role = role.db_value
         }
     }
+
+    fun changePassword(administrator: AdministratorEntity, newPassword: String) {
+        val passwordValidationResult = PasswordValidator.validatePassword(newPassword)
+        if (passwordValidationResult !== PasswordValidationResult.VALID) {
+            throw InvalidPasswordException(passwordValidationResult)
+        }
+
+        administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
+    }
 }
