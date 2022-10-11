@@ -11,6 +11,7 @@ services:
       - network
   db-postgis:
     image:  postgis/postgis:13-3.0-alpine
+    command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
