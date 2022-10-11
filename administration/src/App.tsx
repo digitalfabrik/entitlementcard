@@ -14,7 +14,7 @@ import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 import HomeController from './components/home/HomeController'
 import MetaTagsManager from './components/MetaTagsManager'
 import { AppToasterProvider } from './components/AppToaster'
-import UserSettingsController from "./components/user-settings/UserSettingsController";
+import UserSettingsController from './components/user-settings/UserSettingsController'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
