@@ -1,5 +1,8 @@
 package app.ehrenamtskarte.backend.auth.database.repos
 
+import app.ehrenamtskarte.backend.auth.InvalidPasswordException
+import app.ehrenamtskarte.backend.auth.PasswordValidationResult
+import app.ehrenamtskarte.backend.auth.PasswordValidator
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
@@ -43,6 +46,11 @@ object AdministratorsRepository {
             throw IllegalArgumentException("Role ${role.db_value} needs to have a region assigned.")
         } else if (role in setOf(Role.PROJECT_ADMIN) && regionId != null) {
             throw java.lang.IllegalArgumentException("Role ${role.db_value} cannot have a region assigned.")
+        }
+
+        val passwordValidation = PasswordValidator.validatePassword(password)
+        if (passwordValidation != PasswordValidationResult.VALID) {
+            throw InvalidPasswordException(passwordValidation)
         }
 
         AdministratorEntity.new {
