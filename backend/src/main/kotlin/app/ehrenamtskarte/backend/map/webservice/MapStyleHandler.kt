@@ -8,9 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.google.gson.JsonObject
 import io.javalin.http.Context
-import org.apache.commons.lang3.ObjectUtils.Null
 import java.io.BufferedReader
 import java.io.IOException
 
@@ -25,11 +23,11 @@ data class PartialStyle(
 )
 
 class MapStyleHandler(config: BackendConfiguration) {
-    private var styles: Map<String, String> 
+    private var styles: Map<String, String>
 
     init {
         val mapper = ObjectMapper()
-        
+
         this.styles = config.projects.associate { project ->
             val style = loadStyle() ?: throw Exception("Unable to parse style.json")
             val newStyle = patchStyle(style) { id: String, source: JsonNode ->
@@ -50,7 +48,6 @@ class MapStyleHandler(config: BackendConfiguration) {
                 Pair(id, newSource)
             }
 
-
             val json = mapper.writeValueAsString(newStyle) ?: throw Exception("Failed to create style.json")
 
             Pair(project.id, json)
@@ -58,13 +55,14 @@ class MapStyleHandler(config: BackendConfiguration) {
     }
 
     private fun patchStyle(
-        style: JsonNode, patcher: (id: String, source: JsonNode) -> Pair<String, JsonNode>
+        style: JsonNode,
+        patcher: (id: String, source: JsonNode) -> Pair<String, JsonNode>
     ): JsonNode? {
         val sources = style["sources"] ?: return null
 
         val newSources = sources.fields().asSequence().map {
             patcher(it.key, it.value)
-        }.toMap();
+        }.toMap()
 
         val newSourcesObject = ObjectNode(JsonNodeFactory.instance, newSources)
 
