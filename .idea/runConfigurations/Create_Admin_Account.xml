@@ -16,7 +16,7 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;create-admin showcase.entitlementcard.app admin@example.com admin&quot;" />
+          <option value="--args=&quot;create-admin showcase.entitlementcard.app PROJECT_ADMIN admin@example.com admin&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />

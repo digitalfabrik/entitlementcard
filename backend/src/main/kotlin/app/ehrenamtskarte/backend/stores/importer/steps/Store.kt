@@ -1,9 +1,16 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions.name
-import app.ehrenamtskarte.backend.stores.database.*
+import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
+import app.ehrenamtskarte.backend.stores.database.AcceptingStores
+import app.ehrenamtskarte.backend.stores.database.AddressEntity
+import app.ehrenamtskarte.backend.stores.database.Addresses
+import app.ehrenamtskarte.backend.stores.database.Categories
+import app.ehrenamtskarte.backend.stores.database.ContactEntity
+import app.ehrenamtskarte.backend.stores.database.Contacts
+import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
+import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
@@ -74,5 +81,4 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
             println("[$bar$remaining]")
         }
     }
-
 }

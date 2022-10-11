@@ -1,14 +1,16 @@
 package app.ehrenamtskarte.backend.stores.geocoding
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.STATE
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.request.request
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpMethod
+import io.ktor.http.URLProtocol
+import io.ktor.http.path
 import org.geojson.Feature
 import org.geojson.FeatureCollection
 
@@ -17,7 +19,7 @@ class FeatureFetcher(private val config: ImportConfig, private val httpClient: H
      * Returns geocoding features matching the given [params].
      */
     suspend fun queryFeatures(params: List<Pair<String, String>>): List<Feature> {
-        val geoJson =  httpClient.request<String> {
+        val geoJson = httpClient.request {
             url {
                 protocol = URLProtocol.HTTP
                 host = config.backendConfig.geocoding.host
@@ -30,9 +32,9 @@ class FeatureFetcher(private val config: ImportConfig, private val httpClient: H
                 }
             }
             method = HttpMethod.Get
-        }
+        }.bodyAsText()
 
-        return ObjectMapper().readValue<FeatureCollection>(geoJson, FeatureCollection::class.java).features
+        return ObjectMapper().readValue(geoJson, FeatureCollection::class.java).features
     }
 
     /**

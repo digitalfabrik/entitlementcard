@@ -26,7 +26,8 @@ data class WorkAtOrganization(
                 organization.toJsonField(),
                 JsonField("amountOfWork", mapOf("de" to "Arbeitsaufwand"), Type.Number, amountOfWork),
                 JsonField(
-                    "amountOfWorkUnit", mapOf("de" to "Aufwandseinheit"), Type.String, when (amountOfWorkUnit) {
+                    "amountOfWorkUnit", mapOf("de" to "Aufwandseinheit"), Type.String,
+                    when (amountOfWorkUnit) {
                         AmountOfWorkUnit.HOURS_PER_WEEK -> "Stunden pro Woche"
                         AmountOfWorkUnit.HOURS_PER_YEAR -> "Stunden pro Jahr"
                     }

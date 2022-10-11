@@ -22,4 +22,4 @@ projects:
     pipelineName: SozialpassNuernberg
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
-    pipelineName: Showcase Berechtigungskarte
+    pipelineName: BerechtigungskarteShowcase

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
-import com.expediagroup.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")

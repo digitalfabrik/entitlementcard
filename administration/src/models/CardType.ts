@@ -1,4 +1,4 @@
 export enum CardType {
-    standard = "Standard",
-    gold = "Goldkarte"
+  standard = 'Standard',
+  gold = 'Goldkarte',
 }

@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
@@ -8,6 +7,7 @@ import app.ehrenamtskarte.backend.stores.importer.logChange
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
+import java.util.Locale
 
 /**
  * Sanitizes the addresses of the [AcceptingStore].
@@ -70,7 +70,7 @@ class SanitizeAddress(config: ImportConfig, private val logger: Logger) : Pipeli
             }
 
             val cleanStreet = address.substring(0, houseNumberMatch.range.first).trim()
-            val cleanHouseNumber = houseNumberMatch.value.toLowerCase().trim()
+            val cleanHouseNumber = houseNumberMatch.value.lowercase(Locale.GERMAN).trim()
 
             // Residue that is neither the street nor the house number, e.g. "im Hauptbahnhof", "Ecke Theaterstraße"
             val residue = if (houseNumberMatch.range.last < address.length - 1) {
@@ -99,5 +99,4 @@ class SanitizeAddress(config: ImportConfig, private val logger: Logger) : Pipeli
         }
         return copy(postalCode = newPostalCode)
     }
-
 }

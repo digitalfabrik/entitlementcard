@@ -3,14 +3,14 @@ package app.ehrenamtskarte.backend.application.database.repos
 import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
 import app.ehrenamtskarte.backend.application.database.EakApplications
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
-import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenEakCardApplication
+import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.javalin.core.util.FileUtil
+import io.javalin.util.FileUtil
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
@@ -34,12 +34,13 @@ object EakApplicationRepository {
         return true // todo add sensible validation
     }
 
-    fun validateGoldenApplication(application: GoldenEakCardApplication): Boolean {
+    fun validateGoldenApplication(application: GoldenCardApplication): Boolean {
         return true // todo add sensible validation
     }
 
     private fun persistApplication(
-        applicationJson: String, regionId: Int,
+        applicationJson: String,
+        regionId: Int,
         graphQLContext: GraphQLContext
     ) {
         val newApplication = transaction {
@@ -69,7 +70,7 @@ object EakApplicationRepository {
 
     private fun toString(obj: JsonFieldSerializable): String {
         val mapper = JsonMapper()
-        mapper.registerModule(KotlinModule())
+        mapper.registerModule(KotlinModule.Builder().build())
         return mapper.writeValueAsString(obj.toJsonField())
     }
 
@@ -83,12 +84,11 @@ object EakApplicationRepository {
     fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
         return transaction {
             val application = EakApplicationEntity.findById(applicationId)
-                if (application != null) {
-                    val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
-                    application.delete()
-                    return@transaction applicationDirectory.deleteRecursively()
-                } else false
+            if (application != null) {
+                val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
+                application.delete()
+                return@transaction applicationDirectory.deleteRecursively()
+            } else false
         }
     }
-
 }

@@ -35,7 +35,9 @@ data class BackendConfiguration(
     }
 
     companion object {
-        private val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
+        private val mapper = ObjectMapper(YAMLFactory()).registerModule(
+            KotlinModule.Builder().build()
+        )
 
         fun load(configFile: File?): BackendConfiguration {
             val fallbackResource = ClassLoader.getSystemResource("config/config.yml")

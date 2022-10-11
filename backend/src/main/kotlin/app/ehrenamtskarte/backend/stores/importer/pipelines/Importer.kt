@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.pipelines
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import org.slf4j.LoggerFactory
 
@@ -18,7 +17,7 @@ object Importer {
             }
             logger.info("== Pipeline successfully finished ==")
             true
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             logger.info("== Pipeline was aborted without altering the database ==", e)
             false
         }

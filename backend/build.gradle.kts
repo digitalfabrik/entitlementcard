@@ -7,32 +7,30 @@
 /**
  * The exposed_version (taken from gradle.properties)
  */
-val exposed_version: String by project
+val exposedVersion: String by project
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.3.72"
+    id("org.jetbrains.kotlin.jvm") version "1.7.20"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 
     // Apply the application plugin to add support for building a CLI application.
     application
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
-    implementation("com.github.ajalt.clikt:clikt:3.0.1")
-    implementation("io.javalin:javalin:3.12.0")
-    implementation("com.google.code.gson", "gson", "2.8.6")
-    implementation("org.slf4j", "slf4j-simple", "1.7.30")
-    implementation("org.apache.commons", "commons-text", "1.9")
+    implementation("com.github.ajalt.clikt:clikt:3.5.0")
+    implementation("io.javalin:javalin:5.0.1")
+    implementation("com.google.code.gson", "gson", "2.9.1")
+    implementation("org.slf4j", "slf4j-simple", "2.0.3")
+    implementation("org.apache.commons", "commons-text", "1.10.0")
 
-    implementation("com.expediagroup:graphql-kotlin-schema-generator:3.6.6")
-
+    implementation("com.expediagroup:graphql-kotlin-schema-generator:6.2.5")
+    implementation("com.graphql-java:graphql-java-extended-scalars:19.0")
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -45,32 +43,32 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-    implementation("org.jetbrains.exposed", "exposed-core", exposed_version)
-    implementation("org.jetbrains.exposed", "exposed-dao", exposed_version)
-    implementation("org.jetbrains.exposed", "exposed-jdbc", exposed_version)
-    implementation("org.jetbrains.exposed", "exposed-java-time", exposed_version)
+    implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-java-time", exposedVersion)
     implementation("org.postgresql", "postgresql", "42.2.18")
     implementation("com.kohlschutter.junixsocket", "junixsocket-core", "2.3.2")
     implementation("com.kohlschutter.junixsocket", "junixsocket-common", "2.3.2")
 
     implementation("net.postgis", "postgis-jdbc", "2.5.0")
 
-    implementation("io.ktor:ktor-client-core:1.4.0")
-    implementation("io.ktor:ktor-client-cio:1.4.0")
+    implementation("io.ktor:ktor-client-core:2.1.2")
+    implementation("io.ktor:ktor-client-cio:2.1.2")
 
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2")
-    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+")
-    implementation ("de.grundid.opendatalab:geojson-jackson:1.14")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
+    implementation("de.grundid.opendatalab:geojson-jackson:1.14")
 
-    implementation("com.eatthepath:java-otp:0.2.0") // eak verification
-    implementation("com.auth0:java-jwt:3.4.0") // Java web tokens
+    implementation("com.eatthepath:java-otp:0.4.0") // eak verification
+    implementation("com.auth0:java-jwt:4.0.0") // Java web tokens
     implementation("at.favre.lib:bcrypt:0.9.0")
 }
 
 application {
     // Define the main class for the application.
-    mainClassName = "app.ehrenamtskarte.backend.EntryPointKt"
+    mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
 }
 
 tasks.withType<JavaExec>().configureEach {

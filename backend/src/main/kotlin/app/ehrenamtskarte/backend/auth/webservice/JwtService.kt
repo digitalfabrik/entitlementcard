@@ -7,14 +7,13 @@ import io.javalin.http.Context
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.*
-import kotlin.NoSuchElementException
+import java.util.Date
 
 object JwtService {
     private val secret by lazy {
         System.getenv("JWT_SECRET")
             ?: readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
-        ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
+            ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
 
@@ -40,12 +39,12 @@ object JwtService {
     fun verifyRequest(context: Context): JwtPayload? {
         val header = context.header("Authorization") ?: return null
         val split = header.split(" ")
-        val jwtToken =  if (split.size != 2 || split[0] != "Bearer") null else split[1]
+        val jwtToken = if (split.size != 2 || split[0] != "Bearer") null else split[1]
 
         if (jwtToken === null) {
             return null
         }
-        
+
         return verifyToken(jwtToken)
     }
 }

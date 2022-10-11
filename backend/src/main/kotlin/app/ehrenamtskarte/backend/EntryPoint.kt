@@ -5,16 +5,18 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.Importer
-import com.expediagroup.graphql.extensions.print
+import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.ProgramResult
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
+import com.github.ajalt.clikt.parameters.types.int
 import java.io.File
 
 class Entry : CliktCommand() {
@@ -89,12 +91,14 @@ class CreateAdmin : CliktCommand(help = "Creates an admin account with the speci
     private val config by requireObject<BackendConfiguration>()
 
     private val project by argument()
+    private val role by argument()
     private val email by argument()
     private val password by argument()
+    private val regionId by argument().int().optional()
 
     override fun run() {
         Database.setup(config)
-        Database.createAccount(project, email, password)
+        Database.createAccount(project, email, password, role, regionId)
     }
 }
 
