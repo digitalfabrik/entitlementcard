@@ -47,7 +47,7 @@ class WebService {
         println("Goto http://${host}:${port}/graphiql for a graphical editor")
 
         val graphQLHandler = GraphQLHandler()
-        val mapStyleHandler = MapStyleHandler()
+        val mapStyleHandler = MapStyleHandler(config)
 
         app.post("/") { ctx ->
             if (!production) {
@@ -57,7 +57,7 @@ class WebService {
             graphQLHandler.handle(ctx, applicationData)
         }
 
-        app.get("/map/style") { ctx ->
+        app.get("/project/:project_id/map") { ctx ->
             if (!production) {
                 ctx.header("Access-Control-Allow-Headers: Authorization")
                 ctx.header("Access-Control-Allow-Origin: *")

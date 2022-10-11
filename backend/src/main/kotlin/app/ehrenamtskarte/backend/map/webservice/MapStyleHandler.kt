@@ -1,26 +1,100 @@
 package app.ehrenamtskarte.backend.map.webservice
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.google.gson.JsonObject
 import io.javalin.http.Context
+import org.apache.commons.lang3.ObjectUtils.Null
 import java.io.BufferedReader
 import java.io.IOException
 
-class MapStyleHandler {
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class PartialSource(
+    @JsonProperty("url") val url: String?
+)
 
-    private fun loadStyle(): String {
-        val resource = ClassLoader.getSystemResource("style.json")
-            ?: throw Error("Map style 'style.json' is missing missing!'")
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class PartialStyle(
+    @JsonProperty("sources") val sources: HashMap<String, PartialSource>
+)
+
+class MapStyleHandler(config: BackendConfiguration) {
+    private var styles: Map<String, String> 
+
+    init {
+        val mapper = ObjectMapper()
+        
+        this.styles = config.projects.associate { project ->
+            val style = loadStyle() ?: throw Exception("Unable to parse style.json")
+            val newStyle = patchStyle(style) { id: String, source: JsonNode ->
+                val newSource = source.deepCopy<ObjectNode>()
+
+                val baseUrl = config.map.baseUrl
+
+                if (id == "physical_stores") {
+                    val tiles = ArrayNode(JsonNodeFactory.instance)
+                    tiles.add(baseUrl + "?project_id=" + project.id)
+                    newSource.replace("tiles", tiles)
+                } else if (id == "physical_stores_clustered") {
+                    val tiles = ArrayNode(JsonNodeFactory.instance)
+                    tiles.add(baseUrl + "?clustered=true&project_id=" + project.id)
+                    newSource.replace("tiles", tiles)
+                }
+
+                Pair(id, newSource)
+            }
+
+
+            val json = mapper.writeValueAsString(newStyle) ?: throw Exception("Failed to create style.json")
+
+            Pair(project.id, json)
+        }
+    }
+
+    private fun patchStyle(
+        style: JsonNode, patcher: (id: String, source: JsonNode) -> Pair<String, JsonNode>
+    ): JsonNode? {
+        val sources = style["sources"] ?: return null
+
+        val newSources = sources.fields().asSequence().map {
+            patcher(it.key, it.value)
+        }.toMap();
+
+        val newSourcesObject = ObjectNode(JsonNodeFactory.instance, newSources)
+
+        val newStyle = style.deepCopy<ObjectNode>() ?: return null
+
+        newStyle.replace("sources", newSourcesObject)
+
+        return newStyle
+    }
+
+    private fun loadStyle(): JsonNode? {
+        val mapper = ObjectMapper()
+        val resource =
+            ClassLoader.getSystemResource("style.json") ?: throw Error("Map style 'style.json' is missing missing!'")
 
         val reader = BufferedReader(resource.openStream().reader(Charsets.UTF_8))
-        return reader.readText()
+        val text = reader.readText()
+        return mapper.readTree(text)
     }
-    
+
     fun handle(context: Context) {
         try {
-            val projectId = context.queryParam<String>("project_id")
-            context.result(loadStyle())
+            val projectId: String = context.pathParam("project_id") ?: throw NullPointerException()
+            val style: String = this.styles[projectId]!!
+            context.result(style)
             context.contentType("application/json")
         } catch (e: IOException) {
             context.res.sendError(500)
+        } catch (e: Throwable) {
+            println(e)
         }
     }
 }
