@@ -8,7 +8,7 @@ geocoding:
   host: nominatim.maps.tuerantuer.org
 server:
   host: 0.0.0.0
-  port: 7000
+  port: 8000
   dataDirectory: ./data
 projects:
   - id: bayern.ehrenamtskarte.app
