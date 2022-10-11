@@ -1,10 +1,9 @@
-import { Button, Callout, Card, H2 } from '@blueprintjs/core'
 import React, { useContext, useState } from 'react'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { AuthContext } from '../../AuthProvider'
 import { useAppToaster } from '../AppToaster'
-import PasswordInput from "../PasswordInput";
+import ChangePasswordForm from './ChangePasswordForm'
 
 const isUpperCase = (value: string) => {
   return value === value.toUpperCase() && value !== value.toLowerCase()
@@ -38,7 +37,7 @@ export default () => {
   const appToaster = useAppToaster()
   const [changePassword, { loading }] = useChangePasswordMutation()
 
-  const submitChange = async () => {
+  const submit = async () => {
     try {
       const result = await changePassword({
         variables: {
@@ -68,48 +67,34 @@ export default () => {
 
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  let invalidMessage = null
+  let warnMessage: string | null = null
 
   if (newPassword.length < minPasswordLength) {
-    invalidMessage = (
-      <Callout intent='danger'>
-        Ihr Passwort muss mindestens {minPasswordLength} Zeichen lang sein (aktuell {newPassword.length}).
-      </Callout>
-    )
+    warnMessage = `Ihr Passwort muss mindestens ${minPasswordLength} Zeichen lang sein (aktuell ${newPassword.length}).`
   } else if (getNumChars(newPassword, isLowerCase) < 1) {
-    invalidMessage = <Callout intent='danger'>Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.</Callout>
+    warnMessage = 'Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.'
   } else if (getNumChars(newPassword, isUpperCase) < 1) {
-    invalidMessage = <Callout intent='danger'>Ihr Passwort muss mindestens einen Großbuchstaben enthalten.</Callout>
+    warnMessage = warnMessage = 'Ihr Passwort muss mindestens einen Großbuchstaben enthalten.'
   } else if (getNumChars(newPassword, isSpecialChar) < 1) {
-    invalidMessage = <Callout intent='danger'>Ihr Passwort muss mindestens ein Sonderzeichen enthalten.</Callout>
+    warnMessage = 'Ihr Passwort muss mindestens ein Sonderzeichen enthalten.'
   } else if (newPassword !== repeatNewPassword) {
-    invalidMessage = <Callout intent='danger'>Die Passwörter stimmen nicht überein.</Callout>
+    warnMessage = 'Die Passwörter stimmen nicht überein.'
   }
 
-  const valid = invalidMessage === null
+  const valid = warnMessage === null
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Card style={{ maxWidth: '500px' }}>
-        <H2>Passwort ändern</H2>
-        <p>
-          Ein gültiges Passwort besteht aus mindestens zwölf Zeichen, einem Klein- und einem Großbuchstaben sowie einem
-          Sonderzeichen.
-        </p>
-        <PasswordInput label='Aktuelles Passwort' value={currentPassword} setValue={setCurrentPassword} />
-        <PasswordInput label='Neues Passwort' value={newPassword} setValue={setNewPassword} />
-        <PasswordInput label='Neues Passwort bestätigen' value={repeatNewPassword} setValue={setRepeatNewPassword} />
-        <div>{!isDirty ? null : invalidMessage}</div>
-        <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button
-            text={'Passwort ändern'}
-            intent='primary'
-            disabled={!valid}
-            onClick={submitChange}
-            loading={loading}
-          />
-        </div>
-      </Card>
-    </div>
+    <ChangePasswordForm
+      currentPassword={currentPassword}
+      setCurrentPassword={setCurrentPassword}
+      newPassword={newPassword}
+      setNewPassword={setNewPassword}
+      repeatNewPassword={repeatNewPassword}
+      setRepeatNewPassword={setRepeatNewPassword}
+      submitDisabled={!valid}
+      warnMessage={isDirty ? warnMessage : null}
+      loading={loading}
+      submit={submit}
+    />
   )
 }
