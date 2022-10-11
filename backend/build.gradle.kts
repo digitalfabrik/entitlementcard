@@ -86,7 +86,7 @@ tasks.register<Copy>("copyStyle") {
     into("$buildDir/resources/main/")
 }
 
-tasks.named("jar") {
+tasks.named("classes") {
     dependsOn(tasks.named("copyStyle"))
 }
 
