@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.registerApplicationJavalinHandler
+import app.ehrenamtskarte.backend.application.webservice.ApplicationHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import io.javalin.Javalin
@@ -52,6 +52,7 @@ class WebService {
 
         val graphQLHandler = GraphQLHandler()
         val mapStyleHandler = MapStyleHandler(config)
+        val applicationHandler = ApplicationHandler(applicationData)
 
         app.post("/") { ctx ->
             if (!production) {
@@ -61,7 +62,7 @@ class WebService {
             graphQLHandler.handle(ctx, applicationData)
         }
 
-        app.get("/project/{project_id}/map") { ctx ->
+        app.get(mapStyleHandler.getPath()) { ctx ->
             if (!production) {
                 ctx.header("Access-Control-Allow-Headers: Authorization")
                 ctx.header("Access-Control-Allow-Origin: *")
@@ -69,6 +70,8 @@ class WebService {
             mapStyleHandler.handle(ctx)
         }
 
-        registerApplicationJavalinHandler(app, applicationData)
+        app.get(applicationHandler.getPath()) { ctx ->
+            applicationHandler.handle(ctx)
+        }
     }
 }

@@ -12,16 +12,6 @@ import io.javalin.http.Context
 import java.io.BufferedReader
 import java.io.IOException
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class PartialSource(
-    @JsonProperty("url") val url: String?
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class PartialStyle(
-    @JsonProperty("sources") val sources: HashMap<String, PartialSource>
-)
-
 class MapStyleHandler(config: BackendConfiguration) {
     private var styles: Map<String, String>
 
@@ -81,6 +71,10 @@ class MapStyleHandler(config: BackendConfiguration) {
         val reader = BufferedReader(resource.openStream().reader(Charsets.UTF_8))
         val text = reader.readText()
         return mapper.readTree(text)
+    }
+
+    fun getPath(): String {
+        return "/project/{project_id}/map"
     }
 
     fun handle(context: Context) {
