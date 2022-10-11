@@ -25,7 +25,7 @@ const getNumChars = (value: string, predicate: (char: string) => boolean): numbe
   return value.split('').filter(predicate).length
 }
 
-export default () => {
+const UserSettingsController = () => {
   const minPasswordLength = 12
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -98,3 +98,5 @@ export default () => {
     />
   )
 }
+
+export default UserSettingsController
