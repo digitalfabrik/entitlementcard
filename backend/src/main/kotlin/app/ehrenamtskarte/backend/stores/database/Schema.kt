@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.database
 
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -35,6 +36,8 @@ object AcceptingStores : IntIdTable() {
     val description = varchar("description", 2500).nullable()
     val contactId = reference("contactId", Contacts)
     val categoryId = reference("categoryId", Categories)
+    val projectId = reference("projectId", Projects)
+    val regionId = reference("regionId", Regions).nullable()
 }
 
 class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -44,10 +47,11 @@ class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     var description by AcceptingStores.description
     var contactId by AcceptingStores.contactId
     var categoryId by AcceptingStores.categoryId
+    var projectId by AcceptingStores.projectId
+    var regionId by AcceptingStores.regionId
 }
 
 object PhysicalStores : IntIdTable() {
-    val regionId = reference("regionId", Regions)
     val coordinates = point("coordinates")
     val addressId = reference("addressId", Addresses)
     val storeId = reference("storeId", AcceptingStores)
@@ -55,8 +59,7 @@ object PhysicalStores : IntIdTable() {
 
 class PhysicalStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PhysicalStoreEntity>(PhysicalStores)
-
-    var regionId by PhysicalStores.regionId
+    
     var storeId by PhysicalStores.storeId
     var addressId by PhysicalStores.addressId
     var coordinates by PhysicalStores.coordinates

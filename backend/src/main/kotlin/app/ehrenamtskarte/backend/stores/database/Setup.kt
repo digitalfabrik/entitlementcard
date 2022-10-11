@@ -10,9 +10,7 @@ fun setupDatabase(executeScript: (path: String) -> Unit) {
         PhysicalStores,
         Addresses
     )
-
-    executeScript("sql/create_tilebbox.sql")
-    executeScript("sql/create_physical_stores_clustered.sql")
-    executeScript("sql/create_physical_stores.sql")
+    
+    executeScript("sql/martin_setup.sql")
     executeScript("sql/create_categories.sql")
 }
