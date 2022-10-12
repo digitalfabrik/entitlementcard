@@ -4,7 +4,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { AuthContext } from '../../AuthProvider'
 import { useAppToaster } from '../AppToaster'
 import ChangePasswordForm from './ChangePasswordForm'
-import validatePasswordInput from "../auth/validateNewPasswordInput";
+import validatePasswordInput from '../auth/validateNewPasswordInput'
 
 const UserSettingsController = () => {
   const [currentPassword, setCurrentPassword] = useState('')

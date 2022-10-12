@@ -70,7 +70,7 @@ const ResetPasswordController = () => {
           {warnMessage === null || !isDirty ? null : <Callout intent='danger'>{warnMessage}</Callout>}
           <div
             className={Classes.DIALOG_FOOTER_ACTIONS}
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: "10px" }}>
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
             <Link to='/'>Zurück zum Login</Link>
             <Button
               type='submit'
