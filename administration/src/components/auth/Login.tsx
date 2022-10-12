@@ -4,8 +4,7 @@ import { useAppToaster } from '../AppToaster'
 import { Card, H2, H3, H4 } from '@blueprintjs/core'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from "../StandaloneCenter";
-
+import StandaloneCenter from '../StandaloneCenter'
 
 interface State {
   email: string

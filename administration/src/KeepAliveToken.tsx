@@ -15,11 +15,10 @@ interface Props {
 
 const computeSecondsLeft = (authData: AuthData) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
-const KeepAliveToken = (props: Props) => {
-  const { authData, onSignOut } = props
+const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useContext(AuthContext).data!.administrator.email
-  const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(props.authData))
+  const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
   useEffect(() => {
     setSecondsLeft(computeSecondsLeft(authData))
     const interval = setInterval(() => {
@@ -38,7 +37,7 @@ const KeepAliveToken = (props: Props) => {
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
       appToaster?.show({ intent: 'success', message: 'Login-Zeitraum verlängert.' })
-      props.onSignIn(payload.signInPayload)
+      onSignIn(payload.signInPayload)
       setPassword('')
     },
     onError: () => appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' }),
@@ -47,7 +46,7 @@ const KeepAliveToken = (props: Props) => {
 
   return (
     <>
-      {props.children}
+      {children}
       <Dialog
         isOpen={secondsLeft <= 180}
         title={'Ihr Login-Zeitraum läuft ab!'}
@@ -61,7 +60,7 @@ const KeepAliveToken = (props: Props) => {
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button onClick={props.onSignOut} loading={mutationState.loading}>
+              <Button onClick={onSignOut} loading={mutationState.loading}>
                 Ausloggen
               </Button>
               <Button
