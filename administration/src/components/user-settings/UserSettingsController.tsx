@@ -4,29 +4,9 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { AuthContext } from '../../AuthProvider'
 import { useAppToaster } from '../AppToaster'
 import ChangePasswordForm from './ChangePasswordForm'
-
-const isUpperCase = (value: string) => {
-  return value === value.toUpperCase() && value !== value.toLowerCase()
-}
-
-const isLowerCase = (value: string) => {
-  return value === value.toLowerCase() && value !== value.toUpperCase()
-}
-
-const isNumeric = (value: string) => {
-  return !isNaN(parseInt(value))
-}
-
-const isSpecialChar = (value: string) => {
-  return !isUpperCase(value) && !isLowerCase(value) && !isNumeric(value)
-}
-
-const getNumChars = (value: string, predicate: (char: string) => boolean): number => {
-  return value.split('').filter(predicate).length
-}
+import validatePasswordInput from "../auth/validateNewPasswordInput";
 
 const UserSettingsController = () => {
-  const minPasswordLength = 12
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -67,19 +47,7 @@ const UserSettingsController = () => {
 
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  let warnMessage: string | null = null
-
-  if (newPassword.length < minPasswordLength) {
-    warnMessage = `Ihr Passwort muss mindestens ${minPasswordLength} Zeichen lang sein (aktuell ${newPassword.length}).`
-  } else if (getNumChars(newPassword, isLowerCase) < 1) {
-    warnMessage = 'Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.'
-  } else if (getNumChars(newPassword, isUpperCase) < 1) {
-    warnMessage = warnMessage = 'Ihr Passwort muss mindestens einen Großbuchstaben enthalten.'
-  } else if (getNumChars(newPassword, isSpecialChar) < 1) {
-    warnMessage = 'Ihr Passwort muss mindestens ein Sonderzeichen enthalten.'
-  } else if (newPassword !== repeatNewPassword) {
-    warnMessage = 'Die Passwörter stimmen nicht überein.'
-  }
+  let warnMessage: string | null = validatePasswordInput(newPassword, repeatNewPassword)
 
   const valid = warnMessage === null
 

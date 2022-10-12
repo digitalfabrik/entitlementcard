@@ -58,7 +58,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
-                  <Route path={'/reset-password/:resetPasswordHash'} element={<ResetPasswordController />} />
+                  <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route
                     path={'*'}
                     element={
