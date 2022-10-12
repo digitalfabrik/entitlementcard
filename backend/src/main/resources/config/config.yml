@@ -12,11 +12,14 @@ server:
   dataDirectory: ./data
 projects:
   - id: bayern.ehrenamtskarte.app
+    host: bayern.ehrenamtskarte.app
     importUrl: https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/akzeptanzstellen/app-daten.xml
     pipelineName: EhrenamtskarteBayern
   - id: nuernberg.sozialpass.app
+    host: nuernberg.sozialpass.app
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
   - id: showcase.entitlementcard.app
+    host: showcase.entitlementcard.app
     importUrl: https://example.com
     pipelineName: BerechtigungskarteShowcase

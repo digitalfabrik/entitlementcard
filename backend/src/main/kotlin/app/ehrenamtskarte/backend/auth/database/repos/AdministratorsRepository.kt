@@ -15,7 +15,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.util.Base64
@@ -81,10 +80,8 @@ object AdministratorsRepository {
         SecureRandom.getInstanceStrong().nextBytes(byteArray)
         byteArray.toString()
         val key = Base64.getUrlEncoder().encodeToString(byteArray)
-        transaction {
-            administrator.passwordResetKey = key
-            administrator.passwordResetKeyExpiry = LocalDateTime.now().plusDays(1)
-        }
+        administrator.passwordResetKey = key
+        administrator.passwordResetKeyExpiry = LocalDateTime.now().plusDays(1)
         return key
     }
 }

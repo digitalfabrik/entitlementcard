@@ -17,7 +17,7 @@ val possibleBackendConfigurationFiles =
 
 data class PostgresConfig(val url: String, val user: String, val password: String)
 data class GeocodingConfig(val enabled: Boolean, val host: String)
-data class ProjectConfig(val id: String, val importUrl: String, val pipelineName: String)
+data class ProjectConfig(val id: String, val host: String, val importUrl: String, val pipelineName: String)
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
 
 data class BackendConfiguration(
