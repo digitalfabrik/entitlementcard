@@ -73,6 +73,8 @@ object AdministratorsRepository {
         }
 
         administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
+        administrator.passwordResetKey = null
+        administrator.passwordResetKeyExpiry = null
     }
 
     fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
