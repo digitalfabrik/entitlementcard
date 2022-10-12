@@ -80,7 +80,6 @@ object AdministratorsRepository {
     fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
         val byteArray = ByteArray(64)
         SecureRandom.getInstanceStrong().nextBytes(byteArray)
-        byteArray.toString()
         val key = Base64.getUrlEncoder().encodeToString(byteArray)
         administrator.passwordResetKey = key
         administrator.passwordResetKeyExpiry = LocalDateTime.now().plusDays(1)

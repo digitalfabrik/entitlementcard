@@ -37,6 +37,8 @@ class ResetPasswordMutationService {
             Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
             https://$host/reset-password/$key
             
+            Dieser Link ist 24 Stunden gültig.
+            
             Mit freundlichen Grüßen,
             Ihr Digitalfabrik Team
         """.trimIndent()
