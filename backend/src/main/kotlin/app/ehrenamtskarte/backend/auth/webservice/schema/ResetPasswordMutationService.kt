@@ -24,14 +24,14 @@ class ResetPasswordMutationService {
             val projectEntity = ProjectEntity.findById(user.projectId)!!
 
             val key = AdministratorsRepository.setNewPasswordResetKey(user)
-            sendMail(email, generateResetMail(key, projectEntity.host))
+            sendMail(email, "Passwort Zurücksetzen", generateResetMailMessage(key, projectEntity.host))
         }
         return true
     }
 
-    private fun generateResetMail(key: String, host: String): String {
+    private fun generateResetMailMessage(key: String, host: String): String {
         return """
-            Guten Tag.
+            Guten Tag,
             
             Sie haben angefragt, Ihr Passwort für $host zurückzusetzen.
             Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
