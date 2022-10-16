@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { CardCreationModel } from './CardCreationModel'
-import GenerationForm from './GenerationForm'
+import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
 import { useAppToaster } from '../AppToaster'
-import GenerationFinished from './GenerationFinished'
+import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import generateCards from './generateCards'
 import { RegionContext } from '../../RegionProvider'
@@ -16,7 +16,7 @@ enum Mode {
   finished,
 }
 
-const GenerationController = () => {
+const CreateCardsController = () => {
   const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([])
   const client = useApolloClient()
   const region = useContext(RegionContext)
@@ -62,7 +62,7 @@ const GenerationController = () => {
   }
   if (mode === Mode.input)
     return (
-      <GenerationForm
+      <CreateCardsForm
         cardCreationModels={cardCreationModels}
         setCardCreationModels={setCardCreationModels}
         confirm={confirm}
@@ -81,4 +81,4 @@ const GenerationController = () => {
     )
 }
 
-export default GenerationController
+export default CreateCardsController

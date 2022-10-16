@@ -3,7 +3,7 @@ import Navigation from './components/Navigation'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import GenerationController from './components/generation/GenerationController'
+import CreateCardsController from './components/create-cards/CreateCardsController'
 import styled from 'styled-components'
 import RegionProvider from './RegionProvider'
 import AuthProvider, { AuthContext } from './AuthProvider'
@@ -74,7 +74,7 @@ const App = () => (
                                   path={'/applications'}
                                   element={<ApplicationsController token={authData.token} />}
                                 />
-                                <Route path={'/eak-generation'} element={<GenerationController />} />
+                                <Route path={'/create-cards'} element={<CreateCardsController />} />
                                 <Route path={'/user-settings'} element={<UserSettingsController />} />
                                 <Route path={'*'} element={<HomeController />} />
                               </Routes>

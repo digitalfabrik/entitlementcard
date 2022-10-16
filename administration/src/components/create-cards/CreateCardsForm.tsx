@@ -1,5 +1,5 @@
 import React from 'react'
-import EakForm from './EakForm'
+import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
 import { CardType } from '../../models/CardType'
 import { CardCreationModel, isValid } from './CardCreationModel'
@@ -58,7 +58,7 @@ interface Props {
   confirm: () => void
 }
 
-const GenerationForm = (props: Props) => {
+const CreateCardsForm = (props: Props) => {
   const { cardCreationModels, setCardCreationModels } = props
   const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()])
   const updateModel = (oldModel: CardCreationModel, newModel: CardCreationModel | null) => {
@@ -92,7 +92,7 @@ const GenerationForm = (props: Props) => {
       <FormsWrapper>
         {cardCreationModels.map(model => (
           <FormColumn key={model.id}>
-            <EakForm model={model} onUpdate={newModel => updateModel(model, newModel)} />
+            <CreateCardForm model={model} onUpdate={newModel => updateModel(model, newModel)} />
           </FormColumn>
         ))}
         <FormColumn key='AddButton'>
@@ -103,4 +103,4 @@ const GenerationForm = (props: Props) => {
   )
 }
 
-export default GenerationForm
+export default CreateCardsForm
