@@ -6,10 +6,6 @@ import { Card, H2, H3, H4 } from '@blueprintjs/core'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
-interface Props {
-  onSignIn: (payload: SignInPayload, password: string) => void
-}
-
 const Center = styled('div')`
   display: flex;
   flex-grow: 1;
@@ -23,12 +19,12 @@ interface State {
   password: string
 }
 
-const Login = (props: Props) => {
+const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [state, setState] = React.useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
-    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload, state.password),
+    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload),
     onError: () => appToaster?.show({ intent: 'danger', message: 'Login fehlgeschlagen.' }),
   })
   const onSubmit = () =>
