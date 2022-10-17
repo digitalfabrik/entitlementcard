@@ -64,7 +64,7 @@ class MapStyleHandler(config: BackendConfiguration) {
     private fun loadStyle(): JsonNode? {
         val mapper = ObjectMapper()
         val resource =
-            ClassLoader.getSystemResource("style.json") ?: throw Error("Map style 'style.json' is missing!'")
+            ClassLoader.getSystemResource("styles/style.json") ?: throw Error("Map style 'style.json' is missing!'")
 
         val reader = BufferedReader(resource.openStream().reader(Charsets.UTF_8))
         val text = reader.readText()

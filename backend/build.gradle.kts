@@ -81,7 +81,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 tasks.register<Copy>("copyStyle") {
     from("$rootDir/ehrenamtskarte-maplibre-style/style.json")
-    into("$buildDir/resources/main/")
+    into("$buildDir/resources/main/styles")
 }
 
 tasks.named("classes") {
