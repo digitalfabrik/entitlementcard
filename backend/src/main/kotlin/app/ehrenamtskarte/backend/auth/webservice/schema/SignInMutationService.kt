@@ -6,8 +6,10 @@ import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.AuthData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.SignInPayload
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -26,5 +28,29 @@ class SignInMutationService {
         )
         val token = JwtService.createToken(administrator)
         return SignInPayload(administrator, token)
+    }
+
+    @GraphQLDescription("Changes an administrator's password")
+    fun changePassword(
+        project: String,
+        email: String,
+        currentPassword: String,
+        newPassword: String,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        if (email != jwtPayload.email) {
+            throw GraphQLKotlinException("You can only change your own password.")
+        }
+        transaction {
+            val administratorEntity =
+                AdministratorsRepository.findByAuthData(project, email, currentPassword)
+                    ?: throw GraphQLKotlinException("Current password is wrong.")
+
+            AdministratorsRepository.changePassword(administratorEntity, newPassword)
+        }
+        return true
     }
 }

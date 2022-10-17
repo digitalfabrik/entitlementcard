@@ -6,6 +6,7 @@
     "@apollo/client": "^3.6.9",
     "@blueprintjs/core": "^4.10.1",
     "@blueprintjs/datetime": "^4.3.12",
+    "@blueprintjs/popover2": "^1.7.3",
     "@blueprintjs/select": "^4.6.6",
     "@zxing/library": "^0.19.1",
     "core-js": "^3.25.2",

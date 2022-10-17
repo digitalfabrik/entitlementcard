@@ -1,7 +1,6 @@
-import { useQuery } from '@apollo/client'
 import { Button, Spinner } from '@blueprintjs/core'
 import { createContext, ReactNode, useContext } from 'react'
-import { GetRegionsDocument, GetRegionsQuery, GetRegionsQueryVariables, Region } from './generated/graphql'
+import { Region, useGetRegionsQuery } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { AuthContext } from './AuthProvider'
 
@@ -10,7 +9,7 @@ export const RegionContext = createContext<Region | null>(null)
 const RegionProvider = ({ children }: { children: ReactNode }) => {
   const { projectId } = useContext(ProjectConfigContext)
   const userRegionId = useContext(AuthContext).data?.administrator.regionId
-  const { loading, error, data, refetch } = useQuery<GetRegionsQuery, GetRegionsQueryVariables>(GetRegionsDocument, {
+  const { loading, error, data, refetch } = useGetRegionsQuery({
     variables: { project: projectId },
   })
   if (loading) return <Spinner />

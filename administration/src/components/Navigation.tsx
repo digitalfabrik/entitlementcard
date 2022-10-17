@@ -48,6 +48,9 @@ const Navigation = (props: Props) => {
         ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
+        <NavLink to={'/user-settings'}>
+          <Button minimal icon='settings' text='Benutzereinstellungen' />
+        </NavLink>
         <Button minimal icon='log-out' text='Logout' onClick={props.onSignOut} />
       </Navbar.Group>
     </Navbar>

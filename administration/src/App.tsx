@@ -1,8 +1,5 @@
 import React from 'react'
 import Navigation from './components/Navigation'
-import 'normalize.css'
-import '@blueprintjs/core/lib/css/blueprint.css'
-import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { HashRouter, Route, Routes } from 'react-router-dom'
@@ -17,6 +14,7 @@ import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 import HomeController from './components/home/HomeController'
 import MetaTagsManager from './components/MetaTagsManager'
 import { AppToasterProvider } from './components/AppToaster'
+import UserSettingsController from './components/user-settings/UserSettingsController'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -65,6 +63,7 @@ const App = () => (
                           <Route path={'/'} element={<HomeController />} />
                           <Route path={'/applications'} element={<ApplicationsController token={authData.token} />} />
                           <Route path={'/eak-generation'} element={<GenerationController />} />
+                          <Route path={'/user-settings'} element={<UserSettingsController />} />
                         </Routes>
                       </Main>
                     </HashRouter>

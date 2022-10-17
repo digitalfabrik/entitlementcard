@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
-import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
+import PasswordInput from '../PasswordInput'
 
 interface Props {
   loading?: boolean
@@ -29,12 +29,12 @@ const LoginForm = (props: Props) => {
           />
         </FormGroup>
         <FormGroup label='Passwort'>
-          <InputGroup
+          <PasswordInput
             placeholder='Passwort'
             value={props.password}
             disabled={!!props.loading}
-            type='password'
-            onChange={(event: ChangeEvent<HTMLInputElement>) => props.setPassword(event.target.value)}
+            setValue={props.setPassword}
+            label=''
           />
         </FormGroup>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>

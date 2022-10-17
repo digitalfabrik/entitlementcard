@@ -1,15 +1,10 @@
-import { useMutation } from '@apollo/client'
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import LoginForm from './LoginForm'
 import { useAppToaster } from '../AppToaster'
 import { Card, H2, H3, H4 } from '@blueprintjs/core'
-import { SignInDocument, SignInMutation, SignInMutationVariables, SignInPayload } from '../../generated/graphql'
+import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-
-interface Props {
-  onSignIn: (payload: SignInPayload, password: string) => void
-}
 
 const Center = styled('div')`
   display: flex;
@@ -24,12 +19,12 @@ interface State {
   password: string
 }
 
-const Login = (props: Props) => {
+const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [state, setState] = React.useState<State>({ email: '', password: '' })
-  const [signIn, mutationState] = useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, {
-    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload, state.password),
+  const [signIn, mutationState] = useSignInMutation({
+    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload),
     onError: () => appToaster?.show({ intent: 'danger', message: 'Login fehlgeschlagen.' }),
   })
   const onSubmit = () =>

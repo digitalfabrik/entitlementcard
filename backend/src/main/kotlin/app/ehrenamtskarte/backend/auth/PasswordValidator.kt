@@ -21,10 +21,12 @@ object PasswordValidator {
         if (password.length < minPasswordLength) {
             return PasswordValidationResult.NOT_LONG_ENOUGH
         }
-        val numLowercaseChars = password.count { it.isLowerCase() }
-        val numUppercaseChars = password.count { it.isUpperCase() }
-        val numNumericChars = password.count { it.isDigit() }
+
+        val numLowercaseChars = password.count { it.category == CharCategory.LOWERCASE_LETTER }
+        val numUppercaseChars = password.count { it.category == CharCategory.UPPERCASE_LETTER }
+        val numNumericChars = password.count { it.category == CharCategory.DECIMAL_DIGIT_NUMBER }
         val numSpecialChars = password.length - numLowercaseChars - numUppercaseChars - numNumericChars
+
         if (numLowercaseChars < minLowercaseChars) {
             return PasswordValidationResult.TOO_FEW_LOWERCASE_CHARS
         } else if (numUppercaseChars < minUppercaseChars) {
