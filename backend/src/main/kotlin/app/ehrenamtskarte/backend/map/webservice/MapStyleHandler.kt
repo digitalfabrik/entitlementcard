@@ -64,7 +64,7 @@ class MapStyleHandler(config: BackendConfiguration) {
     private fun loadStyle(): JsonNode? {
         val mapper = ObjectMapper()
         val resource =
-            ClassLoader.getSystemResource("style.json") ?: throw Error("Map style 'style.json' is missing missing!'")
+            ClassLoader.getSystemResource("style.json") ?: throw Error("Map style 'style.json' is missing!'")
 
         val reader = BufferedReader(resource.openStream().reader(Charsets.UTF_8))
         val text = reader.readText()
@@ -78,13 +78,11 @@ class MapStyleHandler(config: BackendConfiguration) {
     fun handle(context: Context) {
         try {
             val projectId: String = context.pathParam("project_id")
-            val style: String = this.styles[projectId]!!
+            val style: String = this.styles[projectId] ?: throw NullPointerException()
             context.result(style)
             context.contentType("application/json")
         } catch (e: IOException) {
             context.res().sendError(500)
-        } catch (e: Throwable) {
-            println(e)
         }
     }
 }
