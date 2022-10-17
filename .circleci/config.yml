@@ -240,6 +240,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init
       - restore_cache:
           key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
