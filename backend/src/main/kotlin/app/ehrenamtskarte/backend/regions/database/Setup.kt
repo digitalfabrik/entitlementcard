@@ -14,22 +14,6 @@ fun setupDatabase() {
         val projects = ProjectEntity.all()
         val dbRegions = RegionEntity.all()
 
-        // Create a dummy region for each project to save the stores to
-        projects.forEach { project ->
-            // Project ids and therefore the dummy regions should never change
-            // Therefore, we only need to create the dummy region if it does not already exist
-            if (dbRegions.none { it.name == project.project }) {
-                // TODO #538: Perhaps no dummy region will be needed anymore
-                RegionEntity.new {
-                    projectId = project.id
-                    name = project.project
-                    prefix = ""
-                    regionIdentifier = null
-                    website = ""
-                }
-            }
-        }
-
         // Create or update eak regions in database
         val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
             ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")

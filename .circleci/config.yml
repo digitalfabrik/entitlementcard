@@ -409,6 +409,7 @@ jobs:
       - run:
           name: "Build .deb"
           command: |
+            cp ~/project/docker/martin-config.yaml config.yaml
             cp /tmp/workspace/martin/martin .
             ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
       - run:
