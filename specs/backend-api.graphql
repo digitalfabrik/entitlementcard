@@ -110,6 +110,8 @@ type Query {
   categories: [Category!]!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Changes an administrator's password"
+  getUsersInProject(project: String!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."

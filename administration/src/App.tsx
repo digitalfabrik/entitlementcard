@@ -17,6 +17,7 @@ import { AppToasterProvider } from './components/AppToaster'
 import UserSettingsController from './components/user-settings/UserSettingsController'
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
+import ManageUsersController from './components/users/ManageUsersController'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -75,6 +76,7 @@ const App = () => (
                                   element={<ApplicationsController token={authData.token} />}
                                 />
                                 <Route path={'/create-cards'} element={<CreateCardsController />} />
+                                <Route path={'/users'} element={<ManageUsersController />} />
                                 <Route path={'/user-settings'} element={<UserSettingsController />} />
                                 <Route path={'*'} element={<HomeController />} />
                               </Routes>
