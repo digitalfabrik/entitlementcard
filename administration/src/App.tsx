@@ -17,6 +17,7 @@ import { AppToasterProvider } from './components/AppToaster'
 import UserSettingsController from './components/user-settings/UserSettingsController'
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
+import ApplyController from './application/ApplyController'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -58,6 +59,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
+                  <Route path={'/apply-for-eak'} element={<ApplyController />} />
                   <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route
                     path={'*'}
