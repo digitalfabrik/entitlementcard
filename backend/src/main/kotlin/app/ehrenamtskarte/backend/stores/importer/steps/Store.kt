@@ -1,21 +1,16 @@
 package app.ehrenamtskarte.backend.stores.importer.steps
 
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
-import app.ehrenamtskarte.backend.regions.database.Regions.name
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
-import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.AddressEntity
-import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.Categories
 import app.ehrenamtskarte.backend.stores.database.ContactEntity
-import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
-import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
 import org.slf4j.Logger
@@ -28,19 +23,15 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
 
     override fun execute(input: List<AcceptingStore>) {
         transaction {
-            // TODO #538: The right region should be used instead of the dummy region
-            val region = RegionEntity.find { name eq config.findProject().id }.first()
+            val project = ProjectEntity.find { Projects.project eq config.findProject().id }.single()
             try {
-                PhysicalStores.deleteAll()
-                AcceptingStores.deleteAll()
-                Contacts.deleteAll()
-                Addresses.deleteAll()
+                project.deleteAssociatedStores()
 
                 input.forEachIndexed { done, acceptingStore ->
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode!!
-                        locaction = acceptingStore.location
+                        location = acceptingStore.location
                         countryCode = acceptingStore.countryCode
                     }
                     val contact = ContactEntity.new {
@@ -53,9 +44,10 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
                         description = acceptingStore.discount
                         contactId = contact.id
                         categoryId = EntityID(acceptingStore.categoryId, Categories)
+                        regionId = null // TODO #538: For now the region is always null
+                        projectId = project.id
                     }
                     PhysicalStoreEntity.new {
-                        regionId = region.id
                         storeId = storeEntity.id
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)

@@ -42,7 +42,6 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
     "protobufjs-cli": "^1.0.2",
-    "run-script-os": "^1.1.6",
     "typescript": "^4.8.3"
   },
   "scripts": {
@@ -53,9 +52,7 @@
     "lint": "eslint . && prettier . --check",
     "format": "prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
-    "generate-protobuf": "run-script-os",
-    "generate-protobuf:linux": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/protobuf.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/protobuf.d.ts src/generated/protobuf.js",
-    "generate-protobuf:win32": "mkdir src\\generated | pbjs -t static-module -w es6 -o src\\generated\\protobuf.js ..\\specs\\card_activate_model.proto --force-long | pbts -o src\\generated\\protobuf.d.ts src\\generated\\protobuf.js",
+    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/protobuf.js ../specs/card_activate_model.proto --force-long && pbts -o src/generated/protobuf.d.ts src/generated/protobuf.js",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql"
   },
   "eslintConfig": {

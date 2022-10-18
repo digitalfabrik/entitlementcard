@@ -49,4 +49,23 @@ internal class PasswordValidatorTest {
             PasswordValidationResult.VALID
         )
     }
+
+    @Test
+    fun validatesPasswordWithUmlauts() {
+        val password = "a!Bcrf835921"
+        assertEquals(
+            PasswordValidator.validatePassword(password),
+            PasswordValidationResult.VALID
+        )
+    }
+
+    @Test
+    fun validatesPasswordWithArabic() {
+        val password = "1!مرحبا بالعAa"
+        assertEquals(
+            // Valid because all arabic characters are special-characters
+            PasswordValidator.validatePassword(password),
+            PasswordValidationResult.VALID
+        )
+    }
 }
