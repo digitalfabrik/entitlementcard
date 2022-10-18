@@ -17,7 +17,6 @@ fun setupDatabase(config: BackendConfiguration) {
             if (dbProjects.none { it.project == projectConfig.id }) {
                 ProjectEntity.new {
                     project = projectConfig.id
-                    host = projectConfig.host
                 }
             }
         }
