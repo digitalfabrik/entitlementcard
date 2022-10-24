@@ -85,7 +85,7 @@ export const WorkAtOrganizationForm = ({
           setState={responsibility => setState({ ...state, responsibility })}
           label='Ehrenamtliche Tätigkeit'
         />
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           <div style={{ flex: '2' }}>
             <DateForm
               label='Tätig seit'
@@ -100,6 +100,7 @@ export const WorkAtOrganizationForm = ({
               setState={amountOfWork => setState({ ...state, amountOfWork })}
               min={0}
               max={100}
+              minWidth={250}
             />
           </div>
         </div>

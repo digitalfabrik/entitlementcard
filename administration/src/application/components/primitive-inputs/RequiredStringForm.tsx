@@ -9,7 +9,7 @@ export const RequiredStringForm = ({
   state,
   setState,
   label,
-  minWidth = 100,
+  minWidth = 200,
 }: {
   state: RequiredStringFormState
   setState: (value: RequiredStringFormState) => void

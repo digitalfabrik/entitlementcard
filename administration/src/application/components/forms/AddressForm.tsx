@@ -33,6 +33,7 @@ export const AddressForm = ({
             state={state.houseNumber}
             setState={houseNumber => setState({ ...state, houseNumber })}
             label='Hausnummer'
+            minWidth={100}
           />
         </div>
       </div>
