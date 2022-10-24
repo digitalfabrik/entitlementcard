@@ -1,6 +1,6 @@
 import { Card, CardContent, Checkbox, FormControlLabel, FormGroup, IconButton, Tooltip } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { AmountOfWorkUnit, WorkAtOrganizationInput } from '../generated/graphql'
+import { AmountOfWorkUnit, WorkAtOrganizationInput } from '../../../generated/graphql'
 import {
   convertOrganizationFormStateToInput,
   initialOrganizationFormState,
@@ -8,17 +8,21 @@ import {
   OrganizationFormState,
 } from './OrganizationForm'
 import { useState } from 'react'
-import ConfirmDialog from './ConfirmDialog'
-import { initialNumberFormState, NumberForm } from './NumberForm'
-import { DateForm, convertDateFormStateToInput, initialDateFormState } from './DateForm'
-import { initialRequiredStringFormState, RequiredStringForm } from './RequiredStringForm'
+import ConfirmDialog from '../ConfirmDialog'
+import { convertNumberFormStateToInput, initialNumberFormState, NumberForm } from '../primitive-inputs/NumberForm'
+import { DateForm, convertDateFormStateToInput, initialDateFormState } from '../primitive-inputs/DateForm'
+import {
+  convertRequiredStringFormStateToInput,
+  initialRequiredStringFormState,
+  RequiredStringForm,
+} from '../primitive-inputs/RequiredStringForm'
 import {
   convertRequiredFileFormStateToInput,
   FILE_SIZE_LIMIT_MEGA_BYTES,
   FileForm,
   FileFormState,
   initialFileFormState,
-} from './FileInputForm'
+} from '../primitive-inputs/FileInputForm'
 
 export type WorkAtOrganizationFormState = {
   organizationFormState: OrganizationFormState
@@ -105,7 +109,7 @@ export const WorkAtOrganizationForm = ({
             control={
               <Checkbox checked={state.payment} onChange={() => setState({ ...state, payment: !state.payment })} />
             }
-            label='Bezahlung außerhalb von Auslagenersatz oder Erstattung der Kosten'
+            label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt.'
           />
         </FormGroup>
         <h4>Tätigkeitsnachweis</h4>
@@ -126,17 +130,13 @@ export const WorkAtOrganizationForm = ({
 export const convertWorkAtOrganizationFormStateToInput = (
   state: WorkAtOrganizationFormState
 ): WorkAtOrganizationInput => {
-  const amountOfWork = parseFloat(state.amountOfWork)
-  if (isNaN(amountOfWork) || amountOfWork <= 0) {
-    throw Error('amountOfWork must be a non-negative number.')
-  }
   return {
     organization: convertOrganizationFormStateToInput(state.organizationFormState),
     workSinceDate: convertDateFormStateToInput(state.activeSince),
-    amountOfWork: amountOfWork,
+    amountOfWork: convertNumberFormStateToInput(state.amountOfWork, 0, 100),
     amountOfWorkUnit: AmountOfWorkUnit.HoursPerWeek,
     certificate: convertRequiredFileFormStateToInput(state.certificate),
     payment: state.payment,
-    responsibility: '',
+    responsibility: convertRequiredStringFormStateToInput(state.responsibility),
   }
 }

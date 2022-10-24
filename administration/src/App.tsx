@@ -17,7 +17,7 @@ import { AppToasterProvider } from './components/AppToaster'
 import UserSettingsController from './components/user-settings/UserSettingsController'
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
-import ApplyController from './application/ApplyController'
+import ApplyController from './application/components/ApplyController'
 import { createUploadLink } from 'apollo-upload-client'
 
 if (!process.env.REACT_APP_API_BASE_URL) {

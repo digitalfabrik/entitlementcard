@@ -53,7 +53,7 @@ export const NumberForm = ({
   )
 }
 
-export const convertRequiredStringFormStateToInput = (state: NumberFormState, min: number, max: number): number => {
+export const convertNumberFormStateToInput = (state: NumberFormState, min: number, max: number): number => {
   const number = parseFloat(state)
   if (isNaN(number)) {
     throw Error('Is not a number')

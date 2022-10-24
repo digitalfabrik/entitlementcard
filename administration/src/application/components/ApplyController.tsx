@@ -2,29 +2,31 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import localforage from 'localforage'
+import { LoadingButton } from '@mui/lab'
+import SendIcon from '@mui/icons-material/Send'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ApplicationType,
   BlueCardEntitlementInput,
   BlueCardEntitlementType,
   useAddBlueEakApplicationMutation,
-} from '../generated/graphql'
+} from '../../generated/graphql'
 import {
   convertStandardEntitlementFormStateToInput,
   initialStandardEntitlementFormState,
   StandardEntitlementForm,
   StandardEntitlementFormState,
-} from './StandardEntitlementForm'
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+} from './forms/StandardEntitlementForm'
+import { DialogActions, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import {
   convertPersonalDataFormStateToInput,
   initialPersonalDataFormState,
   PersonalDataForm,
   PersonalDataFormState,
-} from './PersonalDataForm'
-import { useInitializeGlobalArrayBuffersManager } from './FileInputForm'
+} from './forms/PersonalDataForm'
+import useLocallyStoredState from '../useLocallyStoredState'
+import DiscardAllInputsButton from './DiscardAllInputsButton'
+import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 
 const EntitlementTypeInput = (props: {
   value: BlueCardEntitlementType | null
@@ -59,52 +61,15 @@ const initialApplicationFormState: ApplicationFormState = {
   personalData: initialPersonalDataFormState,
 }
 
-function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, (state: T) => void] {
-  const [state, setState] = useState(initialState)
-  const stateRef = useRef(state)
-  const [loading, setLoading] = useState(true)
-
-  const setStateAndRef = useCallback((state: T) => {
-    setState(state)
-    stateRef.current = state
-  }, [])
-
-  useEffect(() => {
-    localforage
-      .getItem<string>(storageKey)
-      .then(storedString => {
-        if (storedString !== null) {
-          setStateAndRef(JSON.parse(storedString))
-        }
-      })
-      .finally(() => setLoading(false))
-  }, [storageKey])
-
-  useEffect(() => {
-    if (loading) {
-      return
-    }
-    // Auto-save every 2 seconds
-    let lastState: T | null = null
-    const interval = setInterval(() => {
-      if (lastState !== stateRef.current) {
-        localforage.setItem(storageKey, JSON.stringify(stateRef.current))
-        lastState = stateRef.current
-      }
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [loading])
-  return [loading ? null : state, setStateAndRef]
-}
-
 const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
-  const [addBlueEakApplication, result] = useAddBlueEakApplicationMutation()
+  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
   const [state, setState] = useLocallyStoredState(initialApplicationFormState, applicationStorageKey)
-  const initialized = useInitializeGlobalArrayBuffersManager()
+  const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
 
-  if (state == null || !initialized) {
+  // state is null, if it's still being loaded from storage (e.g. after a page reload)
+  if (state == null || !arrayBufferManagerInitialized) {
     return null
   }
 
@@ -126,13 +91,13 @@ const ApplyController = () => {
     const entitlement = getEntitlement()
     addBlueEakApplication({
       variables: {
-        regionId: 1,
+        regionId: 1, // TODO: Add a mechanism to retrieve the regionId
         application: {
           entitlement,
           personalData: convertPersonalDataFormStateToInput(state.personalData),
-          hasAcceptedPrivacyPolicy: true,
-          applicationType: ApplicationType.FirstApplication,
-          givenInformationIsCorrectAndComplete: true,
+          hasAcceptedPrivacyPolicy: true, // TODO: Add a corresponding field
+          applicationType: ApplicationType.FirstApplication, // TODO: Add a corresponding field
+          givenInformationIsCorrectAndComplete: true, // TODO: Add a corresponding field
         },
       },
     })
@@ -151,31 +116,43 @@ const ApplyController = () => {
             value={state.entitlementType}
             setValue={entitlementType => setState({ ...state, entitlementType })}
           />
-          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Standard ? 'block' : 'none' }}>
-            <StandardEntitlementForm
-              state={state.standardEntitlement}
-              setState={standardEntitlement => setState({ ...state, standardEntitlement })}
-            />
-          </div>
-          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Juleica ? 'block' : 'none' }}>
-            <JuleicaEntitlementForm />
-          </div>
-          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Service ? 'block' : 'none' }}>
-            <ServiceEntitlementForm />
-          </div>
-
+          <SwitchDisplay value={state.entitlementType}>
+            {{
+              [BlueCardEntitlementType.Standard]: (
+                <StandardEntitlementForm
+                  state={state.standardEntitlement}
+                  setState={standardEntitlement => setState({ ...state, standardEntitlement })}
+                />
+              ),
+              [BlueCardEntitlementType.Juleica]: <JuleicaEntitlementForm />,
+              [BlueCardEntitlementType.Service]: <ServiceEntitlementForm />,
+            }}
+          </SwitchDisplay>
           <PersonalDataForm
             state={state.personalData}
             setState={personalData => setState({ ...state, personalData })}
           />
-
-          <Button onClick={() => setState(initialApplicationFormState)}>Alle Eingaben verwerfen</Button>
-          <Button variant='contained' type='submit'>
-            Antrag Senden
-          </Button>
+          <DialogActions>
+            <DiscardAllInputsButton discardAll={() => setState(initialApplicationFormState)} />
+            <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
+              Antrag Senden
+            </LoadingButton>
+          </DialogActions>
         </form>
       </div>
     </div>
+  )
+}
+
+const SwitchDisplay = ({ children, value }: { children: { [key: string]: React.ReactNode }; value: string | null }) => {
+  return (
+    <>
+      {Object.entries(children).map(([key, element]) => (
+        <div key={key} style={{ display: key === value ? 'block' : 'none' }}>
+          {element}
+        </div>
+      ))}
+    </>
   )
 }
 

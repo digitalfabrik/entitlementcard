@@ -1,19 +1,22 @@
-import { OrganizationInput } from '../generated/graphql'
+import { OrganizationInput } from '../../../generated/graphql'
 import { AddressForm, AddressFormState, convertAddressFormStateToInput, initialAddressFormState } from './AddressForm'
-import { convertRequiredEmailFormStateToInput, RequiredEmailForm } from './RequiredEmailForm'
-import { convertRequiredStringFormStateToInput, RequiredStringForm } from './RequiredStringForm'
+import { convertRequiredEmailFormStateToInput, RequiredEmailForm } from '../primitive-inputs/RequiredEmailForm'
 import {
-  convertOrganizationCategoryFormStateToInput,
-  initialOrganizationCategoryFormState,
-  OrganizationCategoryForm,
-  OrganizationCategoryFormState,
-} from './OrganizationCategory'
+    convertRequiredStringFormStateToInput,
+    initialRequiredStringFormState,
+    RequiredStringForm
+} from '../primitive-inputs/RequiredStringForm'
+import {
+    convertRequiredSelectFormStateToInput,
+    initialRequiredSelectFormState,
+    RequiredSelectForm, RequiredSelectFormState,
+} from '../primitive-inputs/RequiredSelectForm'
 
 export type OrganizationFormState = {
   amountOfWork: number
   name: string
   addressFormState: AddressFormState
-  categoryFormState: OrganizationCategoryFormState
+  categoryFormState: RequiredSelectFormState
   contactName: string
   contactEmail: string
   contactPhone: string
@@ -22,12 +25,12 @@ export type OrganizationFormState = {
 
 export const initialOrganizationFormState: OrganizationFormState = {
   amountOfWork: 0,
-  name: '',
+  name: initialRequiredStringFormState,
   addressFormState: initialAddressFormState,
-  categoryFormState: initialOrganizationCategoryFormState,
-  contactName: '',
-  contactEmail: '',
-  contactPhone: '',
+  categoryFormState: initialRequiredSelectFormState,
+  contactName: initialRequiredStringFormState,
+  contactEmail: initialRequiredStringFormState,
+  contactPhone: initialRequiredStringFormState,
   contactHasConfirmedDataProcessing: false,
 }
 
@@ -50,9 +53,22 @@ export const OrganizationForm = ({
         state={state.addressFormState}
         setState={addressFormState => setState({ ...state, addressFormState })}
       />
-      <OrganizationCategoryForm
+      <RequiredSelectForm
         state={state.categoryFormState}
         setState={categoryFormState => setState({ ...state, categoryFormState })}
+        label='Einsatzgebiet'
+        options={[
+            'Soziales/Jugend/Senioren',
+            'Tierschutz',
+            'Sport',
+            'Bildung',
+            'Umwelt-/Naturschutz',
+            'Kultur',
+            'Gesundheit',
+            'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+            'Kirchen',
+            'Andere',
+        ]}
       />
       <h4>Kontaktperson der Organisation</h4>
       <RequiredStringForm
@@ -78,7 +94,7 @@ export const convertOrganizationFormStateToInput = (state: OrganizationFormState
   return {
     name: convertRequiredStringFormStateToInput(state.name),
     address: convertAddressFormStateToInput(state.addressFormState),
-    category: convertOrganizationCategoryFormStateToInput(state.categoryFormState),
+    category: convertRequiredSelectFormStateToInput(state.categoryFormState),
     contact: {
       email: convertRequiredEmailFormStateToInput(state.contactEmail),
       name: convertRequiredStringFormStateToInput(state.contactName),

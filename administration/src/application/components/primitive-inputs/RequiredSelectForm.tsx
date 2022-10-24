@@ -1,29 +1,20 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
 
-export type OrganizationCategoryFormState = string
+export type RequiredSelectFormState = string
 
-export const initialOrganizationCategoryFormState: OrganizationCategoryFormState = ''
+export const initialRequiredSelectFormState: RequiredSelectFormState = ''
 
-const categories = [
-  'Soziales/Jugend/Senioren',
-  'Tierschutz',
-  'Sport',
-  'Bildung',
-  'Umwelt-/Naturschutz',
-  'Kultur',
-  'Gesundheit',
-  'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-  'Kirchen',
-  'Andere',
-]
-
-export const OrganizationCategoryForm = ({
+export const RequiredSelectForm = ({
   state,
   setState,
+  label,
+  options,
 }: {
-  state: OrganizationCategoryFormState
-  setState: (value: OrganizationCategoryFormState) => void
+  state: RequiredSelectFormState
+  setState: (value: RequiredSelectFormState) => void
+  label: string
+  options: string[]
 }) => {
   const [touched, setTouched] = useState(false)
 
@@ -36,13 +27,13 @@ export const OrganizationCategoryForm = ({
 
   return (
     <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
-      <InputLabel>Einsatzgebiet</InputLabel>
+      <InputLabel>{label}</InputLabel>
       <Select
         value={state}
-        label='Einsatzgebiet'
+        label={label}
         onBlur={() => setTouched(true)}
         onChange={e => setState(e.target.value)}>
-        {categories.map(category => (
+        {options.map(category => (
           <MenuItem key={category} value={category}>
             {category}
           </MenuItem>
@@ -53,7 +44,7 @@ export const OrganizationCategoryForm = ({
   )
 }
 
-export const convertOrganizationCategoryFormStateToInput = (state: OrganizationCategoryFormState): string => {
-  if (state === '') throw Error('invalid category')
+export const convertRequiredSelectFormStateToInput = (state: RequiredSelectFormState): string => {
+  if (state === '') throw Error('Invalid option!')
   return state
 }

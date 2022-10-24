@@ -1,18 +1,18 @@
-import { PersonalDataInput } from '../generated/graphql'
+import { PersonalDataInput } from '../../../generated/graphql'
 import { AddressForm, AddressFormState, convertAddressFormStateToInput, initialAddressFormState } from './AddressForm'
 import {
   convertRequiredEmailFormStateToInput,
   initialRequiredEmailFormState,
   RequiredEmailForm,
   RequiredEmailFormState,
-} from './RequiredEmailForm'
+} from '../primitive-inputs/RequiredEmailForm'
 import {
   convertRequiredStringFormStateToInput,
   initialRequiredStringFormState,
   RequiredStringForm,
   RequiredStringFormState,
-} from './RequiredStringForm'
-import { convertDateFormStateToInput, DateForm, DateFormState, initialDateFormState } from './DateForm'
+} from '../primitive-inputs/RequiredStringForm'
+import { convertDateFormStateToInput, DateForm, DateFormState, initialDateFormState } from '../primitive-inputs/DateForm'
 
 export type PersonalDataFormState = {
   forenames: RequiredStringFormState

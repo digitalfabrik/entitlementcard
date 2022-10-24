@@ -5,7 +5,7 @@ import {
   WorkAtOrganizationForm,
   WorkAtOrganizationFormState,
 } from './WorkAtOrganizationForm'
-import { WorkAtOrganizationInput } from '../generated/graphql'
+import { WorkAtOrganizationInput } from '../../../generated/graphql'
 
 export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
 

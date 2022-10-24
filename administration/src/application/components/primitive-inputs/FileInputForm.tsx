@@ -1,8 +1,8 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
-import { Button, Chip } from '@mui/material'
-import localforage from 'localforage'
-import { ChangeEventHandler, useEffect, useRef, useState } from 'react'
-import { AttachmentInput } from '../generated/graphql'
+import { Button, Chip, FormHelperText } from '@mui/material'
+import { ChangeEventHandler, useEffect, useRef } from 'react'
+import { AttachmentInput } from '../../../generated/graphql'
+import globalArrayBuffersManager from "../../globalArrayBuffersManager";
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',
@@ -18,71 +18,22 @@ export type FileFormState = {
 
 export const initialFileFormState: FileFormState = null
 
-const arrayBuffersKey = 'array-buffers'
-
-class ArrayBuffersManager {
-  private arrayBuffers: { key: number; value: ArrayBuffer }[] = []
-
-  constructor() {}
-
-  async initialize() {
-    const arrayBuffers = await localforage.getItem<{ key: number; value: ArrayBuffer }[]>(arrayBuffersKey)
-    if (arrayBuffers !== null) {
-      this.arrayBuffers = arrayBuffers
-    }
-  }
-
-  getArrayBufferByKey(key: number): ArrayBuffer {
-    const element = this.arrayBuffers.find(({ key: elementKey }) => key === elementKey)
-    if (element == undefined) {
-      throw Error('Invalid index')
-    }
-    return element.value
-  }
-
-  addArrayBuffer(arrayBuffer: ArrayBuffer): number {
-    const newKey = Math.max(...this.arrayBuffers.map(({ key }) => key), 0) + 1
-    this.arrayBuffers.push({ key: newKey, value: arrayBuffer })
-    localforage.setItem(arrayBuffersKey, this.arrayBuffers)
-    return newKey
-  }
-
-  removeArrayBufferByKey(key: number): void {
-    this.arrayBuffers = this.arrayBuffers.filter(({ key: elementKey }) => key !== elementKey)
-    localforage.setItem(arrayBuffersKey, this.arrayBuffers)
-  }
-
-  has(key: number): boolean {
-    return this.arrayBuffers.find(({ key: elementKey }) => key === elementKey) !== undefined
-  }
-}
-
-const globalArrayBuffersManager = new ArrayBuffersManager()
-
-export const useInitializeGlobalArrayBuffersManager = () => {
-  const [initialized, setInitialized] = useState(false)
-  useEffect(() => {
-    globalArrayBuffersManager.initialize().finally(() => setInitialized(true))
-  }, [])
-  return initialized
-}
 
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
+const useShowAllErrors = () => true
+
 export const FileForm = ({
   state,
   setState,
-  label,
-  minWidth = 100,
 }: {
   state: FileFormState
   setState: (value: FileFormState) => void
   label: string
   minWidth?: number
 }) => {
-  const [touched, setTouched] = useState(false)
-  const isInvalid = state === null
+  const showAllErrors = useShowAllErrors()
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
     const file = e.target.files![0]
@@ -107,22 +58,25 @@ export const FileForm = ({
     if (state === null) {
       return
     }
+    // If the arrayBufferManager doesn't have the specified key, let user reenter a File.
     if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
       setState(null)
     } else {
+      // Remove the arrayBuffer from the storage once the component unmounts.
       return () => globalArrayBuffersManager.removeArrayBufferByKey(state.arrayBufferKey)
     }
   }, [state])
 
   if (state === null) {
-    return <FileInput onChange={onInputChange} label='Datei Anhängen' />
+    return (
+      <>
+        <FileInput onChange={onInputChange} label='Datei Anhängen' />
+        {showAllErrors ? <FormHelperText error>Feld ist erforderlich.</FormHelperText> : null}
+      </>
+    )
   }
 
-  return (
-    <>
-      <Chip label={`Datei angehängt`} icon={<Attachment />} onDelete={() => setState(null)} />
-    </>
-  )
+  return <Chip label={`Datei angehängt`} icon={<Attachment />} onDelete={() => setState(null)} />
 }
 
 const FileInput = ({ onChange, label }: { onChange: ChangeEventHandler<HTMLInputElement>; label: string }) => {

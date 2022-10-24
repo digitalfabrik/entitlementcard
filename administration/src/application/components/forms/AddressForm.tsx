@@ -1,14 +1,18 @@
-import { AddressInput } from '../generated/graphql'
-import { convertRequiredStringFormStateToInput, RequiredStringForm } from './RequiredStringForm'
+import { AddressInput } from '../../../generated/graphql'
+import {
+  convertRequiredStringFormStateToInput,
+  initialRequiredStringFormState,
+  RequiredStringForm
+} from '../primitive-inputs/RequiredStringForm'
 
 export type AddressFormState = AddressInput
 
 export const initialAddressFormState: AddressFormState = {
-  addressSupplement: '',
-  houseNumber: '',
-  location: '',
-  postalCode: '',
-  street: '',
+  addressSupplement: initialRequiredStringFormState,
+  houseNumber: initialRequiredStringFormState,
+  location: initialRequiredStringFormState,
+  postalCode: initialRequiredStringFormState,
+  street: initialRequiredStringFormState,
 }
 
 export const AddressForm = ({

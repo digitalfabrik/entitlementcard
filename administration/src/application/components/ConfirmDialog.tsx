@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
-export default ({
+const ConfirmDialog = ({
   open,
   setOpen,
   title,
@@ -34,3 +34,5 @@ export default ({
     </Dialog>
   )
 }
+
+export default ConfirmDialog

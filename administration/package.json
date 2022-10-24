@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.10.4",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.9",
+    "@mui/lab": "^5.0.0-alpha.104",
     "@mui/material": "^5.10.9",
     "@zxing/library": "^0.19.1",
     "apollo-upload-client": "^17.0.0",
