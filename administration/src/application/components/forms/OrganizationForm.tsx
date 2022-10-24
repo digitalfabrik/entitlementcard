@@ -2,14 +2,15 @@ import { OrganizationInput } from '../../../generated/graphql'
 import { AddressForm, AddressFormState, convertAddressFormStateToInput, initialAddressFormState } from './AddressForm'
 import { convertRequiredEmailFormStateToInput, RequiredEmailForm } from '../primitive-inputs/RequiredEmailForm'
 import {
-    convertRequiredStringFormStateToInput,
-    initialRequiredStringFormState,
-    RequiredStringForm
+  convertRequiredStringFormStateToInput,
+  initialRequiredStringFormState,
+  RequiredStringForm,
 } from '../primitive-inputs/RequiredStringForm'
 import {
-    convertRequiredSelectFormStateToInput,
-    initialRequiredSelectFormState,
-    RequiredSelectForm, RequiredSelectFormState,
+  convertRequiredSelectFormStateToInput,
+  initialRequiredSelectFormState,
+  RequiredSelectForm,
+  RequiredSelectFormState,
 } from '../primitive-inputs/RequiredSelectForm'
 
 export type OrganizationFormState = {
@@ -58,16 +59,16 @@ export const OrganizationForm = ({
         setState={categoryFormState => setState({ ...state, categoryFormState })}
         label='Einsatzgebiet'
         options={[
-            'Soziales/Jugend/Senioren',
-            'Tierschutz',
-            'Sport',
-            'Bildung',
-            'Umwelt-/Naturschutz',
-            'Kultur',
-            'Gesundheit',
-            'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-            'Kirchen',
-            'Andere',
+          'Soziales/Jugend/Senioren',
+          'Tierschutz',
+          'Sport',
+          'Bildung',
+          'Umwelt-/Naturschutz',
+          'Kultur',
+          'Gesundheit',
+          'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+          'Kirchen',
+          'Andere',
         ]}
       />
       <h4>Kontaktperson der Organisation</h4>

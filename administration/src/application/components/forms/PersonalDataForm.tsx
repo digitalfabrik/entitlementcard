@@ -12,7 +12,12 @@ import {
   RequiredStringForm,
   RequiredStringFormState,
 } from '../primitive-inputs/RequiredStringForm'
-import { convertDateFormStateToInput, DateForm, DateFormState, initialDateFormState } from '../primitive-inputs/DateForm'
+import {
+  convertDateFormStateToInput,
+  DateForm,
+  DateFormState,
+  initialDateFormState,
+} from '../primitive-inputs/DateForm'
 
 export type PersonalDataFormState = {
   forenames: RequiredStringFormState

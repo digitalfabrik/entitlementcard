@@ -2,7 +2,7 @@ import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip, FormHelperText } from '@mui/material'
 import { ChangeEventHandler, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
-import globalArrayBuffersManager from "../../globalArrayBuffersManager";
+import globalArrayBuffersManager from '../../globalArrayBuffersManager'
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',
@@ -17,7 +17,6 @@ export type FileFormState = {
 } | null
 
 export const initialFileFormState: FileFormState = null
-
 
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000

@@ -2,7 +2,7 @@ import { AddressInput } from '../../../generated/graphql'
 import {
   convertRequiredStringFormStateToInput,
   initialRequiredStringFormState,
-  RequiredStringForm
+  RequiredStringForm,
 } from '../primitive-inputs/RequiredStringForm'
 
 export type AddressFormState = AddressInput

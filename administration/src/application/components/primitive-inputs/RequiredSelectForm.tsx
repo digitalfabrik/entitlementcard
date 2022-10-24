@@ -28,11 +28,7 @@ export const RequiredSelectForm = ({
   return (
     <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
       <InputLabel>{label}</InputLabel>
-      <Select
-        value={state}
-        label={label}
-        onBlur={() => setTouched(true)}
-        onChange={e => setState(e.target.value)}>
+      <Select value={state} label={label} onBlur={() => setTouched(true)} onChange={e => setState(e.target.value)}>
         {options.map(category => (
           <MenuItem key={category} value={category}>
             {category}
