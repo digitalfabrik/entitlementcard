@@ -40,7 +40,7 @@ export const DateForm = ({
       required
       error={touched && isInvalid}
       value={state}
-      inputProps={{ style: { color: state === '' ? 'transparent' : undefined } }}
+      sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       onBlur={() => setTouched(true)}
       onChange={e => setState(e.target.value)}
       helperText={touched && isInvalid ? error : ''}

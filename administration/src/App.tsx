@@ -24,7 +24,7 @@ if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
 }
 
-const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_BASE_URL }) // createHttpLink({ uri: process.env.REACT_APP_API_BASE_URL })
+const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_BASE_URL })
 
 const createAuthLink = (token?: string) =>
   setContext((_, { headers }) => ({
