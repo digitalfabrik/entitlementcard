@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class EakApplicationMutationService {
@@ -20,7 +21,7 @@ class EakApplicationMutationService {
         application: BlueCardApplication,
         dfe: DataFetchingEnvironment
     ): Boolean {
-        val context = dfe.getLocalContext<GraphQLContext>()
+        val context = dfe.getContext<GraphQLContext>()
         EakApplicationRepository.addEakApplication(
             regionId,
             application,
@@ -51,18 +52,20 @@ class EakApplicationMutationService {
         applicationId: Int,
         dfe: DataFetchingEnvironment
     ): Boolean {
-        val context = dfe.getLocalContext<GraphQLContext>()
+        val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
 
-        val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-        // We throw an UnauthorizedException here, as we do not know whether there was an application with id
-        // `applicationId` and whether this application was contained in the user's project & region.
+        return transaction {
+            val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
+            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
+            // `applicationId` and whether this application was contained in the user's project & region.
 
-        val user = AdministratorEntity.findById(jwtPayload.userId)
-        if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
-            throw UnauthorizedException()
+            val user = AdministratorEntity.findById(jwtPayload.userId)
+            if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
+                throw UnauthorizedException()
+            }
+
+            EakApplicationRepository.delete(applicationId, context)
         }
-
-        return EakApplicationRepository.delete(applicationId, context)
     }
 }

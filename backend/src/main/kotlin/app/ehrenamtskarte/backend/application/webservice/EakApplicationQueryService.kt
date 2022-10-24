@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class EakApplicationQueryService {
@@ -19,11 +20,13 @@ class EakApplicationQueryService {
     ): List<ApplicationView> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
-        if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
-            throw UnauthorizedException()
-        }
+        return transaction {
+            val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
+            if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
+                throw UnauthorizedException()
+            }
 
-        return EakApplicationRepository.getApplications(regionId)
+            EakApplicationRepository.getApplications(regionId)
+        }
     }
 }
