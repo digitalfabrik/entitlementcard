@@ -42,15 +42,16 @@ object AcceptingStoresRepository {
         offset: Long
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
-            if (categoryIds == null)
+            if (categoryIds == null) {
                 Op.TRUE
-            else
+            } else {
                 Op.build { AcceptingStores.categoryId inList categoryIds }
+            }
 
         val textMatcher =
-            if (searchText == null)
+            if (searchText == null) {
                 Op.TRUE
-            else
+            } else {
                 OrOp(
                     listOf(
                         AcceptingStores.name ilike "%$searchText%",
@@ -60,14 +61,16 @@ object AcceptingStoresRepository {
                         Addresses.street ilike "%$searchText%"
                     )
                 )
+            }
 
-        val sortExpression = if (coordinates != null)
+        val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
                 MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
             )
-        else
+        } else {
             AcceptingStores.name
+        }
 
         return (Projects innerJoin (AcceptingStores leftJoin PhysicalStores leftJoin Addresses))
             .slice(AcceptingStores.columns)
