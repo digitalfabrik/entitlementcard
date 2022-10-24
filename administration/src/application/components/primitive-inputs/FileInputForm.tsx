@@ -64,7 +64,7 @@ export const FileForm = ({
       // Remove the arrayBuffer from the storage once the component unmounts.
       return () => globalArrayBuffersManager.removeArrayBufferByKey(state.arrayBufferKey)
     }
-  }, [state])
+  }, [state, setState])
 
   if (state === null) {
     return (
