@@ -1,9 +1,11 @@
 import { Alert, Button } from '@mui/material'
 import {
+  convertWorkAtOrganizationFormStateToInput,
   initialWorkAtOrganizationFormState,
   WorkAtOrganizationForm,
   WorkAtOrganizationFormState,
 } from './WorkAtOrganizationForm'
+import { WorkAtOrganizationInput } from '../generated/graphql'
 
 export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
 
@@ -22,7 +24,7 @@ export const StandardEntitlementForm = ({
   setState: (value: StandardEntitlementFormState) => void
 }) => {
   const addActivity = () => {
-    const newKey = Math.max(...state.map(({ key }) => key)) + 1
+    const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
     setState([...state, { key: newKey, value: initialWorkAtOrganizationFormState }])
   }
   return (
@@ -43,6 +45,12 @@ export const StandardEntitlementForm = ({
       )}
     </>
   )
+}
+
+export const convertStandardEntitlementFormStateToInput = (
+  state: StandardEntitlementFormState
+): WorkAtOrganizationInput[] => {
+  return state.map(({ value }) => convertWorkAtOrganizationFormStateToInput(value))
 }
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {

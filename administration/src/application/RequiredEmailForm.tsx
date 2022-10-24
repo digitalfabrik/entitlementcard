@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 export type RequiredEmailFormState = string
 
-export const initialRequiredStringFormState: RequiredEmailFormState = ''
+export const initialRequiredEmailFormState: RequiredEmailFormState = ''
 
 export const RequiredEmailForm = ({
   state,
@@ -36,7 +36,7 @@ export const RequiredEmailForm = ({
   )
 }
 
-export const convertRequiredStringFormStateToInput = (state: RequiredEmailFormState): string => {
+export const convertRequiredEmailFormStateToInput = (state: RequiredEmailFormState): string => {
   if (state.length === 0) {
     throw Error('Invalid argument.')
   }

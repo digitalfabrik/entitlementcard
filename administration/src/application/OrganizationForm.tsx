@@ -1,12 +1,19 @@
 import { OrganizationInput } from '../generated/graphql'
 import { AddressForm, AddressFormState, convertAddressFormStateToInput, initialAddressFormState } from './AddressForm'
-import { RequiredEmailForm } from './RequiredEmailForm'
+import { convertRequiredEmailFormStateToInput, RequiredEmailForm } from './RequiredEmailForm'
 import { convertRequiredStringFormStateToInput, RequiredStringForm } from './RequiredStringForm'
+import {
+  convertOrganizationCategoryFormStateToInput,
+  initialOrganizationCategoryFormState,
+  OrganizationCategoryForm,
+  OrganizationCategoryFormState,
+} from './OrganizationCategory'
 
 export type OrganizationFormState = {
   amountOfWork: number
   name: string
   addressFormState: AddressFormState
+  categoryFormState: OrganizationCategoryFormState
   contactName: string
   contactEmail: string
   contactPhone: string
@@ -17,6 +24,7 @@ export const initialOrganizationFormState: OrganizationFormState = {
   amountOfWork: 0,
   name: '',
   addressFormState: initialAddressFormState,
+  categoryFormState: initialOrganizationCategoryFormState,
   contactName: '',
   contactEmail: '',
   contactPhone: '',
@@ -42,6 +50,10 @@ export const OrganizationForm = ({
         state={state.addressFormState}
         setState={addressFormState => setState({ ...state, addressFormState })}
       />
+      <OrganizationCategoryForm
+        state={state.categoryFormState}
+        setState={categoryFormState => setState({ ...state, categoryFormState })}
+      />
       <h4>Kontaktperson der Organisation</h4>
       <RequiredStringForm
         state={state.contactName}
@@ -53,6 +65,11 @@ export const OrganizationForm = ({
         setState={contactEmail => setState({ ...state, contactEmail })}
         label='E-Mail-Adresse'
       />
+      <RequiredStringForm
+        state={state.contactPhone}
+        setState={contactPhone => setState({ ...state, contactPhone })}
+        label='Telefon'
+      />
     </>
   )
 }
@@ -61,7 +78,12 @@ export const convertOrganizationFormStateToInput = (state: OrganizationFormState
   return {
     name: convertRequiredStringFormStateToInput(state.name),
     address: convertAddressFormStateToInput(state.addressFormState),
-    category: 'hi',
-    contact: { email: 'asdf', name: 'asdf', hasGivenPermission: false, telephone: '' },
+    category: convertOrganizationCategoryFormStateToInput(state.categoryFormState),
+    contact: {
+      email: convertRequiredEmailFormStateToInput(state.contactEmail),
+      name: convertRequiredStringFormStateToInput(state.contactName),
+      hasGivenPermission: state.contactHasConfirmedDataProcessing,
+      telephone: convertRequiredStringFormStateToInput(state.contactPhone),
+    },
   }
 }

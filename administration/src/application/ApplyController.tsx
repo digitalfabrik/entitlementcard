@@ -2,19 +2,29 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
+import localforage from 'localforage'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
+  ApplicationType,
   BlueCardEntitlementInput,
   BlueCardEntitlementType,
   useAddBlueEakApplicationMutation,
 } from '../generated/graphql'
 import {
+  convertStandardEntitlementFormStateToInput,
   initialStandardEntitlementFormState,
   StandardEntitlementForm,
   StandardEntitlementFormState,
 } from './StandardEntitlementForm'
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import {
+  convertPersonalDataFormStateToInput,
+  initialPersonalDataFormState,
+  PersonalDataForm,
+  PersonalDataFormState,
+} from './PersonalDataForm'
+import { useInitializeGlobalArrayBuffersManager } from './FileInputForm'
 
 const EntitlementTypeInput = (props: {
   value: BlueCardEntitlementType | null
@@ -37,25 +47,95 @@ const EntitlementTypeInput = (props: {
 const JuleicaEntitlementForm = () => null
 const ServiceEntitlementForm = () => null
 
+type ApplicationFormState = {
+  entitlementType: BlueCardEntitlementType | null
+  standardEntitlement: StandardEntitlementFormState
+  personalData: PersonalDataFormState
+}
+
+const initialApplicationFormState: ApplicationFormState = {
+  entitlementType: null,
+  standardEntitlement: initialStandardEntitlementFormState,
+  personalData: initialPersonalDataFormState,
+}
+
+function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, (state: T) => void] {
+  const [state, setState] = useState(initialState)
+  const stateRef = useRef(state)
+  const [loading, setLoading] = useState(true)
+
+  const setStateAndRef = useCallback((state: T) => {
+    setState(state)
+    stateRef.current = state
+  }, [])
+
+  useEffect(() => {
+    localforage
+      .getItem<string>(storageKey)
+      .then(storedString => {
+        if (storedString !== null) {
+          setStateAndRef(JSON.parse(storedString))
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [storageKey])
+
+  useEffect(() => {
+    if (loading) {
+      return
+    }
+    // Auto-save every 2 seconds
+    let lastState: T | null = null
+    const interval = setInterval(() => {
+      if (lastState !== stateRef.current) {
+        localforage.setItem(storageKey, JSON.stringify(stateRef.current))
+        lastState = stateRef.current
+      }
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [loading])
+  return [loading ? null : state, setStateAndRef]
+}
+
+const applicationStorageKey = 'applicationState'
+
 const ApplyController = () => {
   const [addBlueEakApplication, result] = useAddBlueEakApplicationMutation()
-  const [entitlementType, setEntitlementType] = useState<BlueCardEntitlementType | null>(null)
-  const [standardEntitlementFormState, setStandardEntitlementFormState] = useState<StandardEntitlementFormState>(
-    initialStandardEntitlementFormState
-  )
+  const [state, setState] = useLocallyStoredState(initialApplicationFormState, applicationStorageKey)
+  const initialized = useInitializeGlobalArrayBuffersManager()
+
+  if (state == null || !initialized) {
+    return null
+  }
 
   const getEntitlement = (): BlueCardEntitlementInput => {
-    if (entitlementType === null) throw Error('EntitlementType is null.')
-    switch (entitlementType) {
-      case BlueCardEntitlementType.Service:
+    if (state.entitlementType === null) throw Error('EntitlementType is null.')
+    switch (state.entitlementType) {
+      case BlueCardEntitlementType.Standard:
+        const workAtOrganizations = convertStandardEntitlementFormStateToInput(state.standardEntitlement)
+        return {
+          entitlementType: state.entitlementType,
+          workAtOrganizations,
+        }
       default:
         throw Error('Not yet implemented.')
     }
   }
 
   const submit = () => {
-    if (entitlementType === BlueCardEntitlementType.Standard) {
-    }
+    const entitlement = getEntitlement()
+    addBlueEakApplication({
+      variables: {
+        regionId: 1,
+        application: {
+          entitlement,
+          personalData: convertPersonalDataFormStateToInput(state.personalData),
+          hasAcceptedPrivacyPolicy: true,
+          applicationType: ApplicationType.FirstApplication,
+          givenInformationIsCorrectAndComplete: true,
+        },
+      },
+    })
   }
 
   return (
@@ -67,17 +147,32 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <EntitlementTypeInput value={entitlementType} setValue={setEntitlementType} />
-          <div style={{ display: entitlementType === BlueCardEntitlementType.Standard ? 'block' : 'none' }}>
-            <StandardEntitlementForm state={standardEntitlementFormState} setState={setStandardEntitlementFormState} />
+          <EntitlementTypeInput
+            value={state.entitlementType}
+            setValue={entitlementType => setState({ ...state, entitlementType })}
+          />
+          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Standard ? 'block' : 'none' }}>
+            <StandardEntitlementForm
+              state={state.standardEntitlement}
+              setState={standardEntitlement => setState({ ...state, standardEntitlement })}
+            />
           </div>
-          <div style={{ display: entitlementType === BlueCardEntitlementType.Juleica ? 'block' : 'none' }}>
+          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Juleica ? 'block' : 'none' }}>
             <JuleicaEntitlementForm />
           </div>
-          <div style={{ display: entitlementType === BlueCardEntitlementType.Service ? 'block' : 'none' }}>
+          <div style={{ display: state.entitlementType === BlueCardEntitlementType.Service ? 'block' : 'none' }}>
             <ServiceEntitlementForm />
           </div>
-          <div>{/*<Button type='submit' intent='primary' icon='send-message' text='Antrag Senden' />*/}</div>
+
+          <PersonalDataForm
+            state={state.personalData}
+            setState={personalData => setState({ ...state, personalData })}
+          />
+
+          <Button onClick={() => setState(initialApplicationFormState)}>Alle Eingaben verwerfen</Button>
+          <Button variant='contained' type='submit'>
+            Antrag Senden
+          </Button>
         </form>
       </div>
     </div>

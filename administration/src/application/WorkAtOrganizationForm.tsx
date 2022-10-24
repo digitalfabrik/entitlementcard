@@ -9,9 +9,16 @@ import {
 } from './OrganizationForm'
 import { useState } from 'react'
 import ConfirmDialog from './ConfirmDialog'
-import { NumberForm } from './NumberForm'
-import { DateForm, convertDateFormStateToInput } from './DateForm'
-import { RequiredStringForm } from './RequiredStringForm'
+import { initialNumberFormState, NumberForm } from './NumberForm'
+import { DateForm, convertDateFormStateToInput, initialDateFormState } from './DateForm'
+import { initialRequiredStringFormState, RequiredStringForm } from './RequiredStringForm'
+import {
+  convertRequiredFileFormStateToInput,
+  FILE_SIZE_LIMIT_MEGA_BYTES,
+  FileForm,
+  FileFormState,
+  initialFileFormState,
+} from './FileInputForm'
 
 export type WorkAtOrganizationFormState = {
   organizationFormState: OrganizationFormState
@@ -19,14 +26,16 @@ export type WorkAtOrganizationFormState = {
   amountOfWork: string
   payment: boolean
   responsibility: string
+  certificate: FileFormState
 }
 
 export const initialWorkAtOrganizationFormState: WorkAtOrganizationFormState = {
   organizationFormState: initialOrganizationFormState,
-  amountOfWork: '',
-  activeSince: '',
+  amountOfWork: initialNumberFormState,
+  activeSince: initialDateFormState,
   payment: false,
-  responsibility: '',
+  responsibility: initialRequiredStringFormState,
+  certificate: initialFileFormState,
 }
 
 export const WorkAtOrganizationForm = ({
@@ -99,6 +108,16 @@ export const WorkAtOrganizationForm = ({
             label='Bezahlung außerhalb von Auslagenersatz oder Erstattung der Kosten'
           />
         </FormGroup>
+        <h4>Tätigkeitsnachweis</h4>
+        <p>
+          Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Dieser darf maximal{' '}
+          {FILE_SIZE_LIMIT_MEGA_BYTES}MB groß sein. Wählen Sie eine Datei im JPG, PNG oder PDF Format.
+        </p>
+        <FileForm
+          label='Zertifikat'
+          state={state.certificate}
+          setState={certificate => setState({ ...state, certificate })}
+        />
       </CardContent>
     </Card>
   )
@@ -116,7 +135,7 @@ export const convertWorkAtOrganizationFormStateToInput = (
     workSinceDate: convertDateFormStateToInput(state.activeSince),
     amountOfWork: amountOfWork,
     amountOfWorkUnit: AmountOfWorkUnit.HoursPerWeek,
-    certificate: null,
+    certificate: convertRequiredFileFormStateToInput(state.certificate),
     payment: state.payment,
     responsibility: '',
   }

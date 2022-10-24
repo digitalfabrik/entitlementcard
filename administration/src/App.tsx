@@ -1,6 +1,6 @@
 import React from 'react'
 import Navigation from './components/Navigation'
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import GenerationController from './components/generation/GenerationController'
@@ -18,14 +18,13 @@ import UserSettingsController from './components/user-settings/UserSettingsContr
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
 import ApplyController from './application/ApplyController'
+import { createUploadLink } from 'apollo-upload-client'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
 }
 
-const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_API_BASE_URL,
-})
+const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_BASE_URL }) // createHttpLink({ uri: process.env.REACT_APP_API_BASE_URL })
 
 const createAuthLink = (token?: string) =>
   setContext((_, { headers }) => ({

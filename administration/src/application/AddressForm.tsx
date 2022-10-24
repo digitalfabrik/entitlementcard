@@ -20,7 +20,7 @@ export const AddressForm = ({
 }) => {
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>
           <RequiredStringForm state={state.street} setState={street => setState({ ...state, street })} label='Straße' />
         </div>
@@ -32,7 +32,7 @@ export const AddressForm = ({
           />
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1' }}>
           <RequiredStringForm
             state={state.postalCode}
