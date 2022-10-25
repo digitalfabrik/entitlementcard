@@ -7,7 +7,7 @@ import {
   OrganizationForm,
   OrganizationFormState,
 } from './OrganizationForm'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import ConfirmDialog from '../ConfirmDialog'
 import { convertNumberFormStateToInput, initialNumberFormState, NumberForm } from '../primitive-inputs/NumberForm'
 import { DateForm, convertDateFormStateToInput, initialDateFormState } from '../primitive-inputs/DateForm'
@@ -23,6 +23,7 @@ import {
   FileFormState,
   initialFileFormState,
 } from '../primitive-inputs/FileInputForm'
+import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 export type WorkAtOrganizationFormState = {
   organizationFormState: OrganizationFormState
@@ -44,14 +45,18 @@ export const initialWorkAtOrganizationFormState: WorkAtOrganizationFormState = {
 
 export const WorkAtOrganizationForm = ({
   state,
-  setState,
+  listKey,
+  setStateByKey,
   onDelete,
 }: {
   state: WorkAtOrganizationFormState
-  setState: (value: WorkAtOrganizationFormState) => void
+  listKey: number
+  setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
   onDelete?: () => void
 }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
+
   return (
     <Card elevation={4} style={{ margin: '16px 0' }}>
       <CardContent style={{ position: 'relative' }}>
@@ -77,12 +82,12 @@ export const WorkAtOrganizationForm = ({
         )}
         <OrganizationForm
           state={state.organizationFormState}
-          setState={organizationFormState => setState({ ...state, organizationFormState })}
+          setState={useUpdateStateCallback(setState, 'organizationFormState')}
         />
         <h4>Angaben zur Tätigkeit</h4>
         <RequiredStringForm
           state={state.responsibility}
-          setState={responsibility => setState({ ...state, responsibility })}
+          setState={useUpdateStateCallback(setState, 'responsibility')}
           label='Ehrenamtliche Tätigkeit'
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -90,14 +95,14 @@ export const WorkAtOrganizationForm = ({
             <DateForm
               label='Tätig seit'
               state={state.activeSince}
-              setState={activeSince => setState({ ...state, activeSince })}
+              setState={useUpdateStateCallback(setState, 'activeSince')}
             />
           </div>
           <div style={{ flex: '3' }}>
             <NumberForm
               label='Arbeitsstunden pro Woche (Durchschnitt)'
               state={state.amountOfWork}
-              setState={amountOfWork => setState({ ...state, amountOfWork })}
+              setState={useUpdateStateCallback(setState, 'amountOfWork')}
               min={0}
               max={100}
               minWidth={250}
@@ -108,7 +113,10 @@ export const WorkAtOrganizationForm = ({
           <FormControlLabel
             style={{ margin: '8px 0' }}
             control={
-              <Checkbox checked={state.payment} onChange={() => setState({ ...state, payment: !state.payment })} />
+              <Checkbox
+                checked={state.payment}
+                onChange={e => setState(state => ({ ...state, payment: e.target.checked }))}
+              />
             }
             label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt.'
           />
@@ -121,7 +129,7 @@ export const WorkAtOrganizationForm = ({
         <FileForm
           label='Zertifikat'
           state={state.certificate}
-          setState={certificate => setState({ ...state, certificate })}
+          setState={useUpdateStateCallback(setState, 'certificate')}
         />
       </CardContent>
     </Card>

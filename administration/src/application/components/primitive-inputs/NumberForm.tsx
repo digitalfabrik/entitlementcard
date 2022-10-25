@@ -1,5 +1,6 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
+import { SetState } from '../forms/useUpdateStateCallback'
 
 export type NumberFormState = string
 
@@ -14,7 +15,7 @@ export const NumberForm = ({
   max,
 }: {
   state: NumberFormState
-  setState: (value: NumberFormState) => void
+  setState: SetState<NumberFormState>
   label: string
   minWidth?: number
   min: number
@@ -46,7 +47,7 @@ export const NumberForm = ({
       error={touched && isInvalid}
       value={state}
       onBlur={() => setTouched(true)}
-      onChange={e => setState(e.target.value)}
+      onChange={e => setState(() => e.target.value)}
       helperText={touched && isInvalid ? error : ''}
       inputProps={{ inputMode: 'numeric', min, max }}
     />

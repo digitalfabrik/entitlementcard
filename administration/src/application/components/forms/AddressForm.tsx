@@ -4,6 +4,7 @@ import {
   initialRequiredStringFormState,
   RequiredStringForm,
 } from '../primitive-inputs/RequiredStringForm'
+import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 export type AddressFormState = AddressInput
 
@@ -15,23 +16,21 @@ export const initialAddressFormState: AddressFormState = {
   street: initialRequiredStringFormState,
 }
 
-export const AddressForm = ({
-  state,
-  setState,
-}: {
-  state: AddressFormState
-  setState: (value: AddressFormState) => void
-}) => {
+export const AddressForm = ({ state, setState }: { state: AddressFormState; setState: SetState<AddressFormState> }) => {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>
-          <RequiredStringForm state={state.street} setState={street => setState({ ...state, street })} label='Straße' />
+          <RequiredStringForm
+            state={state.street}
+            setState={useUpdateStateCallback(setState, 'street')}
+            label='Straße'
+          />
         </div>
         <div style={{ flex: '1' }}>
           <RequiredStringForm
             state={state.houseNumber}
-            setState={houseNumber => setState({ ...state, houseNumber })}
+            setState={useUpdateStateCallback(setState, 'houseNumber')}
             label='Hausnummer'
             minWidth={100}
           />
@@ -41,14 +40,14 @@ export const AddressForm = ({
         <div style={{ flex: '1' }}>
           <RequiredStringForm
             state={state.postalCode}
-            setState={postalCode => setState({ ...state, postalCode })}
+            setState={useUpdateStateCallback(setState, 'postalCode')}
             label='Postleitzahl'
           />
         </div>
         <div style={{ flex: '3' }}>
           <RequiredStringForm
             state={state.location}
-            setState={location => setState({ ...state, location })}
+            setState={useUpdateStateCallback(setState, 'location')}
             label='Ort'
           />
         </div>

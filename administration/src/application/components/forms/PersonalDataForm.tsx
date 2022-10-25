@@ -18,6 +18,7 @@ import {
   DateFormState,
   initialDateFormState,
 } from '../primitive-inputs/DateForm'
+import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 export type PersonalDataFormState = {
   forenames: RequiredStringFormState
@@ -42,7 +43,7 @@ export const PersonalDataForm = ({
   setState,
 }: {
   state: PersonalDataFormState
-  setState: (value: PersonalDataFormState) => void
+  setState: SetState<PersonalDataFormState>
 }) => {
   return (
     <>
@@ -51,31 +52,32 @@ export const PersonalDataForm = ({
         <div style={{ flex: '1', minWidth: '200px' }}>
           <RequiredStringForm
             state={state.forenames}
-            setState={forenames => setState({ ...state, forenames })}
+            setState={useUpdateStateCallback(setState, 'forenames')}
             label={'Vorname(n)'}
           />
         </div>
         <div style={{ flex: '1', minWidth: '200px' }}>
           <RequiredStringForm
             state={state.surname}
-            setState={surname => setState({ ...state, surname })}
+            setState={useUpdateStateCallback(setState, 'surname')}
             label={'Nachname'}
           />
         </div>
       </div>
       <DateForm
         state={state.dateOfBirth}
-        setState={dateOfBirth => setState({ ...state, dateOfBirth })}
+        setState={useUpdateStateCallback(setState, 'dateOfBirth')}
         label='Geburtsdatum'
       />
-      <AddressForm
-        state={state.addressFormState}
-        setState={addressFormState => setState({ ...state, addressFormState })}
+      <AddressForm state={state.addressFormState} setState={useUpdateStateCallback(setState, 'addressFormState')} />
+      <RequiredEmailForm
+        state={state.email}
+        setState={useUpdateStateCallback(setState, 'email')}
+        label='E-Mail-Adresse'
       />
-      <RequiredEmailForm state={state.email} setState={email => setState({ ...state, email })} label='E-Mail-Adresse' />
       <RequiredStringForm
         state={state.telephone}
-        setState={telephone => setState({ ...state, telephone })}
+        setState={useUpdateStateCallback(setState, 'telephone')}
         label='Telefon'
       />
     </>

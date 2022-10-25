@@ -6,6 +6,8 @@ import {
   WorkAtOrganizationFormState,
 } from './WorkAtOrganizationForm'
 import { WorkAtOrganizationInput } from '../../../generated/graphql'
+import { SetState } from './useUpdateStateCallback'
+import { useCallback } from 'react'
 
 export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
 
@@ -21,21 +23,33 @@ export const StandardEntitlementForm = ({
   setState,
 }: {
   state: StandardEntitlementFormState
-  setState: (value: StandardEntitlementFormState) => void
+  setState: SetState<StandardEntitlementFormState>
 }) => {
-  const addActivity = () => {
-    const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
-    setState([...state, { key: newKey, value: initialWorkAtOrganizationFormState }])
-  }
+  const addActivity = () =>
+    setState(state => {
+      const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
+      return [...state, { key: newKey, value: initialWorkAtOrganizationFormState }]
+    })
+
+  const setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState> = useCallback(
+    key => update =>
+      setState(state => {
+        const index = state.findIndex(element => element.key === key)
+        return replaceAt(state, index, { key, value: update(state[index].value) })
+      }),
+    [setState]
+  )
+
   return (
     <>
       <h3>Ehrenamtliche Tätigkeit(en)</h3>
       {state.map(({ key, value }, index) => (
         <WorkAtOrganizationForm
           key={key}
+          listKey={key}
           state={value}
-          onDelete={state.length <= 1 ? undefined : () => setState(removeAt(state, index))}
-          setState={value => setState(replaceAt(state, index, { key, value }))}
+          onDelete={state.length <= 1 ? undefined : () => setState(state => removeAt(state, index))}
+          setStateByKey={setStateByKey}
         />
       ))}
       {state.length < 10 ? (

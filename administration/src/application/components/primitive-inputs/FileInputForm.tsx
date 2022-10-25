@@ -3,6 +3,7 @@ import { Button, Chip, FormHelperText } from '@mui/material'
 import { ChangeEventHandler, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
 import globalArrayBuffersManager from '../../globalArrayBuffersManager'
+import { SetState } from '../forms/useUpdateStateCallback'
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',
@@ -28,7 +29,7 @@ export const FileForm = ({
   setState,
 }: {
   state: FileFormState
-  setState: (value: FileFormState) => void
+  setState: SetState<FileFormState>
   label: string
   minWidth?: number
 }) => {
@@ -50,7 +51,7 @@ export const FileForm = ({
     const name = 'file' + defaultExtensionsByMIMEType[fileType]
     const arrayBuffer = await file.arrayBuffer()
     const key = globalArrayBuffersManager.addArrayBuffer(arrayBuffer)
-    setState({ MIMEType: fileType, filename: name, arrayBufferKey: key })
+    setState(() => ({ MIMEType: fileType, filename: name, arrayBufferKey: key }))
   }
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export const FileForm = ({
     }
     // If the arrayBufferManager doesn't have the specified key, let user reenter a File.
     if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
-      setState(null)
+      setState(() => null)
     } else {
       // Remove the arrayBuffer from the storage once the component unmounts.
       return () => globalArrayBuffersManager.removeArrayBufferByKey(state.arrayBufferKey)
@@ -75,7 +76,7 @@ export const FileForm = ({
     )
   }
 
-  return <Chip label={`Datei angehängt`} icon={<Attachment />} onDelete={() => setState(null)} />
+  return <Chip label={`Datei angehängt`} icon={<Attachment />} onDelete={() => setState(() => null)} />
 }
 
 const FileInput = ({ onChange, label }: { onChange: ChangeEventHandler<HTMLInputElement>; label: string }) => {

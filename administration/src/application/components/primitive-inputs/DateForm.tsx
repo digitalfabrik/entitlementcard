@@ -1,5 +1,6 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
+import { SetState } from '../forms/useUpdateStateCallback'
 
 export type DateFormState = string
 
@@ -12,7 +13,7 @@ export const DateForm = ({
   minWidth = 100,
 }: {
   state: DateFormState
-  setState: (value: DateFormState) => void
+  setState: SetState<DateFormState>
   label: string
   minWidth?: number
 }) => {
@@ -42,7 +43,7 @@ export const DateForm = ({
       value={state}
       sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       onBlur={() => setTouched(true)}
-      onChange={e => setState(e.target.value)}
+      onChange={e => setState(() => e.target.value)}
       helperText={touched && isInvalid ? error : ''}
     />
   )

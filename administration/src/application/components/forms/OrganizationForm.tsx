@@ -12,6 +12,7 @@ import {
   RequiredSelectForm,
   RequiredSelectFormState,
 } from '../primitive-inputs/RequiredSelectForm'
+import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 export type OrganizationFormState = {
   amountOfWork: number
@@ -40,23 +41,20 @@ export const OrganizationForm = ({
   setState,
 }: {
   state: OrganizationFormState
-  setState: (value: OrganizationFormState) => void
+  setState: SetState<OrganizationFormState>
 }) => {
   return (
     <>
       <h4>Angaben zur Organisation</h4>
       <RequiredStringForm
         state={state.name}
-        setState={name => setState({ ...state, name })}
+        setState={useUpdateStateCallback(setState, 'name')}
         label={'Name der Organisation bzw. des Vereins'}
       />
-      <AddressForm
-        state={state.addressFormState}
-        setState={addressFormState => setState({ ...state, addressFormState })}
-      />
+      <AddressForm state={state.addressFormState} setState={useUpdateStateCallback(setState, 'addressFormState')} />
       <RequiredSelectForm
         state={state.categoryFormState}
-        setState={categoryFormState => setState({ ...state, categoryFormState })}
+        setState={useUpdateStateCallback(setState, 'categoryFormState')}
         label='Einsatzgebiet'
         options={[
           'Soziales/Jugend/Senioren',
@@ -74,17 +72,17 @@ export const OrganizationForm = ({
       <h4>Kontaktperson der Organisation</h4>
       <RequiredStringForm
         state={state.contactName}
-        setState={contactName => setState({ ...state, contactName })}
+        setState={useUpdateStateCallback(setState, 'contactName')}
         label='Vor- und Nachname'
       />
       <RequiredEmailForm
         state={state.contactEmail}
-        setState={contactEmail => setState({ ...state, contactEmail })}
+        setState={useUpdateStateCallback(setState, 'contactEmail')}
         label='E-Mail-Adresse'
       />
       <RequiredStringForm
         state={state.contactPhone}
-        setState={contactPhone => setState({ ...state, contactPhone })}
+        setState={useUpdateStateCallback(setState, 'contactPhone')}
         label='Telefon'
       />
     </>

@@ -1,14 +1,18 @@
 import localforage from 'localforage'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { SetState } from './components/forms/useUpdateStateCallback'
 
-function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, (state: T) => void] {
+function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, SetState<T>] {
   const [state, setState] = useState(initialState)
   const stateRef = useRef(state)
   const [loading, setLoading] = useState(true)
 
-  const setStateAndRef = useCallback((state: T) => {
-    setState(state)
-    stateRef.current = state
+  const setStateAndRef = useCallback((update: (oldState: T) => T) => {
+    setState(state => {
+      const newState = update(state)
+      stateRef.current = newState
+      return newState
+    })
   }, [])
 
   useEffect(() => {
@@ -16,7 +20,7 @@ function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | nul
       .getItem<string>(storageKey)
       .then(storedString => {
         if (storedString !== null) {
-          setStateAndRef(JSON.parse(storedString))
+          setStateAndRef(() => JSON.parse(storedString))
         }
       })
       .finally(() => setLoading(false))

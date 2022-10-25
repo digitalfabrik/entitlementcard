@@ -1,5 +1,6 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
+import { SetState } from '../forms/useUpdateStateCallback'
 
 export type RequiredSelectFormState = string
 
@@ -12,7 +13,7 @@ export const RequiredSelectForm = ({
   options,
 }: {
   state: RequiredSelectFormState
-  setState: (value: RequiredSelectFormState) => void
+  setState: SetState<RequiredSelectFormState>
   label: string
   options: string[]
 }) => {
@@ -28,7 +29,11 @@ export const RequiredSelectForm = ({
   return (
     <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
       <InputLabel>{label}</InputLabel>
-      <Select value={state} label={label} onBlur={() => setTouched(true)} onChange={e => setState(e.target.value)}>
+      <Select
+        value={state}
+        label={label}
+        onBlur={() => setTouched(true)}
+        onChange={e => setState(() => e.target.value)}>
         {options.map(category => (
           <MenuItem key={category} value={category}>
             {category}

@@ -11,55 +11,13 @@ import {
   BlueCardEntitlementType,
   useAddBlueEakApplicationMutation,
 } from '../../generated/graphql'
-import {
-  convertStandardEntitlementFormStateToInput,
-  initialStandardEntitlementFormState,
-  StandardEntitlementForm,
-  StandardEntitlementFormState,
-} from './forms/StandardEntitlementForm'
-import { DialogActions, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
-import {
-  convertPersonalDataFormStateToInput,
-  initialPersonalDataFormState,
-  PersonalDataForm,
-  PersonalDataFormState,
-} from './forms/PersonalDataForm'
+import { convertStandardEntitlementFormStateToInput } from './forms/StandardEntitlementForm'
+import { DialogActions } from '@mui/material'
+import { convertPersonalDataFormStateToInput } from './forms/PersonalDataForm'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-
-const EntitlementTypeInput = (props: {
-  value: BlueCardEntitlementType | null
-  setValue: (value: BlueCardEntitlementType) => void
-}) => {
-  return (
-    <FormControl>
-      <FormLabel>In den folgenden Fällen können Sie eine blaue Ehrenamtskarte beantragen:</FormLabel>
-      <RadioGroup value={props.value} onChange={e => props.setValue(e.target.value as BlueCardEntitlementType)}>
-        <FormControlLabel
-          value={BlueCardEntitlementType.Standard}
-          label='Ehrenamtliches Engagement seit mindestens 2 Jahren bei einem Verein oder einer Organisation'
-          control={<Radio />}
-        />
-      </RadioGroup>
-    </FormControl>
-  )
-}
-
-const JuleicaEntitlementForm = () => null
-const ServiceEntitlementForm = () => null
-
-type ApplicationFormState = {
-  entitlementType: BlueCardEntitlementType | null
-  standardEntitlement: StandardEntitlementFormState
-  personalData: PersonalDataFormState
-}
-
-const initialApplicationFormState: ApplicationFormState = {
-  entitlementType: null,
-  standardEntitlement: initialStandardEntitlementFormState,
-  personalData: initialPersonalDataFormState,
-}
+import { ApplicationForm, initialApplicationFormState } from './forms/ApplicationForm'
 
 const applicationStorageKey = 'applicationState'
 
@@ -112,28 +70,9 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <EntitlementTypeInput
-            value={state.entitlementType}
-            setValue={entitlementType => setState({ ...state, entitlementType })}
-          />
-          <SwitchDisplay value={state.entitlementType}>
-            {{
-              [BlueCardEntitlementType.Standard]: (
-                <StandardEntitlementForm
-                  state={state.standardEntitlement}
-                  setState={standardEntitlement => setState({ ...state, standardEntitlement })}
-                />
-              ),
-              [BlueCardEntitlementType.Juleica]: <JuleicaEntitlementForm />,
-              [BlueCardEntitlementType.Service]: <ServiceEntitlementForm />,
-            }}
-          </SwitchDisplay>
-          <PersonalDataForm
-            state={state.personalData}
-            setState={personalData => setState({ ...state, personalData })}
-          />
+          <ApplicationForm state={state} setState={setState} />
           <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(initialApplicationFormState)} />
+            <DiscardAllInputsButton discardAll={() => setState(() => initialApplicationFormState)} />
             <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
               Antrag Senden
             </LoadingButton>
@@ -143,17 +82,4 @@ const ApplyController = () => {
     </div>
   )
 }
-
-const SwitchDisplay = ({ children, value }: { children: { [key: string]: React.ReactNode }; value: string | null }) => {
-  return (
-    <>
-      {Object.entries(children).map(([key, element]) => (
-        <div key={key} style={{ display: key === value ? 'block' : 'none' }}>
-          {element}
-        </div>
-      ))}
-    </>
-  )
-}
-
 export default ApplyController

@@ -1,5 +1,6 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
+import { SetState } from '../forms/useUpdateStateCallback'
 
 export type RequiredEmailFormState = string
 
@@ -12,7 +13,7 @@ export const RequiredEmailForm = ({
   minWidth = 100,
 }: {
   state: RequiredEmailFormState
-  setState: (value: RequiredEmailFormState) => void
+  setState: SetState<RequiredEmailFormState>
   label: string
   minWidth?: number
 }) => {
@@ -30,7 +31,7 @@ export const RequiredEmailForm = ({
       error={touched && isInvalid}
       value={state}
       onBlur={() => setTouched(true)}
-      onChange={e => setState(e.target.value)}
+      onChange={e => setState(() => e.target.value)}
       helperText={touched && isInvalid ? `Feld ist erforderlich.` : ''}
     />
   )
