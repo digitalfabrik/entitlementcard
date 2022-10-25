@@ -21,7 +21,7 @@ export type CommonBuildConfigType = {
         production: string,
         local: string,
     },
-    mapDataHost: {
+    mapStyleUrl: {
         showcase: string,
         production: string,
         local: string,

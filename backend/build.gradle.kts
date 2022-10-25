@@ -78,3 +78,12 @@ tasks.withType<JavaExec>().configureEach {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+tasks.register<Copy>("copyStyle") {
+    from("$rootDir/ehrenamtskarte-maplibre-style/style.json")
+    into("$buildDir/resources/main/styles")
+}
+
+tasks.named("classes") {
+    dependsOn(tasks.named("copyStyle"))
+}

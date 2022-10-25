@@ -16,7 +16,7 @@ val addressLoader: DataLoader<Int, Address?> = DataLoaderFactory.newDataLoader {
             transaction {
                 AddressRepository.findByIds(ids).map {
                     if (it == null) null
-                    else Address(it.id.value, it.street, it.postalCode, it.locaction, it.countryCode)
+                    else Address(it.id.value, it.street, it.postalCode, it.location, it.countryCode)
                 }
             }
         }

@@ -13,10 +13,10 @@ export const nuernbergCommon: CommonBuildConfigType = {
         primaryColor: "#123456",
         secondaryColor: "#123456"
     },
-    mapDataHost: {
-        production: "https://tiles.entitlementcard.app",
-        showcase: "https://tiles.entitlementcard.app",
-        local: "http://localhost:5002",
+    mapStyleUrl: {
+        production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
+        showcase: "https://tiles.entitlementcard.app/project/showcase.entitlementcard.app/map",
+        local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
     backendUrl: {
         production: "https://api.entitlementcard.app",
