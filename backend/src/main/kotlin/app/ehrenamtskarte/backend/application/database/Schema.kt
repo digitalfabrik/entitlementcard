@@ -8,18 +8,18 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.javatime.datetime
 
-object EakApplications : IntIdTable() {
+object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
     val createdDate = datetime("createdDate").defaultExpression(CurrentDateTime)
 }
 
-class EakApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<EakApplicationEntity>(
-        EakApplications
+class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ApplicationEntity>(
+        Applications
     )
 
-    var regionId by EakApplications.regionId
-    var jsonValue by EakApplications.jsonValue
-    var createdDate by EakApplications.createdDate
+    var regionId by Applications.regionId
+    var jsonValue by Applications.jsonValue
+    var createdDate by Applications.createdDate
 }
