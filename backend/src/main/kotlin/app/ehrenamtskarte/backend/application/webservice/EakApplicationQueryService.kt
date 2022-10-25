@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
+import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.service.Authorizer
@@ -24,6 +24,6 @@ class EakApplicationQueryService {
             throw UnauthorizedException()
         }
 
-        return EakApplicationRepository.getApplications(regionId)
+        return ApplicationRepository.getApplications(regionId)
     }
 }

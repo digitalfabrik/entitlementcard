@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.application.database.repos
 
-import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
-import app.ehrenamtskarte.backend.application.database.EakApplications
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
@@ -15,9 +15,9 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
-object EakApplicationRepository {
+object ApplicationRepository {
 
-    fun <T> addEakApplication(
+    fun <T> addApplication(
         regionId: Int,
         application: T,
         graphQLContext: GraphQLContext,
@@ -44,7 +44,7 @@ object EakApplicationRepository {
         graphQLContext: GraphQLContext
     ) {
         val newApplication = transaction {
-            EakApplicationEntity.new {
+            ApplicationEntity.new {
                 this.regionId = EntityID(regionId, Regions)
                 this.jsonValue = applicationJson
             }
@@ -76,14 +76,14 @@ object EakApplicationRepository {
 
     fun getApplications(regionId: Int): List<ApplicationView> {
         return transaction {
-            EakApplicationEntity.find { EakApplications.regionId eq regionId }
+            ApplicationEntity.find { Applications.regionId eq regionId }
                 .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
         }
     }
 
     fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
         return transaction {
-            val application = EakApplicationEntity.findById(applicationId)
+            val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
                 val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
                 application.delete()
