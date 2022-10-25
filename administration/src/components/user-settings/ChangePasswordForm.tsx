@@ -18,8 +18,8 @@ const ChangePasswordForm = (props: {
       <Card style={{ maxWidth: '500px' }}>
         <H2>Passwort ändern</H2>
         <p>
-          Ein gültiges Passwort besteht aus mindestens zwölf Zeichen, einem Klein- und einem Großbuchstaben sowie einem
-          Sonderzeichen.
+          Ein gültiges Passwort ist mindestens zwölf Zeichen lang, enthält mindestens einen Klein- und einen
+          Großbuchstaben sowie mindestens ein Sonderzeichen.
         </p>
         <form
           onSubmit={event => {

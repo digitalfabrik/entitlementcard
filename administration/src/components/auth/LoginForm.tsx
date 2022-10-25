@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
 import PasswordInput from '../PasswordInput'
+import { Link } from 'react-router-dom'
 
 interface Props {
   loading?: boolean
@@ -37,7 +38,10 @@ const LoginForm = (props: Props) => {
             label=''
           />
         </FormGroup>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+        <div
+          className={Classes.DIALOG_FOOTER_ACTIONS}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link to='/forgot-password'>Passwort vergessen</Link>
           <Button text='Anmelden' type='submit' intent='primary' loading={!!props.loading} />
         </div>
       </form>

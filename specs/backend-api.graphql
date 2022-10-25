@@ -88,6 +88,10 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
+  "Reset the administrator's password"
+  resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
+  "Sends a mail that allows the administrator to reset their password."
+  sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
 }

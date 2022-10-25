@@ -1,0 +1,3 @@
+mutation sendResetMail($project: String!, $email: String!) {
+  result: sendResetMail(project: $project, email: $email)
+}

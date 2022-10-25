@@ -15,6 +15,9 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
+import java.security.SecureRandom
+import java.time.LocalDateTime
+import java.util.Base64
 
 object AdministratorsRepository {
 
@@ -30,7 +33,8 @@ object AdministratorsRepository {
             .firstOrNull()
         return resultRow?.let {
             val user = AdministratorEntity.wrapRow(it)
-            if (PasswordCrypto.verifyPassword(password, user.passwordHash)) {
+            val passwordHash = user.passwordHash
+            if (passwordHash !== null && PasswordCrypto.verifyPassword(password, passwordHash)) {
                 user
             } else {
                 null
@@ -69,5 +73,16 @@ object AdministratorsRepository {
         }
 
         administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
+        administrator.passwordResetKey = null
+        administrator.passwordResetKeyExpiry = null
+    }
+
+    fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
+        val byteArray = ByteArray(64)
+        SecureRandom.getInstanceStrong().nextBytes(byteArray)
+        val key = Base64.getUrlEncoder().encodeToString(byteArray)
+        administrator.passwordResetKey = key
+        administrator.passwordResetKeyExpiry = LocalDateTime.now().plusDays(1)
+        return key
     }
 }

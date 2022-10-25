@@ -49,10 +49,11 @@ class Entry : CliktCommand() {
 }
 
 class GraphQLExport : CliktCommand(name = "graphql-export") {
+    private val config by requireObject<BackendConfiguration>()
     private val path by argument(help = "Export GraphQL schema. Given ")
 
     override fun run() {
-        val schema = GraphQLHandler().graphQLSchema.print()
+        val schema = GraphQLHandler(config).graphQLSchema.print()
         val file = File(path)
         file.writeText(schema)
     }

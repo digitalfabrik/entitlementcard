@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.webservice
 import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParams
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
@@ -27,6 +28,7 @@ import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
+    private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
@@ -109,11 +111,17 @@ class GraphQLHandler(
 
     private fun getGraphQLContext(context: Context, files: List<Part>, applicationData: File) =
         try {
-            GraphQLContext(applicationData, JwtService.verifyRequest(context), files)
+            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, backendConfiguration)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(applicationData, null, files)
+                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(
+                    applicationData,
+                    null,
+                    files,
+                    backendConfiguration
+                )
+
                 else -> throw e
             }
         }

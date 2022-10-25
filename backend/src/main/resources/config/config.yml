@@ -17,9 +17,15 @@ projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/akzeptanzstellen/app-daten.xml
     pipelineName: EhrenamtskarteBayern
+    administrationBaseUrl: https://bayern.ehrenamtskarte.app
+    administrationName: Ehrenamtskarte-Bayern-Verwaltung
   - id: nuernberg.sozialpass.app
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
+    administrationBaseUrl: https://nuernberg.sozialpass.app
+    administrationName: Sozialpass-Nürnberg-Verwaltung
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
     pipelineName: BerechtigungskarteShowcase
+    administrationBaseUrl: https://showcase.entitlementcard.app
+    administrationName: Showcase-Entitlementcard-Verwaltung
