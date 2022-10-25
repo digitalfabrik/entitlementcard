@@ -6,18 +6,13 @@ import { LoadingButton } from '@mui/lab'
 import SendIcon from '@mui/icons-material/Send'
 
 import {
-  ApplicationType,
-  BlueCardEntitlementInput,
-  BlueCardEntitlementType,
   useAddBlueEakApplicationMutation,
 } from '../../generated/graphql'
-import { convertStandardEntitlementFormStateToInput } from './forms/StandardEntitlementForm'
 import { DialogActions } from '@mui/material'
-import { convertPersonalDataFormStateToInput } from './forms/PersonalDataForm'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-import { ApplicationForm, initialApplicationFormState } from './forms/ApplicationForm'
+import {ApplicationForm, convertApplicationFormStateToInput, initialApplicationFormState} from './forms/ApplicationForm'
 
 const applicationStorageKey = 'applicationState'
 
@@ -31,32 +26,11 @@ const ApplyController = () => {
     return null
   }
 
-  const getEntitlement = (): BlueCardEntitlementInput => {
-    if (state.entitlementType === null) throw Error('EntitlementType is null.')
-    switch (state.entitlementType) {
-      case BlueCardEntitlementType.Standard:
-        const workAtOrganizations = convertStandardEntitlementFormStateToInput(state.standardEntitlement)
-        return {
-          entitlementType: state.entitlementType,
-          workAtOrganizations,
-        }
-      default:
-        throw Error('Not yet implemented.')
-    }
-  }
-
   const submit = () => {
-    const entitlement = getEntitlement()
     addBlueEakApplication({
       variables: {
         regionId: 1, // TODO: Add a mechanism to retrieve the regionId
-        application: {
-          entitlement,
-          personalData: convertPersonalDataFormStateToInput(state.personalData),
-          hasAcceptedPrivacyPolicy: true, // TODO: Add a corresponding field
-          applicationType: ApplicationType.FirstApplication, // TODO: Add a corresponding field
-          givenInformationIsCorrectAndComplete: true, // TODO: Add a corresponding field
-        },
+        application: convertApplicationFormStateToInput(state)
       },
     })
   }
