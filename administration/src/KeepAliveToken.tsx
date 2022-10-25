@@ -52,7 +52,11 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
         title={'Ihr Login-Zeitraum läuft ab!'}
         icon={'warning-sign'}
         isCloseButtonShown={false}>
-        <form onSubmit={extendLogin}>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            extendLogin()
+          }}>
           <div className={Classes.DIALOG_BODY}>
             <p>Ihr Login-Zeitraum läuft in {secondsLeft} Sekunden ab. Danach werden Sie automatisch ausgeloggt.</p>
             <p>Geben Sie Ihr Passwort ein, um den Login-Zeitraum zu verlängern.</p>
