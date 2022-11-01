@@ -14,9 +14,9 @@ class EakApplicationQueryService {
 
     @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
+        regionId: Int
     ): List<ApplicationView> {
-        val regionId = 0
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
