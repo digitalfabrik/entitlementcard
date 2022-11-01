@@ -1,28 +1,55 @@
 syntax = "proto3";
 
-message CardActivateModel {
-  string fullName = 1;
-  int64 expirationDate = 2;
-  enum CardType {
-    STANDARD = 0;
-    GOLD = 1;
-  }
-  CardType cardType = 3;
-  int32 regionId = 4;
-  bytes hashSecret = 6;
-  bytes totpSecret = 5;
+message RegionExtension {
+  int32 regionId = 1;
 }
 
-message CardVerifyModel {
+message BirthdayExtension {
+  int64 birthday = 1;
+}
+
+message VAGNumberExtension {
+  string vag_number = 1;
+}
+
+enum BavariaCardType {
+  STANDARD = 0;
+  GOLD = 1;
+}
+
+message BavariaCardTypeExtension {
+  BavariaCardType card_type = 1;
+}
+
+message Expiration {
+  int64 date = 1;
+}
+
+message CardExtensions {
+  optional RegionExtension extension_region = 1;
+  optional BirthdayExtension extension_birthday = 2;
+  optional VAGNumberExtension extension_vag_number = 3;
+  optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
+}
+
+message CardInfo {
+  // Basic information
   string fullName = 1;
-  int64 expirationDate = 2;
-  enum CardType {
-    STANDARD = 0;
-    GOLD = 1;
-  }
-  CardType cardType = 3;
-  int32 regionId = 4;
-  bytes hashSecret = 6;
-  int32 otp = 7;
+  optional Expiration expiration = 2;
+
+  // Extensions
+  optional CardExtensions extensions = 3;
+}
+
+message CardActivationCode {
+  CardInfo info = 1;
+  bytes hash_secret = 2;
+  bytes totp_secret = 3;
+}
+
+message CardVerifyCode {
+  CardInfo info = 1;
+  bytes hashSecret = 2;
+  int32 otp = 3;
 }
 
