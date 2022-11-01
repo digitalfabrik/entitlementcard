@@ -1,9 +1,5 @@
 import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
-import {
-  ApplicationType,
-  BlueCardApplicationInput,
-  BlueCardEntitlementType,
-} from '../../../generated/graphql'
+import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } from '../../../generated/graphql'
 import {
   convertStandardEntitlementFormStateToInput,
   initialStandardEntitlementFormState,

@@ -5,14 +5,16 @@ import '@fontsource/roboto/700.css'
 import { LoadingButton } from '@mui/lab'
 import SendIcon from '@mui/icons-material/Send'
 
-import {
-  useAddBlueEakApplicationMutation,
-} from '../../generated/graphql'
+import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
 import { DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-import {ApplicationForm, convertApplicationFormStateToInput, initialApplicationFormState} from './forms/ApplicationForm'
+import {
+  ApplicationForm,
+  convertApplicationFormStateToInput,
+  initialApplicationFormState,
+} from './forms/ApplicationForm'
 
 const applicationStorageKey = 'applicationState'
 
@@ -30,7 +32,7 @@ const ApplyController = () => {
     addBlueEakApplication({
       variables: {
         regionId: 1, // TODO: Add a mechanism to retrieve the regionId
-        application: convertApplicationFormStateToInput(state)
+        application: convertApplicationFormStateToInput(state),
       },
     })
   }
