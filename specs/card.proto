@@ -12,11 +12,6 @@ message VAGNumberExtension {
   string vag_number = 1;
 }
 
-enum BavariaCardType {
-  STANDARD = 0;
-  GOLD = 1;
-}
-
 message BavariaCardTypeExtension {
   BavariaCardType card_type = 1;
 }
@@ -53,3 +48,8 @@ message CardVerifyCode {
   int32 otp = 3;
 }
 
+// FIXME: Must be last because of https://github.com/protobufjs/protobuf.js/issues/1414
+enum BavariaCardType {
+  STANDARD = 0;
+  GOLD = 1;
+}

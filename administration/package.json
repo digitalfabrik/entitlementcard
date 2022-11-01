@@ -61,7 +61,7 @@
     "lint": "eslint . && prettier . --check",
     "format": "prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
-    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/protobuf.js ../specs/card.proto --force-long && sed  '/@exports BavariaCardType/d' src/generated/protobuf.js > src/generated/protobuf.tmp.js && pbts -o src/generated/protobuf.d.ts src/generated/protobuf.tmp.js",
+    "generate-protobuf": "mkdir -p src/generated && pbjs -t static-module -w es6 -o src/generated/protobuf.js ../specs/card.proto --force-long && pbts -o src/generated/protobuf.d.ts src/generated/protobuf.js",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql"
   },
   "eslintConfig": {
