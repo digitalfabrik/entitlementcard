@@ -136,7 +136,7 @@ jobs:
           name: Build Runner
           command: |
             # Statically use "bayern" build config for analyzing here
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=bayern"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=bayern"
       - run:
           name: Check Analyzer and Linting
           command: |
@@ -176,7 +176,7 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
@@ -222,7 +222,7 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
