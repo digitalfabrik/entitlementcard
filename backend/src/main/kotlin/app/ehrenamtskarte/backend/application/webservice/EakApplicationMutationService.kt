@@ -65,6 +65,7 @@ class EakApplicationMutationService {
                 throw UnauthorizedException()
             }
 
-        return ApplicationRepository.delete(applicationId, context)
+            ApplicationRepository.delete(applicationId, context)
+        }
     }
 }

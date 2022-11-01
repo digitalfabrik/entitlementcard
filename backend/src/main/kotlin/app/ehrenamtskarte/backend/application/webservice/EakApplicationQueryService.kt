@@ -27,5 +27,6 @@ class EakApplicationQueryService {
             }
 
             ApplicationRepository.getApplications(regionId)
+        }
     }
 }
