@@ -34,3 +34,5 @@ lib/build_config/build_config.dart
 lib/graphql/graphql_api.dart
 lib/graphql/graphql_api.graphql.dart
 lib/graphql/graphql_api.graphql.g.dart
+
+lib/proto

@@ -142,6 +142,7 @@ jobs:
           command: |
             fvm flutter analyze --fatal-infos --fatal-warnings
             fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
 
   frontend-android-build:
     docker:

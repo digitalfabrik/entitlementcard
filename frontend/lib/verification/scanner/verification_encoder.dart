@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/protobuf/card_verify_model.pb.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/verification/verification_card_details.dart';
 import 'package:fixnum/fixnum.dart';
 

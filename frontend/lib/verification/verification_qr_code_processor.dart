@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/identification/protobuf/card_activate_model.pb.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/verification/scanner/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/verification/verification_card_details.dart';
