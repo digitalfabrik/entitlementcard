@@ -1,6 +1,6 @@
 import { CardCreationModel } from './CardCreationModel'
 import { CardType } from '../../models/CardType'
-import { CardActivateModel } from '../../generated/protobuf'
+import { CardActivationCode, BavariaCardType } from '../../generated/protobuf'
 import generateCardActivateModel from '../../util/generateCardActivateModel'
 import generateHashFromCardDetails from '../../util/generateHashFromCardDetails'
 import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
@@ -16,15 +16,14 @@ import {
 
 const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], region: Region) => {
   const activateModels = cardCreationModels.map(model => {
-    const cardType =
-      model.cardType === CardType.gold ? CardActivateModel.CardType.GOLD : CardActivateModel.CardType.STANDARD
+    const cardType = model.cardType === CardType.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD
     return generateCardActivateModel(`${model.forename} ${model.surname}`, region.id, model.expirationDate, cardType)
   })
   const cardInputs: CardGenerationModelInput[] = await Promise.all(
     activateModels.map(async model => {
-      const cardDetailsHash = await generateHashFromCardDetails(model.hashSecret, model)
+      const cardDetailsHash = await generateHashFromCardDetails(model.hashSecret, model.info)
       return {
-        expirationDate: model.expirationDate.toNumber(),
+        expirationDate: model.info!.expiration?.date?.toNumber() || 0,
         cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
         totpSecretBase64: uint8ArrayToBase64(model.totpSecret),
         regionId: region.id,

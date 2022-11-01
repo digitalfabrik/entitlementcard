@@ -1,12 +1,12 @@
 import Long from 'long'
-import { CardActivateModel } from '../generated/protobuf'
+import { BavariaCardType } from '../generated/protobuf'
 import isIE11 from './isIE11'
 
 export interface CardDetails {
   fullName: string
   regionId: number
   expirationDate: Long
-  cardType: CardActivateModel.CardType
+  cardType: BavariaCardType
 }
 
 const cardDetailsToBinary = (cardDetails: CardDetails) => {
