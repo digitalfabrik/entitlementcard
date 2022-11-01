@@ -21,11 +21,10 @@ do
         f) adminfolder=${OPTARG};;
         s) servicefile=${OPTARG};;
         c) dependencies=${OPTARG};;
-        m) stylesfolder=${OPTARG};;
         M) martinfolder=${OPTARG};;
         C) configfile=${OPTARG};;
         h)
-            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-m mapboxstylesfolder] [-M martinfolder] [-C configfile]"
+            echo "$0 [-v version] [-r revision] [-a architecture] [-n name] [-t backend_tar] [-s service_file] [-d description] [-f adminfolder] [-c dependencies] [-M martinfolder] [-C configfile]"
             exit 0;;
         *)
             echo "Unknown flag"
@@ -73,11 +72,6 @@ if [[ -n "$adminfolder" ]]; then
     echo "Copying $adminfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
     cp -r "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
-fi
-if [[ -n "$stylesfolder" ]]; then
-    echo "Copying $stylesfolder …"
-    mkdir -p "${debworkdir}/opt/ehrenamtskarte/styles"
-    cp -r "$stylesfolder/"* "${debworkdir}/opt/ehrenamtskarte/styles"
 fi
 if [[ -n "$martinfolder" ]]; then
     echo "Copying $martinfolder …"

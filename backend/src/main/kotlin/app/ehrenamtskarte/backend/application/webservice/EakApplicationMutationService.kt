@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.database.EakApplicationEntity
-import app.ehrenamtskarte.backend.application.database.repos.EakApplicationRepository
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
@@ -22,11 +22,11 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        EakApplicationRepository.addEakApplication(
+        ApplicationRepository.addApplication(
             regionId,
             application,
             context,
-            EakApplicationRepository::validateBlueApplication
+            ApplicationRepository::validateBlueApplication
         )
         return true
     }
@@ -38,11 +38,11 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getLocalContext<GraphQLContext>()
-        EakApplicationRepository.addEakApplication(
+        ApplicationRepository.addApplication(
             regionId,
             application,
             context,
-            EakApplicationRepository::validateGoldenApplication
+            ApplicationRepository::validateGoldenApplication
         )
         return true
     }
@@ -56,7 +56,7 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = EakApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
+            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
             // We throw an UnauthorizedException here, as we do not know whether there was an application with id
             // `applicationId` and whether this application was contained in the user's project & region.
 
@@ -65,7 +65,6 @@ class EakApplicationMutationService {
                 throw UnauthorizedException()
             }
 
-            EakApplicationRepository.delete(applicationId, context)
-        }
+        return ApplicationRepository.delete(applicationId, context)
     }
 }
