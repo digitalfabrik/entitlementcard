@@ -249,7 +249,6 @@ jobs:
           command: |
             ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
             git diff --exit-code
-          background: true
       - run: ./gradlew build
       - save_cache:
           paths:
