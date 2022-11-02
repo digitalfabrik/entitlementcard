@@ -244,6 +244,11 @@ jobs:
           key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+      - run:
+          name: Check that GraphQL scheme is stable
+          command: |
+            ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+            git diff --exit-code
       - run: ./gradlew build
       - save_cache:
           paths:
