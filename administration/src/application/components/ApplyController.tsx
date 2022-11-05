@@ -10,17 +10,13 @@ import { DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-import {
-  ApplicationForm,
-  convertApplicationFormStateToInput,
-  initialApplicationFormState,
-} from './forms/ApplicationForm'
+import applicationForm from './forms/ApplicationForm'
 
 const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
-  const [state, setState] = useLocallyStoredState(initialApplicationFormState, applicationStorageKey)
+  const [state, setState] = useLocallyStoredState(applicationForm.initialState, applicationStorageKey)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
 
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
@@ -28,11 +24,19 @@ const ApplyController = () => {
     return null
   }
 
+  const application = applicationForm.getValidatedInput(state)
+  if (application.type === 'error') {
+    alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
+    return
+  }
+
+  const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
+
   const submit = () => {
     addBlueEakApplication({
       variables: {
-        regionId: 1, // TODO: Add a mechanism to retrieve the regionId
-        application: convertApplicationFormStateToInput(state),
+        regionId, // TODO: Add a mechanism to retrieve the regionId
+        application: application.value,
       },
     })
   }
@@ -46,9 +50,9 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <ApplicationForm state={state} setState={setState} />
+          <applicationForm.Component state={state} setState={setState} />
           <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => initialApplicationFormState)} />
+            <DiscardAllInputsButton discardAll={() => setState(() => applicationForm.initialState)} />
             <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
               Antrag Senden
             </LoadingButton>

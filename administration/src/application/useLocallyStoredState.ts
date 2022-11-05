@@ -1,6 +1,6 @@
 import localforage from 'localforage'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SetState } from './components/forms/useUpdateStateCallback'
+import { SetState } from './useUpdateStateCallback'
 
 function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, SetState<T>] {
   const [state, setState] = useState(initialState)

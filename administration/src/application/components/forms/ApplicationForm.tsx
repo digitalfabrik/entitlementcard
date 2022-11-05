@@ -1,19 +1,10 @@
-import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
+import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } from '../../../generated/graphql'
-import {
-  convertStandardEntitlementFormStateToInput,
-  initialStandardEntitlementFormState,
-  StandardEntitlementForm,
-  StandardEntitlementFormState,
-} from './StandardEntitlementForm'
-import {
-  convertPersonalDataFormStateToInput,
-  initialPersonalDataFormState,
-  PersonalDataForm,
-  PersonalDataFormState,
-} from './PersonalDataForm'
 import SwitchDisplay from '../SwitchDisplay'
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Form } from '../../FormType'
+import standardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
+import personalDataForm, { PersonalDataFormState } from './PersonalDataForm'
 
 const EntitlementTypeInput = ({
   state,
@@ -41,21 +32,40 @@ export type ApplicationFormState = {
   standardEntitlement: StandardEntitlementFormState
   personalData: PersonalDataFormState
 }
-
-export const initialApplicationFormState: ApplicationFormState = {
-  entitlementType: null,
-  standardEntitlement: initialStandardEntitlementFormState,
-  personalData: initialPersonalDataFormState,
-}
-
-export const ApplicationForm = ({
-  state,
-  setState,
-}: {
-  state: ApplicationFormState
-  setState: SetState<ApplicationFormState>
-}) => {
-  return (
+type ValidatedInput = BlueCardApplicationInput
+type Options = void
+type AdditionalProps = {}
+const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
+  initialState: {
+    entitlementType: null,
+    standardEntitlement: standardEntitlementForm.initialState,
+    personalData: personalDataForm.initialState,
+  },
+  getValidatedInput: state => {
+    const personalData = personalDataForm.getValidatedInput(state.personalData)
+    if (state.entitlementType === null || personalData.type === 'error') return { type: 'error' }
+    switch (state.entitlementType) {
+      case BlueCardEntitlementType.Standard:
+        const workAtOrganizations = standardEntitlementForm.getValidatedInput(state.standardEntitlement)
+        if (workAtOrganizations.type === 'error') return { type: 'error' }
+        return {
+          type: 'valid',
+          value: {
+            entitlement: {
+              entitlementType: state.entitlementType,
+              workAtOrganizations: workAtOrganizations.value,
+            },
+            personalData: personalData.value,
+            hasAcceptedPrivacyPolicy: true, // TODO: Add a corresponding field
+            applicationType: ApplicationType.FirstApplication, // TODO: Add a corresponding field
+            givenInformationIsCorrectAndComplete: true, // TODO: Add a corresponding field
+          },
+        }
+      default:
+        throw Error('Not yet implemented.')
+    }
+  },
+  Component: ({ state, setState }) => (
     <>
       <EntitlementTypeInput
         state={state.entitlementType}
@@ -64,7 +74,7 @@ export const ApplicationForm = ({
       <SwitchDisplay value={state.entitlementType}>
         {{
           [BlueCardEntitlementType.Standard]: (
-            <StandardEntitlementForm
+            <standardEntitlementForm.Component
               state={state.standardEntitlement}
               setState={useUpdateStateCallback(setState, 'standardEntitlement')}
             />
@@ -73,31 +83,12 @@ export const ApplicationForm = ({
           [BlueCardEntitlementType.Service]: null,
         }}
       </SwitchDisplay>
-      <PersonalDataForm state={state.personalData} setState={useUpdateStateCallback(setState, 'personalData')} />
+      <personalDataForm.Component
+        state={state.personalData}
+        setState={useUpdateStateCallback(setState, 'personalData')}
+      />
     </>
-  )
+  ),
 }
 
-export const convertApplicationFormStateToInput = (state: ApplicationFormState): BlueCardApplicationInput => {
-  const entitlement = (() => {
-    if (state.entitlementType === null) throw Error('EntitlementType is null.')
-    switch (state.entitlementType) {
-      case BlueCardEntitlementType.Standard:
-        const workAtOrganizations = convertStandardEntitlementFormStateToInput(state.standardEntitlement)
-        return {
-          entitlementType: state.entitlementType,
-          workAtOrganizations,
-        }
-      default:
-        throw Error('Not yet implemented.')
-    }
-  })()
-
-  return {
-    entitlement,
-    personalData: convertPersonalDataFormStateToInput(state.personalData),
-    hasAcceptedPrivacyPolicy: true, // TODO: Add a corresponding field
-    applicationType: ApplicationType.FirstApplication, // TODO: Add a corresponding field
-    givenInformationIsCorrectAndComplete: true, // TODO: Add a corresponding field
-  }
-}
+export default applicationForm

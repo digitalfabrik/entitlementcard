@@ -1,104 +1,110 @@
 import { OrganizationInput } from '../../../generated/graphql'
-import { AddressForm, AddressFormState, convertAddressFormStateToInput, initialAddressFormState } from './AddressForm'
-import { convertRequiredEmailFormStateToInput, RequiredEmailForm } from '../primitive-inputs/RequiredEmailForm'
-import {
-  convertRequiredStringFormStateToInput,
-  initialRequiredStringFormState,
-  RequiredStringForm,
-} from '../primitive-inputs/RequiredStringForm'
-import {
-  convertRequiredSelectFormStateToInput,
-  initialRequiredSelectFormState,
-  RequiredSelectForm,
-  RequiredSelectFormState,
-} from '../primitive-inputs/RequiredSelectForm'
-import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
+import { useUpdateStateCallback } from '../../useUpdateStateCallback'
+import { Form } from '../../FormType'
+import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
+import addressForm, { AddressFormState } from './AddressForm'
+import selectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
+import emailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
+
+const organizationCategoryOptions = {
+  items: [
+    'Soziales/Jugend/Senioren',
+    'Tierschutz',
+    'Sport',
+    'Bildung',
+    'Umwelt-/Naturschutz',
+    'Kultur',
+    'Gesundheit',
+    'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+    'Kirchen',
+    'Andere',
+  ],
+}
 
 export type OrganizationFormState = {
-  amountOfWork: number
-  name: string
-  addressFormState: AddressFormState
-  categoryFormState: RequiredSelectFormState
-  contactName: string
-  contactEmail: string
-  contactPhone: string
-  contactHasConfirmedDataProcessing: boolean
+  name: ShortTextFormState
+  address: AddressFormState
+  category: SelectFormState
+  contactName: ShortTextFormState
+  contactEmail: EmailFormState
+  contactPhone: ShortTextFormState
 }
-
-export const initialOrganizationFormState: OrganizationFormState = {
-  amountOfWork: 0,
-  name: initialRequiredStringFormState,
-  addressFormState: initialAddressFormState,
-  categoryFormState: initialRequiredSelectFormState,
-  contactName: initialRequiredStringFormState,
-  contactEmail: initialRequiredStringFormState,
-  contactPhone: initialRequiredStringFormState,
-  contactHasConfirmedDataProcessing: false,
-}
-
-export const OrganizationForm = ({
-  state,
-  setState,
-}: {
-  state: OrganizationFormState
-  setState: SetState<OrganizationFormState>
-}) => {
-  return (
+type ValidatedInput = OrganizationInput
+type Options = void
+type AdditionalProps = {}
+const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
+  initialState: {
+    name: shortTextForm.initialState,
+    address: addressForm.initialState,
+    category: selectForm.initialState,
+    contactName: shortTextForm.initialState,
+    contactEmail: emailForm.initialState,
+    contactPhone: shortTextForm.initialState,
+  },
+  getValidatedInput: state => {
+    const name = shortTextForm.getValidatedInput(state.name)
+    const address = addressForm.getValidatedInput(state.address)
+    const category = selectForm.getValidatedInput(state.category, organizationCategoryOptions)
+    const contactName = shortTextForm.getValidatedInput(state.contactName)
+    const contactEmail = emailForm.getValidatedInput(state.contactEmail)
+    const contactPhone = shortTextForm.getValidatedInput(state.contactPhone)
+    if (
+      name.type === 'error' ||
+      address.type === 'error' ||
+      category.type === 'error' ||
+      contactName.type === 'error' ||
+      contactEmail.type === 'error' ||
+      contactPhone.type === 'error'
+    )
+      return { type: 'error' }
+    return {
+      type: 'valid',
+      value: {
+        name: name.value,
+        address: address.value,
+        category: category.value,
+        contact: {
+          name: contactName.value,
+          email: contactEmail.value,
+          telephone: contactPhone.value,
+          hasGivenPermission: true, // TODO: Add a field for this.
+        },
+      },
+    }
+  },
+  Component: ({ state, setState }) => (
     <>
       <h4>Angaben zur Organisation</h4>
-      <RequiredStringForm
+      <shortTextForm.Component
         state={state.name}
         setState={useUpdateStateCallback(setState, 'name')}
         label={'Name der Organisation bzw. des Vereins'}
       />
-      <AddressForm state={state.addressFormState} setState={useUpdateStateCallback(setState, 'addressFormState')} />
-      <RequiredSelectForm
-        state={state.categoryFormState}
-        setState={useUpdateStateCallback(setState, 'categoryFormState')}
+      <addressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+      <selectForm.Component
+        state={state.category}
+        setState={useUpdateStateCallback(setState, 'category')}
         label='Einsatzgebiet'
-        options={[
-          'Soziales/Jugend/Senioren',
-          'Tierschutz',
-          'Sport',
-          'Bildung',
-          'Umwelt-/Naturschutz',
-          'Kultur',
-          'Gesundheit',
-          'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-          'Kirchen',
-          'Andere',
-        ]}
+        options={organizationCategoryOptions}
       />
       <h4>Kontaktperson der Organisation</h4>
-      <RequiredStringForm
+      <shortTextForm.Component
         state={state.contactName}
         setState={useUpdateStateCallback(setState, 'contactName')}
         label='Vor- und Nachname'
       />
-      <RequiredEmailForm
+      <emailForm.Component
         state={state.contactEmail}
         setState={useUpdateStateCallback(setState, 'contactEmail')}
         label='E-Mail-Adresse'
       />
-      <RequiredStringForm
+      <shortTextForm.Component
         state={state.contactPhone}
         setState={useUpdateStateCallback(setState, 'contactPhone')}
         label='Telefon'
       />
     </>
-  )
+  ),
 }
 
-export const convertOrganizationFormStateToInput = (state: OrganizationFormState): OrganizationInput => {
-  return {
-    name: convertRequiredStringFormStateToInput(state.name),
-    address: convertAddressFormStateToInput(state.addressFormState),
-    category: convertRequiredSelectFormStateToInput(state.categoryFormState),
-    contact: {
-      email: convertRequiredEmailFormStateToInput(state.contactEmail),
-      name: convertRequiredStringFormStateToInput(state.contactName),
-      hasGivenPermission: state.contactHasConfirmedDataProcessing,
-      telephone: convertRequiredStringFormStateToInput(state.contactPhone),
-    },
-  }
-}
+export default organizationForm

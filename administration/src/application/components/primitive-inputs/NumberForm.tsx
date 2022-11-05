@@ -1,65 +1,42 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
-import { SetState } from '../forms/useUpdateStateCallback'
+import { Form } from '../../FormType'
 
-export type NumberFormState = string
+export type NumberFormState = { type: 'NumberForm'; value: string }
+type ValidatedInput = number
+type Options = { min: number; max: number }
+type AdditionalProps = { label: string; minWidth?: number }
+const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
+  initialState: { type: 'NumberForm', value: '' },
+  getValidatedInput: ({ value }, options) => {
+    const number = parseFloat(value)
+    if (isNaN(number)) return { type: 'error', message: 'Eingabe ist keine Zahl.' }
+    else if (number < options.min || number > options.max)
+      return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }
+    return { type: 'valid', value: number }
+  },
+  Component: ({ state, setState, label, options, minWidth = 100 }) => {
+    const [touched, setTouched] = useState(false)
+    const validationResult = numberForm.getValidatedInput(state, options)
+    const isInvalid = validationResult.type === 'error'
 
-export const initialNumberFormState: NumberFormState = ''
-
-export const NumberForm = ({
-  state,
-  setState,
-  label,
-  minWidth = 100,
-  min,
-  max,
-}: {
-  state: NumberFormState
-  setState: SetState<NumberFormState>
-  label: string
-  minWidth?: number
-  min: number
-  max: number
-}) => {
-  const [touched, setTouched] = useState(false)
-
-  let error: string | null = null
-  if (state.length <= 0) {
-    error = `Feld ist erforderlich.`
-  } else {
-    const number = parseFloat(state)
-    if (isNaN(number)) {
-      error = `${label} muss eine Zahl sein.`
-    } else if (number < min || number > max) {
-      error = `${label} muss zwischen ${min} und ${max} sein.`
-    }
-  }
-  const isInvalid = error !== null
-
-  return (
-    <TextField
-      variant='standard'
-      fullWidth
-      style={{ margin: '4px 0', minWidth }}
-      type='number'
-      label={label}
-      required
-      error={touched && isInvalid}
-      value={state}
-      onBlur={() => setTouched(true)}
-      onChange={e => setState(() => e.target.value)}
-      helperText={touched && isInvalid ? error : ''}
-      inputProps={{ inputMode: 'numeric', min, max }}
-    />
-  )
+    return (
+      <TextField
+        variant='standard'
+        fullWidth
+        style={{ margin: '4px 0', minWidth }}
+        type='number'
+        label={label}
+        required
+        error={touched && isInvalid}
+        value={state}
+        onBlur={() => setTouched(true)}
+        onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}
+        helperText={touched && isInvalid ? validationResult.message : ''}
+        inputProps={{ inputMode: 'numeric', min: options.min, max: options.max }}
+      />
+    )
+  },
 }
 
-export const convertNumberFormStateToInput = (state: NumberFormState, min: number, max: number): number => {
-  const number = parseFloat(state)
-  if (isNaN(number)) {
-    throw Error('Is not a number')
-  } else if (number < min || number > max) {
-    throw Error('')
-  }
-  return number
-}
+export default numberForm
