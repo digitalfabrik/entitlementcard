@@ -9,7 +9,7 @@ import organizationForm, { OrganizationFormState } from './OrganizationForm'
 import dateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import numberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
-import fileInputForm, {FILE_SIZE_LIMIT_MEGA_BYTES, FileFormState} from '../primitive-inputs/FileInputForm'
+import fileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileFormState } from '../primitive-inputs/FileInputForm'
 
 const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -133,10 +133,7 @@ const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
           Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Dieser darf maximal{' '}
           {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein. Wählen Sie eine Datei im JPG, PNG oder PDF Format.
         </p>
-        <fileInputForm.Component
-          state={state.certificate}
-          setState={useUpdateStateCallback(setState, 'certificate')}
-        />
+        <fileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
       </CardContent>
     </Card>
   ),

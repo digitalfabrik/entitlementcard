@@ -2,7 +2,6 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import { useState } from 'react'
 import { Form } from '../../FormType'
 
-
 export type SelectFormState = string
 type ValidatedInput = string
 type Options = { items: string[] }

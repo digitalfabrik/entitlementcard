@@ -8,7 +8,7 @@ export type ValidationResult<I> = ValidationError | ValidationSuccess<I>
 type Props<State, AdditionalProps, Options> = AdditionalProps & {
   state: State
   setState: SetState<State>
-} & ([void] extends [Options] ? { } : { options: Options })
+} & ([void] extends [Options] ? {} : { options: Options })
 
 export type Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: State
