@@ -27,7 +27,7 @@ const emailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
         label={label}
         required
         error={touched && isInvalid}
-        value={state}
+        value={state.value}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'EmailForm', value: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}

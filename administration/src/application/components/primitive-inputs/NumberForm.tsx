@@ -29,7 +29,7 @@ const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
         label={label}
         required
         error={touched && isInvalid}
-        value={state}
+        value={state.value}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}

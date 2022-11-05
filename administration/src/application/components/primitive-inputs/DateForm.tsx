@@ -31,7 +31,7 @@ const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
         label={label}
         required
         error={touched && isInvalid}
-        value={state}
+        value={state.value}
         sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'DateForm', value: e.target.value }))}

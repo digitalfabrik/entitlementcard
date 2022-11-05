@@ -29,7 +29,7 @@ const FileInputButton = ({ onChange, label }: { onChange: ChangeEventHandler<HTM
       <Button startIcon={<AttachFile />} variant='contained' onClick={() => inputRef.current?.click()}>
         {label}
       </Button>
-      <input ref={inputRef} type='file' required accept='.pdf,.jpeg,.jpg,.png' onChange={onChange} hidden />
+      <input ref={inputRef} type='file' accept='.pdf,.jpeg,.jpg,.png' onChange={onChange} hidden />
     </>
   )
 }

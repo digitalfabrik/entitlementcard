@@ -36,7 +36,7 @@ const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
         required
         error={touched && isInvalid}
         onBlur={() => setTouched(true)}
-        value={state}
+        value={state.value}
         onChange={e => setState(() => ({ type: 'ShortText', value: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}
       />
