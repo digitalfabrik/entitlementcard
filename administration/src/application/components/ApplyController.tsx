@@ -24,15 +24,15 @@ const ApplyController = () => {
     return null
   }
 
-  const application = applicationForm.getValidatedInput(state)
-  if (application.type === 'error') {
-    alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
-    return
-  }
-
-  const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
-
   const submit = () => {
+    const application = applicationForm.getValidatedInput(state)
+    if (application.type === 'error') {
+      alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
+      return
+    }
+
+    const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
+
     addBlueEakApplication({
       variables: {
         regionId, // TODO: Add a mechanism to retrieve the regionId
