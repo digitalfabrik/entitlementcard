@@ -23,4 +23,16 @@ data class JsonField(
     val translations: Map<String, String>,
     val type: Type,
     val value: Any
-)
+) {
+    init {
+        when (type) {
+            Type.String -> if (value !is String) throw IllegalArgumentException("Expected String.")
+            Type.Number -> if (value !is Number) throw IllegalArgumentException("Expected Number.")
+            Type.Array -> if (!isListOfJsonFields(value)) throw IllegalArgumentException("Expected Array of JsonFields.")
+            Type.Attachment -> if (value !is AttachmentView) throw IllegalArgumentException("Expected AttachmentView.")
+            Type.Boolean -> if (value !is Boolean) throw IllegalArgumentException("Expected Boolean.")
+        }
+    }
+}
+
+fun isListOfJsonFields(value: Any) = value is List<*> && value.all { it is JsonField }

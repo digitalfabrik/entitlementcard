@@ -1,26 +1,26 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
 import { Form } from '../../FormType'
+import { ShortTextInput } from '../../../generated/graphql'
 
-const MAX_CHARACTERS = 300
+const MAX_SHORT_TEXT_LENGTH = 300
 
 export type ShortTextFormState = {
-  type: 'ShortText'
-  value: string
+  shortText: string
 }
-type ValidatedInput = string
+type ValidatedInput = ShortTextInput
 type Options = void
 type AdditionalProps = { label: string; minWidth?: number }
 const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { type: 'ShortText', value: '' },
-  getValidatedInput: ({ value }) => {
-    if (value.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (value.length > MAX_CHARACTERS)
+  initialState: { shortText: '' },
+  getValidatedInput: ({ shortText }) => {
+    if (shortText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (shortText.length > MAX_SHORT_TEXT_LENGTH)
       return {
         type: 'error',
-        message: `Text überschreitet die erlaubten ${MAX_CHARACTERS} Zeichen.`,
+        message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
       }
-    return { type: 'valid', value }
+    return { type: 'valid', value: { shortText } }
   },
   Component: ({ state, setState, label, minWidth = 200 }) => {
     const [touched, setTouched] = useState(false)
@@ -36,8 +36,8 @@ const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
         required
         error={touched && isInvalid}
         onBlur={() => setTouched(true)}
-        value={state.value}
-        onChange={e => setState(() => ({ type: 'ShortText', value: e.target.value }))}
+        value={state.shortText}
+        onChange={e => setState(() => ({ shortText: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}
       />
     )

@@ -31,12 +31,14 @@ data class BlueCardApplication(
                 JsonField(
                     "hasAcceptedPrivacyPolicy",
                     mapOf("de" to "Ich habe die Richtlinien zum Datenschutz gelesen und akzeptiert"),
-                    Type.Boolean, hasAcceptedPrivacyPolicy
+                    Type.Boolean,
+                    hasAcceptedPrivacyPolicy
                 ),
                 JsonField(
                     "givenInformationIsCorrectAndComplete",
                     mapOf("de" to "Ich bestätige, dass die gegebenen Informationen korrekt und vollständig sind"),
-                    Type.Boolean, givenInformationIsCorrectAndComplete
+                    Type.Boolean,
+                    givenInformationIsCorrectAndComplete
                 )
             )
         )
