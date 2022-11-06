@@ -17,10 +17,10 @@ function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | nul
 
   useEffect(() => {
     localforage
-      .getItem<string>(storageKey)
-      .then(storedString => {
-        if (storedString !== null) {
-          setStateAndRef(() => JSON.parse(storedString))
+      .getItem<T>(storageKey)
+      .then(storedValue => {
+        if (storedValue !== null) {
+          setStateAndRef(() => storedValue)
         }
       })
       .finally(() => setLoading(false))
@@ -34,7 +34,7 @@ function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | nul
     let lastState: T | null = null
     const interval = setInterval(() => {
       if (lastState !== stateRef.current) {
-        localforage.setItem(storageKey, JSON.stringify(stateRef.current))
+        localforage.setItem(storageKey, stateRef.current)
         lastState = stateRef.current
       }
     }, 2000)
