@@ -46,6 +46,7 @@ const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
   initialState: null,
   getValidatedInput: state => {
     if (state === null) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) return { type: 'error' }
     const arrayBuffer = globalArrayBuffersManager.getArrayBufferByKey(state.arrayBufferKey)
     return {
       type: 'valid',
