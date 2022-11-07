@@ -3,15 +3,15 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { useAddBlueEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
-import { DialogActions } from '@mui/material'
+import { useAddEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
+import { DialogActions, Typography } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
-import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
 import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
+import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 import { useAppToaster } from '../../components/AppToaster'
 
@@ -32,7 +32,7 @@ const SuccessContent = styled.div`
 const ApplyController = () => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
-  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation({
+  const [addBlueEakApplication, { loading }] = useAddEakApplicationMutation({
     onError: error => {
       console.error(error)
       enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
@@ -56,7 +56,11 @@ const ApplyController = () => {
     variables: { regionId: regionId },
     // TODO: Add proper error handling and a refetch button when regionId query is implemented
     // TODO: Use enqueueSnackbar from notistack instead of the appToaster
-    onError: () => appToaster?.show({ intent: 'danger', message: 'Datenschutzerklärung konnte nicht geladen werden' }),
+    onError: () =>
+      appToaster?.show({
+        intent: 'danger',
+        message: 'Datenschutzerklärung konnte nicht geladen werden',
+      }),
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
@@ -72,21 +76,17 @@ const ApplyController = () => {
   }
 
   const submit = () => {
-    const application = ApplicationForm.getValidatedInput(state)
-    if (application.type === 'error') {
+    const validationResult = ApplicationForm.getValidatedInput(state)
+    if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',
       })
       return
     }
-
-    const [regionId, applicationInput] = application.value // TODO: Add a mechanism to retrieve the regionId
+    const [regionId, application] = validationResult.value
 
     addBlueEakApplication({
-      variables: {
-        regionId,
-        application: applicationInput,
-      },
+      variables: { regionId, application },
     })
   }
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
@@ -95,9 +95,10 @@ const ApplyController = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h2 style={{ textAlign: 'center' }}>{formSubmitted ? 'Erfolgreich gesendet' : 'Ehrenamtskarte beantragen'}</h2>
         {formSubmitted ? (
-          <SuccessContent>{successText}</SuccessContent>
+          <Typography variant='h3' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
+            {formSubmitted ? 'Erfolgreich gesendet' : 'Bayerische Ehrenamtskarte beantragen'}
+          </Typography>
         ) : (
           <ApplicationForm.Component
             state={state}

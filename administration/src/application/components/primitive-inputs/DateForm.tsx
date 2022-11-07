@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import { memo, useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { DateInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
@@ -24,7 +24,7 @@ const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
     const localISODate = `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
     return { type: 'valid', value: { date: localISODate } }
   },
-  Component: ({ state, setState, label, minWidth = 100 }) => {
+  Component: memo(({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = DateForm.getValidatedInput(state)
@@ -48,7 +48,7 @@ const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
         helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
-  },
+  }),
 }
 
 export default DateForm

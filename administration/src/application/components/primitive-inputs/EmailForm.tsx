@@ -1,7 +1,8 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import { memo, useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { EmailInput } from '../../../generated/graphql'
+import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 import { FormContext } from '../SteppedSubForms'
 
 export type EmailFormState = { email: string }
@@ -13,9 +14,14 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ email }) => {
     if (email === '') return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (email.length > MAX_SHORT_TEXT_LENGTH)
+      return {
+        type: 'error',
+        message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
+      }
     return { type: 'valid', value: { email } }
   },
-  Component: ({ state, setState, label, minWidth = 100 }) => {
+  Component: memo(({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = EmailForm.getValidatedInput(state)
@@ -33,12 +39,13 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
         error={touched && isInvalid}
         value={state.email}
         disabled={disableAllInputs}
+        inputProps={{ maxLength: MAX_SHORT_TEXT_LENGTH }}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ email: e.target.value }))}
         helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
-  },
+  }),
 }
 
 export default EmailForm

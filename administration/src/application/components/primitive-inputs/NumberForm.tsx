@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import { memo, useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
@@ -17,7 +17,7 @@ const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
       return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }
     return { type: 'valid', value: number }
   },
-  Component: ({ state, setState, label, options, minWidth = 100 }) => {
+  Component: memo(({ state, setState, label, options, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = NumberForm.getValidatedInput(state, options)
@@ -40,7 +40,7 @@ const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
         inputProps={{ inputMode: 'numeric', min: options.min, max: options.max }}
       />
     )
-  },
+  }),
 }
 
 export default NumberForm

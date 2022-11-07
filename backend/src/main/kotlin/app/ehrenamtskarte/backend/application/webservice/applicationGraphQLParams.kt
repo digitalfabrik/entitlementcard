@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.schema.create.UploadKey
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.UploadKey
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject

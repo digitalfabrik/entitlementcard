@@ -1,4 +1,4 @@
-import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../generated/graphql'
+import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../generated/graphql'
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import { Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
@@ -8,50 +8,44 @@ import WorkAtOrganizationsEntitlementForm, {
   WorkAtOrganizationsEntitlementFormState,
 } from './WorkAtOrganizationsEntitlementForm'
 
-const BlueCardEntitlementTypeForm = memo(
+const GoldenCardEntitlementTypeForm = memo(
   ({
     state,
     setState,
   }: {
-    state: BlueCardEntitlementType | null
-    setState: SetState<BlueCardEntitlementType | null>
+    state: GoldenCardEntitlementType | null
+    setState: SetState<GoldenCardEntitlementType | null>
   }) => {
     return (
       <FormControl>
         <FormLabel>
-          Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:
+          Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte:
         </FormLabel>
         <RadioGroup
           sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
           value={state}
-          onChange={e => setState(() => e.target.value as BlueCardEntitlementType)}>
+          onChange={e => setState(() => e.target.value as GoldenCardEntitlementType)}>
           <FormControlLabel
-            value={BlueCardEntitlementType.WorkAtOrganizations}
-            label='Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
+            value={GoldenCardEntitlementType.WorkAtOrganizations}
+            label='Ich bin seit seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.'
             control={<Radio required />}
           />
           <Divider variant='middle' />
           <FormControlLabel
-            value={BlueCardEntitlementType.Juleica}
-            label='Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).'
+            value={GoldenCardEntitlementType.HonoredByMinisterPresident}
+            label='Ich bin Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt des Bayerischen Ministerpräsidenten.'
             control={<Radio required />}
           />
           <Divider variant='middle' />
           <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
+            value={GoldenCardEntitlementType.ServiceAward}
+            label='Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.'
             control={<Radio required />}
           />
           <Divider variant='middle' />
           <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
-            control={<Radio required />}
-          />
-          <Divider variant='middle' />
-          <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
+            value={GoldenCardEntitlementType.ServiceAward}
+            label='Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
             control={<Radio required />}
           />
         </RadioGroup>
@@ -60,14 +54,14 @@ const BlueCardEntitlementTypeForm = memo(
   }
 )
 
-export type BlueCardEntitlementFormState = {
-  entitlementType: BlueCardEntitlementType | null
+export type GoldenCardEntitlementFormState = {
+  entitlementType: GoldenCardEntitlementType | null
   workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementFormState
 }
-type ValidatedInput = BlueCardEntitlementInput
+type ValidatedInput = GoldenCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const GoldenCardEntitlementForm: Form<GoldenCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     entitlementType: null,
     workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm.initialState,
@@ -77,7 +71,7 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
   ],
   getValidatedInput: state => {
     switch (state.entitlementType) {
-      case BlueCardEntitlementType.WorkAtOrganizations: {
+      case GoldenCardEntitlementType.WorkAtOrganizations: {
         const workAtOrganizationsEntitlement = WorkAtOrganizationsEntitlementForm.getValidatedInput(
           state.workAtOrganizationsEntitlement
         )
@@ -96,24 +90,24 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
   },
   Component: memo(({ state, setState }) => (
     <>
-      <BlueCardEntitlementTypeForm
+      <GoldenCardEntitlementTypeForm
         state={state.entitlementType}
         setState={useUpdateStateCallback(setState, 'entitlementType')}
       />
       <SwitchComponent value={state.entitlementType}>
         {{
-          [BlueCardEntitlementType.WorkAtOrganizations]: (
+          [GoldenCardEntitlementType.WorkAtOrganizations]: (
             <WorkAtOrganizationsEntitlementForm.Component
               state={state.workAtOrganizationsEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
             />
           ),
-          [BlueCardEntitlementType.Juleica]: null,
-          [BlueCardEntitlementType.Service]: null,
+          [GoldenCardEntitlementType.ServiceAward]: null,
+          [GoldenCardEntitlementType.HonoredByMinisterPresident]: null,
         }}
       </SwitchComponent>
     </>
   )),
 }
 
-export default BlueCardEntitlementForm
+export default GoldenCardEntitlementForm

@@ -78,12 +78,10 @@ type Coordinates {
 }
 
 type Mutation {
-  "Stores a new blue digital EAK"
-  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
-  "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenCardApplicationInput!, regionId: Int!): Boolean!
+  "Stores a new application for an EAK"
+  addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -158,13 +156,18 @@ enum ApplicationType {
 enum BlueCardEntitlementType {
   JULEICA
   SERVICE
-  STANDARD
+  WORK_AT_ORGANIZATIONS
+}
+
+enum CardType {
+  BLUE
+  GOLDEN
 }
 
 enum GoldenCardEntitlementType {
-  HONOR_BY_MINISTER_PRESIDENT
+  HONORED_BY_MINISTER_PRESIDENT
   SERVICE_AWARD
-  STANDARD
+  WORK_AT_ORGANIZATIONS
 }
 
 enum Role {
@@ -188,6 +191,21 @@ input AddressInput {
   street: ShortTextInput!
 }
 
+"""
+
+    An application for the Bayerische Ehrenamtskarte.
+    The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` can be null.
+"""
+input ApplicationInput {
+  applicationType: ApplicationType!
+  blueCardEntitlement: BlueCardEntitlementInput
+  cardType: CardType!
+  givenInformationIsCorrectAndComplete: Boolean!
+  goldenCardEntitlement: GoldenCardEntitlementInput
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+}
+
 input AttachmentInput {
   data: Upload!
 }
@@ -197,33 +215,28 @@ input AuthDataInput {
   password: String!
 }
 
-input BlueCardApplicationInput {
-  applicationType: ApplicationType!
-  entitlement: BlueCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
+"Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
+input BlueCardEntitlementInput {
+  entitlementType: BlueCardEntitlementType!
+  juleicaEntitlement: BlueCardJuleicaEntitlementInput
+  serviceEntitlement: BlueCardServiceEntitlementInput
+  workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlementInput
 }
 
-"""
-Entitlement for blue EAK.
-    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
-    or     entitlementType == Service and serviceActivity, serviceCertification are not null
-    or     entitlementType == Standard and workAtOrganizations is not null
-"""
-input BlueCardEntitlementInput {
-  copyOfJuleica: AttachmentInput
-  entitlementType: BlueCardEntitlementType!
-  juleicaExpirationDate: String
-  juleicaNumber: String
-  serviceEntitlement: BlueCardServiceEntitlementInput
-  workAtOrganizations: [WorkAtOrganizationInput!]
+input BlueCardJuleicaEntitlementInput {
+  copyOfJuleica: AttachmentInput!
+  juleicaExpirationDate: DateInput!
+  juleicaNumber: ShortTextInput!
 }
 
 input BlueCardServiceEntitlementInput {
   certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: String
+}
+
+input BlueCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input CardGenerationModelInput {
@@ -253,17 +266,24 @@ input EmailInput {
   email: String!
 }
 
-input GoldenCardApplicationInput {
-  entitlement: GoldenCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
+"Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
+input GoldenCardEntitlementInput {
+  entitlementType: GoldenCardEntitlementType!
+  honoredByMinisterPresidentEntitlement: GoldenCardHonoredByMinisterPresidentEntitlementInput
+  serviceEntitlement: GoldenCardServiceEntitlementInput
+  workAtOrganizationsEntitlement: GoldenCardWorkAtOrganizationsEntitlementInput
 }
 
-input GoldenCardEntitlementInput {
-  certificate: AttachmentInput
-  goldenEntitlementType: GoldenCardEntitlementType!
-  workAtOrganizations: [WorkAtOrganizationInput!]
+input GoldenCardHonoredByMinisterPresidentEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardServiceEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input OrganizationContactInput {

@@ -1,29 +1,31 @@
 import { Alert, Button } from '@mui/material'
 import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
+import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 import { SetState } from '../../useUpdateStateCallback'
-import { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
-import { WorkAtOrganizationInput } from '../../../generated/graphql'
 
-const WorkAtOrganizationFormHelper = ({
-  listKey,
-  setStateByKey,
-  deleteByKey,
-  ...otherProps
-}: {
-  listKey: number
-  setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
-  deleteByKey?: (key: number) => void
-  state: WorkAtOrganizationFormState
-}) => {
-  const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
-  const onDelete = useMemo(
-    () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
-    [deleteByKey, listKey]
-  )
-  return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
-}
+const WorkAtOrganizationFormHelper = memo(
+  ({
+    listKey,
+    setStateByKey,
+    deleteByKey,
+    ...otherProps
+  }: {
+    listKey: number
+    setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
+    deleteByKey?: (key: number) => void
+    state: WorkAtOrganizationFormState
+  }) => {
+    const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
+    const onDelete = useMemo(
+      () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
+      [deleteByKey, listKey]
+    )
+    return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
+  }
+)
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
   const newArray = [...array]
@@ -37,11 +39,16 @@ function removeAt<T>(array: T[], index: number): T[] {
   return newArray
 }
 
-export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
-type ValidatedInput = WorkAtOrganizationInput[]
+export type WorkAtOrganizationsEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
+type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationsEntitlementForm: Form<
+  WorkAtOrganizationsEntitlementFormState,
+  Options,
+  ValidatedInput,
+  AdditionalProps
+> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   getValidatedInput: state => {
@@ -51,15 +58,17 @@ const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
     }
     return {
       type: 'valid',
-      value: validationResults.map(x => {
-        if (x.type !== 'valid') {
-          throw Error('Found an invalid entry despite previous validity check.')
-        }
-        return x.value
-      }),
+      value: {
+        list: validationResults.map(x => {
+          if (x.type !== 'valid') {
+            throw Error('Found an invalid entry despite previous validity check.')
+          }
+          return x.value
+        }),
+      },
     }
   },
-  Component: ({ state, setState }) => {
+  Component: memo(({ state, setState }) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
@@ -105,7 +114,7 @@ const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
         )}
       </>
     )
-  },
+  }),
 }
 
-export default StandardEntitlementForm
+export default WorkAtOrganizationsEntitlementForm

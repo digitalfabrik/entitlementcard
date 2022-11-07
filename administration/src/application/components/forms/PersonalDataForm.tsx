@@ -6,6 +6,7 @@ import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
+import { memo } from 'react'
 
 export type PersonalDataFormState = {
   forenames: ShortTextFormState
@@ -63,7 +64,7 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
       },
     }
   },
-  Component: ({ state, setState }) => (
+  Component: memo(({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
@@ -103,7 +104,7 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
         label='Geburtsdatum'
       />
     </>
-  ),
+  )),
 }
 
 export default PersonalDataForm

@@ -2,6 +2,7 @@ import { AddressInput } from '../../../generated/graphql'
 import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
+import { memo } from 'react'
 
 export type AddressFormState = {
   street: ShortTextFormState
@@ -47,7 +48,7 @@ const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
       },
     }
   },
-  Component: ({ state, setState }) => (
+  Component: memo(({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>
@@ -83,7 +84,7 @@ const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
         </div>
       </div>
     </>
-  ),
+  )),
 }
 
 export default AddressForm

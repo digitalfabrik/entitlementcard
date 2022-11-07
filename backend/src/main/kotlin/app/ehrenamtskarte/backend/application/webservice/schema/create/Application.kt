@@ -3,18 +3,49 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
-data class BlueCardApplication(
+enum class ApplicationType {
+    FIRST_APPLICATION,
+    RENEWAL_APPLICATION
+}
+
+enum class CardType {
+    BLUE,
+    GOLDEN
+}
+
+@GraphQLDescription(
+    """
+    An application for the Bayerische Ehrenamtskarte.
+    The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` can be null.
+"""
+)
+data class Application(
     val personalData: PersonalData,
+    val cardType: CardType,
     val applicationType: ApplicationType,
-    val entitlement: BlueCardEntitlement,
+    val blueCardEntitlement: BlueCardEntitlement?,
+    val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
     val givenInformationIsCorrectAndComplete: Boolean
 ) : JsonFieldSerializable {
+    private val entitlementByCardType = mapOf(
+        CardType.BLUE to blueCardEntitlement,
+        CardType.GOLDEN to goldenCardEntitlement
+    )
+
+    init {
+        if (!onlySelectedIsPresent(entitlementByCardType, cardType)) {
+            throw IllegalArgumentException("The specified entitlement(s) do not match cardType")
+        }
+    }
+
     override fun toJsonField(): JsonField {
         return JsonField(
-            name = "blue-card-application",
-            translations = mapOf("de" to "Antrag auf blaue Ehrenamtskarte"),
+            name = "application",
+            translations = mapOf("de" to "Antrag"),
             type = Type.Array,
             value = listOf(
                 personalData.toJsonField(),
@@ -27,7 +58,7 @@ data class BlueCardApplication(
                         ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
                     }
                 ),
-                entitlement.toJsonField(),
+                entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(
                     "hasAcceptedPrivacyPolicy",
                     mapOf("de" to "Ich habe die Richtlinien zum Datenschutz gelesen und akzeptiert"),
@@ -43,9 +74,4 @@ data class BlueCardApplication(
             )
         )
     }
-}
-
-enum class ApplicationType {
-    FIRST_APPLICATION,
-    RENEWAL_APPLICATION
 }

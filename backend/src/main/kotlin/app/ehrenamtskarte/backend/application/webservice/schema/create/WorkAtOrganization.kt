@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.DateInput
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.AttachmentView

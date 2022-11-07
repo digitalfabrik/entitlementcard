@@ -1,8 +1,21 @@
-import { ApplicationType } from '../../../generated/graphql'
+import { ApplicationType, CardType } from '../../../generated/graphql'
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { FormControl } from '@mui/material'
+import { memo } from 'react'
+
+const CardTypeInput = ({ state, setState }: { state: CardType | null; setState: SetState<CardType | null> }) => {
+  return (
+    <FormControl>
+      <FormLabel>Antrag auf:</FormLabel>
+      <RadioGroup value={state} onChange={e => setState(() => e.target.value as CardType)}>
+        <FormControlLabel value={CardType.Blue} label='Blaue Ehrenamtskarte' control={<Radio required />} />
+        <FormControlLabel value={CardType.Golden} label='Goldene Ehrenamtskarte' control={<Radio required />} />
+      </RadioGroup>
+    </FormControl>
+  )
+}
 
 const ApplicationTypeInput = ({
   state,
@@ -27,29 +40,30 @@ const ApplicationTypeInput = ({
 }
 
 export type StepCardTypeFormState = {
-  cardType: null // TODO: Add possibility to set CardType (blue or golden)
+  cardType: CardType | null
   applicationType: ApplicationType | null
 }
-type ValidatedInput = { cardType: null; applicationType: ApplicationType }
+type ValidatedInput = { cardType: CardType; applicationType: ApplicationType }
 type Options = {}
 type AdditionalProps = {}
 const StepCardTypeForm: Form<StepCardTypeFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { cardType: null, applicationType: null },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ cardType, applicationType }) => {
-    if (applicationType === null) {
+    if (cardType === null || applicationType === null) {
       return { type: 'error' }
     }
     return { type: 'valid', value: { cardType, applicationType } }
   },
-  Component: ({ state, setState }) => (
+  Component: memo(({ state, setState }) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <CardTypeInput state={state.cardType} setState={useUpdateStateCallback(setState, 'cardType')} />
       <ApplicationTypeInput
         state={state.applicationType}
         setState={useUpdateStateCallback(setState, 'applicationType')}
       />
     </div>
-  ),
+  )),
 }
 
 export default StepCardTypeForm

@@ -1,15 +1,19 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.DateInput
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.AttachmentView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class BlueCardEntitlementType {
     JULEICA,
     SERVICE,
-    STANDARD
+    WORK_AT_ORGANIZATIONS
 }
 
 data class BlueCardServiceEntitlement(
@@ -38,58 +42,64 @@ data class BlueCardServiceEntitlement(
     }
 }
 
+data class BlueCardJuleicaEntitlement(
+    val juleicaNumber: ShortTextInput,
+    val juleicaExpirationDate: DateInput,
+    val copyOfJuleica: Attachment
+) : JsonFieldSerializable {
+    override fun toJsonField() = JsonField(
+        name = "juleicaEntitlement",
+        type = Type.Array,
+        translations = mapOf("de" to "Juleica-Inhaber:in"),
+        value = listOf(
+            juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
+            juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
+            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Scan der Karte"))
+        )
+    )
+}
+
+data class BlueCardWorkAtOrganizationsEntitlement(
+    val list: List<WorkAtOrganization>
+) : JsonFieldSerializable {
+    init {
+        if (list.isEmpty()) {
+            throw IllegalArgumentException("List may not be empty.")
+        } else if (list.size > 5) {
+            throw IllegalArgumentException("List may contain at most 5 entries.")
+        }
+    }
+
+    override fun toJsonField() = JsonField(
+        name = "workAtOrganizationsEntitlement",
+        type = Type.Array,
+        translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
+        value = list.map { it.toJsonField() }
+    )
+}
+
 @GraphQLDescription(
-    """Entitlement for blue EAK.
-    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
-    or     entitlementType == Service and serviceActivity, serviceCertification are not null
-    or     entitlementType == Standard and workAtOrganizations is not null
-"""
+    "Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
 )
 data class BlueCardEntitlement(
     val entitlementType: BlueCardEntitlementType,
-    val juleicaNumber: String?,
-    val juleicaExpirationDate: String?,
-    val copyOfJuleica: Attachment?,
+    val juleicaEntitlement: BlueCardJuleicaEntitlement?,
     val serviceEntitlement: BlueCardServiceEntitlement?,
-    val workAtOrganizations: List<WorkAtOrganization>?
+    val workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlement?
 ) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
-            name = "blueCardEntitlement",
-            translations = mapOf("de" to "Berechtigungsgrund"),
-            type = Type.Array,
-            value = listOf(
-                when (entitlementType) {
-                    BlueCardEntitlementType.JULEICA -> JsonField(
-                        name = "juleicaEntitlement",
-                        type = Type.Array,
-                        translations = mapOf("de" to "Juleica-Inhaber:in"),
-                        value = listOf(
-                            JsonField("juleicaNumber", mapOf("de" to "Kartennummer"), Type.String, juleicaNumber!!),
-                            JsonField(
-                                "juleicaExpiration",
-                                mapOf("de" to "Karte gültig bis"),
-                                Type.String,
-                                juleicaExpirationDate!!
-                            ),
-                            JsonField(
-                                "copyOfJuleica",
-                                mapOf("de" to "Scan der Karte"),
-                                Type.Attachment,
-                                AttachmentView.from(copyOfJuleica!!)
-                            )
-                        )
-                    )
+    private val entitlementByEntitlementType = mapOf(
+        BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
+        BlueCardEntitlementType.SERVICE to serviceEntitlement,
+        BlueCardEntitlementType.JULEICA to juleicaEntitlement
+    )
 
-                    BlueCardEntitlementType.SERVICE -> serviceEntitlement!!.toJsonField()
-                    BlueCardEntitlementType.STANDARD -> JsonField(
-                        name = "standardEntitlement",
-                        type = Type.Array,
-                        translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
-                        value = workAtOrganizations!!.map { it.toJsonField() }
-                    )
-                }
-            )
-        )
+    init {
+        if (!onlySelectedIsPresent(entitlementByEntitlementType, entitlementType)) {
+            throw IllegalArgumentException("The specified entitlements do not match entitlementType.")
+        }
+    }
+
+    override fun toJsonField(): JsonField {
+        return entitlementByEntitlementType[entitlementType]!!.toJsonField()
     }
 }
