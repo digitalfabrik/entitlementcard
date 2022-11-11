@@ -6,7 +6,7 @@ export type SelectFormState = string
 type ValidatedInput = string
 type Options = { items: string[] }
 type AdditionalProps = { label: string }
-const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
+const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: '',
   getArrayBufferKeys: () => [],
   getValidatedInput: (state, options) => {
@@ -20,7 +20,7 @@ const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
-    const validationResult = selectForm.getValidatedInput(state, options)
+    const validationResult = SelectForm.getValidatedInput(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (
@@ -43,4 +43,4 @@ const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   },
 }
 
-export default selectForm
+export default SelectForm

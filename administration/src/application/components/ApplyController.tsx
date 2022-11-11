@@ -10,17 +10,17 @@ import { DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-import applicationForm from './forms/ApplicationForm'
+import ApplicationForm from './forms/ApplicationForm'
 import { useMemo } from 'react'
 
 const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
-  const [state, setState] = useLocallyStoredState(applicationForm.initialState, applicationStorageKey)
+  const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
-    () => (state === null ? null : () => applicationForm.getArrayBufferKeys(state)),
+    () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
     [state]
   )
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
@@ -30,7 +30,7 @@ const ApplyController = () => {
   }
 
   const submit = () => {
-    const application = applicationForm.getValidatedInput(state)
+    const application = ApplicationForm.getValidatedInput(state)
     if (application.type === 'error') {
       alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
       return
@@ -55,9 +55,9 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <applicationForm.Component state={state} setState={setState} />
+          <ApplicationForm.Component state={state} setState={setState} />
           <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => applicationForm.initialState)} />
+            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
             <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
               Antrag Senden
             </LoadingButton>

@@ -5,11 +5,11 @@ import { useState } from 'react'
 import ConfirmDialog from '../ConfirmDialog'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import organizationForm, { OrganizationFormState } from './OrganizationForm'
-import dateForm, { DateFormState } from '../primitive-inputs/DateForm'
-import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import numberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
-import fileInputForm, {FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState} from '../primitive-inputs/FileInputForm'
+import OrganizationForm, { OrganizationFormState } from './OrganizationForm'
+import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
+import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
+import NumberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
+import FileInputForm, {FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState} from '../primitive-inputs/FileInputForm'
 
 const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -48,28 +48,28 @@ export type WorkAtOrganizationFormState = {
 type ValidatedInput = WorkAtOrganizationInput
 type Options = {}
 type AdditionalProps = { onDelete?: () => void }
-const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
-    organization: organizationForm.initialState,
-    amountOfWork: numberForm.initialState,
-    activeSince: dateForm.initialState,
+    organization: OrganizationForm.initialState,
+    amountOfWork: NumberForm.initialState,
+    activeSince: DateForm.initialState,
     payment: false,
-    responsibility: shortTextForm.initialState,
-    certificate: fileInputForm.initialState,
+    responsibility: ShortTextForm.initialState,
+    certificate: FileInputForm.initialState,
   },
   getArrayBufferKeys: state => [
-    ...organizationForm.getArrayBufferKeys(state.organization),
-    ...numberForm.getArrayBufferKeys(state.amountOfWork),
-    ...dateForm.getArrayBufferKeys(state.activeSince),
-    ...shortTextForm.getArrayBufferKeys(state.responsibility),
-    ...fileInputForm.getArrayBufferKeys(state.certificate),
+    ...OrganizationForm.getArrayBufferKeys(state.organization),
+    ...NumberForm.getArrayBufferKeys(state.amountOfWork),
+    ...DateForm.getArrayBufferKeys(state.activeSince),
+    ...ShortTextForm.getArrayBufferKeys(state.responsibility),
+    ...FileInputForm.getArrayBufferKeys(state.certificate),
   ],
   getValidatedInput: state => {
-    const organization = organizationForm.getValidatedInput(state.organization)
-    const amountOfWork = numberForm.getValidatedInput(state.amountOfWork, amountOfWorkOptions)
-    const activeSince = dateForm.getValidatedInput(state.activeSince)
-    const responsibility = shortTextForm.getValidatedInput(state.responsibility)
-    const certificate = fileInputForm.getValidatedInput(state.certificate)
+    const organization = OrganizationForm.getValidatedInput(state.organization)
+    const amountOfWork = NumberForm.getValidatedInput(state.amountOfWork, amountOfWorkOptions)
+    const activeSince = DateForm.getValidatedInput(state.activeSince)
+    const responsibility = ShortTextForm.getValidatedInput(state.responsibility)
+    const certificate = FileInputForm.getValidatedInput(state.certificate)
     if (
       organization.type === 'error' ||
       amountOfWork.type === 'error' ||
@@ -95,26 +95,26 @@ const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     <Card elevation={4} style={{ margin: '16px 0' }}>
       <CardContent style={{ position: 'relative' }}>
         <DeleteActivityButton onDelete={onDelete} />
-        <organizationForm.Component
+        <OrganizationForm.Component
           state={state.organization}
           setState={useUpdateStateCallback(setState, 'organization')}
         />
         <h4>Angaben zur Tätigkeit</h4>
-        <shortTextForm.Component
+        <ShortTextForm.Component
           state={state.responsibility}
           setState={useUpdateStateCallback(setState, 'responsibility')}
           label='Ehrenamtliche Tätigkeit'
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           <div style={{ flex: '2' }}>
-            <dateForm.Component
+            <DateForm.Component
               label='Tätig seit'
               state={state.activeSince}
               setState={useUpdateStateCallback(setState, 'activeSince')}
             />
           </div>
           <div style={{ flex: '3' }}>
-            <numberForm.Component
+            <NumberForm.Component
               label='Arbeitsstunden pro Woche (Durchschnitt)'
               state={state.amountOfWork}
               setState={useUpdateStateCallback(setState, 'amountOfWork')}
@@ -140,10 +140,10 @@ const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
           Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Dieser darf maximal{' '}
           {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein. Wählen Sie eine Datei im JPG, PNG oder PDF Format.
         </p>
-        <fileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+        <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
       </CardContent>
     </Card>
   ),
 }
 
-export default workAtOrganizationForm
+export default WorkAtOrganizationForm

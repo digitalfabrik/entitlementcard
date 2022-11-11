@@ -6,7 +6,7 @@ export type DateFormState = { type: 'DateForm'; value: string }
 type ValidatedInput = string
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = {
+const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {
@@ -19,7 +19,7 @@ const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
   },
   Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
-    const validationResult = dateForm.getValidatedInput(state)
+    const validationResult = DateForm.getValidatedInput(state)
 
     const isInvalid = validationResult.type === 'error'
 
@@ -42,4 +42,4 @@ const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
   },
 }
 
-export default dateForm
+export default DateForm

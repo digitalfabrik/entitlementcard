@@ -1,5 +1,5 @@
 import { AddressInput } from '../../../generated/graphql'
-import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
+import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 
@@ -12,24 +12,24 @@ export type AddressFormState = {
 type ValidatedInput = AddressInput
 type Options = {}
 type AdditionalProps = {}
-const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalProps> = {
+const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
-    street: shortTextForm.initialState,
-    houseNumber: shortTextForm.initialState,
-    location: shortTextForm.initialState,
-    postalCode: shortTextForm.initialState,
+    street: ShortTextForm.initialState,
+    houseNumber: ShortTextForm.initialState,
+    location: ShortTextForm.initialState,
+    postalCode: ShortTextForm.initialState,
   },
   getArrayBufferKeys: state => [
-    ...shortTextForm.getArrayBufferKeys(state.street),
-    ...shortTextForm.getArrayBufferKeys(state.houseNumber),
-    ...shortTextForm.getArrayBufferKeys(state.location),
-    ...shortTextForm.getArrayBufferKeys(state.postalCode),
+    ...ShortTextForm.getArrayBufferKeys(state.street),
+    ...ShortTextForm.getArrayBufferKeys(state.houseNumber),
+    ...ShortTextForm.getArrayBufferKeys(state.location),
+    ...ShortTextForm.getArrayBufferKeys(state.postalCode),
   ],
   getValidatedInput: state => {
-    const street = shortTextForm.getValidatedInput(state.street)
-    const houseNumber = shortTextForm.getValidatedInput(state.houseNumber)
-    const location = shortTextForm.getValidatedInput(state.location)
-    const postalCode = shortTextForm.getValidatedInput(state.postalCode)
+    const street = ShortTextForm.getValidatedInput(state.street)
+    const houseNumber = ShortTextForm.getValidatedInput(state.houseNumber)
+    const location = ShortTextForm.getValidatedInput(state.location)
+    const postalCode = ShortTextForm.getValidatedInput(state.postalCode)
     if (
       street.type === 'error' ||
       houseNumber.type === 'error' ||
@@ -51,14 +51,14 @@ const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>
-          <shortTextForm.Component
+          <ShortTextForm.Component
             state={state.street}
             setState={useUpdateStateCallback(setState, 'street')}
             label='Straße'
           />
         </div>
         <div style={{ flex: '1' }}>
-          <shortTextForm.Component
+          <ShortTextForm.Component
             state={state.houseNumber}
             setState={useUpdateStateCallback(setState, 'houseNumber')}
             label='Hausnummer'
@@ -68,14 +68,14 @@ const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1' }}>
-          <shortTextForm.Component
+          <ShortTextForm.Component
             state={state.postalCode}
             setState={useUpdateStateCallback(setState, 'postalCode')}
             label='Postleitzahl'
           />
         </div>
         <div style={{ flex: '3' }}>
-          <shortTextForm.Component
+          <ShortTextForm.Component
             state={state.location}
             setState={useUpdateStateCallback(setState, 'location')}
             label='Ort'
@@ -86,4 +86,4 @@ const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
   ),
 }
 
-export default addressForm
+export default AddressForm

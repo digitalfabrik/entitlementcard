@@ -11,7 +11,7 @@ export type ShortTextFormState = {
 type ValidatedInput = string
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
+const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'ShortText', value: '' },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {
@@ -25,7 +25,7 @@ const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
   },
   Component: ({ state, setState, label, minWidth = 200 }) => {
     const [touched, setTouched] = useState(false)
-    const validationResult = shortTextForm.getValidatedInput(state)
+    const validationResult = ShortTextForm.getValidatedInput(state)
     const isInvalid = validationResult.type === 'error'
 
     return (
@@ -45,4 +45,4 @@ const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
   },
 }
 
-export default shortTextForm
+export default ShortTextForm

@@ -1,10 +1,10 @@
 import { OrganizationInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import addressForm, { AddressFormState } from './AddressForm'
-import selectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
-import emailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
+import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
+import AddressForm, { AddressFormState } from './AddressForm'
+import SelectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
+import EmailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
 
 const organizationCategoryOptions = {
   items: [
@@ -32,30 +32,30 @@ export type OrganizationFormState = {
 type ValidatedInput = OrganizationInput
 type Options = {}
 type AdditionalProps = {}
-const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
+const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
-    name: shortTextForm.initialState,
-    address: addressForm.initialState,
-    category: selectForm.initialState,
-    contactName: shortTextForm.initialState,
-    contactEmail: emailForm.initialState,
-    contactPhone: shortTextForm.initialState,
+    name: ShortTextForm.initialState,
+    address: AddressForm.initialState,
+    category: SelectForm.initialState,
+    contactName: ShortTextForm.initialState,
+    contactEmail: EmailForm.initialState,
+    contactPhone: ShortTextForm.initialState,
   },
   getArrayBufferKeys: state => [
-    ...shortTextForm.getArrayBufferKeys(state.name),
-    ...addressForm.getArrayBufferKeys(state.address),
-    ...selectForm.getArrayBufferKeys(state.category),
-    ...shortTextForm.getArrayBufferKeys(state.contactName),
-    ...emailForm.getArrayBufferKeys(state.contactEmail),
-    ...shortTextForm.getArrayBufferKeys(state.contactPhone),
+    ...ShortTextForm.getArrayBufferKeys(state.name),
+    ...AddressForm.getArrayBufferKeys(state.address),
+    ...SelectForm.getArrayBufferKeys(state.category),
+    ...ShortTextForm.getArrayBufferKeys(state.contactName),
+    ...EmailForm.getArrayBufferKeys(state.contactEmail),
+    ...ShortTextForm.getArrayBufferKeys(state.contactPhone),
   ],
   getValidatedInput: state => {
-    const name = shortTextForm.getValidatedInput(state.name)
-    const address = addressForm.getValidatedInput(state.address)
-    const category = selectForm.getValidatedInput(state.category, organizationCategoryOptions)
-    const contactName = shortTextForm.getValidatedInput(state.contactName)
-    const contactEmail = emailForm.getValidatedInput(state.contactEmail)
-    const contactPhone = shortTextForm.getValidatedInput(state.contactPhone)
+    const name = ShortTextForm.getValidatedInput(state.name)
+    const address = AddressForm.getValidatedInput(state.address)
+    const category = SelectForm.getValidatedInput(state.category, organizationCategoryOptions)
+    const contactName = ShortTextForm.getValidatedInput(state.contactName)
+    const contactEmail = EmailForm.getValidatedInput(state.contactEmail)
+    const contactPhone = ShortTextForm.getValidatedInput(state.contactPhone)
     if (
       name.type === 'error' ||
       address.type === 'error' ||
@@ -83,30 +83,30 @@ const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
   Component: ({ state, setState }) => (
     <>
       <h4>Angaben zur Organisation</h4>
-      <shortTextForm.Component
+      <ShortTextForm.Component
         state={state.name}
         setState={useUpdateStateCallback(setState, 'name')}
         label={'Name der Organisation bzw. des Vereins'}
       />
-      <addressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
-      <selectForm.Component
+      <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+      <SelectForm.Component
         state={state.category}
         setState={useUpdateStateCallback(setState, 'category')}
         label='Einsatzgebiet'
         options={organizationCategoryOptions}
       />
       <h4>Kontaktperson der Organisation</h4>
-      <shortTextForm.Component
+      <ShortTextForm.Component
         state={state.contactName}
         setState={useUpdateStateCallback(setState, 'contactName')}
         label='Vor- und Nachname'
       />
-      <emailForm.Component
+      <EmailForm.Component
         state={state.contactEmail}
         setState={useUpdateStateCallback(setState, 'contactEmail')}
         label='E-Mail-Adresse'
       />
-      <shortTextForm.Component
+      <ShortTextForm.Component
         state={state.contactPhone}
         setState={useUpdateStateCallback(setState, 'contactPhone')}
         label='Telefon'
@@ -115,4 +115,4 @@ const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
   ),
 }
 
-export default organizationForm
+export default OrganizationForm

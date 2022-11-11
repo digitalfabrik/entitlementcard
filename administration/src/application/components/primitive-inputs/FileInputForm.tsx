@@ -34,7 +34,7 @@ export type FileInputFormState = {
 type ValidatedInput = AttachmentInput
 type Options = {}
 type AdditionalProps = {}
-const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, AdditionalProps> = {
+const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   getValidatedInput: state => {
@@ -50,7 +50,7 @@ const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
     }
   },
   Component: ({ state, setState }) => {
-    const validationResult = fileInputForm.getValidatedInput(state)
+    const validationResult = FileInputForm.getValidatedInput(state)
 
     const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
       const file = e.target.files![0]
@@ -94,4 +94,4 @@ const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
   },
 }
 
-export default fileInputForm
+export default FileInputForm
