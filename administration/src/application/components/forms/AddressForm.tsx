@@ -19,6 +19,12 @@ const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
     location: shortTextForm.initialState,
     postalCode: shortTextForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...shortTextForm.getArrayBufferKeys(state.street),
+    ...shortTextForm.getArrayBufferKeys(state.houseNumber),
+    ...shortTextForm.getArrayBufferKeys(state.location),
+    ...shortTextForm.getArrayBufferKeys(state.postalCode),
+  ],
   getValidatedInput: state => {
     const street = shortTextForm.getValidatedInput(state.street)
     const houseNumber = shortTextForm.getValidatedInput(state.street)

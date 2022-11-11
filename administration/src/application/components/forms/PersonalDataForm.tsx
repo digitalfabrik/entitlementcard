@@ -26,6 +26,14 @@ const personalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
     telephone: shortTextForm.initialState,
     dateOfBirth: dateForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...shortTextForm.getArrayBufferKeys(state.forenames),
+    ...shortTextForm.getArrayBufferKeys(state.surname),
+    ...addressForm.getArrayBufferKeys(state.addressFormState),
+    ...emailForm.getArrayBufferKeys(state.emailAddress),
+    ...shortTextForm.getArrayBufferKeys(state.telephone),
+    ...dateForm.getArrayBufferKeys(state.dateOfBirth),
+  ],
   getValidatedInput: state => {
     const forenames = shortTextForm.getValidatedInput(state.forenames)
     const surname = shortTextForm.getValidatedInput(state.surname)

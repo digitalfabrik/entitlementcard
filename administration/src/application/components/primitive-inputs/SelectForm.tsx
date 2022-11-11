@@ -8,6 +8,7 @@ type Options = { items: string[] }
 type AdditionalProps = { label: string }
 const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: '',
+  getArrayBufferKeys: () => [],
   getValidatedInput: (state, options) => {
     if (state.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!options.items.includes(state))

@@ -41,6 +41,10 @@ const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
     standardEntitlement: standardEntitlementForm.initialState,
     personalData: personalDataForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...standardEntitlementForm.getArrayBufferKeys(state.standardEntitlement),
+    ...personalDataForm.getArrayBufferKeys(state.personalData),
+  ],
   getValidatedInput: state => {
     const personalData = personalDataForm.getValidatedInput(state.personalData)
     if (state.entitlementType === null || personalData.type === 'error') return { type: 'error' }

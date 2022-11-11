@@ -9,7 +9,7 @@ import organizationForm, { OrganizationFormState } from './OrganizationForm'
 import dateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import shortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import numberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
-import fileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileFormState } from '../primitive-inputs/FileInputForm'
+import fileInputForm, {FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState} from '../primitive-inputs/FileInputForm'
 
 const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -43,7 +43,7 @@ export type WorkAtOrganizationFormState = {
   activeSince: DateFormState
   payment: boolean
   responsibility: ShortTextFormState
-  certificate: FileFormState
+  certificate: FileInputFormState
 }
 type ValidatedInput = WorkAtOrganizationInput
 type Options = {}
@@ -57,6 +57,13 @@ const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     responsibility: shortTextForm.initialState,
     certificate: fileInputForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...organizationForm.getArrayBufferKeys(state.organization),
+    ...numberForm.getArrayBufferKeys(state.amountOfWork),
+    ...dateForm.getArrayBufferKeys(state.activeSince),
+    ...shortTextForm.getArrayBufferKeys(state.responsibility),
+    ...fileInputForm.getArrayBufferKeys(state.certificate),
+  ],
   getValidatedInput: state => {
     const organization = organizationForm.getValidatedInput(state.organization)
     const amountOfWork = numberForm.getValidatedInput(state.amountOfWork, amountOfWorkOptions)

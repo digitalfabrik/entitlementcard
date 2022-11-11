@@ -37,6 +37,7 @@ type Options = {}
 type AdditionalProps = {}
 const standardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: workAtOrganizationForm.initialState }],
+  getArrayBufferKeys: state => state.map(({ value }) => workAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   getValidatedInput: state => {
     const validationResults = state.map(({ value }) => workAtOrganizationForm.getValidatedInput(value))
     if (validationResults.some(({ type }) => type === 'error')) {

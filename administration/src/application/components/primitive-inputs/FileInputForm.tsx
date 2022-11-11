@@ -11,14 +11,6 @@ const defaultExtensionsByMIMEType = {
   'image/jpeg': '.jpg',
 }
 
-export type FileFormState = {
-  MIMEType: keyof typeof defaultExtensionsByMIMEType
-  arrayBufferKey: number
-  filename: string
-} | null
-
-export const initialFileFormState: FileFormState = null
-
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
@@ -44,6 +36,7 @@ type Options = {}
 type AdditionalProps = {}
 const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
+  getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   getValidatedInput: state => {
     if (state === null) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!globalArrayBuffersManager.has(state.arrayBufferKey)) return { type: 'error' }
@@ -85,9 +78,6 @@ const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
       // If the arrayBufferManager doesn't have the specified key, let user reenter a File.
       if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
         setState(() => null)
-      } else {
-        // Remove the arrayBuffer from the storage once the component unmounts.
-        return () => globalArrayBuffersManager.removeArrayBufferByKey(state.arrayBufferKey)
       }
     }, [state, setState])
 

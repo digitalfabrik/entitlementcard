@@ -4,6 +4,7 @@ import { SetState } from './useUpdateStateCallback'
 export type Form<State, Options extends {}, ValidatedInput, AdditionalProps extends {}> = {
   initialState: State
   getValidatedInput: GetValidatedInput<State, Options, ValidatedInput>
+  getArrayBufferKeys: (state: State) => number[]
   Component: (props: Props<State, AdditionalProps, Options>) => ReactElement | null
 }
 

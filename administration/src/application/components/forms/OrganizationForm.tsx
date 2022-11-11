@@ -41,6 +41,14 @@ const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
     contactEmail: emailForm.initialState,
     contactPhone: shortTextForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...shortTextForm.getArrayBufferKeys(state.name),
+    ...addressForm.getArrayBufferKeys(state.address),
+    ...selectForm.getArrayBufferKeys(state.category),
+    ...shortTextForm.getArrayBufferKeys(state.contactName),
+    ...emailForm.getArrayBufferKeys(state.contactEmail),
+    ...shortTextForm.getArrayBufferKeys(state.contactPhone),
+  ],
   getValidatedInput: state => {
     const name = shortTextForm.getValidatedInput(state.name)
     const address = addressForm.getValidatedInput(state.address)

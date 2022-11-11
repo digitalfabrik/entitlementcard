@@ -8,6 +8,7 @@ type Options = { min: number; max: number }
 type AdditionalProps = { label: string; minWidth?: number }
 const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'NumberForm', value: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }, options) => {
     const number = parseFloat(value)
     if (isNaN(number)) return { type: 'error', message: 'Eingabe ist keine Zahl.' }

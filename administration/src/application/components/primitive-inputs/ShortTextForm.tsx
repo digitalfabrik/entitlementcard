@@ -13,6 +13,7 @@ type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'ShortText', value: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {
     if (value.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (value.length > MAX_CHARACTERS)

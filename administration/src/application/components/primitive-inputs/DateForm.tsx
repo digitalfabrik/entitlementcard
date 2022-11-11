@@ -8,6 +8,7 @@ type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {
     if (value === '') return { type: 'error', message: 'Feld ist erforderlich.' }
     const date = Date.parse(value)

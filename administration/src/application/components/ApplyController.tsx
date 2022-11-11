@@ -9,8 +9,9 @@ import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
 import { DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
-import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
+import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import applicationForm from './forms/ApplicationForm'
+import { useMemo } from 'react'
 
 const applicationStorageKey = 'applicationState'
 
@@ -18,7 +19,11 @@ const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
   const [state, setState] = useLocallyStoredState(applicationForm.initialState, applicationStorageKey)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
-
+  const getArrayBufferKeys = useMemo(
+    () => (state === null ? null : () => applicationForm.getArrayBufferKeys(state)),
+    [state]
+  )
+  useGarbageCollectArrayBuffers(getArrayBufferKeys)
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
   if (state == null || !arrayBufferManagerInitialized) {
     return null

@@ -8,6 +8,7 @@ type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const emailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'EmailForm', value: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {
     if (value === '') return { type: 'error', message: 'Feld ist erforderlich.' }
     return { type: 'valid', value }
