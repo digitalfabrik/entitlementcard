@@ -33,7 +33,7 @@ export type ApplicationFormState = {
   personalData: PersonalDataFormState
 }
 type ValidatedInput = BlueCardApplicationInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {

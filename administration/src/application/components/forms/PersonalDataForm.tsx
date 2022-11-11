@@ -15,7 +15,7 @@ export type PersonalDataFormState = {
   dateOfBirth: DateFormState
 }
 type ValidatedInput = PersonalDataInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const personalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {

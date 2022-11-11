@@ -10,7 +10,7 @@ export type AddressFormState = {
   postalCode: ShortTextFormState
 }
 type ValidatedInput = AddressInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {

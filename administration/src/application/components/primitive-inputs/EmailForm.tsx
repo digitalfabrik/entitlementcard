@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 
 export type EmailFormState = { type: 'EmailForm'; value: string }
 type ValidatedInput = string
-type Options = void
+type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const emailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'EmailForm', value: '' },

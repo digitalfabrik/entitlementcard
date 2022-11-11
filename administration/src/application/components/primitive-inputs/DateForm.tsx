@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 
 export type DateFormState = { type: 'DateForm'; value: string }
 type ValidatedInput = string
-type Options = void
+type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const dateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },

@@ -33,7 +33,7 @@ function removeAt<T>(array: T[], index: number): T[] {
 
 export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = WorkAtOrganizationInput[]
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const standardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: workAtOrganizationForm.initialState }],

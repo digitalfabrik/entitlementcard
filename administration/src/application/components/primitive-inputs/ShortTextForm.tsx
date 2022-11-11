@@ -9,7 +9,7 @@ export type ShortTextFormState = {
   value: string
 }
 type ValidatedInput = string
-type Options = void
+type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const shortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'ShortText', value: '' },

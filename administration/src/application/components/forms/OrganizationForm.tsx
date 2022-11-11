@@ -30,7 +30,7 @@ export type OrganizationFormState = {
   contactPhone: ShortTextFormState
 }
 type ValidatedInput = OrganizationInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const organizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {

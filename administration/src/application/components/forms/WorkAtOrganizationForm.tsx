@@ -46,7 +46,7 @@ export type WorkAtOrganizationFormState = {
   certificate: FileFormState
 }
 type ValidatedInput = WorkAtOrganizationInput
-type Options = void
+type Options = {}
 type AdditionalProps = { onDelete?: () => void }
 const workAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {

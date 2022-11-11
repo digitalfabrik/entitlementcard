@@ -40,7 +40,7 @@ export type FileInputFormState = {
   filename: string
 } | null
 type ValidatedInput = AttachmentInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
 const fileInputForm: Form<FileInputFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
