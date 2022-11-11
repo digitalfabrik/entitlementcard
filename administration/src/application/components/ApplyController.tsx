@@ -11,6 +11,7 @@ import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
 import { useMemo } from 'react'
+import { SnackbarProvider, useSnackbar } from 'notistack'
 
 const applicationStorageKey = 'applicationState'
 
@@ -22,6 +23,7 @@ const ApplyController = () => {
     () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
     [state]
   )
+  const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
   if (state == null || !arrayBufferManagerInitialized) {
@@ -31,7 +33,9 @@ const ApplyController = () => {
   const submit = () => {
     const application = ApplicationForm.getValidatedInput(state)
     if (application.type === 'error') {
-      alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
+      enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
+        variant: 'error',
+      })
       return
     }
 
@@ -46,24 +50,33 @@ const ApplyController = () => {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
-      <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            submit()
-          }}>
-          <ApplicationForm.Component state={state} setState={setState} />
-          <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
-              Antrag Senden
-            </Button>
-          </DialogActions>
-        </form>
+    <SnackbarProvider>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
+        <div style={{ maxWidth: '1000px', width: '100%' }}>
+          <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              submit()
+            }}>
+            <ApplicationForm.Component state={state} setState={setState} />
+            <DialogActions>
+              <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
+              <Button endIcon={<SendIcon />} variant='contained' type='submit'>
+                Antrag Senden
+              </Button>
+            </DialogActions>
+          </form>
+        </div>
       </div>
-    </div>
+    </SnackbarProvider>
   )
 }
-export default ApplyController
+
+const ApplyApp = () => (
+  <SnackbarProvider>
+    <ApplyController />
+  </SnackbarProvider>
+)
+
+export default ApplyApp

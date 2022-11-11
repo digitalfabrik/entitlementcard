@@ -4,6 +4,7 @@ import { ChangeEventHandler, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
 import globalArrayBuffersManager from '../../globalArrayBuffersManager'
 import { Form } from '../../FormType'
+import { useSnackbar } from 'notistack'
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',
@@ -50,17 +51,20 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
     }
   },
   Component: ({ state, setState }) => {
+    const { enqueueSnackbar } = useSnackbar()
     const validationResult = FileInputForm.getValidatedInput(state)
-
     const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
       const file = e.target.files![0]
       if (!(file.type in defaultExtensionsByMIMEType)) {
-        alert('Die gewählte Datei hat einen unzulässigen Dateityp.')
+        enqueueSnackbar('Die gewählte Datei hat einen unzulässigen Dateityp.', { variant: 'error' })
         e.target.value = ''
         return
       }
       if (file.size > FILE_SIZE_LIMIT_BYTES) {
-        alert(`Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`)
+        enqueueSnackbar(
+          `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
+          { variant: 'error' }
+        )
         e.target.value = ''
         return
       }

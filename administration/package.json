@@ -23,6 +23,7 @@
     "jspdf": "^2.5.1",
     "localforage": "^1.10.0",
     "long": "^5.2.0",
+    "notistack": "^2.0.8",
     "protobufjs": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
