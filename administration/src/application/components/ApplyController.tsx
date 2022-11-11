@@ -2,11 +2,10 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { LoadingButton } from '@mui/lab'
 import SendIcon from '@mui/icons-material/Send'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
-import { DialogActions } from '@mui/material'
+import { Button, DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
@@ -16,7 +15,7 @@ import { useMemo } from 'react'
 const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
-  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
+  const [addBlueEakApplication] = useAddBlueEakApplicationMutation()
   const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
@@ -58,9 +57,9 @@ const ApplyController = () => {
           <ApplicationForm.Component state={state} setState={setState} />
           <DialogActions>
             <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-            <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
+            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
               Antrag Senden
-            </LoadingButton>
+            </Button>
           </DialogActions>
         </form>
       </div>
