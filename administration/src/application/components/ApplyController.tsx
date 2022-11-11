@@ -50,26 +50,24 @@ const ApplyController = () => {
   }
 
   return (
-    <SnackbarProvider>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
-        <div style={{ maxWidth: '1000px', width: '100%' }}>
-          <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              submit()
-            }}>
-            <ApplicationForm.Component state={state} setState={setState} />
-            <DialogActions>
-              <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-              <Button endIcon={<SendIcon />} variant='contained' type='submit'>
-                Antrag Senden
-              </Button>
-            </DialogActions>
-          </form>
-        </div>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
+      <div style={{ maxWidth: '1000px', width: '100%' }}>
+        <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            submit()
+          }}>
+          <ApplicationForm.Component state={state} setState={setState} />
+          <DialogActions>
+            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
+            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
+              Antrag Senden
+            </Button>
+          </DialogActions>
+        </form>
       </div>
-    </SnackbarProvider>
+    </div>
   )
 }
 
