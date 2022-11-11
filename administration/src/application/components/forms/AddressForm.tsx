@@ -27,9 +27,9 @@ const addressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
   ],
   getValidatedInput: state => {
     const street = shortTextForm.getValidatedInput(state.street)
-    const houseNumber = shortTextForm.getValidatedInput(state.street)
-    const location = shortTextForm.getValidatedInput(state.street)
-    const postalCode = shortTextForm.getValidatedInput(state.street)
+    const houseNumber = shortTextForm.getValidatedInput(state.houseNumber)
+    const location = shortTextForm.getValidatedInput(state.location)
+    const postalCode = shortTextForm.getValidatedInput(state.postalCode)
     if (
       street.type === 'error' ||
       houseNumber.type === 'error' ||
