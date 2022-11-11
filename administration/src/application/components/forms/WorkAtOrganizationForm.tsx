@@ -25,7 +25,7 @@ const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
       </Tooltip>
       <ConfirmDialog
         open={deleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
+        onUpdateOpen={setDeleteDialogOpen}
         confirmButtonText='Löschen'
         content='Wollen Sie die Aktivität unwiderruflich löschen?'
         onConfirm={onDelete}
