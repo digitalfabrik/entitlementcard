@@ -3,8 +3,8 @@ import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } fr
 import SwitchDisplay from '../SwitchDisplay'
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { Form } from '../../FormType'
-import standardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
-import personalDataForm, { PersonalDataFormState } from './PersonalDataForm'
+import StandardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
+import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
 
 const EntitlementTypeInput = ({
   state,
@@ -33,20 +33,24 @@ export type ApplicationFormState = {
   personalData: PersonalDataFormState
 }
 type ValidatedInput = BlueCardApplicationInput
-type Options = void
+type Options = {}
 type AdditionalProps = {}
-const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
+const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     entitlementType: null,
-    standardEntitlement: standardEntitlementForm.initialState,
-    personalData: personalDataForm.initialState,
+    standardEntitlement: StandardEntitlementForm.initialState,
+    personalData: PersonalDataForm.initialState,
   },
+  getArrayBufferKeys: state => [
+    ...StandardEntitlementForm.getArrayBufferKeys(state.standardEntitlement),
+    ...PersonalDataForm.getArrayBufferKeys(state.personalData),
+  ],
   getValidatedInput: state => {
-    const personalData = personalDataForm.getValidatedInput(state.personalData)
+    const personalData = PersonalDataForm.getValidatedInput(state.personalData)
     if (state.entitlementType === null || personalData.type === 'error') return { type: 'error' }
     switch (state.entitlementType) {
       case BlueCardEntitlementType.Standard:
-        const workAtOrganizations = standardEntitlementForm.getValidatedInput(state.standardEntitlement)
+        const workAtOrganizations = StandardEntitlementForm.getValidatedInput(state.standardEntitlement)
         if (workAtOrganizations.type === 'error') return { type: 'error' }
         return {
           type: 'valid',
@@ -74,7 +78,7 @@ const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
       <SwitchDisplay value={state.entitlementType}>
         {{
           [BlueCardEntitlementType.Standard]: (
-            <standardEntitlementForm.Component
+            <StandardEntitlementForm.Component
               state={state.standardEntitlement}
               setState={useUpdateStateCallback(setState, 'standardEntitlement')}
             />
@@ -83,7 +87,7 @@ const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
           [BlueCardEntitlementType.Service]: null,
         }}
       </SwitchDisplay>
-      <personalDataForm.Component
+      <PersonalDataForm.Component
         state={state.personalData}
         setState={useUpdateStateCallback(setState, 'personalData')}
       />
@@ -91,4 +95,4 @@ const applicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
   ),
 }
 
-export default applicationForm
+export default ApplicationForm

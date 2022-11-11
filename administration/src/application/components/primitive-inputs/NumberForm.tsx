@@ -6,8 +6,9 @@ export type NumberFormState = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
 type Options = { min: number; max: number }
 type AdditionalProps = { label: string; minWidth?: number }
-const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
+const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'NumberForm', value: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }, options) => {
     const number = parseFloat(value)
     if (isNaN(number)) return { type: 'error', message: 'Eingabe ist keine Zahl.' }
@@ -17,7 +18,7 @@ const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
   },
   Component: ({ state, setState, label, options, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
-    const validationResult = numberForm.getValidatedInput(state, options)
+    const validationResult = NumberForm.getValidatedInput(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (
@@ -39,4 +40,4 @@ const numberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
   },
 }
 
-export default numberForm
+export default NumberForm

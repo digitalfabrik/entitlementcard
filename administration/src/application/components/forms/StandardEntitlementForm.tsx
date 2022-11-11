@@ -1,5 +1,5 @@
 import { Alert, Button } from '@mui/material'
-import workAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
+import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
 import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import { SetState } from '../../useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
@@ -16,7 +16,7 @@ const WorkAtOrganizationFormHelper = ({
   onDelete?: () => void
 }) => {
   const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
-  return <workAtOrganizationForm.Component setState={setState} {...otherProps} />
+  return <WorkAtOrganizationForm.Component setState={setState} {...otherProps} />
 }
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
@@ -33,12 +33,13 @@ function removeAt<T>(array: T[], index: number): T[] {
 
 export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = WorkAtOrganizationInput[]
-type Options = void
+type Options = {}
 type AdditionalProps = {}
-const standardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: [{ key: 0, value: workAtOrganizationForm.initialState }],
+const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+  initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
+  getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   getValidatedInput: state => {
-    const validationResults = state.map(({ value }) => workAtOrganizationForm.getValidatedInput(value))
+    const validationResults = state.map(({ value }) => WorkAtOrganizationForm.getValidatedInput(value))
     if (validationResults.some(({ type }) => type === 'error')) {
       return { type: 'error' }
     }
@@ -56,7 +57,7 @@ const standardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
-        return [...state, { key: newKey, value: workAtOrganizationForm.initialState }]
+        return [...state, { key: newKey, value: WorkAtOrganizationForm.initialState }]
       })
 
     const setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState> = useCallback(
@@ -90,4 +91,4 @@ const standardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
   },
 }
 
-export default standardEntitlementForm
+export default StandardEntitlementForm

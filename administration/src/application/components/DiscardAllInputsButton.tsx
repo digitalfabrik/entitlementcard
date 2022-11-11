@@ -12,7 +12,7 @@ const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }) => {
       </Button>
       <ConfirmDialog
         open={dialogOpen}
-        setOpen={setDialogOpen}
+        onUpdateOpen={setDialogOpen}
         title='Alle Eingaben verwerfen?'
         content='Wollen Sie wirklich alle Eingaben unwiderruflich löschen?'
         onConfirm={discardAll}

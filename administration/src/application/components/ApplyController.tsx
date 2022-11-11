@@ -2,32 +2,40 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { LoadingButton } from '@mui/lab'
 import SendIcon from '@mui/icons-material/Send'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
-import { DialogActions } from '@mui/material'
+import { Button, DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
-import { useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
-import applicationForm from './forms/ApplicationForm'
+import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
+import ApplicationForm from './forms/ApplicationForm'
+import { useMemo } from 'react'
+import { SnackbarProvider, useSnackbar } from 'notistack'
 
 const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
-  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
-  const [state, setState] = useLocallyStoredState(applicationForm.initialState, applicationStorageKey)
+  const [addBlueEakApplication] = useAddBlueEakApplicationMutation()
+  const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
-
+  const getArrayBufferKeys = useMemo(
+    () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
+    [state]
+  )
+  const { enqueueSnackbar } = useSnackbar()
+  useGarbageCollectArrayBuffers(getArrayBufferKeys)
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
   if (state == null || !arrayBufferManagerInitialized) {
     return null
   }
 
   const submit = () => {
-    const application = applicationForm.getValidatedInput(state)
+    const application = ApplicationForm.getValidatedInput(state)
     if (application.type === 'error') {
-      alert('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.')
+      enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
+        variant: 'error',
+      })
       return
     }
 
@@ -50,16 +58,23 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <applicationForm.Component state={state} setState={setState} />
+          <ApplicationForm.Component state={state} setState={setState} />
           <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => applicationForm.initialState)} />
-            <LoadingButton endIcon={<SendIcon />} variant='contained' type='submit' loading={loading}>
+            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
+            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
               Antrag Senden
-            </LoadingButton>
+            </Button>
           </DialogActions>
         </form>
       </div>
     </div>
   )
 }
-export default ApplyController
+
+const ApplyApp = () => (
+  <SnackbarProvider>
+    <ApplyController />
+  </SnackbarProvider>
+)
+
+export default ApplyApp

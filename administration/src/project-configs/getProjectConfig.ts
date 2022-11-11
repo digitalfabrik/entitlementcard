@@ -8,7 +8,7 @@ export interface ProjectConfig {
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
-  switch (hostname) {
+  switch (window.localStorage.getItem('project-override') ?? hostname) {
     case 'bayern.ehrenamtskarte.app':
       return bayernConfig
     case 'nuernberg.sozialpass.app':

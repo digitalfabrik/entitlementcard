@@ -17,15 +17,15 @@ import java.time.ZoneOffset
 class CardMutationService {
     @GraphQLDescription("Stores a new digital EAK")
     fun addCard(dfe: DataFetchingEnvironment, card: CardGenerationModel): Boolean {
-        val jwtPayload = dfe.getLocalContext<GraphQLContext>().enforceSignedIn()
-
-        val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
-        val targetedRegionId = card.regionId
-        if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
-            throw UnauthorizedException()
-        }
+        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
 
         transaction {
+            val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
+            val targetedRegionId = card.regionId
+            if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
+                throw UnauthorizedException()
+            }
+
             CardRepository.insert(
                 Base64.decode(card.cardDetailsHashBase64),
                 Base64.decode(card.totpSecretBase64),

@@ -7,8 +7,9 @@ export type SelectFormState = { selectedText: string }
 type ValidatedInput = ShortTextInput
 type Options = { items: string[] }
 type AdditionalProps = { label: string }
-const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
+const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { selectedText: '' },
+  getArrayBufferKeys: () => [],
   getValidatedInput: ({ selectedText }, options) => {
     if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!options.items.includes(selectedText))
@@ -20,7 +21,7 @@ const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
-    const validationResult = selectForm.getValidatedInput(state, options)
+    const validationResult = SelectForm.getValidatedInput(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (
@@ -43,4 +44,4 @@ const selectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   },
 }
 
-export default selectForm
+export default SelectForm

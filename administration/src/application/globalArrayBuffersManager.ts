@@ -1,5 +1,5 @@
 import localforage from 'localforage'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const globalArrayBuffersKey = 'array-buffers'
 
@@ -28,13 +28,13 @@ class ArrayBuffersManager {
     return newKey
   }
 
-  removeArrayBufferByKey(key: number): void {
-    this.arrayBuffers = this.arrayBuffers.filter(({ key: elementKey }) => key !== elementKey)
-    localforage.setItem(globalArrayBuffersKey, this.arrayBuffers)
-  }
-
   has(key: number): boolean {
     return this.arrayBuffers.find(({ key: elementKey }) => key === elementKey) !== undefined
+  }
+
+  clearAllExcept(except: Set<number>) {
+    this.arrayBuffers = this.arrayBuffers.filter(({ key }) => except.has(key))
+    localforage.setItem(globalArrayBuffersKey, this.arrayBuffers)
   }
 }
 
@@ -46,6 +46,25 @@ export const useInitializeGlobalArrayBuffersManager = () => {
     globalArrayBuffersManager.initialize().finally(() => setInitialized(true))
   }, [setInitialized])
   return initialized
+}
+
+export const useGarbageCollectArrayBuffers = (getUsedArrayBufferKeys: (() => number[]) | null) => {
+  const getUsedArrayBufferKeysRef = useRef(getUsedArrayBufferKeys)
+
+  useEffect(() => {
+    getUsedArrayBufferKeysRef.current = getUsedArrayBufferKeys
+  }, [getUsedArrayBufferKeys])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Collect Garbage
+      const getKeys = getUsedArrayBufferKeysRef.current
+      if (getKeys !== null) {
+        globalArrayBuffersManager.clearAllExcept(new Set(getKeys()))
+      }
+    }, 2000)
+    return () => clearInterval(interval)
+  })
 }
 
 export default globalArrayBuffersManager

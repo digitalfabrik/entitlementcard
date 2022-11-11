@@ -2,30 +2,30 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 
 const ConfirmDialog = ({
   open,
-  setOpen,
+  onUpdateOpen,
   title,
   content,
   onConfirm,
   confirmButtonText = 'Bestätigen',
 }: {
   open: boolean
-  setOpen: (open: boolean) => void
+  onUpdateOpen: (open: boolean) => void
   title: string
   content: string
   onConfirm: () => void
   confirmButtonText?: string
 }) => {
   return (
-    <Dialog open={open} onClick={() => setOpen(false)}>
+    <Dialog open={open} onClick={() => onUpdateOpen(false)}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpen(false)}>Abbrechen</Button>
+        <Button onClick={() => onUpdateOpen(false)}>Abbrechen</Button>
         <Button
           onClick={() => {
-            setOpen(false)
+            onUpdateOpen(false)
             onConfirm()
           }}>
           {confirmButtonText}
