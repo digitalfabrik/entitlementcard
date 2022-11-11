@@ -9,7 +9,7 @@ import OrganizationForm, { OrganizationFormState } from './OrganizationForm'
 import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import NumberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
-import FileInputForm, {FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState} from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
 
 const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
