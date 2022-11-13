@@ -19,6 +19,6 @@ data class DateInput(val date: String) {
     }
 
     fun toJsonField(fieldName: String, translations: Map<String, String>): JsonField {
-        return JsonField(fieldName, translations, Type.String, date)
+        return JsonField(fieldName, translations, Type.Date, date)
     }
 }

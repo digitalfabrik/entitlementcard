@@ -18,6 +18,7 @@ type JsonFieldValueByType = {
   Number: number
   Boolean: boolean
   Attachment: { fileIndex: number }
+  Date: string
 }
 
 const extensionByContentType = new Map([
@@ -46,6 +47,12 @@ const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; to
       return (
         <p>
           {props.jsonField.translations.de}: {props.jsonField.value}
+        </p>
+      )
+    case 'Date':
+      return (
+        <p>
+          {props.jsonField.translations.de}: {new Date(props.jsonField.value).toLocaleDateString('de')}
         </p>
       )
     case 'Number':
