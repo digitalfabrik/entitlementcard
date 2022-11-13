@@ -11,10 +11,10 @@ enum class Type {
     Boolean
 }
 
-data class AttachmentView(val fileName: String, val fileIndex: Int) {
+data class AttachmentView(val fileIndex: Int) {
     @GraphQLIgnore
     companion object {
-        fun from(attachment: Attachment) = AttachmentView(attachment.fileName, attachment.data.index)
+        fun from(attachment: Attachment) = AttachmentView(attachment.data.index)
     }
 }
 

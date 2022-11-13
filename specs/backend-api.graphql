@@ -181,7 +181,6 @@ input AddressInput {
 
 input AttachmentInput {
   data: Upload!
-  fileName: String!
 }
 
 input AuthDataInput {
