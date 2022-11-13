@@ -16,6 +16,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import java.nio.file.Paths
 
 object ApplicationRepository {
     fun persistApplication(
@@ -74,9 +75,12 @@ object ApplicationRepository {
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
-                val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
+                val project = (Projects innerJoin Regions).select { Regions.id eq application.regionId }.single()
+                    .let { ProjectEntity.wrapRow(it) }
+                val applicationDirectory =
+                    Paths.get(graphQLContext.applicationData.absolutePath, project.project, application.id.toString())
                 application.delete()
-                return@transaction applicationDirectory.deleteRecursively()
+                applicationDirectory.toFile().deleteRecursively()
             } else false
         }
     }
