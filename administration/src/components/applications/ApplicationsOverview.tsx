@@ -1,11 +1,12 @@
 import { Alert, Button, Card, H4, IResizeEntry, ResizeSensor } from '@blueprintjs/core'
 import { format } from 'date-fns'
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
-import JsonFieldView, { JsonField } from './JsonFieldView'
+import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import { useAppToaster } from '../AppToaster'
 import FlipMove from 'react-flip-move'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 type Application = GetApplicationsQuery['applications'][number]
 
@@ -50,8 +51,9 @@ const ApplicationView: FunctionComponent<{ application: Application; token: stri
 }) => {
   const { createdDate: createdDateString, jsonValue, id } = application
   const createdDate = new Date(createdDateString)
-  const jsonField: JsonField = JSON.parse(jsonValue)
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${id}`
+  const jsonField: GeneralJsonField = JSON.parse(jsonValue)
+  const config = useContext(ProjectConfigContext)
+  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
   const [collapsed, setCollapsed] = useState(false)
   const [height, setHeight] = useState(0)
   const appToaster = useAppToaster()

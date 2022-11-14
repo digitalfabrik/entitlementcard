@@ -1,22 +1,26 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.EmailInput
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 
 data class OrganizationContact(
-    val name: String,
-    val telephone: String,
-    val email: String,
+    val name: ShortTextInput,
+    val telephone: ShortTextInput,
+    val email: EmailInput,
     val hasGivenPermission: Boolean
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "organizationContact", mapOf("de" to "Kontaktperson der Organisation"), Type.Array,
+            "organizationContact",
+            mapOf("de" to "Kontaktperson der Organisation"),
+            Type.Array,
             listOf(
-                JsonField("name", mapOf("de" to "Name"), Type.String, name),
-                JsonField("telephone", mapOf("de" to "Telefonnummer"), Type.String, telephone),
-                JsonField("email", mapOf("de" to "Email-Adresse"), Type.String, email),
+                name.toJsonField("name", mapOf("de" to "Name")),
+                telephone.toJsonField("telephone", mapOf("de" to "Telefonnummer")),
+                email.toJsonField("email", mapOf("de" to "Email-Adresse")),
                 JsonField(
                     "hasGivenPermission",
                     mapOf("de" to "Kontaktperson hat zur Weitergabe der Daten möglicher Kontaktaufnahme eingewilligt"),

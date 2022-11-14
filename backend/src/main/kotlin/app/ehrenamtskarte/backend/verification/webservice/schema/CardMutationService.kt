@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
@@ -20,7 +20,7 @@ class CardMutationService {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
 
         transaction {
-            val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
+            val user = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
             val targetedRegionId = card.regionId
             if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                 throw UnauthorizedException()

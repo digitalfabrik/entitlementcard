@@ -24,8 +24,9 @@ data class BlueCardServiceEntitlement(
             translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
             value = listOfNotNull(
                 organization.toJsonField(),
-                if (responsibility != null)
-                    JsonField("responsibility", mapOf("de" to "Funktion"), Type.String, responsibility) else null,
+                if (responsibility != null) {
+                    JsonField("responsibility", mapOf("de" to "Funktion"), Type.String, responsibility)
+                } else null,
                 if (certificate != null) JsonField(
                     "serviceCertificate",
                     mapOf("de" to "Zertifikat"),

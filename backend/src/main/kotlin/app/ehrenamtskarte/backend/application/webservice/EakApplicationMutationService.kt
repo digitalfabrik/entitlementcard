@@ -22,11 +22,18 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        ApplicationRepository.addApplication(
+        // Validate that all files are png, jpeg or pdf files and at most 5MB.
+        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
+        val maxFileSizeBytes = 5 * 1000 * 1000
+        if (!context.files.all { it.contentType in allowedContentTypes && it.size <= maxFileSizeBytes }) {
+            throw IllegalArgumentException("An uploaded file does not adhere to the file upload requirements.")
+        }
+
+        ApplicationRepository.persistApplication(
+            application.toJsonField(),
             regionId,
-            application,
-            context,
-            ApplicationRepository::validateBlueApplication
+            context.applicationData,
+            context.files
         )
         return true
     }
@@ -37,12 +44,19 @@ class EakApplicationMutationService {
         application: GoldenCardApplication,
         dfe: DataFetchingEnvironment
     ): Boolean {
-        val context = dfe.getLocalContext<GraphQLContext>()
-        ApplicationRepository.addApplication(
+        val context = dfe.getContext<GraphQLContext>()
+        // Validate that all files are png, jpeg or pdf files and at most 5MB large.
+        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
+        val maxFileSizeBytes = 5 * 1000 * 1000
+        if (!context.files.all { it.contentType in allowedContentTypes && it.size <= maxFileSizeBytes }) {
+            throw IllegalArgumentException("An uploaded file does not adhere to the file upload requirements.")
+        }
+
+        ApplicationRepository.persistApplication(
+            application.toJsonField(),
             regionId,
-            application,
-            context,
-            ApplicationRepository::validateGoldenApplication
+            context.applicationData,
+            context.files
         )
         return true
     }
@@ -61,6 +75,7 @@ class EakApplicationMutationService {
             // `applicationId` and whether this application was contained in the user's project & region.
 
             val user = AdministratorEntity.findById(jwtPayload.userId)
+                ?: throw IllegalArgumentException("Admin does not exist")
             if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
                 throw UnauthorizedException()
             }

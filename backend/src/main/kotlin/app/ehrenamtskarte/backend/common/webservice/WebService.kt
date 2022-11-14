@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.ApplicationHandler
+import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import io.javalin.Javalin
@@ -52,7 +52,7 @@ class WebService {
 
         val graphQLHandler = GraphQLHandler(config)
         val mapStyleHandler = MapStyleHandler(config)
-        val applicationHandler = ApplicationHandler(applicationData)
+        val applicationHandler = ApplicationAttachmentHandler(applicationData)
 
         app.post("/") { ctx ->
             if (!production) {
