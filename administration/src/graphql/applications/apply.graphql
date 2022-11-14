@@ -1,0 +1,3 @@
+mutation addBlueEakApplication($regionId: Int!, $application: BlueCardApplicationInput!) {
+  result: addBlueEakApplication(regionId: $regionId, application: $application)
+}

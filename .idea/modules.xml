@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/administration/administration.iml" filepath="$PROJECT_DIR$/administration/administration.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ehrenamtskarte.iml" filepath="$PROJECT_DIR$/.idea/ehrenamtskarte.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/.idea/frontend.iml" filepath="$PROJECT_DIR$/frontend/.idea/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend/android/frontend_android.iml" filepath="$PROJECT_DIR$/frontend/android/frontend_android.iml" />
     </modules>
   </component>
 </project>
