@@ -1,22 +1,23 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
 import { Form } from '../../FormType'
+import { ShortTextInput } from '../../../generated/graphql'
 
-export type SelectFormState = string
-type ValidatedInput = string
+export type SelectFormState = { selectedText: string }
+type ValidatedInput = ShortTextInput
 type Options = { items: string[] }
 type AdditionalProps = { label: string }
 const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: '',
+  initialState: { selectedText: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: (state, options) => {
-    if (state.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!options.items.includes(state))
+  getValidatedInput: ({ selectedText }, options) => {
+    if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (!options.items.includes(selectedText))
       return {
         type: 'error',
         message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
       }
-    return { type: 'valid', value: state }
+    return { type: 'valid', value: { shortText: selectedText } }
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)

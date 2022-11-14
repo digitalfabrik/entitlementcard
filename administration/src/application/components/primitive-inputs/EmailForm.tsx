@@ -1,17 +1,18 @@
 import { TextField } from '@mui/material'
 import { useState } from 'react'
 import { Form } from '../../FormType'
+import { EmailInput } from '../../../generated/graphql'
 
-export type EmailFormState = { type: 'EmailForm'; value: string }
-type ValidatedInput = string
+export type EmailFormState = { email: string }
+type ValidatedInput = EmailInput
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { type: 'EmailForm', value: '' },
+  initialState: { email: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ value }) => {
-    if (value === '') return { type: 'error', message: 'Feld ist erforderlich.' }
-    return { type: 'valid', value }
+  getValidatedInput: ({ email }) => {
+    if (email === '') return { type: 'error', message: 'Feld ist erforderlich.' }
+    return { type: 'valid', value: { email } }
   },
   Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
@@ -28,9 +29,9 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
         label={label}
         required
         error={touched && isInvalid}
-        value={state.value}
+        value={state.email}
         onBlur={() => setTouched(true)}
-        onChange={e => setState(() => ({ type: 'EmailForm', value: e.target.value }))}
+        onChange={e => setState(() => ({ email: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}
       />
     )

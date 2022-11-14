@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
-import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
@@ -21,7 +21,8 @@ class EakApplicationQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         return transaction {
-            val user = AdministratorsRepository.findByIds(listOf(jwtPayload.userId))[0]
+            val user = AdministratorEntity.findById(jwtPayload.userId)
+                ?: throw IllegalArgumentException("Admin does not exist")
             if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
                 throw UnauthorizedException()
             }

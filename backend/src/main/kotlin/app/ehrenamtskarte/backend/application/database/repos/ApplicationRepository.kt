@@ -2,62 +2,52 @@ package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardApplication
-import app.ehrenamtskarte.backend.application.webservice.schema.create.GoldenCardApplication
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
-import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.javalin.util.FileUtil
+import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import java.nio.file.Paths
 
 object ApplicationRepository {
-
-    fun <T> addApplication(
+    fun persistApplication(
+        applicationJson: JsonField,
         regionId: Int,
-        application: T,
-        graphQLContext: GraphQLContext,
-        validate: (application: T) -> Boolean
-    ) where T : JsonFieldSerializable {
-        if (!validate(application)) {
-            return
-        }
-
-        persistApplication(toString(application), regionId, graphQLContext)
-    }
-
-    fun validateBlueApplication(application: BlueCardApplication): Boolean {
-        return true // todo add sensible validation
-    }
-
-    fun validateGoldenApplication(application: GoldenCardApplication): Boolean {
-        return true // todo add sensible validation
-    }
-
-    private fun persistApplication(
-        applicationJson: String,
-        regionId: Int,
-        graphQLContext: GraphQLContext
+        applicationData: File,
+        files: List<Part>
     ) {
         val newApplication = transaction {
             ApplicationEntity.new {
                 this.regionId = EntityID(regionId, Regions)
-                this.jsonValue = applicationJson
+                this.jsonValue = toString(applicationJson)
             }
         }
 
-        val applicationDirectory = File(graphQLContext.applicationData, newApplication.id.toString())
+        val project =
+            transaction {
+                (Projects innerJoin Regions).slice(Projects.columns).select { Regions.id eq regionId }
+                    .single().let { ProjectEntity.wrapRow(it) }
+            }
+
+        val projectDirectory = File(applicationData, project.project)
+        val applicationDirectory = File(projectDirectory, newApplication.id.toString())
 
         try {
-            graphQLContext.files.forEachIndexed { index, part ->
+            files.forEachIndexed { index, part ->
                 FileUtil.streamToFile(
                     part.inputStream,
-                    File(applicationDirectory, "file/$index").absolutePath
+                    File(applicationDirectory, "$index").absolutePath
                 )
+                File(applicationDirectory, "$index.contentType").writeText(part.contentType)
             }
         } catch (e: Exception) {
             applicationDirectory.deleteRecursively()
@@ -68,10 +58,10 @@ object ApplicationRepository {
         }
     }
 
-    private fun toString(obj: JsonFieldSerializable): String {
+    private fun toString(obj: JsonField): String {
         val mapper = JsonMapper()
         mapper.registerModule(KotlinModule.Builder().build())
-        return mapper.writeValueAsString(obj.toJsonField())
+        return mapper.writeValueAsString(obj)
     }
 
     fun getApplications(regionId: Int): List<ApplicationView> {
@@ -85,9 +75,12 @@ object ApplicationRepository {
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
-                val applicationDirectory = File(graphQLContext.applicationData, application.id.toString())
+                val project = (Projects innerJoin Regions).select { Regions.id eq application.regionId }.single()
+                    .let { ProjectEntity.wrapRow(it) }
+                val applicationDirectory =
+                    Paths.get(graphQLContext.applicationData.absolutePath, project.project, application.id.toString())
                 application.delete()
-                return@transaction applicationDirectory.deleteRecursively()
+                applicationDirectory.toFile().deleteRecursively()
             } else false
         }
     }

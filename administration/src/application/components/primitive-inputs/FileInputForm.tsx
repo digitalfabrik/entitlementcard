@@ -45,7 +45,6 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
     return {
       type: 'valid',
       value: {
-        fileName: state.filename,
         data: new File([arrayBuffer], state.filename, { type: state.MIMEType }),
       },
     }
