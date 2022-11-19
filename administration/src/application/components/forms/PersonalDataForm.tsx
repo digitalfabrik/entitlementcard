@@ -5,8 +5,7 @@ import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortText
 import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import CustomDivider from "../CustomDivider";
-
+import CustomDivider from '../CustomDivider'
 
 export type PersonalDataFormState = {
   forenames: ShortTextFormState
@@ -87,7 +86,7 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
         state={state.addressFormState}
         setState={useUpdateStateCallback(setState, 'addressFormState')}
       />
-      <CustomDivider label="Weitere Angaben" />
+      <CustomDivider label='Weitere Angaben' />
       <EmailForm.Component
         state={state.emailAddress}
         setState={useUpdateStateCallback(setState, 'emailAddress')}

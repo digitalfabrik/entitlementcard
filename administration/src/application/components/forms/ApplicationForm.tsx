@@ -18,7 +18,7 @@ export type ApplicationFormState = {
 }
 type ValidatedInput = [RegionId, BlueCardApplicationInput]
 type Options = {}
-type AdditionalProps = { onSubmit: () => void }
+type AdditionalProps = { onSubmit: () => void; loading: boolean }
 const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     activeStep: 0,
@@ -52,11 +52,11 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
           entitlement: stepRequirements.value,
           hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
           givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
-        }
+        },
       ],
     }
   },
-  Component: ({ state, setState, onSubmit }) => {
+  Component: ({ state, setState, onSubmit, loading }) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,
@@ -83,6 +83,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         setActiveStep={useUpdateStateCallback(setState, 'activeStep')}
         subForms={[personalDataStep, cardTypeStep, requirementsStep, sendStep]}
         onSubmit={onSubmit}
+        loading={loading}
       />
     )
   },

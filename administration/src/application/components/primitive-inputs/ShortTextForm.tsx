@@ -1,7 +1,8 @@
 import { TextField } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
+import { FormContext } from '../SteppedSubForms'
 
 const MAX_SHORT_TEXT_LENGTH = 300
 
@@ -25,6 +26,7 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
   },
   Component: ({ state, setState, label, minWidth = 200 }) => {
     const [touched, setTouched] = useState(false)
+    const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = ShortTextForm.getValidatedInput(state)
     const isInvalid = validationResult.type === 'error'
 
@@ -35,11 +37,12 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
         style={{ margin: '4px 0', minWidth }}
         label={label}
         required
+        disabled={disableAllInputs}
         error={touched && isInvalid}
         onBlur={() => setTouched(true)}
         value={state.shortText}
         onChange={e => setState(() => ({ shortText: e.target.value }))}
-        helperText={touched && isInvalid ? validationResult.message : ''}
+        helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
   },
