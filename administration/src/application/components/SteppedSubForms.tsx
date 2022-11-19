@@ -1,5 +1,5 @@
-import { SetState } from '../useUpdateStateCallback'
-import { ValidationResult } from '../FormType'
+import { SetState, useUpdateStateCallback } from '../useUpdateStateCallback'
+import { Form, ValidationResult } from '../FormType'
 import { ReactNode, useCallback } from 'react'
 import { Button, Divider, Step, ButtonBase, StepContent, StepLabel, Stepper } from '@mui/material'
 
@@ -11,7 +11,7 @@ const SteppedSubForms = ({
 }: {
   activeStep: number
   setActiveStep: SetState<number>
-  subForms: { label: string; form: ReactNode; validate: () => ValidationResult<unknown> }[]
+  subForms: { label: string; element: ReactNode; validate: () => ValidationResult<unknown> }[]
   onSubmit: () => void
 }) => {
   const tryGoTo = (index: number) => {
@@ -24,7 +24,7 @@ const SteppedSubForms = ({
   }
   return (
     <Stepper activeStep={activeStep} orientation='vertical'>
-      {subForms.map(({ validate, label, form }, index) => {
+      {subForms.map(({ validate, label, element }, index) => {
         return (
           <Step key={index}>
             <ButtonBase onClick={() => tryGoTo(index)} style={{ marginLeft: '-8px' }}>
@@ -36,7 +36,7 @@ const SteppedSubForms = ({
                 index={index}
                 setActiveStep={setActiveStep}
                 onSubmit={index === subForms.length - 1 ? onSubmit : undefined}>
-                {form}
+                {element}
               </SubForm>
             </StepContent>
           </Step>
@@ -88,6 +88,29 @@ const SubForm = ({
       )}
     </form>
   )
+}
+
+export const useFormAsStep = <
+  Options extends {},
+  ValidatedInput,
+  AdditionalProps extends {},
+  ParentState,
+  KeyInParent extends keyof ParentState
+>(
+  label: string,
+  form: Form<ParentState[KeyInParent], Options, ValidatedInput, AdditionalProps>,
+  parentState: ParentState,
+  setParentState: SetState<ParentState>,
+  keyInParent: KeyInParent,
+  options: Options,
+  additionalProps: AdditionalProps
+): { label: string; validate: () => ValidationResult<unknown>; element: ReactNode } => {
+  const state = parentState[keyInParent]
+  const setState = useUpdateStateCallback(setParentState, keyInParent)
+  const validate = useCallback(() => form.getValidatedInput(state, options), [state, form, options])
+  const formProps = { ...additionalProps, options, state, setState }
+  const element = <form.Component {...formProps} />
+  return { label, validate, element }
 }
 
 export default SteppedSubForms

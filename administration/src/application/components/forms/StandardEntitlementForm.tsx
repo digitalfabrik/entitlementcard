@@ -1,22 +1,28 @@
 import { Alert, Button } from '@mui/material'
 import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
-import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import { SetState } from '../../useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
+import CustomDivider from '../CustomDivider'
+import { WorkAtOrganizationInput } from '../../../generated/graphql'
 
 const WorkAtOrganizationFormHelper = ({
   listKey,
   setStateByKey,
+  deleteByKey,
   ...otherProps
 }: {
-  state: WorkAtOrganizationFormState
   listKey: number
   setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
-  onDelete?: () => void
+  deleteByKey?: (key: number) => void
+  state: WorkAtOrganizationFormState
 }) => {
   const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
-  return <WorkAtOrganizationForm.Component setState={setState} {...otherProps} />
+  const onDelete = useMemo(
+    () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
+    [deleteByKey, listKey]
+  )
+  return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
 }
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
@@ -69,19 +75,30 @@ const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
       [setState]
     )
 
+    const deleteByKey = useMemo(() => {
+      if (state.length <= 1) return undefined
+      return (key: number) =>
+        setState(state =>
+          removeAt(
+            state,
+            state.findIndex(item => item.key === key)
+          )
+        )
+    }, [state.length, setState])
+
     return (
       <>
-        <h3>Ehrenamtliche Tätigkeit(en)</h3>
-        {state.map(({ key, value }, index) => (
+        {state.map(({ key, value }) => (
           <WorkAtOrganizationFormHelper
             key={key}
             listKey={key}
             state={value}
-            onDelete={state.length <= 1 ? undefined : () => setState(state => removeAt(state, index))}
+            deleteByKey={deleteByKey}
             setStateByKey={setStateByKey}
           />
         ))}
-        {state.length < 10 ? (
+        <CustomDivider />
+        {state.length < 5 ? (
           <Button onClick={addActivity}>Weitere Tätigkeit hinzufügen</Button>
         ) : (
           <Alert severity='info'>Maximale Anzahl an Tätigkeiten erreicht.</Alert>

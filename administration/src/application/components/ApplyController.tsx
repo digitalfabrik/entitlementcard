@@ -2,15 +2,14 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import SendIcon from '@mui/icons-material/Send'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
-import { Button, DialogActions } from '@mui/material'
+import { DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 
 const applicationStorageKey = 'applicationState'
@@ -25,6 +24,9 @@ const ApplyController = () => {
   )
   const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
+
+  const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
+
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
   if (state == null || !arrayBufferManagerInitialized) {
     return null
@@ -39,12 +41,12 @@ const ApplyController = () => {
       return
     }
 
-    const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
+    const [regionId, applicationInput] = application.value // TODO: Add a mechanism to retrieve the regionId
 
     addBlueEakApplication({
       variables: {
-        regionId, // TODO: Add a mechanism to retrieve the regionId
-        application: application.value,
+        regionId,
+        application: applicationInput,
       },
     })
   }
@@ -53,19 +55,10 @@ const ApplyController = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            submit()
-          }}>
-          <ApplicationForm.Component state={state} setState={setState} />
-          <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
-              Antrag Senden
-            </Button>
-          </DialogActions>
-        </form>
+        <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} />
+        <DialogActions>
+          <DiscardAllInputsButton discardAll={discardAll} />
+        </DialogActions>
       </div>
     </div>
   )
