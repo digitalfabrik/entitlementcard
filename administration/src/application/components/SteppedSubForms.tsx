@@ -77,21 +77,21 @@ const SubForm = ({
 }) => {
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
   const { enqueueSnackbar } = useSnackbar()
-  useEffect(() => setFormContxt({ ...formContext, disableAllInputs: loading }), [loading])
+  useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])
 
   const handleOnSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (validate().type === 'error') {
         enqueueSnackbar('Ihre Eingaben sind ungültig oder nicht vollständig.', { variant: 'error' })
-        setFormContxt({ ...formContext, showAllErrors: true })
+        setFormContxt(state => ({ ...state, showAllErrors: true }))
       } else if (onSubmit === undefined) {
         setActiveStep(() => index + 1)
       } else {
         onSubmit()
       }
     },
-    [validate, onSubmit, setActiveStep, index]
+    [validate, onSubmit, setActiveStep, index, enqueueSnackbar]
   )
   return (
     <FormContext.Provider value={formContext}>
