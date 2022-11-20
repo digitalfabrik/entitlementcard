@@ -1,30 +1,43 @@
 import localforage from 'localforage'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SetState } from './useUpdateStateCallback'
+import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
-function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | null, SetState<T>] {
+function useLocallyStoredState<T>(
+    initialState: T,
+    storageKey: string
+): {
+  status: 'loading' | 'ready'
+  state: T
+  setState: SetState<T>
+} {
   const [state, setState] = useState(initialState)
   const stateRef = useRef(state)
   const [loading, setLoading] = useState(true)
 
-  const setStateAndRef = useCallback((update: (oldState: T) => T) => {
-    setState(state => {
-      const newState = update(state)
-      stateRef.current = newState
-      return newState
-    })
-  }, [])
-
   useEffect(() => {
     localforage
-      .getItem<T>(storageKey)
-      .then(storedValue => {
-        if (storedValue !== null) {
-          setStateAndRef(() => storedValue)
+        .getItem<T>(storageKey)
+        .then(storedValue => {
+          if (storedValue !== null) {
+            stateRef.current = storedValue
+            setState(storedValue)
+          }
+        })
+        .finally(() => setLoading(false))
+  }, [storageKey, setState, stateRef])
+
+  const setStateAndRef = useCallback(
+      (update: (oldState: T) => T) => {
+        if (!loading) {
+          setState(state => {
+            const newState = update(state)
+            stateRef.current = newState
+            return newState
+          })
         }
-      })
-      .finally(() => setLoading(false))
-  }, [storageKey, setStateAndRef])
+      },
+      [loading]
+  )
 
   useEffect(() => {
     // Auto-save every 2 seconds unless we're still loading the state.
@@ -41,7 +54,53 @@ function useLocallyStoredState<T>(initialState: T, storageKey: string): [T | nul
     return () => clearInterval(interval)
   }, [loading, storageKey])
 
-  return [loading ? null : state, setStateAndRef]
+  return { status: loading ? 'loading' : 'ready', state, setState: setStateAndRef }
 }
 
-export default useLocallyStoredState
+/**
+ * Locally stores some state together with a version using localforage.
+ * Auto-saves any update every 2 seconds.
+ * Initially, it
+ *  - returns the locally stored state, if there exists one and if the stored version matches the passed version, or
+ *  - returns the passed initial state otherwise.
+ *  While localforage is loading, the returned status is set to `loading` otherwise to `ready`.
+ */
+function useVersionedLocallyStoredState<T>(
+    initialState: T,
+    storageKey: string,
+    version: string
+): {
+  status: 'loading' | 'ready'
+  state: T
+  setState: SetState<T>
+} {
+  const {
+    status: locallyStoredStatus,
+    setState: setLocallyStoredState,
+    state: locallyStoredState,
+  } = useLocallyStoredState({ version, value: initialState }, storageKey)
+  const locallyStoredVersion =
+      typeof locallyStoredState === 'object' && 'version' in locallyStoredState
+          ? locallyStoredState.version
+          : '(could not determine)'
+  useEffect(() => {
+    if (locallyStoredStatus === 'ready' && locallyStoredVersion !== version) {
+      console.warn(
+          `Resetting storage because of version mismatch: \n` +
+          `Locally stored version: ${locallyStoredVersion}.\n` +
+          `New version: ${version}.`
+      )
+      setLocallyStoredState(() => ({ version, value: initialState }))
+    }
+  }, [locallyStoredVersion, version, locallyStoredStatus, initialState, setLocallyStoredState])
+  const setState: SetState<T> = useUpdateStateCallback(setLocallyStoredState, 'value')
+  if (locallyStoredStatus === 'loading' || locallyStoredVersion !== version)
+    return {
+      status: 'loading',
+      state: initialState,
+      setState,
+    }
+  return { status: 'ready', state: locallyStoredState.value, setState }
+}
+
+export default useVersionedLocallyStoredState
