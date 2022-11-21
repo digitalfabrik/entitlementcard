@@ -26,7 +26,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     featureFlags: {
         verification: true,
     },
-    applicationUrl: "https://nuernberg.sozialpass.app/apply-for-eak",
+    applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
 };
 
 let nuernberg: BuildConfigType = {
