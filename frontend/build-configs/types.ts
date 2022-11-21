@@ -30,10 +30,11 @@ export type CommonBuildConfigType = {
         showcase: string,
         production: string,
         local: string,
-    }
+    },
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
+    applicationUrl: string,
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

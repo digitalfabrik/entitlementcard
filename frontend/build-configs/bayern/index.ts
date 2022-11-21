@@ -25,7 +25,8 @@ export const bayernCommon: CommonBuildConfigType = {
     },
     featureFlags: {
         verification: false,
-    }
+    },
+    applicationUrl: "https://bayern.ehrenamtskarte.app/apply-for-eak",
 };
 
 let bayern: BuildConfigType = {

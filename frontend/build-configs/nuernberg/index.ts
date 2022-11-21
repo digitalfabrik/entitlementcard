@@ -15,7 +15,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
-        showcase: "https://tiles.entitlementcard.app/project/showcase.entitlementcard.app/map",
+        showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
     backendUrl: {
@@ -25,7 +25,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     featureFlags: {
         verification: true,
-    }
+    },
+    applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
 };
 
 let nuernberg: BuildConfigType = {
