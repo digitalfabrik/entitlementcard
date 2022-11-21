@@ -21,7 +21,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
-        local: "http://10.0.2.2:7000",
+        local: "http://localhost:7000",
     },
     featureFlags: {
         verification: true,
