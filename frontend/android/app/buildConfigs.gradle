@@ -11,7 +11,7 @@ def execCommand(command) {
     def cmdLine = isWindows() ? ["cmd", "/c", command] : command
     logger.quiet("Build Config Command: $command")
 
-    def process = cmdLine.execute()
+    def process = cmdLine.execute(null, project.rootDir)
     def (out, err) = new StringWriter().with {
         o -> new StringWriter().with {
             e -> process.waitForProcessOutput(o, e)
