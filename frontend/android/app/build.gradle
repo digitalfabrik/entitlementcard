@@ -33,26 +33,27 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
+    flavorDimensions "dummy"
+    productFlavors {
+        Automatic {
+            getIsDefault().set(true)
+            // Automatically decides which build config to use based on project properties, dart defines or environment variables.
+        }
+        Bayern {
+            // Forces the bayern build config
+            def buildConfig = createBuildConfig("bayern")
+            applicationId buildConfig.applicationId
+        }
+        Nuernberg {
+            // Forces the nuernberg build config
+            def buildConfig = createBuildConfig("nuernberg")
+            applicationId buildConfig.applicationId
+        }
     }
 
-    def buildConfigName = determineBuildConfigName()
-    def buildConfig = createBuildConfig(buildConfigName)
 
-    defaultConfig {
-
-        setupResourceValues(buildConfigName, {
-            String type, String name, String value -> resValue(type, name, value)
-        })
-
-        applicationId buildConfig.applicationId
-
-        minSdkVersion 20
-        targetSdkVersion 30
-        multiDexEnabled true
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     signingConfigs {
@@ -74,7 +75,7 @@ android {
                 signingConfig signingConfigs.debug
             }
 
-            
+
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
             // The workaround is from https://github.com/flutter/flutter/issues/58479.
@@ -85,21 +86,46 @@ android {
         }
     }
 
+    defaultConfig {
+        minSdkVersion 20
+        targetSdkVersion 30
+        multiDexEnabled true
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+
     applicationVariants.all { variant ->
-        // If we create a FLOSS build, then we want to exclude GMS
-        if (buildConfig.excludeLocationPlayServices) {
-            variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
-            variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+       variant.productFlavors.each { flavor ->
+           
+           def buildConfigName = flavor.name == "Bayern" ? "bayern" : 
+                                        flavor.name == "Nuernberg" ? "nuernberg" : 
+                                        determineBuildConfigName()
+           def buildConfig = createBuildConfig(buildConfigName)
+
+           defaultConfig {
+               setupResourceValues(buildConfigName, {
+                   String type, String name, String value -> resValue(type, name, value)
+               })
+           }
+           
+
+           packagingOptions {
+               // Exclude x86 because the app size in F-Droid is limited to 30MB
+               if (buildConfig.featureFlags.excludeX86) {
+                   exclude 'lib/x86**'
+               }
+           }
+           
+           // If we create a FLOSS build, then we want to exclude GMS
+           if (buildConfig.excludeLocationPlayServices) {
+               variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+               variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
+           }
         }
     }
-    
-    packagingOptions {
-        
-        // Exclude x86 because the app size in F-Droid is limited to 30MB
-        if (buildConfig.featureFlags.excludeX86) {
-            exclude 'lib/x86**'
-        }
-    }
+
+
 }
 
 flutter {
