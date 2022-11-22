@@ -21,7 +21,7 @@ export const bayernCommon: CommonBuildConfigType = {
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
-        local: "http://10.0.2.2:8000",
+        local: "http://localhost:8000",
     },
     featureFlags: {
         verification: false,
