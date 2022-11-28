@@ -26,11 +26,13 @@ fun setupDatabase() {
                     prefix = eakRegion[0]
                     regionIdentifier = eakRegion[2]
                     website = eakRegion[3]
+                    dataPrivacyPolicy = "Lore ipsum"
                 }
             } else {
                 dbRegion.name = eakRegion[1]
                 dbRegion.prefix = eakRegion[0]
                 dbRegion.website = eakRegion[3]
+                dbRegion.dataPrivacyPolicy = "Lore ipsum"
             }
         }
     }

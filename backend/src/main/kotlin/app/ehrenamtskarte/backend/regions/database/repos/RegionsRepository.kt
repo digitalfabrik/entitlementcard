@@ -25,4 +25,8 @@ object RegionsRepository {
 
     fun findByIds(ids: List<Int>) =
         RegionEntity.find { Regions.id inList ids }.sortByKeys({ it.id.value }, ids)
+
+    fun findRegionById(regionId: Int): RegionEntity {
+        return RegionEntity[regionId]
+    }
 }

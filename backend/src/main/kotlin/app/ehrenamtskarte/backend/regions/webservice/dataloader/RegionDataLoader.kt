@@ -16,7 +16,7 @@ val regionLoader: DataLoader<Int, Region?> = DataLoaderFactory.newDataLoader { i
             transaction {
                 RegionsRepository.findByIds(ids).map {
                     if (it == null) null
-                    else Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
+                    else Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
                 }
             }
         }

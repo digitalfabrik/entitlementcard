@@ -114,6 +114,8 @@ type Query {
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
+  "Returns region data for specific region."
+  regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Return list of all regions in the given project."
@@ -125,6 +127,7 @@ type Query {
 }
 
 type Region {
+  dataPrivacyPolicy: String
   id: Int!
   name: String!
   prefix: String!

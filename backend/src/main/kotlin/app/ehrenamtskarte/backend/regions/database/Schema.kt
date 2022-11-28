@@ -12,6 +12,7 @@ object Regions : IntIdTable() {
     val website = varchar("website", 400)
     val name = varchar("name", 100)
     val prefix = varchar("prefix", 30) // Usually "Stadt" or "Landkreis"
+    val dataPrivacyPolicy = varchar("dataPrivacyPolicy", 4000)
 }
 
 class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -22,4 +23,5 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
     var website by Regions.website
     var name by Regions.name
     var prefix by Regions.prefix
+    var dataPrivacyPolicy by Regions.dataPrivacyPolicy
 }
