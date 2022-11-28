@@ -29,4 +29,9 @@ object RegionsRepository {
     fun findRegionById(regionId: Int): RegionEntity {
         return RegionEntity[regionId]
     }
+
+    fun updateDataPolicy(region: RegionEntity, dataPrivacyText: String) {
+        region.dataPrivacyPolicy = dataPrivacyText
+    }
+
 }

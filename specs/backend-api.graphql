@@ -94,6 +94,8 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates the data privacy policy of a region"
+  updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
 }
 
 type PhysicalStore {

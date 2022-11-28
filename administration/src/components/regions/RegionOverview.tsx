@@ -1,7 +1,8 @@
-import {Button, Card, H4, TextArea } from '@blueprintjs/core';
+import {Button, Card, H4, TextArea} from '@blueprintjs/core';
 import React, {ReactElement, useState} from 'react';
 import styled from 'styled-components';
-import {dataPrivacyBaseText} from "../../constants/dataPrivacyBase";
+import {useUpdateDataPolicyMutation} from "../../generated/graphql";
+import {useAppToaster} from "../AppToaster";
 
 const Content = styled.div`
   padding: 0 6rem;
@@ -34,35 +35,51 @@ const ButtonBar = styled(({stickyTop: number, ...rest}) => <Card {...rest} />)<{
 
 type RegionOverviewProps = {
     dataPrivacyPolicy: string
+    regionId: number
 }
 
-const RegionOverview = ({dataPrivacyPolicy}: RegionOverviewProps): ReactElement => {
-
+const RegionOverview = ({dataPrivacyPolicy, regionId}: RegionOverviewProps): ReactElement => {
+        const appToaster = useAppToaster()
     const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy);
+    const [updateDataPrivacy] = useUpdateDataPolicyMutation({
+    })
 
-    const onSave = (): void => {
-        if(dataPrivacyPolicy.length) {
-        console.log("save", `${dataPrivacyBaseText}\n\n${dataPrivacyText}`)
+    const onSave = async() => {
+        try {
+        const result = await updateDataPrivacy({variables: {regionId,text: dataPrivacyText}})
+        if (result.errors) {
+            console.error(result.errors)
+            appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
+        } else {
+            appToaster?.show({
+                intent: 'success',
+                message: 'Datenschutzerklärungerfolgreich geändert.',
+            })
         }
+    } catch (e) {
+        console.error(e)
+        appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
+    }
     }
 
 return (
-        <>
-            <ButtonBar stickyTop={0}>
-                <Button
-                    icon='lock'
-                    text='Speichern'
-                    intent='success'
-                    onClick={onSave}
-                />
-            </ButtonBar>
-            <Content>
-                <Label>Datenschutzerklärung</Label>
-                <TextArea fill={true} onChange={e => setDataPrivacyText(e.target.value)} value={dataPrivacyText} large
-                          rows={20} placeholder={'Fügen sie hier ihre Datenschutzerklärung ein...'}/>
-            </Content>
-        </>
-    );
-};
+    <>
+        <ButtonBar stickyTop={0}>
+            <Button
+                icon='lock'
+                text='Speichern'
+                intent='success'
+                onClick={onSave}
+            />
+        </ButtonBar>
+        <Content>
+            <Label>Datenschutzerklärung</Label>
+            <TextArea fill={true} onChange={e => setDataPrivacyText(e.target.value)} value={dataPrivacyText} large
+                      rows={20} placeholder={'Fügen sie hier ihre Datenschutzerklärung ein...'}/>
+        </Content>
+    </>
+);
+}
+;
 
 export default RegionOverview;

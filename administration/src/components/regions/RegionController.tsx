@@ -7,11 +7,12 @@ import { Spinner } from '@blueprintjs/core';
 
 
 const RegionController = (props: { region: Region}) => {
-    const {loading, error, data, refetch} = useGetDataPolicyQuery({variables:{regionId: props.region.id},  onError: error => console.error(error)})
+    const {region} = props
+    const {loading, error, data, refetch} = useGetDataPolicyQuery({variables:{regionId: region.id},  onError: error => console.error(error)})
     if (loading) return <Spinner />
     else if (error || !data)
         return <ErrorHandler refetch={refetch}/>
-    else return <RegionOverview dataPrivacyPolicy={data.dataPolicy.dataPrivacyPolicy ?? ''} />
+    else return <RegionOverview dataPrivacyPolicy={data.dataPolicy.dataPrivacyPolicy ?? ''} regionId={region.id}/>
 }
 
 const ControllerWithRegion = (): ReactElement => {
