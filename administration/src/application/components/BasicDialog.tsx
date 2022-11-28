@@ -1,19 +1,21 @@
 import {Icon, IconSize} from '@blueprintjs/core'
-import {Dialog, DialogContent, DialogContentText, DialogTitle} from '@mui/material'
+import {Breakpoint, Dialog, DialogContent, DialogContentText, DialogTitle} from '@mui/material'
 
 const BasicDialog = ({
                          open,
                          onUpdateOpen,
                          title,
                          content,
+                         maxWidth
                      }: {
     open: boolean
     onUpdateOpen: (open: boolean) => void
     title: string
     content: string
+    maxWidth?: Breakpoint | false
 }) => {
     return (
-        <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)}>
+        <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
             <DialogTitle style={{display: 'flex', justifyContent: 'space-between'}}>
                 {title}
                 <Icon
@@ -24,7 +26,7 @@ const BasicDialog = ({
                 />
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>{content}</DialogContentText>
+                <DialogContentText style={{whiteSpace: 'pre-line'}}>{content}</DialogContentText>
             </DialogContent>
         </Dialog>
     )

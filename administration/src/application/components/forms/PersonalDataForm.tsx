@@ -6,7 +6,7 @@ import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import BasicDialog from "../BasicDialog";
-import dataPrivacyBase from "../../../constants/dataPrivacyBase";
+import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from "../../../constants/dataPrivacyBase";
 import { Checkbox, FormGroup } from '@mui/material'
 
 export type PersonalDataFormState = {
@@ -117,7 +117,7 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
             />
             <div style={{alignSelf: 'center'}}>Ich akzeptiere die <a onClick={()=>setState(state => ({...state, dataPrivacyModal: true}))}>Datenschutzerklärung</a></div>
       </FormGroup>
-      <BasicDialog open={state.dataPrivacyModal} onUpdateOpen={()=>setState(state => ({...state, dataPrivacyModal: false}))} title={'Datenschutzerklärung'} content={dataPrivacyBase}/>
+      <BasicDialog open={state.dataPrivacyModal} maxWidth='lg' onUpdateOpen={()=>setState(state => ({...state, dataPrivacyModal: false}))} title={dataPrivacyBaseHeadline} content={dataPrivacyBaseText}/>
     </>
   ),
 }

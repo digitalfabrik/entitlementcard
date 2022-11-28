@@ -1,7 +1,7 @@
 import {Button, Card, H4, TextArea} from '@blueprintjs/core';
 import React, {ReactElement, useState} from 'react';
 import styled from 'styled-components';
-import dataPrivacyBase from "../../constants/dataPrivacyBase";
+import {dataPrivacyBaseText} from "../../constants/dataPrivacyBase";
 
 type RegionsControllerProps = {}
 
@@ -39,7 +39,7 @@ const RegionController = (props: RegionsControllerProps): ReactElement => {
     const [dataPrivacyText, setDataPrivacyText] = useState<string>('');
 
     const onSave = (): void => {
-        console.log("save", `${dataPrivacyBase}\n\n${dataPrivacyText}`)
+        console.log("save", `${dataPrivacyBaseText}\n\n${dataPrivacyText}`)
     }
 
 
