@@ -3,34 +3,45 @@ import { Button, H3 } from '@blueprintjs/core'
 import { Role } from '../../generated/graphql'
 import { AuthContext } from '../../AuthProvider'
 import { NavLink } from 'react-router-dom'
+import styled from 'styled-components'
+
+const StyledButton = styled(Button)`
+  margin: 10px;
+`
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`
 
 const HomeController = () => {
   const role = useContext(AuthContext).data?.administrator.role
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+    <Container>
       <H3>Wählen Sie eine Aktion aus:</H3>
       {role === Role.RegionAdmin || role === Role.RegionManager ? (
         <>
           <NavLink to={'/applications'}>
-            <Button style={{ margin: '10px' }} icon='form' text='Eingehende Anträge' />
+            <StyledButton icon='form' text='Eingehende Anträge' />
           </NavLink>
           <NavLink to={'/eak-generation'}>
-            <Button style={{ margin: '10px' }} icon='id-number' text='Karten erstellen' />
+            <StyledButton icon='id-number' text='Karten erstellen' />
           </NavLink>
         </>
       ) : null}
       {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
         <>
            <NavLink to={'/users'}>
-             <Button style={{ margin: '10px' }} icon='people' text='Benutzer verwalten' />
+             <StyledButton icon='people' text='Benutzer verwalten' />
            </NavLink>
            <NavLink to={'/region'} reloadDocument>
-              <Button style={{ margin: '10px' }} icon='path-search' text='Region verwalten' />
+              <StyledButton icon='path-search' text='Region verwalten' />
            </NavLink>
          </>
       ) : null}
-    </div>
+    </Container>
   )
 }
 

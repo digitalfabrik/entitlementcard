@@ -13,7 +13,7 @@ display: flex;
 `
 
 const StyledDialogText = styled(DialogContentText)`
-white-space: pre-line`
+  white-space: pre-line`
 
 const BasicDialog = ({
                          open,

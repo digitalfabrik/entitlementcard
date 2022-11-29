@@ -77,7 +77,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         throw Error('Not yet implemented.')
     }
   },
-  Component: ({ state, setState,privacyPolicy}) => (
+  Component: ({ state, setState, privacyPolicy}) => (
     <>
       <EntitlementTypeInput
         state={state.entitlementType}
