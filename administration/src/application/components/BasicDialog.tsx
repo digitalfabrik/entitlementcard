@@ -1,5 +1,19 @@
 import {Icon, IconSize} from '@blueprintjs/core'
 import {Breakpoint, Dialog, DialogContent, DialogContentText, DialogTitle} from '@mui/material'
+import styled from 'styled-components'
+
+const CloseIcon = styled(Icon)`
+align-self: center;
+  cursor: pointer;
+`
+
+const StyledDialogTitle = styled(DialogTitle)`
+display: flex;
+  justify-content: space-between;
+`
+
+const StyledDialogText = styled(DialogContentText)`
+white-space: pre-line`
 
 const BasicDialog = ({
                          open,
@@ -16,17 +30,16 @@ const BasicDialog = ({
 }) => {
     return (
         <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
-            <DialogTitle style={{display: 'flex', justifyContent: 'space-between'}}>
+            <StyledDialogTitle>
                 {title}
-                <Icon
+                <CloseIcon
                     icon="cross"
                     onClick={() => onUpdateOpen(false)}
-                    style={{alignSelf: 'center'}}
                     size={IconSize.LARGE}
                 />
-            </DialogTitle>
+            </StyledDialogTitle>
             <DialogContent>
-                <DialogContentText style={{whiteSpace: 'pre-line'}}>{content}</DialogContentText>
+                <StyledDialogText>{content}</StyledDialogText>
             </DialogContent>
         </Dialog>
     )

@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import SendIcon from '@mui/icons-material/Send'
 
-import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
+import {useAddBlueEakApplicationMutation, useGetDataPolicyQuery} from '../../generated/graphql'
 import { Button, DialogActions } from '@mui/material'
 import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
@@ -14,10 +14,14 @@ import { useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 
 const applicationStorageKey = 'applicationState'
+const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
+
 
 const ApplyController = () => {
   const [addBlueEakApplication] = useAddBlueEakApplicationMutation()
   const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
+  // TODO use retrieved regionId
+  const {loading, data: policyData} = useGetDataPolicyQuery({variables:{regionId: regionId},  onError: error => console.error(error)})
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -26,7 +30,7 @@ const ApplyController = () => {
   const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
   // state is null, if it's still being loaded from storage (e.g. after a page reload)
-  if (state == null || !arrayBufferManagerInitialized) {
+  if (state == null || !arrayBufferManagerInitialized || loading) {
     return null
   }
 
@@ -38,8 +42,6 @@ const ApplyController = () => {
       })
       return
     }
-
-    const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
     addBlueEakApplication({
       variables: {
@@ -58,7 +60,7 @@ const ApplyController = () => {
             e.preventDefault()
             submit()
           }}>
-          <ApplicationForm.Component state={state} setState={setState} />
+          <ApplicationForm.Component state={state} setState={setState}  privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}/>
           <DialogActions>
             <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
             <Button endIcon={<SendIcon />} variant='contained' type='submit'>

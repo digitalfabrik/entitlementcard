@@ -12,7 +12,7 @@ object Regions : IntIdTable() {
     val website = varchar("website", 400)
     val name = varchar("name", 100)
     val prefix = varchar("prefix", 30) // Usually "Stadt" or "Landkreis"
-    val dataPrivacyPolicy = varchar("dataPrivacyPolicy", 4000)
+    val dataPrivacyPolicy = varchar("dataPrivacyPolicy", 20000).nullable()
 }
 
 class RegionEntity(id: EntityID<Int>) : IntEntity(id) {

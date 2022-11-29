@@ -3,8 +3,8 @@ export const dataPrivacyBaseText = 'Diese Datenschutzerklärung bezieht sich auf
     'Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung. \n\n' +
     'Der gesamte Programmcode der digitalen bayerischen Ehrenamtskarte ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz und kann hier eingesehen werden:\n https://github.com/digitalfabrik/entitlementcard\n\n' +
     'Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten Kontaktdaten erreichen.\n\n' +
-    'Name und Kontaktdaten des Verantwortlichen im Sinne des §7 TMG\nChristian K. J. Diener\nLeiter Referat Öffentlichkeitsarbeit\nTelefon: 089 1261-1640\nTelefax: 089 1261-181640\nE-Mail: Oeffentlichkeitsarbeit@stmas.bayern.de \n' +
-    'Kontaktdaten der Datenschutzbeauftragten\n\nTür an Tür – Digitalfabrik gGmbH\nHerr Daniel Kehne\nWertachstr. 29\n86153 Augsburg\n\n' +
+    'Name und Kontaktdaten des Verantwortlichen im Sinne des §7 TMG\nChristian K. J. Diener\nLeiter Referat Öffentlichkeitsarbeit\nTelefon: 089 1261-1640\nTelefax: 089 1261-181640\nE-Mail: Oeffentlichkeitsarbeit@stmas.bayern.de \n\n' +
+    'Kontaktdaten der Datenschutzbeauftragten\nTür an Tür – Digitalfabrik gGmbH\nHerr Daniel Kehne\nWertachstr. 29\n86153 Augsburg\n\n' +
     'E-Mail: digitalfabrik@tuerantuer.de\nTelefon: 0821 20990556\n\n' +
     'Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Landesbeauftragten für den Datenschutz (https://www.datenschutz-bayern.de). \n\n' +
     'Haftung im Sinne §§ 7 - 10 TMG\n' +

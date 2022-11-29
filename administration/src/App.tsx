@@ -21,6 +21,7 @@ import ForgotPasswordController from './components/auth/ForgotPasswordController
 import ApplyController from './application/components/ApplyController'
 import { createUploadLink } from 'apollo-upload-client'
 import {Role} from "./generated/graphql";
+import DataPrivacyPolicy from "./components/DataPrivacyPolicy";
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -62,6 +63,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
+                    <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy/>}/>
                   <Route path={'/apply-for-eak'} element={<ApplyController />} />
                   <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route

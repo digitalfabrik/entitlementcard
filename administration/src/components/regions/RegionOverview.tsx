@@ -53,7 +53,7 @@ const RegionOverview = ({dataPrivacyPolicy, regionId}: RegionOverviewProps): Rea
         } else {
             appToaster?.show({
                 intent: 'success',
-                message: 'Datenschutzerklärungerfolgreich geändert.',
+                message: 'Datenschutzerklärung erfolgreich geändert.',
             })
         }
     } catch (e) {

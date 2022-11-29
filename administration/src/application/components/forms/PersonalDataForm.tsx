@@ -5,9 +5,6 @@ import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortText
 import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import BasicDialog from "../BasicDialog";
-import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from "../../../constants/dataPrivacyBase";
-import { Checkbox, FormGroup } from '@mui/material'
 
 export type PersonalDataFormState = {
   forenames: ShortTextFormState
@@ -16,8 +13,6 @@ export type PersonalDataFormState = {
   emailAddress: EmailFormState
   telephone: ShortTextFormState
   dateOfBirth: DateFormState
-  dataPrivacyAccepted: boolean,
-  dataPrivacyModal: boolean
 }
 type ValidatedInput = PersonalDataInput
 type Options = {}
@@ -30,8 +25,6 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
     emailAddress: EmailForm.initialState,
     telephone: ShortTextForm.initialState,
     dateOfBirth: DateForm.initialState,
-    dataPrivacyAccepted: false,
-    dataPrivacyModal: false
   },
   getArrayBufferKeys: state => [
     ...ShortTextForm.getArrayBufferKeys(state.forenames),
@@ -48,15 +41,13 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
     const emailAddress = EmailForm.getValidatedInput(state.emailAddress)
     const telephone = ShortTextForm.getValidatedInput(state.telephone)
     const dateOfBirth = DateForm.getValidatedInput(state.dateOfBirth)
-    const dataPrivacyAccepted = state.dataPrivacyAccepted
     if (
       forenames.type === 'error' ||
       surname.type === 'error' ||
       address.type === 'error' ||
       emailAddress.type === 'error' ||
       telephone.type === 'error' ||
-      dateOfBirth.type === 'error' ||
-      dataPrivacyAccepted === false
+      dateOfBirth.type === 'error'
     )
       return { type: 'error' }
     return {
@@ -109,15 +100,6 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
         setState={useUpdateStateCallback(setState, 'telephone')}
         label='Telefon'
       />
-      <FormGroup row>
-         <Checkbox
-                checked={state.dataPrivacyAccepted}
-                onChange={e => setState(state => ({...state, dataPrivacyAccepted: e.target.checked}))}
-                required
-            />
-            <div style={{alignSelf: 'center'}}>Ich akzeptiere die <a onClick={()=>setState(state => ({...state, dataPrivacyModal: true}))}>Datenschutzerklärung</a></div>
-      </FormGroup>
-      <BasicDialog open={state.dataPrivacyModal} maxWidth='lg' onUpdateOpen={()=>setState(state => ({...state, dataPrivacyModal: false}))} title={dataPrivacyBaseHeadline} content={dataPrivacyBaseText}/>
     </>
   ),
 }

@@ -25,7 +25,7 @@ const HomeController = () => {
            <NavLink to={'/users'}>
              <Button style={{ margin: '10px' }} icon='people' text='Benutzer verwalten' />
            </NavLink>
-           <NavLink to={'/region'}>
+           <NavLink to={'/region'} reloadDocument>
               <Button style={{ margin: '10px' }} icon='path-search' text='Region verwalten' />
            </NavLink>
          </>

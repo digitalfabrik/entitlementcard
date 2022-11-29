@@ -1,10 +1,12 @@
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } from '../../../generated/graphql'
 import SwitchDisplay from '../SwitchDisplay'
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { Form } from '../../FormType'
 import StandardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
 import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
+import BasicDialog from "../BasicDialog";
+import {dataPrivacyBaseHeadline, dataPrivacyBaseText} from "../../../constants/dataPrivacyBase";
 
 const EntitlementTypeInput = ({
   state,
@@ -31,15 +33,21 @@ export type ApplicationFormState = {
   entitlementType: BlueCardEntitlementType | null
   standardEntitlement: StandardEntitlementFormState
   personalData: PersonalDataFormState
+  hasAcceptedPrivacyPolicy: boolean
+  openPrivacyPolicy: boolean
 }
 type ValidatedInput = BlueCardApplicationInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = {
+  privacyPolicy: string
+}
 const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     entitlementType: null,
     standardEntitlement: StandardEntitlementForm.initialState,
     personalData: PersonalDataForm.initialState,
+    hasAcceptedPrivacyPolicy: false,
+    openPrivacyPolicy: false
   },
   getArrayBufferKeys: state => [
     ...StandardEntitlementForm.getArrayBufferKeys(state.standardEntitlement),
@@ -60,7 +68,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
               workAtOrganizations: workAtOrganizations.value,
             },
             personalData: personalData.value,
-            hasAcceptedPrivacyPolicy: true, // TODO: Add a corresponding field
+            hasAcceptedPrivacyPolicy: state.hasAcceptedPrivacyPolicy,
             applicationType: ApplicationType.FirstApplication, // TODO: Add a corresponding field
             givenInformationIsCorrectAndComplete: true, // TODO: Add a corresponding field
           },
@@ -69,7 +77,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         throw Error('Not yet implemented.')
     }
   },
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState,privacyPolicy}) => (
     <>
       <EntitlementTypeInput
         state={state.entitlementType}
@@ -91,6 +99,15 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         state={state.personalData}
         setState={useUpdateStateCallback(setState, 'personalData')}
       />
+      <FormGroup row>
+        <Checkbox
+            checked={state.hasAcceptedPrivacyPolicy}
+            onChange={e => setState(state => ({...state, hasAcceptedPrivacyPolicy: e.target.checked}))}
+            required
+        />
+        <div style={{alignSelf: 'center'}}>Ich akzeptiere die <a onClick={()=>setState(state => ({...state, openPrivacyPolicy: true}))}>Datenschutzerklärung</a></div>
+      </FormGroup>
+      <BasicDialog open={state.openPrivacyPolicy} maxWidth='lg' onUpdateOpen={()=>setState(state => ({...state, openPrivacyPolicy: false}))} title={dataPrivacyBaseHeadline} content={`${dataPrivacyBaseText}\n${privacyPolicy}`}/>
     </>
   ),
 }
