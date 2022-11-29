@@ -33,5 +33,4 @@ object RegionsRepository {
     fun updateDataPolicy(region: RegionEntity, dataPrivacyText: String) {
         region.dataPrivacyPolicy = dataPrivacyText
     }
-
 }

@@ -11,7 +11,7 @@ class RegionsMutationService {
     fun updateDataPrivacy(regionId: Int, dataPrivacyText: String): Boolean {
         transaction {
             val region = RegionsRepository.findRegionById(regionId)
-                RegionsRepository.updateDataPolicy(region, dataPrivacyText)
+            RegionsRepository.updateDataPolicy(region, dataPrivacyText)
         }
         return true
     }

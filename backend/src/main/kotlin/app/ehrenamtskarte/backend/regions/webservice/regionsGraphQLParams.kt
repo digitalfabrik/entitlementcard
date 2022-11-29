@@ -20,7 +20,7 @@ val regionsGraphQlParams = GraphQLParams(
     dataLoaderRegistry = createDataLoaderRegistry(),
     queries = listOf(
         TopLevelObject(RegionsQueryService())
-    ) ,
+    ),
     mutations = listOf(
         TopLevelObject(RegionsMutationService())
     )
