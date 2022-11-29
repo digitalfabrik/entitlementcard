@@ -1,8 +1,8 @@
-import {Button, Card, H4, TextArea} from '@blueprintjs/core';
-import React, {ReactElement, useState} from 'react';
-import styled from 'styled-components';
-import {useUpdateDataPolicyMutation} from "../../generated/graphql";
-import {useAppToaster} from "../AppToaster";
+import { Button, Card, H4, TextArea } from '@blueprintjs/core'
+import React, { ReactElement, useState } from 'react'
+import styled from 'styled-components'
+import { useUpdateDataPolicyMutation } from '../../generated/graphql'
+import { useAppToaster } from '../AppToaster'
 
 const Content = styled.div`
   padding: 0 6rem;
@@ -17,7 +17,7 @@ const Content = styled.div`
 const Label = styled(H4)`
   text-align: center;
 `
-const ButtonBar = styled(({stickyTop: number, ...rest}) => <Card {...rest} />)<{ stickyTop: number }>`
+const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
   padding: 15px;
   background: #fafafa;
@@ -34,52 +34,50 @@ const ButtonBar = styled(({stickyTop: number, ...rest}) => <Card {...rest} />)<{
 `
 
 type RegionOverviewProps = {
-    dataPrivacyPolicy: string
-    regionId: number
+  dataPrivacyPolicy: string
+  regionId: number
 }
 
-const RegionOverview = ({dataPrivacyPolicy, regionId}: RegionOverviewProps): ReactElement => {
-        const appToaster = useAppToaster()
-    const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy);
-    const [updateDataPrivacy] = useUpdateDataPolicyMutation({
-    })
+const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+  const appToaster = useAppToaster()
+  const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
+  const [updateDataPrivacy] = useUpdateDataPolicyMutation({})
 
-    const onSave = async() => {
-        try {
-        const result = await updateDataPrivacy({variables: {regionId,text: dataPrivacyText}})
-        if (result.errors) {
-            console.error(result.errors)
-            appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
-        } else {
-            appToaster?.show({
-                intent: 'success',
-                message: 'Datenschutzerklärung erfolgreich geändert.',
-            })
-        }
-    } catch (e) {
-        console.error(e)
+  const onSave = async () => {
+    try {
+      const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
+      if (result.errors) {
+        console.error(result.errors)
         appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
+      } else {
+        appToaster?.show({
+          intent: 'success',
+          message: 'Datenschutzerklärung erfolgreich geändert.',
+        })
+      }
+    } catch (e) {
+      console.error(e)
+      appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
     }
-    }
+  }
 
-return (
+  return (
     <>
-        <ButtonBar stickyTop={0}>
-            <Button
-                icon='lock'
-                text='Speichern'
-                intent='success'
-                onClick={onSave}
-            />
-        </ButtonBar>
-        <Content>
-            <Label>Datenschutzerklärung</Label>
-            <TextArea fill={true} onChange={e => setDataPrivacyText(e.target.value)} value={dataPrivacyText} large
-                      rows={20} placeholder={'Fügen sie hier ihre Datenschutzerklärung ein...'}/>
-        </Content>
+      <ButtonBar stickyTop={0}>
+        <Button icon='lock' text='Speichern' intent='success' onClick={onSave} />
+      </ButtonBar>
+      <Content>
+        <Label>Datenschutzerklärung</Label>
+        <TextArea
+          fill={true}
+          onChange={e => setDataPrivacyText(e.target.value)}
+          value={dataPrivacyText}
+          large
+          rows={20}
+          placeholder={'Fügen sie hier ihre Datenschutzerklärung ein...'}
+        />
+      </Content>
     </>
-);
+  )
 }
-;
-
-export default RegionOverview;
+export default RegionOverview

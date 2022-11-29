@@ -1,12 +1,12 @@
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } from '../../../generated/graphql'
 import SwitchDisplay from '../SwitchDisplay'
-import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { Form } from '../../FormType'
 import StandardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
 import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
-import BasicDialog from "../BasicDialog";
-import {dataPrivacyBaseHeadline, dataPrivacyBaseText} from "../../../constants/dataPrivacyBase";
+import BasicDialog from '../BasicDialog'
+import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
 
 const EntitlementTypeInput = ({
   state,
@@ -47,7 +47,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
     standardEntitlement: StandardEntitlementForm.initialState,
     personalData: PersonalDataForm.initialState,
     hasAcceptedPrivacyPolicy: false,
-    openPrivacyPolicy: false
+    openPrivacyPolicy: false,
   },
   getArrayBufferKeys: state => [
     ...StandardEntitlementForm.getArrayBufferKeys(state.standardEntitlement),
@@ -77,7 +77,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         throw Error('Not yet implemented.')
     }
   },
-  Component: ({ state, setState, privacyPolicy}) => (
+  Component: ({ state, setState, privacyPolicy }) => (
     <>
       <EntitlementTypeInput
         state={state.entitlementType}
@@ -101,13 +101,22 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
       />
       <FormGroup row>
         <Checkbox
-            checked={state.hasAcceptedPrivacyPolicy}
-            onChange={e => setState(state => ({...state, hasAcceptedPrivacyPolicy: e.target.checked}))}
-            required
+          checked={state.hasAcceptedPrivacyPolicy}
+          onChange={e => setState(state => ({ ...state, hasAcceptedPrivacyPolicy: e.target.checked }))}
+          required
         />
-        <div style={{alignSelf: 'center'}}>Ich akzeptiere die <a onClick={()=>setState(state => ({...state, openPrivacyPolicy: true}))}>Datenschutzerklärung</a></div>
+        <div style={{ alignSelf: 'center' }}>
+          Ich akzeptiere die{' '}
+          <a onClick={() => setState(state => ({ ...state, openPrivacyPolicy: true }))}>Datenschutzerklärung</a>
+        </div>
       </FormGroup>
-      <BasicDialog open={state.openPrivacyPolicy} maxWidth='lg' onUpdateOpen={()=>setState(state => ({...state, openPrivacyPolicy: false}))} title={dataPrivacyBaseHeadline} content={`${dataPrivacyBaseText}\n${privacyPolicy}`}/>
+      <BasicDialog
+        open={state.openPrivacyPolicy}
+        maxWidth='lg'
+        onUpdateOpen={() => setState(state => ({ ...state, openPrivacyPolicy: false }))}
+        title={dataPrivacyBaseHeadline}
+        content={`${dataPrivacyBaseText}\n${privacyPolicy}`}
+      />
     </>
   ),
 }

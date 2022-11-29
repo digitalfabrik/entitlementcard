@@ -33,13 +33,13 @@ const HomeController = () => {
       ) : null}
       {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
         <>
-           <NavLink to={'/users'}>
-             <StyledButton icon='people' text='Benutzer verwalten' />
-           </NavLink>
-           <NavLink to={'/region'} reloadDocument>
-              <StyledButton icon='path-search' text='Region verwalten' />
-           </NavLink>
-         </>
+          <NavLink to={'/users'}>
+            <StyledButton icon='people' text='Benutzer verwalten' />
+          </NavLink>
+          <NavLink to={'/region'} reloadDocument>
+            <StyledButton icon='path-search' text='Region verwalten' />
+          </NavLink>
+        </>
       ) : null}
     </Container>
   )

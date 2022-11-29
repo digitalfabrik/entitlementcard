@@ -20,8 +20,8 @@ import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
 import ApplyController from './application/components/ApplyController'
 import { createUploadLink } from 'apollo-upload-client'
-import {Role} from "./generated/graphql";
-import DataPrivacyPolicy from "./components/DataPrivacyPolicy";
+import { Role } from './generated/graphql'
+import DataPrivacyPolicy from './components/DataPrivacyPolicy'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
@@ -63,7 +63,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
-                    <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy/>}/>
+                  <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy />} />
                   <Route path={'/apply-for-eak'} element={<ApplyController />} />
                   <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route
@@ -81,9 +81,12 @@ const App = () => (
                                   path={'/applications'}
                                   element={<ApplicationsController token={authData.token} />}
                                 />
-                                 <Route path={'/region'}
-                                        element={isAdmin(authData.administrator.role) ? <RegionsController/> : <Navigate to={'/'}/>}
-                                 />
+                                <Route
+                                  path={'/region'}
+                                  element={
+                                    isAdmin(authData.administrator.role) ? <RegionsController /> : <Navigate to={'/'} />
+                                  }
+                                />
                                 <Route path={'/eak-generation'} element={<GenerationController />} />
                                 <Route path={'/user-settings'} element={<UserSettingsController />} />
                                 <Route path={'*'} element={<HomeController />} />

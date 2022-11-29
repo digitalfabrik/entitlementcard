@@ -3,7 +3,7 @@ import { Spinner } from '@blueprintjs/core'
 import { RegionContext } from '../../RegionProvider'
 import ApplicationsOverview from './ApplicationsOverview'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
-import ErrorHandler from "../../ErrorHandler";
+import ErrorHandler from '../../ErrorHandler'
 
 const ApplicationsController = (props: { region: Region; token: string }) => {
   const { loading, error, data, refetch } = useGetApplicationsQuery({
@@ -11,8 +11,7 @@ const ApplicationsController = (props: { region: Region; token: string }) => {
     onError: error => console.error(error),
   })
   if (loading) return <Spinner />
-  else if (error || !data)
-    return <ErrorHandler refetch={refetch}/>
+  else if (error || !data) return <ErrorHandler refetch={refetch} />
   else return <ApplicationsOverview applications={data.applications} token={props.token} />
 }
 
