@@ -3,12 +3,12 @@ import {Breakpoint, Dialog, DialogContent, DialogContentText, DialogTitle} from 
 import styled from 'styled-components'
 
 const CloseIcon = styled(Icon)`
-align-self: center;
+  align-self: center;
   cursor: pointer;
 `
 
 const StyledDialogTitle = styled(DialogTitle)`
-display: flex;
+  display: flex;
   justify-content: space-between;
 `
 
