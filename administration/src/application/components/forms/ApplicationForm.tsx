@@ -1,12 +1,19 @@
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { ApplicationType, BlueCardApplicationInput, BlueCardEntitlementType } from '../../../generated/graphql'
 import SwitchDisplay from '../SwitchDisplay'
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { Form } from '../../FormType'
 import StandardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
 import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
 import BasicDialog from '../BasicDialog'
 import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
+import styled from 'styled-components'
+
+const PrivacyPolicyButton = styled(Button)`
+  text-transform: capitalize !important;
+  padding: 0 !important;
+  vertical-align: unset !important;
+`
 
 const EntitlementTypeInput = ({
   state,
@@ -107,7 +114,16 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
         />
         <div style={{ alignSelf: 'center' }}>
           Ich akzeptiere die{' '}
-          <a onClick={() => setState(state => ({ ...state, openPrivacyPolicy: true }))}>Datenschutzerklärung</a>
+          <PrivacyPolicyButton
+            variant='text'
+            onClick={() =>
+              setState(state => ({
+                ...state,
+                openPrivacyPolicy: true,
+              }))
+            }>
+            Datenschutzerklärung
+          </PrivacyPolicyButton>
         </div>
       </FormGroup>
       <BasicDialog
