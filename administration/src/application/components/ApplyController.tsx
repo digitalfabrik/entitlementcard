@@ -10,14 +10,22 @@ import useLocallyStoredState from '../useLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
+import styled from 'styled-components'
 
 const applicationStorageKey = 'applicationState'
+
+const SuccessContent = styled.div`
+  white-space: pre-line;
+  display: flex;
+  justify-content: center;
+`
 
 const ApplyController = () => {
   const [addBlueEakApplication] = useAddBlueEakApplicationMutation()
   const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -47,25 +55,36 @@ const ApplyController = () => {
         application: application.value,
       },
     })
+
+    setFormSubmitted(true)
+    setState(() => ApplicationForm.initialState)
   }
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            submit()
-          }}>
-          <ApplicationForm.Component state={state} setState={setState} />
-          <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
-              Antrag Senden
-            </Button>
-          </DialogActions>
-        </form>
+        <h2 style={{ textAlign: 'center' }}>{formSubmitted ? `Erfolgreich gesendet` : `Ehrenamtskarte beantragen`}</h2>
+        {formSubmitted ? (
+          <SuccessContent>
+            {`Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
+            Der zuständige Sachebearbeiter wird ihren Antrag prüfen.
+            Weitere Informationen erhalten sie per E-Mail`}
+          </SuccessContent>
+        ) : (
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              submit()
+            }}>
+            <ApplicationForm.Component state={state} setState={setState} />
+            <DialogActions>
+              <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
+              <Button endIcon={<SendIcon />} variant='contained' type='submit'>
+                Antrag Senden
+              </Button>
+            </DialogActions>
+          </form>
+        )}
       </div>
     </div>
   )
