@@ -36,7 +36,7 @@ class IntroScreenState extends State<IntroScreen> {
       Slide(
         title: "Wie kann ich eine Ehrenamtskarte beantragen?",
         description: "In dem Formular geben Sie Informationen über Sie und Ihre "
-            "ehrenamtliche Tätigkeit an. Anshließend wird "
+            "ehrenamtliche Tätigkeit an. Anschließend wird "
             "der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
         pathImage: "assets/intro_slides/apply_for_eak.png",
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
