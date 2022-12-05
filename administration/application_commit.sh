@@ -4,6 +4,12 @@
 # This is used as a version for the application form. The form should reset whenever there are changes to the source
 # code of the application form.
 
+if ! command -v git &> /dev/null
+then
+  >&2 echo "Git is not installed."
+  exit 1
+fi
+
 basedir=$(dirname "$0")
 commit=$(git log -n 1 --format="%h" -- "${basedir}/src/application")
 if [ -z "$commit" ]
