@@ -27,7 +27,8 @@ const ApplyController = () => {
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  const { loading, data: policyData } = useGetDataPolicyQuery({
+  // TODO add loading handler
+  const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
     onError: error => console.error(error),
   })
