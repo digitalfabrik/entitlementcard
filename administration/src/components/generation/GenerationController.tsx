@@ -61,13 +61,7 @@ const GenerationController = () => {
     }
   }
   if (mode === Mode.input)
-    return (
-      <GenerationForm
-        cardBlueprints={cardBlueprints}
-        setCardBlueprints={setCardBlueprints}
-        confirm={confirm}
-      />
-    )
+    return <GenerationForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
   else if (mode === Mode.loading) return <Spinner />
   // (mode === Mode.finished)
   else

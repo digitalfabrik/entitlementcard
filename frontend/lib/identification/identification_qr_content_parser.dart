@@ -36,7 +36,7 @@ class IdentificationQrContentParser {
   void processQrCodeContent(String rawBase64Content) {
     const base64Decoder = Base64Decoder();
 
-    // TODO (Max): Refactor into Dart extension 
+    // TODO (Max): Refactor into Dart extension
     CardActivationCode activationCode;
     try {
       final rawProtobufData = base64Decoder.convert(rawBase64Content);
@@ -52,14 +52,14 @@ class IdentificationQrContentParser {
     if (!activationCode.hasHashSecret()) {
       throw QrCodeFieldMissingException("hashSecret");
     }
-    
+
     int? expirationDay = cardInfo.expiration.day;
     if (expirationDay == 0) {
       expirationDay = null;
     }
 
     final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
-    
+
     if (bavarianCardType == BavariaCardType.STANDARD && expirationDay == null) {
       throw QRCodeMissingExpiryException();
     }

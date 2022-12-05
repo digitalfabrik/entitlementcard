@@ -5,7 +5,7 @@ import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
 import { format, fromUnixTime } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
-import {CardActivationCode} from "../../generated/card_pb";
+import { CardActivationCode } from '../../generated/card_pb'
 
 type TTFFont = {
   /**
@@ -31,8 +31,8 @@ export async function loadTTFFont(name: string, fontStyle: string, path: string)
 }
 
 function addLetter(doc: jsPDF, activationCode: CardActivationCode, region: Region) {
-  const info = activationCode.info!;
-  
+  const info = activationCode.info!
+
   const pageSize = doc.internal.pageSize
   const { width, height } = { width: pageSize.getWidth(), height: pageSize.getHeight() }
   const pageMargin = 20
@@ -78,11 +78,9 @@ Ihre digitale Ehrenamtskarte ist da!`,
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
-  let expirationDateInt = Number(info.expiration!.day!);
+  let expirationDateInt = Number(info.expiration!.day!)
   const expirationDate =
-   expirationDateInt > 0
-      ? format(fromUnixTime(expirationDateInt * 24 * 60 * 60), 'dd.MM.yyyy')
-      : 'unbegrenzt'
+    expirationDateInt > 0 ? format(fromUnixTime(expirationDateInt * 24 * 60 * 60), 'dd.MM.yyyy') : 'unbegrenzt'
   doc.text(
     `Name: ${info!.fullName}
 Karte ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}

@@ -10,14 +10,14 @@ String encodeVerificationCardDetails(VerificationCardDetails verificationCardDet
 
   final verifyCode = CardVerifyCode(
     info: CardInfo(
-        fullName: cardDetails.fullName,
-        expiration: Expiration(day: cardDetails.expirationDay ?? 0), 
-        extensions: CardExtensions(
-          extensionRegion: RegionExtension(regionId: cardDetails.regionId),
-          extensionBavariaCardType: BavariaCardTypeExtension(
-              cardType: BavariaCardType.valueOf(cardDetails.cardType.index),
-          ),
+      fullName: cardDetails.fullName,
+      expiration: Expiration(day: cardDetails.expirationDay ?? 0),
+      extensions: CardExtensions(
+        extensionRegion: RegionExtension(regionId: cardDetails.regionId),
+        extensionBavariaCardType: BavariaCardTypeExtension(
+          cardType: BavariaCardType.valueOf(cardDetails.cardType.index),
         ),
+      ),
     ),
     hashSecret: const Base64Decoder().convert(cardDetails.hashSecretBase64),
     otp: verificationCardDetails.otp,

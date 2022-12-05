@@ -92,7 +92,10 @@ const GenerationForm = (props: Props) => {
       <FormsWrapper>
         {cardBlueprints.map(blueprint => (
           <FormColumn key={blueprint.id}>
-            <EakForm cardBlueprint={blueprint} onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)} />
+            <EakForm
+              cardBlueprint={blueprint}
+              onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}
+            />
           </FormColumn>
         ))}
         <FormColumn key='AddButton'>

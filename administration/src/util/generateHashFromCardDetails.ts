@@ -1,5 +1,5 @@
 import isIE11 from './isIE11'
-import {CardInfo} from "../generated/card_pb";
+import { CardInfo } from '../generated/card_pb'
 
 const cardInfoToBinary = (cardInfo: CardInfo) => {
   const fullNameWithoutZero = new TextEncoder().encode(cardInfo.fullName)
@@ -12,7 +12,7 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
 
   let offset = 0
 
-  view.setUint32(offset, cardInfo.expiration!.day!);
+  view.setUint32(offset, cardInfo.expiration!.day!)
   offset += expirationDateBytes
 
   view.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
@@ -20,7 +20,7 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
 
   view.setInt32(offset, cardInfo.extensions?.extensionRegion!.regionId!, true)
   offset += regionIdBytes
-  
+
   // FIXME: Include all the other extensions
 
   binary.set(fullNameWithoutZero, offset)
@@ -34,7 +34,7 @@ const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardInfo: Car
   // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
   let hashArrayBuffer: ArrayBuffer
   if (isIE11()) {
-    throw Error("IE11 is not supported")
+    throw Error('IE11 is not supported')
   } else {
     const key = await crypto.subtle.importKey('raw', hashSecret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
     hashArrayBuffer = await crypto.subtle.sign('HMAC', key, binary.buffer)

@@ -2,13 +2,14 @@ import { getUnixTime, secondsToHours } from 'date-fns'
 import isIE11 from './isIE11'
 import getRandomValues from './getRandomValues'
 import {
-  BavariaCardType, BavariaCardTypeExtension,
+  BavariaCardType,
+  BavariaCardTypeExtension,
   CardActivationCode,
   CardExtensions,
   CardInfo,
   Expiration,
-  RegionExtension
-} from "../generated/card_pb";
+  RegionExtension,
+} from '../generated/card_pb'
 
 const generateActivationCodes = (
   fullName: string,

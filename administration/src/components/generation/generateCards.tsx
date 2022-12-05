@@ -12,14 +12,19 @@ import {
   CardGenerationModelInput,
   Region,
 } from '../../generated/graphql'
-import {BavariaCardType} from "../../generated/card_pb";
+import { BavariaCardType } from '../../generated/card_pb'
 
 const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardBlueprint[], region: Region) => {
   const activationCodes = cardBlueprints.map(cardBlueprint => {
     const cardType = cardBlueprint.cardType === CardType.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD
-    return generateActivationCodes(`${cardBlueprint.forename} ${cardBlueprint.surname}`, region.id, cardBlueprint.expirationDate, cardType)
+    return generateActivationCodes(
+      `${cardBlueprint.forename} ${cardBlueprint.surname}`,
+      region.id,
+      cardBlueprint.expirationDate,
+      cardType
+    )
   })
-  
+
   const graphQLModel: CardGenerationModelInput[] = await Promise.all(
     activationCodes.map(async activationCode => {
       const cardDetailsHash = await generateHashFromCardDetails(activationCode.hashSecret, activationCode.info!)
@@ -33,7 +38,10 @@ const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardB
   )
   const results = await Promise.all(
     graphQLModel.map(cardGenerationInput =>
-      client.mutate<AddCardMutation, AddCardMutationVariables>({ mutation: AddCardDocument, variables: { card: cardGenerationInput } })
+      client.mutate<AddCardMutation, AddCardMutationVariables>({
+        mutation: AddCardDocument,
+        variables: { card: cardGenerationInput },
+      })
     )
   )
   const fail = results.find(result => !result.data?.success)

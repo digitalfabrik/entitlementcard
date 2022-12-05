@@ -29,7 +29,7 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     );
   }
 
-  // TODO (Max): Refactor into Dart extension 
+  // TODO (Max): Refactor into Dart extension
   CardVerifyCode verifyCode;
   try {
     verifyCode = CardVerifyCode.fromBuffer(rawProtobufData);
@@ -41,7 +41,7 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
       stackTrace: stacktrace,
     );
   }
-  
+
   // TODO (Max): Duplicate code to identification_qr_content_parser.dart
   final cardInfo = verifyCode.info;
   final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
