@@ -128,7 +128,9 @@ jobs:
       - install-app-toolbelt
       - run:
           name: Install Flutter Packages
-          command: fvm flutter pub get
+          command: |
+            fvm dart pub global activate protoc_plugin
+            fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
@@ -170,6 +172,7 @@ jobs:
       - run:
           name: Install Flutter Packages
           command: |
+            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --android
       - save_cache:
@@ -210,6 +213,7 @@ jobs:
       - run:
           name: Install Flutter Packages
           command: |
+            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --ios
       - save_cache:
