@@ -44,7 +44,7 @@ message CardActivationCode {
 
 message CardVerifyCode {
   CardInfo info = 1;
-  bytes hashSecret = 2;
+  bytes hash_secret = 2;
   int32 otp = 3;
 }
 
