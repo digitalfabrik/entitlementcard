@@ -1,18 +1,16 @@
 import { getUnixTime } from 'date-fns'
+import isIE11 from './isIE11'
+import getRandomValues from './getRandomValues'
 import {
-  BavariaCardType,
+  BavariaCardType, BavariaCardTypeExtension,
   CardActivationCode,
   CardExtensions,
   CardInfo,
   Expiration,
-  RegionExtension,
-  BavariaCardTypeExtension,
-} from '../generated/protobuf'
-import isIE11 from './isIE11'
-import getRandomValues from './getRandomValues'
-import Long from 'long'
+  RegionExtension
+} from "../generated/card_pb";
 
-const generateCardActivateModel = (
+const generateActivationCodes = (
   fullName: string,
   regionId: number,
   expirationDate: Date | null,
@@ -36,9 +34,9 @@ const generateCardActivateModel = (
       expiration:
         expirationDate !== null
           ? new Expiration({
-              date: Long.fromNumber(getUnixTime(expirationDate), false),
+              date: BigInt(getUnixTime(expirationDate)),
             })
-          : null,
+          : undefined,
       extensions: new CardExtensions({
         extensionRegion: new RegionExtension({
           regionId: regionId,
@@ -53,4 +51,4 @@ const generateCardActivateModel = (
   })
 }
 
-export default generateCardActivateModel
+export default generateActivationCodes

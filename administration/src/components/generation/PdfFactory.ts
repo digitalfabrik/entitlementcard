@@ -1,11 +1,11 @@
 import { jsPDF } from 'jspdf'
 import logo from './logo'
 import { drawjsPDF } from '../../util/qrcode'
-import { CardActivationCode } from '../../generated/protobuf'
 import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
 import { format, fromUnixTime } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
+import {CardActivationCode} from "../../generated/card_pb";
 
 type TTFFont = {
   /**
@@ -30,7 +30,9 @@ export async function loadTTFFont(name: string, fontStyle: string, path: string)
   }
 }
 
-function addLetter(doc: jsPDF, model: CardActivationCode, region: Region) {
+function addLetter(doc: jsPDF, activationCode: CardActivationCode, region: Region) {
+  const info = activationCode.info!;
+  
   const pageSize = doc.internal.pageSize
   const { width, height } = { width: pageSize.getWidth(), height: pageSize.getHeight() }
   const pageMargin = 20
@@ -42,9 +44,10 @@ function addLetter(doc: jsPDF, model: CardActivationCode, region: Region) {
   const greetingY = 60
 
   doc.setFontSize(16)
+
   doc.text(
     // TODO: Why is info optional?
-    `Guten Tag, ${model.info!.fullName}.
+    `Guten Tag, ${info.fullName}.
 Ihre digitale Ehrenamtskarte ist da!`,
     pageMargin,
     greetingY
@@ -71,16 +74,17 @@ Ihre digitale Ehrenamtskarte ist da!`,
 
   doc.setFontSize(16)
   doc.text('Anmeldecode', width / 2, qrCodeY - qrCodeMargin, undefined, 'center')
-  const qrCodeText = uint8ArrayToBase64(CardActivationCode.encode(model).finish())
+  const qrCodeText = uint8ArrayToBase64(activationCode.toBinary())
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
+  let expirationDateInt = Number(info.expiration!.date!);
   const expirationDate =
-    model.info!.expirationDate.toNumber() > 0
-      ? format(fromUnixTime(model.info!.expirationDate.toNumber()), 'dd.MM.yyyy')
+   expirationDateInt > 0
+      ? format(fromUnixTime(expirationDateInt), 'dd.MM.yyyy')
       : 'unbegrenzt'
   doc.text(
-    `Name: ${model.info!.fullName}
+    `Name: ${info!.fullName}
 Karte ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}
 Karte gültig bis: ${expirationDate}
 Aussteller: ${region.prefix} ${region.name}`,
@@ -113,7 +117,7 @@ function checkForeignText(doc: jsPDF, text: string): string | null {
   return null
 }
 
-export function generatePdf(font: TTFFont, models: CardActivationCode[], region: Region) {
+export function generatePdf(font: TTFFont, activationCodes: CardActivationCode[], region: Region) {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -125,9 +129,9 @@ export function generatePdf(font: TTFFont, models: CardActivationCode[], region:
   doc.addFont(fontFileName, font.name, font.fontStyle)
   doc.setFont(font.name)
 
-  for (let k = 0; k < models.length; k++) {
-    let model = models[k]
-    let unsupportedChar = checkForeignText(doc, model.info!.fullName)
+  for (let k = 0; k < activationCodes.length; k++) {
+    let activationCode = activationCodes[k]
+    let unsupportedChar = checkForeignText(doc, activationCode.info!.fullName)
 
     if (unsupportedChar) {
       throw new Exception({
@@ -136,8 +140,8 @@ export function generatePdf(font: TTFFont, models: CardActivationCode[], region:
       })
     }
 
-    addLetter(doc, models[k], region)
-    if (k !== models.length - 1) doc.addPage()
+    addLetter(doc, activationCodes[k], region)
+    if (k !== activationCodes.length - 1) doc.addPage()
   }
 
   doc.setDocumentProperties({

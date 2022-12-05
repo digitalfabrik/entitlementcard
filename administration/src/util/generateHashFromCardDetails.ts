@@ -1,16 +1,15 @@
-import Long from 'long'
-import { BavariaCardType } from '../generated/protobuf'
 import isIE11 from './isIE11'
+import {CardInfo} from "../generated/card_pb";
 
-export interface CardDetails {
-  fullName: string
-  regionId: number
-  expirationDate: Long
-  cardType: BavariaCardType
+export function bigIntToNumber64bit (a: bigint): ArrayBuffer {
+  const buffer = new ArrayBuffer(8);
+  const dataView = new DataView(buffer);
+  dataView.setBigInt64(0, a);
+  return buffer;
 }
 
-const cardDetailsToBinary = (cardDetails: CardDetails) => {
-  const fullNameWithoutZero = new TextEncoder().encode(cardDetails.fullName)
+const cardInfoToBinary = (cardInfo: CardInfo) => {
+  const fullNameWithoutZero = new TextEncoder().encode(cardInfo.fullName)
   const expirationDateBytes = 8 // int64
   const cardTypeBytes = 4 // int32
   const regionIdBytes = 4 // int32
@@ -20,39 +19,29 @@ const cardDetailsToBinary = (cardDetails: CardDetails) => {
 
   let offset = 0
 
-  binary.set(cardDetails.expirationDate.toBytesLE(), offset)
+  binary.set(new Uint8Array(bigIntToNumber64bit(cardInfo.expiration!.date!)), offset)
   offset += expirationDateBytes
 
-  binaryView.setInt32(offset, cardDetails.cardType, true)
+  binaryView.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
   offset += cardTypeBytes
 
-  binaryView.setInt32(offset, cardDetails.regionId, true)
+  binaryView.setInt32(offset, cardInfo.extensions?.extensionRegion!.regionId!, true)
   offset += regionIdBytes
+  
+  // FIXME: Include all the other extensions
 
   binary.set(fullNameWithoutZero, offset)
   return binary
 }
 
-const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: CardDetails) => {
-  const binary = cardDetailsToBinary(cardDetails)
+const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardInfo: CardInfo) => {
+  const binary = cardInfoToBinary(cardInfo)
 
   // In IE11, this returns KeyOperation / CryptoOperation,
   // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
   let hashArrayBuffer: ArrayBuffer
   if (isIE11()) {
-    const key = await new Promise((resolve, reject) => {
-      // @ts-ignore
-      const op = msCrypto.subtle.importKey('raw', hashSecret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']) // @ts-ignore
-      op.oncomplete = event => resolve(event.target.result) // @ts-ignore
-      op.onerror = e => reject(e)
-    })
-
-    hashArrayBuffer = await new Promise((resolve, reject) => {
-      // @ts-ignore
-      const op = msCrypto.subtle.sign({ name: 'HMAC', hash: 'SHA-256' }, key, binary.buffer) // @ts-ignore
-      op.oncomplete = event => resolve(event.target.result) // @ts-ignore
-      op.onerror = e => reject(e)
-    })
+    throw Error("IE11 is not supported")
   } else {
     const key = await crypto.subtle.importKey('raw', hashSecret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
     hashArrayBuffer = await crypto.subtle.sign('HMAC', key, binary.buffer)

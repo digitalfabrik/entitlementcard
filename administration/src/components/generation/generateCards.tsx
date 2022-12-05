@@ -1,7 +1,6 @@
-import { CardCreationModel } from './CardCreationModel'
+import { CardBlueprint } from './CardBlueprint'
 import { CardType } from '../../models/CardType'
-import { CardActivationCode, BavariaCardType } from '../../generated/protobuf'
-import generateCardActivateModel from '../../util/generateCardActivateModel'
+import generateActivationCodes from '../../util/generateActivationCodes'
 import generateHashFromCardDetails from '../../util/generateHashFromCardDetails'
 import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
 import { generatePdf, loadTTFFont } from './PdfFactory'
@@ -13,26 +12,28 @@ import {
   CardGenerationModelInput,
   Region,
 } from '../../generated/graphql'
+import {BavariaCardType} from "../../generated/card_pb";
 
-const generateCards = async (client: ApolloClient<object>, cardCreationModels: CardCreationModel[], region: Region) => {
-  const activateModels = cardCreationModels.map(model => {
-    const cardType = model.cardType === CardType.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD
-    return generateCardActivateModel(`${model.forename} ${model.surname}`, region.id, model.expirationDate, cardType)
+const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardBlueprint[], region: Region) => {
+  const activationCodes = cardBlueprints.map(cardBlueprint => {
+    const cardType = cardBlueprint.cardType === CardType.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD
+    return generateActivationCodes(`${cardBlueprint.forename} ${cardBlueprint.surname}`, region.id, cardBlueprint.expirationDate, cardType)
   })
-  const cardInputs: CardGenerationModelInput[] = await Promise.all(
-    activateModels.map(async model => {
-      const cardDetailsHash = await generateHashFromCardDetails(model.hashSecret, model.info)
+  
+  const graphQLModel: CardGenerationModelInput[] = await Promise.all(
+    activationCodes.map(async activationCode => {
+      const cardDetailsHash = await generateHashFromCardDetails(activationCode.hashSecret, activationCode.info!)
       return {
-        expirationDate: model.info!.expiration?.date?.toNumber() || 0,
+        expirationDate: activationCode.info!.expiration!.date! || BigInt(0),
         cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
-        totpSecretBase64: uint8ArrayToBase64(model.totpSecret),
+        totpSecretBase64: uint8ArrayToBase64(activationCode.totpSecret),
         regionId: region.id,
       }
     })
   )
   const results = await Promise.all(
-    cardInputs.map(card =>
-      client.mutate<AddCardMutation, AddCardMutationVariables>({ mutation: AddCardDocument, variables: { card } })
+    graphQLModel.map(cardGenerationInput =>
+      client.mutate<AddCardMutation, AddCardMutationVariables>({ mutation: AddCardDocument, variables: { card: cardGenerationInput } })
     )
   )
   const fail = results.find(result => !result.data?.success)
@@ -40,7 +41,7 @@ const generateCards = async (client: ApolloClient<object>, cardCreationModels: C
 
   const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
 
-  return generatePdf(font, activateModels, region)
+  return generatePdf(font, activationCodes, region)
 }
 
 export default generateCards
