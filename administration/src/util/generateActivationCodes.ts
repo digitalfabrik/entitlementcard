@@ -1,4 +1,4 @@
-import { getUnixTime, secondsToHours } from 'date-fns'
+import { getUnixTime } from 'date-fns'
 import isIE11 from './isIE11'
 import getRandomValues from './getRandomValues'
 import {
