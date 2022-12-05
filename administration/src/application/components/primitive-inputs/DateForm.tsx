@@ -1,7 +1,8 @@
 import { TextField } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { DateInput } from '../../../generated/graphql'
+import { FormContext } from '../SteppedSubForms'
 
 export type DateFormState = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
@@ -25,6 +26,7 @@ const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
   },
   Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
+    const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = DateForm.getValidatedInput(state)
 
     const isInvalid = validationResult.type === 'error'
@@ -37,12 +39,13 @@ const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = 
         type='date'
         label={label}
         required
+        disabled={disableAllInputs}
         error={touched && isInvalid}
         value={state.value}
         sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'DateForm', value: e.target.value }))}
-        helperText={touched && isInvalid ? validationResult.message : ''}
+        helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
   },

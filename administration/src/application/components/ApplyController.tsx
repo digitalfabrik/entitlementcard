@@ -2,37 +2,46 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import SendIcon from '@mui/icons-material/Send'
 
 import { useAddBlueEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
-import { Button, DialogActions } from '@mui/material'
-import useLocallyStoredState from '../useLocallyStoredState'
+import { DialogActions } from '@mui/material'
+import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
+import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 
-const applicationStorageKey = 'applicationState'
+// This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
+// application form.
+const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
+
+export const applicationStorageKey = 'applicationState'
 const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
 const ApplyController = () => {
-  const [addBlueEakApplication] = useAddBlueEakApplicationMutation()
-  const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
-  // TODO use retrieved regionId
+  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
+  const { status, state, setState } = useVersionedLocallyStoredState(
+    ApplicationForm.initialState,
+    applicationStorageKey,
+    lastCommitForApplicationForm
+  )
   const { loading, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
     onError: error => console.error(error),
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
-    () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
-    [state]
+    () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
+    [state, status]
   )
   const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
-  // state is null, if it's still being loaded from storage (e.g. after a page reload)
-  if (state == null || !arrayBufferManagerInitialized || loading) {
+
+  const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
+
+  if (status === 'loading' || !arrayBufferManagerInitialized) {
     return null
   }
 
@@ -45,10 +54,12 @@ const ApplyController = () => {
       return
     }
 
+    const [regionId, applicationInput] = application.value // TODO: Add a mechanism to retrieve the regionId
+
     addBlueEakApplication({
       variables: {
-        regionId, // TODO: Add a mechanism to retrieve the regionId
-        application: application.value,
+        regionId,
+        application: applicationInput,
       },
     })
   }
@@ -57,23 +68,8 @@ const ApplyController = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            submit()
-          }}>
-          <ApplicationForm.Component
-            state={state}
-            setState={setState}
-            privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
-          />
-          <DialogActions>
-            <DiscardAllInputsButton discardAll={() => setState(() => ApplicationForm.initialState)} />
-            <Button endIcon={<SendIcon />} variant='contained' type='submit'>
-              Antrag Senden
-            </Button>
-          </DialogActions>
-        </form>
+        <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''} />
+        <DialogActions>{loading ? null : <DiscardAllInputsButton discardAll={discardAll} />}</DialogActions>
       </div>
     </div>
   )
@@ -81,7 +77,9 @@ const ApplyController = () => {
 
 const ApplyApp = () => (
   <SnackbarProvider>
-    <ApplyController />
+    <ApplicationErrorBoundary>
+      <ApplyController />
+    </ApplicationErrorBoundary>
   </SnackbarProvider>
 )
 
