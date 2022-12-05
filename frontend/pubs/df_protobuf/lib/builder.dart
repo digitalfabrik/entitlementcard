@@ -78,7 +78,7 @@ class ProtobufBuilder extends Builder {
     await runSafely(
       "protoc",
       [
-        '--plugin=protoc-gen-dart=/Users/max/.pub-cache/bin/protoc-gen-dart',
+        '--plugin=protoc-gen-dart=${Platform.environment['HOME']}/.pub-cache/bin/protoc-gen-dart',
         '--dart_out=$outputDirectory',
         path.join('.', inputPath),
       ],
