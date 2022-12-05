@@ -74,7 +74,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
           value={dataPrivacyText}
           large
           rows={20}
-          placeholder={'Fügen sie hier ihre Datenschutzerklärung ein...'}
+          placeholder={'Fügen Sie hier Ihre Datenschutzerklärung ein...'}
         />
       </Content>
     </>
