@@ -5,30 +5,38 @@ import '@fontsource/roboto/700.css'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
 import { DialogActions } from '@mui/material'
-import useLocallyStoredState from '../useLocallyStoredState'
+import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
 import { useCallback, useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
+import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 
-const applicationStorageKey = 'applicationState'
+// This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
+// application form.
+const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
+
+export const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
-  const [state, setState] = useLocallyStoredState(ApplicationForm.initialState, applicationStorageKey)
+  const { status, state, setState } = useVersionedLocallyStoredState(
+    ApplicationForm.initialState,
+    applicationStorageKey,
+    lastCommitForApplicationForm
+  )
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
-    () => (state === null ? null : () => ApplicationForm.getArrayBufferKeys(state)),
-    [state]
+    () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
+    [state, status]
   )
   const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
 
   const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
 
-  // state is null, if it's still being loaded from storage (e.g. after a page reload)
-  if (state == null || !arrayBufferManagerInitialized) {
+  if (status === 'loading' || !arrayBufferManagerInitialized) {
     return null
   }
 
@@ -64,7 +72,9 @@ const ApplyController = () => {
 
 const ApplyApp = () => (
   <SnackbarProvider>
-    <ApplyController />
+    <ApplicationErrorBoundary>
+      <ApplyController />
+    </ApplicationErrorBoundary>
   </SnackbarProvider>
 )
 
