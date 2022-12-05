@@ -29,9 +29,10 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     );
   }
 
-  CardVerifyModel cardVerifyModel;
+  // TODO (Max): Refactor into Dart extension 
+  CardVerifyCode verifyCode;
   try {
-    cardVerifyModel = CardVerifyModel.fromBuffer(rawProtobufData);
+    verifyCode = CardVerifyCode.fromBuffer(rawProtobufData);
   } on Exception catch (e, stacktrace) {
     throw VerificationParseException(
       internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
@@ -40,15 +41,19 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
       stackTrace: stacktrace,
     );
   }
+  
+  // TODO (Max): Duplicate code to identification_qr_content_parser.dart
+  final cardInfo = verifyCode.info;
+  final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
 
-  final fullName = cardVerifyModel.fullName;
-  final hashSecretBase64 = const Base64Encoder().convert(cardVerifyModel.hashSecret);
-  final unixInt64ExpirationDate = cardVerifyModel.expirationDate;
+  final fullName = cardInfo.fullName;
+  final hashSecretBase64 = const Base64Encoder().convert(verifyCode.hashSecret);
+  final unixInt64ExpirationDate = cardInfo.expiration.date;
   int? unixExpirationDate;
   unixExpirationDate = unixInt64ExpirationDate.toInt();
-  final cardType = CardType.values[cardVerifyModel.cardType.value];
-  final regionId = cardVerifyModel.regionId;
-  final otp = cardVerifyModel.otp;
+  final cardType = CardType.values[bavarianCardType.value];
+  final regionId = cardInfo.extensions.extensionRegion.regionId;
+  final otp = verifyCode.otp;
 
   final baseCardDetails = BaseCardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId);
   return VerificationCardDetails(baseCardDetails, otp);

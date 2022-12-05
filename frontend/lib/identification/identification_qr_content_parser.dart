@@ -36,22 +36,24 @@ class IdentificationQrContentParser {
   void processQrCodeContent(String rawBase64Content) {
     const base64Decoder = Base64Decoder();
 
-    CardActivateModel cardActivateModel;
+    // TODO (Max): Refactor into Dart extension 
+    CardActivationCode activationCode;
     try {
       final rawProtobufData = base64Decoder.convert(rawBase64Content);
-      cardActivateModel = CardActivateModel.fromBuffer(rawProtobufData);
+      activationCode = CardActivationCode.fromBuffer(rawProtobufData);
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
 
-    if (!cardActivateModel.hasFullName()) {
+    final cardInfo = activationCode.info;
+    if (!cardInfo.hasFullName()) {
       throw QrCodeFieldMissingException("fullName");
     }
-    if (!cardActivateModel.hasHashSecret()) {
+    if (!activationCode.hasHashSecret()) {
       throw QrCodeFieldMissingException("hashSecret");
     }
 
-    final unixInt64ExpirationDate = cardActivateModel.expirationDate;
+    final unixInt64ExpirationDate = cardInfo.expiration.date;
     int? unixExpirationDate;
     if (unixInt64ExpirationDate > 0) {
       try {
@@ -61,27 +63,29 @@ class IdentificationQrContentParser {
       }
     }
 
-    if (cardActivateModel.cardType == CardActivateModel_CardType.STANDARD && unixExpirationDate == null) {
+    final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
+    
+    if (bavarianCardType == BavariaCardType.STANDARD && unixExpirationDate == null) {
       throw QRCodeMissingExpiryException();
     }
 
-    final cardType = CardType.values[cardActivateModel.cardType.value];
-    if (!cardActivateModel.hasTotpSecret()) {
+    final cardType = CardType.values[bavarianCardType.value]; // FIXME: Insecure mapping
+    if (!activationCode.hasTotpSecret()) {
       throw QrCodeFieldMissingException("totpSecret");
     }
     String? base32TotpSecret;
     try {
-      base32TotpSecret = base32.encode(Uint8List.fromList(cardActivateModel.totpSecret));
+      base32TotpSecret = base32.encode(Uint8List.fromList(activationCode.totpSecret));
     } on Exception catch (_) {
       throw QRCodeInvalidTotpSecretException();
     }
 
     final cardDetails = CardDetails(
-      cardActivateModel.fullName,
-      const Base64Encoder().convert(cardActivateModel.hashSecret),
+      cardInfo.fullName,
+      const Base64Encoder().convert(activationCode.hashSecret),
       unixExpirationDate,
       cardType,
-      cardActivateModel.regionId,
+      cardInfo.extensions.extensionRegion.regionId,
       base32TotpSecret,
     );
     _cardDetailsModel.setCardDetails(cardDetails);
