@@ -13,7 +13,10 @@ import { useCallback, useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 
+// This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
+// application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
+
 export const applicationStorageKey = 'applicationState'
 
 const ApplyController = () => {
