@@ -133,6 +133,9 @@ jobs:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
+          name: Install protoc
+          command: sudo apt install -y protobuf-compiler
+      - run:
           name: Build Runner
           command: |
             # Statically use "bayern" build config for analyzing here
@@ -220,6 +223,9 @@ jobs:
             pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
       - run:
+          name: Install protoc
+          command: sudo apt install -y protobuf-compiler
+      - run:
           name: Build Runner
           command: |
             fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
@@ -276,6 +282,9 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - run:
+          name: Install protoc
+          command: sudo apt install -y protobuf-compiler
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
