@@ -1,6 +1,6 @@
 export const dataPrivacyBaseText =
   'Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen der digitalen bayerischen Ehrenamtskarte einschließlich verbundener Dienste.\n\n' +
-  'Die digitale bayerischen Ehrenamtskarte wird im Auftrag des Bayerischen Staatsministeriums für Familie, Arbeit und Soziales, Winzererstraße 9, 80797 München durch die Tür an Tür – Digitalfabrik gGmbH, Wertachstr. 29, 86153 Augsburg betrieben.\n\n' +
+  'Die digitale bayerische Ehrenamtskarte wird im Auftrag des Bayerischen Staatsministeriums für Familie, Arbeit und Soziales, Winzererstraße 9, 80797 München durch die Tür an Tür – Digitalfabrik gGmbH, Wertachstr. 29, 86153 Augsburg betrieben.\n\n' +
   'Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung. \n\n' +
   'Der gesamte Programmcode der digitalen bayerischen Ehrenamtskarte ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz und kann hier eingesehen werden:\n https://github.com/digitalfabrik/entitlementcard\n\n' +
   'Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten Kontaktdaten erreichen.\n\n' +
