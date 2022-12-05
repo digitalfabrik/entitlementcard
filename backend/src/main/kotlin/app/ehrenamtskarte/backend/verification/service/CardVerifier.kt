@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.verification.service
 
+import app.ehrenamtskarte.backend.verification.DayUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 import java.time.Instant
-import java.time.LocalDateTime
 import javax.crypto.spec.SecretKeySpec
 
 val TIME_STEP: Duration = Duration.ofSeconds(30)
@@ -18,10 +18,12 @@ object CardVerifier {
         return verifyCard(card, totp)
     }
 
-    private fun verifyCard(card: CardEntity, totp: Int): Boolean =
-        card.expirationDate?.isAfter(LocalDateTime.now()) ?: true &&
-            !card.revoked &&
-            isTotpValid(totp, card.totpSecret)
+    private fun verifyCard(card: CardEntity, totp: Int): Boolean {
+        val expirationDate = card.expirationDate
+        return (expirationDate == null || isOnOrBeforeToday(expirationDate)) &&
+                !card.revoked &&
+                isTotpValid(totp, card.totpSecret)
+    }
 
     private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
         if (generateTotp(secret) == totp) return true

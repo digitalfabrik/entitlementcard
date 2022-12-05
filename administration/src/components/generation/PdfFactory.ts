@@ -6,6 +6,7 @@ import { format, fromUnixTime } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
 import { CardActivationCode } from '../../generated/card_pb'
+import {dateToDaysSinceEpoch, daysSinceEpochToDate} from "../../util/day";
 
 type TTFFont = {
   /**
@@ -80,7 +81,7 @@ Ihre digitale Ehrenamtskarte ist da!`,
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
   let expirationDateInt = Number(info.expiration!.day!)
   const expirationDate =
-    expirationDateInt > 0 ? format(fromUnixTime(expirationDateInt * 24 * 60 * 60), 'dd.MM.yyyy') : 'unbegrenzt'
+    expirationDateInt > 0 ? format(daysSinceEpochToDate(expirationDateInt), 'dd.MM.yyyy') : 'unbegrenzt'
   doc.text(
     `Name: ${info!.fullName}
 Karte ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}

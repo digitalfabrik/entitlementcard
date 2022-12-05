@@ -1,4 +1,3 @@
-import { getUnixTime } from 'date-fns'
 import isIE11 from './isIE11'
 import getRandomValues from './getRandomValues'
 import {
@@ -10,6 +9,7 @@ import {
   Expiration,
   RegionExtension,
 } from '../generated/card_pb'
+import {dateToDaysSinceEpoch} from "./day";
 
 const generateActivationCodes = (
   fullName: string,
@@ -35,7 +35,7 @@ const generateActivationCodes = (
       expiration:
         expirationDate !== null
           ? new Expiration({
-              day: Math.floor(getUnixTime(expirationDate) / 60 / 60 / 24),
+              day: dateToDaysSinceEpoch(expirationDate),
             })
           : undefined,
       extensions: new CardExtensions({

@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.database
 
 import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.verification.DayUtil
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -33,14 +34,10 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var regionId by Cards.regionId
 
     var expirationDate: LocalDateTime?
-        get() = if (expirationDay > 0) LocalDateTime.ofEpochSecond(
-            expirationDay * 24L * 60L * 60L,
-            0,
-            ZoneOffset.UTC
-        ) else null
+        get() = if (expirationDay > 0) DayUtil.daysSinceEpochToDate(expirationDay) else null
         set(value) {
             expirationDay = if (value != null) {
-                value.toEpochSecond(ZoneOffset.UTC) / 24 / 60 / 60
+                DayUtil.dateToDaysSinceEpoch(value)
             } else {
                 0
             }
