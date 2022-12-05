@@ -14,7 +14,7 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
   if (baseCardDetails.fullName.isEmpty) {
     throw QrCodeFieldMissingException("fullName");
   }
-  if (baseCardDetails.unixExpirationDate == null &&
+  if (baseCardDetails.expirationDay == null &&
       baseCardDetails.cardType.index == BavariaCardType.STANDARD.value) { // FIXME: Insecure index comparision
     throw QrCodeFieldMissingException("expirationDate");
   }

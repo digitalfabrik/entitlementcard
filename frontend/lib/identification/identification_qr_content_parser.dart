@@ -52,20 +52,15 @@ class IdentificationQrContentParser {
     if (!activationCode.hasHashSecret()) {
       throw QrCodeFieldMissingException("hashSecret");
     }
-
-    final unixInt64ExpirationDate = cardInfo.expiration.date;
-    int? unixExpirationDate;
-    if (unixInt64ExpirationDate > 0) {
-      try {
-        unixExpirationDate = unixInt64ExpirationDate.toInt();
-      } on Exception catch (_) {
-        throw QRCodeInvalidExpiryException();
-      }
+    
+    int? expirationDay = cardInfo.expiration.day;
+    if (expirationDay == 0) {
+      expirationDay = null;
     }
 
     final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
     
-    if (bavarianCardType == BavariaCardType.STANDARD && unixExpirationDate == null) {
+    if (bavarianCardType == BavariaCardType.STANDARD && expirationDay == null) {
       throw QRCodeMissingExpiryException();
     }
 
@@ -83,7 +78,7 @@ class IdentificationQrContentParser {
     final cardDetails = CardDetails(
       cardInfo.fullName,
       const Base64Encoder().convert(activationCode.hashSecret),
-      unixExpirationDate,
+      expirationDay,
       cardType,
       cardInfo.extensions.extensionRegion.regionId,
       base32TotpSecret,

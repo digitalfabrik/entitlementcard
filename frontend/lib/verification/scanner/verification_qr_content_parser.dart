@@ -48,13 +48,11 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
 
   final fullName = cardInfo.fullName;
   final hashSecretBase64 = const Base64Encoder().convert(verifyCode.hashSecret);
-  final unixInt64ExpirationDate = cardInfo.expiration.date;
-  int? unixExpirationDate;
-  unixExpirationDate = unixInt64ExpirationDate.toInt();
+  final expirationDay = cardInfo.expiration.day;
   final cardType = CardType.values[bavarianCardType.value];
   final regionId = cardInfo.extensions.extensionRegion.regionId;
   final otp = verifyCode.otp;
 
-  final baseCardDetails = BaseCardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId);
+  final baseCardDetails = BaseCardDetails(fullName, hashSecretBase64, expirationDay, cardType, regionId);
   return VerificationCardDetails(baseCardDetails, otp);
 }

@@ -24,7 +24,7 @@ Future<void> saveCardDetails(CardDetails? cardDetails) async {
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
         key: unixExpirationDateKey,
-        value: cardDetails.unixExpirationDate != null ? cardDetails.unixExpirationDate.toString() : "0",
+        value: cardDetails.expirationDate != null ? cardDetails.expirationDay.toString() : "0",
       ),
       storage.write(key: cardTypeKey, value: cardDetails.cardType.index.toString()),
       storage.write(key: totpSecretBase32Key, value: cardDetails.totpSecretBase32),

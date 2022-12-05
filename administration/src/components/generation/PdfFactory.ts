@@ -78,10 +78,10 @@ Ihre digitale Ehrenamtskarte ist da!`,
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
-  let expirationDateInt = Number(info.expiration!.date!);
+  let expirationDateInt = Number(info.expiration!.day!);
   const expirationDate =
    expirationDateInt > 0
-      ? format(fromUnixTime(expirationDateInt), 'dd.MM.yyyy')
+      ? format(fromUnixTime(expirationDateInt * 24 * 60 * 60), 'dd.MM.yyyy')
       : 'unbegrenzt'
   doc.text(
     `Name: ${info!.fullName}

@@ -17,7 +17,12 @@ message BavariaCardTypeExtension {
 }
 
 message Expiration {
-  int64 date = 1;
+  // Expiration day (calculated from 1970-01-01).
+  // Cards are always invalid on 1970-01-01 (because day = 0 is excluded).
+  // The calculated day is inclusive (e.g. if day == 1, then the card is valid on 1970-01-02, but not on 1970-01-03).
+  // Because the data type is unsigned, there are no dates before 1970-01-01.
+  // 2^32days = 11 759 230.8 years.
+  uint32 day = 1;
 }
 
 message CardExtensions {

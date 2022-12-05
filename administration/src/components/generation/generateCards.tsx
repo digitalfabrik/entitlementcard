@@ -24,7 +24,7 @@ const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardB
     activationCodes.map(async activationCode => {
       const cardDetailsHash = await generateHashFromCardDetails(activationCode.hashSecret, activationCode.info!)
       return {
-        expirationDate: activationCode.info!.expiration!.date! || BigInt(0),
+        expirationDate: activationCode.info!.expiration!.day!,
         cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
         totpSecretBase64: uint8ArrayToBase64(activationCode.totpSecret),
         regionId: region.id,

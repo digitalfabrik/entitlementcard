@@ -1,13 +1,6 @@
 import isIE11 from './isIE11'
 import {CardInfo} from "../generated/card_pb";
 
-export function bigIntToNumber64bit (a: bigint): ArrayBuffer {
-  const buffer = new ArrayBuffer(8);
-  const dataView = new DataView(buffer);
-  dataView.setBigInt64(0, a);
-  return buffer;
-}
-
 const cardInfoToBinary = (cardInfo: CardInfo) => {
   const fullNameWithoutZero = new TextEncoder().encode(cardInfo.fullName)
   const expirationDateBytes = 8 // int64
@@ -15,17 +8,17 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
   const regionIdBytes = 4 // int32
   const fullNameBytes = fullNameWithoutZero.byteLength + 1 // zero terminated string
   const binary = new Uint8Array(expirationDateBytes + cardTypeBytes + regionIdBytes + fullNameBytes)
-  const binaryView = new DataView(binary.buffer)
+  const view = new DataView(binary.buffer)
 
   let offset = 0
 
-  binary.set(new Uint8Array(bigIntToNumber64bit(cardInfo.expiration!.date!)), offset)
+  view.setUint32(offset, cardInfo.expiration!.day!);
   offset += expirationDateBytes
 
-  binaryView.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
+  view.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
   offset += cardTypeBytes
 
-  binaryView.setInt32(offset, cardInfo.extensions?.extensionRegion!.regionId!, true)
+  view.setInt32(offset, cardInfo.extensions?.extensionRegion!.regionId!, true)
   offset += regionIdBytes
   
   // FIXME: Include all the other extensions

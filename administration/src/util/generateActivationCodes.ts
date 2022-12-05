@@ -1,4 +1,4 @@
-import { getUnixTime } from 'date-fns'
+import { getUnixTime, secondsToHours } from 'date-fns'
 import isIE11 from './isIE11'
 import getRandomValues from './getRandomValues'
 import {
@@ -34,7 +34,7 @@ const generateActivationCodes = (
       expiration:
         expirationDate !== null
           ? new Expiration({
-              date: BigInt(getUnixTime(expirationDate)),
+              day: getUnixTime(expirationDate) / 60 / 60 / 24,
             })
           : undefined,
       extensions: new CardExtensions({

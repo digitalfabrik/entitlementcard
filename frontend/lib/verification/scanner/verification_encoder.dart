@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/verification/verification_card_details.dart';
-import 'package:fixnum/fixnum.dart';
 
 // TODO (Max): Refactor into Dart extension
 String encodeVerificationCardDetails(VerificationCardDetails verificationCardDetails) {
@@ -12,7 +11,7 @@ String encodeVerificationCardDetails(VerificationCardDetails verificationCardDet
   final verifyCode = CardVerifyCode(
     info: CardInfo(
         fullName: cardDetails.fullName,
-        expiration: Expiration(date: Int64(cardDetails.unixExpirationDate ?? 0)), 
+        expiration: Expiration(day: cardDetails.expirationDay ?? 0), 
         extensions: CardExtensions(
           extensionRegion: RegionExtension(regionId: cardDetails.regionId),
           extensionBavariaCardType: BavariaCardTypeExtension(
@@ -36,10 +35,10 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
 
   final fullName = cardInfo.fullName;
   final randomBytes = const Base64Encoder().convert(verifyCode.hashSecret);
-  final unixExpirationTime = cardInfo.expiration.date.toInt();
+  final expirationDay = cardInfo.expiration.day;
   final cardType = CardType.values[cardInfo.extensions.extensionBavariaCardType.cardType.value];
   final regionId = cardInfo.extensions.extensionRegion.regionId;
   final otp = verifyCode.otp;
 
-  return VerificationCardDetails(BaseCardDetails(fullName, randomBytes, unixExpirationTime, cardType, regionId), otp);
+  return VerificationCardDetails(BaseCardDetails(fullName, randomBytes, expirationDay, cardType, regionId), otp);
 }
