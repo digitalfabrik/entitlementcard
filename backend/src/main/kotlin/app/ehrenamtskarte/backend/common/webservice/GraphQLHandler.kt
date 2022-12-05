@@ -77,6 +77,14 @@ class GraphQLHandler(
         }
     }
 
+    private fun getIpAdress(context: Context): String {
+        val xRealIp = context.header("X-Real-IP")
+        val xForwardedFor = context.header("X-Forwarded-For")
+        val remoteAddress = context.req().remoteAddr
+
+        return listOf(xRealIp, xForwardedFor, remoteAddress).firstNotNullOf { it }
+    }
+
     /**
      * Get any errors and data from [executionResult].
      */
@@ -109,9 +117,9 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(context: Context, files: List<Part>, applicationData: File) =
+    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
         try {
-            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, backendConfiguration)
+            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, remoteIp, backendConfiguration)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
@@ -119,6 +127,7 @@ class GraphQLHandler(
                     applicationData,
                     null,
                     files,
+                    remoteIp,
                     backendConfiguration
                 )
 
@@ -133,7 +142,8 @@ class GraphQLHandler(
         // Execute the query against the schema
         try {
             val (payload, files) = getPayload(context)
-            val graphQLContext = getGraphQLContext(context, files, applicationData)
+            val remoteIp = getIpAdress(context)
+            val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData)
 
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =
