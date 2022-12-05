@@ -25,20 +25,21 @@ message Expiration {
   uint32 day = 1;
 }
 
+// All fields in this extension are explicitly optional, handle with care!
 message CardExtensions {
-  optional RegionExtension extension_region = 1;
-  optional BirthdayExtension extension_birthday = 2;
-  optional VAGNumberExtension extension_vag_number = 3;
-  optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
+  RegionExtension extension_region = 1;
+  BirthdayExtension extension_birthday = 2;
+  VAGNumberExtension extension_vag_number = 3;
+  BavariaCardTypeExtension extension_bavaria_card_type = 4;
 }
 
 message CardInfo {
   // Basic information
   string fullName = 1;
-  optional Expiration expiration = 2;
+  Expiration expiration = 2;
 
   // Extensions
-  optional CardExtensions extensions = 3;
+  CardExtensions extensions = 3;
 }
 
 message CardActivationCode {
