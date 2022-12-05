@@ -48,7 +48,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
       const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
       if (result.errors) {
         console.error(result.errors)
-        appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
+        appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung' })
       } else {
         appToaster?.show({
           intent: 'success',
