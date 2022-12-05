@@ -13,7 +13,9 @@ const val TOTP_SECRET_LENGTH = 20
 
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
-    val expirationDate = long("expirationDate") // Seconds since 1970
+    // Using long because unsigned types are not stable
+    // Days since 1970
+    val expirationDay = long("expirationDay")
     val issueDate = long("issueDate")
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
@@ -24,24 +26,28 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CardEntity>(Cards)
 
     var totpSecret by Cards.totpSecret
-    private var expirationDateEpochSeconds by Cards.expirationDate
+    private var expirationDay by Cards.expirationDay
     private var issueDateEpochSeconds by Cards.issueDate
     var revoked by Cards.revoked
     var cardDetailsHash by Cards.cardDetailsHash
     var regionId by Cards.regionId
 
     var expirationDate: LocalDateTime?
-        get() = if (expirationDateEpochSeconds > 0) LocalDateTime.ofEpochSecond(
-            expirationDateEpochSeconds,
+        get() = if (expirationDay > 0) LocalDateTime.ofEpochSecond(
+            expirationDay * 24L * 60L * 60L,
             0,
             ZoneOffset.UTC
         ) else null
         set(value) {
-            expirationDateEpochSeconds = value?.toEpochSecond(ZoneOffset.UTC) ?: 0
+            expirationDay = if (value != null) {
+                value.toEpochSecond(ZoneOffset.UTC) / 24 / 60 / 60
+            } else {
+                0
+            }
         }
 
     var issueDate: LocalDateTime
-        get() = LocalDateTime.ofEpochSecond(expirationDateEpochSeconds, 0, ZoneOffset.UTC)
+        get() = LocalDateTime.ofEpochSecond(issueDateEpochSeconds, 0, ZoneOffset.UTC)
         set(value) {
             issueDateEpochSeconds = value.toEpochSecond(ZoneOffset.UTC)
         }

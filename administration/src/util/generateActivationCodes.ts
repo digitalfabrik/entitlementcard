@@ -35,7 +35,7 @@ const generateActivationCodes = (
       expiration:
         expirationDate !== null
           ? new Expiration({
-              day: getUnixTime(expirationDate) / 60 / 60 / 24,
+              day: Math.floor(getUnixTime(expirationDate) / 60 / 60 / 24),
             })
           : undefined,
       extensions: new CardExtensions({
