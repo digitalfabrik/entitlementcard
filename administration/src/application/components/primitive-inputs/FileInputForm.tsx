@@ -1,10 +1,11 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip, FormHelperText } from '@mui/material'
-import { ChangeEventHandler, useEffect, useRef } from 'react'
+import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
 import globalArrayBuffersManager from '../../globalArrayBuffersManager'
 import { Form } from '../../FormType'
 import { useSnackbar } from 'notistack'
+import { FormContext } from '../SteppedSubForms'
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',
@@ -15,11 +16,23 @@ const defaultExtensionsByMIMEType = {
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
-const FileInputButton = ({ onChange, label }: { onChange: ChangeEventHandler<HTMLInputElement>; label: string }) => {
+const FileInputButton = ({
+  onChange,
+  label,
+  disabled,
+}: {
+  onChange: ChangeEventHandler<HTMLInputElement>
+  label: string
+  disabled: boolean
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   return (
     <>
-      <Button startIcon={<AttachFile />} variant='contained' onClick={() => inputRef.current?.click()}>
+      <Button
+        startIcon={<AttachFile />}
+        variant='contained'
+        onClick={() => inputRef.current?.click()}
+        disabled={disabled}>
         {label}
       </Button>
       <input ref={inputRef} type='file' accept='.pdf,.jpeg,.jpg,.png' onChange={onChange} hidden />
@@ -51,6 +64,7 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
   },
   Component: ({ state, setState }) => {
     const { enqueueSnackbar } = useSnackbar()
+    const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = FileInputForm.getValidatedInput(state)
     const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
       const file = e.target.files![0]
@@ -87,13 +101,21 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
     if (state === null) {
       return (
         <>
-          <FileInputButton onChange={onInputChange} label='Datei Anhängen' />
-          {validationResult.type === 'error' ? <FormHelperText error>{validationResult.message}</FormHelperText> : null}
+          <FileInputButton onChange={onInputChange} label='Datei Anhängen' disabled={disableAllInputs} />
+          {showAllErrors && validationResult.type === 'error' ? (
+            <FormHelperText error>{validationResult.message}</FormHelperText>
+          ) : null}
         </>
       )
     }
 
-    return <Chip label={`Datei angehängt`} icon={<Attachment />} onDelete={() => setState(() => null)} />
+    return (
+      <Chip
+        label={`Datei angehängt`}
+        icon={<Attachment />}
+        onDelete={disableAllInputs ? undefined : () => setState(() => null)}
+      />
+    )
   },
 }
 

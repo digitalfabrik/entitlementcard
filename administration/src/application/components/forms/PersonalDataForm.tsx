@@ -5,6 +5,7 @@ import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortText
 import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
+import CustomDivider from '../CustomDivider'
 
 export type PersonalDataFormState = {
   forenames: ShortTextFormState
@@ -64,7 +65,6 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
   },
   Component: ({ state, setState }) => (
     <>
-      <h3>Persönliche Angaben</h3>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
           <ShortTextForm.Component
@@ -81,15 +81,12 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
           />
         </div>
       </div>
-      <DateForm.Component
-        state={state.dateOfBirth}
-        setState={useUpdateStateCallback(setState, 'dateOfBirth')}
-        label='Geburtsdatum'
-      />
+      <CustomDivider label='Adresse (Erstwohnsitz)' />
       <AddressForm.Component
         state={state.addressFormState}
         setState={useUpdateStateCallback(setState, 'addressFormState')}
       />
+      <CustomDivider label='Weitere Angaben' />
       <EmailForm.Component
         state={state.emailAddress}
         setState={useUpdateStateCallback(setState, 'emailAddress')}
@@ -99,6 +96,11 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
         state={state.telephone}
         setState={useUpdateStateCallback(setState, 'telephone')}
         label='Telefon'
+      />
+      <DateForm.Component
+        state={state.dateOfBirth}
+        setState={useUpdateStateCallback(setState, 'dateOfBirth')}
+        label='Geburtsdatum'
       />
     </>
   ),
