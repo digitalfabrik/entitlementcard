@@ -57,7 +57,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
       }
     } catch (e) {
       console.error(e)
-      appToaster?.show({ intent: 'danger', message: 'Fehler beim Speicher der Datenschutzerklärung' })
+      appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung' })
     }
   }
 
