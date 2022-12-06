@@ -2,20 +2,9 @@ import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
 import { Button } from '@mui/material'
-import styled from 'styled-components'
 import BasicDialog from "../BasicDialog";
 import { useState } from 'react'
 import {dataPrivacyBaseHeadline, dataPrivacyBaseText} from "../../../constants/dataPrivacyBase";
-
-const PrivacyPolicyButton = styled(Button)`
-  text-transform: capitalize !important;
-  padding: 0 !important;
-  vertical-align: unset !important;
-`
-
-const PrivacyPolicyContainer = styled.div`
-align-self: center;
-`
 
 const acceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
@@ -64,16 +53,17 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
   Component: ({ state, setState, privacyPolicy }) => {
       const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false);
       const PrivacyLabel = (
-          <PrivacyPolicyContainer>
+          <div style={{alignSelf: 'center'}}>
               Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung
               gespeichert werden und akzeptiere die{' '}
-              <PrivacyPolicyButton
+              <Button
                   variant='text'
+                  style={{textTransform: 'capitalize', padding: 0, verticalAlign: 'unset'}}
                   onClick={() => setOpenPrivacyPolicy(true)
                   }>
                   Datenschutzerklärung
-              </PrivacyPolicyButton>
-          </PrivacyPolicyContainer>
+              </Button>
+          </div>
       )
       return(
           <>

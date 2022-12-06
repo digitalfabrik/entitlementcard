@@ -50,7 +50,7 @@ const Main = styled.div`
   justify-content: center;
 `
 
-const isAdmin = (role: Role): boolean => role === Role.ProjectAdmin || role === Role.RegionAdmin
+const isRegionAdmin = (role: Role): boolean => role === Role.RegionAdmin
 
 const App = () => (
   <ProjectConfigProvider>
@@ -84,7 +84,7 @@ const App = () => (
                                 <Route
                                   path={'/region'}
                                   element={
-                                    isAdmin(authData.administrator.role) ? <RegionsController /> : <Navigate to={'/'} />
+                                    isRegionAdmin(authData.administrator.role) ? <RegionsController /> : <Navigate to={'/'} />
                                   }
                                 />
                                 <Route path={'/eak-generation'} element={<GenerationController />} />

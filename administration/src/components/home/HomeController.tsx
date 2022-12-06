@@ -36,10 +36,12 @@ const HomeController = () => {
           <NavLink to={'/users'}>
             <StyledButton icon='people' text='Benutzer verwalten' />
           </NavLink>
-          <NavLink to={'/region'} reloadDocument>
-            <StyledButton icon='path-search' text='Region verwalten' />
-          </NavLink>
         </>
+      ) : null}
+      {role === Role.RegionAdmin ? (
+        <NavLink to={'/region'} reloadDocument>
+            <StyledButton icon='path-search' text='Region verwalten' />
+        </NavLink>
       ) : null}
     </Container>
   )
