@@ -6,7 +6,7 @@ import { FormContext } from '../SteppedSubForms'
 export type CheckboxFormState = { checked: boolean }
 type ValidatedInput = boolean
 type Options = { required: true; notCheckedErrorMessage: string } | { required: false }
-type AdditionalProps = { label: string | ReactElement}
+type AdditionalProps = { label: string | ReactElement }
 const CheckboxForm: Form<CheckboxFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],

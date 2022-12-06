@@ -18,7 +18,7 @@ export type ApplicationFormState = {
 }
 type ValidatedInput = [RegionId, BlueCardApplicationInput]
 type Options = {}
-type AdditionalProps = { onSubmit: () => void; loading: boolean, privacyPolicy: string }
+type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
 const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     activeStep: 0,
@@ -76,7 +76,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
       { cardType: state.stepCardType.cardType },
       {}
     )
-    const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, {privacyPolicy})
+    const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, { privacyPolicy })
     return (
       <SteppedSubForms
         activeStep={state.activeStep}

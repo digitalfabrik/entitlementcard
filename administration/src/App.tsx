@@ -84,7 +84,11 @@ const App = () => (
                                 <Route
                                   path={'/region'}
                                   element={
-                                    isRegionAdmin(authData.administrator.role) ? <RegionsController /> : <Navigate to={'/'} />
+                                    isRegionAdmin(authData.administrator.role) ? (
+                                      <RegionsController />
+                                    ) : (
+                                      <Navigate to={'/'} />
+                                    )
                                   }
                                 />
                                 <Route path={'/eak-generation'} element={<GenerationController />} />

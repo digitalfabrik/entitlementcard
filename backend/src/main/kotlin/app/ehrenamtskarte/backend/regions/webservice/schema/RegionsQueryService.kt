@@ -26,7 +26,7 @@ class RegionsQueryService {
     @GraphQLDescription("Returns region data for specific region.")
     fun regionByRegionId(regionId: Int): Region = transaction {
         val regionEntity = RegionsRepository.findRegionById(regionId)
-        
+
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 }

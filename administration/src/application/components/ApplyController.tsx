@@ -68,8 +68,16 @@ const ApplyController = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''} />
-        <DialogActions>{loading || loadingPolicy ? null : <DiscardAllInputsButton discardAll={discardAll} />}</DialogActions>
+        <ApplicationForm.Component
+          state={state}
+          setState={setState}
+          onSubmit={submit}
+          loading={loading}
+          privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+        />
+        <DialogActions>
+          {loading || loadingPolicy ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+        </DialogActions>
       </div>
     </div>
   )

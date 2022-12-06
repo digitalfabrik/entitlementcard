@@ -33,10 +33,10 @@ const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)
   }
 `
 
-const CharCounter = styled.span<{hasError: boolean}>`
+const CharCounter = styled.span<{ hasError: boolean }>`
   text-align: center;
   align-self: flex-start;
-  color: ${props=>props.hasError ? 'red': 'black'};
+  color: ${props => (props.hasError ? 'red' : 'black')};
 `
 
 type RegionOverviewProps = {
@@ -50,16 +50,15 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy] = useUpdateDataPolicyMutation({})
-  const maxCharsExceeded = dataPrivacyText.length>MAX_CHARS
+  const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 
   const onSave = async () => {
-    if(maxCharsExceeded) {
+    if (maxCharsExceeded) {
       appToaster?.show({
         intent: 'danger',
-        message: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`
+        message: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`,
       })
-    }
-    else {
+    } else {
       try {
         const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
         if (result.errors) {
@@ -93,7 +92,9 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
           rows={20}
           placeholder={'Fügen Sie hier Ihre Datenschutzerklärung ein...'}
         />
-        <CharCounter hasError={maxCharsExceeded}>{dataPrivacyText.length}/{MAX_CHARS}</CharCounter>
+        <CharCounter hasError={maxCharsExceeded}>
+          {dataPrivacyText.length}/{MAX_CHARS}
+        </CharCounter>
       </Content>
     </>
   )
