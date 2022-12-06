@@ -27,7 +27,6 @@ const ApplyController = () => {
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  // TODO add loading handler
   const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
     onError: error => console.error(error),
@@ -70,7 +69,7 @@ const ApplyController = () => {
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
         <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''} />
-        <DialogActions>{loading ? null : <DiscardAllInputsButton discardAll={discardAll} />}</DialogActions>
+        <DialogActions>{loading || loadingPolicy ? null : <DiscardAllInputsButton discardAll={discardAll} />}</DialogActions>
       </div>
     </div>
   )

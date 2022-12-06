@@ -33,31 +33,48 @@ const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)
   }
 `
 
+const CharCounter = styled.span<{hasError: boolean}>`
+  text-align: center;
+  align-self: flex-start;
+  color: ${props=>props.hasError ? 'red': 'black'};
+`
+
 type RegionOverviewProps = {
   dataPrivacyPolicy: string
   regionId: number
 }
 
+const MAX_CHARS = 20000
+
 const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy] = useUpdateDataPolicyMutation({})
+  const maxCharsExceeded = dataPrivacyText.length>MAX_CHARS
 
   const onSave = async () => {
-    try {
-      const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
-      if (result.errors) {
-        console.error(result.errors)
+    if(maxCharsExceeded) {
+      appToaster?.show({
+        intent: 'danger',
+        message: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`
+      })
+    }
+    else {
+      try {
+        const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
+        if (result.errors) {
+          console.error(result.errors)
+          appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung.' })
+        } else {
+          appToaster?.show({
+            intent: 'success',
+            message: 'Datenschutzerklärung erfolgreich geändert.',
+          })
+        }
+      } catch (e) {
+        console.error(e)
         appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung' })
-      } else {
-        appToaster?.show({
-          intent: 'success',
-          message: 'Datenschutzerklärung erfolgreich geändert.',
-        })
       }
-    } catch (e) {
-      console.error(e)
-      appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung' })
     }
   }
 
@@ -76,6 +93,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
           rows={20}
           placeholder={'Fügen Sie hier Ihre Datenschutzerklärung ein...'}
         />
+        <CharCounter hasError={maxCharsExceeded}>{dataPrivacyText.length}/{MAX_CHARS}</CharCounter>
       </Content>
     </>
   )
