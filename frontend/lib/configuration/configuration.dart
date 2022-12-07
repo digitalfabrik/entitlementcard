@@ -4,7 +4,6 @@ class Configuration extends InheritedWidget {
   final String mapStyleUrl;
   final String graphqlUrl;
   final String projectId;
-  final bool showVerification;
   final bool showDevSettings;
 
   const Configuration({
@@ -12,7 +11,6 @@ class Configuration extends InheritedWidget {
     required this.mapStyleUrl,
     required this.graphqlUrl,
     required this.projectId,
-    required this.showVerification,
     required this.showDevSettings,
     required super.child,
   });
@@ -22,7 +20,6 @@ class Configuration extends InheritedWidget {
       mapStyleUrl != oldWidget.mapStyleUrl ||
       graphqlUrl != oldWidget.graphqlUrl ||
       projectId != oldWidget.projectId ||
-      showVerification != oldWidget.showVerification ||
       showDevSettings != oldWidget.showDevSettings;
 
   static Configuration of(BuildContext context) {
