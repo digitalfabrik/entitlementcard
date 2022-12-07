@@ -8,7 +8,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:label="@string/BUILD_CONFIG_APP_NAME"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/${icon}"
+        android:roundIcon="@mipmap/${icon}_round">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

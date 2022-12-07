@@ -2,7 +2,7 @@ import BuildConfigType, {CommonBuildConfigType} from "../types";
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
-    appIcon: "",
+    appIcon: "app_icon_bayern",
     projectId: {
         production: "bayern.ehrenamtskarte.app",
         showcase: "showcase.entitlementcard.app",
