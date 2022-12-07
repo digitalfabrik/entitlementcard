@@ -1,7 +1,7 @@
 import localforage from 'localforage'
 import { useEffect, useRef, useState } from 'react'
 
-const globalArrayBuffersKey = 'array-buffers'
+export const globalArrayBuffersKey = 'array-buffers'
 
 class ArrayBuffersManager {
   private arrayBuffers: { key: number; value: ArrayBuffer }[] = []

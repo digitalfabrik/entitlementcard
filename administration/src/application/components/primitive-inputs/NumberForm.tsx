@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
+import { FormContext } from '../SteppedSubForms'
 
 export type NumberFormState = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
@@ -18,6 +19,7 @@ const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
   },
   Component: ({ state, setState, label, options, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
+    const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = NumberForm.getValidatedInput(state, options)
     const isInvalid = validationResult.type === 'error'
 
@@ -29,7 +31,8 @@ const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
         type='number'
         label={label}
         required
-        error={touched && isInvalid}
+        disabled={disableAllInputs}
+        error={(showAllErrors || touched) && isInvalid}
         value={state.value}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}

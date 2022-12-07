@@ -1,5 +1,3 @@
-import { Card, CardContent, Checkbox, FormControlLabel, FormGroup, IconButton, Tooltip } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { AmountOfWorkUnit, WorkAtOrganizationInput } from '../../../generated/graphql'
 import { useState } from 'react'
 import ConfirmDialog from '../ConfirmDialog'
@@ -10,38 +8,39 @@ import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
 import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
 import NumberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
 import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import CustomDivider from '../CustomDivider'
+import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
 
-const DeleteActivityButton = ({ onDelete }: { onDelete?: () => void }) => {
+const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  return onDelete === undefined ? null : (
+  return (
     <>
-      <Tooltip title='Aktivität löschen'>
-        <IconButton
-          onClick={() => setDeleteDialogOpen(true)}
-          style={{ position: 'absolute', top: '0', right: '0' }}
-          aria-label='Aktivität löschen'>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
-      <ConfirmDialog
-        open={deleteDialogOpen}
-        onUpdateOpen={setDeleteDialogOpen}
-        confirmButtonText='Löschen'
-        content='Wollen Sie die Aktivität unwiderruflich löschen?'
-        onConfirm={onDelete}
-        title={'Aktivität löschen?'}
+      <CustomDivider
+        label='Ehrenamtliche Tätigkeit'
+        onDelete={onDelete === undefined ? undefined : () => setDeleteDialogOpen(true)}
       />
+      {onDelete === undefined ? null : (
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          onUpdateOpen={setDeleteDialogOpen}
+          confirmButtonText='Löschen'
+          content='Wollen Sie die Tätigkeit unwiderruflich löschen?'
+          onConfirm={onDelete}
+          title={'Tätigkeit löschen?'}
+        />
+      )}
     </>
   )
 }
 
 const amountOfWorkOptions = { min: 0, max: 100 }
+const paymentOptions = { required: false } as const
 
 export type WorkAtOrganizationFormState = {
   organization: OrganizationFormState
   amountOfWork: NumberFormState
   activeSince: DateFormState
-  payment: boolean
+  payment: CheckboxFormState
   responsibility: ShortTextFormState
   certificate: FileInputFormState
 }
@@ -53,7 +52,7 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     organization: OrganizationForm.initialState,
     amountOfWork: NumberForm.initialState,
     activeSince: DateForm.initialState,
-    payment: false,
+    payment: CheckboxForm.initialState,
     responsibility: ShortTextForm.initialState,
     certificate: FileInputForm.initialState,
   },
@@ -70,12 +69,14 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     const activeSince = DateForm.getValidatedInput(state.activeSince)
     const responsibility = ShortTextForm.getValidatedInput(state.responsibility)
     const certificate = FileInputForm.getValidatedInput(state.certificate)
+    const payment = CheckboxForm.getValidatedInput(state.payment, paymentOptions)
     if (
       organization.type === 'error' ||
       amountOfWork.type === 'error' ||
       activeSince.type === 'error' ||
       responsibility.type === 'error' ||
-      certificate.type === 'error'
+      certificate.type === 'error' ||
+      payment.type === 'error'
     )
       return { type: 'error' }
     return {
@@ -87,62 +88,54 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
         workSinceDate: activeSince.value,
         responsibility: responsibility.value,
         certificate: certificate.value,
-        payment: state.payment,
+        payment: payment.value,
       },
     }
   },
   Component: ({ state, setState, onDelete }) => (
-    <Card elevation={4} style={{ margin: '16px 0' }}>
-      <CardContent style={{ position: 'relative' }}>
-        <DeleteActivityButton onDelete={onDelete} />
-        <OrganizationForm.Component
-          state={state.organization}
-          setState={useUpdateStateCallback(setState, 'organization')}
-        />
-        <h4>Angaben zur Tätigkeit</h4>
-        <ShortTextForm.Component
-          state={state.responsibility}
-          setState={useUpdateStateCallback(setState, 'responsibility')}
-          label='Ehrenamtliche Tätigkeit'
-        />
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-          <div style={{ flex: '2' }}>
-            <DateForm.Component
-              label='Tätig seit'
-              state={state.activeSince}
-              setState={useUpdateStateCallback(setState, 'activeSince')}
-            />
-          </div>
-          <div style={{ flex: '3' }}>
-            <NumberForm.Component
-              label='Arbeitsstunden pro Woche (Durchschnitt)'
-              state={state.amountOfWork}
-              setState={useUpdateStateCallback(setState, 'amountOfWork')}
-              options={amountOfWorkOptions}
-              minWidth={250}
-            />
-          </div>
-        </div>
-        <FormGroup>
-          <FormControlLabel
-            style={{ margin: '8px 0' }}
-            control={
-              <Checkbox
-                checked={state.payment}
-                onChange={e => setState(state => ({ ...state, payment: e.target.checked }))}
-              />
-            }
-            label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt.'
+    <>
+      <ActivityDivider onDelete={onDelete} />
+      <OrganizationForm.Component
+        state={state.organization}
+        setState={useUpdateStateCallback(setState, 'organization')}
+      />
+      <h4>Angaben zur Tätigkeit</h4>
+      <ShortTextForm.Component
+        state={state.responsibility}
+        setState={useUpdateStateCallback(setState, 'responsibility')}
+        label='Ehrenamtliche Tätigkeit'
+      />
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+        <div style={{ flex: '2' }}>
+          <DateForm.Component
+            label='Tätig seit'
+            state={state.activeSince}
+            setState={useUpdateStateCallback(setState, 'activeSince')}
           />
-        </FormGroup>
-        <h4>Tätigkeitsnachweis</h4>
-        <p>
-          Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Dieser darf maximal{' '}
-          {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein. Wählen Sie eine Datei im JPG, PNG oder PDF Format.
-        </p>
-        <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
-      </CardContent>
-    </Card>
+        </div>
+        <div style={{ flex: '3' }}>
+          <NumberForm.Component
+            label='Arbeitsstunden pro Woche (Durchschnitt)'
+            state={state.amountOfWork}
+            setState={useUpdateStateCallback(setState, 'amountOfWork')}
+            options={amountOfWorkOptions}
+            minWidth={250}
+          />
+        </div>
+      </div>
+      <CheckboxForm.Component
+        state={state.payment}
+        setState={useUpdateStateCallback(setState, 'payment')}
+        label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt.'
+        options={paymentOptions}
+      />
+      <h4>Tätigkeitsnachweis</h4>
+      <p>
+        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal{' '}
+        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
+      </p>
+      <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+    </>
   ),
 }
 
