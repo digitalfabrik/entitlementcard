@@ -26,6 +26,7 @@ const SuccessContent = styled.div`
   white-space: pre-line;
   display: flex;
   justify-content: center;
+  margin-bottom: 1rem;
 `
 
 const ApplyController = () => {
@@ -91,7 +92,11 @@ const ApplyController = () => {
         <DialogActions>
           {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
           {formSubmitted && (
-            <Button variant='outlined' endIcon={<OpenInNew />} onClick={onNavigateBackToApp}>
+            <Button
+              style={{ margin: '0 auto' }}
+              variant='outlined'
+              endIcon={<OpenInNew />}
+              onClick={onNavigateBackToApp}>
               Zurück zur App
             </Button>
           )}
