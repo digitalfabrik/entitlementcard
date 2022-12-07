@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
-import { DialogActions } from '@mui/material'
+import { Button, DialogActions } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
@@ -13,6 +13,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import getMobileOperatingSystem from '../../util/getMobileOperatingSystem'
+import { OpenInNew } from '@mui/icons-material'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -27,13 +29,13 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = () => {
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -69,16 +71,31 @@ const ApplyController = () => {
     setFormSubmitted(true)
     setState(() => ApplicationForm.initialState)
   }
-
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
             Sie können das Fenster schließen.`
+
+  const onNavigateBackToApp = (): void => {
+    console.log(getMobileOperatingSystem())
+    // TODO add deeplink
+  }
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h2 style={{ textAlign: 'center' }}>Blaue Ehrenamtskarte beantragen</h2>
-        <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} />
-        <DialogActions>{loading ? null : <DiscardAllInputsButton discardAll={discardAll} />}</DialogActions>
+        <h2 style={{ textAlign: 'center' }}>{formSubmitted ? 'Erfolgreich gesendet' : 'Ehrenamtskarte beantragen'}</h2>
+        {formSubmitted ? (
+          <SuccessContent>{successText}</SuccessContent>
+        ) : (
+          <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} />
+        )}
+        <DialogActions>
+          {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {formSubmitted && (
+            <Button variant='outlined' endIcon={<OpenInNew />} onClick={onNavigateBackToApp}>
+              Zurück zur App
+            </Button>
+          )}
+        </DialogActions>
       </div>
     </div>
   )
