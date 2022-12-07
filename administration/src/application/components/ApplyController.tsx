@@ -60,16 +60,15 @@ const ApplyController = () => {
     setState(() => ApplicationForm.initialState)
   }
 
+  const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
+            Sie können das Fenster schließen.`
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <h2 style={{ textAlign: 'center' }}>{formSubmitted ? `Erfolgreich gesendet` : `Ehrenamtskarte beantragen`}</h2>
         {formSubmitted ? (
-          <SuccessContent>
-            {`Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
-            Der zuständige Sachebearbeiter wird ihren Antrag prüfen.
-            Weitere Informationen erhalten sie per E-Mail`}
-          </SuccessContent>
+          <SuccessContent>{successText}</SuccessContent>
         ) : (
           <form
             onSubmit={e => {
