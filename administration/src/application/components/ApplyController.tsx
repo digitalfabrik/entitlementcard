@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
-import { Button, DialogActions } from '@mui/material'
+import { DialogActions } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
@@ -13,8 +13,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
-import getMobileOperatingSystem from '../../util/getMobileOperatingSystem'
-import { OpenInNew } from '@mui/icons-material'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -75,11 +73,6 @@ const ApplyController = () => {
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
             Sie können das Fenster schließen.`
 
-  const onNavigateBackToApp = (): void => {
-    console.log(getMobileOperatingSystem())
-    // TODO add deeplink
-  }
-
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
@@ -91,15 +84,6 @@ const ApplyController = () => {
         )}
         <DialogActions>
           {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
-          {formSubmitted && (
-            <Button
-              style={{ margin: '0 auto' }}
-              variant='outlined'
-              endIcon={<OpenInNew />}
-              onClick={onNavigateBackToApp}>
-              Zurück zur App
-            </Button>
-          )}
         </DialogActions>
       </div>
     </div>
