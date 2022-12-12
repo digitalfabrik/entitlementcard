@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.verification.service
 
-import app.ehrenamtskarte.backend.verification.DayUtil.Companion.daysSinceEpochToDate
-import app.ehrenamtskarte.backend.verification.DayUtil.Companion.isOnOrBeforeToday
+import app.ehrenamtskarte.backend.verification.ValidityPeriodUtil.Companion.daysSinceEpochToDate
+import app.ehrenamtskarte.backend.verification.ValidityPeriodUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator

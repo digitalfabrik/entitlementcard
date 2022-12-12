@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
 
-class DayUtil {
+class ValidityPeriodUtil {
     companion object {
         fun isOnOrBeforeToday(maxInclusiveDay: LocalDate, clock: Clock): Boolean {
             // Cards issues for day == 0 are never valid!
