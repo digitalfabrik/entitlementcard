@@ -61,6 +61,21 @@ internal class DayUtilTest {
     fun afterMidnight() {
         val clock = clockWithTime(1970, 1, 7, 0,  30)
         assertFalse(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(5L), clock))
+    }   
+    
+    @Test
+    fun randomDayIsConformantWithAdministrationFrontend() {
+        // Values taken from administration frontend
+        val clock = clockWithTime(2080, 12, 7, 15,  30)
+        assertTrue(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(40518), clock))
+    }
+
+    @Test
+    fun randomDay() {
+        // 30304 was defined in DayUtilTest.kt
+        // "2052, 12, 20" was calculated here and is copied to day.test.ts
+        val clock = clockWithTime(2052, 12, 20, 0, 0)
+        assertTrue(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(30304), clock))
     }
 
     @Test
