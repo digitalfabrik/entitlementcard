@@ -292,8 +292,15 @@ jobs:
       - run: |
           npm run generate-graphql
           npm run generate-protobuf
-          npm run lint
-          npm run build
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm run test
+      - run:
+          name: Build
+          command: npm run build
       - save_cache:
           paths:
             - node_modules
