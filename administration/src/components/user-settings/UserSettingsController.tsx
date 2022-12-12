@@ -47,7 +47,7 @@ const UserSettingsController = () => {
 
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  let warnMessage: string | null = validatePasswordInput(newPassword, repeatNewPassword)
+  const warnMessage: string | null = validatePasswordInput(newPassword, repeatNewPassword)
 
   const valid = warnMessage === null
 

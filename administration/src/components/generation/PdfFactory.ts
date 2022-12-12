@@ -78,7 +78,7 @@ Ihre digitale Ehrenamtskarte ist da!`,
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
-  let expirationDateInt = Number(info.expirationDay)
+  const expirationDateInt = Number(info.expirationDay)
   const expirationDate =
     expirationDateInt > 0 ? format(daysSinceEpochToDate(expirationDateInt), 'dd.MM.yyyy') : 'unbegrenzt'
   doc.text(
@@ -104,7 +104,7 @@ Aussteller: ${region.prefix} ${region.name}`,
 }
 
 function checkForeignText(doc: jsPDF, text: string): string | null {
-  let font = doc.getFont()
+  const font = doc.getFont()
 
   for (let i = 0; i < text.length; i++) {
     if (font.metadata.characterToGlyph(text.charCodeAt(i)) === 0) {
@@ -122,14 +122,14 @@ export function generatePdf(font: TTFFont, activationCodes: CardActivationCode[]
     format: 'a4',
   })
 
-  let fontFileName = `${font.name}.ttf`
+  const fontFileName = `${font.name}.ttf`
   doc.addFileToVFS(fontFileName, font.data)
   doc.addFont(fontFileName, font.name, font.fontStyle)
   doc.setFont(font.name)
 
   for (let k = 0; k < activationCodes.length; k++) {
-    let activationCode = activationCodes[k]
-    let unsupportedChar = checkForeignText(doc, activationCode.info!.fullName)
+    const activationCode = activationCodes[k]
+    const unsupportedChar = checkForeignText(doc, activationCode.info!.fullName)
 
     if (unsupportedChar) {
       throw new Exception({
@@ -150,7 +150,7 @@ export function generatePdf(font: TTFFont, activationCodes: CardActivationCode[]
   })
 
   try {
-    let output = doc.output('blob')
+    const output = doc.output('blob')
     return new Blob([output], { type: 'application/pdf' })
   } catch {
     throw new Exception({
