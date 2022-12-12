@@ -10,6 +10,7 @@ data class GraphQLContext(
     val applicationData: File,
     val jwtPayload: JwtPayload?,
     val files: List<Part>,
+    val remoteIp: String,
     val backendConfiguration: BackendConfiguration
 ) : GraphQLContext {
 
