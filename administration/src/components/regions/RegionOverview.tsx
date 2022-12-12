@@ -33,7 +33,7 @@ const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)
   }
 `
 
-const CharCounter = styled.span<{ hasError: boolean }>`
+const CharCounter = styled.span<{ $hasError: boolean }>`
   text-align: center;
   align-self: flex-start;
   color: ${props => (props.hasError ? 'red' : 'black')};
