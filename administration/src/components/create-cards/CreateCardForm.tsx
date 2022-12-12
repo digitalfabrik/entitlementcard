@@ -38,7 +38,7 @@ interface Props {
   onUpdate: (newCardBlueprint: CardBlueprint | null) => void
 }
 
-const EakForm = (props: Props) => {
+const CreateCardForm = (props: Props) => {
   return (
     <div>
       <Card>
@@ -97,4 +97,4 @@ const EakForm = (props: Props) => {
   )
 }
 
-export default EakForm
+export default CreateCardForm

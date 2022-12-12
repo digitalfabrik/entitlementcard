@@ -3,7 +3,7 @@ import Navigation from './components/Navigation'
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import GenerationController from './components/generation/GenerationController'
+import CreateCardsController from './components/create-cards/CreateCardsController'
 import styled from 'styled-components'
 import RegionProvider from './RegionProvider'
 import AuthProvider, { AuthContext } from './AuthProvider'
@@ -17,6 +17,7 @@ import { AppToasterProvider } from './components/AppToaster'
 import UserSettingsController from './components/user-settings/UserSettingsController'
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
+import ManageUsersController from './components/users/ManageUsersController'
 import ApplyController from './application/components/ApplyController'
 import { createUploadLink } from 'apollo-upload-client'
 
@@ -75,7 +76,8 @@ const App = () => (
                                   path={'/applications'}
                                   element={<ApplicationsController token={authData.token} />}
                                 />
-                                <Route path={'/eak-generation'} element={<GenerationController />} />
+                                <Route path={'/create-cards'} element={<CreateCardsController />} />
+                                <Route path={'/users'} element={<ManageUsersController />} />
                                 <Route path={'/user-settings'} element={<UserSettingsController />} />
                                 <Route path={'*'} element={<HomeController />} />
                               </Routes>
