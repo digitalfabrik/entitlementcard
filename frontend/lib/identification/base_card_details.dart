@@ -5,11 +5,13 @@ class BaseCardDetails {
   final String hashSecretBase64;
   final CardType cardType;
   final int regionId;
-  final int? unixExpirationDate;
+
+  // Days since 1970-01-01. For more information refer to the card.proto
+  final int? expirationDay;
   final DateTime? expirationDate;
 
-  BaseCardDetails(this.fullName, this.hashSecretBase64, this.unixExpirationDate, this.cardType, this.regionId)
-      : expirationDate = unixExpirationDate != null && unixExpirationDate > 0
-            ? DateTime.fromMillisecondsSinceEpoch(unixExpirationDate * 1000)
+  BaseCardDetails(this.fullName, this.hashSecretBase64, this.expirationDay, this.cardType, this.regionId)
+      : expirationDate = expirationDay != null && expirationDay > 0
+            ? DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay))
             : null;
 }

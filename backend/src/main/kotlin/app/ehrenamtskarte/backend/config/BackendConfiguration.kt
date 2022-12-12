@@ -3,10 +3,12 @@ package app.ehrenamtskarte.backend.config
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Paths
+import java.time.ZoneId
 
 val possibleBackendConfigurationFiles =
     listOf<File>(
@@ -23,7 +25,8 @@ data class ProjectConfig(
     val importUrl: String,
     val pipelineName: String,
     val administrationBaseUrl: String,
-    val administrationName: String
+    val administrationName: String,
+    val timezone: ZoneId
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
@@ -42,9 +45,10 @@ data class BackendConfiguration(
     }
 
     companion object {
-        private val mapper = ObjectMapper(YAMLFactory()).registerModule(
-            KotlinModule.Builder().build()
-        )
+        private val mapper = ObjectMapper(YAMLFactory())
+            .registerModule(
+                KotlinModule.Builder().build()
+            ).registerModule(JavaTimeModule())
 
         fun load(configFile: File?): BackendConfiguration {
             val fallbackResource = ClassLoader.getSystemResource("config/config.yml")

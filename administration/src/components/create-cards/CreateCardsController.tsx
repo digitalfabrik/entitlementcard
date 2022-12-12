@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { CardCreationModel } from './CardCreationModel'
+import { CardBlueprint } from './CardBlueprint'
 import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
 import { useAppToaster } from '../AppToaster'
@@ -17,7 +17,7 @@ enum Mode {
 }
 
 const CreateCardsController = () => {
-  const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([])
+  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
   const region = useContext(RegionContext)
   const [mode, setMode] = useState(Mode.input)
@@ -34,7 +34,7 @@ const CreateCardsController = () => {
   const confirm = async () => {
     try {
       setMode(Mode.loading)
-      const pdfDataUri = await generateCards(client, cardCreationModels, region)
+      const pdfDataUri = await generateCards(client, cardBlueprints, region)
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setMode(Mode.finished)
     } catch (e) {
@@ -62,11 +62,7 @@ const CreateCardsController = () => {
   }
   if (mode === Mode.input)
     return (
-      <CreateCardsForm
-        cardCreationModels={cardCreationModels}
-        setCardCreationModels={setCardCreationModels}
-        confirm={confirm}
-      />
+      <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
     )
   else if (mode === Mode.loading) return <Spinner />
   // (mode === Mode.finished)
@@ -74,7 +70,7 @@ const CreateCardsController = () => {
     return (
       <GenerationFinished
         reset={() => {
-          setCardCreationModels([])
+          setCardBlueprints([])
           setMode(Mode.input)
         }}
       />

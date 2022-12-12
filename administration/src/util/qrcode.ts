@@ -61,8 +61,8 @@ const createQRCode = (
     // Write the contents of this row of the barcode
     for (let inputX = 0; inputX < inputWidth; inputX++) {
       if (input.get(inputX, inputY) === 1) {
-        let outputX = leftPadding + inputX * multiple
-        let outputY = topPadding + inputY * multiple
+        const outputX = leftPadding + inputX * multiple
+        const outputY = topPadding + inputY * multiple
         renderRect(outputX, outputY, multiple)
       }
     }
