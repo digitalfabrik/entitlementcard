@@ -11,7 +11,7 @@ String encodeVerificationCardDetails(VerificationCardDetails verificationCardDet
   final verifyCode = CardVerifyCode(
     info: CardInfo(
       fullName: cardDetails.fullName,
-      expirationDay: cardDetails.expirationDay ?? 0,
+      expirationDay: cardDetails.expirationDay,
       extensions: CardExtensions(
         extensionRegion: RegionExtension(regionId: cardDetails.regionId),
         extensionBavariaCardType: BavariaCardTypeExtension(
