@@ -32,7 +32,7 @@ object Authorizer {
     }
 
     fun mayViewUsersInRegion(user: AdministratorEntity?, region: RegionEntity): Boolean {
-        return (user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id) ||
+        return mayViewUsersInProject(user, region.projectId.value) ||
             (user?.role == Role.PROJECT_ADMIN.db_value && user.projectId == region.projectId)
     }
 }
