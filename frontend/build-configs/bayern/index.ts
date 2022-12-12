@@ -23,9 +23,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
-    featureFlags: {
-        verification: true,
-    },
+    featureFlags: {},
     applicationUrl: "https://bayern.ehrenamtskarte.app/apply-for-eak",
 };
 

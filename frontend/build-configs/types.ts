@@ -4,9 +4,7 @@ type BuildConfigType = {
     ios: iOSBuildConfigType,
 }
 
-export type FeatureFlagsType = {
-    verification: boolean
-}
+export type FeatureFlagsType = {}
 
 export type ThemeType = {
     primaryColor: string,

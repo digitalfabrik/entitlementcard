@@ -23,9 +23,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:7000",
     },
-    featureFlags: {
-        verification: true,
-    },
+    featureFlags: {},
     applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
 };
 
