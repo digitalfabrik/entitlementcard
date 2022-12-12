@@ -82,7 +82,7 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
         <BasicDialog
           open={openPrivacyPolicy}
           maxWidth='lg'
-          onUpdateOpen={() => setOpenPrivacyPolicy(false)}
+          onUpdateOpen={setOpenPrivacyPolicy}
           title={dataPrivacyBaseHeadline}
           content={`${dataPrivacyBaseText}\n${privacyPolicy}`}
         />
