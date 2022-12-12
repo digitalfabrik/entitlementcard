@@ -23,12 +23,12 @@ class CardMutationService {
             if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                 throw UnauthorizedException()
             }
-
             CardRepository.insert(
                 Base64.decode(card.cardDetailsHashBase64),
                 Base64.decode(card.totpSecretBase64),
                 card.cardExpirationDay,
-                card.regionId
+                card.regionId,
+                user.id.value
             )
         }
         return true

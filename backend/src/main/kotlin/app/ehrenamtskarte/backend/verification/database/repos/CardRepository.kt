@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.verification.database.repos
 
+import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.verification.database.CardEntity
@@ -19,13 +20,14 @@ object CardRepository {
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int) =
+    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int, creatorId: Int) =
         CardEntity.new {
             this.cardDetailsHash = cardDetailsHash
             this.totpSecret = totpSecret
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
+            this.creatorId = EntityID(creatorId, Administrators)
             this.revoked = false
         }
 }
