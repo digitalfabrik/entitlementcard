@@ -20,8 +20,8 @@ object CardVerifier {
     }
 
     private fun verifyCard(card: CardEntity, totp: Int): Boolean {
-        val expirationDate = card.expirationDate
-        return (expirationDate == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDate))) &&
+        val expirationDay = card.expirationDay
+        return (expirationDay == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDay))) &&
             !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
