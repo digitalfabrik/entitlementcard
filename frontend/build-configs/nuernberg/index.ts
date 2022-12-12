@@ -13,19 +13,18 @@ export const nuernbergCommon: CommonBuildConfigType = {
         primaryColor: "#123456",
         secondaryColor: "#123456"
     },
-    mapDataHost: {
-        production: "https://tiles.entitlementcard.app",
-        showcase: "https://tiles.entitlementcard.app",
-        local: "http://localhost:5002",
+    mapStyleUrl: {
+        production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
+        showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
+        local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
-        local: "http://10.0.2.2:7000",
+        local: "http://localhost:7000",
     },
-    featureFlags: {
-        verification: true,
-    }
+    featureFlags: {},
+    applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
 };
 
 let nuernberg: BuildConfigType = {

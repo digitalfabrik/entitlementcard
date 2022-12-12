@@ -174,16 +174,15 @@ scalar Long
 scalar Upload
 
 input AddressInput {
-  addressSupplement: String
-  houseNumber: String!
-  location: String!
-  postalCode: String!
-  street: String!
+  addressSupplement: ShortTextInput
+  houseNumber: ShortTextInput!
+  location: ShortTextInput!
+  postalCode: ShortTextInput!
+  street: ShortTextInput!
 }
 
 input AttachmentInput {
   data: Upload!
-  fileName: String!
 }
 
 input AuthDataInput {
@@ -237,6 +236,16 @@ input CoordinatesInput {
   lng: Float!
 }
 
+"A local date in the format yyyy-MM-dd"
+input DateInput {
+  date: String!
+}
+
+"An email address with at most 300 characters"
+input EmailInput {
+  email: String!
+}
+
 input GoldenCardApplicationInput {
   entitlement: GoldenCardEntitlementInput!
   givenInformationIsCorrectAndComplete: Boolean!
@@ -251,31 +260,31 @@ input GoldenCardEntitlementInput {
 }
 
 input OrganizationContactInput {
-  email: String!
+  email: EmailInput!
   hasGivenPermission: Boolean!
-  name: String!
-  telephone: String!
+  name: ShortTextInput!
+  telephone: ShortTextInput!
 }
 
 input OrganizationInput {
   address: AddressInput!
-  category: String!
+  category: ShortTextInput!
   contact: OrganizationContactInput!
-  name: String!
+  name: ShortTextInput!
   "Link zu Website oder Satzung"
-  website: String
+  website: ShortTextInput
 }
 
 input PersonalDataInput {
   address: AddressInput!
-  dateOfBirth: String!
-  emailAddress: String!
-  forenames: String!
-  gender: String
-  nationality: String
-  surname: String!
-  telephone: String
-  title: String
+  dateOfBirth: DateInput!
+  emailAddress: EmailInput!
+  forenames: ShortTextInput!
+  gender: ShortTextInput
+  nationality: ShortTextInput
+  surname: ShortTextInput!
+  telephone: ShortTextInput
+  title: ShortTextInput
 }
 
 input SearchParamsInput {
@@ -286,12 +295,17 @@ input SearchParamsInput {
   searchText: String
 }
 
+"A String wrapper that expects a non-empty string with at most 300 characters"
+input ShortTextInput {
+  shortText: String!
+}
+
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   amountOfWorkUnit: AmountOfWorkUnit!
   certificate: AttachmentInput
   organization: OrganizationInput!
   payment: Boolean!
-  responsibility: String!
-  workSinceDate: String!
+  responsibility: ShortTextInput!
+  workSinceDate: DateInput!
 }

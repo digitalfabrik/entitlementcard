@@ -4,9 +4,7 @@ type BuildConfigType = {
     ios: iOSBuildConfigType,
 }
 
-export type FeatureFlagsType = {
-    verification: boolean
-}
+export type FeatureFlagsType = {}
 
 export type ThemeType = {
     primaryColor: string,
@@ -21,7 +19,7 @@ export type CommonBuildConfigType = {
         production: string,
         local: string,
     },
-    mapDataHost: {
+    mapStyleUrl: {
         showcase: string,
         production: string,
         local: string,
@@ -30,10 +28,11 @@ export type CommonBuildConfigType = {
         showcase: string,
         production: string,
         local: string,
-    }
+    },
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
+    applicationUrl: string,
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

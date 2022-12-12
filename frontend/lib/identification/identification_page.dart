@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
 import 'package:ehrenamtskarte/identification/card_details_model.dart';
@@ -7,6 +8,7 @@ import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/verification/verification_workflow.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatelessWidget {
   final String title;
@@ -43,14 +45,10 @@ class IdentificationPage extends StatelessWidget {
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
           startActivateQrCode: () => _showActivateQrCode(context),
-          startEakApplication: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text('Not yet implemented.'),
-              ),
-            );
-          },
+          startEakApplication: () => launchUrlString(
+            buildConfig.applicationUrl,
+            mode: LaunchMode.externalApplication,
+          ),
         );
       },
     );

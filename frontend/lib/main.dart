@@ -10,11 +10,11 @@ Future<void> main() async {
 
   debugPrint("Environment: $appEnvironment");
 
-  final mapDataHost = isProduction()
-      ? buildConfig.mapDataHost.production
+  final mapStyleUrl = isProduction()
+      ? buildConfig.mapStyleUrl.production
       : isLocal()
-          ? buildConfig.mapDataHost.local
-          : buildConfig.mapDataHost.showcase;
+          ? buildConfig.mapStyleUrl.local
+          : buildConfig.mapStyleUrl.showcase;
 
   final graphqlUrl = isProduction()
       ? buildConfig.backendUrl.production
@@ -30,10 +30,9 @@ Future<void> main() async {
 
   runApp(
     Configuration(
-      mapStyleUrl: "https://maps.tuerantuer.org/styles/ehrenamtskarte/style.json?tiles=$mapDataHost",
+      mapStyleUrl: mapStyleUrl,
       graphqlUrl: graphqlUrl,
       projectId: projectId,
-      showVerification: buildConfig.featureFlags.verification,
       showDevSettings: kDebugMode,
       child: const App(),
     ),

@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.webservice
 import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParams
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
@@ -27,6 +28,7 @@ import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
+    private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
@@ -75,6 +77,14 @@ class GraphQLHandler(
         }
     }
 
+    private fun getIpAdress(context: Context): String {
+        val xRealIp = context.header("X-Real-IP")
+        val xForwardedFor = context.header("X-Forwarded-For")
+        val remoteAddress = context.req().remoteAddr
+
+        return listOf(xRealIp, xForwardedFor, remoteAddress).firstNotNullOf { it }
+    }
+
     /**
      * Get any errors and data from [executionResult].
      */
@@ -107,13 +117,20 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(context: Context, files: List<Part>, applicationData: File) =
+    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
         try {
-            GraphQLContext(applicationData, JwtService.verifyRequest(context), files)
+            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, remoteIp, backendConfiguration)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(applicationData, null, files)
+                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(
+                    applicationData,
+                    null,
+                    files,
+                    remoteIp,
+                    backendConfiguration
+                )
+
                 else -> throw e
             }
         }
@@ -125,7 +142,8 @@ class GraphQLHandler(
         // Execute the query against the schema
         try {
             val (payload, files) = getPayload(context)
-            val graphQLContext = getGraphQLContext(context, files, applicationData)
+            val remoteIp = getIpAdress(context)
+            val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData)
 
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =

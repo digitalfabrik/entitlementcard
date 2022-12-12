@@ -1,0 +1,150 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "import",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "run",
+                "--args",
+                "import"
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "Run Backend",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend",
+                "env": {
+                    "JWT_SECRET": "Hello World!"
+                }
+            },
+            "args": [
+                "run",
+                "--args",
+                "execute"
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "Run Frontend",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "run",
+                "--dart-define=environment=local"
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "Create Admin Account",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "run",
+                "--args=\"create-admin nuernberg.sozialpass.app REGION_MANAGER region_n@example.com Administrator! 9\""
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "Generate React GraphQL Client",
+            "type": "shell",
+            "command": "npm",
+            "options": {
+                "cwd": "${workspaceFolder}/administration"
+            },
+            "args": [
+                "run",
+                "generate-graphql"
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "GraphQL Schema Export",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "run",
+                "--args=\"graphql-export ../specs/backend-api.graphql\""
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        },
+        {
+            "label": "Format",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "format",
+                "-l",
+                "120",
+                "."
+            ]
+        },
+        {
+            "label": "Select bayern",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "pub",
+                "run",
+                "build_runner",
+                "build",
+                "--delete-conflicting-outputs",
+                "--define",
+                "\"df_build_config=name=bayern\""
+            ]
+        },
+        {
+            "label": "Format backend",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "ktlintformat"
+            ],
+            "problemMatcher": [
+                "$gradle"
+            ]
+        }
+    ]
+}

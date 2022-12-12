@@ -30,14 +30,12 @@ workflows:
           requires:
             - martin-build
       - meta-pack
-      - styles-pack
       - deploy:
           context:
             - entitlementcard-apt
           requires:
             - backend-pack
             - administration-pack
-            - styles-pack
             - martin-pack
             - meta-pack
           filters:
@@ -240,10 +238,17 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init
       - restore_cache:
           key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+      - run:
+          name: Check that GraphQL scheme is stable
+          command: |
+            ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+            git diff --exit-code
       - run: ./gradlew build
       - save_cache:
           paths:
@@ -372,31 +377,6 @@ jobs:
           paths:
             - debs/*.deb
 
-  styles-pack:
-    docker:
-      - image: debian:11 # We deploy on debian -> pack on debian
-    working_directory: ~/project/map-tiles/styles
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: "Setup dependencies"
-          command: |
-            apt-get update
-            apt-get install -y curl
-      - run:
-          name: "Download legacy styles deb"
-          command: curl -o eak-map-styles_0.4785-1_all.deb https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
-      - run:
-          name: "Move .deb to artifacts folder"
-          command: |
-            mkdir -p /tmp/artifacts/debs
-            mv *.deb /tmp/artifacts/debs
-      - persist_to_workspace:
-          root: /tmp/artifacts
-          paths:
-            - debs/*.deb
-
   martin-pack:
     docker:
       - image: debian:11 # We deploy on debian -> pack on debian
@@ -409,6 +389,7 @@ jobs:
       - run:
           name: "Build .deb"
           command: |
+            cp ~/project/docker/martin-config.yaml config.yaml
             cp /tmp/workspace/martin/martin .
             ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
       - run:
@@ -430,7 +411,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-map-styles, eak-martin"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs

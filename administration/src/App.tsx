@@ -1,6 +1,6 @@
 import React from 'react'
 import Navigation from './components/Navigation'
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import CreateCardsController from './components/create-cards/CreateCardsController'
@@ -18,14 +18,14 @@ import UserSettingsController from './components/user-settings/UserSettingsContr
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
 import ManageUsersController from './components/users/ManageUsersController'
+import ApplyController from './application/components/ApplyController'
+import { createUploadLink } from 'apollo-upload-client'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
 }
 
-const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_API_BASE_URL,
-})
+const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_BASE_URL })
 
 const createAuthLink = (token?: string) =>
   setContext((_, { headers }) => ({
@@ -59,6 +59,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
+                  <Route path={'/apply-for-eak'} element={<ApplyController />} />
                   <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route
                     path={'*'}

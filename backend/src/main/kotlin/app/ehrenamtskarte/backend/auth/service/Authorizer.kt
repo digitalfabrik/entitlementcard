@@ -6,22 +6,22 @@ import app.ehrenamtskarte.backend.regions.database.RegionEntity
 
 object Authorizer {
 
-    fun mayCreateCardInRegion(user: AdministratorEntity?, regionId: Int): Boolean {
-        return user?.regionId?.value == regionId && user.role in setOf(
+    fun mayCreateCardInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.regionId?.value == regionId && user.role in setOf(
             Role.REGION_MANAGER.db_value,
             Role.REGION_ADMIN.db_value
         )
     }
 
-    fun mayViewApplicationsInRegion(user: AdministratorEntity?, regionId: Int): Boolean {
-        return user?.regionId?.value == regionId && user.role in setOf(
+    fun mayViewApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.regionId?.value == regionId && user.role in setOf(
             Role.REGION_MANAGER.db_value,
             Role.REGION_ADMIN.db_value
         )
     }
 
-    fun mayDeleteApplicationsInRegion(user: AdministratorEntity?, regionId: Int): Boolean {
-        return user?.regionId?.value == regionId && user.role in setOf(
+    fun mayDeleteApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.regionId?.value == regionId && user.role in setOf(
             Role.REGION_MANAGER.db_value,
             Role.REGION_ADMIN.db_value
         )
