@@ -1,26 +1,26 @@
 package app.ehrenamtskarte.backend.verification
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
+import java.time.Clock
+import java.time.LocalDate
+import java.time.Month
+import kotlin.math.max
 
 class DayUtil {
     companion object {
-        fun isOnOrBeforeToday(maxInclusiveDay: LocalDateTime): Boolean {
-            // FIXME: verify this and write unit test
-            return !maxInclusiveDay.isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS))
-        }
-        
-        fun dateToDaysSinceEpoch(date: LocalDateTime): Long {
-            return date.toEpochSecond(ZoneOffset.UTC) / 24 / 60 / 60 
+        fun isOnOrBeforeToday(maxInclusiveDay: LocalDate, clock: Clock?): Boolean {
+            // not after includes the current day
+            if (maxInclusiveDay.isEqual(LocalDate.of(1970, Month.JANUARY,1))){
+                return false
+            }
+            return !LocalDate.now(clock).isAfter(maxInclusiveDay)
         }
 
-        fun daysSinceEpochToDate(day: Long): LocalDateTime {
-            return LocalDateTime.ofEpochSecond(
-                day * 24L * 60L * 60L, // FIXME: this is not correct as a day is not always 24h :D
-                0,
-                ZoneOffset.UTC
-            )
+        fun isOnOrBeforeToday(maxInclusiveDay: LocalDate): Boolean {
+            return isOnOrBeforeToday(maxInclusiveDay, null)
+        }
+
+        fun daysSinceEpochToDate(day: Long): LocalDate {
+            return LocalDate.of(1970, Month.JANUARY, 1).plusDays(day);
         }
     }
 }
