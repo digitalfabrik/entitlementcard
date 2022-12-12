@@ -72,7 +72,7 @@ const ApplyController = () => {
           state={state}
           setState={setState}
           onSubmit={submit}
-          loading={loading}
+          loading={loading || loadingPolicy}
           privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
         />
         <DialogActions>
