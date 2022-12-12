@@ -13,9 +13,8 @@ const val TOTP_SECRET_LENGTH = 20
 
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
+    // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
-    // The integer type has a max value of
-    // Days since 1970
     val expirationDay = long("expirationDay").nullable()
     val issueDate = timestamp("issueDate").defaultExpression(CurrentTimestamp())
     val revoked = bool("revoked")

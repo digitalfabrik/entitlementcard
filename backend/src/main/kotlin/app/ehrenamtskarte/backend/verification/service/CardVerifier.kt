@@ -8,20 +8,21 @@ import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
 import javax.crypto.spec.SecretKeySpec
 
 val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    fun verifyCardHash(project: String, cardHash: ByteArray, totp: Int): Boolean {
+    fun verifyCardHash(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHashModel(project, cardHash) } ?: return false
-        return verifyCard(card, totp)
+        return verifyCard(card, totp, timezone)
     }
 
-    private fun verifyCard(card: CardEntity, totp: Int): Boolean {
+    private fun verifyCard(card: CardEntity, totp: Int, timezone: ZoneId): Boolean {
         val expirationDay = card.expirationDay
-        return (expirationDay == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDay))) &&
+        return (expirationDay == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)) &&
             !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
