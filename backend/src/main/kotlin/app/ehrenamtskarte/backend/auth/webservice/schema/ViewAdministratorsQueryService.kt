@@ -4,7 +4,6 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -26,21 +25,14 @@ class ViewAdministratorsQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId)
+            val admin = AdministratorEntity.findById(jwtPayload.userId)
             val projectId = ProjectEntity.find { Projects.project eq project }.single().id.value
-            if (!Authorizer.mayViewUsersInProject(user, projectId)) {
+            if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw UnauthorizedException()
             }
             val administrators = AdministratorEntity.find { Administrators.projectId eq projectId }
 
-            administrators.map {
-                Administrator(
-                    it.id.value,
-                    it.email,
-                    it.regionId?.value,
-                    Role.fromDbValue(it.role)!!
-                )
-            }
+            administrators.map { Administrator.fromDbEntity(it) }
         }
     }
 
@@ -53,21 +45,14 @@ class ViewAdministratorsQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId)
+            val admin = AdministratorEntity.findById(jwtPayload.userId)
             val region = RegionEntity.findById(regionId) ?: throw UnauthorizedException()
-            if (!Authorizer.mayViewUsersInRegion(user, region)) {
+            if (!Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw UnauthorizedException()
             }
             val administrators = AdministratorEntity.find { Administrators.regionId eq regionId }
 
-            administrators.map {
-                Administrator(
-                    it.id.value,
-                    it.email,
-                    it.regionId?.value,
-                    Role.fromDbValue(it.role)!!
-                )
-            }
+            administrators.map { Administrator.fromDbEntity(it) }
         }
     }
 }
