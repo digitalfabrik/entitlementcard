@@ -91,12 +91,12 @@ const CreateCardsForm = (props: Props) => {
       {/* @ts-ignore */}
       <FormsWrapper>
         {cardBlueprints.map(blueprint => (
-            <FormColumn key={blueprint.id}>
-              <EakForm
-                  cardBlueprint={blueprint}
-                  onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}
-              />
-            </FormColumn>
+          <FormColumn key={blueprint.id}>
+            <CreateCardForm
+              cardBlueprint={blueprint}
+              onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}
+            />
+          </FormColumn>
         ))}
         <FormColumn key='AddButton'>
           <AddEakButton onClick={addForm} />

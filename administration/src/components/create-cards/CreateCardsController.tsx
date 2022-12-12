@@ -61,9 +61,7 @@ const CreateCardsController = () => {
     }
   }
   if (mode === Mode.input)
-    return (
-      <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
-    )
+    return <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
   else if (mode === Mode.loading) return <Spinner />
   // (mode === Mode.finished)
   else
