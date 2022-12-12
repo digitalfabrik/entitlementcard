@@ -15,7 +15,7 @@ const HomeController = () => {
           <NavLink to={'/applications'}>
             <Button style={{ margin: '10px' }} icon='form' text='Eingehende Anträge' />
           </NavLink>
-          <NavLink to={'/eak-generation'}>
+          <NavLink to={'/create-cards'}>
             <Button style={{ margin: '10px' }} icon='id-number' text='Karten erstellen' />
           </NavLink>
         </>

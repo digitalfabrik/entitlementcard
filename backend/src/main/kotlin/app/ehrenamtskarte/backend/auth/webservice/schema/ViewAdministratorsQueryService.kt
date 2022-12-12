@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,6 +32,33 @@ class ViewAdministratorsQueryService {
                 throw UnauthorizedException()
             }
             val administrators = AdministratorEntity.find { Administrators.projectId eq projectId }
+
+            administrators.map {
+                Administrator(
+                    it.id.value,
+                    it.email,
+                    it.regionId?.value,
+                    Role.fromDbValue(it.role)!!
+                )
+            }
+        }
+    }
+
+    @GraphQLDescription("Returns all administrators in a region. This function requires the role REGION_ADMIN or PROJECT_ADMIN.")
+    fun getUsersInRegion(
+        regionId: Int,
+        dfe: DataFetchingEnvironment
+    ): List<Administrator> {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        return transaction {
+            val user = AdministratorEntity.findById(jwtPayload.userId)
+            val region = RegionEntity.findById(regionId) ?: throw UnauthorizedException()
+            if (!Authorizer.mayViewUsersInRegion(user, region)) {
+                throw UnauthorizedException()
+            }
+            val administrators = AdministratorEntity.find { Administrators.regionId eq regionId }
 
             administrators.map {
                 Administrator(

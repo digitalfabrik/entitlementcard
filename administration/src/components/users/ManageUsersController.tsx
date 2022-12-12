@@ -1,24 +1,17 @@
-import { Button, ButtonGroup, Card, Spinner } from '@blueprintjs/core'
-import { useContext } from 'react'
-import styled from 'styled-components'
+import { Button, Card, H3, Spinner } from '@blueprintjs/core'
+import { ReactElement, useContext } from 'react'
 import { AuthContext } from '../../AuthProvider'
-import { Role, useGetRegionsQuery, useGetUsersInProjectQuery } from '../../generated/graphql'
+import {
+  Region,
+  Role,
+  useGetRegionsQuery,
+  useGetUsersInProjectQuery,
+  useGetUsersInRegionQuery,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
-
-const UsersTable = styled.table`
-  border-spacing: 0;
-
-  & tbody tr:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  & td,
-  & th {
-    margin: 0;
-    padding: 16px;
-  }
-`
+import UsersTable from './UsersTable'
+import { RegionContext } from '../../RegionProvider'
 
 const RefetchCard = (props: { refetch: () => void }) => {
   return (
@@ -31,8 +24,19 @@ const RefetchCard = (props: { refetch: () => void }) => {
   )
 }
 
+const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
+  return (
+    <StandaloneCenter>
+      <Card style={{ maxWidth: '800px', margin: '16px' }}>
+        <H3>{title}</H3>
+        {children}
+      </Card>
+    </StandaloneCenter>
+  )
+}
+
 const ManageProjectUsers = () => {
-  const projectId = useContext(ProjectConfigContext).projectId
+  const { projectId, name: projectName } = useContext(ProjectConfigContext)
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
   const usersQuery = useGetUsersInProjectQuery({ variables: { project: projectId } })
 
@@ -48,63 +52,42 @@ const ManageProjectUsers = () => {
   const users = usersQuery.data!!.users
 
   return (
-    <StandaloneCenter>
-      <Card style={{ maxWidth: '800px', margin: '16px' }}>
-        <UsersTable>
-          <thead>
-            <tr>
-              <th>E-Mail Adresse</th>
-              <th>Region</th>
-              <th>Rolle</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td>{user.email}</td>
-                <td>{user.regionId === null ? <i>(Keine)</i> : regions.find(r => r.id === user.regionId)?.name}</td>
-                <td>{roleToText(user.role)}</td>
-                <td>
-                  <ButtonGroup minimal>
-                    <Button icon='edit' intent='warning' text='Bearbeiten' minimal />
-                    <Button icon='trash' intent='danger' text='Entfernen' minimal />
-                  </ButtonGroup>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </UsersTable>
-        <div style={{ padding: '16px', textAlign: 'center' }}>
-          <Button intent='success' text='Benutzer hinzufügen' icon='add' />
-        </div>
-      </Card>
-    </StandaloneCenter>
+    <UsersTableContainer title={`Alle Benutzer von '${projectName} - Verwaltung'`}>
+      <UsersTable users={users} regions={regions} showRegion={true} />
+    </UsersTableContainer>
   )
 }
 
-const roleToText = (role: Role): String => {
-  switch (role) {
-    case Role.NoRights:
-      return 'Keine'
-    case Role.ProjectAdmin:
-      return 'Administrator'
-    case Role.RegionAdmin:
-      return 'Regionsadministrator'
-    case Role.RegionManager:
-      return 'Regionsverwalter'
-    default:
-      return role
-  }
-}
+const ManageRegionUsers = ({ region }: { region: Region }) => {
+  const { projectId } = useContext(ProjectConfigContext)
+  const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
+  const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region!!.id } })
 
-const ManageRegionUsers = () => null
+  if (regionsQuery.loading || usersQuery.loading) {
+    return <Spinner />
+  } else if (!regionsQuery.data || regionsQuery.error) {
+    return <RefetchCard refetch={regionsQuery.refetch} />
+  } else if (!usersQuery.data || usersQuery.error) {
+    return <RefetchCard refetch={usersQuery.refetch} />
+  }
+
+  const regions = regionsQuery.data!!.regions
+  const users = usersQuery.data!!.users
+
+  return (
+    <UsersTableContainer title={`Alle Verwalter der Region '${region.name}'`}>
+      <UsersTable users={users} regions={regions} showRegion={false} />
+    </UsersTableContainer>
+  )
+}
 
 const ManageUsersController = () => {
   const role = useContext(AuthContext).data!.administrator.role
-  if (role === Role.RegionAdmin) {
-    return ManageRegionUsers()
+  const region = useContext(RegionContext)
+  if (role === Role.RegionAdmin && region !== null) {
+    return <ManageRegionUsers region={region} />
   } else if (role === Role.ProjectAdmin) {
-    return ManageProjectUsers()
+    return <ManageProjectUsers />
   } else {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

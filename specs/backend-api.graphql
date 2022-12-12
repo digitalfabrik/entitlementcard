@@ -112,6 +112,8 @@ type Query {
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns all administrators in a project. This function requires the role PROJECT_ADMIN."
   getUsersInProject(project: String!): [Administrator!]!
+  "Returns all administrators in a region. This function requires the role REGION_ADMIN or PROJECT_ADMIN."
+  getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
