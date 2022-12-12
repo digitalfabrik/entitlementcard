@@ -67,8 +67,8 @@ const ApplyController = () => {
       },
     })
 
-    setFormSubmitted(true)
     setState(() => ApplicationForm.initialState)
+    setFormSubmitted(true)
   }
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
             Sie können das Fenster schließen.`
