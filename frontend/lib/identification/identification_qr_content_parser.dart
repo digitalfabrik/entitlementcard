@@ -53,9 +53,11 @@ class IdentificationQrContentParser {
       throw QrCodeFieldMissingException("hashSecret");
     }
 
-    int? expirationDay = cardInfo.expiration.day;
-    if (expirationDay == 0) {
+    int? expirationDay;
+    if (!cardInfo.hasExpirationDay()) {
       expirationDay = null;
+    } else {
+      expirationDay = cardInfo.expirationDay;
     }
 
     final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;

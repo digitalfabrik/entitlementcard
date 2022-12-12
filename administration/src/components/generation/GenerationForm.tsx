@@ -62,7 +62,7 @@ const GenerationForm = (props: Props) => {
   const { cardBlueprints, setCardBlueprints } = props
   const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard()])
   const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint | null) => {
-    if (newBlueprint === null) setCardBlueprints(cardBlueprints.filter(blueprpint => blueprpint !== oldBlueprint))
+    if (newBlueprint === null) setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
     else {
       if (newBlueprint.cardType === CardType.gold) newBlueprint.expirationDate = null
       setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))

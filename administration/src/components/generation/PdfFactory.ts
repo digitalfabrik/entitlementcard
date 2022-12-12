@@ -47,7 +47,6 @@ function addLetter(doc: jsPDF, activationCode: CardActivationCode, region: Regio
   doc.setFontSize(16)
 
   doc.text(
-    // TODO: Why is info optional?
     `Guten Tag, ${info.fullName}.
 Ihre digitale Ehrenamtskarte ist da!`,
     pageMargin,
@@ -79,7 +78,7 @@ Ihre digitale Ehrenamtskarte ist da!`,
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
-  let expirationDateInt = Number(info.expiration!.day!)
+  let expirationDateInt = Number(info.expirationDay)
   const expirationDate =
     expirationDateInt > 0 ? format(daysSinceEpochToDate(expirationDateInt), 'dd.MM.yyyy') : 'unbegrenzt'
   doc.text(

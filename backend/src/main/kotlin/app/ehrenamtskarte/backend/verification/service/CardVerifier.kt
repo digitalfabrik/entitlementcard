@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.verification.service
 
+import app.ehrenamtskarte.backend.verification.DayUtil.Companion.daysSinceEpochToDate
 import app.ehrenamtskarte.backend.verification.DayUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
@@ -20,7 +21,7 @@ object CardVerifier {
 
     private fun verifyCard(card: CardEntity, totp: Int): Boolean {
         val expirationDate = card.expirationDate
-        return (expirationDate == null || isOnOrBeforeToday(expirationDate)) &&
+        return (expirationDate == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDate))) &&
                 !card.revoked &&
                 isTotpValid(totp, card.totpSecret)
     }

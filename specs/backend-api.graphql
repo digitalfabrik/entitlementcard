@@ -219,7 +219,7 @@ input BlueCardServiceEntitlementInput {
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
-  cardExpirationDay: Int!
+  cardExpirationDay: Long
   regionId: Int!
   totpSecretBase64: String!
 }

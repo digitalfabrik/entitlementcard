@@ -19,11 +19,11 @@ object CardRepository {
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime?, regionId: Int) =
+    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int) =
         CardEntity.new {
             this.cardDetailsHash = cardDetailsHash
             this.totpSecret = totpSecret
-            this.expirationDate = expirationDate
+            this.expirationDate = expirationDay
             this.issueDate = LocalDateTime.now()
             this.regionId = EntityID(regionId, Regions)
             this.revoked = false

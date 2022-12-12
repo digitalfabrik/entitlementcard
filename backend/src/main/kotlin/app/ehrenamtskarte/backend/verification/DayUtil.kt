@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.verification
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
 
 class DayUtil {
     companion object {
@@ -13,12 +12,12 @@ class DayUtil {
         }
         
         fun dateToDaysSinceEpoch(date: LocalDateTime): Long {
-            return date.toEpochSecond(ZoneOffset.UTC) / 24 / 60 / 60
+            return date.toEpochSecond(ZoneOffset.UTC) / 24 / 60 / 60 
         }
 
         fun daysSinceEpochToDate(day: Long): LocalDateTime {
             return LocalDateTime.ofEpochSecond(
-                day * 24L * 60L * 60L,
+                day * 24L * 60L * 60L, // FIXME: this is not correct as a day is not always 24h :D
                 0,
                 ZoneOffset.UTC
             )

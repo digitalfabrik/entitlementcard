@@ -6,7 +6,6 @@ import {
   CardActivationCode,
   CardExtensions,
   CardInfo,
-  Expiration,
   RegionExtension,
 } from '../generated/card_pb'
 import {dateToDaysSinceEpoch} from "./day";
@@ -32,11 +31,9 @@ const generateActivationCodes = (
   return new CardActivationCode({
     info: new CardInfo({
       fullName: fullName,
-      expiration:
+      expirationDay:
         expirationDate !== null
-          ? new Expiration({
-              day: dateToDaysSinceEpoch(expirationDate),
-            })
+          ? dateToDaysSinceEpoch(expirationDate)
           : undefined,
       extensions: new CardExtensions({
         extensionRegion: new RegionExtension({

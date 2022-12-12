@@ -48,7 +48,7 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
 
   final fullName = cardInfo.fullName;
   final hashSecretBase64 = const Base64Encoder().convert(verifyCode.hashSecret);
-  final expirationDay = cardInfo.expiration.day;
+  final expirationDay = cardInfo.expirationDay;
   final cardType = CardType.values[bavarianCardType.value];
   final regionId = cardInfo.extensions.extensionRegion.regionId;
   final otp = verifyCode.otp;

@@ -29,11 +29,7 @@ class CardMutationService {
             CardRepository.insert(
                 Base64.decode(card.cardDetailsHashBase64),
                 Base64.decode(card.totpSecretBase64),
-                LocalDateTime.ofEpochSecond(
-                    card.cardExpirationDay * 24L * 60L * 60L,
-                    0,
-                    ZoneOffset.UTC
-                ),
+                card.cardExpirationDay,
                 card.regionId
             )
         }

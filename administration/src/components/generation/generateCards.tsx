@@ -28,8 +28,9 @@ const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardB
   const graphQLModel: CardGenerationModelInput[] = await Promise.all(
     activationCodes.map(async activationCode => {
       const cardDetailsHash = await generateHashFromCardDetails(activationCode.hashSecret, activationCode.info!)
-      return {
-        cardExpirationDay: activationCode.info!.expiration!.day!,
+        const expirationDay = activationCode.info!.expirationDay; // FIXME: can this really be null?
+        return {
+        cardExpirationDay: expirationDay ?? null, // JS number can represent integers up to 2^53, so it can represent all values of an uint32 (protobuf)
         cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
         totpSecretBase64: uint8ArrayToBase64(activationCode.totpSecret),
         regionId: region.id,

@@ -11,7 +11,7 @@ String encodeVerificationCardDetails(VerificationCardDetails verificationCardDet
   final verifyCode = CardVerifyCode(
     info: CardInfo(
       fullName: cardDetails.fullName,
-      expiration: Expiration(day: cardDetails.expirationDay ?? 0),
+      expirationDay: cardDetails.expirationDay ?? 0,
       extensions: CardExtensions(
         extensionRegion: RegionExtension(regionId: cardDetails.regionId),
         extensionBavariaCardType: BavariaCardTypeExtension(
@@ -35,7 +35,7 @@ VerificationCardDetails decodeVerificationCardDetails(String base64Data) {
 
   final fullName = cardInfo.fullName;
   final randomBytes = const Base64Encoder().convert(verifyCode.hashSecret);
-  final expirationDay = cardInfo.expiration.day;
+  final expirationDay = cardInfo.expirationDay;
   final cardType = CardType.values[cardInfo.extensions.extensionBavariaCardType.cardType.value];
   final regionId = cardInfo.extensions.extensionRegion.regionId;
   final otp = verifyCode.otp;
