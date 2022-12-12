@@ -8,7 +8,7 @@ import {
   CardInfo,
   RegionExtension,
 } from '../generated/card_pb'
-import { dateToDaysSinceEpoch } from './day'
+import { dateToDaysSinceEpoch } from './validityPeriod'
 
 const generateActivationCodes = (
   fullName: string,

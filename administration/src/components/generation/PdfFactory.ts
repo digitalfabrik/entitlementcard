@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
 import { CardActivationCode } from '../../generated/card_pb'
-import { daysSinceEpochToDate } from '../../util/day'
+import { daysSinceEpochToDate } from '../../util/validityPeriod'
 
 type TTFFont = {
   /**
