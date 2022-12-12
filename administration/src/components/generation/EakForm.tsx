@@ -5,7 +5,7 @@ import { CardType } from '../../models/CardType'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 import styled from 'styled-components'
-import { CardCreationModel } from './CardCreationModel'
+import { CardBlueprint } from './CardBlueprint'
 import { add } from 'date-fns'
 
 const CardHeader = styled.div`
@@ -34,8 +34,8 @@ const renderCardType: ItemRenderer<CardType> = (cardType, { handleClick, modifie
 }
 
 interface Props {
-  model: CardCreationModel
-  onUpdate: (newModel: CardCreationModel | null) => void
+  cardBlueprint: CardBlueprint
+  onUpdate: (newCardBlueprint: CardBlueprint | null) => void
 }
 
 const EakForm = (props: Props) => {
@@ -49,10 +49,10 @@ const EakForm = (props: Props) => {
           <InputGroup
             placeholder='Vorname'
             autoFocus
-            value={props.model.forename}
+            value={props.cardBlueprint.forename}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               props.onUpdate({
-                ...props.model,
+                ...props.cardBlueprint,
                 forename: event.target.value,
               })
             }
@@ -61,10 +61,10 @@ const EakForm = (props: Props) => {
         <FormGroup label='Nachname'>
           <InputGroup
             placeholder='Nachname'
-            value={props.model.surname}
+            value={props.cardBlueprint.surname}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               props.onUpdate({
-                ...props.model,
+                ...props.cardBlueprint,
                 surname: event.target.value,
               })
             }
@@ -73,10 +73,10 @@ const EakForm = (props: Props) => {
         <FormGroup label='Ablaufdatum'>
           <DateInput
             placeholder='Ablaufdatum'
-            disabled={props.model.cardType === CardType.gold}
-            value={props.model.expirationDate}
+            disabled={props.cardBlueprint.cardType === CardType.gold}
+            value={props.cardBlueprint.expirationDate}
             parseDate={str => new Date(str)}
-            onChange={value => props.onUpdate({ ...props.model, expirationDate: value })}
+            onChange={value => props.onUpdate({ ...props.cardBlueprint, expirationDate: value })}
             formatDate={date => date.toLocaleDateString()}
             maxDate={add(Date.now(), { years: 99 })}
             minDate={new Date()}
@@ -86,10 +86,10 @@ const EakForm = (props: Props) => {
         <FormGroup label='Typ der Karte'>
           <CardTypeSelect
             items={Object.values(CardType)}
-            onItemSelect={value => props.onUpdate({ ...props.model, cardType: value })}
+            onItemSelect={value => props.onUpdate({ ...props.cardBlueprint, cardType: value })}
             itemRenderer={renderCardType}
             filterable={false}>
-            <Button text={props.model.cardType} rightIcon='caret-down' />
+            <Button text={props.cardBlueprint.cardType} rightIcon='caret-down' />
           </CardTypeSelect>
         </FormGroup>
       </Card>

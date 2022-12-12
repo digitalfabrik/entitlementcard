@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.verification.database.Cards
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import java.time.LocalDateTime
+import java.time.Instant
 
 object CardRepository {
 
@@ -19,12 +19,12 @@ object CardRepository {
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDate: LocalDateTime?, regionId: Int) =
+    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int) =
         CardEntity.new {
             this.cardDetailsHash = cardDetailsHash
             this.totpSecret = totpSecret
-            this.expirationDate = expirationDate
-            this.issueDate = LocalDateTime.now()
+            this.expirationDay = expirationDay
+            this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
             this.revoked = false
         }

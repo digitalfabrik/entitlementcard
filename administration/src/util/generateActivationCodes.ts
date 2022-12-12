@@ -1,15 +1,21 @@
-import { getUnixTime } from 'date-fns'
-import { CardActivateModel } from '../generated/protobuf'
 import isIE11 from './isIE11'
 import getRandomValues from './getRandomValues'
-import Long from 'long'
+import {
+  BavariaCardType,
+  BavariaCardTypeExtension,
+  CardActivationCode,
+  CardExtensions,
+  CardInfo,
+  RegionExtension,
+} from '../generated/card_pb'
+import { dateToDaysSinceEpoch } from './validityPeriod'
 
-const generateCardActivateModel = (
+const generateActivationCodes = (
   fullName: string,
   regionId: number,
   expirationDate: Date | null,
-  cardType: CardActivateModel.CardType
-) => {
+  cardType: BavariaCardType
+): CardActivationCode => {
   if (!window.isSecureContext && !isIE11())
     // localhost is considered secure.
     throw Error('Environment is not considered secure nor are we using Internet Explorer.')
@@ -22,15 +28,22 @@ const generateCardActivateModel = (
   const totpSecret = new Uint8Array(20)
   getRandomValues(totpSecret)
 
-  return new CardActivateModel({
-    fullName: fullName,
+  return new CardActivationCode({
+    info: new CardInfo({
+      fullName: fullName,
+      expirationDay: expirationDate !== null ? dateToDaysSinceEpoch(expirationDate) : undefined,
+      extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: regionId,
+        }),
+        extensionBavariaCardType: new BavariaCardTypeExtension({
+          cardType: cardType,
+        }),
+      }),
+    }),
     hashSecret: hashSecret,
     totpSecret: totpSecret,
-    expirationDate:
-      expirationDate !== null ? Long.fromNumber(getUnixTime(expirationDate), false) : Long.fromNumber(0, false),
-    cardType: cardType,
-    regionId: regionId,
   })
 }
 
-export default generateCardActivateModel
+export default generateActivationCodes

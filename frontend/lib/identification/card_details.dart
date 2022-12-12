@@ -6,7 +6,7 @@ class CardDetails extends BaseCardDetails {
   CardDetails(
     super.fullName,
     super.randomBytes,
-    super.unixExpirationDate,
+    super.expirationDay,
     super.cardType,
     super.regionId,
     this.totpSecretBase32,

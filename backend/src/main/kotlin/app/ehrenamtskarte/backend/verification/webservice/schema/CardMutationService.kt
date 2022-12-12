@@ -10,8 +10,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.util.Base64
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @Suppress("unused")
 class CardMutationService {
@@ -29,11 +27,7 @@ class CardMutationService {
             CardRepository.insert(
                 Base64.decode(card.cardDetailsHashBase64),
                 Base64.decode(card.totpSecretBase64),
-                if (card.expirationDate > 0) LocalDateTime.ofEpochSecond(
-                    card.expirationDate,
-                    0,
-                    ZoneOffset.UTC
-                ) else null,
+                card.cardExpirationDay,
                 card.regionId
             )
         }

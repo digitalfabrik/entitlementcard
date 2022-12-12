@@ -64,12 +64,27 @@ commands:
       - run:
           name: Install Dart
           command: |
-            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
+            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.18.5/linux_packages/dart_2.18.5-1_amd64.deb
             sudo dpkg -i dart.deb
+  install-protobuf-linux:
+    steps:
+      - run:
+          name: Install protobuf from GitHub
+          command: |
+            curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
+            unzip protoc*.zip -d $HOME/.local
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+  install-protobuf-mac:
+    steps:
+      - run:
+          name: Install protobuf
+          command: |
+            curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+            unzip protoc*.zip -d $HOME/.local
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
   install-fvm-linux:
     steps:
       - install-dart-linux
-      - install-app-toolbelt
       - run:
           name: Install FVM
           command: |
@@ -118,7 +133,7 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/node:16.17.0
+      - image: cimg/node:19.1.0
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -126,9 +141,12 @@ jobs:
           path: ~/project
       - install-fvm-linux
       - install-app-toolbelt
+      - install-protobuf-linux
       - run:
           name: Install Flutter Packages
-          command: fvm flutter pub get
+          command: |
+            fvm dart pub global activate protoc_plugin
+            fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
@@ -136,12 +154,19 @@ jobs:
           name: Build Runner
           command: |
             # Statically use "bayern" build config for analyzing here
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=bayern"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=bayern"
       - run:
           name: Check Analyzer and Linting
           command: |
             fvm flutter analyze --fatal-infos --fatal-warnings
             fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
+      - run:
+          name: Tests
+          command: |
+            fvm flutter test
+            fvm flutter test pubs/df_build_config
+            fvm flutter test pubs/df_protobuf
 
   frontend-android-build:
     docker:
@@ -160,12 +185,14 @@ jobs:
           path: ~/project
       - install-fvm-linux
       - install-app-toolbelt
+      - install-protobuf-linux
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
+            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --android
       - save_cache:
@@ -175,15 +202,13 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
             fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
-
-
 
   frontend-ios-build:
     macos:
@@ -200,12 +225,14 @@ jobs:
           path: ~/project
       - install-fvm-mac
       - install-app-toolbelt
+      - install-protobuf-mac
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
+            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --ios
       - save_cache:
@@ -221,7 +248,7 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --delete-conflicting-outputs --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
       - run:
           name: Build
           command: |
@@ -249,6 +276,10 @@ jobs:
           command: |
             ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
             git diff --exit-code
+      - run:
+          name: Test
+          command: |
+            ./gradlew test
       - run: ./gradlew build
       - save_cache:
           paths:
@@ -267,7 +298,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:16.17.0
+      - image: cimg/node:19.1.0
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -275,14 +306,22 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - install-protobuf-linux
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
       - run: |
           npm run generate-graphql
           npm run generate-protobuf
-          npm run lint
-          npm run build
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm run test
+      - run:
+          name: Build
+          command: npm run build
       - save_cache:
           paths:
             - node_modules
