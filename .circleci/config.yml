@@ -69,15 +69,19 @@ commands:
   install-protobuf-linux:
     steps:
       - run:
-          name: Install FVM
+          name: Install protobuf from GitHub
           command: |
             curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
             unzip protoc*.zip -d $HOME/.local
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+  install-protobuf-mac:
+    steps:
+      - run:
+          name: Install protobuf
+          command: brew install protobuf
   install-fvm-linux:
     steps:
       - install-dart-linux
-      - install-app-toolbelt
       - run:
           name: Install FVM
           command: |
@@ -134,6 +138,7 @@ jobs:
           path: ~/project
       - install-fvm-linux
       - install-app-toolbelt
+      - install-protobuf-linux
       - run:
           name: Install Flutter Packages
           command: |
@@ -142,7 +147,6 @@ jobs:
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
-      - install-protobuf-linux
       - run:
           name: Build Runner
           command: |
@@ -178,6 +182,7 @@ jobs:
           path: ~/project
       - install-fvm-linux
       - install-app-toolbelt
+      - install-protobuf-linux
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
@@ -217,6 +222,7 @@ jobs:
           path: ~/project
       - install-fvm-mac
       - install-app-toolbelt
+      - install-protobuf-mac
       - restore_cache:
           keys:
             - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}

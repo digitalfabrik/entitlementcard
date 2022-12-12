@@ -2,11 +2,11 @@ import { jsPDF } from 'jspdf'
 import logo from './logo'
 import { drawjsPDF } from '../../util/qrcode'
 import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
-import { format, fromUnixTime } from 'date-fns'
+import { format } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
 import { CardActivationCode } from '../../generated/card_pb'
-import {dateToDaysSinceEpoch, daysSinceEpochToDate} from "../../util/day";
+import {daysSinceEpochToDate} from "../../util/day";
 
 type TTFFont = {
   /**
