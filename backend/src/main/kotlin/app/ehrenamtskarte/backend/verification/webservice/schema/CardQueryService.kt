@@ -12,7 +12,7 @@ class CardQueryService {
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid")
     fun verifyCardInProject(projectId: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val project = context.backendConfiguration.projects.find { it.id == projectId } ?: return false
+        val project = context.backendConfiguration.projects.find { it.id == projectId } ?: throw NullPointerException("Project not found")
         return CardVerifier.verifyCardHash(projectId, Base64.decode(card.cardDetailsHashBase64), card.totp, project.timezone)
     }
 }
