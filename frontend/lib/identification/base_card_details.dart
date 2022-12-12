@@ -14,6 +14,8 @@ class BaseCardDetails {
 
   BaseCardDetails(this.fullName, this.hashSecretBase64, this.expirationDay, this.cardType, this.regionId)
       : expirationDate = expirationDay != null && expirationDay > 0
-            ? DateTime.fromMillisecondsSinceEpoch(expirationDay * secondsPerDay * millisecondsPerSecond) // FIXME: this is not correct as a day is not always 24h :D
+            ? DateTime.fromMillisecondsSinceEpoch(expirationDay *
+                secondsPerDay *
+                millisecondsPerSecond) // FIXME: this is not correct as a day is not always 24h :D
             : null;
 }

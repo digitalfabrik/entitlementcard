@@ -10,7 +10,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-
 internal class DayUtilTest {
     private fun clockWithTime(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Clock {
         return Clock.fixed(
@@ -53,20 +52,20 @@ internal class DayUtilTest {
 
     @Test
     fun beforeMidnight() {
-        val clock = clockWithTime(1970, 1, 6, 23,  30)
+        val clock = clockWithTime(1970, 1, 6, 23, 30)
         assertTrue(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun afterMidnight() {
-        val clock = clockWithTime(1970, 1, 7, 0,  30)
+        val clock = clockWithTime(1970, 1, 7, 0, 30)
         assertFalse(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(5L), clock))
-    }   
-    
+    }
+
     @Test
     fun randomDayIsConformantWithAdministrationFrontend() {
         // Values taken from administration frontend
-        val clock = clockWithTime(2080, 12, 7, 15,  30)
+        val clock = clockWithTime(2080, 12, 7, 15, 30)
         assertTrue(DayUtil.isOnOrBeforeToday(DayUtil.daysSinceEpochToDate(40518), clock))
     }
 
@@ -80,7 +79,7 @@ internal class DayUtilTest {
 
     @Test
     fun testSanityAboutTime() {
-        val epochZero = 0L;
+        val epochZero = 0L
         val epochZeroDate = LocalDateTime.ofEpochSecond(epochZero, 0, ZoneOffset.UTC)
 
         // 50k days

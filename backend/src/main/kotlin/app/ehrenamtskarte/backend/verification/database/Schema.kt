@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.verification.database
 
 import app.ehrenamtskarte.backend.regions.database.Regions
-import app.ehrenamtskarte.backend.verification.DayUtil
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -9,7 +8,6 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.javatime.datetime
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 const val CARD_DETAILS_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
@@ -17,7 +15,7 @@ const val TOTP_SECRET_LENGTH = 20
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
     // Using long because unsigned ints are not available, but we want to be able to represent them.
-    // The integer type has a max value of 
+    // The integer type has a max value of
     // Days since 1970
     val expirationDay = long("expirationDay").nullable()
     val issueDate = datetime("issueDate").defaultExpression(CurrentDateTime)

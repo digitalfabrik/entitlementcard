@@ -10,8 +10,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.util.Base64
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @Suppress("unused")
 class CardMutationService {

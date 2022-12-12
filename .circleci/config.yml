@@ -66,6 +66,14 @@ commands:
           command: |
             curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.18.5/linux_packages/dart_2.18.5-1_amd64.deb
             sudo dpkg -i dart.deb
+  install-protobuf-linux:
+    steps:
+      - run:
+          name: Install FVM
+          command: |
+            curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
+            unzip protoc*.zip -d $HOME/.local
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
   install-fvm-linux:
     steps:
       - install-dart-linux
@@ -118,7 +126,7 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/node:16.17.0
+      - image: cimg/node:19.1.0
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -134,9 +142,7 @@ jobs:
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
-      - run:
-          name: Install protoc
-          command: sudo apt install -y protobuf-compiler
+      - install-protobuf-linux
       - run:
           name: Build Runner
           command: |
@@ -195,8 +201,6 @@ jobs:
             fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
-
-
 
   frontend-ios-build:
     macos:
@@ -285,7 +289,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:16.17.0
+      - image: cimg/node:19.1.0
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -293,9 +297,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-      - run:
-          name: Install protoc
-          command: sudo apt install -y protobuf-compiler
+      - install-protobuf-linux
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
