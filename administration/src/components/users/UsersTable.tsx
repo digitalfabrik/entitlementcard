@@ -1,4 +1,5 @@
-import { Button, ButtonGroup } from '@blueprintjs/core'
+import { Button, ButtonGroup, H4 } from '@blueprintjs/core'
+import { Popover2 } from '@blueprintjs/popover2'
 import styled from 'styled-components'
 import { Administrator, Region, Role } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
@@ -16,6 +17,42 @@ const StyledTable = styled.table`
     padding: 16px;
   }
 `
+
+const RoleHelpButton = () => {
+  return (
+    <Popover2
+      content={
+        <div style={{ padding: '10px' }}>
+          <H4 style={{ textAlign: 'center' }}>Welche Rollen haben welche Berechtigungen?</H4>
+          <ul>
+            <li>
+              <b>Administrator:</b>
+              <ul>
+                <li>Kann verwaltende Benutzer in allen Regionen verwalten.</li>
+              </ul>
+            </li>
+            <li>
+              <b>Regionsadministrator:</b>
+              <ul>
+                <li>Kann verwaltende Benutzer in seiner Region verwalten.</li>
+                <li>Kann digitale Karten in seiner Region erstellen.</li>
+                <li>Kann Anträge in seiner Region verwalten.</li>
+              </ul>
+            </li>
+            <li>
+              <b>Regionsverwalter:</b>
+              <ul>
+                <li>Kann digitale Karten in seiner Region erstellen.</li>
+                <li>Kann Anträge in seiner Region verwalten.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      }>
+      <Button icon='help' minimal />
+    </Popover2>
+  )
+}
 
 const UsersTable = ({
   users,
@@ -41,7 +78,9 @@ const UsersTable = ({
           <tr>
             <th>E-Mail Adresse</th>
             {showRegion ? <th>Region</th> : null}
-            <th>Rolle</th>
+            <th>
+              Rolle <RoleHelpButton />
+            </th>
           </tr>
         </thead>
         <tbody>
