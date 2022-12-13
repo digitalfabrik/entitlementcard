@@ -41,6 +41,9 @@ const createClient = (token?: string) =>
   new ApolloClient({
     link: createAuthLink(token).concat(httpLink),
     cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: { fetchPolicy: 'network-only' },
+    },
   })
 
 const Main = styled.div`

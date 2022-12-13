@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.regions.database.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -17,6 +18,9 @@ class RegionsMutationService {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            if (dataPrivacyText.length> PRIVACY_POLICY_MAX_CHARS) {
+                throw RuntimeException()
+            }
             if (!Authorizer.mayUpdatePrivacyPolicyInRegion(user, regionId)) {
                 throw UnauthorizedException()
             }

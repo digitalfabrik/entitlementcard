@@ -12,6 +12,7 @@ import ApplicationForm from './forms/ApplicationForm'
 import { useCallback, useMemo } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import { useAppToaster } from '../../components/AppToaster'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -22,6 +23,7 @@ const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
 const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
+  const appToaster = useAppToaster()
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
@@ -29,7 +31,8 @@ const ApplyController = () => {
   )
   const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
-    onError: error => console.error(error),
+    // TODO Add proper error handling and a refetch button when regionId query is implemented
+    onError: () => appToaster?.show({ intent: 'danger', message: 'Datenschutzerklärung konnte nicht geladen werden' }),
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(

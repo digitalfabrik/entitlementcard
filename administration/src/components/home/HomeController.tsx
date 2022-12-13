@@ -39,7 +39,7 @@ const HomeController = () => {
         </>
       ) : null}
       {role === Role.RegionAdmin ? (
-        <NavLink to={'/region'} reloadDocument>
+        <NavLink to={'/region'}>
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
       ) : null}

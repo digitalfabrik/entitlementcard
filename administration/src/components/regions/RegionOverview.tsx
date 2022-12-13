@@ -36,7 +36,7 @@ const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)
 const CharCounter = styled.span<{ $hasError: boolean }>`
   text-align: center;
   align-self: flex-start;
-  color: ${props => (props.hasError ? 'red' : 'black')};
+  color: ${props => (props.$hasError ? 'red' : 'black')};
 `
 
 type RegionOverviewProps = {
@@ -92,7 +92,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
           rows={20}
           placeholder={'Fügen Sie hier Ihre Datenschutzerklärung ein...'}
         />
-        <CharCounter hasError={maxCharsExceeded}>
+        <CharCounter $hasError={maxCharsExceeded}>
           {dataPrivacyText.length}/{MAX_CHARS}
         </CharCounter>
       </Content>
