@@ -13,6 +13,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import { useAppToaster } from '../../components/AppToaster'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -29,7 +30,21 @@ const SuccessContent = styled.div`
 
 const ApplyController = () => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
-  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation()
+  const appToaster = useAppToaster()
+  const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation({
+    onError: error => {
+      console.error(error)
+      appToaster?.show({ intent: 'danger', message: 'Beim Absenden des Antrags is ein Fehler aufgetreten.' })
+    },
+    onCompleted: result => {
+      if (result) {
+        setState(() => ApplicationForm.initialState)
+        setFormSubmitted(true)
+      } else {
+        appToaster?.show({ intent: 'danger', message: 'Beim Absenden des Antrags is ein Fehler aufgetreten.' })
+      }
+    },
+  })
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
@@ -66,9 +81,6 @@ const ApplyController = () => {
         application: applicationInput,
       },
     })
-
-    setState(() => ApplicationForm.initialState)
-    setFormSubmitted(true)
   }
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
             Sie können das Fenster schließen.`
