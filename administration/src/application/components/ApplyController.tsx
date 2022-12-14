@@ -42,7 +42,7 @@ const ApplyController = () => {
         setState(() => ApplicationForm.initialState)
         setFormSubmitted(true)
       } else {
-        enqueueSnackbar('Beim Absenden des Antrags is ein Fehler aufgetreten.', { variant: 'error' })
+        enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
       }
     },
   })
