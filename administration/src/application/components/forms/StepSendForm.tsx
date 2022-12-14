@@ -62,6 +62,7 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
           onClick={() => setOpenPrivacyPolicy(true)}>
           Datenschutzerklärung
         </Button>
+        .
       </div>
     )
     return (

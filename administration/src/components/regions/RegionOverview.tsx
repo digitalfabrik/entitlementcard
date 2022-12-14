@@ -1,4 +1,4 @@
-import { Button, Card, H4, TextArea } from '@blueprintjs/core'
+import { Button, Card, H3, TextArea } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 import { useUpdateDataPolicyMutation } from '../../generated/graphql'
@@ -13,9 +13,11 @@ const Content = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
+  flex-direction: column;
 `
-const Label = styled(H4)`
+const Label = styled(H3)`
   text-align: center;
+  margin: 15px;
 `
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
@@ -37,6 +39,7 @@ const CharCounter = styled.span<{ $hasError: boolean }>`
   text-align: center;
   align-self: flex-start;
   color: ${props => (props.$hasError ? 'red' : 'black')};
+  margin: 15px;
 `
 
 type RegionOverviewProps = {

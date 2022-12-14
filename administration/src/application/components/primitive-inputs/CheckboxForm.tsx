@@ -22,7 +22,7 @@ const CheckboxForm: Form<CheckboxFormState, Options, ValidatedInput, AdditionalP
     const isInvalid = validationResult.type === 'error'
 
     return (
-      <FormGroup>
+      <FormGroup onBlur={() => setTouched(true)}>
         <FormControl required={options.required} error={touched && isInvalid} disabled={disableAllInputs}>
           <FormControlLabel
             style={{ margin: '8px 0' }}
