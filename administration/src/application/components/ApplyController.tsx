@@ -13,7 +13,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
-import { useAppToaster } from '../../components/AppToaster'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -30,18 +29,18 @@ const SuccessContent = styled.div`
 
 const ApplyController = () => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Beim Absenden des Antrags is ein Fehler aufgetreten.' })
+      enqueueSnackbar('Beim Absenden des Antrags is ein Fehler aufgetreten', { variant: 'error' })
     },
     onCompleted: result => {
       if (result) {
         setState(() => ApplicationForm.initialState)
         setFormSubmitted(true)
       } else {
-        appToaster?.show({ intent: 'danger', message: 'Beim Absenden des Antrags is ein Fehler aufgetreten.' })
+        enqueueSnackbar('Beim Absenden des Antrags is ein Fehler aufgetreten.', { variant: 'error' })
       }
     },
   })
@@ -55,7 +54,6 @@ const ApplyController = () => {
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
     [state, status]
   )
-  const { enqueueSnackbar } = useSnackbar()
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
 
   const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
