@@ -15,7 +15,7 @@ export const bayernCommon: CommonBuildConfigType = {
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/bayern.ehrenamtskarte.app/map",
-        showcase: "https://tiles.entitlementcard.app/project/showcase.entitlementcard.app/map",
+        showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/bayern.ehrenamtskarte.app/map",
     },
     backendUrl: {
@@ -23,9 +23,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
-    featureFlags: {
-        verification: true,
-    },
+    featureFlags: {},
     applicationUrl: "https://bayern.ehrenamtskarte.app/apply-for-eak",
 };
 

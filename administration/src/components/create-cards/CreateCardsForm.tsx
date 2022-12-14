@@ -1,8 +1,8 @@
 import React from 'react'
-import EakForm from './EakForm'
+import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
 import { CardType } from '../../models/CardType'
-import { CardCreationModel, isValid } from './CardCreationModel'
+import { CardBlueprint, isValid } from './CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
@@ -11,7 +11,7 @@ import { usePrompt } from '../../util/blocker-prompt'
 
 let idCounter = 0
 
-const createEmptyCard = (): CardCreationModel => ({
+const createEmptyCard = (): CardBlueprint => ({
   id: idCounter++,
   forename: '',
   surname: '',
@@ -53,25 +53,25 @@ const FormColumn = styled.div`
 `
 
 interface Props {
-  cardCreationModels: CardCreationModel[]
-  setCardCreationModels: (models: CardCreationModel[]) => void
+  cardBlueprints: CardBlueprint[]
+  setCardBlueprints: (blueprints: CardBlueprint[]) => void
   confirm: () => void
 }
 
-const GenerationForm = (props: Props) => {
-  const { cardCreationModels, setCardCreationModels } = props
-  const addForm = () => setCardCreationModels([...cardCreationModels, createEmptyCard()])
-  const updateModel = (oldModel: CardCreationModel, newModel: CardCreationModel | null) => {
-    if (newModel === null) setCardCreationModels(cardCreationModels.filter(model => model !== oldModel))
+const CreateCardsForm = (props: Props) => {
+  const { cardBlueprints, setCardBlueprints } = props
+  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard()])
+  const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint | null) => {
+    if (newBlueprint === null) setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
     else {
-      if (newModel.cardType === CardType.gold) newModel.expirationDate = null
-      setCardCreationModels(cardCreationModels.map(model => (model === oldModel ? newModel : model)))
+      if (newBlueprint.cardType === CardType.gold) newBlueprint.expirationDate = null
+      setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))
     }
   }
 
-  const allCardsValid = cardCreationModels.reduce((acc, model) => acc && isValid(model), true)
+  const allCardsValid = cardBlueprints.reduce((acc, blueprint) => acc && isValid(blueprint), true)
 
-  usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardCreationModels.length !== 0)
+  usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardBlueprints.length !== 0)
 
   return (
     <>
@@ -82,17 +82,20 @@ const GenerationForm = (props: Props) => {
             text='QR-Codes drucken'
             intent='success'
             onClick={props.confirm}
-            disabled={!allCardsValid || cardCreationModels.length === 0}
+            disabled={!allCardsValid || cardBlueprints.length === 0}
           />
           {!allCardsValid && 'Mindestens eine Karte enthält ungültige Eingaben.'}
-          {cardCreationModels.length === 0 && 'Legen Sie zunächst eine Karte an.'}
+          {cardBlueprints.length === 0 && 'Legen Sie zunächst eine Karte an.'}
         </Tooltip>
       </ButtonBar>
       {/* @ts-ignore */}
       <FormsWrapper>
-        {cardCreationModels.map(model => (
-          <FormColumn key={model.id}>
-            <EakForm model={model} onUpdate={newModel => updateModel(model, newModel)} />
+        {cardBlueprints.map(blueprint => (
+          <FormColumn key={blueprint.id}>
+            <CreateCardForm
+              cardBlueprint={blueprint}
+              onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}
+            />
           </FormColumn>
         ))}
         <FormColumn key='AddButton'>
@@ -103,4 +106,4 @@ const GenerationForm = (props: Props) => {
   )
 }
 
-export default GenerationForm
+export default CreateCardsForm

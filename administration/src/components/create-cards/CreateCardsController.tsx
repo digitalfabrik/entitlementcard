@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { CardCreationModel } from './CardCreationModel'
-import GenerationForm from './GenerationForm'
+import { CardBlueprint } from './CardBlueprint'
+import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
 import { useAppToaster } from '../AppToaster'
-import GenerationFinished from './GenerationFinished'
+import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import generateCards from './generateCards'
 import { RegionContext } from '../../RegionProvider'
@@ -16,8 +16,8 @@ enum Mode {
   finished,
 }
 
-const GenerationController = () => {
-  const [cardCreationModels, setCardCreationModels] = useState<CardCreationModel[]>([])
+const CreateCardsController = () => {
+  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
   const region = useContext(RegionContext)
   const [mode, setMode] = useState(Mode.input)
@@ -34,7 +34,7 @@ const GenerationController = () => {
   const confirm = async () => {
     try {
       setMode(Mode.loading)
-      const pdfDataUri = await generateCards(client, cardCreationModels, region)
+      const pdfDataUri = await generateCards(client, cardBlueprints, region)
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setMode(Mode.finished)
     } catch (e) {
@@ -61,24 +61,18 @@ const GenerationController = () => {
     }
   }
   if (mode === Mode.input)
-    return (
-      <GenerationForm
-        cardCreationModels={cardCreationModels}
-        setCardCreationModels={setCardCreationModels}
-        confirm={confirm}
-      />
-    )
+    return <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
   else if (mode === Mode.loading) return <Spinner />
   // (mode === Mode.finished)
   else
     return (
       <GenerationFinished
         reset={() => {
-          setCardCreationModels([])
+          setCardBlueprints([])
           setMode(Mode.input)
         }}
       />
     )
 }
 
-export default GenerationController
+export default CreateCardsController

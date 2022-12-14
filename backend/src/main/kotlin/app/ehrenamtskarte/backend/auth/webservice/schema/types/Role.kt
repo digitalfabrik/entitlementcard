@@ -15,8 +15,8 @@ enum class Role(val db_value: String) {
     NO_RIGHTS("NO_RIGHTS");
 
     companion object {
-        fun fromDbValue(db_value: String): Role? {
-            return values().find { it.db_value == db_value }
+        fun fromDbValue(db_value: String): Role {
+            return values().find { it.db_value == db_value } ?: throw IllegalArgumentException("Role does not exist!")
         }
     }
 }

@@ -17,9 +17,9 @@ String hashVerificationCardDetails(VerificationCardDetails verificationCardDetai
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
   final buffer = Uint8List(16).buffer;
   final data = ByteData.view(buffer);
-  final unixExpirationDate = cardDetails.unixExpirationDate;
-  if (unixExpirationDate != null) {
-    data.setInt64(0, unixExpirationDate, Endian.little);
+  final expirationDay = cardDetails.expirationDay;
+  if (expirationDay != null) {
+    data.setUint32(0, expirationDay, Endian.little);
   }
   data.setInt32(8, cardDetails.cardType.index, Endian.little);
   data.setInt32(12, cardDetails.regionId, Endian.little);

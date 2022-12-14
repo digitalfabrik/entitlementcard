@@ -26,7 +26,7 @@ const HomeController = () => {
           <NavLink to={'/applications'}>
             <StyledButton icon='form' text='Eingehende Anträge' />
           </NavLink>
-          <NavLink to={'/eak-generation'}>
+          <NavLink to={'/create-cards'}>
             <StyledButton icon='id-number' text='Karten erstellen' />
           </NavLink>
         </>

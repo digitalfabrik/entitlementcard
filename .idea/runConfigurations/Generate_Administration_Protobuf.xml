@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Generate React GraphQL Client" type="js.build_tools.npm">
+  <configuration default="false" name="Generate Administration Protobuf" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/administration/package.json" />
     <command value="run" />
     <scripts>
-      <script value="generate-graphql" />
+      <script value="generate-protobuf" />
     </scripts>
     <node-interpreter value="project" />
     <envs />

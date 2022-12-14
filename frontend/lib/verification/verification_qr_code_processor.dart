@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/identification/protobuf/card_activate_model.pb.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/verification/scanner/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/verification/verification_card_details.dart';
@@ -14,8 +14,8 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
   if (baseCardDetails.fullName.isEmpty) {
     throw QrCodeFieldMissingException("fullName");
   }
-  if (baseCardDetails.unixExpirationDate == null &&
-      baseCardDetails.cardType.index == CardActivateModel_CardType.STANDARD.value) {
+  if (baseCardDetails.expirationDay == null && baseCardDetails.cardType.index == BavariaCardType.STANDARD.value) {
+    // FIXME: Insecure index comparision
     throw QrCodeFieldMissingException("expirationDate");
   }
   if (baseCardDetails.hashSecretBase64.isEmpty) {

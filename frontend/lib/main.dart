@@ -33,7 +33,6 @@ Future<void> main() async {
       mapStyleUrl: mapStyleUrl,
       graphqlUrl: graphqlUrl,
       projectId: projectId,
-      showVerification: buildConfig.featureFlags.verification,
       showDevSettings: kDebugMode,
       child: const App(),
     ),

@@ -1,58 +1,40 @@
-import Long from 'long'
-import { CardActivateModel } from '../generated/protobuf'
 import isIE11 from './isIE11'
+import { CardInfo } from '../generated/card_pb'
 
-export interface CardDetails {
-  fullName: string
-  regionId: number
-  expirationDate: Long
-  cardType: CardActivateModel.CardType
-}
-
-const cardDetailsToBinary = (cardDetails: CardDetails) => {
-  const fullNameWithoutZero = new TextEncoder().encode(cardDetails.fullName)
-  const expirationDateBytes = 8 // int64
+const cardInfoToBinary = (cardInfo: CardInfo) => {
+  const fullNameWithoutZero = new TextEncoder().encode(cardInfo.fullName)
+  const expirationDayBytes = 4 // uint32
   const cardTypeBytes = 4 // int32
   const regionIdBytes = 4 // int32
   const fullNameBytes = fullNameWithoutZero.byteLength + 1 // zero terminated string
-  const binary = new Uint8Array(expirationDateBytes + cardTypeBytes + regionIdBytes + fullNameBytes)
-  const binaryView = new DataView(binary.buffer)
+  const binary = new Uint8Array(expirationDayBytes + cardTypeBytes + regionIdBytes + fullNameBytes)
+  const view = new DataView(binary.buffer)
 
   let offset = 0
 
-  binary.set(cardDetails.expirationDate.toBytesLE(), offset)
-  offset += expirationDateBytes
+  view.setUint32(offset, cardInfo.expirationDay ?? 0) // A value of 0 indicates that the card does not expire
+  offset += expirationDayBytes
 
-  binaryView.setInt32(offset, cardDetails.cardType, true)
+  view.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
   offset += cardTypeBytes
 
-  binaryView.setInt32(offset, cardDetails.regionId, true)
+  view.setInt32(offset, cardInfo.extensions?.extensionRegion!.regionId!, true)
   offset += regionIdBytes
+
+  // FIXME: Include all the other extensions
 
   binary.set(fullNameWithoutZero, offset)
   return binary
 }
 
-const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardDetails: CardDetails) => {
-  const binary = cardDetailsToBinary(cardDetails)
+const generateHashFromCardDetails = async (hashSecret: Uint8Array, cardInfo: CardInfo) => {
+  const binary = cardInfoToBinary(cardInfo)
 
-  // In IE11, this returns KeyOperation / CryptoOperation,
-  // see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
   let hashArrayBuffer: ArrayBuffer
   if (isIE11()) {
-    const key = await new Promise((resolve, reject) => {
-      // @ts-ignore
-      const op = msCrypto.subtle.importKey('raw', hashSecret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']) // @ts-ignore
-      op.oncomplete = event => resolve(event.target.result) // @ts-ignore
-      op.onerror = e => reject(e)
-    })
-
-    hashArrayBuffer = await new Promise((resolve, reject) => {
-      // @ts-ignore
-      const op = msCrypto.subtle.sign({ name: 'HMAC', hash: 'SHA-256' }, key, binary.buffer) // @ts-ignore
-      op.oncomplete = event => resolve(event.target.result) // @ts-ignore
-      op.onerror = e => reject(e)
-    })
+    // The below API is not supported on IE11:
+    // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
+    throw Error('IE11 is not supported')
   } else {
     const key = await crypto.subtle.importKey('raw', hashSecret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
     hashArrayBuffer = await crypto.subtle.sign('HMAC', key, binary.buffer)

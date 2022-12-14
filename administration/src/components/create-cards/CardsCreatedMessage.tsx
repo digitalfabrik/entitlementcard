@@ -17,7 +17,7 @@ interface Props {
   reset: () => void
 }
 
-const GenerationController = (props: Props) => {
+const CardsCreatedMessage = (props: Props) => {
   return (
     <Container>
       <Icon icon='tick-circle' color='green' iconSize={100} />
@@ -26,4 +26,4 @@ const GenerationController = (props: Props) => {
     </Container>
   )
 }
-export default GenerationController
+export default CardsCreatedMessage

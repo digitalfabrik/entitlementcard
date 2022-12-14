@@ -1,0 +1,8 @@
+query getUsersInProject($project: String!) {
+  users: getUsersInProject(project: $project) {
+    regionId
+    email
+    id
+    role
+  }
+}

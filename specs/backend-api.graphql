@@ -112,6 +112,10 @@ type Query {
   categories: [Category!]!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
+  getUsersInProject(project: String!): [Administrator!]!
+  "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
+  getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
@@ -224,7 +228,7 @@ input BlueCardServiceEntitlementInput {
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
-  expirationDate: Long!
+  cardExpirationDay: Long
   regionId: Int!
   totpSecretBase64: String!
 }

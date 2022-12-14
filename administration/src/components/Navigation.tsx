@@ -34,7 +34,7 @@ const Navigation = (props: Props) => {
             <NavLink to={'/applications'}>
               <Button minimal icon='form' text='Eingehende Anträge' />
             </NavLink>
-            <NavLink to={'/eak-generation'}>
+            <NavLink to={'/create-cards'}>
               <Button minimal icon='id-number' text='Karten erstellen' />
             </NavLink>
           </>
