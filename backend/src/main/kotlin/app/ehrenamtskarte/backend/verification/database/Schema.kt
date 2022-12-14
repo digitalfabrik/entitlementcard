@@ -20,7 +20,7 @@ object Cards : IntIdTable() {
     val issueDate = timestamp("issueDate").defaultExpression(CurrentTimestamp())
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
-    val creatorId = reference("creatorId", Administrators)
+    val issuerId = reference("issuerId", Administrators)
     val cardDetailsHash = binary("cardDetailsHash", CARD_DETAILS_HASH_LENGTH).uniqueIndex()
 }
 
@@ -33,5 +33,5 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var revoked by Cards.revoked
     var cardDetailsHash by Cards.cardDetailsHash
     var regionId by Cards.regionId
-    var creatorId by Cards.creatorId
+    var issuerId by Cards.issuerId
 }
