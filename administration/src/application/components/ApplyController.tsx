@@ -93,23 +93,25 @@ const ApplyController = () => {
             Sie können das Fenster schließen.`
 
   return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
-        <div style={{ maxWidth: '1000px', width: '100%' }}>
-          <h2 style={{ textAlign: 'center' }}>{formSubmitted ? 'Erfolgreich gesendet' : 'Ehrenamtskarte beantragen'}</h2>
-          {formSubmitted ? (
-              <SuccessContent>{successText}</SuccessContent>
-          ) : (
-              <ApplicationForm.Component state={state}
-                                         setState={setState}
-                                         onSubmit={submit}
-                                         loading={loading || loadingPolicy}
-                                         privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}/>
-          )}
-          <DialogActions>
-            {loading || loadingPolicy || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
-          </DialogActions>
-        </div>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
+      <div style={{ maxWidth: '1000px', width: '100%' }}>
+        <h2 style={{ textAlign: 'center' }}>{formSubmitted ? 'Erfolgreich gesendet' : 'Ehrenamtskarte beantragen'}</h2>
+        {formSubmitted ? (
+          <SuccessContent>{successText}</SuccessContent>
+        ) : (
+          <ApplicationForm.Component
+            state={state}
+            setState={setState}
+            onSubmit={submit}
+            loading={loading || loadingPolicy}
+            privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+          />
+        )}
+        <DialogActions>
+          {loading || loadingPolicy || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+        </DialogActions>
       </div>
+    </div>
   )
 }
 
