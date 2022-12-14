@@ -1,6 +1,10 @@
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
+import { Button } from '@mui/material'
+import BasicDialog from '../BasicDialog'
+import { useState } from 'react'
+import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
 
 const acceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
@@ -20,7 +24,7 @@ type ValidatedInput = {
   givenInformationIsCorrectAndComplete: boolean
 }
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { privacyPolicy: string }
 const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     acceptedDataPrivacy: CheckboxForm.initialState,
@@ -46,23 +50,46 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
       },
     }
   },
-  Component: ({ state, setState }) => (
-    <>
-      <CheckboxForm.Component
-        label='Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung
-              gespeichert werden.'
-        state={state.acceptedDataPrivacy}
-        setState={useUpdateStateCallback(setState, 'acceptedDataPrivacy')}
-        options={acceptedDatePrivacyOptions}
-      />
-      <CheckboxForm.Component
-        label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
-        state={state.givenInformationIsCorrectAndComplete}
-        setState={useUpdateStateCallback(setState, 'givenInformationIsCorrectAndComplete')}
-        options={givenInformationIsCorrectAndCompleteOptions}
-      />
-    </>
-  ),
+  Component: ({ state, setState, privacyPolicy }) => {
+    const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
+    const PrivacyLabel = (
+      <div style={{ alignSelf: 'center' }}>
+        Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und
+        akzeptiere die{' '}
+        <Button
+          variant='text'
+          style={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
+          onClick={() => setOpenPrivacyPolicy(true)}>
+          Datenschutzerklärung
+        </Button>
+        .
+      </div>
+    )
+    return (
+      <>
+        <CheckboxForm.Component
+          state={state.acceptedDataPrivacy}
+          setState={useUpdateStateCallback(setState, 'acceptedDataPrivacy')}
+          options={acceptedDatePrivacyOptions}
+          label={PrivacyLabel}
+        />
+
+        <CheckboxForm.Component
+          label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
+          state={state.givenInformationIsCorrectAndComplete}
+          setState={useUpdateStateCallback(setState, 'givenInformationIsCorrectAndComplete')}
+          options={givenInformationIsCorrectAndCompleteOptions}
+        />
+        <BasicDialog
+          open={openPrivacyPolicy}
+          maxWidth='lg'
+          onUpdateOpen={setOpenPrivacyPolicy}
+          title={dataPrivacyBaseHeadline}
+          content={`${dataPrivacyBaseText}\n${privacyPolicy}`}
+        />
+      </>
+    )
+  },
 }
 
 export default StepSendForm

@@ -3,7 +3,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { useAddBlueEakApplicationMutation } from '../../generated/graphql'
+import { useAddBlueEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
 import { DialogActions } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
@@ -13,12 +13,14 @@ import { useCallback, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import { useAppToaster } from '../../components/AppToaster'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
 
 export const applicationStorageKey = 'applicationState'
+const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
 const SuccessContent = styled.div`
   white-space: pre-line;
@@ -33,22 +35,29 @@ const ApplyController = () => {
   const [addBlueEakApplication, { loading }] = useAddBlueEakApplicationMutation({
     onError: error => {
       console.error(error)
-      enqueueSnackbar('Beim Absenden des Antrags is ein Fehler aufgetreten', { variant: 'error' })
+      enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
     },
     onCompleted: result => {
       if (result) {
         setState(() => ApplicationForm.initialState)
         setFormSubmitted(true)
       } else {
-        enqueueSnackbar('Beim Absenden des Antrags is ein Fehler aufgetreten.', { variant: 'error' })
+        enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
       }
     },
   })
+  const appToaster = useAppToaster()
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
     lastCommitForApplicationForm
   )
+  const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
+    variables: { regionId: regionId },
+    // TODO: Add proper error handling and a refetch button when regionId query is implemented
+    // TODO: Use enqueueSnackbar from notistack instead of the appToaster
+    onError: () => appToaster?.show({ intent: 'danger', message: 'Datenschutzerklärung konnte nicht geladen werden' }),
+  })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -90,10 +99,16 @@ const ApplyController = () => {
         {formSubmitted ? (
           <SuccessContent>{successText}</SuccessContent>
         ) : (
-          <ApplicationForm.Component state={state} setState={setState} onSubmit={submit} loading={loading} />
+          <ApplicationForm.Component
+            state={state}
+            setState={setState}
+            onSubmit={submit}
+            loading={loading || loadingPolicy}
+            privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+          />
         )}
         <DialogActions>
-          {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {loading || loadingPolicy || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
         </DialogActions>
       </div>
     </div>
