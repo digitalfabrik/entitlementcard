@@ -31,7 +31,8 @@ const ApplyController = () => {
   )
   const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
-    // TODO Add proper error handling and a refetch button when regionId query is implemented
+    // TODO: Add proper error handling and a refetch button when regionId query is implemented
+    // TODO: Use enqueueSnackbar from notistack instead of the appToaster
     onError: () => appToaster?.show({ intent: 'danger', message: 'Datenschutzerklärung konnte nicht geladen werden' }),
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
