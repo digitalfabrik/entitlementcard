@@ -5,7 +5,6 @@ import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortText
 import AddressForm, { AddressFormState } from './AddressForm'
 import SelectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
 import EmailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
-import { memo } from 'react'
 
 const organizationCategoryOptions = {
   items: [
@@ -81,7 +80,7 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
       },
     }
   },
-  Component: memo(({ state, setState }) => (
+  Component: ({ state, setState }) => (
     <>
       <h4>Angaben zur Organisation</h4>
       <ShortTextForm.Component
@@ -113,7 +112,7 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
         label='Telefon'
       />
     </>
-  )),
+  ),
 }
 
 export default OrganizationForm

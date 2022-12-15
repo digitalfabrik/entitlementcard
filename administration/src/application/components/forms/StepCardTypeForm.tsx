@@ -3,7 +3,6 @@ import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { FormControl } from '@mui/material'
-import { memo } from 'react'
 
 const CardTypeInput = ({ state, setState }: { state: CardType | null; setState: SetState<CardType | null> }) => {
   return (
@@ -55,7 +54,7 @@ const StepCardTypeForm: Form<StepCardTypeFormState, Options, ValidatedInput, Add
     }
     return { type: 'valid', value: { cardType, applicationType } }
   },
-  Component: memo(({ state, setState }) => (
+  Component: ({ state, setState }) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <CardTypeInput state={state.cardType} setState={useUpdateStateCallback(setState, 'cardType')} />
       <ApplicationTypeInput
@@ -63,7 +62,7 @@ const StepCardTypeForm: Form<StepCardTypeFormState, Options, ValidatedInput, Add
         setState={useUpdateStateCallback(setState, 'applicationType')}
       />
     </div>
-  )),
+  ),
 }
 
 export default StepCardTypeForm

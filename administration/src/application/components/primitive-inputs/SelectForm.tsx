@@ -1,5 +1,5 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
-import { memo, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
@@ -20,7 +20,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
       }
     return { type: 'valid', value: { shortText: selectedText } }
   },
-  Component: memo(({ state, setState, label, options }) => {
+  Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = SelectForm.getValidatedInput(state, options)
@@ -44,7 +44,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
         {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
       </FormControl>
     )
-  }),
+  },
 }
 
 export default SelectForm

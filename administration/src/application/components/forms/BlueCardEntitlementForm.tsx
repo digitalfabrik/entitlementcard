@@ -2,63 +2,58 @@ import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../gene
 import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import { Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
-import { memo } from 'react'
 import SwitchComponent from '../SwitchComponent'
 import WorkAtOrganizationsEntitlementForm, {
   WorkAtOrganizationsEntitlementFormState,
 } from './WorkAtOrganizationsEntitlementForm'
 
-const BlueCardEntitlementTypeForm = memo(
-  ({
-    state,
-    setState,
-  }: {
-    state: BlueCardEntitlementType | null
-    setState: SetState<BlueCardEntitlementType | null>
-  }) => {
-    return (
-      <FormControl>
-        <FormLabel>
-          Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:
-        </FormLabel>
-        <RadioGroup
-          sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
-          value={state}
-          onChange={e => setState(() => e.target.value as BlueCardEntitlementType)}>
-          <FormControlLabel
-            value={BlueCardEntitlementType.WorkAtOrganizations}
-            label='Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
-            control={<Radio required />}
-          />
-          <Divider variant='middle' />
-          <FormControlLabel
-            value={BlueCardEntitlementType.Juleica}
-            label='Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).'
-            control={<Radio required />}
-          />
-          <Divider variant='middle' />
-          <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
-            control={<Radio required />}
-          />
-          <Divider variant='middle' />
-          <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
-            control={<Radio required />}
-          />
-          <Divider variant='middle' />
-          <FormControlLabel
-            value={BlueCardEntitlementType.Service}
-            label='Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
-            control={<Radio required />}
-          />
-        </RadioGroup>
-      </FormControl>
-    )
-  }
-)
+const BlueCardEntitlementTypeForm = ({
+  state,
+  setState,
+}: {
+  state: BlueCardEntitlementType | null
+  setState: SetState<BlueCardEntitlementType | null>
+}) => {
+  return (
+    <FormControl>
+      <FormLabel>Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:</FormLabel>
+      <RadioGroup
+        sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
+        value={state}
+        onChange={e => setState(() => e.target.value as BlueCardEntitlementType)}>
+        <FormControlLabel
+          value={BlueCardEntitlementType.WorkAtOrganizations}
+          label='Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
+          control={<Radio required />}
+        />
+        <Divider variant='middle' />
+        <FormControlLabel
+          value={BlueCardEntitlementType.Juleica}
+          label='Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).'
+          control={<Radio required />}
+        />
+        <Divider variant='middle' />
+        <FormControlLabel
+          value={BlueCardEntitlementType.Service}
+          label='Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
+          control={<Radio required />}
+        />
+        <Divider variant='middle' />
+        <FormControlLabel
+          value={BlueCardEntitlementType.Service}
+          label='Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
+          control={<Radio required />}
+        />
+        <Divider variant='middle' />
+        <FormControlLabel
+          value={BlueCardEntitlementType.Service}
+          label='Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
+          control={<Radio required />}
+        />
+      </RadioGroup>
+    </FormControl>
+  )
+}
 
 export type BlueCardEntitlementFormState = {
   entitlementType: BlueCardEntitlementType | null
@@ -94,7 +89,7 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
         return { type: 'error' }
     }
   },
-  Component: memo(({ state, setState }) => (
+  Component: ({ state, setState }) => (
     <>
       <BlueCardEntitlementTypeForm
         state={state.entitlementType}
@@ -113,7 +108,7 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
         }}
       </SwitchComponent>
     </>
-  )),
+  ),
 }
 
 export default BlueCardEntitlementForm

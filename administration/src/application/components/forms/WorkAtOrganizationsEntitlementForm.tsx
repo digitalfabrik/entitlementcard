@@ -2,30 +2,28 @@ import { Alert, Button } from '@mui/material'
 import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 import { SetState } from '../../useUpdateStateCallback'
-import { memo, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
 
-const WorkAtOrganizationFormHelper = memo(
-  ({
-    listKey,
-    setStateByKey,
-    deleteByKey,
-    ...otherProps
-  }: {
-    listKey: number
-    setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
-    deleteByKey?: (key: number) => void
-    state: WorkAtOrganizationFormState
-  }) => {
-    const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
-    const onDelete = useMemo(
-      () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
-      [deleteByKey, listKey]
-    )
-    return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
-  }
-)
+const WorkAtOrganizationFormHelper = ({
+  listKey,
+  setStateByKey,
+  deleteByKey,
+  ...otherProps
+}: {
+  listKey: number
+  setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
+  deleteByKey?: (key: number) => void
+  state: WorkAtOrganizationFormState
+}) => {
+  const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
+  const onDelete = useMemo(
+    () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
+    [deleteByKey, listKey]
+  )
+  return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
+}
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
   const newArray = [...array]
@@ -68,7 +66,7 @@ const WorkAtOrganizationsEntitlementForm: Form<
       },
     }
   },
-  Component: memo(({ state, setState }) => {
+  Component: ({ state, setState }) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
@@ -114,7 +112,7 @@ const WorkAtOrganizationsEntitlementForm: Form<
         )}
       </>
     )
-  }),
+  },
 }
 
 export default WorkAtOrganizationsEntitlementForm

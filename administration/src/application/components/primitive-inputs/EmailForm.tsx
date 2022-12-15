@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { memo, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { EmailInput } from '../../../generated/graphql'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
@@ -21,7 +21,7 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
       }
     return { type: 'valid', value: { email } }
   },
-  Component: memo(({ state, setState, label, minWidth = 100 }) => {
+  Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = EmailForm.getValidatedInput(state)
@@ -45,7 +45,7 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
         helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
-  }),
+  },
 }
 
 export default EmailForm

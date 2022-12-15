@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { memo, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
@@ -24,7 +24,7 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
       }
     return { type: 'valid', value: { shortText } }
   },
-  Component: memo(({ state, setState, label, minWidth = 200 }) => {
+  Component: ({ state, setState, label, minWidth = 200 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = ShortTextForm.getValidatedInput(state)
@@ -46,7 +46,7 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
         helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
       />
     )
-  }),
+  },
 }
 
 export default ShortTextForm

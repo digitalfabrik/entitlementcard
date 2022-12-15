@@ -1,7 +1,6 @@
 import { BlueCardEntitlementInput, CardType, GoldenCardEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import { memo } from 'react'
 import SwitchComponent from '../SwitchComponent'
 import BlueCardEntitlementForm, { BlueCardEntitlementFormState } from './BlueCardEntitlementForm'
 import GoldenCardEntitlementForm, { GoldenCardEntitlementFormState } from './GoldenCardEntitlementForm'
@@ -40,7 +39,7 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
         return { type: 'error' }
     }
   },
-  Component: memo(({ state, setState, options }) => (
+  Component: ({ state, setState, options }) => (
     <SwitchComponent value={options.cardType}>
       {{
         [CardType.Blue]: (
@@ -57,7 +56,7 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
         ),
       }}
     </SwitchComponent>
-  )),
+  ),
 }
 
 export default StepRequirementsForm

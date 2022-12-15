@@ -1,6 +1,6 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip, FormHelperText } from '@mui/material'
-import { ChangeEventHandler, memo, useContext, useEffect, useRef } from 'react'
+import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
 import globalArrayBuffersManager from '../../globalArrayBuffersManager'
 import { Form } from '../../FormType'
@@ -62,7 +62,7 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
       },
     }
   },
-  Component: memo(({ state, setState }) => {
+  Component: ({ state, setState }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = FileInputForm.getValidatedInput(state)
@@ -116,7 +116,7 @@ const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, Additiona
         onDelete={disableAllInputs ? undefined : () => setState(() => null)}
       />
     )
-  }),
+  },
 }
 
 export default FileInputForm
