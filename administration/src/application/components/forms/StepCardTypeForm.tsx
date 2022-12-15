@@ -4,19 +4,17 @@ import { Form } from '../../FormType'
 import { FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { FormControl } from '@mui/material'
 import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
-import CustomDivider from "../CustomDivider";
+import CustomDivider from '../CustomDivider'
 
-const CardTypeInput = ({ state, setState }: { state: CardType | null; setState: SetState<CardType | null> }) => {
-  return (
-    <FormControl>
-      <FormLabel>Antrag auf:</FormLabel>
-      <RadioGroup value={state} onChange={e => setState(() => e.target.value as CardType)}>
-        <FormControlLabel value={CardType.Blue} label='Blaue Ehrenamtskarte' control={<Radio required />} />
-        <FormControlLabel value={CardType.Golden} label='Goldene Ehrenamtskarte' control={<Radio required />} />
-      </RadioGroup>
-    </FormControl>
-  )
-}
+const CardTypeInput = ({ state, setState }: { state: CardType | null; setState: SetState<CardType | null> }) => (
+  <FormControl>
+    <FormLabel>Antrag auf:</FormLabel>
+    <RadioGroup value={state} onChange={e => setState(() => e.target.value as CardType)}>
+      <FormControlLabel value={CardType.Blue} label='Blaue Ehrenamtskarte' control={<Radio required />} />
+      <FormControlLabel value={CardType.Golden} label='Goldene Ehrenamtskarte' control={<Radio required />} />
+    </RadioGroup>
+  </FormControl>
+)
 
 const ApplicationTypeInput = ({
   state,
@@ -70,12 +68,12 @@ const StepCardTypeForm: Form<StepCardTypeFormState, Options, ValidatedInput, Add
   Component: ({ state, setState }) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <CardTypeInput state={state.cardType} setState={useUpdateStateCallback(setState, 'cardType')} />
-        <CustomDivider />
+      <CustomDivider />
       <ApplicationTypeInput
         state={state.applicationType}
         setState={useUpdateStateCallback(setState, 'applicationType')}
       />
-        <CustomDivider />
+      <CustomDivider />
       <Typography>
         Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.
         Hier können Sie wählen, ob Sie neben der physischen auch die digitale Ehrenamtskarte beantragen möchten.

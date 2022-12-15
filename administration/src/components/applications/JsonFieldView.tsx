@@ -92,7 +92,16 @@ const JsonFieldView = (props: {
     case 'Boolean':
       return (
         <p>
-          {props.jsonField.translations.de}:&nbsp;{props.jsonField.value ? <><Icon icon='tick' /> Ja</> : <><Icon icon='cross' /> Nein</>}
+          {props.jsonField.translations.de}:&nbsp;
+          {props.jsonField.value ? (
+            <>
+              <Icon icon='tick' /> Ja
+            </>
+          ) : (
+            <>
+              <Icon icon='cross' /> Nein
+            </>
+          )}
         </p>
       )
     case 'Attachment':

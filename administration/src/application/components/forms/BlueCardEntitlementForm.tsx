@@ -12,7 +12,9 @@ import WorkAtDepartmentEntitlementForm, {
   WorkAtDepartmentEntitlementFormState,
 } from './WorkAtDepartmentEntitlementForm'
 import MilitaryReserveEntitlementForm, { MilitaryReserveEntitlementFormState } from './MilitaryReserveEntitlementForm'
-import VolunteerServiceEntitlementForm, {VolunteerServiceEntitlementFormState} from './VolunteerServiceEntitlementForm'
+import VolunteerServiceEntitlementForm, {
+  VolunteerServiceEntitlementFormState,
+} from './VolunteerServiceEntitlementForm'
 
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
   labelByValue: {
@@ -46,7 +48,7 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
     juleicaEntitlement: JuleicaEntitlementForm.initialState,
     workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm.initialState,
     militaryReserveEntitlement: MilitaryReserveEntitlementForm.initialState,
-    volunteerServiceEntitlement: VolunteerServiceEntitlementForm.initialState
+    volunteerServiceEntitlement: VolunteerServiceEntitlementForm.initialState,
   },
   getArrayBufferKeys: state => [
     ...RadioGroupForm.getArrayBufferKeys(state.entitlementType),
@@ -54,7 +56,7 @@ const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, Valid
     ...JuleicaEntitlementForm.getArrayBufferKeys(state.juleicaEntitlement),
     ...WorkAtDepartmentEntitlementForm.getArrayBufferKeys(state.workAtDepartmentEntitlement),
     ...MilitaryReserveEntitlementForm.getArrayBufferKeys(state.militaryReserveEntitlement),
-    ...VolunteerServiceEntitlementForm.getArrayBufferKeys(state.volunteerServiceEntitlement)
+    ...VolunteerServiceEntitlementForm.getArrayBufferKeys(state.volunteerServiceEntitlement),
   ],
   getValidatedInput: state => {
     const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)

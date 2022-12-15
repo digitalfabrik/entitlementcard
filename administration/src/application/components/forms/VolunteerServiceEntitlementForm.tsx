@@ -1,6 +1,4 @@
-import {
-  BlueCardVolunteerServiceEntitlementInput,
-} from '../../../generated/graphql'
+import { BlueCardVolunteerServiceEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
@@ -31,8 +29,7 @@ const VolunteerServiceEntitlementForm: Form<
   getValidatedInput: state => {
     const programName = ShortTextForm.getValidatedInput(state.programName)
     const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (programName.type === 'error' || certificate.type === 'error')
-      return { type: 'error' }
+    if (programName.type === 'error' || certificate.type === 'error') return { type: 'error' }
     return {
       type: 'valid',
       value: {
