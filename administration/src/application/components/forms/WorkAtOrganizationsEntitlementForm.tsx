@@ -1,10 +1,10 @@
 import { Alert, Button } from '@mui/material'
 import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
-import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 import { SetState } from '../../useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
+import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 
 const WorkAtOrganizationFormHelper = ({
   listKey,

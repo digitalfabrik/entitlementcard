@@ -17,15 +17,14 @@ enum class CardType {
 }
 
 @GraphQLDescription(
-    """
-    An application for the Bayerische Ehrenamtskarte.
-    The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` can be null.
-"""
+    "An application for the Bayerische Ehrenamtskarte.\n" +
+        "The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null."
 )
 data class Application(
     val personalData: PersonalData,
     val cardType: CardType,
     val applicationType: ApplicationType,
+    val wantsDigitalCard: Boolean,
     val blueCardEntitlement: BlueCardEntitlement?,
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
@@ -45,7 +44,7 @@ data class Application(
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "application",
-            translations = mapOf("de" to "Antrag"),
+            translations = mapOf("de" to ""),
             type = Type.Array,
             value = listOf(
                 personalData.toJsonField(),
@@ -57,6 +56,21 @@ data class Application(
                         ApplicationType.FIRST_APPLICATION -> "Erstantrag"
                         ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
                     }
+                ),
+                JsonField(
+                    name = "cardType",
+                    translations = mapOf("de" to "Kartentyp"),
+                    type = Type.String,
+                    value = when (cardType) {
+                        CardType.BLUE -> "Blaue Ehrenamtskarte"
+                        CardType.GOLDEN -> "Goldene Ehrenamtskarte"
+                    }
+                ),
+                JsonField(
+                    name = "wantsDigitalCard",
+                    translations = mapOf("de" to "Ich beantrage neben der physischen auch die digitale Ehrenamtskarte."),
+                    type = Type.Boolean,
+                    value = wantsDigitalCard
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(

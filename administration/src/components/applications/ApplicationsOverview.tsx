@@ -18,19 +18,19 @@ interface Props {
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
-const ApplicationViewCard = styled(Card)<{ collapsed: boolean; contentHeight: number }>`
+const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number }>`
   transition: height 0.2s;
-  height: ${props => (props.collapsed ? COLLAPSED_HEIGHT : props.contentHeight + 2 * CARD_PADDING)}px;
+  height: ${props => (props.$collapsed ? COLLAPSED_HEIGHT : props.$contentHeight + 2 * CARD_PADDING)}px;
+  width: 600px;
   overflow: hidden;
   margin: 10px;
   padding: 0px;
   position: relative;
-  min-width: 200px;
 `
 
-const ExpandContainer = styled.div<{ collapsed: boolean }>`
+const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%);
-  opacity: ${props => (props.collapsed ? '1' : '0')};
+  opacity: ${props => (props.$collapsed ? '1' : '0')};
   position: absolute;
   top: 0px;
   transition: opacity 0.2s;
@@ -41,7 +41,7 @@ const ExpandContainer = styled.div<{ collapsed: boolean }>`
   cursor: pointer;
   align-items: flex-end;
   padding: ${CARD_PADDING}px;
-  pointer-events: ${props => (props.collapsed ? 'all' : 'none')};
+  pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
 const ApplicationView: FunctionComponent<{ application: Application; token: string; gotDeleted: () => void }> = ({
@@ -78,14 +78,14 @@ const ApplicationView: FunctionComponent<{ application: Application; token: stri
   }
 
   return (
-    <ApplicationViewCard elevation={2} collapsed={collapsed} contentHeight={height}>
-      <ExpandContainer onClick={() => setCollapsed(false)} collapsed={collapsed}>
+    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height}>
+      <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
       <ResizeSensor onResize={handleResize}>
         <div style={{ overflow: 'visible', padding: `${CARD_PADDING}px` }}>
           <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
-          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} token={token} key={0} />
+          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} token={token} key={0} hierarchyIndex={0} />
           <div
             style={{
               display: 'flex',

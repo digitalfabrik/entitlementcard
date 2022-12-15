@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.DateInput
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
-import app.ehrenamtskarte.backend.application.webservice.schema.view.AttachmentView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
@@ -11,52 +10,26 @@ import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPre
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class BlueCardEntitlementType {
+    // mindestens zwei Jahren freiwillig durchschnittlich fünf Stunden pro Woche oder bei Projektarbeiten mindestens
+    // 250 Stunden jährlich engagieren
+    WORK_AT_ORGANIZATIONS,
+
+    // Inhaber einer Juleica (Jugendleitercard) sind
     JULEICA,
-    SERVICE,
-    WORK_AT_ORGANIZATIONS
-}
 
-data class BlueCardServiceEntitlement(
-    val organization: Organization,
-    val responsibility: String?,
-    val certificate: Attachment?
-) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
-            name = "serviceEntitlement",
-            type = Type.Array,
-            translations = mapOf("de" to "Spezieller Dienst mit Grundausbildung"),
-            value = listOfNotNull(
-                organization.toJsonField(),
-                if (responsibility != null) {
-                    JsonField("responsibility", mapOf("de" to "Funktion"), Type.String, responsibility)
-                } else null,
-                if (certificate != null) JsonField(
-                    "serviceCertificate",
-                    mapOf("de" to "Zertifikat"),
-                    Type.Attachment,
-                    AttachmentView.from(certificate)
-                ) else null
-            )
-        )
-    }
-}
+    // Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem
+    // Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit
+    // abgeschlossener Grundausbildung.
+    WORK_AT_DEPARTMENT,
 
-data class BlueCardJuleicaEntitlement(
-    val juleicaNumber: ShortTextInput,
-    val juleicaExpirationDate: DateInput,
-    val copyOfJuleica: Attachment
-) : JsonFieldSerializable {
-    override fun toJsonField() = JsonField(
-        name = "juleicaEntitlement",
-        type = Type.Array,
-        translations = mapOf("de" to "Juleica-Inhaber:in"),
-        value = listOf(
-            juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
-            juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
-            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Scan der Karte"))
-        )
-    )
+    // als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr leisten, indem sie entweder in den vergangenen zwei
+    // Kalenderjahren insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht haben oder in den vergangenen
+    // zwei Kalenderjahren ständiger Angehöriger eines Bezirks- oder Kreisverbindungskommandos waren
+    MILITARY_RESERVE,
+
+    // einen Freiwilligendienst ableisten in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen ökologischem
+    // Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).
+    VOLUNTEER_SERVICE
 }
 
 data class BlueCardWorkAtOrganizationsEntitlement(
@@ -71,11 +44,79 @@ data class BlueCardWorkAtOrganizationsEntitlement(
     }
 
     override fun toJsonField() = JsonField(
-        name = "workAtOrganizationsEntitlement",
+        name = "blueCardWorkAtOrganizationsEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Engagement bei Verein oder Organisation"),
+        translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich."),
         value = list.map { it.toJsonField() }
     )
+}
+
+data class BlueCardJuleicaEntitlement(
+    val juleicaNumber: ShortTextInput,
+    val juleicaExpirationDate: DateInput,
+    val copyOfJuleica: Attachment
+) : JsonFieldSerializable {
+    override fun toJsonField() = JsonField(
+        name = "blueCardJuleicaEntitlement",
+        type = Type.Array,
+        translations = mapOf("de" to "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)."),
+        value = listOf(
+            juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
+            juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
+            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Kopie der Karte"))
+        )
+    )
+}
+
+data class BlueCardWorkAtDepartmentEntitlement(
+    val organization: Organization,
+    val responsibility: ShortTextInput,
+    val certificate: Attachment
+) : JsonFieldSerializable {
+    override fun toJsonField(): JsonField {
+        return JsonField(
+            name = "blueCardWorkAtDepartmentEntitlement",
+            type = Type.Array,
+            translations = mapOf("de" to "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung."),
+            value = listOfNotNull(
+                organization.toJsonField(),
+                responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+            )
+        )
+    }
+}
+
+data class BlueCardMilitaryReserveEntitlement(
+    val certificate: Attachment
+) : JsonFieldSerializable {
+    override fun toJsonField(): JsonField {
+        return JsonField(
+            name = "blueCardMilitaryReserveEntitlement",
+            type = Type.Array,
+            translations = mapOf("de" to "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."),
+            value = listOfNotNull(
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+            )
+        )
+    }
+}
+
+data class BlueCardVolunteerServiceEntitlement(
+    val programName: ShortTextInput,
+    val certificate: Attachment
+) : JsonFieldSerializable {
+    override fun toJsonField(): JsonField {
+        return JsonField(
+            name = "volunteerServiceEntitlement",
+            type = Type.Array,
+            translations = mapOf("de" to "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)."),
+            value = listOfNotNull(
+                programName.toJsonField("programName", mapOf("de" to "Name des Programms")),
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+            )
+        )
+    }
 }
 
 @GraphQLDescription(
@@ -83,14 +124,18 @@ data class BlueCardWorkAtOrganizationsEntitlement(
 )
 data class BlueCardEntitlement(
     val entitlementType: BlueCardEntitlementType,
+    val workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlement?,
     val juleicaEntitlement: BlueCardJuleicaEntitlement?,
-    val serviceEntitlement: BlueCardServiceEntitlement?,
-    val workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlement?
+    val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
+    val militaryServiceEntitlement: BlueCardMilitaryReserveEntitlement?,
+    val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?
 ) : JsonFieldSerializable {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
-        BlueCardEntitlementType.SERVICE to serviceEntitlement,
-        BlueCardEntitlementType.JULEICA to juleicaEntitlement
+        BlueCardEntitlementType.JULEICA to juleicaEntitlement,
+        BlueCardEntitlementType.WORK_AT_DEPARTMENT to workAtDepartmentEntitlement,
+        BlueCardEntitlementType.MILITARY_RESERVE to militaryServiceEntitlement,
+        BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement
     )
 
     init {

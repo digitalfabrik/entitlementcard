@@ -52,6 +52,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
           personalData: personalData.value,
           cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
+          wantsDigitalCard: stepCardType.value.wantsDigitalCard,
           blueCardEntitlement: stepRequirements.value.type === CardType.Blue ? stepRequirements.value.value : null,
           goldenCardEntitlement: stepRequirements.value.type === CardType.Golden ? stepRequirements.value.value : null,
           hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
