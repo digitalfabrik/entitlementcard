@@ -314,8 +314,6 @@ input OrganizationInput {
   category: ShortTextInput!
   contact: OrganizationContactInput!
   name: ShortTextInput!
-  "Link zu Website oder Satzung"
-  website: ShortTextInput
 }
 
 input PersonalDataInput {

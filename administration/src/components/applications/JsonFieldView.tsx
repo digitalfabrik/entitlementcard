@@ -33,7 +33,7 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   transition: 0.2s;
   &:hover {
     border-color: #999;
-    background-color: ${props => (props.$hierarchyIndex % 2 === 0 ? 'rgba(0,0,0,5%)' : 'white')};
+    background-color: ${props => (props.$hierarchyIndex % 2 === 1 ? 'rgba(0,0,0,5%)' : 'white')};
   }
 
   & > div {

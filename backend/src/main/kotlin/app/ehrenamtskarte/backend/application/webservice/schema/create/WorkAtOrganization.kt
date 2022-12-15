@@ -22,9 +22,9 @@ data class WorkAtOrganization(
             Type.Array,
             listOfNotNull(
                 organization.toJsonField(),
+                responsibility.toJsonField("responsibility", mapOf("de" to "Tätigkeit")),
                 JsonField("amountOfWork", mapOf("de" to "Arbeitsaufwand (Stunden/Woche)"), Type.Number, amountOfWork),
-                responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
-                workSinceDate.toJsonField("workSinceDate", mapOf("de" to "Datum des Arbeitsbeginns")),
+                workSinceDate.toJsonField("workSinceDate", mapOf("de" to "Tätig seit")),
                 JsonField(
                     "payment",
                     mapOf("de" to "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt:"),
