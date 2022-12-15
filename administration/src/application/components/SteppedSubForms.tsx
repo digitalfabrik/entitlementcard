@@ -78,6 +78,7 @@ const SubForm = ({
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
   const { enqueueSnackbar } = useSnackbar()
   useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])
+
   const handleOnSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()

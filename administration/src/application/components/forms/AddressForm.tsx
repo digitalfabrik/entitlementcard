@@ -47,7 +47,8 @@ const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
       },
     }
   },
-  Component: ({ state, setState }) => <>
+  Component: ({ state, setState }) => (
+    <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>
           <ShortTextForm.Component
@@ -81,7 +82,8 @@ const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalPro
           />
         </div>
       </div>
-    </>,
+    </>
+  ),
 }
 
 export default AddressForm

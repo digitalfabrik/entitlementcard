@@ -63,7 +63,8 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
       },
     }
   },
-  Component: ({ state, setState }) => <>
+  Component: ({ state, setState }) => (
+    <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
           <ShortTextForm.Component
@@ -101,7 +102,8 @@ const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, Add
         setState={useUpdateStateCallback(setState, 'dateOfBirth')}
         label='Geburtsdatum'
       />
-    </>,
+    </>
+  ),
 }
 
 export default PersonalDataForm
