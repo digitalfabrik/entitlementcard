@@ -99,7 +99,9 @@ const ApplyController = () => {
           {formSubmitted ? 'Erfolgreich gesendet' : 'Bayerische Ehrenamtskarte beantragen'}
         </Typography>
         {formSubmitted ? (
-          <SuccessContent>{successText}</SuccessContent>
+          <SuccessContent>
+            <Typography>{successText}</Typography>
+          </SuccessContent>
         ) : (
           <ApplicationForm.Component
             state={state}
