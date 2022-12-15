@@ -95,7 +95,7 @@ const ApplyController = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h3' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
+        <Typography variant='h4' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
           {formSubmitted ? 'Erfolgreich gesendet' : 'Bayerische Ehrenamtskarte beantragen'}
         </Typography>
         {formSubmitted ? (

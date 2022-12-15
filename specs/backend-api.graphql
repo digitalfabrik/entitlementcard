@@ -217,7 +217,7 @@ input AuthDataInput {
 input BlueCardEntitlementInput {
   entitlementType: BlueCardEntitlementType!
   juleicaEntitlement: BlueCardJuleicaEntitlementInput
-  militaryServiceEntitlement: BlueCardMilitaryReserveEntitlementInput
+  militaryReserveEntitlement: BlueCardMilitaryReserveEntitlementInput
   volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlementInput
   workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlementInput
   workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlementInput

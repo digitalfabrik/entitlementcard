@@ -127,14 +127,14 @@ data class BlueCardEntitlement(
     val workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlement?,
     val juleicaEntitlement: BlueCardJuleicaEntitlement?,
     val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
-    val militaryServiceEntitlement: BlueCardMilitaryReserveEntitlement?,
+    val militaryReserveEntitlement: BlueCardMilitaryReserveEntitlement?,
     val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?
 ) : JsonFieldSerializable {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
         BlueCardEntitlementType.JULEICA to juleicaEntitlement,
         BlueCardEntitlementType.WORK_AT_DEPARTMENT to workAtDepartmentEntitlement,
-        BlueCardEntitlementType.MILITARY_RESERVE to militaryServiceEntitlement,
+        BlueCardEntitlementType.MILITARY_RESERVE to militaryReserveEntitlement,
         BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement
     )
 
