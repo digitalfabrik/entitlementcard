@@ -41,7 +41,13 @@ object AdministratorsRepository {
         }
     }
 
-    fun insert(project: String, email: String, password: String?, role: Role, regionId: Int? = null) {
+    fun insert(
+        project: String,
+        email: String,
+        password: String?,
+        role: Role,
+        regionId: Int? = null
+    ): AdministratorEntity {
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw IllegalArgumentException("Project does not exist.")
 
@@ -65,7 +71,7 @@ object AdministratorsRepository {
             PasswordCrypto.hashPasswort(it)
         }
 
-        AdministratorEntity.new {
+        return AdministratorEntity.new {
             this.email = email
             this.projectId = projectEntity.id
             this.regionId = region?.id
