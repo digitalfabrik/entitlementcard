@@ -16,7 +16,7 @@ const Navigation = (props: Props) => {
   const region = useContext(RegionContext)
   const role = useContext(AuthContext).data?.administrator.role
   return (
-    <Navbar>
+    <Navbar style={{ height: 'auto' }}>
       <Navbar.Group>
         <Navbar.Heading>{config.name} Verwaltung</Navbar.Heading>
         <Navbar.Divider />
