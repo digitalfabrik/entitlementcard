@@ -27,8 +27,8 @@ const RefetchCard = (props: { refetch: () => void }) => {
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
   return (
     <StandaloneCenter>
-      <Card style={{ maxWidth: '800px', margin: '16px' }}>
-        <H3>{title}</H3>
+      <Card style={{ maxWidth: '1200px', margin: '16px' }}>
+        <H3 style={{ textAlign: 'center' }}>{title}</H3>
         {children}
       </Card>
     </StandaloneCenter>
@@ -53,7 +53,7 @@ const ManageProjectUsers = () => {
 
   return (
     <UsersTableContainer title={`Alle Benutzer von '${projectName} - Verwaltung'`}>
-      <UsersTable users={users} regions={regions} showRegion={true} refetch={usersQuery.refetch} />
+      <UsersTable users={users} regions={regions} refetch={usersQuery.refetch} />
     </UsersTableContainer>
   )
 }
@@ -75,8 +75,8 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   const users = usersQuery.data!!.users
 
   return (
-    <UsersTableContainer title={`Alle Verwalter der Region '${region.name}'`}>
-      <UsersTable users={users} regions={regions} showRegion={false} refetch={usersQuery.refetch} />
+    <UsersTableContainer title={`Alle Verwalter der Region '${region.prefix} ${region.name}'`}>
+      <UsersTable users={users} regions={regions} selectedRegionId={region.id} refetch={usersQuery.refetch} />
     </UsersTableContainer>
   )
 }
