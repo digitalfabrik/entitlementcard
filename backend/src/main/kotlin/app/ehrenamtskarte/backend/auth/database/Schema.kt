@@ -1,12 +1,15 @@
 package app.ehrenamtskarte.backend.auth.database
 
+import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.or
 
 object Administrators : IntIdTable() {
     val email = varchar("email", 100).uniqueIndex()
@@ -16,6 +19,15 @@ object Administrators : IntIdTable() {
     val passwordHash = binary("passwordHash").nullable()
     val passwordResetKey = varchar("passwordResetKey", 100).nullable()
     val passwordResetKeyExpiry = datetime("passwordResetKeyExpiry").nullable()
+
+    init {
+        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS)
+        val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
+        check("roleRegionCombinationConstraint") {
+            regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
+                regionId.isNotNull().and(role.inList(regionCompatibleRoles.map { it.db_value }))
+        }
+    }
 }
 
 class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
