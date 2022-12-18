@@ -1,8 +1,10 @@
 import { Button, ButtonGroup, H4 } from '@blueprintjs/core'
 import { Popover2 } from '@blueprintjs/popover2'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { Administrator, Region, Role } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
+import CreateUserDialog from './CreateUserDialog'
 
 const StyledTable = styled.table`
   border-spacing: 0;
@@ -58,12 +60,15 @@ const UsersTable = ({
   users,
   regions,
   showRegion,
+  refetch,
 }: {
   users: Administrator[]
   regions: Region[]
   showRegion: boolean
+  refetch: () => void
 }) => {
   const appToaster = useAppToaster()
+  const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
 
   const showNotImplementedToast = () =>
     appToaster?.show({
@@ -76,7 +81,7 @@ const UsersTable = ({
       <StyledTable>
         <thead>
           <tr>
-            <th>E-Mail Adresse</th>
+            <th>Email-Adresse</th>
             {showRegion ? <th>Region</th> : null}
             <th>
               Rolle <RoleHelpButton />
@@ -102,13 +107,18 @@ const UsersTable = ({
         </tbody>
       </StyledTable>
       <div style={{ padding: '16px', textAlign: 'center' }}>
-        <Button intent='success' text='Benutzer hinzufügen' icon='add' onClick={showNotImplementedToast} />
+        <Button intent='success' text='Benutzer hinzufügen' icon='add' onClick={() => setCreateUserDialogOpen(true)} />
+        <CreateUserDialog
+          isOpen={createUserDialogOpen}
+          onClose={() => setCreateUserDialogOpen(false)}
+          onSuccess={refetch}
+        />
       </div>
     </>
   )
 }
 
-const roleToText = (role: Role): String => {
+export const roleToText = (role: Role): String => {
   switch (role) {
     case Role.NoRights:
       return 'Keine'

@@ -53,7 +53,7 @@ const ManageProjectUsers = () => {
 
   return (
     <UsersTableContainer title={`Alle Benutzer von '${projectName} - Verwaltung'`}>
-      <UsersTable users={users} regions={regions} showRegion={true} />
+      <UsersTable users={users} regions={regions} showRegion={true} refetch={usersQuery.refetch} />
     </UsersTableContainer>
   )
 }
@@ -76,7 +76,7 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
 
   return (
     <UsersTableContainer title={`Alle Verwalter der Region '${region.name}'`}>
-      <UsersTable users={users} regions={regions} showRegion={false} />
+      <UsersTable users={users} regions={regions} showRegion={false} refetch={usersQuery.refetch} />
     </UsersTableContainer>
   )
 }
