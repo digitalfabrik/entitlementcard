@@ -1,3 +1,6 @@
+import kotlin.Pair
+import com.android.build.api.dsl.ApplicationProductFlavor
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -25,6 +28,33 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply from: "buildConfigs.gradle"
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+ext.setupApplication = { ApplicationProductFlavor flavor, buildConfig ->
+    flavor.applicationId buildConfig.applicationId
+    flavor.manifestPlaceholders = [*:determineIcon(buildConfig)]
+
+    setupResourceValues("bayern", {
+        String type, String name, String value -> flavor.resValue(type, name, value)
+    })
+}
+
+ext.setupVariant = { variant, buildConfig ->
+    if (buildConfig.featureFlags.excludeX86) {
+        variant.packaging.jniLibs.excludes.add('**/lib/x86**')
+    }
+    if (buildConfig.excludeLocationPlayServices) {
+        variant.compileConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
+        variant.runtimeConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+}
 
 android {
     compileSdkVersion 33
@@ -35,33 +65,21 @@ android {
 
     flavorDimensions "dummy"
     productFlavors {
-        Automatic {
-            getIsDefault().set(true)
+        Automatic { flavor ->
+            flavor.getIsDefault().set(true)
             // Automatically decides which build config to use based on project properties, dart defines or environment variables.
         }
-        Bayern {
+        Bayern { flavor ->
             // Forces the bayern build config
-            def buildConfig = createBuildConfig("bayern")
-            applicationId buildConfig.applicationId
-            manifestPlaceholders = [*:determineIcon(buildConfig)]
-
-            setupResourceValues("bayern", {
-                String type, String name, String value -> resValue(type, name, value)
-            })
+            setupApplication(flavor, createBuildConfig("bayern"))
         }
-        Nuernberg {
-            // Forces the nuernberg build config
-            def buildConfig = createBuildConfig("nuernberg")
-            applicationId buildConfig.applicationId
-
-            manifestPlaceholders = [*:determineIcon(buildConfig)]
-
-            setupResourceValues("nuernberg", {
-                String type, String name, String value -> resValue(type, name, value)
-            })
+        Nuernberg { flavor ->
+            setupApplication(flavor, createBuildConfig("nuernberg"))
+        }
+        BayernFloss { flavor ->
+            setupApplication(flavor, createBuildConfig("bayern-floss"))
         }
     }
-
 
     lintOptions {
         disable 'InvalidPackage'
@@ -99,43 +117,26 @@ android {
 
     defaultConfig {
         minSdkVersion 20
-        targetSdkVersion 32
+        targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-
-    applicationVariants.all { variant ->
-       variant.productFlavors.each { flavor ->
-
-           logger.warn("Flavor name " + flavor.name)
-           def buildConfigName = flavor.name == "Bayern" ? "bayern" : 
-                                        flavor.name == "Nuernberg" ? "nuernberg" : 
-                                        determineBuildConfigName()
-           def buildConfig = createBuildConfig(buildConfigName)
-
-
-
-           
-           
-
-           packagingOptions {
-               // Exclude x86 because the app size in F-Droid is limited to 30MB
-               if (buildConfig.featureFlags.excludeX86) {
-                   exclude 'lib/x86**'
-               }
-           }
-           
-           // If we create a FLOSS build, then we want to exclude GMS
-           if (buildConfig.excludeLocationPlayServices) {
-               variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
-               variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
-           }
-        }
+    androidComponents {
+        // Verify this using:
+        // unzip -l frontend/build/app/outputs/apk/Bayern/debug/app-Bayern-debug.apk | grep x86
+        // unzip -l frontend/build/app/outputs/apk/Nuernberg/debug/app-Nuernberg-debug.apk | grep x86
+        onVariants(selector().withFlavor(new Pair("dummy", "Bayern")), { variant ->
+            setupVariant(variant, createBuildConfig("bayern"))
+        })
+        onVariants(selector().withFlavor(new Pair("dummy", "Nuernberg")), { variant ->
+            setupVariant(variant, createBuildConfig("nuernberg"))
+        })
+        onVariants(selector().withFlavor(new Pair("dummy", "BayernFloss")), { variant ->
+            setupVariant(variant, createBuildConfig("bayern-floss"))
+        })
     }
-
-
 }
 
 flutter {
