@@ -44,6 +44,10 @@ android {
             def buildConfig = createBuildConfig("bayern")
             applicationId buildConfig.applicationId
             manifestPlaceholders = [*:determineIcon(buildConfig)]
+
+            setupResourceValues("bayern", {
+                String type, String name, String value -> resValue(type, name, value)
+            })
         }
         Nuernberg {
             // Forces the nuernberg build config
@@ -51,6 +55,10 @@ android {
             applicationId buildConfig.applicationId
 
             manifestPlaceholders = [*:determineIcon(buildConfig)]
+
+            setupResourceValues("nuernberg", {
+                String type, String name, String value -> resValue(type, name, value)
+            })
         }
     }
 
@@ -91,7 +99,7 @@ android {
 
     defaultConfig {
         minSdkVersion 20
-        targetSdkVersion 30
+        targetSdkVersion 32
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -100,17 +108,16 @@ android {
 
     applicationVariants.all { variant ->
        variant.productFlavors.each { flavor ->
-           
+
+           logger.warn("Flavor name " + flavor.name)
            def buildConfigName = flavor.name == "Bayern" ? "bayern" : 
                                         flavor.name == "Nuernberg" ? "nuernberg" : 
                                         determineBuildConfigName()
            def buildConfig = createBuildConfig(buildConfigName)
 
-           defaultConfig {
-               setupResourceValues(buildConfigName, {
-                   String type, String name, String value -> resValue(type, name, value)
-               })
-           }
+
+
+           
            
 
            packagingOptions {
@@ -133,7 +140,7 @@ android {
 
 flutter {
     source '../..'
-    target 'lib/main_prod.dart'
+    target 'lib/main.dart'
 }
 
 dependencies {
