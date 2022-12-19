@@ -34,8 +34,8 @@ let bayern: BuildConfigType = {
         applicationId: "de.nrw.it.giz.ehrensache.bayern.android",
         featureFlags: {
             ...bayernCommon.featureFlags,
-            excludeLocationPlayServices: false,
-            excludeX86: false
+            excludeLocationPlayServices: true,
+            excludeX86: true
         }
     },
     ios: {
