@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 const scanDelayAfterErrorMs = 500;
 
@@ -18,7 +18,10 @@ class QrCodeScanner extends StatefulWidget {
 }
 
 class _QRViewState extends State<QrCodeScanner> {
-  QRViewController? _controller;
+  final MobileScannerController _controller = MobileScannerController(
+    torchEnabled: false,
+    formats: [BarcodeFormat.qrCode],
+  );
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool isProcessingCode = false;
 
@@ -29,35 +32,47 @@ class _QRViewState extends State<QrCodeScanner> {
       children: <Widget>[
         Expanded(
           flex: 4,
-          child: QRView(
-            key: qrKey,
-            onQRViewCreated: _onQrViewCreated,
-            overlay: QrScannerOverlayShape(
-              borderColor: Theme.of(context).colorScheme.secondary,
-              borderRadius: 10,
-              borderLength: 30,
-              borderWidth: 10,
-              cutOutSize: _calculateScanArea(context),
-            ),
+          child: Stack(
+            children: [
+              MobileScanner(
+                key: qrKey,
+                onDetect: (barcode, args) => _onCodeScanned(barcode),
+                allowDuplicates: false,
+                controller: controller,
+              ),
+              Center(
+                child: Container(
+                  width: _calculateScanArea(context),
+                  height: _calculateScanArea(context),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 10,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        if (controller != null)
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    child: const Text('Halten Sie die Kamera auf den QR Code.'),
-                  ),
-                  QrCodeScannerControls(controller: controller)
-                ],
-              ),
+        Expanded(
+          flex: 1,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                ),
+                QrCodeScannerControls(controller: controller)
+              ],
             ),
-          )
+          ),
+        )
       ],
     );
   }
@@ -76,37 +91,14 @@ class _QRViewState extends State<QrCodeScanner> {
     return scanArea;
   }
 
-  void _onQrViewCreated(QRViewController controller) {
-    setState(() {
-      _controller = controller;
-    });
-    controller.scannedDataStream.listen(_onCodeScanned);
-  }
-
   Future<void> _onCodeScanned(Barcode scanData) async {
     final controller = _controller;
-    final code = scanData.code;
-    if (controller == null || code == null) {
+    final code = scanData.rawValue;
+    if (code == null) {
       return;
     }
-
-    // needed because this method gets called multiple times in a row after one
-    // qr code gets detected, therefore we need to protect it
-    if (isProcessingCode) {
-      return;
-    }
-    isProcessingCode = true;
-    controller.pauseCamera();
 
     await widget.onCodeScanned(code);
-
-    // give the user time to move the camara away from the qr code
-    await Future.delayed(const Duration(milliseconds: scanDelayAfterErrorMs));
-
-    if (mounted) {
-      controller.resumeCamera();
-    }
-    isProcessingCode = false;
   }
 
   @override
