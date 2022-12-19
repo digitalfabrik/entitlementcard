@@ -7,14 +7,27 @@ workflows:
       - check-frontend
       - frontend-android-build:
           buildConfig: "bayern-floss"
+          androidFlavor: "Bayern" # TODO: Add BayernFloss flavor in android
           requires:
             - check-frontend
       - frontend-android-build:
           buildConfig: "bayern"
+          androidFlavor: "Bayern"
           requires:
             - check-frontend
       - frontend-ios-build:
           buildConfig: "bayern"
+          flutterFlavor: "Bayern"
+          requires:
+            - check-frontend
+      - frontend-android-build:
+          buildConfig: "nuernberg"
+          flutterFlavor: "Nuernberg"
+          requires:
+            - check-frontend
+      - frontend-ios-build:
+          buildConfig: "nuernberg"
+          flutterFlavor: "Nuernberg"
           requires:
             - check-frontend
       - backend-build
@@ -176,7 +189,6 @@ jobs:
         description: "Name of the build config to use"
         type: string
     environment:
-      BUILD_CONFIG_NAME: << parameters.buildConfig >>
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
     working_directory: ~/project/frontend
@@ -202,11 +214,11 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --dart-define=environment=production --release -t lib/main.dart
+            fvm --verbose flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -218,8 +230,6 @@ jobs:
         description: "Name of the build config to use"
         type: string
     working_directory: ~/project/frontend
-    environment:
-      BUILD_CONFIG_NAME: << parameters.buildConfig >>
     steps:
       - checkout:
           path: ~/project
@@ -248,12 +258,12 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=$BUILD_CONFIG_NAME"
+            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
-            app-toolbelt v0 build-config write-xcconfig "$BUILD_CONFIG_NAME" ios --directory ios/
-            fvm --verbose flutter build ios --dart-define=environment=production --no-codesign --release -t lib/main.dart
+            app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
+            fvm --verbose flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
 
   backend-build:
     environment:
