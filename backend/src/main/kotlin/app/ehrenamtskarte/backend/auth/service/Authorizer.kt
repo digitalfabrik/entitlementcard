@@ -56,7 +56,8 @@ object Authorizer {
             return true
         } else if (
             actingAdmin.role == Role.REGION_ADMIN.db_value &&
-            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id
+            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
+            newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
         ) {
             return true
         }
