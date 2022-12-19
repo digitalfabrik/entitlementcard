@@ -6,7 +6,7 @@ workflows:
     jobs:
       - check-frontend
       - frontend-android-build:
-          name: frontend-ios-build-bayern-floss
+          name: frontend-android-build-bayern-floss
           buildConfig: "bayern-floss"
           flutterFlavor: "BayernFloss"
           requires:

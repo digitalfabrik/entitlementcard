@@ -37,20 +37,27 @@ idea {
     }
 }
 
-ext.setupApplication = { ApplicationProductFlavor flavor, buildConfig ->
+ext.setupApplication = { ApplicationProductFlavor flavor, buildConfigName ->
+    var buildConfig = createBuildConfig(buildConfigName)
     flavor.applicationId buildConfig.applicationId
     flavor.manifestPlaceholders = [*:determineIcon(buildConfig)]
 
-    setupResourceValues("bayern", {
+    setupResourceValues(buildConfigName, {
         String type, String name, String value -> flavor.resValue(type, name, value)
     })
 }
 
-ext.setupVariant = { variant, buildConfig ->
+ext.setupVariant = { variant, buildConfigName ->
+    var buildConfig = createBuildConfig(buildConfigName)
     if (buildConfig.featureFlags.excludeX86) {
+        // Verify this using:
+        // unzip -l frontend/build/app/outputs/apk/Bayern/debug/app-Bayern-debug.apk | grep x86
+        // unzip -l frontend/build/app/outputs/apk/Nuernberg/debug/app-Nuernberg-debug.apk | grep x86
         variant.packaging.jniLibs.excludes.add('**/lib/x86**')
     }
     if (buildConfig.excludeLocationPlayServices) {
+        // Verify this by opeing the APKs in Android Studio/IntelliJ. Then select all the .dex files.
+        // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
         variant.compileConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
         variant.runtimeConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
     }
@@ -71,13 +78,13 @@ android {
         }
         Bayern { flavor ->
             // Forces the bayern build config
-            setupApplication(flavor, createBuildConfig("bayern"))
+            setupApplication(flavor, "bayern")
         }
         Nuernberg { flavor ->
-            setupApplication(flavor, createBuildConfig("nuernberg"))
+            setupApplication(flavor, "nuernberg")
         }
         BayernFloss { flavor ->
-            setupApplication(flavor, createBuildConfig("bayern-floss"))
+            setupApplication(flavor, "bayern-floss")
         }
     }
 
@@ -124,17 +131,14 @@ android {
     }
 
     androidComponents {
-        // Verify this using:
-        // unzip -l frontend/build/app/outputs/apk/Bayern/debug/app-Bayern-debug.apk | grep x86
-        // unzip -l frontend/build/app/outputs/apk/Nuernberg/debug/app-Nuernberg-debug.apk | grep x86
         onVariants(selector().withFlavor(new Pair("dummy", "Bayern")), { variant ->
-            setupVariant(variant, createBuildConfig("bayern"))
+            setupVariant(variant, "bayern")
         })
         onVariants(selector().withFlavor(new Pair("dummy", "Nuernberg")), { variant ->
-            setupVariant(variant, createBuildConfig("nuernberg"))
+            setupVariant(variant, "nuernberg")
         })
         onVariants(selector().withFlavor(new Pair("dummy", "BayernFloss")), { variant ->
-            setupVariant(variant, createBuildConfig("bayern-floss"))
+            setupVariant(variant, "bayern-floss")
         })
     }
 }
