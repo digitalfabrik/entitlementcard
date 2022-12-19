@@ -2,7 +2,7 @@ import BuildConfigType, {CommonBuildConfigType} from "../types";
 
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Sozialpass",
-    appIcon: "",
+    appIcon: "app_icon_nuernberg",
     projectId: {
         production: "nuernberg.sozialpass.app",
         showcase: "showcase.entitlementcard.app",
