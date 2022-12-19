@@ -10,9 +10,7 @@ import 'package:flutter/material.dart';
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
-  final bool showVerification;
-
-  const HomePage({super.key, required this.showVerification});
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -44,13 +42,12 @@ class _HomePageState extends State<HomePage> {
         "Suche",
         GlobalKey<NavigatorState>(debugLabel: "Search tab key"),
       ),
-      if (widget.showVerification)
-        AppFlow(
-          const IdentificationPage(title: "Ausweisen"),
-          Icons.remove_red_eye_outlined,
-          "Ausweisen",
-          GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
-        ),
+      AppFlow(
+        const IdentificationPage(title: "Ausweisen"),
+        Icons.remove_red_eye_outlined,
+        "Ausweisen",
+        GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
+      ),
       AppFlow(const AboutPage(), Icons.info_outline, "Über", GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
   }

@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
@@ -16,7 +15,6 @@ class EntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final configuration = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
 
     return FutureBuilder<SettingsModel>(
@@ -31,9 +29,7 @@ class EntryWidget extends StatelessWidget {
             introRouteName: (context) => IntroScreen(
                   onFinishedCallback: () => settings.setFirstStart(enabled: false),
                 ),
-            homeRouteName: (context) => HomePage(
-                  showVerification: configuration.showVerification,
-                )
+            homeRouteName: (context) => const HomePage()
           };
 
           final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;

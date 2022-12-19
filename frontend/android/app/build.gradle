@@ -43,11 +43,14 @@ android {
             // Forces the bayern build config
             def buildConfig = createBuildConfig("bayern")
             applicationId buildConfig.applicationId
+            manifestPlaceholders = [*:determineIcon(buildConfig)]
         }
         Nuernberg {
             // Forces the nuernberg build config
             def buildConfig = createBuildConfig("nuernberg")
             applicationId buildConfig.applicationId
+
+            manifestPlaceholders = [*:determineIcon(buildConfig)]
         }
     }
 

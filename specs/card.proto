@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+message RegionExtension {
+  // Using int32 instead of uint32, even though we do not expect negative values.
+  // The reason is that int32 are better supported in GraphQL and SQL.
+  int32 regionId = 1;
+}
+
+message BirthdayExtension {
+  // Days since the birthday (calculated from 1970-01-01).
+  // All values of this field are valid, including the 0, which indicates that the birthday is on 1970-01-01.
+  // If you intend to specify that the card does not have an associated birthdate, then exclude the BirthdayExtension.
+  int32 birthday = 1;
+}
+
+message NuernbergPassNumberExtension {
+  string pass_number = 1;
+}
+
+message BavariaCardTypeExtension {
+  BavariaCardType card_type = 1;
+}
+
+// All fields in this extension are explicitly optional, handle with care!
+message CardExtensions {
+  optional RegionExtension extension_region = 1;
+  optional BirthdayExtension extension_birthday = 2;
+  optional NuernbergPassNumberExtension extension_vag_number = 3;
+  optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
+}
+
+message CardInfo {
+  // Basic information
+  string fullName = 1;
+  // Expiration day (calculated from 1970-01-01).
+  // Cards are always invalid on 1970-01-01 (because day = 0 is excluded).
+  // The calculated day is inclusive (e.g. if day == 1, then the card is valid on 1970-01-02, but not on 1970-01-03).
+  // Because the data type is unsigned, there are no dates before 1970-01-01.
+  // 2^32days = 11 759 230.8 years.
+  optional uint32 expiration_day = 2;
+
+  // Extensions
+  CardExtensions extensions = 3;
+}
+
+message CardActivationCode {
+  CardInfo info = 1;
+  bytes hash_secret = 2;
+  bytes totp_secret = 3;
+}
+
+message CardVerifyCode {
+  CardInfo info = 1;
+  bytes hash_secret = 2;
+  uint32 otp = 3;
+}
+
+// FIXME: Must be last because of https://github.com/protobufjs/protobuf.js/issues/1414
+enum BavariaCardType {
+  STANDARD = 0;
+  GOLD = 1;
+}

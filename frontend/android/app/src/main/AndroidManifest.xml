@@ -8,7 +8,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:label="@string/BUILD_CONFIG_APP_NAME"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/${icon}"
+        android:roundIcon="@mipmap/${icon}_round">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -42,4 +43,7 @@
     <!--<uses-permission android:name="android.permission.CAMERA" tools:node="remove"/>-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

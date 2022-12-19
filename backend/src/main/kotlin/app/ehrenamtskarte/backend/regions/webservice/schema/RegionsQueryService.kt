@@ -11,7 +11,7 @@ class RegionsQueryService {
     @GraphQLDescription("Return list of all regions in the given project.")
     fun regionsInProject(project: String): List<Region> = transaction {
         RegionsRepository.findAllInProject(project).map {
-            Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
+            Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
         }
     }
 
@@ -19,7 +19,14 @@ class RegionsQueryService {
     fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> = transaction {
         RegionsRepository.findByIdsInProject(project, ids).map {
             if (it == null) null
-            else Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
+            else Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
         }
+    }
+
+    @GraphQLDescription("Returns region data for specific region.")
+    fun regionByRegionId(regionId: Int): Region = transaction {
+        val regionEntity = RegionsRepository.findRegionById(regionId)
+
+        Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 }

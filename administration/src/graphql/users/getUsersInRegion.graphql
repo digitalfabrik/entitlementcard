@@ -1,0 +1,8 @@
+query getUsersInRegion($regionId: Int!) {
+  users: getUsersInRegion(regionId: $regionId) {
+    regionId
+    email
+    id
+    role
+  }
+}

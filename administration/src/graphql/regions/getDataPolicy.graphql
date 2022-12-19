@@ -1,0 +1,5 @@
+query getDataPolicy($regionId: Int!) {
+  dataPolicy: regionByRegionId(regionId: $regionId) {
+    dataPrivacyPolicy
+  }
+}

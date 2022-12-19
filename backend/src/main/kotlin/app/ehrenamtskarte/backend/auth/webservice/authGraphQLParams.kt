@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.auth.webservice.dataloader.administratorLoader
 import app.ehrenamtskarte.backend.auth.webservice.schema.ChangePasswordMutationService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordMutationService
 import app.ehrenamtskarte.backend.auth.webservice.schema.SignInMutationService
+import app.ehrenamtskarte.backend.auth.webservice.schema.ViewAdministratorsQueryService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
@@ -24,5 +25,7 @@ val authGraphQlParams = GraphQLParams(
         TopLevelObject(ChangePasswordMutationService()),
         TopLevelObject(ResetPasswordMutationService())
     ),
-    queries = listOf()
+    queries = listOf(
+        TopLevelObject(ViewAdministratorsQueryService())
+    )
 )

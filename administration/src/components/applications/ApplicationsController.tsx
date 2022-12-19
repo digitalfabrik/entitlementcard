@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
-import { Button, Card, H3, Spinner } from '@blueprintjs/core'
+import { Spinner } from '@blueprintjs/core'
 import { RegionContext } from '../../RegionProvider'
 import ApplicationsOverview from './ApplicationsOverview'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
+import ErrorHandler from '../../ErrorHandler'
 
 const ApplicationsController = (props: { region: Region; token: string }) => {
   const { loading, error, data, refetch } = useGetApplicationsQuery({
@@ -10,15 +11,7 @@ const ApplicationsController = (props: { region: Region; token: string }) => {
     onError: error => console.error(error),
   })
   if (loading) return <Spinner />
-  else if (error || !data)
-    return (
-      <Card>
-        <H3>Ein Fehler ist aufgetreten.</H3>
-        <Button intent='primary' onClick={() => refetch()}>
-          Erneut versuchen
-        </Button>
-      </Card>
-    )
+  else if (error || !data) return <ErrorHandler refetch={refetch} />
   else return <ApplicationsOverview applications={data.applications} token={props.token} />
 }
 

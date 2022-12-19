@@ -19,13 +19,16 @@ projects:
     pipelineName: EhrenamtskarteBayern
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
+    timezone: "Europe/Berlin"
   - id: nuernberg.sozialpass.app
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Sozialpass-Nürnberg-Verwaltung
+    timezone: "Europe/Berlin"
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
     pipelineName: BerechtigungskarteShowcase
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
+    timezone: "Europe/Berlin"

@@ -94,6 +94,8 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates the data privacy policy of a region"
+  updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
 }
 
 type PhysicalStore {
@@ -110,10 +112,16 @@ type Query {
   categories: [Category!]!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
+  getUsersInProject(project: String!): [Administrator!]!
+  "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
+  getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
+  "Returns region data for specific region."
+  regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Return list of all regions in the given project."
@@ -125,6 +133,7 @@ type Query {
 }
 
 type Region {
+  dataPrivacyPolicy: String
   id: Int!
   name: String!
   prefix: String!
@@ -219,7 +228,7 @@ input BlueCardServiceEntitlementInput {
 
 input CardGenerationModelInput {
   cardDetailsHashBase64: String!
-  expirationDate: Long!
+  cardExpirationDay: Long
   regionId: Int!
   totpSecretBase64: String!
 }

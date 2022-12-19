@@ -1,7 +1,8 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
+import { FormContext } from '../SteppedSubForms'
 
 export type SelectFormState = { selectedText: string }
 type ValidatedInput = ShortTextInput
@@ -21,6 +22,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
+    const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = SelectForm.getValidatedInput(state, options)
     const isInvalid = validationResult.type === 'error'
 
@@ -28,6 +30,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
       <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
         <InputLabel>{label}</InputLabel>
         <Select
+          disabled={disableAllInputs}
           value={state.selectedText}
           label={label}
           onBlur={() => setTouched(true)}
@@ -38,7 +41,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
             </MenuItem>
           ))}
         </Select>
-        {!touched || !isInvalid ? null : <FormHelperText>{validationResult.message}</FormHelperText>}
+        {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
       </FormControl>
     )
   },
