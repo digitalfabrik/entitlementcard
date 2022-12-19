@@ -48,7 +48,7 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
       itemRenderer={itemRenderer}
       filterable={true}
       itemListPredicate={(filter, items) =>
-        items.filter(region => region.name.toLowerCase().includes(filter.toLowerCase()))
+        items.filter(region => getTitle(region).toLowerCase().includes(filter.toLowerCase()))
       }
       fill
       itemListRenderer={renderMenu}
