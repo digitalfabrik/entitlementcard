@@ -7,12 +7,12 @@ workflows:
       - check-frontend
       - frontend-android-build:
           buildConfig: "bayern-floss"
-          androidFlavor: "Bayern" # TODO: Add BayernFloss flavor in android
+          flutterFlavor: "Bayern" # TODO: Add BayernFloss flavor in android
           requires:
             - check-frontend
       - frontend-android-build:
           buildConfig: "bayern"
-          androidFlavor: "Bayern"
+          flutterFlavor: "Bayern"
           requires:
             - check-frontend
       - frontend-ios-build:
