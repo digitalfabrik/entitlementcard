@@ -40,7 +40,7 @@ object Authorizer {
             mayViewUsersInProject(user, region.projectId.value)
     }
 
-    fun mayCreateAdministrator(
+    fun mayCreateUser(
         actingAdmin: AdministratorEntity,
         newAdminProjectId: Int,
         newAdminRole: Role,

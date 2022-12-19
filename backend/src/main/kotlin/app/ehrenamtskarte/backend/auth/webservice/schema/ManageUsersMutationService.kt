@@ -46,7 +46,7 @@ class ManageUsersMutationService {
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
             val region = regionId?.let { RegionEntity.findById(it) }
 
-            if (!Authorizer.mayCreateAdministrator(actingAdmin, projectEntity.id.value, role, region)) {
+            if (!Authorizer.mayCreateUser(actingAdmin, projectEntity.id.value, role, region)) {
                 throw UnauthorizedException()
             }
 
