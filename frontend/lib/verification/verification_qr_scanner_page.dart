@@ -100,9 +100,8 @@ class VerificationQrScannerPage extends StatelessWidget {
         e,
       );
     } finally {
-      // Should already be closed in any case, but we want to really be sure the
-      // dialog eventually is closed.
-      _closeWaitingDialog(context);
+      // close current "Karte verifizieren" view
+      Navigator.of(context).pop();
     }
   }
 
@@ -120,17 +119,16 @@ class VerificationQrScannerPage extends StatelessWidget {
     await PositiveVerificationResultDialog.show(context, cardDetails);
   }
 
-  Future<void> _openWaitingDialog(BuildContext context) async {
-    await showDialog(
+  void _openWaitingDialog(BuildContext context) {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) =>
           AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])),
     );
-    Navigator.pop(context);
   }
 
   void _closeWaitingDialog(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
   }
 }
