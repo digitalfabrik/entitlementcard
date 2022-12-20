@@ -46,17 +46,17 @@ class VerificationQrScannerPage extends StatelessWidget {
             ),
           ),
           if (config.showDevSettings)
-          TextButton(
-            onPressed: () async {
-              final provider = Provider.of<CardDetailsModel>(context, listen: false);
-              final cardDetails = provider.cardDetails!;
-              final generator = OTPGenerator(cardDetails.totpSecretBase32);
-              final code =
-                  encodeVerificationCardDetails(VerificationCardDetails(cardDetails, generator.generateOTP().code));
-              _handleQrCode(context, code);
-            },
-            child: const Text("Self Verify"),
-          )
+            TextButton(
+              onPressed: () async {
+                final provider = Provider.of<CardDetailsModel>(context, listen: false);
+                final cardDetails = provider.cardDetails!;
+                final generator = OTPGenerator(cardDetails.totpSecretBase32);
+                final code =
+                    encodeVerificationCardDetails(VerificationCardDetails(cardDetails, generator.generateOTP().code));
+                _handleQrCode(context, code);
+              },
+              child: const Text("Self Verify"),
+            )
         ],
       ),
     );
