@@ -1,12 +1,16 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
+import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/verification/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/verification/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
 import 'package:ehrenamtskarte/verification/query_server_verification.dart';
+import 'package:ehrenamtskarte/verification/scanner/verification_encoder.dart';
+import 'package:ehrenamtskarte/verification/verification_card_details.dart';
 import 'package:ehrenamtskarte/verification/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart' as nav_bars;
 import 'package:flutter/material.dart';
@@ -19,6 +23,7 @@ class VerificationQrScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
     return Expanded(
       child: Column(
@@ -39,6 +44,18 @@ class VerificationQrScannerPage extends StatelessWidget {
             child: QrCodeScannerPage(
               onCodeScanned: (code) => _handleQrCode(context, code),
             ),
+          ),
+          if (config.showDevSettings)
+          TextButton(
+            onPressed: () async {
+              final provider = Provider.of<CardDetailsModel>(context, listen: false);
+              final cardDetails = provider.cardDetails!;
+              final generator = OTPGenerator(cardDetails.totpSecretBase32);
+              final code =
+                  encodeVerificationCardDetails(VerificationCardDetails(cardDetails, generator.generateOTP().code));
+              _handleQrCode(context, code);
+            },
+            child: const Text("Self Verify"),
           )
         ],
       ),
