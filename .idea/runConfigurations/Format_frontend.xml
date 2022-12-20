@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Format frontend" type="ShConfigurationType">
+  <configuration default="false" name="Format frontend" type="ShConfigurationType" folderName="Frontend">
     <option name="SCRIPT_TEXT" value="fvm flutter format -l 120 ." />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />

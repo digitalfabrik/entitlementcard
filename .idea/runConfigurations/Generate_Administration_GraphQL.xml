@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Generate Administration GraphQL" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/administration/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="generate-graphql" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start administration (env:local)" type="js.build_tools.npm">
+  <configuration default="false" name="Generate Administration Protobuf" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/administration/package.json" />
     <command value="run" />
     <scripts>
-      <script value="start" />
+      <script value="generate-protobuf" />
     </scripts>
     <node-interpreter value="project" />
     <envs />
