@@ -11,8 +11,8 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
   const view = new DataView(binary.buffer)
 
   let offset = 0
-
-  view.setUint32(offset, cardInfo.expirationDay ?? 0) // A value of 0 indicates that the card does not expire
+  // A expirationDay of 0 indicates that the card does not expire
+  view.setUint32(offset, cardInfo.expirationDay ?? 0, true)
   offset += expirationDayBytes
 
   view.setInt32(offset, cardInfo.extensions?.extensionBavariaCardType?.cardType!, true)
