@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Import" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
+  <configuration default="false" name="Create region manager" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -16,7 +16,7 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;import&quot;" />
+          <option value="--args=&quot;create-admin bayern.ehrenamtskarte.app REGION_MANAGER admin+bayernregion1@example.com Administrator! 1&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
