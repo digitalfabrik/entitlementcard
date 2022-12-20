@@ -4,7 +4,9 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/identification/card_details.dart';
 import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/identification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +41,10 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _setValidEakData(context),
           ),
           ListTile(
+            title: const Text('Set base64 card'),
+            onTap: () => _showRawCardInput(context),
+          ),
+          ListTile(
             title: const Text('Show Intro Slides'),
             onTap: () => _showInfoSlides(context),
           ),
@@ -67,6 +73,59 @@ class DevSettingsView extends StatelessWidget {
 
   Future<void> _setValidEakData(BuildContext context) async {
     Provider.of<CardDetailsModel>(context, listen: false).setCardDetails(validEakDetails);
+  }
+
+  Future<void> _showRawCardInput(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final base64Controller = TextEditingController();
+        return AlertDialog(
+          scrollable: true,
+          title: const Text('Set base64 card'),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: base64Controller,
+                    decoration: const InputDecoration(
+                      labelText: 'Base64 data',
+                      icon: Icon(Icons.card_membership),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Submit"),
+              onPressed: () {
+                final messengerState = ScaffoldMessenger.of(context);
+                final provider = Provider.of<CardDetailsModel>(context, listen: false);
+                try {
+                  IdentificationQrContentParser(provider).processQrCodeContent(base64Controller.text);
+                  messengerState.showSnackBar(
+                    const SnackBar(
+                      content: Text("Card set"),
+                    ),
+                  );
+                  Navigator.pop(context);
+                } on QrCodeParseException catch (e, _) {
+                  messengerState.showSnackBar(
+                    SnackBar(
+                      content: Text(e.reason),
+                    ),
+                  );
+                }
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   void _showInfoSlides(BuildContext context) {
