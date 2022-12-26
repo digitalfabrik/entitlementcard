@@ -97,10 +97,11 @@ class _MapPageState extends State<MapPage> implements MapPageController {
   PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic rawFeature) {
     final feature = rawFeature as Map<String, dynamic>;
     final properties = feature["properties"] as Map<String, dynamic>;
+    final geometry = feature["geometry"] as Map<String, dynamic>;
 
     return PhysicalStoreFeatureData(
       _getIntOrNull(properties["id"]),
-      _getLatLngOrNull(properties["coordinates"]),
+      _getLatLngOrNull(geometry["coordinates"]),
       _getIntOrNull(properties["categoryId"]),
     );
   }
