@@ -46,8 +46,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   MaplibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
-  Widget? _currentMapLibreView;
-  bool _isAnimating = false;
   bool _isMapInitialized = false;
 
   @override
@@ -63,74 +61,64 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
     final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
-    final Widget? currentMapLibreView = _currentMapLibreView;
-    final Widget maplibreView;
+    final userLocation = widget.userLocation;
+    final cameraPosition = userLocation != null
+        ? CameraPosition(target: userLocation, zoom: MapContainer.userLocationZoomLevel)
+        : const CameraPosition(target: MapContainer.centerOfBavaria, zoom: MapContainer.bavariaZoomLevel);
 
-    if (currentMapLibreView == null || !_isAnimating) {
-      final userLocation = widget.userLocation;
-      final cameraPosition = userLocation != null
-          ? CameraPosition(target: userLocation, zoom: MapContainer.userLocationZoomLevel)
-          : const CameraPosition(target: MapContainer.centerOfBavaria, zoom: MapContainer.bavariaZoomLevel);
-
-      maplibreView = Stack(
-        children: [
-          MaplibreMap(
-            initialCameraPosition: cameraPosition,
-            styleString: config.mapStyleUrl,
-            // We provide our own attribution menu
-            attributionButtonMargins: const math.Point(-100, -100),
-            // There is no way to remove the logo, so set the margins to a really large value to hide it
-            logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
-            myLocationEnabled: _permissionGiven,
-            myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
-            // required to prevent mapbox iOS from requesting location
-            // permissions on startup, as discussed in #249
-            myLocationRenderMode: MyLocationRenderMode.NORMAL,
-            onMapCreated: _onMapCreated,
-            onMapClick: _onMapClick,
-            compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-            compassViewPosition: CompassViewPosition.TopRight,
-            minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
+    final mapLibreView = Stack(
+      children: [
+        MaplibreMap(
+          initialCameraPosition: cameraPosition,
+          styleString: config.mapStyleUrl,
+          // We provide our own attribution menu
+          attributionButtonMargins: const math.Point(-100, -100),
+          // There is no way to remove the logo, so set the margins to a really large value to hide it
+          logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
+          myLocationEnabled: _permissionGiven,
+          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
+          // required to prevent mapbox iOS from requesting location
+          // permissions on startup, as discussed in #249
+          myLocationRenderMode: MyLocationRenderMode.NORMAL,
+          onMapCreated: _onMapCreated,
+          onMapClick: _onMapClick,
+          compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+          compassViewPosition: CompassViewPosition.TopRight,
+          minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: IconButton(
+            color: mapboxColor,
+            padding: const EdgeInsets.all(5),
+            constraints: const BoxConstraints(),
+            iconSize: 20,
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const AttributionDialog(),
+              );
+            },
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: IconButton(
-              color: mapboxColor,
-              padding: const EdgeInsets.all(5),
-              constraints: const BoxConstraints(),
-              iconSize: 20,
-              icon: const Icon(Icons.info_outline),
-              tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const AttributionDialog(),
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    } else {
-      maplibreView = currentMapLibreView;
-    }
+        ),
+      ],
+    );
 
     // Apply ScreenParentResizer only on android
     // https://github.com/flutter-mapbox-gl/maps/issues/195
     return defaultTargetPlatform == TargetPlatform.android
         ? ScreenParentResizer(
             childInitialized: _isMapInitialized,
-            child: maplibreView,
+            child: mapLibreView,
           )
-        : maplibreView;
+        : mapLibreView;
   }
 
   void _onMapCreated(MaplibreMapController controller) {
     _controller = controller;
-    if (widget.locationAvailable) {
-      _controller?.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
-    }
 
     setState(() {
       _isMapInitialized = true;
@@ -228,12 +216,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     return minimalDistanceFeature?.item1;
   }
 
-  Future<void> _animate(Future F) async {
-    _isAnimating = true;
-    await F;
-    _isAnimating = false;
-  }
-
   @override
   Future<void> bringCameraToLocation(LatLng location, {double? zoomLevel}) async {
     final controller = _controller;
@@ -244,7 +226,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     final update =
         zoomLevel != null ? CameraUpdate.newLatLngZoom(location, zoomLevel) : CameraUpdate.newLatLng(location);
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
-    await _animate(controller.animateCamera(update));
+    await controller.animateCamera(update);
   }
 
   @override
@@ -262,7 +244,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         zoom: MapContainer.userLocationZoomLevel,
       ),
     );
-    await _animate(controller.animateCamera(cameraUpdate));
+    await controller.animateCamera(cameraUpdate);
 
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
     if (!_permissionGiven) {
