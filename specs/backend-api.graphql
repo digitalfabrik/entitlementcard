@@ -86,6 +86,8 @@ type Mutation {
   addGoldenEakApplication(application: GoldenCardApplicationInput!, regionId: Int!): Boolean!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
+  "Creates a new administrator"
+  createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Reset the administrator's password"
