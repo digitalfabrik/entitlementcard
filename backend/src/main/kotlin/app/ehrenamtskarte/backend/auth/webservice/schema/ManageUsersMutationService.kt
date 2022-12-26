@@ -86,8 +86,9 @@ class ManageUsersMutationService {
             
             Dieser Link ist 24 Stunden gültig.
             
-            Mit freundlichen Grüßen,
-            Ihr Digitalfabrik Team
+            Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
+            
+            - $administrationName
         """.trimIndent()
     }
 }
