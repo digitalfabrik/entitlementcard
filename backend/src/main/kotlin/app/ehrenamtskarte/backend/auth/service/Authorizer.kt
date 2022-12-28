@@ -39,4 +39,28 @@ object Authorizer {
         return (user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id) ||
             mayViewUsersInProject(user, region.projectId.value)
     }
+
+    fun mayCreateUser(
+        actingAdmin: AdministratorEntity,
+        newAdminProjectId: Int,
+        newAdminRole: Role,
+        newAdminRegion: RegionEntity?
+    ): Boolean {
+        if (actingAdmin.projectId.value != newAdminProjectId) {
+            return false
+        } else if (newAdminRole == Role.NO_RIGHTS) {
+            return false
+        }
+
+        if (actingAdmin.role == Role.PROJECT_ADMIN.db_value) {
+            return true
+        } else if (
+            actingAdmin.role == Role.REGION_ADMIN.db_value &&
+            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
+            newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
+        ) {
+            return true
+        }
+        return false
+    }
 }

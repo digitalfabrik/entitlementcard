@@ -48,6 +48,8 @@ android {
 
         applicationId buildConfig.applicationId
 
+        manifestPlaceholders = [*:determineIcon(buildConfig)]
+
         minSdkVersion 20
         targetSdkVersion 30
         multiDexEnabled true

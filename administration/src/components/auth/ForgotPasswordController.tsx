@@ -54,7 +54,7 @@ const ForgotPasswordController = () => {
                 e.preventDefault()
                 submit()
               }}>
-              <FormGroup label='E-Mail Adresse'>
+              <FormGroup label='Email-Adresse'>
                 <InputGroup
                   value={email}
                   onChange={e => setEmail(e.target.value)}
