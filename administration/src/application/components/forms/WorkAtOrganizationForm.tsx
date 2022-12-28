@@ -3,13 +3,19 @@ import { useState } from 'react'
 import ConfirmDialog from '../ConfirmDialog'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import OrganizationForm, { OrganizationFormState } from './OrganizationForm'
-import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import NumberForm, { NumberFormState } from '../primitive-inputs/NumberForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import OrganizationForm from './OrganizationForm'
+import DateForm from '../primitive-inputs/DateForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import NumberForm from '../primitive-inputs/NumberForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
-import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
+import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
 const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -36,62 +42,26 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
 const amountOfWorkOptions = { min: 0, max: 100 }
 const paymentOptions = { required: false } as const
 
-export type WorkAtOrganizationFormState = {
-  organization: OrganizationFormState
-  amountOfWork: NumberFormState
-  activeSince: DateFormState
-  payment: CheckboxFormState
-  responsibility: ShortTextFormState
-  certificate: FileInputFormState
+const FormCompounds = {
+  organization: OrganizationForm,
+  amountOfWork: NumberForm,
+  workSinceDate: DateForm,
+  payment: CheckboxForm,
+  responsibility: ShortTextForm,
+  certificate: FileInputForm,
 }
+
+export type WorkAtOrganizationFormState = CompoundState<typeof FormCompounds>
 type ValidatedInput = WorkAtOrganizationInput
 type Options = {}
 type AdditionalProps = { onDelete?: () => void }
 const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    organization: OrganizationForm.initialState,
-    amountOfWork: NumberForm.initialState,
-    activeSince: DateForm.initialState,
-    payment: CheckboxForm.initialState,
-    responsibility: ShortTextForm.initialState,
-    certificate: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...OrganizationForm.getArrayBufferKeys(state.organization),
-    ...NumberForm.getArrayBufferKeys(state.amountOfWork),
-    ...DateForm.getArrayBufferKeys(state.activeSince),
-    ...CheckboxForm.getArrayBufferKeys(state.payment),
-    ...ShortTextForm.getArrayBufferKeys(state.responsibility),
-    ...FileInputForm.getArrayBufferKeys(state.certificate),
-  ],
-  getValidatedInput: state => {
-    const organization = OrganizationForm.getValidatedInput(state.organization)
-    const amountOfWork = NumberForm.getValidatedInput(state.amountOfWork, amountOfWorkOptions)
-    const activeSince = DateForm.getValidatedInput(state.activeSince)
-    const responsibility = ShortTextForm.getValidatedInput(state.responsibility)
-    const payment = CheckboxForm.getValidatedInput(state.payment, paymentOptions)
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (
-      organization.type === 'error' ||
-      amountOfWork.type === 'error' ||
-      activeSince.type === 'error' ||
-      responsibility.type === 'error' ||
-      certificate.type === 'error' ||
-      payment.type === 'error'
-    )
-      return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        organization: organization.value,
-        amountOfWork: amountOfWork.value,
-        workSinceDate: activeSince.value,
-        responsibility: responsibility.value,
-        certificate: certificate.value,
-        payment: payment.value,
-      },
-    }
-  },
+  initialState: createCompoundInitialState(FormCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {
+    amountOfWork: amountOfWorkOptions,
+    payment: paymentOptions,
+  }),
   Component: ({ state, setState, onDelete }) => (
     <>
       <ActivityDivider onDelete={onDelete} />
@@ -109,8 +79,8 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
         <div style={{ flex: '2' }}>
           <DateForm.Component
             label='Tätig seit'
-            state={state.activeSince}
-            setState={useUpdateStateCallback(setState, 'activeSince')}
+            state={state.workSinceDate}
+            setState={useUpdateStateCallback(setState, 'workSinceDate')}
           />
         </div>
         <div style={{ flex: '3' }}>

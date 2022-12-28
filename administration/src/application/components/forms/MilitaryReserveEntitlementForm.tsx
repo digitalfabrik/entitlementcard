@@ -1,12 +1,20 @@
 import { BlueCardMilitaryReserveEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type MilitaryReserveEntitlementFormState = {
-  certificate: FileInputFormState
+const FormCompounds = {
+  certificate: FileInputForm,
 }
+
+export type MilitaryReserveEntitlementFormState = CompoundState<typeof FormCompounds>
 type ValidatedInput = BlueCardMilitaryReserveEntitlementInput
 type Options = {}
 type AdditionalProps = {}
@@ -16,20 +24,9 @@ const MilitaryReserveEntitlementForm: Form<
   ValidatedInput,
   AdditionalProps
 > = {
-  initialState: {
-    certificate: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [...FileInputForm.getArrayBufferKeys(state.certificate)],
-  getValidatedInput: state => {
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (certificate.type === 'error') return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        certificate: certificate.value,
-      },
-    }
-  },
+  initialState: createCompoundInitialState(FormCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />

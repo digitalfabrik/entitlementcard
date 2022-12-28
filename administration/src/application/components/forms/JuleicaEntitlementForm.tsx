@@ -1,45 +1,30 @@
 import { BlueCardJuleicaEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import DateForm, { DateFormState } from '../primitive-inputs/DateForm'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import DateForm from '../primitive-inputs/DateForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type JuleicaEntitlementFormState = {
-  juleicaNumber: ShortTextFormState
-  juleicaExpirationDate: DateFormState
-  copyOfJuleica: FileInputFormState
+const FormCompounds = {
+  juleicaNumber: ShortTextForm,
+  juleicaExpirationDate: DateForm,
+  copyOfJuleica: FileInputForm,
 }
+export type JuleicaEntitlementFormState = CompoundState<typeof FormCompounds>
 type ValidatedInput = BlueCardJuleicaEntitlementInput
 type Options = {}
 type AdditionalProps = {}
 const JuleicaEntitlementForm: Form<JuleicaEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    juleicaNumber: ShortTextForm.initialState,
-    juleicaExpirationDate: DateForm.initialState,
-    copyOfJuleica: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...ShortTextForm.getArrayBufferKeys(state.juleicaNumber),
-    ...DateForm.getArrayBufferKeys(state.juleicaExpirationDate),
-    ...FileInputForm.getArrayBufferKeys(state.copyOfJuleica),
-  ],
-  getValidatedInput: state => {
-    const juleicaNumber = ShortTextForm.getValidatedInput(state.juleicaNumber)
-    const juleicaExpirationDate = DateForm.getValidatedInput(state.juleicaExpirationDate)
-    const copyOfJuleica = FileInputForm.getValidatedInput(state.copyOfJuleica)
-    if (juleicaNumber.type === 'error' || juleicaExpirationDate.type === 'error' || copyOfJuleica.type === 'error')
-      return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        juleicaNumber: juleicaNumber.value,
-        juleicaExpirationDate: juleicaExpirationDate.value,
-        copyOfJuleica: copyOfJuleica.value,
-      },
-    }
-  },
+  initialState: createCompoundInitialState(FormCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur JuLeiCa' />

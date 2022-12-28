@@ -1,52 +1,30 @@
 import { AddressInput } from '../../../generated/graphql'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type AddressFormState = {
-  street: ShortTextFormState
-  houseNumber: ShortTextFormState
-  location: ShortTextFormState
-  postalCode: ShortTextFormState
+const AddressCompounds = {
+  street: ShortTextForm,
+  houseNumber: ShortTextForm,
+  location: ShortTextForm,
+  postalCode: ShortTextForm,
 }
+
+export type AddressFormState = CompoundState<typeof AddressCompounds>
 type ValidatedInput = AddressInput
 type Options = {}
 type AdditionalProps = {}
+
 const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    street: ShortTextForm.initialState,
-    houseNumber: ShortTextForm.initialState,
-    location: ShortTextForm.initialState,
-    postalCode: ShortTextForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...ShortTextForm.getArrayBufferKeys(state.street),
-    ...ShortTextForm.getArrayBufferKeys(state.houseNumber),
-    ...ShortTextForm.getArrayBufferKeys(state.location),
-    ...ShortTextForm.getArrayBufferKeys(state.postalCode),
-  ],
-  getValidatedInput: state => {
-    const street = ShortTextForm.getValidatedInput(state.street)
-    const houseNumber = ShortTextForm.getValidatedInput(state.houseNumber)
-    const location = ShortTextForm.getValidatedInput(state.location)
-    const postalCode = ShortTextForm.getValidatedInput(state.postalCode)
-    if (
-      street.type === 'error' ||
-      houseNumber.type === 'error' ||
-      location.type === 'error' ||
-      postalCode.type === 'error'
-    )
-      return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        street: street.value,
-        houseNumber: houseNumber.value,
-        location: location.value,
-        postalCode: postalCode.value,
-      },
-    }
-  },
+  initialState: createCompoundInitialState(AddressCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(AddressCompounds),
+  getValidatedInput: createCompoundGetValidatedInput(AddressCompounds, {}),
   Component: ({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

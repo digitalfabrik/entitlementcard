@@ -1,12 +1,18 @@
 import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type HonoredByMinisterPresidentEntitlementFormState = {
-  certificate: FileInputFormState
-}
+const FormCompounds = { certificate: FileInputForm }
+
+export type HonoredByMinisterPresidentEntitlementFormState = CompoundState<typeof FormCompounds>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
@@ -16,20 +22,9 @@ const HonoredByMinisterPresidentEntitlementForm: Form<
   ValidatedInput,
   AdditionalProps
 > = {
-  initialState: {
-    certificate: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [...FileInputForm.getArrayBufferKeys(state.certificate)],
-  getValidatedInput: state => {
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (certificate.type === 'error') return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        certificate: certificate.value,
-      },
-    }
-  },
+  initialState: createCompoundInitialState(FormCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zum Ehrenzeichen' />

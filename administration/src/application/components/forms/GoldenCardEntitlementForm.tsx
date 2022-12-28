@@ -2,18 +2,13 @@ import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import SwitchComponent from '../SwitchComponent'
-import WorkAtOrganizationsEntitlementForm, {
-  WorkAtOrganizationsEntitlementFormState,
-} from './WorkAtOrganizationsEntitlementForm'
-import RadioGroupForm, { RadioGroupFormState } from '../primitive-inputs/RadioGroupForm'
+import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
+import RadioGroupForm from '../primitive-inputs/RadioGroupForm'
 import radioGroupForm from '../primitive-inputs/RadioGroupForm'
-import WorkAtDepartmentEntitlementForm, {
-  WorkAtDepartmentEntitlementFormState,
-} from './WorkAtDepartmentEntitlementForm'
-import MilitaryReserveEntitlementForm, { MilitaryReserveEntitlementFormState } from './MilitaryReserveEntitlementForm'
-import HonoredByMinisterPresidentEntitlementForm, {
-  HonoredByMinisterPresidentEntitlementFormState,
-} from './HonoredByMinisterPresidentEntitlementForm'
+import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
+import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
+import HonoredByMinisterPresidentEntitlementForm from './HonoredByMinisterPresidentEntitlementForm'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {
@@ -28,31 +23,21 @@ const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]
   },
 }
 
-export type GoldenCardEntitlementFormState = {
-  entitlementType: RadioGroupFormState
-  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementFormState
-  honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementFormState
-  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementFormState
-  militaryReserveEntitlement: MilitaryReserveEntitlementFormState
+const FormCompounds = {
+  entitlementType: RadioGroupForm,
+  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm,
+  honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementForm,
+  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm,
+  militaryReserveEntitlement: MilitaryReserveEntitlementForm,
 }
+
+export type GoldenCardEntitlementFormState = CompoundState<typeof FormCompounds>
 type ValidatedInput = GoldenCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
 const GoldenCardEntitlementForm: Form<GoldenCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    entitlementType: RadioGroupForm.initialState,
-    workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm.initialState,
-    honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementForm.initialState,
-    workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm.initialState,
-    militaryReserveEntitlement: MilitaryReserveEntitlementForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...RadioGroupForm.getArrayBufferKeys(state.entitlementType),
-    ...WorkAtOrganizationsEntitlementForm.getArrayBufferKeys(state.workAtOrganizationsEntitlement),
-    ...HonoredByMinisterPresidentEntitlementForm.getArrayBufferKeys(state.honoredByMinisterPresidentEntitlement),
-    ...WorkAtDepartmentEntitlementForm.getArrayBufferKeys(state.workAtDepartmentEntitlement),
-    ...MilitaryReserveEntitlementForm.getArrayBufferKeys(state.militaryReserveEntitlement),
-  ],
+  initialState: createCompoundInitialState(FormCompounds),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
   getValidatedInput: state => {
     const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)
     if (entitlementTypeResult.type === 'error') return { type: 'error' }
