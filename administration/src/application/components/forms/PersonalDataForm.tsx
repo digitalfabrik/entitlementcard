@@ -13,7 +13,7 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const FormCompounds = {
+const SubForms = {
   forenames: ShortTextForm,
   surname: ShortTextForm,
   address: AddressForm,
@@ -22,14 +22,14 @@ const FormCompounds = {
   dateOfBirth: DateForm,
 }
 
-export type PersonalDataFormState = CompoundState<typeof FormCompounds>
+export type PersonalDataFormState = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput
 type Options = {}
 type AdditionalProps = {}
 const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

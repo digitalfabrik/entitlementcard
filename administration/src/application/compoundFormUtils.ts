@@ -2,48 +2,52 @@ import { Form, ValidationResult } from './FormType'
 import { mapValues } from 'lodash'
 
 type AnyForm = Form<any, any, any, any>
-export type FormCompounds = { [key: string]: AnyForm }
-export type InferState<F extends AnyForm> = F extends Form<infer State, any, any, any> ? State : never
-export type InferOptions<F extends AnyForm> = F extends Form<any, infer Options, any, any> ? Options : never
-export type InferValidatedInput<F extends AnyForm> = F extends Form<any, any, infer ValidatedInput, any>
+type SubForms = { [key: string]: AnyForm }
+type InferState<F extends AnyForm> = F extends Form<infer State, any, any, any> ? State : never
+type InferOptions<F extends AnyForm> = F extends Form<any, infer Options, any, any> ? Options : never
+type InferValidatedInput<F extends AnyForm> = F extends Form<any, any, infer ValidatedInput, any>
   ? ValidatedInput
   : never
 
-export type CompoundState<Forms extends FormCompounds> = { [key in keyof Forms]: InferState<Forms[key]> }
-export type CompoundValidatedInput<Forms extends FormCompounds> = {
+export type CompoundState<Forms extends SubForms> = { [key in keyof Forms]: InferState<Forms[key]> }
+type CompoundValidatedInput<Forms extends SubForms> = {
   [key in keyof Forms]: InferValidatedInput<Forms[key]>
 }
 
-export function createCompoundGetArrayBufferKeys<Forms extends { [key: string]: Form<any, any, any, any> }>(
-  forms: Forms
+export function createCompoundGetArrayBufferKeys<Forms extends SubForms>(
+  subForms: Forms
 ) {
   return (state: CompoundState<Forms>) => {
     const arrayBufferKeys = []
-    for (const [key, form] of Object.entries(forms)) {
+    for (const [key, form] of Object.entries(subForms)) {
       arrayBufferKeys.push(...form.getArrayBufferKeys(state[key]))
     }
     return arrayBufferKeys
   }
 }
 
-export type KeysWithOptions<Forms extends FormCompounds> = {
+type KeysWithOptions<Forms extends SubForms> = {
   [K in keyof Forms]: {} extends InferOptions<Forms[K]> ? never : K
 }[keyof Forms]
-export type CompoundOptions<Forms extends FormCompounds> = {
+type SubFormsOptions<Forms extends SubForms> = {
   [key in KeysWithOptions<Forms>]: InferOptions<Forms[key]>
 }
 
-export function createCompoundGetValidatedInput<Forms extends FormCompounds>(
-  forms: Forms,
-  compoundOptions: CompoundOptions<Forms>
+/**
+ * Returns an error if the getValidatedInput function of one of the sub forms returns an error.
+ * Otherwise, returns a valid result whose value maps a sub form key to its valid input value.
+ */
+export function createCompoundGetValidatedInput<Forms extends SubForms>(
+  subForms: Forms,
+  subFormsOptions: SubFormsOptions<Forms>
 ) {
   return (state: CompoundState<Forms>): ValidationResult<CompoundValidatedInput<Forms>> => {
     const results: { [key in keyof Forms]: ValidationResult<InferValidatedInput<Forms[key]>> } = mapValues(
-      forms,
+      subForms,
       (form, key) => {
-        if (key in compoundOptions) {
+        if (key in subFormsOptions) {
           const optionsKey = key as KeysWithOptions<Forms>
-          return form.getValidatedInput(state[key], compoundOptions[optionsKey])
+          return form.getValidatedInput(state[key], subFormsOptions[optionsKey])
         } else {
           return form.getValidatedInput(state[key])
         }
@@ -60,8 +64,8 @@ export function createCompoundGetValidatedInput<Forms extends FormCompounds>(
   }
 }
 
-export function createCompoundInitialState<Forms extends { [key: string]: Form<any, any, any, any> }>(
-  forms: Forms
+export function createCompoundInitialState<Forms extends SubForms>(
+  subForms: Forms
 ): CompoundState<Forms> {
-  return mapValues(forms, form => form.initialState)
+  return mapValues(subForms, form => form.initialState)
 }

@@ -12,13 +12,13 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const FormCompounds = {
+const SubForms = {
   organization: OrganizationForm,
   responsibility: ShortTextForm,
   certificate: FileInputForm,
 }
 
-export type WorkAtDepartmentEntitlementFormState = CompoundState<typeof FormCompounds>
+export type WorkAtDepartmentEntitlementFormState = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
@@ -28,9 +28,9 @@ const WorkAtDepartmentEntitlementForm: Form<
   ValidatedInput,
   AdditionalProps
 > = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />

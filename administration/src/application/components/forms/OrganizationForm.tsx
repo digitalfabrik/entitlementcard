@@ -33,7 +33,7 @@ const contactHasGivenPermissionOptions = {
   notCheckedErrorMessage: 'Die Kontaktperson muss zugestimmt haben, damit Sie Ihren Antrag senden können.',
 } as const
 
-const FormCompounds = {
+const SubForms = {
   name: ShortTextForm,
   address: AddressForm,
   category: SelectForm,
@@ -43,18 +43,18 @@ const FormCompounds = {
   contactHasGivenPermission: CheckboxForm,
 }
 
-const getValidatedCompoundInput = createCompoundGetValidatedInput(FormCompounds, {
+const getValidatedCompoundInput = createCompoundGetValidatedInput(SubForms, {
   contactHasGivenPermission: contactHasGivenPermissionOptions,
   category: organizationCategoryOptions,
 })
 
-export type OrganizationFormState = CompoundState<typeof FormCompounds>
+export type OrganizationFormState = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
 type Options = {}
 type AdditionalProps = {}
 const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: state => {
     const compoundResult = getValidatedCompoundInput(state)
     if (compoundResult.type === 'error') return compoundResult

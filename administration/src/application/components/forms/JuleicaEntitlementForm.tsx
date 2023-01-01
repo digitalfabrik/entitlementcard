@@ -12,19 +12,19 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const FormCompounds = {
+const SubForms = {
   juleicaNumber: ShortTextForm,
   juleicaExpirationDate: DateForm,
   copyOfJuleica: FileInputForm,
 }
-export type JuleicaEntitlementFormState = CompoundState<typeof FormCompounds>
+export type JuleicaEntitlementFormState = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardJuleicaEntitlementInput
 type Options = {}
 type AdditionalProps = {}
 const JuleicaEntitlementForm: Form<JuleicaEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur JuLeiCa' />

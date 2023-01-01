@@ -25,7 +25,7 @@ const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: 
   },
 }
 
-const FormCompounds = {
+const SubForms = {
   entitlementType: RadioGroupForm,
   workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm,
   juleicaEntitlement: JuleicaEntitlementForm,
@@ -34,13 +34,13 @@ const FormCompounds = {
   volunteerServiceEntitlement: VolunteerServiceEntitlementForm,
 }
 
-export type BlueCardEntitlementFormState = CompoundState<typeof FormCompounds>
+export type BlueCardEntitlementFormState = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
 const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: state => {
     const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)
     if (entitlementTypeResult.type === 'error') return { type: 'error' }

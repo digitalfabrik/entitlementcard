@@ -21,12 +21,12 @@ const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheck
   notCheckedErrorMessage: 'Diese Erklärung ist erforderlich.',
 }
 
-const FormCompounds = {
+const SubForms = {
   hasAcceptedDataPrivacy: CheckboxForm,
   givenInformationIsCorrectAndComplete: CheckboxForm,
 }
 
-export type StepSendFormState = CompoundState<typeof FormCompounds>
+export type StepSendFormState = CompoundState<typeof SubForms>
 type ValidatedInput = {
   hasAcceptedDataPrivacy: boolean
   givenInformationIsCorrectAndComplete: boolean
@@ -34,9 +34,9 @@ type ValidatedInput = {
 type Options = {}
 type AdditionalProps = { privacyPolicy: string }
 const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {
     hasAcceptedDataPrivacy: hasAcceptedDatePrivacyOptions,
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
   }),

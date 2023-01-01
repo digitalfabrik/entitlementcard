@@ -42,7 +42,7 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
 const amountOfWorkOptions = { min: 0, max: 100 }
 const paymentOptions = { required: false } as const
 
-const FormCompounds = {
+const SubForms = {
   organization: OrganizationForm,
   amountOfWork: NumberForm,
   workSinceDate: DateForm,
@@ -51,14 +51,14 @@ const FormCompounds = {
   certificate: FileInputForm,
 }
 
-export type WorkAtOrganizationFormState = CompoundState<typeof FormCompounds>
+export type WorkAtOrganizationFormState = CompoundState<typeof SubForms>
 type ValidatedInput = WorkAtOrganizationInput
 type Options = {}
 type AdditionalProps = { onDelete?: () => void }
 const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {
     amountOfWork: amountOfWorkOptions,
     payment: paymentOptions,
   }),

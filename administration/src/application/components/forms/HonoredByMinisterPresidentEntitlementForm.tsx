@@ -10,9 +10,9 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const FormCompounds = { certificate: FileInputForm }
+const SubForms = { certificate: FileInputForm }
 
-export type HonoredByMinisterPresidentEntitlementFormState = CompoundState<typeof FormCompounds>
+export type HonoredByMinisterPresidentEntitlementFormState = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
@@ -22,9 +22,9 @@ const HonoredByMinisterPresidentEntitlementForm: Form<
   ValidatedInput,
   AdditionalProps
 > = {
-  initialState: createCompoundInitialState(FormCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(FormCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(FormCompounds, {}),
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zum Ehrenzeichen' />
