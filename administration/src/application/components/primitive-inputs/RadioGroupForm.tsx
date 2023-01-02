@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import { Form, ValidationResult } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
-type RadioGroupFormState<T extends string> = { selectedValue: T | '' }
+type RadioGroupFormState<T extends string> = { selectedValue: T | null }
 type ValidatedInput<T extends string> = T
 type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
@@ -16,7 +16,7 @@ export function createRadioGroupForm<T extends string>(): Form<
   AdditionalProps
 > {
   const getValidatedInput = ({ selectedValue }: RadioGroupFormState<T>, options: Options<T>): ValidationResult<T> => {
-    if (selectedValue === '') return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (selectedValue === null) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!Object.keys(options.labelByValue).includes(selectedValue))
       return {
         type: 'error',
@@ -25,7 +25,7 @@ export function createRadioGroupForm<T extends string>(): Form<
     return { type: 'valid', value: selectedValue }
   }
   return {
-    initialState: { selectedValue: '' },
+    initialState: { selectedValue: null },
     getArrayBufferKeys: () => [],
     getValidatedInput,
     Component: ({ state, setState, options, divideItems, title }) => {
@@ -33,7 +33,7 @@ export function createRadioGroupForm<T extends string>(): Form<
       const { showAllErrors, disableAllInputs } = useContext(FormContext)
       const validationResult = getValidatedInput(state, options)
       const isInvalid = validationResult.type === 'error'
-
+      const labelByValueEntries: [T, string][] = Object.entries(options.labelByValue) as [T, string][]
       return (
         <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
           <FormLabel>{title}</FormLabel>
@@ -41,13 +41,13 @@ export function createRadioGroupForm<T extends string>(): Form<
             sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
             value={state.selectedValue}
             onBlur={() => setTouched(true)}
-            onChange={e => setState(() => ({ selectedValue: e.target.value as T | '' }))}>
-            {Object.entries(options.labelByValue).map(([value, label], index, array) => (
+            onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}>
+            {labelByValueEntries.map(([value, label], index, array) => (
               <React.Fragment key={index}>
                 <FormControlLabel
                   disabled={disableAllInputs}
                   value={value}
-                  label={label as string}
+                  label={label}
                   control={<Radio required />}
                 />
                 {divideItems && index < array.length - 1 ? <Divider variant='middle' /> : null}
