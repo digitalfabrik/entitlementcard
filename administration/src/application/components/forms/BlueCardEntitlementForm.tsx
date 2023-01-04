@@ -46,18 +46,13 @@ type AdditionalProps = {}
 const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createSwitchValidate(
-    SubForms,
-    { entitlementType: entitlementTypeOptions },
-    'entitlementType',
-    {
-      JULEICA: 'juleicaEntitlement',
-      MILITARY_RESERVE: 'militaryReserveEntitlement',
-      VOLUNTEER_SERVICE: 'volunteerServiceEntitlement',
-      WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
-      WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
-    }
-  ),
+  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
+    JULEICA: 'juleicaEntitlement',
+    MILITARY_RESERVE: 'militaryReserveEntitlement',
+    VOLUNTEER_SERVICE: 'volunteerServiceEntitlement',
+    WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+    WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+  }),
   Component: ({ state, setState }) => (
     <>
       <EntitlementTypeRadioGroupForm.Component
