@@ -9,22 +9,22 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const AddressCompounds = {
+const SubForms = {
   street: ShortTextForm,
   houseNumber: ShortTextForm,
   location: ShortTextForm,
   postalCode: ShortTextForm,
 }
 
-export type AddressFormState = CompoundState<typeof AddressCompounds>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = AddressInput
 type Options = {}
 type AdditionalProps = {}
 
-const AddressForm: Form<AddressFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(AddressCompounds),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(AddressCompounds),
-  getValidatedInput: createCompoundGetValidatedInput(AddressCompounds, {}),
+const AddressForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

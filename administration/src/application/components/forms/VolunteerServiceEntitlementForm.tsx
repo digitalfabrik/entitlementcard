@@ -1,43 +1,29 @@
 import { BlueCardVolunteerServiceEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundGetValidatedInput,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type VolunteerServiceEntitlementFormState = {
-  programName: ShortTextFormState
-  certificate: FileInputFormState
+const SubForms = {
+  programName: ShortTextForm,
+  certificate: FileInputForm,
 }
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardVolunteerServiceEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const VolunteerServiceEntitlementForm: Form<
-  VolunteerServiceEntitlementFormState,
-  Options,
-  ValidatedInput,
-  AdditionalProps
-> = {
-  initialState: {
-    programName: ShortTextForm.initialState,
-    certificate: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...ShortTextForm.getArrayBufferKeys(state.programName),
-    ...FileInputForm.getArrayBufferKeys(state.certificate),
-  ],
-  getValidatedInput: state => {
-    const programName = ShortTextForm.getValidatedInput(state.programName)
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (programName.type === 'error' || certificate.type === 'error') return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        programName: programName.value,
-        certificate: certificate.value,
-      },
-    }
-  },
+const VolunteerServiceEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />

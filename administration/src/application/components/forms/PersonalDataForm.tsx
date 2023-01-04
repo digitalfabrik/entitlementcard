@@ -22,11 +22,11 @@ const SubForms = {
   dateOfBirth: DateForm,
 }
 
-export type PersonalDataFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput
 type Options = {}
 type AdditionalProps = {}
-const PersonalDataForm: Form<PersonalDataFormState, Options, ValidatedInput, AdditionalProps> = {
+const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),

@@ -3,11 +3,11 @@ import { useContext, useState, ReactElement } from 'react'
 import { Form } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
-export type CheckboxFormState = { checked: boolean }
+type State = { checked: boolean }
 type ValidatedInput = boolean
 type Options = { required: true; notCheckedErrorMessage: string } | { required: false }
 type AdditionalProps = { label: string | ReactElement }
-const CheckboxForm: Form<CheckboxFormState, Options, ValidatedInput, AdditionalProps> = {
+const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ checked }, options) => {

@@ -48,11 +48,11 @@ const getValidatedCompoundInput = createCompoundGetValidatedInput(SubForms, {
   category: organizationCategoryOptions,
 })
 
-export type OrganizationFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
 type Options = {}
 type AdditionalProps = {}
-const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
+const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: state => {

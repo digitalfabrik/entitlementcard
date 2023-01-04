@@ -17,11 +17,11 @@ const SubForms = {
   stepSend: StepSendForm,
 }
 
-export type ApplicationFormState = { activeStep: number } & CompoundState<typeof SubForms>
+type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = {}
 type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
-const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
+const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     activeStep: 0,
@@ -72,7 +72,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
       state,
       setState,
       'stepRequirements',
-      { cardType: state.stepCardType.cardType },
+      { cardType: state.stepCardType.cardType.selectedValue },
       {}
     )
     const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, { privacyPolicy })

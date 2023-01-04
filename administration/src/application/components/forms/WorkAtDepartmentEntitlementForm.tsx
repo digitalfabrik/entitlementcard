@@ -18,16 +18,11 @@ const SubForms = {
   certificate: FileInputForm,
 }
 
-export type WorkAtDepartmentEntitlementFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const WorkAtDepartmentEntitlementForm: Form<
-  WorkAtDepartmentEntitlementFormState,
-  Options,
-  ValidatedInput,
-  AdditionalProps
-> = {
+const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),

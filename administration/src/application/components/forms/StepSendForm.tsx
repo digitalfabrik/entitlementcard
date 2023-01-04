@@ -26,14 +26,14 @@ const SubForms = {
   givenInformationIsCorrectAndComplete: CheckboxForm,
 }
 
-export type StepSendFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = {
   hasAcceptedDataPrivacy: boolean
   givenInformationIsCorrectAndComplete: boolean
 }
 type Options = {}
 type AdditionalProps = { privacyPolicy: string }
-const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalProps> = {
+const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {
@@ -63,7 +63,6 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
           options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
-
         <CheckboxForm.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}

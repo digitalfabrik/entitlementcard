@@ -37,11 +37,11 @@ const SubForms = {
   militaryReserveEntitlement: MilitaryReserveEntitlementForm,
 }
 
-export type GoldenCardEntitlementFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const GoldenCardEntitlementForm: Form<GoldenCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createSwitchGetValidatedInput(

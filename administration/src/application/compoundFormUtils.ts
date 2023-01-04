@@ -3,7 +3,7 @@ import { mapValues } from 'lodash'
 
 type AnyForm = Form<any, any, any, any>
 type SubForms = { [key: string]: AnyForm }
-type InferState<F extends AnyForm> = F extends Form<infer State, any, any, any> ? State : never
+export type InferState<F extends AnyForm> = F extends Form<infer State, any, any, any> ? State : never
 type InferOptions<F extends AnyForm> = F extends Form<any, infer Options, any, any> ? Options : never
 type InferValidatedInput<F extends AnyForm> = F extends Form<any, any, infer ValidatedInput, any>
   ? ValidatedInput

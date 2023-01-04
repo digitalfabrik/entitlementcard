@@ -4,11 +4,11 @@ import { Form } from '../../FormType'
 import { DateInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-export type DateFormState = { type: 'DateForm'; value: string }
+type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const DateForm: Form<DateFormState, Options, ValidatedInput, AdditionalProps> = {
+const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }) => {

@@ -36,11 +36,11 @@ const SubForms = {
   wantsDigitalCard: CheckboxForm,
 }
 
-export type StepCardTypeFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = { cardType: CardType; applicationType: ApplicationType; wantsDigitalCard: boolean }
 type Options = {}
 type AdditionalProps = {}
-const StepCardTypeForm: Form<StepCardTypeFormState, Options, ValidatedInput, AdditionalProps> = {
+const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {

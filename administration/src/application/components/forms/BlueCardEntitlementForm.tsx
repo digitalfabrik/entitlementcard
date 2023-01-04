@@ -39,11 +39,11 @@ const SubForms = {
   volunteerServiceEntitlement: VolunteerServiceEntitlementForm,
 }
 
-export type BlueCardEntitlementFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createSwitchGetValidatedInput(

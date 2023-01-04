@@ -5,11 +5,11 @@ import { EmailInput } from '../../../generated/graphql'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 import { FormContext } from '../SteppedSubForms'
 
-export type EmailFormState = { email: string }
+type State = { email: string }
 type ValidatedInput = EmailInput
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> = {
+const EmailForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { email: '' },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ email }) => {

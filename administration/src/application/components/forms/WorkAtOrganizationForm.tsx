@@ -51,11 +51,11 @@ const SubForms = {
   certificate: FileInputForm,
 }
 
-export type WorkAtOrganizationFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = WorkAtOrganizationInput
 type Options = {}
 type AdditionalProps = { onDelete?: () => void }
-const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {

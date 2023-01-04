@@ -17,11 +17,11 @@ const SubForms = {
   juleicaExpirationDate: DateForm,
   copyOfJuleica: FileInputForm,
 }
-export type JuleicaEntitlementFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardJuleicaEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const JuleicaEntitlementForm: Form<JuleicaEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const JuleicaEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),

@@ -3,11 +3,11 @@ import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
-export type NumberFormState = { type: 'NumberForm'; value: string }
+type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
 type Options = { min: number; max: number }
 type AdditionalProps = { label: string; minWidth?: number }
-const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
+const NumberForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'NumberForm', value: '' },
   getArrayBufferKeys: () => [],
   getValidatedInput: ({ value }, options) => {

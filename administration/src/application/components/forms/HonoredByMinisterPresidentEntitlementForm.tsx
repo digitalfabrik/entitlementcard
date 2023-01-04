@@ -12,16 +12,11 @@ import {
 
 const SubForms = { certificate: FileInputForm }
 
-export type HonoredByMinisterPresidentEntitlementFormState = CompoundState<typeof SubForms>
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const HonoredByMinisterPresidentEntitlementForm: Form<
-  HonoredByMinisterPresidentEntitlementFormState,
-  Options,
-  ValidatedInput,
-  AdditionalProps
-> = {
+const HonoredByMinisterPresidentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),

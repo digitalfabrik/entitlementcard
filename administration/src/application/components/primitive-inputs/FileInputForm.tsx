@@ -40,7 +40,7 @@ const FileInputButton = ({
   )
 }
 
-export type FileInputFormState = {
+type State = {
   MIMEType: keyof typeof defaultExtensionsByMIMEType
   arrayBufferKey: number
   filename: string
@@ -48,7 +48,7 @@ export type FileInputFormState = {
 type ValidatedInput = AttachmentInput
 type Options = {}
 type AdditionalProps = {}
-const FileInputForm: Form<FileInputFormState, Options, ValidatedInput, AdditionalProps> = {
+const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   getValidatedInput: state => {
