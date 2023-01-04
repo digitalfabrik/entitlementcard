@@ -138,7 +138,7 @@ export const useFormAsStep = <
 ): { label: string; validate: () => ValidationResult<unknown>; element: ReactNode } => {
   const state = parentState[keyInParent]
   const setState = useUpdateStateCallback(setParentState, keyInParent)
-  const validate = useCallback(() => form.getValidatedInput(state, options), [state, form, options])
+  const validate = useCallback(() => form.validate(state, options), [state, form, options])
   const formProps = { ...additionalProps, options, state, setState }
   const element = <form.Component {...formProps} />
   return { label, validate, element }

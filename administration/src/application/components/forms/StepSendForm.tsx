@@ -4,7 +4,7 @@ import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 import { Button } from '@mui/material'
@@ -36,7 +36,7 @@ type AdditionalProps = { privacyPolicy: string }
 const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createCompoundGetValidatedInput(SubForms, {
+  validate: createCompoundValidate(SubForms, {
     hasAcceptedDataPrivacy: hasAcceptedDatePrivacyOptions,
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
   }),

@@ -11,7 +11,7 @@ type AdditionalProps = { label: string }
 const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { selectedText: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ selectedText }, options) => {
+  validate: ({ selectedText }, options) => {
     if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!options.items.includes(selectedText))
       return {
@@ -23,7 +23,7 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = SelectForm.getValidatedInput(state, options)
+    const validationResult = SelectForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (

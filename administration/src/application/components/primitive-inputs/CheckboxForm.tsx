@@ -10,14 +10,14 @@ type AdditionalProps = { label: string | ReactElement }
 const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ checked }, options) => {
+  validate: ({ checked }, options) => {
     if (options.required && !checked) return { type: 'error', message: options.notCheckedErrorMessage }
     return { type: 'valid', value: checked }
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
     const { disableAllInputs, showAllErrors } = useContext(FormContext)
-    const validationResult = CheckboxForm.getValidatedInput(state, options)
+    const validationResult = CheckboxForm.validate(state, options)
 
     const isInvalid = validationResult.type === 'error'
 

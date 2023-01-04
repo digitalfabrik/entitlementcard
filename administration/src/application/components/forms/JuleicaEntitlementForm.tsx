@@ -8,7 +8,7 @@ import CustomDivider from '../CustomDivider'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
@@ -24,7 +24,7 @@ type AdditionalProps = {}
 const JuleicaEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
+  validate: createCompoundValidate(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur JuLeiCa' />

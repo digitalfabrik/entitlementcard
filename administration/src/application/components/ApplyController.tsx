@@ -72,7 +72,7 @@ const ApplyController = () => {
   }
 
   const submit = () => {
-    const validationResult = ApplicationForm.getValidatedInput(state)
+    const validationResult = ApplicationForm.validate(state)
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',

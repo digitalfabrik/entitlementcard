@@ -9,7 +9,7 @@ import CustomDivider from '../CustomDivider'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
@@ -29,7 +29,7 @@ type AdditionalProps = {}
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createCompoundGetValidatedInput(SubForms, {}),
+  validate: createCompoundValidate(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

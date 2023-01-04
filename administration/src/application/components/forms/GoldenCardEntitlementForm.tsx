@@ -11,7 +11,7 @@ import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
-  createSwitchGetValidatedInput,
+  createSwitchValidate,
 } from '../../compoundFormUtils'
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
@@ -44,7 +44,7 @@ type AdditionalProps = {}
 const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createSwitchGetValidatedInput(
+  validate: createSwitchValidate(
     SubForms,
     { entitlementType: entitlementTypeOptions },
     'entitlementType',

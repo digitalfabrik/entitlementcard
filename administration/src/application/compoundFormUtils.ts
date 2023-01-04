@@ -14,6 +14,9 @@ type CompoundValidatedInput<Forms extends SubForms> = {
   [key in keyof Forms]: InferValidatedInput<Forms[key]>
 }
 
+/**
+ * Creates a getArrayBufferKeys function that returns all keys of all sub forms.
+ **/
 export function createCompoundGetArrayBufferKeys<Forms extends SubForms>(subForms: Forms) {
   return (state: CompoundState<Forms>) => {
     const arrayBufferKeys = []
@@ -39,9 +42,9 @@ function getValidatedInputOfKey<Forms extends SubForms, K extends keyof Forms>(
 ): ValidationResult<InferValidatedInput<Forms[K]>> {
   if (key in subFormsOptions) {
     const optionsKey: KeysWithOptions<Forms> = key as unknown as KeysWithOptions<Forms>
-    return subForms[key].getValidatedInput(state[key], subFormsOptions[optionsKey])
+    return subForms[key].validate(state[key], subFormsOptions[optionsKey])
   } else {
-    return subForms[key].getValidatedInput(state[key])
+    return subForms[key].validate(state[key])
   }
 }
 
@@ -49,7 +52,7 @@ function getValidatedInputOfKey<Forms extends SubForms, K extends keyof Forms>(
  * Returns an error if the getValidatedInput function of one of the sub forms returns an error.
  * Otherwise, returns a valid result whose value maps a sub form key to its valid input value.
  */
-export function createCompoundGetValidatedInput<Forms extends SubForms>(
+export function createCompoundValidate<Forms extends SubForms>(
   subForms: Forms,
   subFormsOptions: SubFormsOptions<Forms>
 ) {
@@ -75,7 +78,7 @@ type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
   [k in keyof Forms]: InferValidatedInput<Forms[k]> | undefined
 }
 
-export function createSwitchGetValidatedInput<Forms extends SubForms, K extends keyof Forms>(
+export function createSwitchValidate<Forms extends SubForms, K extends keyof Forms>(
   subForms: Forms,
   subFormsOptions: SubFormsOptions<Forms>,
   switchBy: K,
@@ -91,7 +94,7 @@ export function createSwitchGetValidatedInput<Forms extends SubForms, K extends 
       return { type: 'error' }
     }
     const selectedKey: keyof Forms = selectedKeyByValue[value]
-    const selectedKeyResult = subForms[selectedKey].getValidatedInput(state[selectedKey])
+    const selectedKeyResult = subForms[selectedKey].validate(state[selectedKey])
     if (selectedKeyResult.type === 'error') {
       return { type: 'error' }
     }

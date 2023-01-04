@@ -27,15 +27,15 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     activeStep: 0,
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: state => {
-    const personalData = PersonalDataForm.getValidatedInput(state.stepPersonalData)
-    const stepCardType = StepCardTypeForm.getValidatedInput(state.stepCardType)
+  validate: state => {
+    const personalData = PersonalDataForm.validate(state.stepPersonalData)
+    const stepCardType = StepCardTypeForm.validate(state.stepCardType)
     if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
-    const stepRequirements = StepRequirementsForm.getValidatedInput(state.stepRequirements, {
+    const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
     })
-    const stepSend = StepSendForm.getValidatedInput(state.stepSend)
+    const stepSend = StepSendForm.validate(state.stepSend)
     if (stepRequirements.type === 'error' || stepSend.type === 'error') return { type: 'error' }
 
     return {

@@ -19,15 +19,15 @@ type AdditionalProps = {}
 const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: (state, options) => {
+  validate: (state, options) => {
     switch (options.cardType) {
       case CardType.Blue: {
-        const blueCardEntitlement = BlueCardEntitlementForm.getValidatedInput(state.blueCardEntitlement)
+        const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
         if (blueCardEntitlement.type === 'error') return { type: 'error' }
         return { type: 'valid', value: { type: CardType.Blue, value: blueCardEntitlement.value } }
       }
       case CardType.Golden: {
-        const goldenCardEntitlement = GoldenCardEntitlementForm.getValidatedInput(state.goldenCardEntitlement)
+        const goldenCardEntitlement = GoldenCardEntitlementForm.validate(state.goldenCardEntitlement)
         if (goldenCardEntitlement.type === 'error') return { type: 'error' }
         return { type: 'valid', value: { type: CardType.Golden, value: goldenCardEntitlement.value } }
       }

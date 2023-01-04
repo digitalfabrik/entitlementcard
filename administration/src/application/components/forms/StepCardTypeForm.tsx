@@ -8,7 +8,7 @@ import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
@@ -43,7 +43,7 @@ type AdditionalProps = {}
 const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createCompoundGetValidatedInput(SubForms, {
+  validate: createCompoundValidate(SubForms, {
     cardType: cardTypeOptions,
     applicationType: applicationTypeOptions,
     wantsDigitalCard: wantsDigitalCardOptions,

@@ -11,7 +11,7 @@ type AdditionalProps = { label: string; minWidth?: number }
 const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ value }) => {
+  validate: ({ value }) => {
     if (value === '') return { type: 'error', message: 'Feld ist erforderlich.' }
     const dateMillisecondsSinceEpoch = Date.parse(value)
     if (isNaN(dateMillisecondsSinceEpoch)) {
@@ -27,7 +27,7 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = DateForm.getValidatedInput(state)
+    const validationResult = DateForm.validate(state)
 
     const isInvalid = validationResult.type === 'error'
 

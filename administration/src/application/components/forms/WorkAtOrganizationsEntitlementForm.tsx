@@ -47,8 +47,8 @@ type AdditionalProps = {}
 const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
-  getValidatedInput: state => {
-    const validationResults = state.map(({ value }) => WorkAtOrganizationForm.getValidatedInput(value))
+  validate: state => {
+    const validationResults = state.map(({ value }) => WorkAtOrganizationForm.validate(value))
     if (validationResults.some(({ type }) => type === 'error')) {
       return { type: 'error' }
     }

@@ -13,7 +13,7 @@ import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
@@ -58,7 +58,7 @@ type AdditionalProps = { onDelete?: () => void }
 const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createCompoundGetValidatedInput(SubForms, {
+  validate: createCompoundValidate(SubForms, {
     amountOfWork: amountOfWorkOptions,
     payment: paymentOptions,
   }),

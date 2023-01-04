@@ -12,7 +12,7 @@ import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
-  createSwitchGetValidatedInput,
+  createSwitchValidate,
 } from '../../compoundFormUtils'
 
 const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
@@ -46,7 +46,7 @@ type AdditionalProps = {}
 const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: createSwitchGetValidatedInput(
+  validate: createSwitchValidate(
     SubForms,
     { entitlementType: entitlementTypeOptions },
     'entitlementType',

@@ -15,7 +15,7 @@ export function createRadioGroupForm<T extends string>(): Form<
   ValidatedInput<T>,
   AdditionalProps
 > {
-  const getValidatedInput = ({ selectedValue }: RadioGroupFormState<T>, options: Options<T>): ValidationResult<T> => {
+  const validate = ({ selectedValue }: RadioGroupFormState<T>, options: Options<T>): ValidationResult<T> => {
     if (selectedValue === null) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!Object.keys(options.labelByValue).includes(selectedValue))
       return {
@@ -27,11 +27,11 @@ export function createRadioGroupForm<T extends string>(): Form<
   return {
     initialState: { selectedValue: null },
     getArrayBufferKeys: () => [],
-    getValidatedInput,
+    validate,
     Component: ({ state, setState, options, divideItems, title }) => {
       const [touched, setTouched] = useState(false)
       const { showAllErrors, disableAllInputs } = useContext(FormContext)
-      const validationResult = getValidatedInput(state, options)
+      const validationResult = validate(state, options)
       const isInvalid = validationResult.type === 'error'
       const labelByValueEntries: [T, string][] = Object.entries(options.labelByValue) as [T, string][]
       return (

@@ -9,7 +9,7 @@ import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundGetValidatedInput,
+  createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
@@ -43,7 +43,7 @@ const SubForms = {
   contactHasGivenPermission: CheckboxForm,
 }
 
-const getValidatedCompoundInput = createCompoundGetValidatedInput(SubForms, {
+const getValidatedCompoundInput = createCompoundValidate(SubForms, {
   contactHasGivenPermission: contactHasGivenPermissionOptions,
   category: organizationCategoryOptions,
 })
@@ -55,7 +55,7 @@ type AdditionalProps = {}
 const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  getValidatedInput: state => {
+  validate: state => {
     const compoundResult = getValidatedCompoundInput(state)
     if (compoundResult.type === 'error') return compoundResult
     return {

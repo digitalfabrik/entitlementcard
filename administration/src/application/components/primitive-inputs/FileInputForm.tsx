@@ -51,7 +51,7 @@ type AdditionalProps = {}
 const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
-  getValidatedInput: state => {
+  validate: state => {
     if (state === null) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!globalArrayBuffersManager.has(state.arrayBufferKey)) return { type: 'error' }
     const arrayBuffer = globalArrayBuffersManager.getArrayBufferByKey(state.arrayBufferKey)
@@ -65,7 +65,7 @@ const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = FileInputForm.getValidatedInput(state)
+    const validationResult = FileInputForm.validate(state)
     const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
       const file = e.target.files![0]
       if (!(file.type in defaultExtensionsByMIMEType)) {
