@@ -4,18 +4,14 @@ import { useContext, useState } from 'react'
 import { Form, ValidationResult } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
-type RadioGroupFormState<T extends string> = { selectedValue: T | null }
+type State<T extends string> = { selectedValue: T | null }
 type ValidatedInput<T extends string> = T
 type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
+type RadioGroupForm<T extends string> = Form<State<T>, Options<T>, ValidatedInput<T>, AdditionalProps>
 
-export function createRadioGroupForm<T extends string>(): Form<
-  RadioGroupFormState<T>,
-  Options<T>,
-  ValidatedInput<T>,
-  AdditionalProps
-> {
-  const validate = ({ selectedValue }: RadioGroupFormState<T>, options: Options<T>): ValidationResult<T> => {
+export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
+  const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
     if (selectedValue === null) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!Object.keys(options.labelByValue).includes(selectedValue))
       return {
