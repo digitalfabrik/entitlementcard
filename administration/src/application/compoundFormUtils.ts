@@ -92,7 +92,7 @@ type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
   [k in keyof Forms]: InferValidatedInput<Forms[k]> | undefined
 }
 
-type FormWithStringValidatedInput = Form<unknown, {}, string, {}>
+type FormWithStringValidatedInput = Form<any, any, string, any>
 
 export function createSwitchValidate<
   K extends string,
