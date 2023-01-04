@@ -29,6 +29,13 @@ type CompoundValidatedInput<Forms extends SubForms> = {
   [key in keyof Forms]: InferValidatedInput<Forms[key]>
 }
 
+export function createCompoundInitialState<Forms extends SubForms>(subForms: Forms): CompoundState<Forms> {
+  return mapValues<Forms, CompoundState<Forms>>(
+    subForms,
+    <k extends keyof Forms>(form: Forms[k]) => form.initialState as InferState<Forms[k]>
+  )
+}
+
 /**
  * Creates a getArrayBufferKeys function that returns all keys of all sub forms.
  **/
@@ -125,11 +132,4 @@ export function createSwitchValidate<
       } as SwitchValidationInput<Forms, K>,
     }
   }
-}
-
-export function createCompoundInitialState<Forms extends SubForms>(subForms: Forms): CompoundState<Forms> {
-  return mapValues<Forms, CompoundState<Forms>>(
-    subForms,
-    <k extends keyof Forms>(form: Forms[k]) => form.initialState as InferState<Forms[k]>
-  )
 }
