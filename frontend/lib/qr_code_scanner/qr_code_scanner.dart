@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
+import 'package:ehrenamtskarte/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -40,17 +41,17 @@ class _QRViewState extends State<QrCodeScanner> {
                 allowDuplicates: false,
                 controller: controller,
               ),
-              Center(
+              Padding(
+                padding: EdgeInsets.zero,
                 child: Container(
-                  width: _calculateScanArea(context),
-                  height: _calculateScanArea(context),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.secondary,
-                        width: 10,
+                  decoration: ShapeDecoration(
+                    shape: QrScannerOverlayShape(
+                      borderRadius: 10,
+                      borderColor: Theme.of(context).colorScheme.secondary,
+                      borderLength: 30,
+                      borderWidth: 10,
+                      cutOutSize: _calculateScanArea(context),
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   ),
                 ),
               ),
