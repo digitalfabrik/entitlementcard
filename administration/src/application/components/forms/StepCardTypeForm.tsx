@@ -41,7 +41,7 @@ type ValidatedInput = { cardType: CardType; applicationType: ApplicationType; wa
 type Options = {}
 type AdditionalProps = {}
 const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
-  initialState: createCompoundInitialState(SubForms),
+  initialState: { ...createCompoundInitialState(SubForms), wantsDigitalCard: { checked: true } },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
     cardType: cardTypeOptions,
@@ -68,7 +68,8 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       <CustomDivider />
       <Typography>
         Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.
-        Hier können Sie wählen, ob Sie neben der physischen auch die digitale Ehrenamtskarte beantragen möchten.
+        Hier können Sie wählen, ob Sie neben der physischen auch kostenfrei die digitale Ehrenamtskarte beantragen
+        möchten.
       </Typography>
       <CheckboxForm.Component
         state={state.wantsDigitalCard}
