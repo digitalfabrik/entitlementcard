@@ -72,12 +72,8 @@ android {
 
     flavorDimensions "dummy"
     productFlavors {
-        Automatic { flavor ->
-            flavor.getIsDefault().set(true)
-            // Automatically decides which build config to use based on project properties, dart defines or environment variables.
-        }
         Bayern { flavor ->
-            // Forces the bayern build config
+            flavor.getIsDefault().set(true)
             setupApplication(flavor, "bayern")
         }
         Nuernberg { flavor ->

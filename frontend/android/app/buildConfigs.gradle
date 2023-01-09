@@ -35,29 +35,6 @@ def execCommand(command) {
     return out
 }
 
-def determineBuildConfigName() {
-    def dartEnvironmentVariables = new LinkedHashMap<String, String>()
-
-    if (project.hasProperty('dart-defines')) {
-        dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
-                .split(',')
-                .collectEntries { entry ->
-                    def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
-                    [(pair.first()): pair.last()]
-                }
-    }
-
-    if (dartEnvironmentVariables.containsKey('BUILD_CONFIG_NAME')) {
-        return dartEnvironmentVariables.BUILD_CONFIG_NAME
-    } else if (project.hasProperty('BUILD_CONFIG_NAME')) {
-        return project.BUILD_CONFIG_NAME
-    } else if (System.getenv()["BUILD_CONFIG_NAME"]) {
-        return System.getenv()['BUILD_CONFIG_NAME']
-    } else {
-        return 'bayern'
-    }
-}
-
 def createBuildConfig(buildConfigName) {
     def proc = execCommand("app-toolbelt v0 build-config to-json $buildConfigName android")
     def buildConfig = new JsonSlurper().parseText(proc)
@@ -111,7 +88,6 @@ def determineIcon(buildConfig) {
 }
 
 ext {
-    determineBuildConfigName = this.&determineBuildConfigName
     createBuildConfig = this.&createBuildConfig
     // setupGoogleServices = this.&setupGoogleServices
     setupResourceValues = this.&setupResourceValues
