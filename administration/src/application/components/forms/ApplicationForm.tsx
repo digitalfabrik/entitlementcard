@@ -1,11 +1,11 @@
-import { useUpdateStateCallback } from '../../useUpdateStateCallback'
-import { BlueCardApplicationInput } from '../../../generated/graphql'
+import { ApplicationInput, CardType } from '../../../generated/graphql'
 import { Form } from '../../FormType'
 import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
-import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import StepCardTypeForm, { StepCardTypeFormState } from './StepCardTypeForm'
 import StepRequirementsForm, { StepRequirementsFormState } from './StepRequirementsForm'
 import StepSendForm, { StepSendFormState } from './StepSendForm'
+import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
+import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 
 type RegionId = number
 
@@ -16,7 +16,7 @@ export type ApplicationFormState = {
   stepRequirements: StepRequirementsFormState
   stepSend: StepSendFormState
 }
-type ValidatedInput = [RegionId, BlueCardApplicationInput]
+type ValidatedInput = [RegionId, ApplicationInput]
 type Options = {}
 type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
 const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
@@ -38,18 +38,23 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
     const stepCardType = StepCardTypeForm.getValidatedInput(state.stepCardType)
     if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
-    const stepRequirements = StepRequirementsForm.getValidatedInput(state.stepRequirements)
+    const stepRequirements = StepRequirementsForm.getValidatedInput(state.stepRequirements, {
+      cardType: stepCardType.value.cardType,
+    })
     const stepSend = StepSendForm.getValidatedInput(state.stepSend)
     if (stepRequirements.type === 'error' || stepSend.type === 'error') return { type: 'error' }
 
     return {
       type: 'valid',
       value: [
-        1, // TODO: Add a mechanism to retrieve this regionId,
+        1, // TODO: Add a mechanism to retrieve this regionId
         {
           personalData: personalData.value,
+          cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
-          entitlement: stepRequirements.value,
+          wantsDigitalCard: stepCardType.value.wantsDigitalCard,
+          blueCardEntitlement: stepRequirements.value.type === CardType.Blue ? stepRequirements.value.value : null,
+          goldenCardEntitlement: stepRequirements.value.type === CardType.Golden ? stepRequirements.value.value : null,
           hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
           givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
         },

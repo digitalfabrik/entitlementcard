@@ -1,4 +1,4 @@
-import { AmountOfWorkUnit, WorkAtOrganizationInput } from '../../../generated/graphql'
+import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import { useState } from 'react'
 import ConfirmDialog from '../ConfirmDialog'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
@@ -60,6 +60,7 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     ...OrganizationForm.getArrayBufferKeys(state.organization),
     ...NumberForm.getArrayBufferKeys(state.amountOfWork),
     ...DateForm.getArrayBufferKeys(state.activeSince),
+    ...CheckboxForm.getArrayBufferKeys(state.payment),
     ...ShortTextForm.getArrayBufferKeys(state.responsibility),
     ...FileInputForm.getArrayBufferKeys(state.certificate),
   ],
@@ -68,8 +69,8 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
     const amountOfWork = NumberForm.getValidatedInput(state.amountOfWork, amountOfWorkOptions)
     const activeSince = DateForm.getValidatedInput(state.activeSince)
     const responsibility = ShortTextForm.getValidatedInput(state.responsibility)
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
     const payment = CheckboxForm.getValidatedInput(state.payment, paymentOptions)
+    const certificate = FileInputForm.getValidatedInput(state.certificate)
     if (
       organization.type === 'error' ||
       amountOfWork.type === 'error' ||
@@ -84,7 +85,6 @@ const WorkAtOrganizationForm: Form<WorkAtOrganizationFormState, Options, Validat
       value: {
         organization: organization.value,
         amountOfWork: amountOfWork.value,
-        amountOfWorkUnit: AmountOfWorkUnit.HoursPerWeek,
         workSinceDate: activeSince.value,
         responsibility: responsibility.value,
         certificate: certificate.value,

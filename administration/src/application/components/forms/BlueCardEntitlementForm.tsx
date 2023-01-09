@@ -1,95 +1,171 @@
 import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../generated/graphql'
-import { SetState, useUpdateStateCallback } from '../../useUpdateStateCallback'
+import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import { Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import SwitchComponent from '../SwitchComponent'
-import StandardEntitlementForm, { StandardEntitlementFormState } from './StandardEntitlementForm'
+import WorkAtOrganizationsEntitlementForm, {
+  WorkAtOrganizationsEntitlementFormState,
+} from './WorkAtOrganizationsEntitlementForm'
+import RadioGroupForm from '../primitive-inputs/RadioGroupForm'
+import radioGroupForm, { RadioGroupFormState } from '../primitive-inputs/RadioGroupForm'
+import JuleicaEntitlementForm, { JuleicaEntitlementFormState } from './JuleicaEntitlementForm'
+import WorkAtDepartmentEntitlementForm, {
+  WorkAtDepartmentEntitlementFormState,
+} from './WorkAtDepartmentEntitlementForm'
+import MilitaryReserveEntitlementForm, { MilitaryReserveEntitlementFormState } from './MilitaryReserveEntitlementForm'
+import VolunteerServiceEntitlementForm, {
+  VolunteerServiceEntitlementFormState,
+} from './VolunteerServiceEntitlementForm'
 
-const BlueCardEntitlementTypeForm = ({
-  state,
-  setState,
-}: {
-  state: BlueCardEntitlementType | null
-  setState: SetState<BlueCardEntitlementType | null>
-}) => {
-  return (
-    <FormControl>
-      <FormLabel>
-        Die folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte trifft auch mich zu:
-      </FormLabel>
-      <RadioGroup
-        sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
-        value={state}
-        onChange={e => setState(() => e.target.value as BlueCardEntitlementType)}>
-        <FormControlLabel
-          value={BlueCardEntitlementType.Standard}
-          label='Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
-          control={<Radio required />}
-        />
-        <Divider variant='middle' />
-        <FormControlLabel
-          value={BlueCardEntitlementType.Juleica}
-          label='Ich bin Inhaber:in einer JuLeiCa (Jugendleitercarte)'
-          control={<Radio required />}
-        />
-        <Divider variant='middle' />
-        <FormControlLabel
-          value={BlueCardEntitlementType.Service}
-          label='Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
-          control={<Radio required />}
-        />
-        {/* TODO: Add missing possible entitlements */}
-      </RadioGroup>
-    </FormControl>
-  )
+const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
+  labelByValue: {
+    [BlueCardEntitlementType.WorkAtOrganizations]:
+      'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.',
+    [BlueCardEntitlementType.Juleica]: 'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).',
+    [BlueCardEntitlementType.WorkAtDepartment]:
+      'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.',
+    [BlueCardEntitlementType.MilitaryReserve]:
+      'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.',
+    [BlueCardEntitlementType.VolunteerService]:
+      'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).',
+  },
 }
 
 export type BlueCardEntitlementFormState = {
-  entitlementType: BlueCardEntitlementType | null
-  standardEntitlement: StandardEntitlementFormState
+  entitlementType: RadioGroupFormState
+  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementFormState
+  juleicaEntitlement: JuleicaEntitlementFormState
+  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementFormState
+  militaryReserveEntitlement: MilitaryReserveEntitlementFormState
+  volunteerServiceEntitlement: VolunteerServiceEntitlementFormState
 }
 type ValidatedInput = BlueCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
 const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
-    entitlementType: null,
-    standardEntitlement: StandardEntitlementForm.initialState,
+    entitlementType: RadioGroupForm.initialState,
+    workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm.initialState,
+    juleicaEntitlement: JuleicaEntitlementForm.initialState,
+    workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm.initialState,
+    militaryReserveEntitlement: MilitaryReserveEntitlementForm.initialState,
+    volunteerServiceEntitlement: VolunteerServiceEntitlementForm.initialState,
   },
-  getArrayBufferKeys: state => [...StandardEntitlementForm.getArrayBufferKeys(state.standardEntitlement)],
+  getArrayBufferKeys: state => [
+    ...RadioGroupForm.getArrayBufferKeys(state.entitlementType),
+    ...WorkAtOrganizationsEntitlementForm.getArrayBufferKeys(state.workAtOrganizationsEntitlement),
+    ...JuleicaEntitlementForm.getArrayBufferKeys(state.juleicaEntitlement),
+    ...WorkAtDepartmentEntitlementForm.getArrayBufferKeys(state.workAtDepartmentEntitlement),
+    ...MilitaryReserveEntitlementForm.getArrayBufferKeys(state.militaryReserveEntitlement),
+    ...VolunteerServiceEntitlementForm.getArrayBufferKeys(state.volunteerServiceEntitlement),
+  ],
   getValidatedInput: state => {
-    switch (state.entitlementType) {
-      case BlueCardEntitlementType.Standard: {
-        const standardEntitlement = StandardEntitlementForm.getValidatedInput(state.standardEntitlement)
-        if (standardEntitlement.type === 'error') return { type: 'error' }
+    const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)
+    if (entitlementTypeResult.type === 'error') return { type: 'error' }
+    const entitlementType = entitlementTypeResult.value.value as BlueCardEntitlementType
+    switch (entitlementType) {
+      case BlueCardEntitlementType.WorkAtOrganizations: {
+        const workAtOrganizationsEntitlement = WorkAtOrganizationsEntitlementForm.getValidatedInput(
+          state.workAtOrganizationsEntitlement
+        )
+        if (workAtOrganizationsEntitlement.type === 'error') return { type: 'error' }
         return {
           type: 'valid',
           value: {
-            entitlementType: state.entitlementType,
-            workAtOrganizations: standardEntitlement.value,
+            entitlementType,
+            workAtOrganizationsEntitlement: workAtOrganizationsEntitlement.value,
           },
         }
       }
-      default:
-        return { type: 'error' }
+      case BlueCardEntitlementType.Juleica: {
+        const juleicaEntitlement = JuleicaEntitlementForm.getValidatedInput(state.juleicaEntitlement)
+        if (juleicaEntitlement.type === 'error') return { type: 'error' }
+        return {
+          type: 'valid',
+          value: {
+            entitlementType,
+            juleicaEntitlement: juleicaEntitlement.value,
+          },
+        }
+      }
+      case BlueCardEntitlementType.WorkAtDepartment:
+        const workAtDepartmentEntitlement = WorkAtDepartmentEntitlementForm.getValidatedInput(
+          state.workAtDepartmentEntitlement
+        )
+        if (workAtDepartmentEntitlement.type === 'error') return { type: 'error' }
+        return {
+          type: 'valid',
+          value: {
+            entitlementType,
+            workAtDepartmentEntitlement: workAtDepartmentEntitlement.value,
+          },
+        }
+      case BlueCardEntitlementType.MilitaryReserve:
+        const militaryReserveEntitlement = MilitaryReserveEntitlementForm.getValidatedInput(
+          state.militaryReserveEntitlement
+        )
+        if (militaryReserveEntitlement.type === 'error') return { type: 'error' }
+        return {
+          type: 'valid',
+          value: {
+            entitlementType,
+            militaryReserveEntitlement: militaryReserveEntitlement.value,
+          },
+        }
+      case BlueCardEntitlementType.VolunteerService:
+        const volunteerServiceEntitlement = VolunteerServiceEntitlementForm.getValidatedInput(
+          state.volunteerServiceEntitlement
+        )
+        if (volunteerServiceEntitlement.type === 'error') return { type: 'error' }
+        return {
+          type: 'valid',
+          value: {
+            entitlementType,
+            volunteerServiceEntitlement: volunteerServiceEntitlement.value,
+          },
+        }
     }
   },
   Component: ({ state, setState }) => (
     <>
-      <BlueCardEntitlementTypeForm
+      <RadioGroupForm.Component
         state={state.entitlementType}
+        divideItems
+        title='Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:'
+        options={entitlementTypeOptions}
         setState={useUpdateStateCallback(setState, 'entitlementType')}
       />
-      <SwitchComponent value={state.entitlementType}>
+      <SwitchComponent value={state.entitlementType.selectedValue}>
         {{
-          [BlueCardEntitlementType.Standard]: (
-            <StandardEntitlementForm.Component
-              state={state.standardEntitlement}
-              setState={useUpdateStateCallback(setState, 'standardEntitlement')}
+          [BlueCardEntitlementType.WorkAtOrganizations]: (
+            <WorkAtOrganizationsEntitlementForm.Component
+              state={state.workAtOrganizationsEntitlement}
+              setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
             />
           ),
-          [BlueCardEntitlementType.Juleica]: null,
-          [BlueCardEntitlementType.Service]: null,
+          [BlueCardEntitlementType.Juleica]: (
+            <JuleicaEntitlementForm.Component
+              state={state.juleicaEntitlement}
+              setState={useUpdateStateCallback(setState, 'juleicaEntitlement')}
+            />
+          ),
+          [BlueCardEntitlementType.WorkAtDepartment]: (
+            <WorkAtDepartmentEntitlementForm.Component
+              state={state.workAtDepartmentEntitlement}
+              setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
+            />
+          ),
+          [BlueCardEntitlementType.MilitaryReserve]: (
+            <MilitaryReserveEntitlementForm.Component
+              state={state.militaryReserveEntitlement}
+              setState={useUpdateStateCallback(setState, 'militaryReserveEntitlement')}
+            />
+          ),
+          [BlueCardEntitlementType.VolunteerService]: (
+            <VolunteerServiceEntitlementForm.Component
+              state={state.volunteerServiceEntitlement}
+              setState={useUpdateStateCallback(setState, 'volunteerServiceEntitlement')}
+            />
+          ),
         }}
       </SwitchComponent>
     </>

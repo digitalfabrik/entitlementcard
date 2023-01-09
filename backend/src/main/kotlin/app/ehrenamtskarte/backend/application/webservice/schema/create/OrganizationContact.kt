@@ -18,12 +18,12 @@ data class OrganizationContact(
             mapOf("de" to "Kontaktperson der Organisation"),
             Type.Array,
             listOf(
-                name.toJsonField("name", mapOf("de" to "Name")),
-                telephone.toJsonField("telephone", mapOf("de" to "Telefonnummer")),
-                email.toJsonField("email", mapOf("de" to "Email-Adresse")),
+                name.toJsonField("name", mapOf("de" to "Vor- und Nachname")),
+                telephone.toJsonField("telephone", mapOf("de" to "Telefon")),
+                email.toJsonField("email", mapOf("de" to "E-Mail-Adresse")),
                 JsonField(
                     "hasGivenPermission",
-                    mapOf("de" to "Kontaktperson hat zur Weitergabe der Daten möglicher Kontaktaufnahme eingewilligt"),
+                    mapOf("de" to "Die Kontaktperson hat der Weitergabe seiner Daten zum Zwecke der Antragsverarbeitung zugestimmt."),
                     Type.Boolean,
                     hasGivenPermission
                 )

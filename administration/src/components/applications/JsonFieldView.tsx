@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Icon } from '@blueprintjs/core'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import styled from 'styled-components'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string
@@ -27,21 +28,48 @@ const extensionByContentType = new Map([
   ['image/jpeg', 'jpg'],
 ])
 
-const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; token: string }) => {
+const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
+  border-color: #ddd;
+  transition: 0.2s;
+  &:hover {
+    border-color: #999;
+    background-color: ${props => (props.$hierarchyIndex % 2 === 1 ? 'rgba(0,0,0,5%)' : 'white')};
+  }
+
+  & > div {
+    padding-left: 10px;
+    border-left: 1px solid;
+    border-color: inherit;
+  }
+`
+
+const JsonFieldView = (props: {
+  jsonField: GeneralJsonField
+  baseUrl: string
+  token: string
+  hierarchyIndex: number
+}) => {
   const appToaster = useAppToaster()
   switch (props.jsonField.type) {
     case 'Array':
-      return (
-        <>
+      const children = props.jsonField.value.map((jsonField: GeneralJsonField, index: number) => (
+        <JsonFieldView
+          jsonField={jsonField}
+          baseUrl={props.baseUrl}
+          token={props.token}
+          key={index}
+          hierarchyIndex={props.hierarchyIndex + 1}
+        />
+      ))
+      return props.jsonField.translations.de.length === 0 ? (
+        <>{children}</>
+      ) : (
+        <ParentOfBorder $hierarchyIndex={props.hierarchyIndex}>
           <p>
             <b>{props.jsonField.translations.de}</b>
           </p>
-          <div style={{ paddingLeft: '10px', borderLeft: '1px solid #ccc' }}>
-            {props.jsonField.value.map((jsonField: GeneralJsonField, index: number) => (
-              <JsonFieldView jsonField={jsonField} baseUrl={props.baseUrl} token={props.token} key={index} />
-            ))}
-          </div>
-        </>
+          <div>{children}</div>
+        </ParentOfBorder>
       )
     case 'String':
       return (
@@ -64,7 +92,16 @@ const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; to
     case 'Boolean':
       return (
         <p>
-          {props.jsonField.translations.de}:&nbsp;{props.jsonField.value ? <Icon icon='tick' /> : <Icon icon='cross' />}
+          {props.jsonField.translations.de}:&nbsp;
+          {props.jsonField.value ? (
+            <>
+              <Icon icon='tick' /> Ja
+            </>
+          ) : (
+            <>
+              <Icon icon='cross' /> Nein
+            </>
+          )}
         </p>
       )
     case 'Attachment':

@@ -5,6 +5,7 @@ import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortText
 import AddressForm, { AddressFormState } from './AddressForm'
 import SelectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
 import EmailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
+import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
 
 const organizationCategoryOptions = {
   items: [
@@ -21,6 +22,11 @@ const organizationCategoryOptions = {
   ],
 }
 
+const contactHasGivenPermissionOptions = {
+  required: true,
+  notCheckedErrorMessage: 'Die Kontaktperson muss zugestimmt haben, damit Sie Ihren Antrag senden können.',
+} as const
+
 export type OrganizationFormState = {
   name: ShortTextFormState
   address: AddressFormState
@@ -28,6 +34,7 @@ export type OrganizationFormState = {
   contactName: ShortTextFormState
   contactEmail: EmailFormState
   contactPhone: ShortTextFormState
+  contactHasGivenPermission: CheckboxFormState
 }
 type ValidatedInput = OrganizationInput
 type Options = {}
@@ -40,6 +47,7 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
     contactName: ShortTextForm.initialState,
     contactEmail: EmailForm.initialState,
     contactPhone: ShortTextForm.initialState,
+    contactHasGivenPermission: CheckboxForm.initialState,
   },
   getArrayBufferKeys: state => [
     ...ShortTextForm.getArrayBufferKeys(state.name),
@@ -48,6 +56,7 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
     ...ShortTextForm.getArrayBufferKeys(state.contactName),
     ...EmailForm.getArrayBufferKeys(state.contactEmail),
     ...ShortTextForm.getArrayBufferKeys(state.contactPhone),
+    ...CheckboxForm.getArrayBufferKeys(state.contactHasGivenPermission),
   ],
   getValidatedInput: state => {
     const name = ShortTextForm.getValidatedInput(state.name)
@@ -56,13 +65,18 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
     const contactName = ShortTextForm.getValidatedInput(state.contactName)
     const contactEmail = EmailForm.getValidatedInput(state.contactEmail)
     const contactPhone = ShortTextForm.getValidatedInput(state.contactPhone)
+    const contactHasGivenPermission = CheckboxForm.getValidatedInput(
+      state.contactHasGivenPermission,
+      contactHasGivenPermissionOptions
+    )
     if (
       name.type === 'error' ||
       address.type === 'error' ||
       category.type === 'error' ||
       contactName.type === 'error' ||
       contactEmail.type === 'error' ||
-      contactPhone.type === 'error'
+      contactPhone.type === 'error' ||
+      contactHasGivenPermission.type === 'error'
     )
       return { type: 'error' }
     return {
@@ -75,7 +89,7 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
           name: contactName.value,
           email: contactEmail.value,
           telephone: contactPhone.value,
-          hasGivenPermission: true, // TODO: Add a field for this.
+          hasGivenPermission: contactHasGivenPermission.value,
         },
       },
     }
@@ -110,6 +124,12 @@ const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, Add
         state={state.contactPhone}
         setState={useUpdateStateCallback(setState, 'contactPhone')}
         label='Telefon'
+      />
+      <CheckboxForm.Component
+        state={state.contactHasGivenPermission}
+        setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
+        label='Die Kontaktperson hat der Weitergabe seiner Daten zum Zwecke der Antragsverarbeitung zugestimmt.'
+        options={contactHasGivenPermissionOptions}
       />
     </>
   ),

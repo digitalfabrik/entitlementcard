@@ -78,12 +78,10 @@ type Coordinates {
 }
 
 type Mutation {
-  "Stores a new blue digital EAK"
-  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
-  "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenCardApplicationInput!, regionId: Int!): Boolean!
+  "Stores a new application for an EAK"
+  addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
@@ -147,11 +145,6 @@ type SignInPayload {
   user: Administrator!
 }
 
-enum AmountOfWorkUnit {
-  HOURS_PER_WEEK
-  HOURS_PER_YEAR
-}
-
 enum ApplicationType {
   FIRST_APPLICATION
   RENEWAL_APPLICATION
@@ -159,14 +152,22 @@ enum ApplicationType {
 
 enum BlueCardEntitlementType {
   JULEICA
-  SERVICE
-  STANDARD
+  MILITARY_RESERVE
+  VOLUNTEER_SERVICE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
+}
+
+enum CardType {
+  BLUE
+  GOLDEN
 }
 
 enum GoldenCardEntitlementType {
-  HONOR_BY_MINISTER_PRESIDENT
-  SERVICE_AWARD
-  STANDARD
+  HONORED_BY_MINISTER_PRESIDENT
+  MILITARY_RESERVE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
 }
 
 enum Role {
@@ -190,6 +191,21 @@ input AddressInput {
   street: ShortTextInput!
 }
 
+"""
+An application for the Bayerische Ehrenamtskarte.
+The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+"""
+input ApplicationInput {
+  applicationType: ApplicationType!
+  blueCardEntitlement: BlueCardEntitlementInput
+  cardType: CardType!
+  givenInformationIsCorrectAndComplete: Boolean!
+  goldenCardEntitlement: GoldenCardEntitlementInput
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+  wantsDigitalCard: Boolean!
+}
+
 input AttachmentInput {
   data: Upload!
 }
@@ -199,33 +215,39 @@ input AuthDataInput {
   password: String!
 }
 
-input BlueCardApplicationInput {
-  applicationType: ApplicationType!
-  entitlement: BlueCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
-}
-
-"""
-Entitlement for blue EAK.
-    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
-    or     entitlementType == Service and serviceActivity, serviceCertification are not null
-    or     entitlementType == Standard and workAtOrganizations is not null
-"""
+"Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
 input BlueCardEntitlementInput {
-  copyOfJuleica: AttachmentInput
   entitlementType: BlueCardEntitlementType!
-  juleicaExpirationDate: String
-  juleicaNumber: String
-  serviceEntitlement: BlueCardServiceEntitlementInput
-  workAtOrganizations: [WorkAtOrganizationInput!]
+  juleicaEntitlement: BlueCardJuleicaEntitlementInput
+  militaryReserveEntitlement: BlueCardMilitaryReserveEntitlementInput
+  volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlementInput
+  workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlementInput
 }
 
-input BlueCardServiceEntitlementInput {
-  certificate: AttachmentInput
+input BlueCardJuleicaEntitlementInput {
+  copyOfJuleica: AttachmentInput!
+  juleicaExpirationDate: DateInput!
+  juleicaNumber: ShortTextInput!
+}
+
+input BlueCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input BlueCardVolunteerServiceEntitlementInput {
+  certificate: AttachmentInput!
+  programName: ShortTextInput!
+}
+
+input BlueCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput!
   organization: OrganizationInput!
-  responsibility: String
+  responsibility: ShortTextInput!
+}
+
+input BlueCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input CardGenerationModelInput {
@@ -255,17 +277,31 @@ input EmailInput {
   email: String!
 }
 
-input GoldenCardApplicationInput {
-  entitlement: GoldenCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
+"Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
+input GoldenCardEntitlementInput {
+  entitlementType: GoldenCardEntitlementType!
+  honoredByMinisterPresidentEntitlement: GoldenCardHonoredByMinisterPresidentEntitlementInput
+  militaryReserveEntitlement: GoldenCardMilitaryReserveEntitlementInput
+  workAtDepartmentEntitlement: GoldenCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: GoldenCardWorkAtOrganizationsEntitlementInput
 }
 
-input GoldenCardEntitlementInput {
-  certificate: AttachmentInput
-  goldenEntitlementType: GoldenCardEntitlementType!
-  workAtOrganizations: [WorkAtOrganizationInput!]
+input GoldenCardHonoredByMinisterPresidentEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput!
+  organization: OrganizationInput!
+  responsibility: ShortTextInput!
+}
+
+input GoldenCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input OrganizationContactInput {
@@ -280,8 +316,6 @@ input OrganizationInput {
   category: ShortTextInput!
   contact: OrganizationContactInput!
   name: ShortTextInput!
-  "Link zu Website oder Satzung"
-  website: ShortTextInput
 }
 
 input PersonalDataInput {
@@ -289,11 +323,8 @@ input PersonalDataInput {
   dateOfBirth: DateInput!
   emailAddress: EmailInput!
   forenames: ShortTextInput!
-  gender: ShortTextInput
-  nationality: ShortTextInput
   surname: ShortTextInput!
-  telephone: ShortTextInput
-  title: ShortTextInput
+  telephone: ShortTextInput!
 }
 
 input SearchParamsInput {
@@ -311,8 +342,7 @@ input ShortTextInput {
 
 input WorkAtOrganizationInput {
   amountOfWork: Float!
-  amountOfWorkUnit: AmountOfWorkUnit!
-  certificate: AttachmentInput
+  certificate: AttachmentInput!
   organization: OrganizationInput!
   payment: Boolean!
   responsibility: ShortTextInput!

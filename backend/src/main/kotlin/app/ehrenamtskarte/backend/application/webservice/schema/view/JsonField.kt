@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Attachment
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 enum class Type {
@@ -29,7 +29,7 @@ data class JsonField(
         when (type) {
             Type.String -> if (value !is String) throw IllegalArgumentException("Expected String.")
             Type.Number -> if (value !is Number) throw IllegalArgumentException("Expected Number.")
-            Type.Array -> if (!isListOfJsonFields(value)) throw IllegalArgumentException("Expected Array of JsonFields.")
+            Type.Array -> if (!isListOfJsonFields(value)) throw IllegalArgumentException("Expected List of JsonFields.")
             Type.Attachment -> if (value !is AttachmentView) throw IllegalArgumentException("Expected AttachmentView.")
             Type.Boolean -> if (value !is Boolean) throw IllegalArgumentException("Expected Boolean.")
             Type.Date -> if (value !is String) throw IllegalArgumentException("Expected String for Date.")

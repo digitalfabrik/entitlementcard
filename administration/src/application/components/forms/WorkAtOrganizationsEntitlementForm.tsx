@@ -4,7 +4,7 @@ import { SetState } from '../../useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
-import { WorkAtOrganizationInput } from '../../../generated/graphql'
+import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 
 const WorkAtOrganizationFormHelper = ({
   listKey,
@@ -37,11 +37,16 @@ function removeAt<T>(array: T[], index: number): T[] {
   return newArray
 }
 
-export type StandardEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
-type ValidatedInput = WorkAtOrganizationInput[]
+export type WorkAtOrganizationsEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
+type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationsEntitlementForm: Form<
+  WorkAtOrganizationsEntitlementFormState,
+  Options,
+  ValidatedInput,
+  AdditionalProps
+> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   getValidatedInput: state => {
@@ -51,12 +56,14 @@ const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
     }
     return {
       type: 'valid',
-      value: validationResults.map(x => {
-        if (x.type !== 'valid') {
-          throw Error('Found an invalid entry despite previous validity check.')
-        }
-        return x.value
-      }),
+      value: {
+        list: validationResults.map(x => {
+          if (x.type !== 'valid') {
+            throw Error('Found an invalid entry despite previous validity check.')
+          }
+          return x.value
+        }),
+      },
     }
   },
   Component: ({ state, setState }) => {
@@ -108,4 +115,4 @@ const StandardEntitlementForm: Form<StandardEntitlementFormState, Options, Valid
   },
 }
 
-export default StandardEntitlementForm
+export default WorkAtOrganizationsEntitlementForm

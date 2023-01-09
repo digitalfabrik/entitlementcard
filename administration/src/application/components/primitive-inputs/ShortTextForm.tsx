@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-const MAX_SHORT_TEXT_LENGTH = 300
+export const MAX_SHORT_TEXT_LENGTH = 300
 
 export type ShortTextFormState = {
   shortText: string
@@ -37,6 +37,7 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
         style={{ margin: '4px 0', minWidth }}
         label={label}
         required
+        inputProps={{ maxLength: MAX_SHORT_TEXT_LENGTH }}
         disabled={disableAllInputs}
         error={touched && isInvalid}
         onBlur={() => setTouched(true)}
