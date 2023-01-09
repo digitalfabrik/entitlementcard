@@ -1,10 +1,4 @@
-mutation editAdministrator(
-  $project: String!
-  $adminId: Int!
-  $newEmail: String!
-  $newRegionId: Int
-  $newRole: Role!
-) {
+mutation editAdministrator($project: String!, $adminId: Int!, $newEmail: String!, $newRegionId: Int, $newRole: Role!) {
   result: editAdministrator(
     project: $project
     adminId: $adminId
