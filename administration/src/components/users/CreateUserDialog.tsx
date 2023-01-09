@@ -1,55 +1,19 @@
-import { Button, Checkbox, Classes, Dialog, FormGroup, HTMLSelect, InputGroup } from '@blueprintjs/core'
+import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import RoleHelpButton from './RoleHelpButton'
-import { roleToText } from './UsersTable'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import RegionSelector from '../RegionSelector'
-import { ApolloError } from '@apollo/client'
+import RoleSelector from './RoleSelector'
+import getMessageFromApolloError from "../getMessageFromApolloError";
 
 const RoleFormGroupLabel = styled.span`
   & span {
     display: inline-block !important;
   }
 `
-
-const RoleSelector = ({
-  role,
-  onChange,
-  hideProjectAdmin,
-}: {
-  role: Role | null
-  onChange: (role: Role | null) => void
-  hideProjectAdmin: boolean
-}) => {
-  return (
-    <HTMLSelect fill onChange={e => onChange((e.target.value as Role | null) ?? null)} value={role ?? ''} required>
-      <option value='' disabled>
-        Auswählen...
-      </option>
-      {hideProjectAdmin ? null : <option value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</option>}
-      <option value={Role.RegionAdmin}>{roleToText(Role.RegionAdmin)}</option>
-      <option value={Role.RegionManager}>{roleToText(Role.RegionManager)}</option>
-    </HTMLSelect>
-  )
-}
-
-const getMessageFromApolloError = (error: ApolloError): string => {
-  const defaultMessage = 'Etwas ist schief gelaufen.'
-  if (error.graphQLErrors.length !== 1) {
-    return defaultMessage
-  }
-  const graphQLError = error.graphQLErrors[0]
-  if ('code' in graphQLError.extensions) {
-    switch (graphQLError.extensions['code']) {
-      case 'EMAIL_ALREADY_EXISTS':
-        return 'Die Email-Adresse wird bereits verwendet.'
-    }
-  }
-  return defaultMessage
-}
 
 const CreateUserDialog = ({
   isOpen,

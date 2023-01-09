@@ -5,6 +5,7 @@ import { Administrator, Region, Role } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import CreateUserDialog from './CreateUserDialog'
 import RoleHelpButton from './RoleHelpButton'
+import EditUserDialog from './EditUserDialog'
 
 const StyledTable = styled.table`
   border-spacing: 0;
@@ -22,7 +23,7 @@ const StyledTable = styled.table`
 
   & th {
     position: sticky;
-    top: 0px;
+    top: 0;
     background: white;
     border-bottom: 1px solid lightgray;
   }
@@ -43,6 +44,7 @@ const UsersTable = ({
 }) => {
   const appToaster = useAppToaster()
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
+  const [userInEditDialog, setUserInEditDialog] = useState<Administrator | null>(null)
 
   const showNotImplementedToast = () =>
     appToaster?.show({
@@ -73,7 +75,13 @@ const UsersTable = ({
                 {selectedRegionId !== null ? null : <td>{regionName === null ? <i>(Keine)</i> : regionName}</td>}
                 <td>{roleToText(user.role)}</td>
                 <td>
-                  <Button icon='edit' intent='warning' text='Bearbeiten' minimal onClick={showNotImplementedToast} />
+                  <Button
+                    icon='edit'
+                    intent='warning'
+                    text='Bearbeiten'
+                    minimal
+                    onClick={() => setUserInEditDialog(user)}
+                  />
                   <Button icon='trash' intent='danger' text='Entfernen' minimal onClick={showNotImplementedToast} />
                 </td>
               </tr>
@@ -90,6 +98,12 @@ const UsersTable = ({
           regionIdOverride={selectedRegionId}
         />
       </div>
+      <EditUserDialog
+        selectedUser={userInEditDialog}
+        onClose={() => setUserInEditDialog(null)}
+        onSuccess={refetch}
+        regionIdOverride={selectedRegionId}
+      />
     </>
   )
 }
