@@ -113,13 +113,15 @@ const EditUserDialog = ({
             {selectedUser?.id === actingAdminId ? (
               <>
                 Sie können Ihr eigenes Passwort unter{' '}
-                <a href={window.location.origin + '/user-settings'}>{window.location.origin + '/user-settings'}</a>{' '}
+                <a href={window.location.origin + '/user-settings'} target='_blank' rel='noreferrer'>
+                  {window.location.origin + '/user-settings'}
+                </a>{' '}
                 ändern.
               </>
             ) : (
               <>
                 Der Benutzer kann sein Passwort unter{' '}
-                <a href={window.location.origin + '/forgot-password'} target='_blank'>
+                <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
                   {window.location.origin + '/forgot-password'}
                 </a>{' '}
                 zurücksetzen.
