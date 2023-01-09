@@ -15,14 +15,17 @@ String hashVerificationCardDetails(VerificationCardDetails verificationCardDetai
 }
 
 List<int> cardDetailsToBinary(BaseCardDetails cardDetails) {
-  final buffer = Uint8List(16).buffer;
+  final buffer = Uint8List(12).buffer;
   final data = ByteData.view(buffer);
+  var offset = 0;
+
   final expirationDay = cardDetails.expirationDay;
-  if (expirationDay != null) {
-    data.setUint32(0, expirationDay, Endian.little);
-  }
-  data.setInt32(8, cardDetails.cardType.index, Endian.little);
-  data.setInt32(12, cardDetails.regionId, Endian.little);
+  data.setUint32(offset, expirationDay ?? 0, Endian.little);
+  offset += 4;
+  data.setInt32(offset, cardDetails.cardType.index, Endian.little);
+  offset += 4;
+  data.setInt32(offset, cardDetails.regionId, Endian.little);
+  offset += 4;
 
   final fullNameBytes = utf8.encode(cardDetails.fullName);
 
