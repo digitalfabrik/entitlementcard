@@ -41,7 +41,7 @@ class _QRViewState extends State<QrCodeScanner> {
             ),
             Padding(
               padding: EdgeInsets.zero,
-              child: Container(
+              child: DecoratedBox(
                 decoration: ShapeDecoration(
                   shape: QrScannerOverlayShape(
                     borderRadius: 10,
@@ -79,7 +79,6 @@ class _QRViewState extends State<QrCodeScanner> {
   }
 
   Future<void> _onCodeScanned(Barcode scanData) async {
-    final controller = _controller;
     final code = scanData.rawValue;
     if (code == null) {
       return;
@@ -90,7 +89,7 @@ class _QRViewState extends State<QrCodeScanner> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
