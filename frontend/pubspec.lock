@@ -645,13 +645,6 @@ packages:
       url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
-  maps_launcher:
-    dependency: "direct main"
-    description:
-      name: maps_launcher
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   matcher:
     dependency: transitive
     description:
@@ -1174,7 +1167,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.5"
+    version: "6.1.6"
   url_launcher_android:
     dependency: transitive
     description:

@@ -1,10 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start Administration (Local)" type="js.build_tools.npm">
+  <configuration default="false" name="Test administration" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/administration/package.json" />
-    <command value="run" />
-    <scripts>
-      <script value="start" />
-    </scripts>
+    <command value="test" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />

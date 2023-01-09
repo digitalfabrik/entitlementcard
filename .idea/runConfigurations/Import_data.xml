@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build Backend" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Import data" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -15,7 +15,8 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="build" />
+          <option value="run" />
+          <option value="--args=&quot;import&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />

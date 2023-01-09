@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
@@ -6,7 +8,7 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-import 'package:maps_launcher/maps_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DetailContent extends StatelessWidget {
@@ -58,7 +60,7 @@ class DetailContent extends StatelessWidget {
                   Icons.location_on,
                   addressString,
                   "Adresse",
-                  onTap: () => MapsLauncher.launchQuery(mapQueryString),
+                  onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
@@ -113,6 +115,16 @@ class DetailContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _launchMap(String query) async {
+    if (Platform.isAndroid) {
+      await launchUrl(Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query}));
+    } else if (Platform.isIOS) {
+      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}));
+    } else {
+      await launchUrl(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': query}));
+    }
   }
 
   void _showOnMap(BuildContext context) {

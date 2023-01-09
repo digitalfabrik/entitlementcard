@@ -7,9 +7,15 @@ static def isWindows() {
     System.properties['os.name'].toLowerCase().contains('windows')
 }
 
+ext.commandCache = new HashMap<>();
+
 def execCommand(command) {
     def cmdLine = isWindows() ? ["cmd", "/c", command] : command
-    logger.quiet("Build Config Command: $command")
+    
+    if (command in ext.commandCache) {
+        logger.quiet("Using cached command output")
+        return ext.commandCache[command]
+    }
 
     def process = cmdLine.execute(null, project.rootDir)
     def (out, err) = new StringWriter().with {
@@ -19,13 +25,12 @@ def execCommand(command) {
         }
     }
 
-    logger.quiet("Build Config exitValue: ${process.exitValue()}")
-
     if (process.exitValue() != 0) {
-        logger.error("Failed to get build config for $command: $err")
+        logger.error("Failed to get build config for $command (${process.exitValue()}): $err")
         return
     }
-    logger.quiet(out)
+
+    ext.commandCache[command] = out;
 
     return out
 }
@@ -49,14 +54,11 @@ def determineBuildConfigName() {
     } else if (System.getenv()["BUILD_CONFIG_NAME"]) {
         return System.getenv()['BUILD_CONFIG_NAME']
     } else {
-        logger.warn("WARNING: No build config specified. Using the build config 'bayern'!")
         return 'bayern'
     }
 }
 
 def createBuildConfig(buildConfigName) {
-    logger.quiet("Using build config $buildConfigName")
-
     def proc = execCommand("app-toolbelt v0 build-config to-json $buildConfigName android")
     def buildConfig = new JsonSlurper().parseText(proc)
     return buildConfig
@@ -83,8 +85,6 @@ def createBuildConfig(buildConfigName) {
 // }
 
 def setupResourceValues(buildConfigName, resValue) {
-    logger.quiet("Using build config $buildConfigName")
-    
     def proc = execCommand("app-toolbelt v0 build-config to-properties $buildConfigName android")
     def buildConfigProperties = new Properties()
     buildConfigProperties.load(new StringReader(proc))

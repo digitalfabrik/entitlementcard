@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Create Admin Account" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
+  <configuration default="false" name="Run backend (env:local+buildConfig:all)" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
-          <entry key="JWT_SECRET" value="&quot;Hello world!&quot;" />
+          <entry key="JWT_SECRET" value="HelloWorld" />
         </map>
       </option>
       <option name="executionName" />
@@ -16,10 +16,11 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;create-admin showcase.entitlementcard.app PROJECT_ADMIN admin@example.com Administrator!&quot;" />
+          <option value="--args" />
+          <option value="&quot;execute&quot;" />
         </list>
       </option>
-      <option name="vmOptions" value="" />
+      <option name="vmOptions" />
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>

@@ -10,7 +10,7 @@
         android:label="@string/BUILD_CONFIG_APP_NAME"
         android:icon="@mipmap/${icon}"
         android:roundIcon="@mipmap/${icon}_round">
-        <activity
+        <activity android:exported="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
