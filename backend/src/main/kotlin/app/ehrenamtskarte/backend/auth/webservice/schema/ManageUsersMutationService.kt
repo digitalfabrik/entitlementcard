@@ -109,6 +109,31 @@ class ManageUsersMutationService {
         return true
     }
 
+    @GraphQLDescription("Deletes an existing administrator")
+    fun deleteAdministrator(
+        project: String,
+        adminId: Int,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        transaction {
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
+
+            if (existingAdmin.projectId != projectEntity.id) throw UnauthorizedException()
+
+            if (!Authorizer.mayDeleteUser(actingAdmin, existingAdmin)) {
+                throw UnauthorizedException()
+            }
+
+            AdministratorsRepository.deleteAdministrator(existingAdmin)
+        }
+        return true
+    }
+
     private fun generateWelcomeMailMessage(
         key: String,
         administrationName: String,

@@ -11,6 +11,8 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.not
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -30,7 +32,8 @@ class ViewAdministratorsQueryService {
             if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw UnauthorizedException()
             }
-            val administrators = AdministratorEntity.find { Administrators.projectId eq projectId }
+            val administrators =
+                AdministratorEntity.find { Administrators.projectId eq projectId and not(Administrators.deleted) }
 
             administrators.map { Administrator.fromDbEntity(it) }
         }
@@ -50,7 +53,8 @@ class ViewAdministratorsQueryService {
             if (!Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw UnauthorizedException()
             }
-            val administrators = AdministratorEntity.find { Administrators.regionId eq regionId }
+            val administrators =
+                AdministratorEntity.find { Administrators.regionId eq regionId and not(Administrators.deleted) }
 
             administrators.map { Administrator.fromDbEntity(it) }
         }

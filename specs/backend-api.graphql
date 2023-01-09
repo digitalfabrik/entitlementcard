@@ -86,6 +86,8 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Deletes an existing administrator"
+  deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Edits an existing administrator"

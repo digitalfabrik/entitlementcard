@@ -10,7 +10,6 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.IllegalArgumentException
 import java.util.stream.Collectors
 import app.ehrenamtskarte.backend.application.database.setupDatabase as setupDatabaseForApplication
 import app.ehrenamtskarte.backend.auth.database.setupDatabase as setupDatabaseForAuth
@@ -41,7 +40,7 @@ class Database {
             roleDbValue: String,
             projectId: Int? = null
         ) {
-            val role = Role.fromDbValue(roleDbValue) ?: throw IllegalArgumentException("Invalid role '$roleDbValue'.")
+            val role = Role.fromDbValue(roleDbValue)
             transaction {
                 AdministratorsRepository.insert(project, email, password, role, projectId)
             }
