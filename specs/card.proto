@@ -14,7 +14,12 @@ message BirthdayExtension {
 }
 
 message NuernbergPassNumberExtension {
-  string pass_number = 1;
+  uint32 pass_number = 1;
+}
+
+enum BavariaCardType {
+  STANDARD = 0;
+  GOLD = 1;
 }
 
 message BavariaCardTypeExtension {
@@ -43,20 +48,29 @@ message CardInfo {
   CardExtensions extensions = 3;
 }
 
-message CardActivationCode {
-  CardInfo info = 1;
-  bytes hash_secret = 2;
-  bytes totp_secret = 3;
+message QrCode {
+  oneof qr_code {
+    DynamicActivationCode activation = 1;
+    DynamicVerifyCode dynamic_verify = 2;
+    StaticVerifyCode static_verify = 3;
+  }
 }
 
-message CardVerifyCode {
+message DynamicActivationCode {
   CardInfo info = 1;
-  bytes hash_secret = 2;
+  bytes pepper = 2;
+  bytes totp_secret = 3;
+  bytes ec_signature = 4;
+}
+
+message DynamicVerifyCode {
+  CardInfo info = 1;
+  bytes pepper = 2;
   uint32 otp = 3;
 }
 
-// FIXME: Must be last because of https://github.com/protobufjs/protobuf.js/issues/1414
-enum BavariaCardType {
-  STANDARD = 0;
-  GOLD = 1;
+message StaticVerifyCode {
+  CardInfo info = 1;
+  bytes pepper = 2;
+  bytes ec_signature = 3;
 }
