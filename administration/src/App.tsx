@@ -68,7 +68,7 @@ const App = () => (
                 <Routes>
                   <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
                   <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy />} />
-                  <Route path={'/apply-for-eak'} element={<ApplyController />} />
+                  <Route path={'/beantragen'} element={<ApplyController />} />
                   <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
                   <Route
                     path={'*'}
