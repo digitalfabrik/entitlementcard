@@ -63,4 +63,30 @@ object Authorizer {
         }
         return false
     }
+
+    fun mayEditUser(
+        actingAdmin: AdministratorEntity,
+        existingAdmin: AdministratorEntity,
+        newAdminProjectId: Int,
+        newAdminRole: Role,
+        newAdminRegion: RegionEntity?
+    ): Boolean {
+        if (actingAdmin.projectId.value != newAdminProjectId || existingAdmin.projectId.value != newAdminProjectId) {
+            return false
+        } else if (newAdminRole == Role.NO_RIGHTS) {
+            return false
+        }
+
+        if (actingAdmin.role == Role.PROJECT_ADMIN.db_value) {
+            return true
+        } else if (
+            actingAdmin.role == Role.REGION_ADMIN.db_value &&
+            existingAdmin.regionId == actingAdmin.regionId &&
+            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
+            newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
+        ) {
+            return true
+        }
+        return false
+    }
 }

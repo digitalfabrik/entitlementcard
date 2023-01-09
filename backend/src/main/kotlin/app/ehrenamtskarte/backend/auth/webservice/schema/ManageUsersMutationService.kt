@@ -72,6 +72,43 @@ class ManageUsersMutationService {
         return true
     }
 
+    @GraphQLDescription("Edits an existing administrator")
+    fun editAdministrator(
+        project: String,
+        adminId: Int,
+        newEmail: String,
+        newRole: Role,
+        newRegionId: Int?,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        transaction {
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
+
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
+            val newRegion = newRegionId?.let { RegionEntity.findById(it) }
+
+            if (!Authorizer.mayEditUser(actingAdmin, existingAdmin, projectEntity.id.value, newRole, newRegion)) {
+                throw UnauthorizedException()
+            }
+
+            if (
+                newEmail != existingAdmin.email &&
+                !AdministratorEntity.find { Administrators.email eq newEmail }.empty()
+            ) {
+                throw EmailAlreadyExistsException()
+            }
+
+            existingAdmin.email = newEmail
+            existingAdmin.role = newRole.db_value
+            existingAdmin.regionId = newRegion?.id
+        }
+        return true
+    }
+
     private fun generateWelcomeMailMessage(
         key: String,
         administrationName: String,
