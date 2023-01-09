@@ -194,7 +194,7 @@ jobs:
         description: "Name of the build config to use"
         type: string
       flutterFlavor:
-        description: "Flutter to use"
+        description: "Flutter Flavor to use"
         type: string
     environment:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
@@ -238,7 +238,7 @@ jobs:
         description: "Name of the build config to use"
         type: string
       flutterFlavor:
-        description: "Flutter to use"
+        description: "Flutter Flavor to use"
         type: string
     working_directory: ~/project/frontend
     steps:

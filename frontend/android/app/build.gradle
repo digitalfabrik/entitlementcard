@@ -56,7 +56,7 @@ ext.setupVariant = { variant, buildConfigName ->
         variant.packaging.jniLibs.excludes.add('**/lib/x86**')
     }
     if (buildConfig.excludeLocationPlayServices) {
-        // Verify this by opeing the APKs in Android Studio/IntelliJ. Then select all the .dex files.
+        // Verify this by opening the APKs in Android Studio/IntelliJ. Then select all the .dex files.
         // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
         variant.compileConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
         variant.runtimeConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
