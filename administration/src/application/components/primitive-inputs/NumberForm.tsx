@@ -3,14 +3,14 @@ import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { FormContext } from '../SteppedSubForms'
 
-export type NumberFormState = { type: 'NumberForm'; value: string }
+type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
 type Options = { min: number; max: number }
 type AdditionalProps = { label: string; minWidth?: number }
-const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps> = {
+const NumberForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'NumberForm', value: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ value }, options) => {
+  validate: ({ value }, options) => {
     const number = parseFloat(value)
     if (isNaN(number)) return { type: 'error', message: 'Eingabe ist keine Zahl.' }
     else if (number < options.min || number > options.max)
@@ -20,7 +20,7 @@ const NumberForm: Form<NumberFormState, Options, ValidatedInput, AdditionalProps
   Component: ({ state, setState, label, options, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = NumberForm.getValidatedInput(state, options)
+    const validationResult = NumberForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (

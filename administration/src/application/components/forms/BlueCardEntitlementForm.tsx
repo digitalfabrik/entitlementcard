@@ -2,20 +2,20 @@ import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../gene
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import SwitchComponent from '../SwitchComponent'
-import WorkAtOrganizationsEntitlementForm, {
-  WorkAtOrganizationsEntitlementFormState,
-} from './WorkAtOrganizationsEntitlementForm'
-import RadioGroupForm from '../primitive-inputs/RadioGroupForm'
-import radioGroupForm, { RadioGroupFormState } from '../primitive-inputs/RadioGroupForm'
-import JuleicaEntitlementForm, { JuleicaEntitlementFormState } from './JuleicaEntitlementForm'
-import WorkAtDepartmentEntitlementForm, {
-  WorkAtDepartmentEntitlementFormState,
-} from './WorkAtDepartmentEntitlementForm'
-import MilitaryReserveEntitlementForm, { MilitaryReserveEntitlementFormState } from './MilitaryReserveEntitlementForm'
-import VolunteerServiceEntitlementForm, {
-  VolunteerServiceEntitlementFormState,
-} from './VolunteerServiceEntitlementForm'
+import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
+import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
+import JuleicaEntitlementForm from './JuleicaEntitlementForm'
+import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
+import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
+import VolunteerServiceEntitlementForm from './VolunteerServiceEntitlementForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundInitialState,
+  createSwitchValidate,
+} from '../../compoundFormUtils'
 
+const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
   labelByValue: {
     [BlueCardEntitlementType.WorkAtOrganizations]:
@@ -30,104 +30,32 @@ const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: 
   },
 }
 
-export type BlueCardEntitlementFormState = {
-  entitlementType: RadioGroupFormState
-  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementFormState
-  juleicaEntitlement: JuleicaEntitlementFormState
-  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementFormState
-  militaryReserveEntitlement: MilitaryReserveEntitlementFormState
-  volunteerServiceEntitlement: VolunteerServiceEntitlementFormState
+const SubForms = {
+  entitlementType: EntitlementTypeRadioGroupForm,
+  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm,
+  juleicaEntitlement: JuleicaEntitlementForm,
+  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm,
+  militaryReserveEntitlement: MilitaryReserveEntitlementForm,
+  volunteerServiceEntitlement: VolunteerServiceEntitlementForm,
 }
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const BlueCardEntitlementForm: Form<BlueCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    entitlementType: RadioGroupForm.initialState,
-    workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm.initialState,
-    juleicaEntitlement: JuleicaEntitlementForm.initialState,
-    workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm.initialState,
-    militaryReserveEntitlement: MilitaryReserveEntitlementForm.initialState,
-    volunteerServiceEntitlement: VolunteerServiceEntitlementForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...RadioGroupForm.getArrayBufferKeys(state.entitlementType),
-    ...WorkAtOrganizationsEntitlementForm.getArrayBufferKeys(state.workAtOrganizationsEntitlement),
-    ...JuleicaEntitlementForm.getArrayBufferKeys(state.juleicaEntitlement),
-    ...WorkAtDepartmentEntitlementForm.getArrayBufferKeys(state.workAtDepartmentEntitlement),
-    ...MilitaryReserveEntitlementForm.getArrayBufferKeys(state.militaryReserveEntitlement),
-    ...VolunteerServiceEntitlementForm.getArrayBufferKeys(state.volunteerServiceEntitlement),
-  ],
-  getValidatedInput: state => {
-    const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)
-    if (entitlementTypeResult.type === 'error') return { type: 'error' }
-    const entitlementType = entitlementTypeResult.value.value as BlueCardEntitlementType
-    switch (entitlementType) {
-      case BlueCardEntitlementType.WorkAtOrganizations: {
-        const workAtOrganizationsEntitlement = WorkAtOrganizationsEntitlementForm.getValidatedInput(
-          state.workAtOrganizationsEntitlement
-        )
-        if (workAtOrganizationsEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            workAtOrganizationsEntitlement: workAtOrganizationsEntitlement.value,
-          },
-        }
-      }
-      case BlueCardEntitlementType.Juleica: {
-        const juleicaEntitlement = JuleicaEntitlementForm.getValidatedInput(state.juleicaEntitlement)
-        if (juleicaEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            juleicaEntitlement: juleicaEntitlement.value,
-          },
-        }
-      }
-      case BlueCardEntitlementType.WorkAtDepartment:
-        const workAtDepartmentEntitlement = WorkAtDepartmentEntitlementForm.getValidatedInput(
-          state.workAtDepartmentEntitlement
-        )
-        if (workAtDepartmentEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            workAtDepartmentEntitlement: workAtDepartmentEntitlement.value,
-          },
-        }
-      case BlueCardEntitlementType.MilitaryReserve:
-        const militaryReserveEntitlement = MilitaryReserveEntitlementForm.getValidatedInput(
-          state.militaryReserveEntitlement
-        )
-        if (militaryReserveEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            militaryReserveEntitlement: militaryReserveEntitlement.value,
-          },
-        }
-      case BlueCardEntitlementType.VolunteerService:
-        const volunteerServiceEntitlement = VolunteerServiceEntitlementForm.getValidatedInput(
-          state.volunteerServiceEntitlement
-        )
-        if (volunteerServiceEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            volunteerServiceEntitlement: volunteerServiceEntitlement.value,
-          },
-        }
-    }
-  },
+const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
+    JULEICA: 'juleicaEntitlement',
+    MILITARY_RESERVE: 'militaryReserveEntitlement',
+    VOLUNTEER_SERVICE: 'volunteerServiceEntitlement',
+    WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+    WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+  }),
   Component: ({ state, setState }) => (
     <>
-      <RadioGroupForm.Component
+      <EntitlementTypeRadioGroupForm.Component
         state={state.entitlementType}
         divideItems
         title='Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:'

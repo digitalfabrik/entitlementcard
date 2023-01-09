@@ -1,50 +1,31 @@
 import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES, FileInputFormState } from '../primitive-inputs/FileInputForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
-import OrganizationForm, { OrganizationFormState } from './OrganizationForm'
+import OrganizationForm from './OrganizationForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundValidate,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
-export type WorkAtDepartmentEntitlementFormState = {
-  organization: OrganizationFormState
-  responsibility: ShortTextFormState
-  certificate: FileInputFormState
+const SubForms = {
+  organization: OrganizationForm,
+  responsibility: ShortTextForm,
+  certificate: FileInputForm,
 }
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const WorkAtDepartmentEntitlementForm: Form<
-  WorkAtDepartmentEntitlementFormState,
-  Options,
-  ValidatedInput,
-  AdditionalProps
-> = {
-  initialState: {
-    organization: OrganizationForm.initialState,
-    responsibility: ShortTextForm.initialState,
-    certificate: FileInputForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...OrganizationForm.getArrayBufferKeys(state.organization),
-    ...ShortTextForm.getArrayBufferKeys(state.responsibility),
-    ...FileInputForm.getArrayBufferKeys(state.certificate),
-  ],
-  getValidatedInput: state => {
-    const organization = OrganizationForm.getValidatedInput(state.organization)
-    const responsibility = ShortTextForm.getValidatedInput(state.responsibility)
-    const certificate = FileInputForm.getValidatedInput(state.certificate)
-    if (organization.type === 'error' || responsibility.type === 'error' || certificate.type === 'error')
-      return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        organization: organization.value,
-        responsibility: responsibility.value,
-        certificate: certificate.value,
-      },
-    }
-  },
+const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: createCompoundValidate(SubForms, {}),
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
