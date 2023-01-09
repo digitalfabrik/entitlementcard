@@ -82,7 +82,7 @@ class DevSettingsView extends StatelessWidget {
         final base64Controller = TextEditingController();
         return AlertDialog(
           scrollable: true,
-          title: const Text('Set base64 card'),
+          title: const Text('Activate Card from Base64'),
           content: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
@@ -104,7 +104,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: const Text("Submit"),
+              child: const Text("Activate Card"),
               onPressed: () {
                 final messengerState = ScaffoldMessenger.of(context);
                 final provider = Provider.of<CardDetailsModel>(context, listen: false);
@@ -112,7 +112,7 @@ class DevSettingsView extends StatelessWidget {
                   IdentificationQrContentParser(provider).processQrCodeContent(base64Controller.text);
                   messengerState.showSnackBar(
                     const SnackBar(
-                      content: Text("Card set"),
+                      content: Text("Card activated."),
                     ),
                   );
                   Navigator.pop(context);
