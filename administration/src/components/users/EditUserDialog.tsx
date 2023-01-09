@@ -1,11 +1,12 @@
-import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { Button, Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
+import { Administrator, Role, useEditAdministratorMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import RoleHelpButton from './RoleHelpButton'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import RegionSelector from '../RegionSelector'
+import { AuthContext } from '../../AuthProvider'
 import RoleSelector from './RoleSelector'
 import getMessageFromApolloError from '../getMessageFromApolloError'
 
@@ -15,41 +16,44 @@ const RoleFormGroupLabel = styled.span`
   }
 `
 
-const CreateUserDialog = ({
-  isOpen,
+const EditUserDialog = ({
+  selectedUser,
   onClose,
   onSuccess,
   regionIdOverride,
 }: {
-  isOpen: boolean
   onClose: () => void
+  selectedUser: Administrator | null
   onSuccess: () => void
   // If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator and RegionManager
   // roles are selectable.
   regionIdOverride: number | null
 }) => {
   const appToaster = useAppToaster()
+  const actingAdminId = useContext(AuthContext).data?.administrator.id
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
-  const [sendWelcomeMail, setSendWelcomeMail] = useState(true)
-  const project = useContext(ProjectConfigContext).projectId
+  const { projectId: project } = useContext(ProjectConfigContext)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
-  const [createAdministrator, { loading }] = useCreateAdministratorMutation({
+  useEffect(() => {
+    if (selectedUser !== null) {
+      setEmail(selectedUser.email)
+      setRole(selectedUser.role)
+      setRegionId(selectedUser.regionId === undefined ? null : selectedUser.regionId)
+    }
+  }, [selectedUser])
+
+  const [editAdministrator, { loading }] = useEditAdministratorMutation({
     onError: error => {
       console.error(error)
       appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich erstellt.' })
+      appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich bearbeitet.' })
       onClose()
       onSuccess()
-      // Reset State
-      setEmail('')
-      setRole(null)
-      setRegionId(null)
-      setSendWelcomeMail(true)
     },
   })
 
@@ -62,17 +66,23 @@ const CreateUserDialog = ({
   }
 
   return (
-    <Dialog title='Benutzer hinzufügen' isOpen={isOpen} onClose={onClose}>
+    <Dialog title={`Benutzer '${selectedUser?.email}' bearbeiten`} isOpen={selectedUser !== null} onClose={onClose}>
       <form
         onSubmit={e => {
           e.preventDefault()
-          createAdministrator({
+
+          if (selectedUser === null) {
+            console.error('Form submitted in an unexpected state.')
+            return
+          }
+
+          editAdministrator({
             variables: {
               project,
-              email,
-              role: role as Role,
-              regionId: getRegionId(),
-              sendWelcomeMail,
+              adminId: selectedUser.id,
+              newEmail: email,
+              newRole: role as Role,
+              newRegionId: getRegionId(),
             },
           })
         }}>
@@ -99,18 +109,36 @@ const CreateUserDialog = ({
               <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
             </FormGroup>
           )}
-          <FormGroup>
-            <Checkbox checked={sendWelcomeMail} onChange={e => setSendWelcomeMail(e.currentTarget.checked)}>
-              <b>Sende eine Willkommens-Email.</b>
-              <br />
-              Diese Email enthält einen Link, mit dem das Passwort des Accounts gesetzt werden kann. Der Link ist 24
-              Stunden gültig.
-            </Checkbox>
-          </FormGroup>
+          <Callout intent='primary'>
+            {selectedUser?.id === actingAdminId ? (
+              <>
+                Sie können Ihr eigenes Passwort unter{' '}
+                <a href={window.location.origin + '/user-settings'} target='_blank' rel='noreferrer'>
+                  {window.location.origin + '/user-settings'}
+                </a>{' '}
+                ändern.
+              </>
+            ) : (
+              <>
+                Der Benutzer kann sein Passwort unter{' '}
+                <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
+                  {window.location.origin + '/forgot-password'}
+                </a>{' '}
+                zurücksetzen.
+              </>
+            )}
+          </Callout>
+          {selectedUser?.id !== actingAdminId ? null : (
+            <Callout intent='danger' style={{ marginTop: '16px' }}>
+              <b>Sie bearbeiten Ihr eigenes Konto.</b> Möglicherweise können Sie diese Änderungen nicht rückgängig
+              machen.
+              <Checkbox required>Ich bestätige, dass ich diesen Warnhinweis gelesen habe.</Checkbox>
+            </Callout>
+          )}
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='success' text='Benutzer hinzufügen' icon='add' loading={loading} />
+            <Button type='submit' intent='primary' text='Benutzer bearbeiten' icon='edit' loading={loading} />
           </div>
         </div>
       </form>
@@ -118,4 +146,4 @@ const CreateUserDialog = ({
   )
 }
 
-export default CreateUserDialog
+export default EditUserDialog
