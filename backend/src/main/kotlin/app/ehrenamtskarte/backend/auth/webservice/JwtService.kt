@@ -19,7 +19,6 @@ object JwtService {
 
     fun createToken(administrator: Administrator): String =
         JWT.create()
-            .withClaim(JwtPayload::email.name, administrator.email)
             .withClaim(JwtPayload::userId.name, administrator.id)
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
