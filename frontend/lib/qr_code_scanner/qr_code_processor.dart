@@ -10,4 +10,9 @@ class QrCodeFieldMissingException extends QrCodeParseException {
   QrCodeFieldMissingException(this.missingFieldName) : super("field missing: $missingFieldName");
 }
 
+class QrCodeWrongTypeException extends QrCodeParseException {
+  QrCodeWrongTypeException() : super("Wrong QrCode type was read.");
+}
+
+
 typedef QRCodeProcessor = void Function(String rawBase64Content);

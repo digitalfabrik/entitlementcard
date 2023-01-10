@@ -37,20 +37,25 @@ class IdentificationQrContentParser {
     const base64Decoder = Base64Decoder();
 
     // TODO (Max): Refactor into Dart extension
-    CardActivationCode activationCode;
+    QrCode qrcode;
     try {
-      final rawProtobufData = base64Decoder.convert(rawBase64Content);
-      activationCode = CardActivationCode.fromBuffer(rawProtobufData);
+      qrcode = QrCode.fromBuffer(base64Decoder.convert(rawBase64Content));
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
+
+    if (!qrcode.hasActivation()) {
+      throw QrCodeWrongTypeException();
+    }
+
+    final DynamicActivationCode activationCode = qrcode.activation;
 
     final cardInfo = activationCode.info;
     if (!cardInfo.hasFullName()) {
       throw QrCodeFieldMissingException("fullName");
     }
-    if (!activationCode.hasHashSecret()) {
-      throw QrCodeFieldMissingException("hashSecret");
+    if (!activationCode.hasPepper()) {
+      throw QrCodeFieldMissingException("pepper");
     }
 
     int? expirationDay;
@@ -79,7 +84,7 @@ class IdentificationQrContentParser {
 
     final cardDetails = CardDetails(
       cardInfo.fullName,
-      const Base64Encoder().convert(activationCode.hashSecret),
+      activationCode.pepper,
       expirationDay,
       cardType,
       cardInfo.extensions.extensionRegion.regionId,

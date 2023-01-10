@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/identification/card_details.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const dataVersionKey = "dataVersion";
 const fullNameKey = "fullName";
-const hashSecretBase64Key = "hashSecretBase64";
+const pepperBase64Key = "pepperBase64";
 const regionIdKey = "regionId";
 const unixExpirationDateKey = "unixExpirationDate";
 const cardTypeKey = "cardType";
@@ -20,7 +22,7 @@ Future<void> saveCardDetails(CardDetails? cardDetails) async {
     await Future.wait([
       storage.write(key: dataVersionKey, value: currentDataVersion.toString()),
       storage.write(key: fullNameKey, value: cardDetails.fullName),
-      storage.write(key: hashSecretBase64Key, value: cardDetails.hashSecretBase64),
+      storage.write(key: pepperBase64Key, value: const Base64Encoder().convert(cardDetails.pepper)),
       storage.write(key: regionIdKey, value: cardDetails.regionId.toString()),
       storage.write(
         key: unixExpirationDateKey,
@@ -59,10 +61,11 @@ Future<CardDetails?> loadCardDetails() async {
     throw Exception("Can't load full name.");
   }
 
-  final String? hashSecretBase64 = await storage.read(key: hashSecretBase64Key);
-  if (hashSecretBase64 == null) {
-    throw Exception("Can't load hash secret.");
+  final String? pepperBase64 = await storage.read(key: pepperBase64Key);
+  if (pepperBase64 == null) {
+    throw Exception("Can't load pepper.");
   }
+  final pepper = const Base64Decoder().convert(pepperBase64);
 
   final storedUnixExpirationDate = await storage.read(key: unixExpirationDateKey);
   if (storedUnixExpirationDate == null) {
@@ -86,5 +89,5 @@ Future<CardDetails?> loadCardDetails() async {
     throw Exception("Can't load totp secret.");
   }
 
-  return CardDetails(fullName, hashSecretBase64, unixExpirationDate, cardType, regionId, totpSecret);
+  return CardDetails(fullName, pepper, unixExpirationDate, cardType, regionId, totpSecret);
 }

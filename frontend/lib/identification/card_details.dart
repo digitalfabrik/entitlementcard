@@ -5,7 +5,7 @@ class CardDetails extends BaseCardDetails {
 
   CardDetails(
     super.fullName,
-    super.randomBytes,
+    super.pepper,
     super.expirationDay,
     super.cardType,
     super.regionId,
