@@ -4,6 +4,7 @@ import { Role } from '../../generated/graphql'
 import { AuthContext } from '../../AuthProvider'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 const StyledButton = styled(Button)`
   margin: 10px;
@@ -16,6 +17,7 @@ const Container = styled.div`
 `
 
 const HomeController = () => {
+  const { applicationFeatureEnabled } = useContext(ProjectConfigContext)
   const role = useContext(AuthContext).data?.administrator.role
 
   return (
@@ -23,9 +25,11 @@ const HomeController = () => {
       <H3>Wählen Sie eine Aktion aus:</H3>
       {role === Role.RegionAdmin || role === Role.RegionManager ? (
         <>
-          <NavLink to={'/applications'}>
-            <StyledButton icon='form' text='Eingehende Anträge' />
-          </NavLink>
+          {applicationFeatureEnabled ? (
+            <NavLink to={'/applications'}>
+              <StyledButton icon='form' text='Eingehende Anträge' />
+            </NavLink>
+          ) : null}
           <NavLink to={'/create-cards'}>
             <StyledButton icon='id-number' text='Karten erstellen' />
           </NavLink>
@@ -38,7 +42,7 @@ const HomeController = () => {
           </NavLink>
         </>
       ) : null}
-      {role === Role.RegionAdmin ? (
+      {role === Role.RegionAdmin && applicationFeatureEnabled ? (
         <NavLink to={'/region'}>
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
