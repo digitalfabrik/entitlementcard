@@ -1,4 +1,3 @@
-import isIE11 from './isIE11'
 import { CardInfo } from '../generated/card_pb'
 
 const cardInfoToBinary = (cardInfo: CardInfo) => {
@@ -30,15 +29,9 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
 const generateHashFromCardDetails = async (pepper: Uint8Array, cardInfo: CardInfo) => {
   const binary = cardInfoToBinary(cardInfo)
 
-  let hashArrayBuffer: ArrayBuffer
-  if (isIE11()) {
-    // The below API is not supported on IE11:
-    // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#browser_compatibility
-    throw Error('IE11 is not supported')
-  } else {
-    const key = await crypto.subtle.importKey('raw', pepper, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
-    hashArrayBuffer = await crypto.subtle.sign('HMAC', key, binary.buffer)
-  }
+  const key = await crypto.subtle.importKey('raw', pepper, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+  const hashArrayBuffer: ArrayBuffer = await crypto.subtle.sign('HMAC', key, binary.buffer)
+
   return new Uint8Array(hashArrayBuffer)
 }
 

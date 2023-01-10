@@ -5,11 +5,11 @@
  */
 
 function downloadDataUri(blob: Blob, fileName: string) {
-    const data = window.URL.createObjectURL(blob)
-    const downloadLink = document.createElement('a')
-    downloadLink.href = data
-    downloadLink.download = fileName
-    downloadLink.click()
+  const data = window.URL.createObjectURL(blob)
+  const downloadLink = document.createElement('a')
+  downloadLink.href = data
+  downloadLink.download = fileName
+  downloadLink.click()
 }
 
 export default downloadDataUri
