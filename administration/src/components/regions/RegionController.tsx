@@ -16,15 +16,15 @@ const RegionController = ({ regionId }: { regionId: number }) => {
 }
 
 const ControllerWithRegion = (): ReactElement => {
-  const { regionId, role } = useContext(WhoAmIContext).me!
-  if (regionId === null || regionId === undefined || role !== Role.RegionAdmin) {
+  const { region, role } = useContext(WhoAmIContext).me!
+  if (!region || role !== Role.RegionAdmin) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p>Sie sind nicht berechtigt diese Seite aufzurufen.</p>
       </div>
     )
   } else {
-    return <RegionController regionId={regionId} />
+    return <RegionController regionId={region.id} />
   }
 }
 
