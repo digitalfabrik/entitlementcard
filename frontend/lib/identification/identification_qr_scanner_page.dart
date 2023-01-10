@@ -17,8 +17,10 @@ class IdentificationQrScannerPage extends StatelessWidget {
         const NavigationBar(
           title: "Karte hinzufügen",
         ),
-        QrCodeScannerPage(
-          onCodeScanned: (code) async => _onCodeScanned(context, code),
+        Expanded(
+          child: QrCodeScannerPage(
+            onCodeScanned: (code) async => _onCodeScanned(context, code),
+          ),
         ),
       ],
     );
@@ -26,7 +28,8 @@ class IdentificationQrScannerPage extends StatelessWidget {
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
     final provider = Provider.of<CardDetailsModel>(context, listen: false);
-    Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
+    Future<void> showError(String msg) async =>
+        QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
       IdentificationQrContentParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {

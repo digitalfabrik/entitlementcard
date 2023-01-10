@@ -31,35 +31,49 @@ class _QRViewState extends State<QrCodeScanner> {
     final controller = _controller;
     return Column(
       children: <Widget>[
-        Stack(
-          children: [
-            MobileScanner(
-              key: qrKey,
-              onDetect: (barcode, args) => _onCodeScanned(barcode),
-              allowDuplicates: false,
-              controller: controller,
-            ),
-            Padding(
-              padding: EdgeInsets.zero,
-              child: DecoratedBox(
-                decoration: ShapeDecoration(
-                  shape: QrScannerOverlayShape(
-                    borderRadius: 10,
-                    borderColor: Theme.of(context).colorScheme.secondary,
-                    borderLength: 30,
-                    borderWidth: 10,
-                    cutOutSize: _calculateScanArea(context),
+        Expanded(
+          flex: 4,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              MobileScanner(
+                key: qrKey,
+                onDetect: (barcode, args) => _onCodeScanned(barcode),
+                allowDuplicates: false,
+                controller: controller,
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    shape: QrScannerOverlayShape(
+                      borderRadius: 10,
+                      borderColor: Theme.of(context).colorScheme.secondary,
+                      borderLength: 30,
+                      borderWidth: 10,
+                      cutOutSize: _calculateScanArea(context),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: const Text('Halten Sie die Kamera auf den QR Code.'),
-            ),
-            QrCodeScannerControls(controller: controller)
-          ],
+            ],
+          ),
         ),
+        Expanded(
+          flex: 1,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                ),
+                QrCodeScannerControls(controller: controller)
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
