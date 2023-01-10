@@ -1,0 +1,3 @@
+mutation deleteAdministrator($project: String!, $adminId: Int!) {
+  result: deleteAdministrator(project: $project, adminId: $adminId)
+}

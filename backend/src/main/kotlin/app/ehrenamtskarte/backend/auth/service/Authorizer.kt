@@ -89,4 +89,20 @@ object Authorizer {
         }
         return false
     }
+
+    fun mayDeleteUser(
+        actingAdmin: AdministratorEntity,
+        existingAdmin: AdministratorEntity
+    ): Boolean {
+        if (actingAdmin.projectId.value != existingAdmin.projectId.value && existingAdmin.role != Role.NO_RIGHTS.db_value) {
+            return false
+        }
+
+        if (actingAdmin.role == Role.PROJECT_ADMIN.db_value) {
+            return true
+        } else if (actingAdmin.role == Role.REGION_ADMIN.db_value && existingAdmin.regionId == actingAdmin.regionId) {
+            return true
+        }
+        return false
+    }
 }

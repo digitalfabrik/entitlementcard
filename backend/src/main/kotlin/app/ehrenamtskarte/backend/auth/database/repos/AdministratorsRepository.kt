@@ -17,6 +17,7 @@ import org.jetbrains.exposed.sql.select
 import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.util.Base64
+import java.util.UUID
 
 object AdministratorsRepository {
 
@@ -77,6 +78,7 @@ object AdministratorsRepository {
             this.regionId = region?.id
             this.passwordHash = passwordHash
             this.role = role.db_value
+            this.deleted = false
         }
     }
 
@@ -89,6 +91,12 @@ object AdministratorsRepository {
         administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
         administrator.passwordResetKey = null
         administrator.passwordResetKeyExpiry = null
+    }
+
+    fun deleteAdministrator(administrator: AdministratorEntity) {
+        administrator.deleted = true
+        administrator.email = UUID.randomUUID().toString() + "@entitlementcard.app"
+        administrator.role = Role.NO_RIGHTS.db_value
     }
 
     fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
