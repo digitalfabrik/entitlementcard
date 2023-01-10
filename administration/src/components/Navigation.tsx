@@ -31,11 +31,11 @@ const Navigation = (props: Props) => {
         <Navbar.Divider />
         {role === Role.RegionAdmin || role === Role.RegionManager ? (
           <>
-            {!config.applicationFeatureEnabled ? null : (
+            {config.applicationFeatureEnabled ? (
               <NavLink to={'/applications'}>
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
-            )}
+            ) : null}
             <NavLink to={'/create-cards'}>
               <Button minimal icon='id-number' text='Karten erstellen' />
             </NavLink>
