@@ -82,8 +82,8 @@ const CreateCardsForm = (props: Props) => {
             </ButtonBar>
             {/* @ts-ignore */}
             <FormsWrapper>
-                {cardBlueprints.map(blueprint => (
-                    <FormColumn key={blueprint.id}>
+                {cardBlueprints.map((blueprint, index) => (
+                    <FormColumn key={index}>
                         <CreateCardForm
                             cardBlueprint={blueprint}
                             onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}

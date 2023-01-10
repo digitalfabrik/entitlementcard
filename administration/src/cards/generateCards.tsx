@@ -18,7 +18,7 @@ const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardB
         // FIXME
         const cardType = cardBlueprint.cardType === BavariaCardTypeBlueprint.gold ? GraphQLBavariaCardType.GOLD : GraphQLBavariaCardType.STANDARD
         return generateActivationCodes(
-            `${cardBlueprint.forename} ${cardBlueprint.surname}`,
+            cardBlueprint.name,
             region.id,
             cardBlueprint.expirationDate,
             cardType

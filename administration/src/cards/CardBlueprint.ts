@@ -1,6 +1,6 @@
 import { add } from 'date-fns'
 
-const MAX_NAME_LENGTH = 100
+const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
 
 export enum BavariaCardTypeBlueprint {
   standard = 'Standard',
@@ -12,9 +12,7 @@ export enum BavariaCardTypeBlueprint {
  * Blueprint for a new card. This object contains data about a future card, which will be created.
  */
 export interface CardBlueprint {
-  id: number
-  forename: string
-  surname: string
+  name: string
   expirationDate: Date | null
   cardType: BavariaCardTypeBlueprint // FIXME
 }
@@ -24,16 +22,12 @@ export const isNameValid = (value: string) => value.length > 0 && value.length <
 export const isExpirationDateValid = (value: Date | null) => value !== null && value > new Date()
 
 export const isValid = (cardCreationInfo: CardBlueprint) =>
-  isNameValid(cardCreationInfo.forename) &&
-  isNameValid(cardCreationInfo.surname) &&
+  isNameValid(cardCreationInfo.name) &&
   (isExpirationDateValid(cardCreationInfo.expirationDate) || cardCreationInfo.cardType === BavariaCardTypeBlueprint.gold)
 
-let idCounter = 0
 
 export const createEmptyCard = (): CardBlueprint => ({
-  id: idCounter++,
-  forename: '',
-  surname: '',
+  name: '',
   expirationDate: add(Date.now(), { years: 2 }),
   cardType: BavariaCardTypeBlueprint.standard, // FIXME
 })

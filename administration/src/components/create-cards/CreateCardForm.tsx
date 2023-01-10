@@ -44,27 +44,15 @@ const CreateCardForm = (props: Props) => {
         <CardHeader>
           <Button minimal icon='cross' onClick={() => props.onUpdate(null)} />
         </CardHeader>
-        <FormGroup label='Vorname'>
+        <FormGroup label='Name'>
           <InputGroup
-            placeholder='Vorname'
+            placeholder='Erika Mustermann'
             autoFocus
-            value={props.cardBlueprint.forename}
+            value={props.cardBlueprint.name}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               props.onUpdate({
                 ...props.cardBlueprint,
-                forename: event.target.value,
-              })
-            }
-          />
-        </FormGroup>
-        <FormGroup label='Nachname'>
-          <InputGroup
-            placeholder='Nachname'
-            value={props.cardBlueprint.surname}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              props.onUpdate({
-                ...props.cardBlueprint,
-                surname: event.target.value,
+                name: event.target.value,
               })
             }
           />
