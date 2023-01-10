@@ -10,7 +10,7 @@ import {
 } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 
-const TOTP_SECRET_LENGTH = 20;
+const TOTP_SECRET_LENGTH = 20
 
 const generateActivationCodes = (
   fullName: string,
