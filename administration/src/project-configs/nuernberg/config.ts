@@ -1,7 +1,7 @@
 import { ProjectConfig } from '../getProjectConfig'
 
 const config: ProjectConfig = {
-  name: 'Sozialpass Nürnberg',
+  name: 'Digitaler Nürnberg-Pass',
   projectId: 'nuernberg.sozialpass.app',
 }
 
