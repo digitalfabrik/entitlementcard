@@ -47,7 +47,7 @@ const Router = () => {
                   <Navigation onSignOut={signOut} />
                   <Main>
                     <Routes>
-                      <Route path={'/applications'} element={<ApplicationsController token={authData.token} />} />
+                      <Route path={'/applications'} element={<ApplicationsController />} />
                       <Route path={'/region'} element={<RegionsController />} />
                       <Route path={'/create-cards'} element={<CreateCardsController />} />
                       <Route path={'/users'} element={<ManageUsersController />} />
