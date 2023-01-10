@@ -1,6 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build backend" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Create region admin (env:local+buildConfig:bayern)" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
+      <option name="env">
+        <map>
+          <entry key="JWT_SECRET" value="&quot;Hello world!&quot;" />
+        </map>
+      </option>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
       <option name="externalSystemIdString" value="GRADLE" />
@@ -10,10 +15,11 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="build" />
+          <option value="run" />
+          <option value="--args=&quot;create-admin bayern.ehrenamtskarte.app REGION_ADMIN region-admin@example.com Administrator! 1&quot;" />
         </list>
       </option>
-      <option name="vmOptions" />
+      <option name="vmOptions" value="" />
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>

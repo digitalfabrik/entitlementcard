@@ -5,6 +5,7 @@ import showcaseConfig from './showcase/config'
 export interface ProjectConfig {
   name: string
   projectId: string
+  applicationFeatureEnabled: boolean
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {

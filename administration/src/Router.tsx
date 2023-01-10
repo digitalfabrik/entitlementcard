@@ -32,9 +32,7 @@ const Router = () => {
       <Routes>
         <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
         <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy />} />
-        {projectConfig.projectId === 'bayern.ehrenamtskarte.app' ? (
-          <Route path={'/beantragen'} element={<ApplyController />} />
-        ) : null}
+        {projectConfig.applicationFeatureEnabled ? <Route path={'/beantragen'} element={<ApplyController />} /> : null}
         <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
         <Route
           path={'*'}
@@ -47,8 +45,13 @@ const Router = () => {
                   <Navigation onSignOut={signOut} />
                   <Main>
                     <Routes>
-                      <Route path={'/applications'} element={<ApplicationsController />} />
-                      <Route path={'/region'} element={<RegionsController />} />
+                      {projectConfig.applicationFeatureEnabled ? (
+                        <>
+                          <Route path={'/applications'} element={<ApplicationsController />} />
+                          {/*Currently, '/region' only allows to set the data privacy text for the application form*/}
+                          <Route path={'/region'} element={<RegionsController />} />
+                        </>
+                      ) : null}
                       <Route path={'/create-cards'} element={<CreateCardsController />} />
                       <Route path={'/users'} element={<ManageUsersController />} />
                       <Route path={'/user-settings'} element={<UserSettingsController />} />

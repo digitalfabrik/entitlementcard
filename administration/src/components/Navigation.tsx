@@ -16,33 +16,38 @@ const Navigation = (props: Props) => {
   return (
     <Navbar style={{ height: 'auto' }}>
       <Navbar.Group>
-        <Navbar.Heading>{config.name} Verwaltung</Navbar.Heading>
+        <Navbar.Heading>
+          <NavLink to={'/'} style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
+            <div style={{ flexDirection: 'column' }}>{config.name} Verwaltung</div>
+            {region === null ? null : (
+              <span>
+                {region.prefix} {region.name}
+              </span>
+            )}
+          </NavLink>
+        </Navbar.Heading>
         <Navbar.Divider />
-        {region == null ? null : (
-          <>
-            <span>{region?.name ?? ''}</span>
-            <Navbar.Divider />
-          </>
-        )}
-        <NavLink to={'/'}>
-          <Button minimal icon='home' text='Home' />
-        </NavLink>
         {role === Role.RegionAdmin || role === Role.RegionManager ? (
           <>
-            <NavLink to={'/applications'}>
-              <Button minimal icon='form' text='Eingehende Anträge' />
-            </NavLink>
+            {config.applicationFeatureEnabled ? (
+              <NavLink to={'/applications'}>
+                <Button minimal icon='form' text='Eingehende Anträge' />
+              </NavLink>
+            ) : null}
             <NavLink to={'/create-cards'}>
               <Button minimal icon='id-number' text='Karten erstellen' />
             </NavLink>
           </>
         ) : null}
         {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
-          <>
-            <NavLink to={'/users'}>
-              <Button minimal icon='people' text='Benutzer verwalten' />
-            </NavLink>
-          </>
+          <NavLink to={'/users'}>
+            <Button minimal icon='people' text='Benutzer verwalten' />
+          </NavLink>
+        ) : null}
+        {role === Role.RegionAdmin && config.applicationFeatureEnabled ? (
+          <NavLink to={'/region'}>
+            <Button minimal icon='path-search' text='Region verwalten' />
+          </NavLink>
         ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
