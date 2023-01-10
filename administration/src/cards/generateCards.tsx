@@ -1,8 +1,8 @@
 import { CardBlueprint } from './CardBlueprint'
-import { CardType } from '../../models/CardType'
-import generateActivationCodes from '../../util/generateActivationCodes'
-import generateHashFromCardDetails from '../../util/generateHashFromCardDetails'
-import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
+import { BavariaCardType } from './BavariaCardType'
+import generateActivationCodes from './generateActivationCodes'
+import generateHashFromCardDetails from './generateHashFromCardDetails'
+import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { generatePdf, loadTTFFont } from './PdfFactory'
 import { ApolloClient } from '@apollo/client'
 import {
@@ -11,12 +11,12 @@ import {
   AddCardMutationVariables,
   CardGenerationModelInput,
   Region,
-} from '../../generated/graphql'
-import { BavariaCardType } from '../../generated/card_pb'
+} from '../generated/graphql'
+import { BavariaCardType as GraphQLBavariaCardType } from '../generated/card_pb'
 
 const generateCards = async (client: ApolloClient<object>, cardBlueprints: CardBlueprint[], region: Region) => {
   const activationCodes = cardBlueprints.map(cardBlueprint => {
-    const cardType = cardBlueprint.cardType === CardType.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD
+    const cardType = cardBlueprint.cardType === BavariaCardType.gold ? GraphQLBavariaCardType.GOLD : GraphQLBavariaCardType.STANDARD
     return generateActivationCodes(
       `${cardBlueprint.forename} ${cardBlueprint.surname}`,
       region.id,

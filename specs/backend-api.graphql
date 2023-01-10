@@ -156,17 +156,17 @@ enum ApplicationType {
   RENEWAL_APPLICATION
 }
 
+enum BavariaCardType {
+  BLUE
+  GOLDEN
+}
+
 enum BlueCardEntitlementType {
   JULEICA
   MILITARY_RESERVE
   VOLUNTEER_SERVICE
   WORK_AT_DEPARTMENT
   WORK_AT_ORGANIZATIONS
-}
-
-enum CardType {
-  BLUE
-  GOLDEN
 }
 
 enum GoldenCardEntitlementType {
@@ -204,7 +204,7 @@ The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntit
 input ApplicationInput {
   applicationType: ApplicationType!
   blueCardEntitlement: BlueCardEntitlementInput
-  cardType: CardType!
+  cardType: BavariaCardType!
   givenInformationIsCorrectAndComplete: Boolean!
   goldenCardEntitlement: GoldenCardEntitlementInput
   hasAcceptedPrivacyPolicy: Boolean!

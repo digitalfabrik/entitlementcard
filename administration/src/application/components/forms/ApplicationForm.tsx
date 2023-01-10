@@ -1,4 +1,4 @@
-import { ApplicationInput, CardType } from '../../../generated/graphql'
+import { ApplicationInput, BavariaCardType } from '../../../generated/graphql'
 import { Form } from '../../FormType'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -47,8 +47,8 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
           wantsDigitalCard: stepCardType.value.wantsDigitalCard,
-          blueCardEntitlement: stepRequirements.value.type === CardType.Blue ? stepRequirements.value.value : null,
-          goldenCardEntitlement: stepRequirements.value.type === CardType.Golden ? stepRequirements.value.value : null,
+          blueCardEntitlement: stepRequirements.value.type === BavariaCardType.Blue ? stepRequirements.value.value : null,
+          goldenCardEntitlement: stepRequirements.value.type === BavariaCardType.Golden ? stepRequirements.value.value : null,
           hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
           givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
         },

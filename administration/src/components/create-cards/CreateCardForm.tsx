@@ -1,12 +1,12 @@
 import React, { ChangeEvent } from 'react'
 import { Button, Card, FormGroup, InputGroup, MenuItem } from '@blueprintjs/core'
 import { ItemRenderer, Select } from '@blueprintjs/select'
-import { CardType } from '../../models/CardType'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 import styled from 'styled-components'
-import { CardBlueprint } from './CardBlueprint'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import { add } from 'date-fns'
+import {BavariaCardType} from "../../cards/BavariaCardType";
 
 const CardHeader = styled.div`
   margin: -20px -20px 20px -20px;
@@ -16,9 +16,9 @@ const CardHeader = styled.div`
   justify-content: right;
 `
 
-const CardTypeSelect = Select.ofType<CardType>()
+const CardTypeSelect = Select.ofType<BavariaCardType>()
 
-const renderCardType: ItemRenderer<CardType> = (cardType, { handleClick, modifiers }) => {
+const renderCardType: ItemRenderer<BavariaCardType> = (cardType, { handleClick, modifiers }) => {
   if (!modifiers.matchesPredicate) {
     return null
   }
@@ -73,7 +73,7 @@ const CreateCardForm = (props: Props) => {
         <FormGroup label='Ablaufdatum'>
           <DateInput
             placeholder='Ablaufdatum'
-            disabled={props.cardBlueprint.cardType === CardType.gold}
+            disabled={props.cardBlueprint.cardType === BavariaCardType.gold}
             value={props.cardBlueprint.expirationDate}
             parseDate={str => new Date(str)}
             onChange={value => props.onUpdate({ ...props.cardBlueprint, expirationDate: value })}
@@ -85,7 +85,7 @@ const CreateCardForm = (props: Props) => {
         </FormGroup>
         <FormGroup label='Typ der Karte'>
           <CardTypeSelect
-            items={Object.values(CardType)}
+            items={Object.values(BavariaCardType)}
             onItemSelect={value => props.onUpdate({ ...props.cardBlueprint, cardType: value })}
             itemRenderer={renderCardType}
             filterable={false}>

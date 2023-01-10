@@ -1,4 +1,4 @@
-import { BlueCardEntitlementInput, CardType, GoldenCardEntitlementInput } from '../../../generated/graphql'
+import { BlueCardEntitlementInput, BavariaCardType, GoldenCardEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import SwitchComponent from '../SwitchComponent'
@@ -12,24 +12,24 @@ const SubForms = {
 }
 export type StepRequirementsFormState = CompoundState<typeof SubForms>
 type ValidatedInput =
-  | { type: CardType.Blue; value: BlueCardEntitlementInput }
-  | { type: CardType.Golden; value: GoldenCardEntitlementInput }
-type Options = { cardType: CardType | null }
+  | { type: BavariaCardType.Blue; value: BlueCardEntitlementInput }
+  | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
+type Options = { cardType: BavariaCardType | null }
 type AdditionalProps = {}
 const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) => {
     switch (options.cardType) {
-      case CardType.Blue: {
+      case BavariaCardType.Blue: {
         const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
         if (blueCardEntitlement.type === 'error') return { type: 'error' }
-        return { type: 'valid', value: { type: CardType.Blue, value: blueCardEntitlement.value } }
+        return { type: 'valid', value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value } }
       }
-      case CardType.Golden: {
+      case BavariaCardType.Golden: {
         const goldenCardEntitlement = GoldenCardEntitlementForm.validate(state.goldenCardEntitlement)
         if (goldenCardEntitlement.type === 'error') return { type: 'error' }
-        return { type: 'valid', value: { type: CardType.Golden, value: goldenCardEntitlement.value } }
+        return { type: 'valid', value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value } }
       }
       default:
         return { type: 'error' }
@@ -38,13 +38,13 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
   Component: ({ state, setState, options }) => (
     <SwitchComponent value={options.cardType}>
       {{
-        [CardType.Blue]: (
+        [BavariaCardType.Blue]: (
           <BlueCardEntitlementForm.Component
             state={state.blueCardEntitlement}
             setState={useUpdateStateCallback(setState, 'blueCardEntitlement')}
           />
         ),
-        [CardType.Golden]: (
+        [BavariaCardType.Golden]: (
           <GoldenCardEntitlementForm.Component
             state={state.goldenCardEntitlement}
             setState={useUpdateStateCallback(setState, 'goldenCardEntitlement')}

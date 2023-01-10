@@ -1,4 +1,4 @@
-import { ApplicationType, CardType } from '../../../generated/graphql'
+import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import { Typography } from '@mui/material'
@@ -12,11 +12,11 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const CardTypeForm = createRadioGroupForm<CardType>()
+const CardTypeForm = createRadioGroupForm<BavariaCardType>()
 const cardTypeOptions = {
   labelByValue: {
-    [CardType.Blue]: 'Blaue Ehrenamtskarte',
-    [CardType.Golden]: 'Goldene Ehrenamtskarte',
+    [BavariaCardType.Blue]: 'Blaue Ehrenamtskarte',
+    [BavariaCardType.Golden]: 'Goldene Ehrenamtskarte',
   },
 }
 
@@ -37,7 +37,7 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = { cardType: CardType; applicationType: ApplicationType; wantsDigitalCard: boolean }
+type ValidatedInput = { cardType: BavariaCardType; applicationType: ApplicationType; wantsDigitalCard: boolean }
 type Options = {}
 type AdditionalProps = {}
 const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {

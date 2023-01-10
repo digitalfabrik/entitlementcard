@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { CardBlueprint } from './CardBlueprint'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
 import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
-import generateCards from './generateCards'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Exception } from '../../exception'
+import generateCards from "../../cards/generateCards";
 
 enum Mode {
   input,

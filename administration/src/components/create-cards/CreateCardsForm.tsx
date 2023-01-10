@@ -1,13 +1,13 @@
 import React from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
-import { CardType } from '../../models/CardType'
-import { CardBlueprint, isValid } from './CardBlueprint'
+import { CardBlueprint, isValid } from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
 import { add } from 'date-fns'
 import { usePrompt } from '../../util/blocker-prompt'
+import {BavariaCardType} from "../../cards/BavariaCardType";
 
 let idCounter = 0
 
@@ -16,7 +16,7 @@ const createEmptyCard = (): CardBlueprint => ({
   forename: '',
   surname: '',
   expirationDate: add(Date.now(), { years: 2 }),
-  cardType: CardType.standard,
+  cardType: BavariaCardType.standard, // FIXME
 })
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
@@ -64,7 +64,7 @@ const CreateCardsForm = (props: Props) => {
   const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint | null) => {
     if (newBlueprint === null) setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
     else {
-      if (newBlueprint.cardType === CardType.gold) newBlueprint.expirationDate = null
+      if (newBlueprint.cardType === BavariaCardType.gold) newBlueprint.expirationDate = null
       setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))
     }
   }

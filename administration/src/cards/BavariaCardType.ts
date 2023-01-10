@@ -1,4 +1,4 @@
-export enum CardType {
+export enum BavariaCardType {
   standard = 'Standard',
   gold = 'Goldkarte',
 }

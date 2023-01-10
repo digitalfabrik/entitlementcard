@@ -1,4 +1,4 @@
-import { CardType } from '../../models/CardType'
+import { BavariaCardType } from './BavariaCardType'
 
 const MAX_NAME_LENGTH = 100
 
@@ -10,7 +10,7 @@ export interface CardBlueprint {
   forename: string
   surname: string
   expirationDate: Date | null
-  cardType: CardType
+  cardType: BavariaCardType // FIXME
 }
 
 export const isNameValid = (value: string) => value.length > 0 && value.length < MAX_NAME_LENGTH
@@ -20,4 +20,4 @@ export const isExpirationDateValid = (value: Date | null) => value !== null && v
 export const isValid = (cardCreationInfo: CardBlueprint) =>
   isNameValid(cardCreationInfo.forename) &&
   isNameValid(cardCreationInfo.surname) &&
-  (isExpirationDateValid(cardCreationInfo.expirationDate) || cardCreationInfo.cardType === CardType.gold)
+  (isExpirationDateValid(cardCreationInfo.expirationDate) || cardCreationInfo.cardType === BavariaCardType.gold)

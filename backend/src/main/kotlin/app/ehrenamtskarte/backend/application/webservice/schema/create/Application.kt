@@ -11,7 +11,7 @@ enum class ApplicationType {
     RENEWAL_APPLICATION
 }
 
-enum class CardType {
+enum class BavariaCardType {
     BLUE,
     GOLDEN
 }
@@ -22,7 +22,7 @@ enum class CardType {
 )
 data class Application(
     val personalData: PersonalData,
-    val cardType: CardType,
+    val cardType: BavariaCardType,
     val applicationType: ApplicationType,
     val wantsDigitalCard: Boolean,
     val blueCardEntitlement: BlueCardEntitlement?,
@@ -31,8 +31,8 @@ data class Application(
     val givenInformationIsCorrectAndComplete: Boolean
 ) : JsonFieldSerializable {
     private val entitlementByCardType = mapOf(
-        CardType.BLUE to blueCardEntitlement,
-        CardType.GOLDEN to goldenCardEntitlement
+        BavariaCardType.BLUE to blueCardEntitlement,
+        BavariaCardType.GOLDEN to goldenCardEntitlement
     )
 
     init {
@@ -62,8 +62,8 @@ data class Application(
                     translations = mapOf("de" to "Kartentyp"),
                     type = Type.String,
                     value = when (cardType) {
-                        CardType.BLUE -> "Blaue Ehrenamtskarte"
-                        CardType.GOLDEN -> "Goldene Ehrenamtskarte"
+                        BavariaCardType.BLUE -> "Blaue Ehrenamtskarte"
+                        BavariaCardType.GOLDEN -> "Goldene Ehrenamtskarte"
                     }
                 ),
                 JsonField(

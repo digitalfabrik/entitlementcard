@@ -1,12 +1,12 @@
 import { jsPDF } from 'jspdf'
-import logo from './logo'
-import { drawjsPDF } from '../../util/qrcode'
-import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
+import logo from './bavariaLogo' // FIXME
+import { drawjsPDF } from '../util/qrcode'
+import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
-import { Exception } from '../../exception'
-import { Region } from '../../generated/graphql'
-import { DynamicActivationCode, QrCode } from '../../generated/card_pb'
-import { daysSinceEpochToDate } from '../../util/validityPeriod'
+import { Exception } from '../exception'
+import { Region } from '../generated/graphql'
+import { DynamicActivationCode, QrCode } from '../generated/card_pb'
+import { daysSinceEpochToDate } from './validityPeriod'
 
 type TTFFont = {
   /**
