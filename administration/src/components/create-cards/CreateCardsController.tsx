@@ -8,10 +8,10 @@ import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Exception } from '../../exception'
-import {activateCards} from "../../cards/activation";
-import {generatePdf, loadTTFFont} from "../../cards/PdfFactory";
+import { activateCards } from '../../cards/activation'
+import { generatePdf, loadTTFFont } from '../../cards/PdfFactory'
 
-enum Mode {
+enum CardActivationState {
   input,
   loading,
   finished,
@@ -21,7 +21,7 @@ const CreateCardsController = () => {
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
   const { region } = useContext(WhoAmIContext).me!
-  const [mode, setMode] = useState(Mode.input)
+  const [state, setState] = useState(CardActivationState.input)
   const appToaster = useAppToaster()
 
   if (!region) {
@@ -34,7 +34,7 @@ const CreateCardsController = () => {
 
   const confirm = async () => {
     try {
-      setMode(Mode.loading)
+      setState(CardActivationState.loading)
       const activationCodes = cardBlueprints.map(cardBlueprint => {
         return cardBlueprint.generateActivationCode(region)
       })
@@ -45,7 +45,7 @@ const CreateCardsController = () => {
       const pdfDataUri = generatePdf(font, activationCodes, region)
 
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
-      setMode(Mode.finished)
+      setState(CardActivationState.finished)
     } catch (e) {
       console.error(e)
       if (e instanceof Exception) {
@@ -66,22 +66,23 @@ const CreateCardsController = () => {
       } else {
         appToaster?.show({ message: 'Etwas ist schiefgegangen.', intent: 'danger' })
       }
-      setMode(Mode.input)
+      setState(CardActivationState.input)
     }
   }
-  if (mode === Mode.input)
+  if (state === CardActivationState.input) {
     return <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
-  else if (mode === Mode.loading) return <Spinner />
-  // (mode === Mode.finished)
-  else
+  } else if (state === CardActivationState.loading) {
+    return <Spinner />
+  } else {
     return (
       <GenerationFinished
         reset={() => {
           setCardBlueprints([])
-          setMode(Mode.input)
+          setState(CardActivationState.input)
         }}
       />
     )
+  }
 }
 
 export default CreateCardsController

@@ -4,7 +4,7 @@ import { ItemRenderer, Select } from '@blueprintjs/select'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 import styled from 'styled-components'
-import {BavariaCardTypeBlueprint, CardBlueprint} from '../../cards/CardBlueprint'
+import { BavariaCardTypeBlueprint, CardBlueprint } from '../../cards/CardBlueprint'
 import { add } from 'date-fns'
 
 const CardHeader = styled.div`
@@ -34,7 +34,8 @@ const renderCardType: ItemRenderer<BavariaCardTypeBlueprint> = (cardType, { hand
 
 interface Props {
   cardBlueprint: CardBlueprint
-  onUpdate: (newCardBlueprint: CardBlueprint | null) => void
+  onUpdate: () => void
+  onRemove: () => void
 }
 
 const CreateCardForm = (props: Props) => {
@@ -42,19 +43,17 @@ const CreateCardForm = (props: Props) => {
     <div>
       <Card>
         <CardHeader>
-          <Button minimal icon='cross' onClick={() => props.onUpdate(null)} />
+          <Button minimal icon='cross' onClick={() => props.onRemove()} />
         </CardHeader>
         <FormGroup label='Name'>
           <InputGroup
             placeholder='Erika Mustermann'
             autoFocus
-            value={props.cardBlueprint.name}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              props.onUpdate({
-                ...props.cardBlueprint,
-                name: event.target.value,
-              })
-            }
+            value={props.cardBlueprint.fullName}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              props.cardBlueprint.fullName = event.target.value
+              props.onUpdate()
+            }}
           />
         </FormGroup>
         <FormGroup label='Ablaufdatum'>
@@ -63,7 +62,10 @@ const CreateCardForm = (props: Props) => {
             disabled={props.cardBlueprint.cardType === BavariaCardTypeBlueprint.gold}
             value={props.cardBlueprint.expirationDate}
             parseDate={str => new Date(str)}
-            onChange={value => props.onUpdate({ ...props.cardBlueprint, expirationDate: value })}
+            onChange={value => {
+              props.cardBlueprint.expirationDate = value
+              props.onUpdate()
+            }}
             formatDate={date => date.toLocaleDateString()}
             maxDate={add(Date.now(), { years: 99 })}
             minDate={new Date()}
@@ -73,7 +75,13 @@ const CreateCardForm = (props: Props) => {
         <FormGroup label='Typ der Karte'>
           <CardTypeSelect
             items={Object.values(BavariaCardTypeBlueprint)}
-            onItemSelect={value => props.onUpdate({ ...props.cardBlueprint, cardType: value })}
+            onItemSelect={value => {
+              props.cardBlueprint.cardType = value
+              if (props.cardBlueprint.cardType == BavariaCardTypeBlueprint.gold) {
+                props.cardBlueprint.expirationDate = null
+              }
+              props.onUpdate()
+            }}
             itemRenderer={renderCardType}
             filterable={false}>
             <Button text={props.cardBlueprint.cardType} rightIcon='caret-down' />
