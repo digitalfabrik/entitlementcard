@@ -19,7 +19,7 @@ fun setupDatabase() {
         val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
             ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         EAK_BAYERN_REGIONS.forEach { eakRegion ->
-            val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] }
+            val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] && it.projectId == eakProject.id }
             if (dbRegion == null) {
                 RegionEntity.new {
                     projectId = eakProject.id
@@ -41,7 +41,7 @@ fun setupDatabase() {
         val nuernbergRegion = dbRegions.singleOrNull { it.projectId == nuernbergPassProject.id }
         if (nuernbergRegion == null) {
             RegionEntity.new {
-                projectId = eakProject.id
+                projectId = nuernbergPassProject.id
                 name = "Nürnberg"
                 prefix = "Stadt"
                 regionIdentifier = null
