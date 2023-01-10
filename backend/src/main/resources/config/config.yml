@@ -24,7 +24,7 @@ projects:
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
     administrationBaseUrl: https://nuernberg.sozialpass.app
-    administrationName: Sozialpass-Nürnberg-Verwaltung
+    administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
