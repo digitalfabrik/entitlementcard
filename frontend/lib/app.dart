@@ -11,11 +11,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => SettingsModel()..initialize()),
-          ChangeNotifierProvider(create: (context) => CardDetailsModel()..initialize()),
-        ],
-        child: const EntryWidget(),
+      providers: [
+        ChangeNotifierProvider(create: (context) => SettingsModel()..initialize()),
+        ChangeNotifierProvider(create: (context) => CardDetailsModel()..initialize()),
+      ],
+      child: const EntryWidget(),
     );
   }
 }
