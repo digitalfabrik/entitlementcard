@@ -22,5 +22,5 @@ String encodeVerificationCardDetails(VerificationCardDetails verificationCardDet
     otp: verificationCardDetails.otp,
   );
 
-  return const Base64Encoder().convert(verifyCode.writeToBuffer());
+  return const Base64Encoder().convert(QrCode(dynamicVerify: verifyCode).writeToBuffer());
 }

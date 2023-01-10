@@ -34,12 +34,10 @@ class IdentificationQrContentParser {
   IdentificationQrContentParser(this._cardDetailsModel);
 
   void processQrCodeContent(String rawBase64Content) {
-    const base64Decoder = Base64Decoder();
-
     // TODO (Max): Refactor into Dart extension
     QrCode qrcode;
     try {
-      qrcode = QrCode.fromBuffer(base64Decoder.convert(rawBase64Content));
+      qrcode = QrCode.fromBuffer(const Base64Decoder().convert(rawBase64Content));
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
