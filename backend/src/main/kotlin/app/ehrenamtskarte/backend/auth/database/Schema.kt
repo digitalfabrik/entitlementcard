@@ -29,7 +29,7 @@ object Administrators : IntIdTable() {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
                 regionId.isNotNull().and(role.inList(regionCompatibleRoles.map { it.db_value }))
         }
-        check("deletedIffNoRights") {
+        check("deletedIfAndOnlyIfNoRights") {
             (deleted eq Op.TRUE and (role eq Role.NO_RIGHTS.db_value)) or
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
