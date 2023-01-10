@@ -79,7 +79,7 @@ const UsersTable = ({
                   <Button
                     icon='trash'
                     intent='danger'
-                    text='Entfernen'
+                    text='Löschen'
                     minimal
                     onClick={() => setUserInDeleteDialog(user)}
                   />
