@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
+import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
@@ -6,8 +7,6 @@ import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
-
-import '../graphql/configured_graphql_provider.dart';
 
 const mapTabIndex = 0;
 
