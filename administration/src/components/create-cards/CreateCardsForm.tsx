@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateCardForm from './CreateCardForm'
 import {Button, Card, Tooltip} from '@blueprintjs/core'
-import {CardBlueprint, BavariaCardTypeBlueprint, createEmptyCard, isValid} from '../../cards/CardBlueprint'
+import {CardBlueprint, BavariaCardTypeBlueprint, createEmptyCard} from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
@@ -42,26 +42,21 @@ const FormColumn = styled.div`
 
 interface Props {
     cardBlueprints: CardBlueprint[]
-    setCardBlueprints: (blueprints: CardBlueprint[]) => void
+
     confirm: () => void
 }
 
 const CreateCardsForm = (props: Props) => {
     const {cardBlueprints, setCardBlueprints} = props
     const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard()])
-    const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint | null) => {
-        if (newBlueprint === null) {
-            setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
-        } else {
-            // FIXME: Probably should not be here
-            if (newBlueprint.cardType === BavariaCardTypeBlueprint.gold) {
-                newBlueprint.expirationDate = null
-            }
-            setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))
-        }
+    const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
+        setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
+    }
+    const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint) => {
+        setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))
     }
 
-    const allCardsValid = cardBlueprints.reduce((acc, blueprint) => acc && isValid(blueprint), true)
+    const allCardsValid = cardBlueprints.reduce((acc, blueprint) => acc && blueprint.isValid(), true)
 
     usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardBlueprints.length !== 0)
 

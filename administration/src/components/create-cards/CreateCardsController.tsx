@@ -8,7 +8,8 @@ import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Exception } from '../../exception'
-import generateCards from "../../cards/generateCards";
+import {activateCards} from "../../cards/activation";
+import {generatePdf, loadTTFFont} from "../../cards/PdfFactory";
 
 enum Mode {
   input,
@@ -34,7 +35,15 @@ const CreateCardsController = () => {
   const confirm = async () => {
     try {
       setMode(Mode.loading)
-      const pdfDataUri = await generateCards(client, cardBlueprints, region)
+      const activationCodes = cardBlueprints.map(cardBlueprint => {
+        return cardBlueprint.generateActivationCode(region)
+      })
+
+      await activateCards(client, activationCodes, region)
+
+      const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
+      const pdfDataUri = generatePdf(font, activationCodes, region)
+
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setMode(Mode.finished)
     } catch (e) {
