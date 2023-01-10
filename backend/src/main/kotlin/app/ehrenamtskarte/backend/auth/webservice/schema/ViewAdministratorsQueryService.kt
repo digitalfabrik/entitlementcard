@@ -18,6 +18,21 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class ViewAdministratorsQueryService {
 
+    @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
+    fun whoAmI(project: String, dfe: DataFetchingEnvironment): Administrator {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        return transaction {
+            val admin = AdministratorEntity.findById(jwtPayload.adminId)
+            val projectId = ProjectEntity.find { Projects.project eq project }.single().id
+            if (admin == null || admin.deleted || admin.projectId != projectId) {
+                throw UnauthorizedException()
+            }
+            Administrator.fromDbEntity(admin)
+        }
+    }
+
     @GraphQLDescription("Returns all administrators in a project. This query requires the role PROJECT_ADMIN.")
     fun getUsersInProject(
         project: String,
@@ -27,7 +42,7 @@ class ViewAdministratorsQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.userId)
+            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectId = ProjectEntity.find { Projects.project eq project }.single().id.value
             if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw UnauthorizedException()
@@ -48,7 +63,7 @@ class ViewAdministratorsQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.userId)
+            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val region = RegionEntity.findById(regionId) ?: throw UnauthorizedException()
             if (!Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw UnauthorizedException()

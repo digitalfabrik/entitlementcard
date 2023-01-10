@@ -50,7 +50,7 @@ class EakApplicationMutationService {
             // We throw an UnauthorizedException here, as we do not know whether there was an application with id
             // `applicationId` and whether this application was contained in the user's project & region.
 
-            val user = AdministratorEntity.findById(jwtPayload.userId)
+            val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw IllegalArgumentException("Admin does not exist")
             if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
                 throw UnauthorizedException()

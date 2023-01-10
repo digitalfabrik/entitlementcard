@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { AuthContext } from '../../AuthProvider'
 import { useAppToaster } from '../AppToaster'
 import ChangePasswordForm from './ChangePasswordForm'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 
 const UserSettingsController = () => {
   const [currentPassword, setCurrentPassword] = useState('')
@@ -12,7 +12,7 @@ const UserSettingsController = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
 
   const project = useContext(ProjectConfigContext).projectId
-  const email = useContext(AuthContext).data!.administrator.email
+  const email = useContext(WhoAmIContext).me!.email
 
   const appToaster = useAppToaster()
   const [changePassword, { loading }] = useChangePasswordMutation()

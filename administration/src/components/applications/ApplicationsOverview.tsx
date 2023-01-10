@@ -10,11 +10,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 
 type Application = GetApplicationsQuery['applications'][number]
 
-interface Props {
-  applications: Application[]
-  token: string
-}
-
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
@@ -24,7 +19,7 @@ const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: 
   width: 600px;
   overflow: hidden;
   margin: 10px;
-  padding: 0px;
+  padding: 0;
   position: relative;
 `
 
@@ -32,9 +27,9 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%);
   opacity: ${props => (props.$collapsed ? '1' : '0')};
   position: absolute;
-  top: 0px;
+  top: 0;
   transition: opacity 0.2s;
-  bottom: 0px;
+  bottom: 0;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -44,9 +39,8 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
-const ApplicationView: FunctionComponent<{ application: Application; token: string; gotDeleted: () => void }> = ({
+const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void }> = ({
   application,
-  token,
   gotDeleted,
 }) => {
   const { createdDate: createdDateString, jsonValue, id } = application
@@ -85,7 +79,7 @@ const ApplicationView: FunctionComponent<{ application: Application; token: stri
       <ResizeSensor onResize={handleResize}>
         <div style={{ overflow: 'visible', padding: `${CARD_PADDING}px` }}>
           <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
-          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} token={token} key={0} hierarchyIndex={0} />
+          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
           <div
             style={{
               display: 'flex',
@@ -120,18 +114,13 @@ const ApplicationView: FunctionComponent<{ application: Application; token: stri
 }
 
 // Necessary for FlipMove, as it cannot handle functional components
-class ApplicationViewComponent extends React.Component<{
-  application: Application
-  token: string
-  gotDeleted: () => void
-}> {
+class ApplicationViewComponent extends React.Component<{ application: Application; gotDeleted: () => void }> {
   render() {
-    const { application, token, gotDeleted } = this.props
-    return <ApplicationView application={application} token={token} gotDeleted={gotDeleted} />
+    return <ApplicationView {...this.props} />
   }
 }
 
-const ApplicationsOverview = (props: Props) => {
+const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
 
   return (
@@ -141,7 +130,6 @@ const ApplicationsOverview = (props: Props) => {
         <ApplicationViewComponent
           key={application.id}
           application={application}
-          token={props.token}
           gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
         />
       ))}

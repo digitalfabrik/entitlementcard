@@ -19,8 +19,7 @@ object JwtService {
 
     fun createToken(administrator: Administrator): String =
         JWT.create()
-            .withClaim(JwtPayload::email.name, administrator.email)
-            .withClaim(JwtPayload::userId.name, administrator.id)
+            .withClaim(JwtPayload::adminId.name, administrator.id)
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
@@ -33,20 +32,16 @@ object JwtService {
     }
 
     private fun verifyToken(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
-        JwtPayload(it[JwtPayload::email.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
+        JwtPayload(it[JwtPayload::adminId.name]!!.asInt())
     }
 
     fun verifyRequest(context: Context): JwtPayload? {
         val header = context.header("Authorization") ?: return null
         val split = header.split(" ")
-        val jwtToken = if (split.size != 2 || split[0] != "Bearer") null else split[1]
-
-        if (jwtToken === null) {
-            return null
-        }
+        val jwtToken = (if (split.size != 2 || split[0] != "Bearer") null else split[1]) ?: return null
 
         return verifyToken(jwtToken)
     }
 }
 
-data class JwtPayload(val email: String, val userId: Int)
+data class JwtPayload(val adminId: Int)

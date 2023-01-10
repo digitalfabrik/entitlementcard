@@ -1,23 +1,24 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
 import React, { ReactNode, useContext, useEffect, useState } from 'react'
-import { AuthContext, AuthData } from './AuthProvider'
+import { TokenPayload } from './AuthProvider'
 import { useAppToaster } from './components/AppToaster'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import PasswordInput from './components/PasswordInput'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import { WhoAmIContext } from './WhoAmIProvider'
 
 interface Props {
-  authData: AuthData
+  authData: TokenPayload
   children: ReactNode
   onSignIn: (payload: SignInPayload) => void
   onSignOut: () => void
 }
 
-const computeSecondsLeft = (authData: AuthData) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
+const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
 const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
   const projectId = useContext(ProjectConfigContext).projectId
-  const email = useContext(AuthContext).data!.administrator.email
+  const email = useContext(WhoAmIContext).me!.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
   useEffect(() => {
     setSecondsLeft(computeSecondsLeft(authData))

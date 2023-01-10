@@ -20,14 +20,14 @@ class ChangePasswordMutationService {
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-
-        if (email != jwtPayload.email) {
-            throw GraphQLKotlinException("You can only change your own password.")
-        }
         transaction {
             val administratorEntity =
                 AdministratorsRepository.findByAuthData(project, email, currentPassword)
                     ?: throw GraphQLKotlinException("Current password is wrong.")
+
+            if (administratorEntity.id.value != jwtPayload.adminId) {
+                throw GraphQLKotlinException("You can only change your own password.")
+            }
 
             AdministratorsRepository.changePassword(administratorEntity, newPassword)
         }

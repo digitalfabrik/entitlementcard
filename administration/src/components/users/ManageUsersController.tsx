@@ -1,6 +1,5 @@
 import { Button, Card, H3, Spinner } from '@blueprintjs/core'
 import { ReactElement, useContext } from 'react'
-import { AuthContext } from '../../AuthProvider'
 import {
   Region,
   Role,
@@ -11,7 +10,7 @@ import {
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import UsersTable from './UsersTable'
-import { RegionContext } from '../../RegionProvider'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 
 const RefetchCard = (props: { refetch: () => void }) => {
   return (
@@ -82,9 +81,8 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
 }
 
 const ManageUsersController = () => {
-  const role = useContext(AuthContext).data!.administrator.role
-  const region = useContext(RegionContext)
-  if (role === Role.RegionAdmin && region !== null) {
+  const { role, region } = useContext(WhoAmIContext).me!
+  if (role === Role.RegionAdmin && region) {
     return <ManageRegionUsers region={region} />
   } else if (role === Role.ProjectAdmin) {
     return <ManageProjectUsers />

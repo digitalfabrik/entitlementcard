@@ -29,6 +29,6 @@ class SignInMutationService {
 
         val administrator = Administrator.fromDbEntity(administratorEntity)
         val token = JwtService.createToken(administrator)
-        return SignInPayload(administrator, token)
+        return SignInPayload(token)
     }
 }

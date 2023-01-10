@@ -18,7 +18,7 @@ class CardMutationService {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
 
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val targetedRegionId = card.regionId
             if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                 throw UnauthorizedException()

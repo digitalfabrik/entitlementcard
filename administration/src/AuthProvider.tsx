@@ -1,81 +1,68 @@
 import { createContext, ReactNode, useMemo, useState } from 'react'
-import { Administrator, SignInPayload } from './generated/graphql'
+import { SignInPayload } from './generated/graphql'
 
-export interface AuthData {
+export interface TokenPayload {
   token: string
   expiry: Date
-  administrator: Administrator
+  adminId: number
 }
 
 const noop = () => {}
 
 export const AuthContext = createContext<{
-  data: AuthData | null
+  data: TokenPayload | null
   signIn: (payload: SignInPayload) => void
   signOut: () => void
 }>({ data: null, signIn: noop, signOut: noop })
 
-const getExpiryFromToken = (token: string) => {
-  const payload: { exp: number } = JSON.parse(atob(token.split('.')[1]))
-  return new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
+const LOCAL_STORAGE_KEY = 'auth-token'
+
+const loadToken = () => window.localStorage.getItem(LOCAL_STORAGE_KEY)
+const storeToken = (token: string) => window.localStorage.setItem(LOCAL_STORAGE_KEY, token)
+const removeToken = () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+
+const extractTokenPayload = (token: string): TokenPayload => {
+  const payload: { exp: number; adminId: number } = JSON.parse(atob(token.split('.')[1]))
+  const expiry = new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
+  return { token, expiry, adminId: payload.adminId }
 }
 
-const convertToAuthData: (payload: SignInPayload) => AuthData = payload => ({
-  token: payload.token,
-  administrator: payload.user,
-  expiry: getExpiryFromToken(payload.token),
-})
-
-const LOCAL_STORAGE_KEY = 'authdata'
-
-const loadAuthDataFromSessionStorage = (): AuthData | null => {
-  const authDataRaw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
-  if (authDataRaw === null) {
+const loadTokenPayload = (): TokenPayload | null => {
+  const token = loadToken()
+  if (token === null) {
     return null
   }
 
   try {
-    const partialAuthData: { token: string; administrator: Administrator } = JSON.parse(authDataRaw)
-    const expiry = getExpiryFromToken(partialAuthData.token)
+    const { expiry, adminId } = extractTokenPayload(token)
     if (expiry < new Date()) {
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+      removeToken()
       return null
     }
-    return { ...partialAuthData, expiry: getExpiryFromToken(partialAuthData.token) }
+    return { token, expiry, adminId }
   } catch (e) {
-    window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+    console.error(e)
+    removeToken()
   }
   return null
 }
 
-const saveAuthDataToSessionStorage = (authData: AuthData) => {
-  window.localStorage.setItem(
-    LOCAL_STORAGE_KEY,
-    JSON.stringify({
-      token: authData.token,
-      administrator: authData.administrator,
-    })
-  )
-}
-
-const removeAuthDataFromSessionStorage = () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
-
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authData, setAuthData] = useState<AuthData | null>(loadAuthDataFromSessionStorage())
+  const [tokenPayload, setTokenPayload] = useState<TokenPayload | null>(loadTokenPayload())
   const contextValue = useMemo(
     () => ({
-      data: authData,
+      data: tokenPayload,
       signIn: (payload: SignInPayload) => {
-        const authData = convertToAuthData(payload)
-        saveAuthDataToSessionStorage(authData)
-        setAuthData(authData)
+        const tokenPayload = extractTokenPayload(payload.token)
+        storeToken(payload.token)
+        setTokenPayload(tokenPayload)
       },
       signOut: () => {
-        removeAuthDataFromSessionStorage()
-        setAuthData(null)
+        removeToken()
+        setTokenPayload(null)
       },
     }),
-    [authData]
+    [tokenPayload]
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
