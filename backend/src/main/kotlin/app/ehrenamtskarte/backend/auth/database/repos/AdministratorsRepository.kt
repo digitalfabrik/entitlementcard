@@ -34,7 +34,7 @@ object AdministratorsRepository {
         return resultRow?.let {
             val user = AdministratorEntity.wrapRow(it)
             val passwordHash = user.passwordHash
-            if (passwordHash !== null && PasswordCrypto.verifyPassword(password, passwordHash)) {
+            if (passwordHash != null && PasswordCrypto.verifyPassword(password, passwordHash)) {
                 user
             } else {
                 null
@@ -84,7 +84,7 @@ object AdministratorsRepository {
 
     fun changePassword(administrator: AdministratorEntity, newPassword: String) {
         val passwordValidationResult = PasswordValidator.validatePassword(newPassword)
-        if (passwordValidationResult !== PasswordValidationResult.VALID) {
+        if (passwordValidationResult != PasswordValidationResult.VALID) {
             throw InvalidPasswordException(passwordValidationResult)
         }
 

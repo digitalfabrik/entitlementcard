@@ -7,7 +7,7 @@ import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import generateCards from './generateCards'
-import { RegionContext } from '../../RegionProvider'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Exception } from '../../exception'
 
 enum Mode {
@@ -19,11 +19,11 @@ enum Mode {
 const CreateCardsController = () => {
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
-  const region = useContext(RegionContext)
+  const { region } = useContext(WhoAmIContext).me!
   const [mode, setMode] = useState(Mode.input)
   const appToaster = useAppToaster()
 
-  if (region === null) {
+  if (!region) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p>Sie sind nicht berechtigt, Karten auszustellen.</p>

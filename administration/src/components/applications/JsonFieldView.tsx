@@ -3,7 +3,7 @@ import { Button, Icon } from '@blueprintjs/core'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
 import styled from 'styled-components'
-import {AuthContext} from "../../AuthProvider";
+import { AuthContext } from '../../AuthProvider'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string
@@ -44,11 +44,7 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   }
 `
 
-const JsonFieldView = (props: {
-  jsonField: GeneralJsonField
-  baseUrl: string
-  hierarchyIndex: number
-}) => {
+const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; hierarchyIndex: number }) => {
   const appToaster = useAppToaster()
   const token = useContext(AuthContext).data?.token
 

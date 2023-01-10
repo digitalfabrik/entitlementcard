@@ -49,6 +49,7 @@ type Address {
 type Administrator {
   email: String!
   id: Int!
+  region: Region
   regionId: Int
   role: Role!
 }
@@ -134,6 +135,8 @@ type Query {
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"
   verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
+  "Returns the requesting administrator as retrieved from his JWT token."
+  whoAmI(project: String!): Administrator!
 }
 
 type Region {
@@ -146,7 +149,6 @@ type Region {
 
 type SignInPayload {
   token: String!
-  user: Administrator!
 }
 
 enum ApplicationType {

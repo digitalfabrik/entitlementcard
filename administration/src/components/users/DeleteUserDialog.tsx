@@ -5,6 +5,7 @@ import { useAppToaster } from '../AppToaster'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { AuthContext } from '../../AuthProvider'
 import getMessageFromApolloError from '../getMessageFromApolloError'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 
 const DeleteUserDialog = ({
   selectedUser,
@@ -16,8 +17,8 @@ const DeleteUserDialog = ({
   onSuccess: () => void
 }) => {
   const appToaster = useAppToaster()
-  const authContext = useContext(AuthContext)
-  const actingAdminId = authContext.data?.administrator.id
+  const { signOut } = useContext(AuthContext)
+  const actingAdminId = useContext(WhoAmIContext).me?.id
   const { projectId: project } = useContext(ProjectConfigContext)
 
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
@@ -28,7 +29,7 @@ const DeleteUserDialog = ({
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich gelöscht.' })
       if (selectedUser?.id === actingAdminId) {
-        authContext.signOut()
+        signOut()
       } else {
         onClose()
         onSuccess()

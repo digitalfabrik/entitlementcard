@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Button, H3 } from '@blueprintjs/core'
 import { Role } from '../../generated/graphql'
-import { AuthContext } from '../../AuthProvider'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 
 const StyledButton = styled(Button)`
   margin: 10px;
@@ -16,7 +16,7 @@ const Container = styled.div`
 `
 
 const HomeController = () => {
-  const role = useContext(AuthContext).data?.administrator.role
+  const { role } = useContext(WhoAmIContext).me!
 
   return (
     <Container>

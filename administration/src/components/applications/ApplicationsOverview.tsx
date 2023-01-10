@@ -10,7 +10,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 
 type Application = GetApplicationsQuery['applications'][number]
 
-
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 

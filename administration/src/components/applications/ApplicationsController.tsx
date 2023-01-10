@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { RegionContext } from '../../RegionProvider'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 import ApplicationsOverview from './ApplicationsOverview'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
 import ErrorHandler from '../../ErrorHandler'
@@ -16,9 +16,9 @@ const ApplicationsController = (props: { region: Region }) => {
 }
 
 const ControllerWithRegion = () => {
-  const region = useContext(RegionContext)
+  const region = useContext(WhoAmIContext).me!.region
 
-  if (region === null) {
+  if (!region) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p>Sie sind nicht berechtigt, Anträge einzusehen.</p>
