@@ -1,11 +1,17 @@
 import { OrganizationInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import ShortTextForm, { ShortTextFormState } from '../primitive-inputs/ShortTextForm'
-import AddressForm, { AddressFormState } from './AddressForm'
-import SelectForm, { SelectFormState } from '../primitive-inputs/SelectForm'
-import EmailForm, { EmailFormState } from '../primitive-inputs/EmailForm'
-import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import AddressForm from './AddressForm'
+import SelectForm from '../primitive-inputs/SelectForm'
+import EmailForm from '../primitive-inputs/EmailForm'
+import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundValidate,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 
 const organizationCategoryOptions = {
   items: [
@@ -27,69 +33,42 @@ const contactHasGivenPermissionOptions = {
   notCheckedErrorMessage: 'Die Kontaktperson muss zugestimmt haben, damit Sie Ihren Antrag senden können.',
 } as const
 
-export type OrganizationFormState = {
-  name: ShortTextFormState
-  address: AddressFormState
-  category: SelectFormState
-  contactName: ShortTextFormState
-  contactEmail: EmailFormState
-  contactPhone: ShortTextFormState
-  contactHasGivenPermission: CheckboxFormState
+const SubForms = {
+  name: ShortTextForm,
+  address: AddressForm,
+  category: SelectForm,
+  contactName: ShortTextForm,
+  contactEmail: EmailForm,
+  contactPhone: ShortTextForm,
+  contactHasGivenPermission: CheckboxForm,
 }
+
+const getValidatedCompoundInput = createCompoundValidate(SubForms, {
+  contactHasGivenPermission: contactHasGivenPermissionOptions,
+  category: organizationCategoryOptions,
+})
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
 type Options = {}
 type AdditionalProps = {}
-const OrganizationForm: Form<OrganizationFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    name: ShortTextForm.initialState,
-    address: AddressForm.initialState,
-    category: SelectForm.initialState,
-    contactName: ShortTextForm.initialState,
-    contactEmail: EmailForm.initialState,
-    contactPhone: ShortTextForm.initialState,
-    contactHasGivenPermission: CheckboxForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...ShortTextForm.getArrayBufferKeys(state.name),
-    ...AddressForm.getArrayBufferKeys(state.address),
-    ...SelectForm.getArrayBufferKeys(state.category),
-    ...ShortTextForm.getArrayBufferKeys(state.contactName),
-    ...EmailForm.getArrayBufferKeys(state.contactEmail),
-    ...ShortTextForm.getArrayBufferKeys(state.contactPhone),
-    ...CheckboxForm.getArrayBufferKeys(state.contactHasGivenPermission),
-  ],
-  getValidatedInput: state => {
-    const name = ShortTextForm.getValidatedInput(state.name)
-    const address = AddressForm.getValidatedInput(state.address)
-    const category = SelectForm.getValidatedInput(state.category, organizationCategoryOptions)
-    const contactName = ShortTextForm.getValidatedInput(state.contactName)
-    const contactEmail = EmailForm.getValidatedInput(state.contactEmail)
-    const contactPhone = ShortTextForm.getValidatedInput(state.contactPhone)
-    const contactHasGivenPermission = CheckboxForm.getValidatedInput(
-      state.contactHasGivenPermission,
-      contactHasGivenPermissionOptions
-    )
-    if (
-      name.type === 'error' ||
-      address.type === 'error' ||
-      category.type === 'error' ||
-      contactName.type === 'error' ||
-      contactEmail.type === 'error' ||
-      contactPhone.type === 'error' ||
-      contactHasGivenPermission.type === 'error'
-    )
-      return { type: 'error' }
+const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: state => {
+    const compoundResult = getValidatedCompoundInput(state)
+    if (compoundResult.type === 'error') return compoundResult
     return {
       type: 'valid',
       value: {
-        name: name.value,
-        address: address.value,
-        category: category.value,
+        name: compoundResult.value.name,
+        category: compoundResult.value.category,
+        address: compoundResult.value.address,
         contact: {
-          name: contactName.value,
-          email: contactEmail.value,
-          telephone: contactPhone.value,
-          hasGivenPermission: contactHasGivenPermission.value,
+          name: compoundResult.value.contactName,
+          email: compoundResult.value.contactEmail,
+          telephone: compoundResult.value.contactPhone,
+          hasGivenPermission: compoundResult.value.contactHasGivenPermission,
         },
       },
     }

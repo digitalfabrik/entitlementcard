@@ -2,18 +2,17 @@ import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import SwitchComponent from '../SwitchComponent'
-import WorkAtOrganizationsEntitlementForm, {
-  WorkAtOrganizationsEntitlementFormState,
-} from './WorkAtOrganizationsEntitlementForm'
-import RadioGroupForm, { RadioGroupFormState } from '../primitive-inputs/RadioGroupForm'
-import radioGroupForm from '../primitive-inputs/RadioGroupForm'
-import WorkAtDepartmentEntitlementForm, {
-  WorkAtDepartmentEntitlementFormState,
-} from './WorkAtDepartmentEntitlementForm'
-import MilitaryReserveEntitlementForm, { MilitaryReserveEntitlementFormState } from './MilitaryReserveEntitlementForm'
-import HonoredByMinisterPresidentEntitlementForm, {
-  HonoredByMinisterPresidentEntitlementFormState,
-} from './HonoredByMinisterPresidentEntitlementForm'
+import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
+import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
+import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
+import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
+import HonoredByMinisterPresidentEntitlementForm from './HonoredByMinisterPresidentEntitlementForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundInitialState,
+  createSwitchValidate,
+} from '../../compoundFormUtils'
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {
@@ -28,90 +27,32 @@ const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]
   },
 }
 
-export type GoldenCardEntitlementFormState = {
-  entitlementType: RadioGroupFormState
-  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementFormState
-  honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementFormState
-  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementFormState
-  militaryReserveEntitlement: MilitaryReserveEntitlementFormState
+const EntitlementTypeRadioGroupForm = createRadioGroupForm<GoldenCardEntitlementType>()
+
+const SubForms = {
+  entitlementType: EntitlementTypeRadioGroupForm,
+  workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm,
+  honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementForm,
+  workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm,
+  militaryReserveEntitlement: MilitaryReserveEntitlementForm,
 }
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const GoldenCardEntitlementForm: Form<GoldenCardEntitlementFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    entitlementType: RadioGroupForm.initialState,
-    workAtOrganizationsEntitlement: WorkAtOrganizationsEntitlementForm.initialState,
-    honoredByMinisterPresidentEntitlement: HonoredByMinisterPresidentEntitlementForm.initialState,
-    workAtDepartmentEntitlement: WorkAtDepartmentEntitlementForm.initialState,
-    militaryReserveEntitlement: MilitaryReserveEntitlementForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...RadioGroupForm.getArrayBufferKeys(state.entitlementType),
-    ...WorkAtOrganizationsEntitlementForm.getArrayBufferKeys(state.workAtOrganizationsEntitlement),
-    ...HonoredByMinisterPresidentEntitlementForm.getArrayBufferKeys(state.honoredByMinisterPresidentEntitlement),
-    ...WorkAtDepartmentEntitlementForm.getArrayBufferKeys(state.workAtDepartmentEntitlement),
-    ...MilitaryReserveEntitlementForm.getArrayBufferKeys(state.militaryReserveEntitlement),
-  ],
-  getValidatedInput: state => {
-    const entitlementTypeResult = radioGroupForm.getValidatedInput(state.entitlementType, entitlementTypeOptions)
-    if (entitlementTypeResult.type === 'error') return { type: 'error' }
-    const entitlementType = entitlementTypeResult.value.value as GoldenCardEntitlementType
-    switch (entitlementType) {
-      case GoldenCardEntitlementType.WorkAtOrganizations: {
-        const workAtOrganizationsEntitlement = WorkAtOrganizationsEntitlementForm.getValidatedInput(
-          state.workAtOrganizationsEntitlement
-        )
-        if (workAtOrganizationsEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            workAtOrganizationsEntitlement: workAtOrganizationsEntitlement.value,
-          },
-        }
-      }
-      case GoldenCardEntitlementType.HonoredByMinisterPresident:
-        const honoredByMinisterPresidentEntitlement = HonoredByMinisterPresidentEntitlementForm.getValidatedInput(
-          state.honoredByMinisterPresidentEntitlement
-        )
-        if (honoredByMinisterPresidentEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            honoredByMinisterPresidentEntitlement: honoredByMinisterPresidentEntitlement.value,
-          },
-        }
-      case GoldenCardEntitlementType.WorkAtDepartment:
-        const workAtDepartmentEntitlement = WorkAtDepartmentEntitlementForm.getValidatedInput(
-          state.workAtDepartmentEntitlement
-        )
-        if (workAtDepartmentEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            workAtDepartmentEntitlement: workAtDepartmentEntitlement.value,
-          },
-        }
-      case GoldenCardEntitlementType.MilitaryReserve:
-        const militaryReserveEntitlement = MilitaryReserveEntitlementForm.getValidatedInput(
-          state.militaryReserveEntitlement
-        )
-        if (militaryReserveEntitlement.type === 'error') return { type: 'error' }
-        return {
-          type: 'valid',
-          value: {
-            entitlementType,
-            militaryReserveEntitlement: militaryReserveEntitlement.value,
-          },
-        }
-    }
-  },
+const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
+    WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+    WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+    MILITARY_RESERVE: 'militaryReserveEntitlement',
+    HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
+  }),
   Component: ({ state, setState }) => (
     <>
-      <RadioGroupForm.Component
+      <EntitlementTypeRadioGroupForm.Component
         state={state.entitlementType}
         setState={useUpdateStateCallback(setState, 'entitlementType')}
         options={entitlementTypeOptions}

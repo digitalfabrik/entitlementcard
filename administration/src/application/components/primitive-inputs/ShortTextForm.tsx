@@ -6,16 +6,14 @@ import { FormContext } from '../SteppedSubForms'
 
 export const MAX_SHORT_TEXT_LENGTH = 300
 
-export type ShortTextFormState = {
-  shortText: string
-}
+type State = { shortText: string }
 type ValidatedInput = ShortTextInput
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, AdditionalProps> = {
+const ShortTextForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { shortText: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ shortText }) => {
+  validate: ({ shortText }) => {
     if (shortText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (shortText.length > MAX_SHORT_TEXT_LENGTH)
       return {
@@ -27,7 +25,7 @@ const ShortTextForm: Form<ShortTextFormState, Options, ValidatedInput, Additiona
   Component: ({ state, setState, label, minWidth = 200 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = ShortTextForm.getValidatedInput(state)
+    const validationResult = ShortTextForm.validate(state)
     const isInvalid = validationResult.type === 'error'
 
     return (

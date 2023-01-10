@@ -1,12 +1,18 @@
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import CheckboxForm, { CheckboxFormState } from '../primitive-inputs/CheckboxForm'
+import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundValidate,
+  createCompoundInitialState,
+} from '../../compoundFormUtils'
 import { Button } from '@mui/material'
 import BasicDialog from '../BasicDialog'
 import { useState } from 'react'
 import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
 
-const acceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
+const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
   notCheckedErrorMessage: 'Um den Antrag zu senden, müssen Sie der Datenschutzverarbeitung zustimmen.',
 }
@@ -15,41 +21,25 @@ const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheck
   notCheckedErrorMessage: 'Diese Erklärung ist erforderlich.',
 }
 
-export type StepSendFormState = {
-  acceptedDataPrivacy: CheckboxFormState
-  givenInformationIsCorrectAndComplete: CheckboxFormState
+const SubForms = {
+  hasAcceptedDataPrivacy: CheckboxForm,
+  givenInformationIsCorrectAndComplete: CheckboxForm,
 }
+
+type State = CompoundState<typeof SubForms>
 type ValidatedInput = {
   hasAcceptedDataPrivacy: boolean
   givenInformationIsCorrectAndComplete: boolean
 }
 type Options = {}
 type AdditionalProps = { privacyPolicy: string }
-const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    acceptedDataPrivacy: CheckboxForm.initialState,
-    givenInformationIsCorrectAndComplete: CheckboxForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...CheckboxForm.getArrayBufferKeys(state.acceptedDataPrivacy),
-    ...CheckboxForm.getArrayBufferKeys(state.givenInformationIsCorrectAndComplete),
-  ],
-  getValidatedInput: state => {
-    const hasAcceptedDataPrivacy = CheckboxForm.getValidatedInput(state.acceptedDataPrivacy, acceptedDatePrivacyOptions)
-    const givenInformationIsCorrectAndComplete = CheckboxForm.getValidatedInput(
-      state.givenInformationIsCorrectAndComplete,
-      givenInformationIsCorrectAndCompleteOptions
-    )
-    if (hasAcceptedDataPrivacy.type === 'error' || givenInformationIsCorrectAndComplete.type === 'error')
-      return { type: 'error' }
-    return {
-      type: 'valid',
-      value: {
-        hasAcceptedDataPrivacy: hasAcceptedDataPrivacy.value,
-        givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndComplete.value,
-      },
-    }
-  },
+const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: createCompoundValidate(SubForms, {
+    hasAcceptedDataPrivacy: hasAcceptedDatePrivacyOptions,
+    givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
+  }),
   Component: ({ state, setState, privacyPolicy }) => {
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
@@ -68,12 +58,11 @@ const StepSendForm: Form<StepSendFormState, Options, ValidatedInput, AdditionalP
     return (
       <>
         <CheckboxForm.Component
-          state={state.acceptedDataPrivacy}
-          setState={useUpdateStateCallback(setState, 'acceptedDataPrivacy')}
-          options={acceptedDatePrivacyOptions}
+          state={state.hasAcceptedDataPrivacy}
+          setState={useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')}
+          options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
-
         <CheckboxForm.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}

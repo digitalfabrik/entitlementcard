@@ -4,14 +4,14 @@ import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-export type SelectFormState = { selectedText: string }
+type State = { selectedText: string }
 type ValidatedInput = ShortTextInput
 type Options = { items: string[] }
 type AdditionalProps = { label: string }
-const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps> = {
+const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { selectedText: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ selectedText }, options) => {
+  validate: ({ selectedText }, options) => {
     if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
     if (!options.items.includes(selectedText))
       return {
@@ -23,7 +23,7 @@ const SelectForm: Form<SelectFormState, Options, ValidatedInput, AdditionalProps
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = SelectForm.getValidatedInput(state, options)
+    const validationResult = SelectForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (

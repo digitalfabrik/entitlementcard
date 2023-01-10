@@ -1,47 +1,41 @@
 import { ApplicationInput, CardType } from '../../../generated/graphql'
 import { Form } from '../../FormType'
-import PersonalDataForm, { PersonalDataFormState } from './PersonalDataForm'
-import StepCardTypeForm, { StepCardTypeFormState } from './StepCardTypeForm'
-import StepRequirementsForm, { StepRequirementsFormState } from './StepRequirementsForm'
-import StepSendForm, { StepSendFormState } from './StepSendForm'
+import PersonalDataForm from './PersonalDataForm'
+import StepCardTypeForm from './StepCardTypeForm'
+import StepRequirementsForm from './StepRequirementsForm'
+import StepSendForm from './StepSendForm'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
 
 type RegionId = number
 
-export type ApplicationFormState = {
-  activeStep: number
-  stepPersonalData: PersonalDataFormState
-  stepCardType: StepCardTypeFormState
-  stepRequirements: StepRequirementsFormState
-  stepSend: StepSendFormState
+const SubForms = {
+  stepPersonalData: PersonalDataForm,
+  stepCardType: StepCardTypeForm,
+  stepRequirements: StepRequirementsForm,
+  stepSend: StepSendForm,
 }
+
+type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = {}
 type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
-const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, AdditionalProps> = {
+const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
+    ...createCompoundInitialState(SubForms),
     activeStep: 0,
-    stepPersonalData: PersonalDataForm.initialState,
-    stepCardType: StepCardTypeForm.initialState,
-    stepRequirements: StepRequirementsForm.initialState,
-    stepSend: StepSendForm.initialState,
   },
-  getArrayBufferKeys: state => [
-    ...PersonalDataForm.getArrayBufferKeys(state.stepPersonalData),
-    ...StepCardTypeForm.getArrayBufferKeys(state.stepCardType),
-    ...StepRequirementsForm.getArrayBufferKeys(state.stepRequirements),
-    ...StepSendForm.getArrayBufferKeys(state.stepSend),
-  ],
-  getValidatedInput: state => {
-    const personalData = PersonalDataForm.getValidatedInput(state.stepPersonalData)
-    const stepCardType = StepCardTypeForm.getValidatedInput(state.stepCardType)
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: state => {
+    const personalData = PersonalDataForm.validate(state.stepPersonalData)
+    const stepCardType = StepCardTypeForm.validate(state.stepCardType)
     if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
-    const stepRequirements = StepRequirementsForm.getValidatedInput(state.stepRequirements, {
+    const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
     })
-    const stepSend = StepSendForm.getValidatedInput(state.stepSend)
+    const stepSend = StepSendForm.validate(state.stepSend)
     if (stepRequirements.type === 'error' || stepSend.type === 'error') return { type: 'error' }
 
     return {
@@ -78,7 +72,7 @@ const ApplicationForm: Form<ApplicationFormState, Options, ValidatedInput, Addit
       state,
       setState,
       'stepRequirements',
-      { cardType: state.stepCardType.cardType },
+      { cardType: state.stepCardType.cardType.selectedValue },
       {}
     )
     const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, { privacyPolicy })

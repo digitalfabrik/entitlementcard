@@ -1,11 +1,11 @@
 import React from 'react'
 
-const SwitchComponent = ({
+const SwitchComponent = <T extends string>({
   children,
   value,
 }: {
-  children: { [key: string]: React.ReactElement | null }
-  value: string | null
+  children: { [key in T]: React.ReactElement | null }
+  value: T | null
 }) => {
   if (value === null) return null
   return children[value]

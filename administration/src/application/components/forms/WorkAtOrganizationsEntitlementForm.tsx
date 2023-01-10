@@ -1,10 +1,13 @@
 import { Alert, Button } from '@mui/material'
-import WorkAtOrganizationForm, { WorkAtOrganizationFormState } from './WorkAtOrganizationForm'
+import WorkAtOrganizationForm from './WorkAtOrganizationForm'
 import { SetState } from '../../useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
+import { InferState } from '../../compoundFormUtils'
+
+type WorkAtOrganizationFormState = InferState<typeof WorkAtOrganizationForm>
 
 const WorkAtOrganizationFormHelper = ({
   listKey,
@@ -37,20 +40,15 @@ function removeAt<T>(array: T[], index: number): T[] {
   return newArray
 }
 
-export type WorkAtOrganizationsEntitlementFormState = { key: number; value: WorkAtOrganizationFormState }[]
+type State = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type Options = {}
 type AdditionalProps = {}
-const WorkAtOrganizationsEntitlementForm: Form<
-  WorkAtOrganizationsEntitlementFormState,
-  Options,
-  ValidatedInput,
-  AdditionalProps
-> = {
+const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
-  getValidatedInput: state => {
-    const validationResults = state.map(({ value }) => WorkAtOrganizationForm.getValidatedInput(value))
+  validate: state => {
+    const validationResults = state.map(({ value }) => WorkAtOrganizationForm.validate(value))
     if (validationResults.some(({ type }) => type === 'error')) {
       return { type: 'error' }
     }

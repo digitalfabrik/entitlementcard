@@ -2,36 +2,32 @@ import { BlueCardEntitlementInput, CardType, GoldenCardEntitlementInput } from '
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import SwitchComponent from '../SwitchComponent'
-import BlueCardEntitlementForm, { BlueCardEntitlementFormState } from './BlueCardEntitlementForm'
-import GoldenCardEntitlementForm, { GoldenCardEntitlementFormState } from './GoldenCardEntitlementForm'
+import BlueCardEntitlementForm from './BlueCardEntitlementForm'
+import GoldenCardEntitlementForm from './GoldenCardEntitlementForm'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
 
-export type StepRequirementsFormState = {
-  blueCardEntitlement: BlueCardEntitlementFormState
-  goldenCardEntitlement: GoldenCardEntitlementFormState
+const SubForms = {
+  blueCardEntitlement: BlueCardEntitlementForm,
+  goldenCardEntitlement: GoldenCardEntitlementForm,
 }
+export type StepRequirementsFormState = CompoundState<typeof SubForms>
 type ValidatedInput =
   | { type: CardType.Blue; value: BlueCardEntitlementInput }
   | { type: CardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: CardType | null }
 type AdditionalProps = {}
 const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedInput, AdditionalProps> = {
-  initialState: {
-    blueCardEntitlement: BlueCardEntitlementForm.initialState,
-    goldenCardEntitlement: GoldenCardEntitlementForm.initialState,
-  },
-  getArrayBufferKeys: state => [
-    ...BlueCardEntitlementForm.getArrayBufferKeys(state.blueCardEntitlement),
-    ...GoldenCardEntitlementForm.getArrayBufferKeys(state.goldenCardEntitlement),
-  ],
-  getValidatedInput: (state, options) => {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: (state, options) => {
     switch (options.cardType) {
       case CardType.Blue: {
-        const blueCardEntitlement = BlueCardEntitlementForm.getValidatedInput(state.blueCardEntitlement)
+        const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
         if (blueCardEntitlement.type === 'error') return { type: 'error' }
         return { type: 'valid', value: { type: CardType.Blue, value: blueCardEntitlement.value } }
       }
       case CardType.Golden: {
-        const goldenCardEntitlement = GoldenCardEntitlementForm.getValidatedInput(state.goldenCardEntitlement)
+        const goldenCardEntitlement = GoldenCardEntitlementForm.validate(state.goldenCardEntitlement)
         if (goldenCardEntitlement.type === 'error') return { type: 'error' }
         return { type: 'valid', value: { type: CardType.Golden, value: goldenCardEntitlement.value } }
       }

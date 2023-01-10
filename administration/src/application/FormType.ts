@@ -3,7 +3,7 @@ import { SetState } from './useUpdateStateCallback'
 
 export type Form<State, Options extends {}, ValidatedInput, AdditionalProps extends {}> = {
   initialState: State
-  getValidatedInput: GetValidatedInput<State, Options, ValidatedInput>
+  validate: Validate<State, Options, ValidatedInput>
   getArrayBufferKeys: (state: State) => number[]
   Component: (props: Props<State, AdditionalProps, Options>) => ReactElement | null
 }
@@ -13,7 +13,7 @@ export type ValidationError = { type: 'error'; message?: string }
 export type ValidationResult<I> = ValidationError | ValidationSuccess<I>
 
 // Do not require an `options` parameter, if Options is an empty object.
-export type GetValidatedInput<State, Options, ValidatedInput> = {} extends Options
+export type Validate<State, Options, ValidatedInput> = {} extends Options
   ? (state: State, options?: Options) => ValidationResult<ValidatedInput>
   : (state: State, options: Options) => ValidationResult<ValidatedInput>
 

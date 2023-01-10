@@ -5,14 +5,14 @@ import { EmailInput } from '../../../generated/graphql'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 import { FormContext } from '../SteppedSubForms'
 
-export type EmailFormState = { email: string }
+type State = { email: string }
 type ValidatedInput = EmailInput
 type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> = {
+const EmailForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { email: '' },
   getArrayBufferKeys: () => [],
-  getValidatedInput: ({ email }) => {
+  validate: ({ email }) => {
     if (email === '') return { type: 'error', message: 'Feld ist erforderlich.' }
     if (email.length > MAX_SHORT_TEXT_LENGTH)
       return {
@@ -24,7 +24,7 @@ const EmailForm: Form<EmailFormState, Options, ValidatedInput, AdditionalProps> 
   Component: ({ state, setState, label, minWidth = 100 }) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = EmailForm.getValidatedInput(state)
+    const validationResult = EmailForm.validate(state)
 
     const isInvalid = validationResult.type === 'error'
 
