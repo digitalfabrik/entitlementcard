@@ -19,7 +19,7 @@ const Navigation = (props: Props) => {
         <Navbar.Heading>
           <NavLink to={'/'} style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
             <div style={{ flexDirection: 'column' }}>{config.name} Verwaltung</div>
-            {region === null ? null : (
+            {!region ? null : (
               <span>
                 {region.prefix} {region.name}
               </span>
