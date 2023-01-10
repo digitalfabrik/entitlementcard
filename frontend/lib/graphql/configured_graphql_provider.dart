@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ConfiguredGraphQlProvider extends StatelessWidget {
@@ -16,10 +16,24 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
           ErrorLink(
             onException: (Request request, NextLink forward, LinkException exception) {
               debugPrint(exception.toString());
+              final messengerState = ScaffoldMessenger.of(context);
+              messengerState.showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(exception.toString()),
+                ),
+              );
               return null;
             },
             onGraphQLError: (Request request, NextLink forward, Response response) {
               debugPrint(response.errors.toString());
+              final messengerState = ScaffoldMessenger.of(context);
+              messengerState.showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(response.errors.toString()),
+                ),
+              );
               return null;
             },
           ),

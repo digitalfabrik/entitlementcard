@@ -7,6 +7,8 @@ import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 
+import '../graphql/configured_graphql_provider.dart';
+
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
@@ -54,21 +56,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return HomePageData(
-      navigateToMapTab: _navigateToMapTab,
-      child: Scaffold(
-        body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _currentTabIndex == mapTabIndex
-            ? FloatingActionMapBar(
-                bringCameraToUser: (position) async {
-                  await mapPageController?.bringCameraToUser(position);
-                },
-                selectedAcceptingStoreId: selectedAcceptingStoreId,
-              )
-            // Returning a Container() instead of null avoids animations
-            : Container(),
-        bottomNavigationBar: _buildBottomNavigationBar(context),
+    return ConfiguredGraphQlProvider(
+      child: HomePageData(
+        navigateToMapTab: _navigateToMapTab,
+        child: Scaffold(
+          body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: _currentTabIndex == mapTabIndex
+              ? FloatingActionMapBar(
+                  bringCameraToUser: (position) async {
+                    await mapPageController?.bringCameraToUser(position);
+                  },
+                  selectedAcceptingStoreId: selectedAcceptingStoreId,
+                )
+              // Returning a Container() instead of null avoids animations
+              : Container(),
+          bottomNavigationBar: _buildBottomNavigationBar(context),
+        ),
       ),
     );
   }
