@@ -3,7 +3,7 @@ import Navigation from './components/Navigation'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import CreateCardsController from './components/create-cards/CreateCardsController'
 import styled from 'styled-components'
-import RegionProvider from './RegionProvider'
+import WhoAmIProvider from './WhoAmIProvider'
 import { AuthContext } from './AuthProvider'
 import Login from './components/auth/Login'
 import KeepAliveToken from './KeepAliveToken'
@@ -40,14 +40,14 @@ const Router = () => {
             authData === null || authData.expiry <= new Date() ? (
               <Login onSignIn={signIn} />
             ) : (
-              <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-                <RegionProvider>
+              <WhoAmIProvider>
+                <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
                   <Navigation onSignOut={signOut} />
                   <Main>
                     <Routes>
                       {projectConfig.applicationFeatureEnabled ? (
                         <>
-                          <Route path={'/applications'} element={<ApplicationsController token={authData.token} />} />
+                          <Route path={'/applications'} element={<ApplicationsController />} />
                           {/*Currently, '/region' only allows to set the data privacy text for the application form*/}
                           <Route path={'/region'} element={<RegionsController />} />
                         </>
@@ -58,8 +58,8 @@ const Router = () => {
                       <Route path={'*'} element={<HomeController />} />
                     </Routes>
                   </Main>
-                </RegionProvider>
-              </KeepAliveToken>
+                </KeepAliveToken>
+              </WhoAmIProvider>
             )
           }
         />

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Icon } from '@blueprintjs/core'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
 import styled from 'styled-components'
+import { AuthContext } from '../../AuthProvider'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string
@@ -43,20 +44,16 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   }
 `
 
-const JsonFieldView = (props: {
-  jsonField: GeneralJsonField
-  baseUrl: string
-  token: string
-  hierarchyIndex: number
-}) => {
+const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; hierarchyIndex: number }) => {
   const appToaster = useAppToaster()
+  const token = useContext(AuthContext).data?.token
+
   switch (props.jsonField.type) {
     case 'Array':
       const children = props.jsonField.value.map((jsonField: GeneralJsonField, index: number) => (
         <JsonFieldView
           jsonField={jsonField}
           baseUrl={props.baseUrl}
-          token={props.token}
           key={index}
           hierarchyIndex={props.hierarchyIndex + 1}
         />
@@ -114,7 +111,7 @@ const JsonFieldView = (props: {
           isCloseButtonShown: false,
         })
         try {
-          const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${props.token}` } })
+          const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
           const contentType = result.headers.get('content-type')
           if (result.status !== 200) {
             throw Error('Status Code is not OK')

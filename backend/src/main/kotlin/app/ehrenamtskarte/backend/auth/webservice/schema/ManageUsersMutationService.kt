@@ -41,7 +41,7 @@ class ManageUsersMutationService {
         val projectConfig = context.backendConfiguration.projects.first { it.id == project }
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
 
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
             val region = regionId?.let { RegionEntity.findById(it) }
@@ -85,7 +85,7 @@ class ManageUsersMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
@@ -119,7 +119,7 @@ class ManageUsersMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
 

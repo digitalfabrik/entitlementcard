@@ -2,8 +2,7 @@ import React, { useContext } from 'react'
 import { Button, Navbar } from '@blueprintjs/core'
 import { NavLink } from 'react-router-dom'
 import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment'
-import { RegionContext } from '../RegionProvider'
-import { AuthContext } from '../AuthProvider'
+import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
@@ -13,15 +12,14 @@ interface Props {
 
 const Navigation = (props: Props) => {
   const config = useContext(ProjectConfigContext)
-  const region = useContext(RegionContext)
-  const role = useContext(AuthContext).data?.administrator.role
+  const { region, role } = useContext(WhoAmIContext).me!
   return (
     <Navbar style={{ height: 'auto' }}>
       <Navbar.Group>
         <Navbar.Heading>
           <NavLink to={'/'} style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
             <div style={{ flexDirection: 'column' }}>{config.name} Verwaltung</div>
-            {region === null ? null : (
+            {!region ? null : (
               <span>
                 {region.prefix} {region.name}
               </span>
