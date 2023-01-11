@@ -1,10 +1,7 @@
 package app.ehrenamtskarte.backend
 
 import app.ehrenamtskarte.backend.common.database.Database
-import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
-import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.SHOWCASE_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.stores.importer.Importer
@@ -32,35 +29,10 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
-    private val smtpUsernameEakBayern by option()
-    private val smtpPasswordEakBayern by option()
-    private val smtpUsernameNuernbergPass by option()
-    private val smtpPasswordNuernbergPass by option()
-    private val smtpUsernameShowcase by option()
-    private val smtpPasswordShowcase by option()
-
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(config)
 
         currentContext.obj = backendConfiguration.copy(
-            projects = backendConfiguration.projects.map { project ->
-                project.copy(
-                    smtp = project.smtp.copy(
-                        username = when (project.id) {
-                            EAK_BAYERN_PROJECT -> smtpUsernameEakBayern
-                            NUERNBERG_PASS_PROJECT -> smtpUsernameNuernbergPass
-                            SHOWCASE_PROJECT -> smtpUsernameShowcase
-                            else -> null
-                        } ?: project.smtp.username,
-                        password = when (project.id) {
-                            EAK_BAYERN_PROJECT -> smtpPasswordEakBayern
-                            NUERNBERG_PASS_PROJECT -> smtpPasswordNuernbergPass
-                            SHOWCASE_PROJECT -> smtpPasswordShowcase
-                            else -> null
-                        } ?: project.smtp.password
-                    )
-                )
-            },
             production = production ?: backendConfiguration.production,
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
