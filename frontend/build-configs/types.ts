@@ -54,6 +54,10 @@ export type CommonBuildConfigType = {
     categories: number[]
     featureFlags: FeatureFlagsType
     applicationUrl: string,
+    dataPrivacyPolicyUrl: string,
+    publisherAddress: string
+    publisherText: string
+    disclaimerText: string
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
