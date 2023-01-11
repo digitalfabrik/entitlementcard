@@ -23,18 +23,19 @@ VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
     qrcode = QrCode.fromBuffer(base64Decoder.convert(rawBase64Content));
   } on Exception catch (e, stackTrace) {
     throw VerificationParseException(
-      internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
+      internalMessage: "Failed to parse QrCode from base64 encoded data. "
           "Message: ${e.toString()}",
       cause: e,
       stackTrace: stackTrace,
     );
   }
 
-  if (!qrcode.hasDynamicVerify()) {
+  // TODO: Allow to parse and verify StaticVerifyCodes.
+  if (!qrcode.hasDynamicActivationCode()) {
     throw QrCodeWrongTypeException();
   }
 
-  final DynamicVerifyCode verifyCode = qrcode.dynamicVerify;
+  final DynamicVerifyCode verifyCode = qrcode.dynamicVerifyCode;
 
   // TODO (Max): Duplicate code to identification_qr_content_parser.dart
   final cardInfo = verifyCode.info;

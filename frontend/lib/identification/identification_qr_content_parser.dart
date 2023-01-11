@@ -42,11 +42,11 @@ class IdentificationQrContentParser {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
 
-    if (!qrcode.hasActivation()) {
+    if (!qrcode.hasDynamicActivationCode()) {
       throw QrCodeWrongTypeException();
     }
 
-    final DynamicActivationCode activationCode = qrcode.activation;
+    final DynamicActivationCode activationCode = qrcode.dynamicActivationCode;
 
     final cardInfo = activationCode.info;
     if (!cardInfo.hasFullName()) {

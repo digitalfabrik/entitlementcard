@@ -78,7 +78,7 @@ Ihre digitale Ehrenamtskarte ist da!`,
     new QrCode({
       qrCode: {
         value: activationCode,
-        case: 'activation',
+        case: 'dynamicActivationCode',
       },
     }).toBinary()
   )
