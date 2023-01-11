@@ -9,15 +9,11 @@ import {
 } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { Region } from '../generated/graphql'
+import { bavaria_card_type, Extension, ExtensionHolder, region_extension, RegionState } from './extensions'
 
 const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
 const TOTP_SECRET_LENGTH = 20
 const PEPPER_LENGTH = 16
-
-export enum BavariaCardTypeBlueprint {
-  standard = 'Standard',
-  gold = 'Goldkarte',
-}
 
 /**
  * Blueprint for a new card. This object contains data about a future card, which will be created.
@@ -25,19 +21,19 @@ export enum BavariaCardTypeBlueprint {
 export class CardBlueprint {
   fullName: string
   expirationDate: Date | null
-  cardType: BavariaCardTypeBlueprint // FIXME
+  extension_states: ExtensionHolder<any>[]
 
-  constructor(fullName: string, expirationDate: Date | null, cardType: BavariaCardTypeBlueprint) {
+  constructor(fullName: string, expirationDate: Date | null, extension_states: ExtensionHolder<any>[]) {
     this.fullName = fullName
     this.expirationDate = expirationDate
-    this.cardType = cardType
+    this.extension_states = extension_states
   }
 
-  hasInfiniteLifetime() {
-    return this.cardType == BavariaCardTypeBlueprint.gold
+  hasInfiniteLifetime(): boolean {
+    return !!this.extension_states.find(state => state.extension.causesInfiniteLifetime(state))
   }
 
-  isValid() {
+  isValid(): boolean {
     return (
       (isNameValid(this.fullName) &&
         this.expirationDate !== null &&
@@ -47,10 +43,11 @@ export class CardBlueprint {
     )
   }
 
-  generateActivationCode = (region: Region): DynamicActivationCode => {
-    if (!window.isSecureContext)
+  generateActivationCode = (): DynamicActivationCode => {
+    if (!window.isSecureContext) {
       // localhost is considered secure.
       throw Error('Environment is not considered secure nor are we using Internet Explorer.')
+    }
     const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
     crypto.getRandomValues(pepper)
 
@@ -62,22 +59,17 @@ export class CardBlueprint {
 
     const expirationDate = this.expirationDate
 
+    let extension_message = {}
+
+    for (const state of this.extension_states) {
+      state.extension.setProtobufData(state, extension_message)
+    }
+
     return new DynamicActivationCode({
       info: new CardInfo({
         fullName: this.fullName,
         expirationDay: expirationDate !== null ? dateToDaysSinceEpoch(expirationDate) : undefined,
-        extensions: new CardExtensions({
-          extensionRegion: new RegionExtension({
-            regionId: region.id,
-          }),
-          extensionBavariaCardType: new BavariaCardTypeExtension({
-            // FIXME
-            cardType:
-              this.cardType === BavariaCardTypeBlueprint.gold
-                ? GraphQLBavariaCardType.GOLD
-                : GraphQLBavariaCardType.STANDARD,
-          }),
-        }),
+        extensions: new CardExtensions(extension_message),
       }),
       pepper: pepper,
       totpSecret: totpSecret,
@@ -89,9 +81,16 @@ export const isNameValid = (value: string) => value.length > 0 && value.length <
 
 export const isExpirationDateValid = (value: Date | null) => value !== null && value > new Date()
 
-export const createEmptyCard = (): CardBlueprint =>
-  new CardBlueprint(
-    '',
-    add(Date.now(), { years: 2 }),
-    BavariaCardTypeBlueprint.standard // FIXME
-  )
+export const createEmptyCard = (region: Region): CardBlueprint =>
+  new CardBlueprint('', add(Date.now(), { years: 2 }), [
+    {
+      state: bavaria_card_type.initialState,
+      extension: bavaria_card_type,
+    },
+    {
+      state: {
+        region_id: region.id,
+      },
+      extension: region_extension,
+    },
+  ])

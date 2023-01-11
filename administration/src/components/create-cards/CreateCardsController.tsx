@@ -36,7 +36,7 @@ const CreateCardsController = () => {
     try {
       setState(CardActivationState.loading)
       const activationCodes = cardBlueprints.map(cardBlueprint => {
-        return cardBlueprint.generateActivationCode(region)
+        return cardBlueprint.generateActivationCode()
       })
 
       await activateCards(client, activationCodes, region)
@@ -70,7 +70,14 @@ const CreateCardsController = () => {
     }
   }
   if (state === CardActivationState.input) {
-    return <CreateCardsForm cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} confirm={confirm} />
+    return (
+      <CreateCardsForm
+        region={region}
+        cardBlueprints={cardBlueprints}
+        setCardBlueprints={setCardBlueprints}
+        confirm={confirm}
+      />
+    )
   } else if (state === CardActivationState.loading) {
     return <Spinner />
   } else {

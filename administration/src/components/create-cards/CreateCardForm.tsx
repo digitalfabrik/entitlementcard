@@ -4,7 +4,7 @@ import { ItemRenderer, Select } from '@blueprintjs/select'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 import styled from 'styled-components'
-import { BavariaCardTypeBlueprint, CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import { add } from 'date-fns'
 
 const CardHeader = styled.div`
@@ -14,23 +14,6 @@ const CardHeader = styled.div`
   display: flex;
   justify-content: right;
 `
-
-const CardTypeSelect = Select.ofType<BavariaCardTypeBlueprint>()
-
-const renderCardType: ItemRenderer<BavariaCardTypeBlueprint> = (cardType, { handleClick, modifiers }) => {
-  if (!modifiers.matchesPredicate) {
-    return null
-  }
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={cardType}
-      key={cardType}
-      onClick={handleClick}
-    />
-  )
-}
 
 interface Props {
   cardBlueprint: CardBlueprint
@@ -59,7 +42,7 @@ const CreateCardForm = (props: Props) => {
         <FormGroup label='Ablaufdatum'>
           <DateInput
             placeholder='Ablaufdatum'
-            disabled={props.cardBlueprint.cardType === BavariaCardTypeBlueprint.gold}
+            // TODO: disabled={props.cardBlueprint.cardType === BavariaCardTypeBlueprint.gold}
             value={props.cardBlueprint.expirationDate}
             parseDate={str => new Date(str)}
             onChange={value => {
@@ -71,21 +54,6 @@ const CreateCardForm = (props: Props) => {
             minDate={new Date()}
             fill={true}
           />
-        </FormGroup>
-        <FormGroup label='Typ der Karte'>
-          <CardTypeSelect
-            items={Object.values(BavariaCardTypeBlueprint)}
-            onItemSelect={value => {
-              props.cardBlueprint.cardType = value
-              if (props.cardBlueprint.cardType == BavariaCardTypeBlueprint.gold) {
-                props.cardBlueprint.expirationDate = null
-              }
-              props.onUpdate()
-            }}
-            itemRenderer={renderCardType}
-            filterable={false}>
-            <Button text={props.cardBlueprint.cardType} rightIcon='caret-down' />
-          </CardTypeSelect>
         </FormGroup>
       </Card>
     </div>

@@ -6,6 +6,7 @@ import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
 import { usePrompt } from '../../util/blocker-prompt'
+import { Region } from '../../generated/graphql'
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
@@ -41,14 +42,15 @@ const FormColumn = styled.div`
 `
 
 interface Props {
+  region: Region
   cardBlueprints: CardBlueprint[]
   setCardBlueprints: (blueprints: CardBlueprint[]) => void
   confirm: () => void
 }
 
 const CreateCardsForm = (props: Props) => {
-  const { cardBlueprints, setCardBlueprints } = props
-  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard()])
+  const { cardBlueprints, setCardBlueprints, region } = props
+  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard(region)])
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
   }
