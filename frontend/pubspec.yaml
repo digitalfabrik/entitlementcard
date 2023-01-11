@@ -101,11 +101,14 @@ flutter:
   assets:
     - assets/category_icons/
     - assets/detail_headers/
-    - assets/eak-lettering.svg
-    - assets/wappen-bavaria.png
     - assets/app_icon/
     - assets/icon/
     - assets/intro_slides/
+    - assets/bayern/header-logo.png
+    - assets/bayern/body-logo.png
+    - assets/nuernberg/header-logo.png
+    - assets/nuernberg/body-logo.jpeg
+    - assets/nuernberg/background.png
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card/eak_card.dart';
+import 'package:ehrenamtskarte/identification/card/card_content.dart';
 import 'package:ehrenamtskarte/identification/card/id_card.dart';
 import 'package:ehrenamtskarte/verification/dialogs/verification_result_dialog.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class PositiveVerificationResultDialog extends StatelessWidget {
           icon: Icons.verified_user,
           iconColor: Colors.green,
           child: IdCard(
-            child: EakCard(
+            child: CardContent(
               cardDetails: cardDetails,
               region: region != null ? Region(region.prefix, region.name) : null,
             ),
