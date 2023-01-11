@@ -43,6 +43,7 @@ export const bayernCommon: CommonBuildConfigType = {
         colorPremium: "#cab374",
         boxDecorationRadius: 1,
     },
+    iconInAboutTab: "assets/bayern/body-logo.png",
     featureFlags: {},
     applicationUrl: "https://bayern.ehrenamtskarte.app/apply-for-eak",
 };

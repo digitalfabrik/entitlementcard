@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
 import 'package:ehrenamtskarte/about/texts.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class AboutPage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: const Image(
-                    image: AssetImage("assets/icon/icon.png"),
+                  child: Image(
+                    image: AssetImage(buildConfig.iconInAboutTab),
                     height: 100.0,
                     width: 100.0,
                     fit: BoxFit.cover,

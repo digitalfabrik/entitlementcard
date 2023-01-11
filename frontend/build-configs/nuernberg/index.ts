@@ -1,7 +1,7 @@
 import BuildConfigType, {CommonBuildConfigType} from "../types";
 
 export const nuernbergCommon: CommonBuildConfigType = {
-    appName: "Sozialpass",
+    appName: "Nürnberg-Pass",
     appIcon: "app_icon_nuernberg",
     projectId: {
         production: "nuernberg.sozialpass.app",
@@ -21,7 +21,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
-        local: "http://localhost:7000",
+        local: "http://localhost:8000",
     },
     cardBranding: {
         headerTextColor: "#000000",
@@ -33,7 +33,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogoPadding: 0,
         headerContainerPadding: {top: 0, right: 24, bottom: 0, left: 16},
         bodyContainerPadding: {top: 0, right: 24, bottom: 24, left: 16},
-        bodyLogo: "assets/nuernberg/body-logo.jpeg",
+        bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLabel: "Nürnberg-Pass",
         bodyTextColor: "#000000",
@@ -43,6 +43,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         colorPremium: "#F9B787",
         boxDecorationRadius: 0,
     },
+    iconInAboutTab: "assets/nuernberg/body-logo.png",
     featureFlags: {},
     applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
 };

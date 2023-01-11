@@ -49,6 +49,7 @@ export type CommonBuildConfigType = {
         bodyBackgroundImageUrl: string
         boxDecorationRadius: number,
     }
+    iconInAboutTab: string
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
