@@ -32,8 +32,11 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
+    private val smtpUsernameEakBayern by option()
     private val smtpPasswordEakBayern by option()
+    private val smtpUsernameNuernbergPass by option()
     private val smtpPasswordNuernbergPass by option()
+    private val smtpUsernameShowcase by option()
     private val smtpPasswordShowcase by option()
 
     override fun run() {
@@ -43,6 +46,12 @@ class Entry : CliktCommand() {
             projects = backendConfiguration.projects.map { project ->
                 project.copy(
                     smtp = project.smtp.copy(
+                        username = when (project.id) {
+                            EAK_BAYERN_PROJECT -> smtpUsernameEakBayern
+                            NUERNBERG_PASS_PROJECT -> smtpUsernameNuernbergPass
+                            SHOWCASE_PROJECT -> smtpUsernameShowcase
+                            else -> null
+                        } ?: project.smtp.username,
                         password = when (project.id) {
                             EAK_BAYERN_PROJECT -> smtpPasswordEakBayern
                             NUERNBERG_PASS_PROJECT -> smtpPasswordNuernbergPass
