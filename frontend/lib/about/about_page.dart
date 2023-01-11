@@ -57,8 +57,8 @@ class AboutPage extends StatelessWidget {
                       child: Text("Herausgeber", style: Theme.of(context).textTheme.subtitle2),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Text(publisherAddress, style: Theme.of(context).textTheme.bodyText1),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
+                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyText1),
                     ),
                     Text(
                       "Mehr Informationen",
@@ -73,7 +73,7 @@ class AboutPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  AppRoute(
                     builder: (context) => ContentPage(title: "Herausgeber", children: getPublisherText(context)),
                   ),
                 );
@@ -84,14 +84,14 @@ class AboutPage extends StatelessWidget {
               thickness: 1,
             ),
             ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
-            ContentTile(
-              icon: Icons.privacy_tip_outlined,
-              title: "Datenschutzerklärung",
-              children: getDataPrivacyText(context),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: const Text("Datenschutzerklärung"),
+              onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
             ),
             ContentTile(
               icon: Icons.info_outline,
-              title: "Haftung, Haftungsausschluss und Disclaimer",
+              title: "Haftung, Haftungsausschluss und Impressum",
               children: getDisclaimerText(context),
             ),
             ListTile(
