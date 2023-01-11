@@ -41,7 +41,6 @@ class App extends StatelessWidget {
             final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;
 
             return MaterialApp(
-              title: 'Ehrenamtskarte',
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: ThemeMode.system,
