@@ -28,6 +28,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation("org.apache.commons:commons-text:1.10.0")
+    implementation("org.simplejavamail:simple-java-mail:7.6.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.2.5")
     implementation("com.graphql-java:graphql-java-extended-scalars:20.0")
