@@ -6,13 +6,13 @@ Color textColor = getColorFromHex(buildConfig.cardBranding.headerTextColor);
 int fontSize = buildConfig.cardBranding.headerTextFontSize;
 double logoPadding = buildConfig.cardBranding.headerLogoPadding.toDouble();
 
-class EakCardHeaderLogo extends StatelessWidget {
+class CardHeaderLogo extends StatelessWidget {
   final String title;
   final Image? logo;
   final double scaleFactor;
   final CrossAxisAlignment alignment;
 
-  const EakCardHeaderLogo({
+  const CardHeaderLogo({
     super.key,
     required this.title,
     this.logo,

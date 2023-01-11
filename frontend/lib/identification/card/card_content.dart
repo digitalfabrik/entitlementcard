@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card/eak_card_header_logo.dart';
+import 'package:ehrenamtskarte/identification/card/card_header_logo.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -47,11 +47,11 @@ class Region with EquatableMixin {
   List<Object> get props => [prefix, name];
 }
 
-class EakCard extends StatelessWidget {
+class CardContent extends StatelessWidget {
   final BaseCardDetails cardDetails;
   final Region? region;
 
-  const EakCard({super.key, required this.cardDetails, this.region});
+  const CardContent({super.key, required this.cardDetails, this.region});
 
   String get _formattedExpirationDate {
     final expirationDate = cardDetails.expirationDate;
@@ -65,7 +65,7 @@ class EakCard extends StatelessWidget {
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
-        final headerTitle = currentRegion != null
+        final headerLeftTitle = currentRegion != null
             ? "${currentRegion.prefix} ${currentRegion.name}"
             : buildConfig.cardBranding.headerTitleLeft;
         return Column(
@@ -88,14 +88,14 @@ class EakCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child: EakCardHeaderLogo(
-                          title: headerTitle,
+                        child: CardHeaderLogo(
+                          title: headerLeftTitle,
                           scaleFactor: scaleFactor,
                           alignment: CrossAxisAlignment.start,
                         ),
                       ),
                       Flexible(
-                        child: EakCardHeaderLogo(
+                        child: CardHeaderLogo(
                           title: buildConfig.cardBranding.headerTitleRight,
                           scaleFactor: scaleFactor,
                           logo: Image(image: AssetImage(buildConfig.cardBranding.headerLogo), fit: BoxFit.contain),

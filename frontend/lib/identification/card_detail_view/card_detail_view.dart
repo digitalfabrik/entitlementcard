@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/card/eak_card.dart';
+import 'package:ehrenamtskarte/identification/card/card_content.dart';
 import 'package:ehrenamtskarte/identification/card/id_card.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/verification_qr_code_view.dart';
@@ -42,7 +42,7 @@ class CardDetailView extends StatelessWidget {
         final eakCard = Padding(
           padding: const EdgeInsets.all(8.0),
           child: IdCard(
-            child: EakCard(
+            child: CardContent(
               cardDetails: cardDetails,
               region: region != null ? Region(region.prefix, region.name) : null,
             ),
