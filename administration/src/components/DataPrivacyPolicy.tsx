@@ -12,6 +12,7 @@ const Container = styled.div`
 const Title = styled.h1`
   margin: 10px;
   text-align: center;
+  font-size: 1.5rem;
 `
 
 const DataPrivacyPolicy = (): ReactElement => (
