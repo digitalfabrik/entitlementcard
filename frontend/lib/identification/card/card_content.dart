@@ -118,7 +118,6 @@ class CardContent extends StatelessWidget {
                         )
                       : null,
                   gradient: RadialGradient(
-                    center: const Alignment(-0.5, -0.6),
                     colors: [cardColor.withAlpha(100), cardColor],
                     radius: buildConfig.cardBranding.boxDecorationRadius.toDouble(),
                   ),
