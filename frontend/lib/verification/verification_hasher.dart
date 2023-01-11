@@ -7,7 +7,7 @@ import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/verification/verification_card_details.dart';
 
 String hashVerificationCardDetails(VerificationCardDetails verificationCardDetails) {
-  final hasher = Hmac(sha256, const Base64Decoder().convert(verificationCardDetails.cardDetails.hashSecretBase64));
+  final hasher = Hmac(sha256, verificationCardDetails.cardDetails.pepper);
 
   final byteList = cardDetailsToBinary(verificationCardDetails.cardDetails);
   final result = hasher.convert(byteList);

@@ -18,7 +18,7 @@ void _assertConsistentCardDetails(VerificationCardDetails verCardDetails) {
     // FIXME: Insecure index comparision
     throw QrCodeFieldMissingException("expirationDate");
   }
-  if (baseCardDetails.hashSecretBase64.isEmpty) {
+  if (baseCardDetails.pepper.isEmpty) {
     throw QrCodeFieldMissingException("hashSecretBase64");
   }
   final expirationDate = baseCardDetails.expirationDate;

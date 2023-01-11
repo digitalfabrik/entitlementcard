@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
@@ -15,7 +16,7 @@ import 'package:provider/provider.dart';
 // for testing, so this is intended
 final validEakDetails = CardDetails(
   "Jane Doe",
-  "aGVsbG8gdGhpcyBpcyBhIHRlc3Q=",
+  const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
   1677542400,
   CardType.standard,
   42,
