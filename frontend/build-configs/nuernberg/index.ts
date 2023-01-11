@@ -10,8 +10,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     categories: [],
     theme: {
-        primaryColor: "#123456",
-        secondaryColor: "#123456"
+        primaryLight: "#D88C51",
+        primaryDark: "#F9B787"
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
@@ -38,7 +38,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         bodyLabel: "Nürnberg-Pass",
         bodyTextColor: "#000000",
         bodyBackgroundImage: true,
-        bodyBackgroundImageUrl:"assets/nuernberg/background.png",
+        bodyBackgroundImageUrl: "assets/nuernberg/background.png",
         colorStandard: "#F9B787",
         colorPremium: "#F9B787",
         boxDecorationRadius: 0,

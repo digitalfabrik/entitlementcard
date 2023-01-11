@@ -10,8 +10,8 @@ export const bayernCommon: CommonBuildConfigType = {
     },
     categories: [1, 2, 3],
     theme: {
-        primaryColor: "#123456",
-        secondaryColor: "#123456"
+        primaryLight: "#5f5384",
+        primaryDark: "#8377A9"
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/bayern.ehrenamtskarte.app/map",
