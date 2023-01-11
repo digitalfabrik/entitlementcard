@@ -87,12 +87,19 @@ class EakCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(child: EakCardHeaderLogo(title: headerTitle, scaleFactor: scaleFactor)),
+                      Flexible(
+                        child: EakCardHeaderLogo(
+                          title: headerTitle,
+                          scaleFactor: scaleFactor,
+                          alignment: CrossAxisAlignment.start,
+                        ),
+                      ),
                       Flexible(
                         child: EakCardHeaderLogo(
                           title: buildConfig.cardBranding.headerTitleRight,
                           scaleFactor: scaleFactor,
                           logo: Image(image: AssetImage(buildConfig.cardBranding.headerLogo), fit: BoxFit.contain),
+                          alignment: CrossAxisAlignment.center,
                         ),
                       ),
                     ],
