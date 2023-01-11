@@ -36,7 +36,7 @@ dependencies:
   url_launcher: ^6.1.6
   flutter_svg: ^1.1.4
   package_info_plus: ^1.4.3+1 # for about dialog
-  qr_code_scanner: ^1.0.1
+  mobile_scanner: ^2.1.0
   flutter_secure_storage: ^6.0.0
   infinite_scroll_pagination: ^3.2.0
   geolocator: ^9.0.1

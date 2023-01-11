@@ -12,19 +12,17 @@ class IdentificationQrScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          const NavigationBar(
-            title: "Karte hinzufügen",
+    return Column(
+      children: [
+        const NavigationBar(
+          title: "Karte hinzufügen",
+        ),
+        Expanded(
+          child: QrCodeScannerPage(
+            onCodeScanned: (code) async => _onCodeScanned(context, code),
           ),
-          Expanded(
-            child: QrCodeScannerPage(
-              onCodeScanned: (code) async => _onCodeScanned(context, code),
-            ),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 

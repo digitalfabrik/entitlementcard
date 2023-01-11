@@ -48,7 +48,8 @@
             "args": [
                 "flutter",
                 "run",
-                "--dart-define=environment=local"
+                "--dart-define=environment=local",
+                "--flavor=Bayern"
             ],
             "problemMatcher": [
                 "$gradle"
