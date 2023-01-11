@@ -20,15 +20,30 @@ projects:
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
     timezone: "Europe/Berlin"
+    smtp:
+      host: mail.ehrenamtskarte.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
   - id: nuernberg.sozialpass.app
     importUrl: https://example.com
     pipelineName: SozialpassNuernberg
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
     pipelineName: BerechtigungskarteShowcase
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
     timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG

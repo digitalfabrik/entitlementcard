@@ -29,7 +29,6 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
-
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(config)
 
