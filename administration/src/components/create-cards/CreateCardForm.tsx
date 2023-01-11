@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { Button, Card, FormGroup, InputGroup, MenuItem } from '@blueprintjs/core'
 import { ItemRenderer, Select } from '@blueprintjs/select'
 import { DateInput } from '@blueprintjs/datetime'
@@ -6,6 +6,7 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
 import styled from 'styled-components'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { add } from 'date-fns'
+import { ExtensionHolder } from '../../cards/extensions'
 
 const CardHeader = styled.div`
   margin: -20px -20px 20px -20px;
@@ -21,7 +22,18 @@ interface Props {
   onRemove: () => void
 }
 
+const ExtensionForm = (props: { holder: ExtensionHolder<any>; onUpdate: () => void }) => {
+  const holder = props.holder
+
+  return holder.extension.createForm(holder.state, state => {
+    holder.state = state
+    props.onUpdate()
+  })
+}
+
 const CreateCardForm = (props: Props) => {
+  const cardBlueprint = props.cardBlueprint
+  console.log(cardBlueprint.hasInfiniteLifetime())
   return (
     <div>
       <Card>
@@ -32,9 +44,9 @@ const CreateCardForm = (props: Props) => {
           <InputGroup
             placeholder='Erika Mustermann'
             autoFocus
-            value={props.cardBlueprint.fullName}
+            value={cardBlueprint.fullName}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              props.cardBlueprint.fullName = event.target.value
+              cardBlueprint.fullName = event.target.value
               props.onUpdate()
             }}
           />
@@ -42,11 +54,11 @@ const CreateCardForm = (props: Props) => {
         <FormGroup label='Ablaufdatum'>
           <DateInput
             placeholder='Ablaufdatum'
-            // TODO: disabled={props.cardBlueprint.cardType === BavariaCardTypeBlueprint.gold}
-            value={props.cardBlueprint.expirationDate}
+            disabled={cardBlueprint.hasInfiniteLifetime()}
+            value={cardBlueprint.expirationDate}
             parseDate={str => new Date(str)}
             onChange={value => {
-              props.cardBlueprint.expirationDate = value
+              cardBlueprint.expirationDate = value
               props.onUpdate()
             }}
             formatDate={date => date.toLocaleDateString()}
@@ -55,6 +67,9 @@ const CreateCardForm = (props: Props) => {
             fill={true}
           />
         </FormGroup>
+        {cardBlueprint.extensionHolders.map((holder, i) => (
+          <ExtensionForm key={i} holder={holder} onUpdate={props.onUpdate} />
+        ))}
       </Card>
     </div>
   )

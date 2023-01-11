@@ -55,7 +55,7 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
   },
 
   causesInfiniteLifetime(state: BavariaCardTypeState): boolean {
-    return state == BavariaCardTypeState.gold
+    return state === BavariaCardTypeState.gold
   },
 
   createForm(state: BavariaCardTypeState, setState: (state: BavariaCardTypeState) => void): React.ReactElement | null {
@@ -80,12 +80,12 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
       <FormGroup label='Typ der Karte'>
         <CardTypeSelect
           items={Object.values(BavariaCardTypeState)}
+          activeItem={state}
           onItemSelect={value => {
-            state = value
             // TODO: if (state == BavariaCardTypeState.gold) {
             //  state.expirationDate = null
             //}
-            setState(state)
+            setState(value)
           }}
           itemRenderer={renderCardType}
           filterable={false}>

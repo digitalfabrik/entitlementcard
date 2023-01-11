@@ -21,16 +21,16 @@ const PEPPER_LENGTH = 16
 export class CardBlueprint {
   fullName: string
   expirationDate: Date | null
-  extension_states: ExtensionHolder<any>[]
+  extensionHolders: ExtensionHolder<any>[]
 
   constructor(fullName: string, expirationDate: Date | null, extension_states: ExtensionHolder<any>[]) {
     this.fullName = fullName
     this.expirationDate = expirationDate
-    this.extension_states = extension_states
+    this.extensionHolders = extension_states
   }
 
   hasInfiniteLifetime(): boolean {
-    return !!this.extension_states.find(state => state.extension.causesInfiniteLifetime(state))
+    return !!this.extensionHolders.find(state => state.extension.causesInfiniteLifetime(state.state))
   }
 
   isValid(): boolean {
@@ -61,7 +61,7 @@ export class CardBlueprint {
 
     let extension_message = {}
 
-    for (const state of this.extension_states) {
+    for (const state of this.extensionHolders) {
       state.extension.setProtobufData(state, extension_message)
     }
 
