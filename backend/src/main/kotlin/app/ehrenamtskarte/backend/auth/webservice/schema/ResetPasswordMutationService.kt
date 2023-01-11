@@ -26,6 +26,8 @@ class ResetPasswordMutationService {
 
             val key = AdministratorsRepository.setNewPasswordResetKey(user)
             sendMail(
+                projectConfig.smtp,
+                projectConfig.administrationName,
                 email,
                 "Passwort Zurücksetzen",
                 generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl)

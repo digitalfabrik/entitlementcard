@@ -59,8 +59,10 @@ class ManageUsersMutationService {
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
                 sendMail(
+                    projectConfig.smtp,
+                    projectConfig.administrationName,
                     email,
-                    "Accounterstellung",
+                    "Kontoerstellung",
                     generateWelcomeMailMessage(
                         key,
                         projectConfig.administrationName,
