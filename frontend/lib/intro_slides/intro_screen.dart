@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/entry_widget.dart';
+import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
