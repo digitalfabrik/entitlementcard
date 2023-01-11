@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
-import {dataPrivacyBaseHeadline, DataPrivacyBaseText} from '../constants/dataPrivacyBase'
-
+import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from '../constants/dataPrivacyBase'
 
 const Container = styled.div`
   max-width: 750px;
