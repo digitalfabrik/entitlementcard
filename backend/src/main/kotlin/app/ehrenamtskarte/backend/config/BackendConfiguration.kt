@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.InputStream
 import java.nio.file.Paths
 import java.time.ZoneId
 
@@ -49,21 +49,26 @@ data class BackendConfiguration(
             .registerModule(
                 KotlinModule.Builder().build()
             ).registerModule(JavaTimeModule())
+        private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
 
         fun load(configFile: File?): BackendConfiguration {
-            val fallbackResource = ClassLoader.getSystemResource("config/config.yml")
-                ?: throw Error("Fallback backend configuration resource 'config/config.yml' missing!'")
+            val fallbacks = listOfNotNull(
+                ClassLoader.getSystemResource("config/config.local.yml"),
+                ClassLoader.getSystemResource("config/config.yml")
+            )
+            if (fallbacks.isEmpty()) {
+                throw Error("Fallback backend configuration resource 'config/config.yml' missing!")
+            }
 
-            val file = configFile ?: possibleBackendConfigurationFiles.find { it.exists() }
-            if (file != null) return from(file)
+            val file =
+                configFile ?: possibleBackendConfigurationFiles.find { it.exists() } ?: File(fallbacks[0].toURI())
 
-            return from(fallbackResource.openStream())
+            logger.info("Loading backend configuration from ${file.absolutePath}.")
+
+            return from(file)
         }
 
         private fun from(file: File): BackendConfiguration =
             file.bufferedReader().use { mapper.readValue(it, BackendConfiguration::class.java) }
-
-        private fun from(inputStream: InputStream): BackendConfiguration =
-            mapper.readValue(inputStream, BackendConfiguration::class.java)
     }
 }
