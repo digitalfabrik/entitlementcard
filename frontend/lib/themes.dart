@@ -1,12 +1,14 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData get lightTheme {
   const defaultTypography = Typography.blackMountainView;
   final lightTheme = ThemeData.from(
-    colorScheme: const ColorScheme.light(
-      primary: Color(0xff5f5384),
-      secondary: Color(0xff5f5384),
+    colorScheme: ColorScheme.light(
+      primary: getColorFromHex(buildConfig.theme.primaryLight),
+      secondary: getColorFromHex(buildConfig.theme.primaryLight),
     ),
     textTheme: defaultTypography.copyWith(
       headline4: defaultTypography.headline4?.apply(color: Colors.black87),
@@ -31,9 +33,9 @@ ThemeData get lightTheme {
 ThemeData get darkTheme {
   const defaultTypography = Typography.whiteMountainView;
   final theme = ThemeData.from(
-    colorScheme: const ColorScheme.dark(
-      primary: Color(0xff8377A9),
-      secondary: Color(0xff8377A9),
+    colorScheme: ColorScheme.dark(
+      primary: getColorFromHex(buildConfig.theme.primaryDark),
+      secondary: getColorFromHex(buildConfig.theme.primaryDark),
     ),
     textTheme: defaultTypography.copyWith(
       headline4: defaultTypography.headline4?.apply(color: Colors.white),

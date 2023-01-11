@@ -7,8 +7,8 @@ type BuildConfigType = {
 export type FeatureFlagsType = {}
 
 export type ThemeType = {
-    primaryColor: string,
-    secondaryColor: string
+    primaryLight: string,
+    primaryDark: string
 }
 
 export type CommonBuildConfigType = {
@@ -36,12 +36,12 @@ export type CommonBuildConfigType = {
         headerTitleRight: string,
         headerLogo: string,
         headerLogoPadding: number,
-        headerContainerPadding: {top:number, left: number; bottom: number, right: number}
+        headerContainerPadding: { top: number, left: number; bottom: number, right: number }
         headerTextFontSize: number,
         bodyTextColor: string,
         colorPremium: string,
         colorStandard: string,
-        bodyContainerPadding: {top:number, left: number; bottom: number, right: number}
+        bodyContainerPadding: { top: number, left: number; bottom: number, right: number }
         bodyLogo: string,
         bodyLogoPosition: string,
         bodyLabel: string,
