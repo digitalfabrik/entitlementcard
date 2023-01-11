@@ -29,6 +29,26 @@ export type CommonBuildConfigType = {
         production: string,
         local: string,
     },
+    cardBranding: {
+        headerTextColor: string,
+        headerColor: string,
+        headerTitleLeft: string,
+        headerTitleRight: string,
+        headerLogo: string,
+        headerLogoPadding: number,
+        headerContainerPadding: {top:number, left: number; bottom: number, right: number}
+        headerTextFontSize: number,
+        bodyTextColor: string,
+        colorPremium: string,
+        colorStandard: string,
+        bodyContainerPadding: {top:number, left: number; bottom: number, right: number}
+        bodyLogo: string,
+        bodyLogoPosition: string,
+        bodyLabel: string,
+        bodyBackgroundImage: boolean,
+        bodyBackgroundImageUrl: string
+        boxDecorationRadius: number,
+    }
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType

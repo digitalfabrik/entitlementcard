@@ -1,6 +1,10 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/widgets.dart';
 
-const bavariaFontColor = Color(0xff008dc9);
+Color textColor = getColorFromHex(buildConfig.cardBranding.headerTextColor);
+int fontSize = buildConfig.cardBranding.headerTextFontSize;
+double logoPadding = buildConfig.cardBranding.headerLogoPadding.toDouble();
 
 class EakCardHeaderLogo extends StatelessWidget {
   final String title;
@@ -11,19 +15,14 @@ class EakCardHeaderLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(4.0 * scaleFactor),
-      child: Column(
-        children: [
-          Flexible(
-            child: Padding(
-              padding: EdgeInsets.all(2 * scaleFactor),
-              child: logo ?? Container(),
-            ),
-          ),
-          Text(title, maxLines: 1, style: TextStyle(fontSize: 8 * scaleFactor, color: bavariaFontColor))
-        ],
-      ),
+    return Padding(padding: EdgeInsets.all(logoPadding * scaleFactor),child:Column(
+      children: [
+        Flexible(
+          child: logo ?? Container(),
+        ),
+        Text(title, maxLines: 3, style: TextStyle(fontSize: fontSize * scaleFactor, color: textColor))
+      ],
+    ),
     );
   }
 }

@@ -1,13 +1,41 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/identification/card/eak_card_header_logo.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-const blueCardColor = Color(0xffcfeaff);
-const goldenCardColor = Color(0xffcab374);
-const textColor = Color(0xff172c82);
+Color standardCardColor = getColorFromHex(buildConfig.cardBranding.colorStandard);
+Color premiumCardColor = getColorFromHex(buildConfig.cardBranding.colorPremium);
+Color textColor = getColorFromHex(buildConfig.cardBranding.bodyTextColor);
+Color headerColor = getColorFromHex(buildConfig.cardBranding.headerColor);
+String headerLogo = buildConfig.cardBranding.headerLogo;
+String bodyLogo = buildConfig.cardBranding.bodyLogo;
+String bodyLabel = buildConfig.cardBranding.bodyLabel;
+
+class PaddingStyle {
+  final double left;
+  final double right;
+  final double top;
+  final double bottom;
+
+  PaddingStyle(this.left, this.right, this.top, this.bottom);
+}
+
+PaddingStyle paddingBody = PaddingStyle(
+  buildConfig.cardBranding.bodyContainerPadding.left.toDouble(),
+  buildConfig.cardBranding.bodyContainerPadding.right.toDouble(),
+  buildConfig.cardBranding.bodyContainerPadding.top.toDouble(),
+  buildConfig.cardBranding.bodyContainerPadding.bottom.toDouble(),
+);
+
+PaddingStyle paddingHeader = PaddingStyle(
+  buildConfig.cardBranding.headerContainerPadding.left.toDouble(),
+  buildConfig.cardBranding.headerContainerPadding.right.toDouble(),
+  buildConfig.cardBranding.headerContainerPadding.top.toDouble(),
+  buildConfig.cardBranding.headerContainerPadding.bottom.toDouble(),
+);
 
 class Region with EquatableMixin {
   final String prefix;
@@ -32,52 +60,81 @@ class EakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = cardDetails.cardType == CardType.gold ? goldenCardColor : blueCardColor;
+    final cardColor = cardDetails.cardType == CardType.gold ? premiumCardColor : standardCardColor;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
-        final headerTitle = currentRegion != null ? "${currentRegion.prefix} ${currentRegion.name}" : "";
+        final headerTitle = currentRegion != null
+            ? "${currentRegion.prefix} ${currentRegion.name}"
+            : buildConfig.cardBranding.headerTitleLeft;
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Header
             ColoredBox(
-              color: const Color(0xf5f5f5ff),
-              child: AspectRatio(
-                aspectRatio: 6 / 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    EakCardHeaderLogo(title: headerTitle, scaleFactor: scaleFactor),
-                    EakCardHeaderLogo(
-                      title: "Freistaat Bayern",
-                      scaleFactor: scaleFactor,
-                      logo: const Image(image: AssetImage("assets/wappen-bavaria.png"), fit: BoxFit.contain),
-                    )
-                  ],
+              color: headerColor,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: paddingHeader.left * scaleFactor,
+                  right: paddingHeader.right * scaleFactor,
+                  top: paddingHeader.top * scaleFactor,
+                  bottom: paddingHeader.bottom * scaleFactor,
+                ),
+                child: AspectRatio(
+                  aspectRatio: 6 / 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(child: EakCardHeaderLogo(title: headerTitle, scaleFactor: scaleFactor)),
+                      Flexible(
+                        child: EakCardHeaderLogo(
+                          title: buildConfig.cardBranding.headerTitleRight,
+                          scaleFactor: scaleFactor,
+                          logo: Image(image: AssetImage(buildConfig.cardBranding.headerLogo), fit: BoxFit.contain),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             // Body
             Flexible(
               child: DecoratedBox(
-                decoration:
-                    BoxDecoration(gradient: RadialGradient(colors: [cardColor.withAlpha(100), cardColor], radius: 1)),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8 * scaleFactor),
-                      child: AspectRatio(
+                decoration: BoxDecoration(
+                  image: buildConfig.cardBranding.bodyBackgroundImage
+                      ? DecorationImage(
+                          image: AssetImage(buildConfig.cardBranding.bodyBackgroundImageUrl),
+                          fit: BoxFit.fill,
+                        )
+                      : null,
+                  gradient: RadialGradient(
+                    center: const Alignment(-0.5, -0.6),
+                    colors: [cardColor.withAlpha(100), cardColor],
+                    radius: buildConfig.cardBranding.boxDecorationRadius.toDouble(),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: paddingBody.left * scaleFactor,
+                    right: paddingBody.right * scaleFactor,
+                    bottom: paddingBody.bottom * scaleFactor,
+                    top: paddingBody.top * scaleFactor,
+                  ),
+                  child: Column(
+                    children: [
+                      AspectRatio(
                         aspectRatio: 6 / 1.2,
-                        child:
-                            SvgPicture.asset("assets/eak-lettering.svg", semanticsLabel: "Bayerische Ehrenamtskarte"),
+                        child: Align(
+                          alignment: buildConfig.cardBranding.bodyLogoPosition == 'center'
+                              ? Alignment.center
+                              : Alignment.centerRight,
+                          child: Image(image: AssetImage(buildConfig.cardBranding.bodyLogo)),
+                        ),
                       ),
-                    ),
-                    Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0 * scaleFactor),
+                      Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -98,11 +155,11 @@ class EakCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         );
       },
