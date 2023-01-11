@@ -49,6 +49,7 @@ type Address {
 type Administrator {
   email: String!
   id: Int!
+  region: Region
   regionId: Int
   role: Role!
 }
@@ -86,6 +87,8 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Deletes an existing administrator"
+  deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Edits an existing administrator"
@@ -132,6 +135,8 @@ type Query {
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"
   verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
+  "Returns the requesting administrator as retrieved from his JWT token."
+  whoAmI(project: String!): Administrator!
 }
 
 type Region {
@@ -144,7 +149,6 @@ type Region {
 
 type SignInPayload {
   token: String!
-  user: Administrator!
 }
 
 enum ApplicationType {

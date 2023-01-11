@@ -10,7 +10,7 @@ import {
 import { Button } from '@mui/material'
 import BasicDialog from '../BasicDialog'
 import { useState } from 'react'
-import { dataPrivacyBaseHeadline, dataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
+import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
@@ -74,7 +74,12 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           maxWidth='lg'
           onUpdateOpen={setOpenPrivacyPolicy}
           title={dataPrivacyBaseHeadline}
-          content={`${dataPrivacyBaseText}\n${privacyPolicy}`}
+          content={
+            <>
+              <DataPrivacyBaseText />
+              <div>{privacyPolicy}</div>
+            </>
+          }
         />
       </>
     )

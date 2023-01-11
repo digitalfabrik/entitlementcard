@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/identification/base_card_details.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -18,41 +17,37 @@ class VerificationParseException extends QrCodeParseException {
 VerificationCardDetails parseQRCodeContent(String rawBase64Content) {
   const base64Decoder = Base64Decoder();
 
-  Uint8List rawProtobufData;
+  // TODO (Max): Refactor into Dart extension
+  QrCode qrcode;
   try {
-    rawProtobufData = base64Decoder.convert(rawBase64Content);
-  } on Exception catch (e) {
+    qrcode = QrCode.fromBuffer(base64Decoder.convert(rawBase64Content));
+  } on Exception catch (e, stackTrace) {
     throw VerificationParseException(
-      internalMessage: "Failed to decode base64 string from qr code, "
-          "probably not base64 encoded. Message: ${e.toString()}",
+      internalMessage: "Failed to parse QrCode from base64 encoded data. "
+          "Message: ${e.toString()}",
       cause: e,
+      stackTrace: stackTrace,
     );
   }
 
-  // TODO (Max): Refactor into Dart extension
-  CardVerifyCode verifyCode;
-  try {
-    verifyCode = CardVerifyCode.fromBuffer(rawProtobufData);
-  } on Exception catch (e, stacktrace) {
-    throw VerificationParseException(
-      internalMessage: "Failed to parse CardVerifyModel from base64 encoded data. "
-          "Message: ${e.toString()}",
-      cause: e,
-      stackTrace: stacktrace,
-    );
+  // TODO: Allow to parse and verify StaticVerifyCodes.
+  if (!qrcode.hasDynamicActivationCode()) {
+    throw QrCodeWrongTypeException();
   }
+
+  final DynamicVerifyCode verifyCode = qrcode.dynamicVerifyCode;
 
   // TODO (Max): Duplicate code to identification_qr_content_parser.dart
   final cardInfo = verifyCode.info;
   final bavarianCardType = cardInfo.extensions.extensionBavariaCardType.cardType;
 
   final fullName = cardInfo.fullName;
-  final hashSecretBase64 = const Base64Encoder().convert(verifyCode.hashSecret);
+  final pepper = verifyCode.pepper;
   final expirationDay = cardInfo.expirationDay;
   final cardType = CardType.values[bavarianCardType.value];
   final regionId = cardInfo.extensions.extensionRegion.regionId;
   final otp = verifyCode.otp;
 
-  final baseCardDetails = BaseCardDetails(fullName, hashSecretBase64, expirationDay, cardType, regionId);
+  final baseCardDetails = BaseCardDetails(fullName, pepper, expirationDay, cardType, regionId);
   return VerificationCardDetails(baseCardDetails, otp);
 }

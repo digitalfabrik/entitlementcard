@@ -21,7 +21,7 @@ class EakApplicationQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         return transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId)
+            val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw IllegalArgumentException("Admin does not exist")
             if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
                 throw UnauthorizedException()

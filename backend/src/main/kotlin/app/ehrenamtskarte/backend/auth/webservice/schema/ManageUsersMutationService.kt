@@ -41,7 +41,7 @@ class ManageUsersMutationService {
         val projectConfig = context.backendConfiguration.projects.first { it.id == project }
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
 
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
             val region = regionId?.let { RegionEntity.findById(it) }
@@ -59,8 +59,10 @@ class ManageUsersMutationService {
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
                 sendMail(
+                    projectConfig.smtp,
+                    projectConfig.administrationName,
                     email,
-                    "Accounterstellung",
+                    "Kontoerstellung",
                     generateWelcomeMailMessage(
                         key,
                         projectConfig.administrationName,
@@ -85,7 +87,7 @@ class ManageUsersMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
             val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
@@ -105,6 +107,31 @@ class ManageUsersMutationService {
             existingAdmin.email = newEmail
             existingAdmin.role = newRole.db_value
             existingAdmin.regionId = newRegion?.id
+        }
+        return true
+    }
+
+    @GraphQLDescription("Deletes an existing administrator")
+    fun deleteAdministrator(
+        project: String,
+        adminId: Int,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        transaction {
+            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
+
+            if (existingAdmin.projectId != projectEntity.id) throw UnauthorizedException()
+
+            if (!Authorizer.mayDeleteUser(actingAdmin, existingAdmin)) {
+                throw UnauthorizedException()
+            }
+
+            AdministratorsRepository.deleteAdministrator(existingAdmin)
         }
         return true
     }

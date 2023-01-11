@@ -18,7 +18,7 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
 
     fun handle(context: Context) {
         val jwtPayload = JwtService.verifyRequest(context)
-        if (jwtPayload === null) {
+        if (jwtPayload == null) {
             context.status(403)
             return
         }
@@ -28,7 +28,7 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
         val (admin, application) = transaction {
             val project = ProjectEntity.find { Projects.project eq projectName }.single()
             val admin =
-                AdministratorEntity.findById(jwtPayload.userId)
+                AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw IllegalArgumentException("Admin does not exist.")
             if (admin.projectId != project.id) throw IllegalArgumentException("Project of admin does not match project")
 

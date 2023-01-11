@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGener
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.postgresql.util.Base64
+import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
@@ -18,14 +18,14 @@ class CardMutationService {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
 
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val targetedRegionId = card.regionId
             if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                 throw UnauthorizedException()
             }
             CardRepository.insert(
-                Base64.decode(card.cardDetailsHashBase64),
-                Base64.decode(card.totpSecretBase64),
+                Base64.getDecoder().decode(card.cardDetailsHashBase64),
+                Base64.getDecoder().decode(card.totpSecretBase64),
                 card.cardExpirationDay,
                 card.regionId,
                 user.id.value

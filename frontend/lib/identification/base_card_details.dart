@@ -2,7 +2,7 @@ enum CardType { standard, gold }
 
 class BaseCardDetails {
   final String fullName;
-  final String hashSecretBase64;
+  final List<int> pepper;
   final CardType cardType;
   final int regionId;
 
@@ -10,7 +10,7 @@ class BaseCardDetails {
   final int? expirationDay;
   final DateTime? expirationDate;
 
-  BaseCardDetails(this.fullName, this.hashSecretBase64, this.expirationDay, this.cardType, this.regionId)
+  BaseCardDetails(this.fullName, this.pepper, this.expirationDay, this.cardType, this.regionId)
       : expirationDate = expirationDay != null && expirationDay > 0
             ? DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay))
             : null;

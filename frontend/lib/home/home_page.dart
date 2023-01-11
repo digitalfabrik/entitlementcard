@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
+import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
@@ -54,21 +55,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return HomePageData(
-      navigateToMapTab: _navigateToMapTab,
-      child: Scaffold(
-        body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _currentTabIndex == mapTabIndex
-            ? FloatingActionMapBar(
-                bringCameraToUser: (position) async {
-                  await mapPageController?.bringCameraToUser(position);
-                },
-                selectedAcceptingStoreId: selectedAcceptingStoreId,
-              )
-            // Returning a Container() instead of null avoids animations
-            : Container(),
-        bottomNavigationBar: _buildBottomNavigationBar(context),
+    return ConfiguredGraphQlProvider(
+      child: HomePageData(
+        navigateToMapTab: _navigateToMapTab,
+        child: Scaffold(
+          body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: _currentTabIndex == mapTabIndex
+              ? FloatingActionMapBar(
+                  bringCameraToUser: (position) async {
+                    await mapPageController?.bringCameraToUser(position);
+                  },
+                  selectedAcceptingStoreId: selectedAcceptingStoreId,
+                )
+              // Returning a Container() instead of null avoids animations
+              : Container(),
+          bottomNavigationBar: _buildBottomNavigationBar(context),
+        ),
       ),
     );
   }

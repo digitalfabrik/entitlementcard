@@ -2,10 +2,10 @@ import { Button } from '@blueprintjs/core'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { Administrator, Region, Role } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
 import CreateUserDialog from './CreateUserDialog'
 import RoleHelpButton from './RoleHelpButton'
 import EditUserDialog from './EditUserDialog'
+import DeleteUserDialog from './DeleteUserDialog'
 
 const StyledTable = styled.table`
   border-spacing: 0;
@@ -42,15 +42,9 @@ const UsersTable = ({
   selectedRegionId?: number | null
   refetch: () => void
 }) => {
-  const appToaster = useAppToaster()
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
   const [userInEditDialog, setUserInEditDialog] = useState<Administrator | null>(null)
-
-  const showNotImplementedToast = () =>
-    appToaster?.show({
-      message: 'Diese Funktion ist noch nicht verfügbar!',
-      intent: 'danger',
-    })
+  const [userInDeleteDialog, setUserInDeleteDialog] = useState<Administrator | null>(null)
 
   return (
     <>
@@ -82,7 +76,13 @@ const UsersTable = ({
                     minimal
                     onClick={() => setUserInEditDialog(user)}
                   />
-                  <Button icon='trash' intent='danger' text='Entfernen' minimal onClick={showNotImplementedToast} />
+                  <Button
+                    icon='trash'
+                    intent='danger'
+                    text='Löschen'
+                    minimal
+                    onClick={() => setUserInDeleteDialog(user)}
+                  />
                 </td>
               </tr>
             )
@@ -103,6 +103,11 @@ const UsersTable = ({
         onClose={() => setUserInEditDialog(null)}
         onSuccess={refetch}
         regionIdOverride={selectedRegionId}
+      />
+      <DeleteUserDialog
+        selectedUser={userInDeleteDialog}
+        onClose={() => setUserInDeleteDialog(null)}
+        onSuccess={refetch}
       />
     </>
   )

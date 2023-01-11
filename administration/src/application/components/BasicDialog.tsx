@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Breakpoint, Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 
 const StyledDialogTitle = styled(DialogTitle)`
@@ -25,7 +26,7 @@ const BasicDialog = ({
   open: boolean
   onUpdateOpen: (open: boolean) => void
   title: string
-  content: string
+  content: ReactNode
   maxWidth?: Breakpoint | false
 }) => {
   return (

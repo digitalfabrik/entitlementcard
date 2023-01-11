@@ -6,9 +6,9 @@ import { useAppToaster } from '../AppToaster'
 import RoleHelpButton from './RoleHelpButton'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import RegionSelector from '../RegionSelector'
-import { AuthContext } from '../../AuthProvider'
 import RoleSelector from './RoleSelector'
 import getMessageFromApolloError from '../getMessageFromApolloError'
+import { WhoAmIContext } from '../../WhoAmIProvider'
 
 const RoleFormGroupLabel = styled.span`
   & span {
@@ -30,7 +30,7 @@ const EditUserDialog = ({
   regionIdOverride: number | null
 }) => {
   const appToaster = useAppToaster()
-  const actingAdminId = useContext(AuthContext).data?.administrator.id
+  const { me, refetch: refetchMe } = useContext(WhoAmIContext)
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
@@ -53,7 +53,11 @@ const EditUserDialog = ({
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich bearbeitet.' })
       onClose()
-      onSuccess()
+      if (me?.id === selectedUser?.id) {
+        refetchMe()
+      } else {
+        onSuccess()
+      }
     },
   })
 
@@ -110,7 +114,7 @@ const EditUserDialog = ({
             </FormGroup>
           )}
           <Callout intent='primary'>
-            {selectedUser?.id === actingAdminId ? (
+            {selectedUser?.id === me?.id ? (
               <>
                 Sie können Ihr eigenes Passwort unter{' '}
                 <a href={window.location.origin + '/user-settings'} target='_blank' rel='noreferrer'>
@@ -128,7 +132,7 @@ const EditUserDialog = ({
               </>
             )}
           </Callout>
-          {selectedUser?.id !== actingAdminId ? null : (
+          {selectedUser?.id !== me?.id ? null : (
             <Callout intent='danger' style={{ marginTop: '16px' }}>
               <b>Sie bearbeiten Ihr eigenes Konto.</b> Möglicherweise können Sie diese Änderungen nicht rückgängig
               machen.

@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.or
@@ -19,6 +20,7 @@ object Administrators : IntIdTable() {
     val passwordHash = binary("passwordHash").nullable()
     val passwordResetKey = varchar("passwordResetKey", 100).nullable()
     val passwordResetKeyExpiry = datetime("passwordResetKeyExpiry").nullable()
+    val deleted = bool("deleted")
 
     init {
         val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS)
@@ -26,6 +28,10 @@ object Administrators : IntIdTable() {
         check("roleRegionCombinationConstraint") {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
                 regionId.isNotNull().and(role.inList(regionCompatibleRoles.map { it.db_value }))
+        }
+        check("deletedIfAndOnlyIfNoRights") {
+            (deleted eq Op.TRUE and (role eq Role.NO_RIGHTS.db_value)) or
+                (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
     }
 }
@@ -40,4 +46,5 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var passwordHash by Administrators.passwordHash
     var passwordResetKey by Administrators.passwordResetKey
     var passwordResetKeyExpiry by Administrators.passwordResetKeyExpiry
+    var deleted by Administrators.deleted
 }

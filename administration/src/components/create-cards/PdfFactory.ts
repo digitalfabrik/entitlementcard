@@ -5,7 +5,7 @@ import uint8ArrayToBase64 from '../../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
 import { Exception } from '../../exception'
 import { Region } from '../../generated/graphql'
-import { CardActivationCode } from '../../generated/card_pb'
+import { DynamicActivationCode, QrCode } from '../../generated/card_pb'
 import { daysSinceEpochToDate } from '../../util/validityPeriod'
 
 type TTFFont = {
@@ -31,7 +31,7 @@ export async function loadTTFFont(name: string, fontStyle: string, path: string)
   }
 }
 
-function addLetter(doc: jsPDF, activationCode: CardActivationCode, region: Region) {
+function addLetter(doc: jsPDF, activationCode: DynamicActivationCode, region: Region) {
   const info = activationCode.info!
 
   const pageSize = doc.internal.pageSize
@@ -74,7 +74,14 @@ Ihre digitale Ehrenamtskarte ist da!`,
 
   doc.setFontSize(16)
   doc.text('Anmeldecode', width / 2, qrCodeY - qrCodeMargin, undefined, 'center')
-  const qrCodeText = uint8ArrayToBase64(activationCode.toBinary())
+  const qrCodeText = uint8ArrayToBase64(
+    new QrCode({
+      qrCode: {
+        value: activationCode,
+        case: 'dynamicActivationCode',
+      },
+    }).toBinary()
+  )
   drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
   doc.setFontSize(12)
   const DetailsY = qrCodeY + qrCodeSize + qrCodeMargin
@@ -115,7 +122,7 @@ function checkForeignText(doc: jsPDF, text: string): string | null {
   return null
 }
 
-export function generatePdf(font: TTFFont, activationCodes: CardActivationCode[], region: Region) {
+export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCode[], region: Region) {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',

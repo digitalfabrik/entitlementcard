@@ -17,8 +17,8 @@ class RegionsMutationService {
     fun updateDataPrivacy(dfe: DataFetchingEnvironment, regionId: Int, dataPrivacyText: String): Boolean {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.userId) ?: throw UnauthorizedException()
-            if (dataPrivacyText.length> PRIVACY_POLICY_MAX_CHARS) {
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
                 throw RuntimeException()
             }
             if (!Authorizer.mayUpdatePrivacyPolicyInRegion(user, regionId)) {
