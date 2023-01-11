@@ -23,7 +23,7 @@ let r = s.replaceAll(/mso-([^;"])*;?/g, "")
  .replaceAll(/border-top:none;?/g, "")
  .replaceAll(/border-right:none;?/g, "")
  .replaceAll(/border-bottom:none;?/g, "")
- .replaceAll(/list-style-type:disc;?/g, "")
+ .replaceAll(/list-style-type: ?disc;?/g, "")
  .replaceAll(/ style=""/g, "")
  .replaceAll(/.*<body>/g, "<div>")
  .replaceAll(/<\/body><\/html>/g, "</div>")
@@ -189,37 +189,37 @@ export const DataPrivacyBaseText = () => (
       1 TMG bei jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
     </p>
     <ul>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>Datum und Uhrzeit des Abrufs</p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Name des aufgerufenen Internetdienstes, der aufgerufenen Ressource und der verwendeten Aktion
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>vollständige IP-Adresse des anfordernden Rechners</p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>Abfrage, die der Client gestellt hat</p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>übertragene Datenmenge</p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>Meldung, ob der Abruf erfolgreich war</p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Browser-Identifikation (enthält in der Regel die Browserversion, sowie das Betriebssystem)
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Innerhalb der App eingegebene Suchen nach Adressen oder Vergünstigungen;
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Standort-Positionen, falls der Standort in den Apps freigegeben ist.
         </p>
@@ -337,38 +337,38 @@ export const DataPrivacyBaseText = () => (
       Soweit wir von Ihnen personenbezogene Daten verarbeiten, stehen Ihnen als Betroffener nachfolgende Rechte zu:
     </p>
     <ul>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Sie haben das Recht auf Auskunft über die zu Ihrer Person gespeicherten Daten (Art. 15 DSGVO).
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Sollten unrichtige personenbezogene Daten verarbeitet werden, steht Ihnen ein Recht auf Berichtigung zu (Art.
           16 DSGVO).
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Liegen die gesetzlichen Voraussetzungen vor, so können Sie die Löschung oder Einschränkung der Verarbeitung
           verlangen (Art. 17 und 18 DSGVO).
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Wenn Sie in die Verarbeitung eingewilligt haben oder ein Vertrag zur Datenverarbeitung besteht und die
           Datenverarbeitung mithilfe automatisierter Verfahren durchgeführt wird, steht Ihnen gegebenenfalls ein Recht
           auf Datenübertragbarkeit zu (Art. 20 DSGVO).
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Falls Sie in die Verarbeitung eingewilligt haben und die Verarbeitung auf dieser Einwilligung beruht, können
           Sie die Einwilligung jederzeit für die Zukunft widerrufen. Die Rechtmäßigkeit der aufgrund der Einwilligung
           bis zum Widerruf erfolgten Datenverarbeitung wird durch diesen nicht berührt.{' '}
         </p>
       </li>
-      <li style={{ listStyleType: 'disc' }}>
+      <li>
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit gegen die
           Verarbeitung Ihrer Daten Widerspruch einzulegen, wenn die Verarbeitung ausschließlich auf Grundlage des Art. 6
