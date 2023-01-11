@@ -18,6 +18,9 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/bayern.ehrenamtskarte.app/map",
     },
+    mapInitialCoordinatesLat: 48.949444,
+    mapInitialCoordinatesLng: 11.395,
+    mapInitialZoomLevel: 6,
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",

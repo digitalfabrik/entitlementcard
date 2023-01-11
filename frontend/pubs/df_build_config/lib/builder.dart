@@ -39,6 +39,8 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
     output.write('  String get $k => "$escaped";\n');
   } else if (v is bool) {
     output.write('  bool get $k => $v;\n');
+  } else if (v is double) {
+    output.write('  double get $k => $v;\n');
   } else if (v is int) {
     output.write('  int get $k => $v;\n');
   } else if (v is List) {

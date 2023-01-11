@@ -18,6 +18,9 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
+    mapInitialCoordinatesLat: 49.460983,
+    mapInitialCoordinatesLng: 11.061859,
+    mapInitialZoomLevel: 10,
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
@@ -80,7 +83,7 @@ Telefax: REPLACE
 E-Mail: REPLACE
 Haftung im Sinne §§ 7 - 10 TMG
 
-Das Stadt Nürnberg stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
+Die Stadt Nürnberg stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
 
 • Die App "Nürnberg-Pass" ist nach § 7 Abs. 1 TMG für die eigenen Inhalte, die es zur Nutzung bereithält, nach den allgemeinen Vorschriften verantwortlich. Die Haftung für Schäden materieller oder ideeller Art, die durch die Nutzung der Inhalte verursacht wurden, ist ausgeschlossen, sofern nicht Vorsatz oder grobe Fahrlässigkeit vorliegt.
 Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird alle Sorgfalt walten gelassen. Eine Gewähr für die inhaltliche Vollständigkeit und Richtigkeit der Daten kann dennoch nicht übernommen werden. Insbesondere wird jede Haftung für solche Schäden ausgeschlossen, die bei Anwendern direkt oder indirekt daraus entstehen, dass die Daten genutzt werden.
