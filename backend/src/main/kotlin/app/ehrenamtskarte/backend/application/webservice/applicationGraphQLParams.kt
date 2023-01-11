@@ -23,10 +23,12 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
     .name("Upload")
     .description("A file part in a multipart request")
     .coercing(object : Coercing<UploadKey?, Void?> {
+        @Deprecated("Deprecated in Java")
         override fun serialize(dataFetcherResult: Any): Void? {
             throw CoercingSerializeException("Upload is an input-only type")
         }
 
+        @Deprecated("Deprecated in Java")
         override fun parseValue(input: Any): UploadKey {
             return if (input is Int) {
                 UploadKey(index = input)
@@ -40,6 +42,7 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
             }
         }
 
+        @Deprecated("Deprecated in Java")
         override fun parseLiteral(input: Any): UploadKey {
             throw CoercingParseLiteralException(
                 "Must use variables to specify Upload values"

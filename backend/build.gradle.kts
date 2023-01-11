@@ -11,7 +11,7 @@ val exposedVersion: String by project
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
+    id("org.jetbrains.kotlin.jvm") version "1.8.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 
     // Apply the application plugin to add support for building a CLI application.
@@ -23,14 +23,14 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.ajalt.clikt:clikt:3.5.0")
-    implementation("io.javalin:javalin:5.0.1")
-    implementation("com.google.code.gson", "gson", "2.9.1")
-    implementation("org.slf4j", "slf4j-simple", "2.0.3")
-    implementation("org.apache.commons", "commons-text", "1.10.0")
+    implementation("com.github.ajalt.clikt:clikt:3.5.1")
+    implementation("io.javalin:javalin:5.3.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.slf4j:slf4j-simple:2.0.6")
+    implementation("org.apache.commons:commons-text:1.10.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.2.5")
-    implementation("com.graphql-java:graphql-java-extended-scalars:19.0")
+    implementation("com.graphql-java:graphql-java-extended-scalars:20.0")
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -43,15 +43,15 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-    implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
-    implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
-    implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
-    implementation("org.jetbrains.exposed", "exposed-java-time", exposedVersion)
-    implementation("org.postgresql", "postgresql", "42.2.18")
-    implementation("com.kohlschutter.junixsocket", "junixsocket-core", "2.3.2")
-    implementation("com.kohlschutter.junixsocket", "junixsocket-common", "2.3.2")
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    implementation("org.postgresql:postgresql:42.5.1")
+    implementation("com.kohlschutter.junixsocket:junixsocket-core:2.6.1")
+    implementation("com.kohlschutter.junixsocket:junixsocket-common:2.6.1")
 
-    implementation("net.postgis", "postgis-jdbc", "2.5.0")
+    implementation("net.postgis:postgis-jdbc:2.5.0")
 
     implementation("io.ktor:ktor-client-core:2.1.2")
     implementation("io.ktor:ktor-client-cio:2.1.2")
@@ -62,8 +62,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
     implementation("de.grundid.opendatalab:geojson-jackson:1.14")
 
-    implementation("com.eatthepath:java-otp:0.4.0") // eak verification
-    implementation("com.auth0:java-jwt:4.0.0") // Java web tokens
+    implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
+    implementation("com.auth0:java-jwt:4.2.1") // Java web tokens
     implementation("at.favre.lib:bcrypt:0.9.0")
 }
 
