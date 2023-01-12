@@ -8,7 +8,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "showcase.entitlementcard.app",
         local: "nuernberg.sozialpass.app"
     },
-    categories: [],
+    categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     theme: {
         primaryLight: "#D88C51",
         primaryDark: "#F9B787"

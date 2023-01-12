@@ -8,7 +8,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "showcase.entitlementcard.app",
         local: "bayern.ehrenamtskarte.app"
     },
-    categories: [1, 2, 3],
+    categories: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     theme: {
         primaryLight: "#5f5384",
         primaryDark: "#8377A9"
