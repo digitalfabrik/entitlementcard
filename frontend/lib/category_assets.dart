@@ -172,7 +172,7 @@ const List<CategoryAsset> categoryAssets = [
     name: 'Sport/Bewegung/Tanz',
     shortName: "Sport",
     icon: "assets/category_icons/17.svg",
-    detailIcon: null,
+    detailIcon: "assets/detail_headers/17_sport.svg",
     color: Color(0xFF00ccc6),
   ),
   CategoryAsset(
