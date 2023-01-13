@@ -43,9 +43,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 
 List<Widget> getDisclaimerText(BuildContext context) {
-  return toWidgets(Theme.of(context), [
-    Paragraph(content: buildConfig.disclaimerText)
-  ]);
+  return toWidgets(Theme.of(context), [Paragraph(content: buildConfig.disclaimerText)]);
 }
 
 List<Widget> getPublisherText(BuildContext context) {
