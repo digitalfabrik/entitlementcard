@@ -46,7 +46,7 @@ export const bayernCommon: CommonBuildConfigType = {
         colorPremium: "#cab374",
         boxDecorationRadius: 1,
     },
-    iconInAboutTab: "assets/bayern/body-logo.png",
+    iconInAboutTab: "assets/bayern/icon.png",
     featureFlags: {},
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",

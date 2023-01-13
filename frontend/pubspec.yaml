@@ -94,6 +94,7 @@ flutter:
     - assets/intro_slides/
     - assets/bayern/header-logo.png
     - assets/bayern/body-logo.png
+    - assets/bayern/icon.png
     - assets/nuernberg/header-logo.png
     - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
