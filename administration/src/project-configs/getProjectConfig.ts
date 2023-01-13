@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
@@ -6,6 +7,8 @@ export interface ProjectConfig {
   name: string
   projectId: string
   applicationFeatureEnabled: boolean
+  dataPrivacyHeadline: string
+  dataPrivacyText: () => ReactElement
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
