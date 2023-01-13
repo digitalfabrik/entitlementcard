@@ -85,7 +85,7 @@ class VerificationQrScannerPage extends StatelessWidget {
         context,
         "Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
         "werden, da die Kommunikation mit dem Server fehlschlug. "
-        "Bitte prüfen sie ihre Internetverbindung.",
+        "Bitte prüfen Sie Ihre Internetverbindung.",
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
