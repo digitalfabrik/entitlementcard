@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/activate_code_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/activation/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
@@ -25,25 +25,20 @@ class IdentificationPage extends StatelessWidget {
           return Container();
         }
 
-        startApplication() => launchUrlString(
-              buildConfig.applicationUrl,
-              mode: LaunchMode.externalApplication,
-            );
-
         final activationCode = activationCodeModel.activationCode;
         if (activationCode != null) {
           return CardDetailView(
             activationCode: activationCode,
             startVerification: () => _showVerificationDialog(context, settings),
             startActivation: () => _startActivation(context),
-            startApplication: startApplication,
+            startApplication: _startApplication,
           );
         }
 
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
           startActivation: () => _startActivation(context),
-          startApplication: startApplication,
+          startApplication: _startApplication,
         );
       },
     );
@@ -54,6 +49,13 @@ class IdentificationPage extends StatelessWidget {
   }
 
   void _startActivation(BuildContext context) {
-    Navigator.push(context, AppRoute(builder: (context) => const ActivateCodeScannerPage()));
+    Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
+  }
+
+  Future<bool> _startApplication() {
+    return launchUrlString(
+      buildConfig.applicationUrl,
+      mode: LaunchMode.externalApplication,
+    );
   }
 }

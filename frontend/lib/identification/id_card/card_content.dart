@@ -1,8 +1,8 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
-import 'package:ehrenamtskarte/identification/card/card_header_logo.dart';
+import 'package:ehrenamtskarte/identification/id_card/card_header_logo.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -36,17 +36,6 @@ PaddingStyle paddingHeader = PaddingStyle(
   buildConfig.cardBranding.headerContainerPadding.top.toDouble(),
   buildConfig.cardBranding.headerContainerPadding.bottom.toDouble(),
 );
-
-class Region with EquatableMixin {
-  final String prefix;
-  final String name;
-
-  Region(this.prefix, this.name);
-
-  @override
-  List<Object> get props => [prefix, name];
-}
-
 class CardContent extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;

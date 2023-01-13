@@ -1,5 +1,5 @@
+import 'package:ehrenamtskarte/identification/activation/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
-import 'package:ehrenamtskarte/identification/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
@@ -7,8 +7,8 @@ import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-class ActivateCodeScannerPage extends StatelessWidget {
-  const ActivateCodeScannerPage({super.key});
+class ActivationCodeScannerPage extends StatelessWidget {
+  const ActivationCodeScannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {

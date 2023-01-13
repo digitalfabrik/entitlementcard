@@ -1,9 +1,8 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/card/card_content.dart';
-import 'package:ehrenamtskarte/identification/card/id_card.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -46,10 +45,8 @@ class CardDetailView extends StatelessWidget {
         final paddedCard = Padding(
           padding: const EdgeInsets.all(8.0),
           child: IdCard(
-            child: CardContent(
-              cardInfo: activationCode.info,
-              region: region != null ? Region(region.prefix, region.name) : null,
-            ),
+            cardInfo: activationCode.info,
+            region: region != null ? Region(region.prefix, region.name) : null,
           ),
         );
         final richQrCode =

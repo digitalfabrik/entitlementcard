@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:ehrenamtskarte/identification/persistence/card_details_store.dart';
+import 'package:ehrenamtskarte/identification/activation_code_store.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/foundation.dart';
 
@@ -38,6 +38,7 @@ class ActivationCodeModel extends ChangeNotifier {
 
   void removeCode() {
     const ActivationCodeStore().remove();
+    _activationCode = null;
     notifyListeners();
   }
 }
