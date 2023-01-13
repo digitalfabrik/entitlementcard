@@ -1,14 +1,14 @@
-import 'package:ehrenamtskarte/identification/card_details_model.dart';
-import 'package:ehrenamtskarte/identification/identification_qr_content_parser.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_parsing_error_dialog.dart';
+import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-class IdentificationQrScannerPage extends StatelessWidget {
-  const IdentificationQrScannerPage({super.key});
+class ActivateCodeScannerPage extends StatelessWidget {
+  const ActivateCodeScannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,13 @@ class IdentificationQrScannerPage extends StatelessWidget {
   }
 
   Future<void> _onCodeScanned(BuildContext context, String code) async {
-    final provider = Provider.of<CardDetailsModel>(context, listen: false);
+    final provider = Provider.of<ActivationCodeModel>(context, listen: false);
     Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
-      IdentificationQrContentParser(provider).processQrCodeContent(code);
+      ActivationCodeParser(provider).processQrCodeContent(code);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
-        "Die eingescannte Karte enthält kein Ablauf-datum, "
+        "Die eingescannte Karte enthält kein Ablaufdatum, "
         "obwohl dies für die blaue Ehrenamtskarte erforderlich"
         " ist. Vermutlich ist beim Erstellen der "
         "digitalen Ehrenamtskarte ein Fehler passiert.",

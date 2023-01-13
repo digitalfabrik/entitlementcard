@@ -1,15 +1,15 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/verification/verification_card_details.dart';
-import 'package:ehrenamtskarte/verification/verification_hasher.dart';
+import 'package:ehrenamtskarte/identification/verification/verification_hasher.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 Future<bool> queryServerVerification(
   GraphQLClient client,
   String projectId,
-  VerificationCardDetails cardDetails,
+  DynamicVerifyCode verifyCode,
 ) async {
-  final hash = hashVerificationCardDetails(cardDetails);
-  return _queryServerVerification(client, projectId, hash, cardDetails.otp);
+  final hash = hashVerifyCode(verifyCode);
+  return _queryServerVerification(client, projectId, hash, verifyCode.otp);
 }
 
 Future<bool> _queryServerVerification(GraphQLClient client, String projectId, String verificationHash, int totp) async {

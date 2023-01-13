@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_controls.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_overlay_shape.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
