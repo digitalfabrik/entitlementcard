@@ -29,7 +29,7 @@ DynamicVerifyCode parseQRCodeContent(String rawBase64Content) {
   }
 
   // TODO: Allow to parse and verify StaticVerifyCodes.
-  if (!qrcode.hasDynamicActivationCode()) {
+  if (!qrcode.hasDynamicVerifyCode()) {
     throw QrCodeWrongTypeException();
   }
   return qrcode.dynamicVerifyCode;
