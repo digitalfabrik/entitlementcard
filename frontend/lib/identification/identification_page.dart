@@ -1,10 +1,10 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/activation/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
-import 'package:ehrenamtskarte/identification/verification/verification_workflow.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

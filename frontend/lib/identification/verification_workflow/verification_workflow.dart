@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/verification/dialogs/verification_info_dialog.dart';
-import 'package:ehrenamtskarte/identification/verification/verification_qr_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_scanner_page.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 
