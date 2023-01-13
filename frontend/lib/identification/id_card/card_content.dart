@@ -36,6 +36,7 @@ PaddingStyle paddingHeader = PaddingStyle(
   buildConfig.cardBranding.headerContainerPadding.top.toDouble(),
   buildConfig.cardBranding.headerContainerPadding.bottom.toDouble(),
 );
+
 class CardContent extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
