@@ -22,6 +22,7 @@ final sampleEakActivationCode = DynamicActivationCode(
       extensionBavariaCardType: BavariaCardTypeExtension(
         cardType: BavariaCardType.STANDARD,
       ),
+      extensionRegion: RegionExtension(regionId: 42),
     ),
   ),
   pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
