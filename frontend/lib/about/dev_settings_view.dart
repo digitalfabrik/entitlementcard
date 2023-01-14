@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:base32/base32.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/activation/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
