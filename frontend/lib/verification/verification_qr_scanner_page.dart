@@ -5,6 +5,7 @@ import 'package:ehrenamtskarte/identification/card_details_model.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/verification/dialogs/internet_connection_verification_dialog.dart';
 import 'package:ehrenamtskarte/verification/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/verification/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
@@ -80,10 +81,11 @@ class VerificationQrScannerPage extends StatelessWidget {
         await _onSuccess(context, card.cardDetails);
       }
     } on ServerVerificationException catch (e) {
-      await _onError(
+      await _onConnectionError(
         context,
         "Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
-        "werden, da die Kommunikation mit dem Server fehlschlug.",
+        "werden, da die Kommunikation mit dem Server fehlschlug. "
+        "Bitte prüfen Sie Ihre Internetverbindung.",
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
@@ -129,6 +131,15 @@ class VerificationQrScannerPage extends StatelessWidget {
     _closeWaitingDialog(context);
 
     await NegativeVerificationResultDialog.show(context, message);
+  }
+
+  Future<void> _onConnectionError(BuildContext context, String message, [Exception? exception]) async {
+    if (exception != null) {
+      debugPrint("Connection failed: $exception");
+    }
+    _closeWaitingDialog(context);
+
+    await InternetConnectionVerificationDialog.show(context, message);
   }
 
   Future<void> _onSuccess(BuildContext context, BaseCardDetails cardDetails) async {
