@@ -19,27 +19,27 @@ class MoreActionsDialog extends StatelessWidget {
       title: const Text("Weitere Aktionen"),
       children: [
         ListTile(
-          title: const Text("Anderen Aktivierungscode einscannen"),
-          subtitle: const Text("Dadurch wird die bestehende Karte vom Gerät gelöscht."),
-          leading: const Icon(Icons.qr_code_scanner, size: 36),
-          onTap: () {
-            Navigator.pop(context);
-            startActivation();
-          },
-        ),
-        ListTile(
           title: const Text("Weitere Ehrenamtskarte beantragen"),
           subtitle: const Text("Ihre hinterlegte Karte bleibt erhalten."),
-          leading: const Icon(Icons.attach_file, size: 36),
+          leading: const Icon(Icons.assignment, size: 36),
           onTap: () {
             Navigator.pop(context);
             startApplication();
           },
         ),
         ListTile(
+          title: const Text("Anderen Aktivierungscode einscannen"),
+          subtitle: const Text("Dadurch wird die hinterlegte Karte vom Gerät gelöscht."),
+          leading: const Icon(Icons.add_card, size: 36),
+          onTap: () {
+            Navigator.pop(context);
+            startActivation();
+          },
+        ),
+        ListTile(
           title: const Text("Eine digitale Ehrenamtskarte prüfen"),
           subtitle: const Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
-          leading: const Icon(Icons.check_circle_outline, size: 36),
+          leading: const Icon(Icons.verified, size: 36),
           onTap: () {
             Navigator.pop(context);
             startVerification();
