@@ -9,8 +9,8 @@ import {
 } from '../../compoundFormUtils'
 import { Button } from '@mui/material'
 import BasicDialog from '../BasicDialog'
-import { useState } from 'react'
-import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from '../../../constants/dataPrivacyBase'
+import { useContext, useState } from 'react'
+import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
@@ -41,6 +41,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
   }),
   Component: ({ state, setState, privacyPolicy }) => {
+    const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
       <div style={{ alignSelf: 'center' }}>
@@ -73,10 +74,10 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           open={openPrivacyPolicy}
           maxWidth='lg'
           onUpdateOpen={setOpenPrivacyPolicy}
-          title={dataPrivacyBaseHeadline}
+          title={config.dataPrivacyHeadline}
           content={
             <>
-              <DataPrivacyBaseText />
+              <config.dataPrivacyContent />
               <div>{privacyPolicy}</div>
             </>
           }

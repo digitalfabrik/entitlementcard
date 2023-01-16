@@ -13,7 +13,6 @@ import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
-import { useAppToaster } from '../../components/AppToaster'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -46,7 +45,6 @@ const ApplyController = () => {
       }
     },
   })
-  const appToaster = useAppToaster()
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
@@ -55,8 +53,7 @@ const ApplyController = () => {
   const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
     // TODO: Add proper error handling and a refetch button when regionId query is implemented
-    // TODO: Use enqueueSnackbar from notistack instead of the appToaster
-    onError: () => appToaster?.show({ intent: 'danger', message: 'Datenschutzerklärung konnte nicht geladen werden' }),
+    onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
