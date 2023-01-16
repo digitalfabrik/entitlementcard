@@ -1,8 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
+
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/animated_progressbar.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
+import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
@@ -61,15 +62,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
                     Padding(
                       padding: EdgeInsets.all(padding),
                       child: QrImage(
-                        data: const Base64Encoder().convert(
-                          QrCode(
-                            dynamicVerifyCode: DynamicVerifyCode(
-                              info: activationCode.info,
-                              pepper: activationCode.pepper,
-                              otp: otpCode.code,
-                            ),
-                          ).writeToBuffer(),
-                        ),
+                        data: const QrCodeUtils().createDynamicVerifyQrCodeData(activationCode, otpCode.code),
                         version: QrVersions.auto,
                         foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
                         gapless: false,

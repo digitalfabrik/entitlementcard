@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/verification_hasher.dart';
+import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -8,7 +8,7 @@ Future<bool> queryServerVerification(
   String projectId,
   DynamicVerifyCode verifyCode,
 ) async {
-  final hash = hashVerifyCode(verifyCode);
+  final hash = const QrCodeUtils().hashCardInfo(verifyCode.info, verifyCode.pepper);
   return _queryServerVerification(client, projectId, hash, verifyCode.otp);
 }
 
