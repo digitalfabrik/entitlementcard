@@ -24,7 +24,7 @@ class CardMutationService {
                 throw UnauthorizedException()
             }
             CardRepository.insert(
-                Base64.getDecoder().decode(card.cardDetailsHashBase64),
+                Base64.getDecoder().decode(card.cardInfoHashBase64),
                 Base64.getDecoder().decode(card.totpSecretBase64),
                 card.cardExpirationDay,
                 card.regionId,

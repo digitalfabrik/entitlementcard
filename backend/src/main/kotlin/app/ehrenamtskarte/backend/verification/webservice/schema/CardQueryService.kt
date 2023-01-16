@@ -13,6 +13,6 @@ class CardQueryService {
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw NullPointerException("Project not found")
-        return CardVerifier.verifyCardHash(project, Base64.getDecoder().decode(card.cardDetailsHashBase64), card.totp, projectConfig.timezone)
+        return CardVerifier.verifyCardHash(project, Base64.getDecoder().decode(card.cardInfoHashBase64), card.totp, projectConfig.timezone)
     }
 }

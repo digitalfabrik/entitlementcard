@@ -7,6 +7,7 @@ import { Exception } from '../exception'
 import { Region } from '../generated/graphql'
 import { DynamicActivationCode, QrCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
+import * as size1 from './seal.png'
 
 type TTFFont = {
   /**
