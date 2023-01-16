@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
-import { CardBlueprint, createEmptyBavariaCard } from '../../cards/CardBlueprint'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
 import { usePrompt } from '../../util/blocker-prompt'
 import { Region } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
@@ -50,7 +51,9 @@ interface Props {
 
 const CreateCardsForm = (props: Props) => {
   const { cardBlueprints, setCardBlueprints, region } = props
-  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyBavariaCard(region)])
+  const projectConfig = useContext(ProjectConfigContext)
+
+  const addForm = () => setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
   }

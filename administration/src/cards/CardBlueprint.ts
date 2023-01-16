@@ -97,25 +97,3 @@ export class CardBlueprint {
     })
   }
 }
-
-export const createEmptyBavariaCard = (region: Region): CardBlueprint =>
-  new CardBlueprint('', add(Date.now(), { years: 2 }), [
-    {
-      state: bavaria_card_type.initialState,
-      extension: bavaria_card_type,
-    },
-    {
-      state: {
-        region_id: region.id,
-      },
-      extension: region_extension,
-    },
-    {
-      state: nuernberg_pass_number_extension.initialState,
-      extension: nuernberg_pass_number_extension,
-    },
-    {
-      state: birthday_extension.initialState,
-      extension: birthday_extension,
-    },
-  ])
