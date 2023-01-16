@@ -12,7 +12,7 @@ export const bayernCommon: CommonBuildConfigType = {
     },
     categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     theme: {
-        primaryLight: "#5f5384",
+        primaryLight: "#8377A9",
         primaryDark: "#8377A9"
     },
     mapStyleUrl: {

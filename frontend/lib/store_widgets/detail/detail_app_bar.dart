@@ -2,28 +2,11 @@ import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 const double bottomSize = 100;
-
-class DetailAppBarBackButton extends StatelessWidget {
-  final Color textColor;
-
-  const DetailAppBarBackButton({super.key, required this.textColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        Icons.arrow_back_ios,
-        color: textColor,
-      ),
-      onPressed: () => Navigator.of(context).maybePop(),
-    );
-  }
-}
 
 class DetailAppBarHeaderImage extends StatelessWidget {
   final int? categoryId;
@@ -110,7 +93,7 @@ class DetailAppBar extends StatelessWidget {
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
-    return NavigationBarWithBottom(
+    return AppBarWithBottom(
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
       bottom: PreferredSize(

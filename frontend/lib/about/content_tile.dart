@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/routing.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 
 class ContentTile extends StatelessWidget {
@@ -37,9 +37,7 @@ class ContentPage extends StatelessWidget {
       decoration: BoxDecoration(color: theme.backgroundColor),
       child: CustomScrollView(
         slivers: <Widget>[
-          SliverNavigationBar(
-            title: title,
-          ),
+          CustomSliverAppBar(title: title),
           SliverPadding(
             padding: const EdgeInsets.all(10),
             sliver: SliverList(
