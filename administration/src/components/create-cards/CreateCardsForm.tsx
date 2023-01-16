@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
-import { CardBlueprint, createEmptyCard } from '../../cards/CardBlueprint'
+import { CardBlueprint, createEmptyBavariaCard } from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
@@ -50,7 +50,7 @@ interface Props {
 
 const CreateCardsForm = (props: Props) => {
   const { cardBlueprints, setCardBlueprints, region } = props
-  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard(region)])
+  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyBavariaCard(region)])
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
   }

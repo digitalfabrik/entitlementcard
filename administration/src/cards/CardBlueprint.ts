@@ -9,7 +9,15 @@ import {
 } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { Region } from '../generated/graphql'
-import { bavaria_card_type, Extension, ExtensionHolder, region_extension, RegionState } from './extensions'
+import {
+  bavaria_card_type,
+  birthday_extension,
+  Extension,
+  ExtensionHolder,
+  nuernberg_pass_number_extension,
+  region_extension,
+  RegionState,
+} from './extensions'
 
 const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
 const TOTP_SECRET_LENGTH = 20
@@ -33,13 +41,22 @@ export class CardBlueprint {
     return !!this.extensionHolders.find(state => state.extension.causesInfiniteLifetime(state.state))
   }
 
+  isNameValid(): boolean {
+    return this.fullName.length > 0 && this.fullName.length < MAX_NAME_LENGTH
+  }
+
+  isExpirationDateValid(): boolean {
+    return this.expirationDate !== null && this.expirationDate > new Date()
+  }
+
   isValid(): boolean {
     return (
-      (isNameValid(this.fullName) &&
-        this.expirationDate !== null &&
-        !this.hasInfiniteLifetime() &&
-        isExpirationDateValid(this.expirationDate)) ||
-      (this.expirationDate === null && this.hasInfiniteLifetime())
+      // Name valid
+      this.isNameValid() &&
+      // Extensions valid
+      this.extensionHolders.every(state => state.extension.isValid(state.state)) &&
+      // Expiration date valid
+      ((!this.hasInfiniteLifetime() && this.isExpirationDateValid()) || this.hasInfiniteLifetime())
     )
   }
 
@@ -60,6 +77,9 @@ export class CardBlueprint {
     let extension_message = {}
 
     for (const state of this.extensionHolders) {
+      if (!state) {
+        throw new Error('Tried to add invalid extension')
+      }
       state.extension.setProtobufData(state, extension_message)
     }
 
@@ -78,11 +98,7 @@ export class CardBlueprint {
   }
 }
 
-export const isNameValid = (value: string) => value.length > 0 && value.length < MAX_NAME_LENGTH
-
-export const isExpirationDateValid = (value: Date | null) => value !== null && value > new Date()
-
-export const createEmptyCard = (region: Region): CardBlueprint =>
+export const createEmptyBavariaCard = (region: Region): CardBlueprint =>
   new CardBlueprint('', add(Date.now(), { years: 2 }), [
     {
       state: bavaria_card_type.initialState,
@@ -93,5 +109,13 @@ export const createEmptyCard = (region: Region): CardBlueprint =>
         region_id: region.id,
       },
       extension: region_extension,
+    },
+    {
+      state: nuernberg_pass_number_extension.initialState,
+      extension: nuernberg_pass_number_extension,
+    },
+    {
+      state: birthday_extension.initialState,
+      extension: birthday_extension,
     },
   ])

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
-import { Button, Card, FormGroup, InputGroup, MenuItem } from '@blueprintjs/core'
+import { Button, Card, FormGroup, InputGroup, Intent, MenuItem } from '@blueprintjs/core'
 import { ItemRenderer, Select } from '@blueprintjs/select'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
@@ -44,6 +44,7 @@ const CreateCardForm = (props: Props) => {
           <InputGroup
             placeholder='Erika Mustermann'
             autoFocus
+            intent={cardBlueprint.isNameValid() ? undefined : Intent.DANGER}
             value={cardBlueprint.fullName}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               cardBlueprint.fullName = event.target.value
