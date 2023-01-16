@@ -154,8 +154,19 @@ export const DataPrivacyBaseText = () => (
           <br />
         </b>
       </span>
-      Bei Nutzung der digitalen NürnbergPass-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs. 1 TMG bei
-      jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
+      Bei jedem Zugriff auf das
+      <span style={{ fontFamily: '"Calibri"', fontSize: '11pt' }}>&nbsp;</span>
+      <a
+        target='_blank'
+        rel='noreferrer'
+        href='https://nuernberg.sozialpass.app/beantragen'
+        title='https://nuernberg.sozialpass.app/beantragen'>
+        <span style={{ color: '#0000ff' }}>
+          <u>Antragsformular</u>
+        </span>
+      </a>{' '}
+      oder die Nutzung der digitalen NürnbergPass-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs. 1 TMG
+      bei jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
     </p>
     <ul>
       <li>
@@ -253,14 +264,18 @@ export const DataPrivacyBaseText = () => (
       erhoben, genutzt oder verarbeitet werden. Um dies zu gewährleisten, müssen Sie z.B. bei der Beantragung des
       digitalen NürnbergPass explizit der Verarbeitung und Weitergabe Ihrer Daten zustimmen. Sollten Sie den digitalen
       NürnbergPass über das Online-Formular auf (
-      <a target='_blank' href='https://nuernberg.sozialpass.app/beantragen'>
+      <a
+        target='_blank'
+        rel='noreferrer'
+        href='https://nuernberg.sozialpass.app/beantragen'
+        title='https://nuernberg.sozialpass.app/beantragen'>
         <span style={{ color: '#0000ff' }}>
           <u>https://nuernberg.sozialpass.app/beantragen</u>
         </span>
       </a>
-      ) beantragen, wird die Tür an Tür – Digitalfabrik gGmbH die im Antragsformular angegebenen Daten erheben,
-      verarbeiten und nutzen. Dies erfolgt ausschließlich für den Zweck der Ausstellung des digitalen NürnbergPass,
-      sowie der damit verbundenen Gewährung von Vergünstigungen und zugehörigen Kommunikationsmaßnahmen.
+      ) beantragen, wird die Tür an Tür – Digitalfabrik gGmbH die im Antragsformular angegebenen Daten verarbeiten und
+      nutzen. Dies erfolgt ausschließlich für den Zweck der Ausstellung des digitalen NürnbergPass, sowie der damit
+      verbundenen Gewährung von Vergünstigungen und zugehörigen Kommunikationsmaßnahmen.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Beim Zugriff auf dieses Internetangebot werden von uns Cookies (kleine Dateien) auf Ihrer Festplatte mit einer
