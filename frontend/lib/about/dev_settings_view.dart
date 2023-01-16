@@ -116,7 +116,8 @@ class DevSettingsView extends StatelessWidget {
                 final messengerState = ScaffoldMessenger.of(context);
                 final provider = Provider.of<ActivationCodeModel>(context, listen: false);
                 try {
-                  ActivationCodeParser(provider).processQrCodeContent(base64Controller.text);
+                  final activationCode = const ActivationCodeParser().parseQrCodeContent(base64Controller.text);
+                  provider.setCode(activationCode);
                   messengerState.showSnackBar(
                     const SnackBar(
                       content: Text("Card activated."),

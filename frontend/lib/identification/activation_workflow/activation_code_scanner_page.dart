@@ -30,7 +30,8 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final provider = Provider.of<ActivationCodeModel>(context, listen: false);
     Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
     try {
-      ActivationCodeParser(provider).processQrCodeContent(code);
+      final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
+      provider.setCode(activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
         "Die eingescannte Karte enthält kein Ablaufdatum, "

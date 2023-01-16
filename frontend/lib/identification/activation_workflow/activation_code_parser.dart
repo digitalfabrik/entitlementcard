@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 
@@ -25,23 +24,21 @@ class QRCodeInvalidFormatException extends QrCodeParseException {
 }
 
 class ActivationCodeParser {
-  final ActivationCodeModel _activationCodeModel;
+  const ActivationCodeParser();
 
-  ActivationCodeParser(this._activationCodeModel);
-
-  void processQrCodeContent(String rawBase64Content) {
-    QrCode qrcode;
+  DynamicActivationCode parseQrCodeContent(String rawBase64Content) {
+    QrCode qrCode;
     try {
-      qrcode = QrCode.fromBuffer(const Base64Decoder().convert(rawBase64Content));
+      qrCode = QrCode.fromBuffer(const Base64Decoder().convert(rawBase64Content));
     } on Exception catch (e, stackTrace) {
       throw QRCodeInvalidFormatException(e, stackTrace);
     }
 
-    if (!qrcode.hasDynamicActivationCode()) {
+    if (!qrCode.hasDynamicActivationCode()) {
       throw QrCodeWrongTypeException();
     }
 
-    final DynamicActivationCode activationCode = qrcode.dynamicActivationCode;
+    final DynamicActivationCode activationCode = qrCode.dynamicActivationCode;
 
     final cardInfo = activationCode.info;
     if (!cardInfo.hasFullName()) {
@@ -68,6 +65,6 @@ class ActivationCodeParser {
       throw QrCodeFieldMissingException("totpSecret");
     }
 
-    _activationCodeModel.setCode(qrcode.dynamicActivationCode);
+    return qrCode.dynamicActivationCode;
   }
 }
