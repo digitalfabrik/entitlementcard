@@ -1,23 +1,6 @@
-import { add } from 'date-fns'
-import {
-  BavariaCardType as GraphQLBavariaCardType,
-  BavariaCardTypeExtension,
-  CardExtensions,
-  CardInfo,
-  DynamicActivationCode,
-  RegionExtension,
-} from '../generated/card_pb'
+import { CardExtensions, CardInfo, DynamicActivationCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
-import { Region } from '../generated/graphql'
-import {
-  bavaria_card_type,
-  birthday_extension,
-  Extension,
-  ExtensionHolder,
-  nuernberg_pass_number_extension,
-  region_extension,
-  RegionState,
-} from './extensions'
+import { ExtensionHolder } from './extensions'
 
 const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
 const TOTP_SECRET_LENGTH = 20

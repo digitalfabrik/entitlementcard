@@ -147,7 +147,7 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
 
   setProtobufData(state: BavariaCardTypeState, message: PartialMessage<CardExtensions>): void {
     message.extensionBavariaCardType = {
-      cardType: state == BavariaCardTypeState.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD,
+      cardType: state === BavariaCardTypeState.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD,
     }
   },
 

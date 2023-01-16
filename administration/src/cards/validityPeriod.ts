@@ -1,4 +1,4 @@
-import { addDays, differenceInDays, differenceInHours, fromUnixTime, getUnixTime } from 'date-fns'
+import { addDays, differenceInDays, fromUnixTime, getUnixTime } from 'date-fns'
 
 export const dateToDaysSinceEpoch = (date: Date): number => {
   return differenceInDays(date, getUnixTime(0))
