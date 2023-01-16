@@ -30,7 +30,6 @@ class ActivationCodeParser {
   ActivationCodeParser(this._activationCodeModel);
 
   void processQrCodeContent(String rawBase64Content) {
-    // TODO (Max): Refactor into Dart extension
     QrCode qrcode;
     try {
       qrcode = QrCode.fromBuffer(const Base64Decoder().convert(rawBase64Content));
