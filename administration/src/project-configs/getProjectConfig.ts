@@ -8,7 +8,7 @@ export interface ProjectConfig {
   projectId: string
   applicationFeatureEnabled: boolean
   dataPrivacyHeadline: string
-  dataPrivacyText: () => ReactElement
+  dataPrivacyContent: () => ReactElement
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {

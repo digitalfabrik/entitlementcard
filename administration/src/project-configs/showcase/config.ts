@@ -6,7 +6,7 @@ const config: ProjectConfig = {
   projectId: 'showcase.entitlementcard.app',
   applicationFeatureEnabled: true,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
-  dataPrivacyText: DataPrivacyBaseText,
+  dataPrivacyContent: DataPrivacyBaseText,
 }
 
 export default config

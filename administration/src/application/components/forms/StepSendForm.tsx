@@ -77,7 +77,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           title={config.dataPrivacyHeadline}
           content={
             <>
-              <config.dataPrivacyText />
+              <config.dataPrivacyContent />
               <div>{privacyPolicy}</div>
             </>
           }

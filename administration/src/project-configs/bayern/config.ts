@@ -6,7 +6,7 @@ const config: ProjectConfig = {
   projectId: 'bayern.ehrenamtskarte.app',
   applicationFeatureEnabled: true,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
-  dataPrivacyText: DataPrivacyBaseText,
+  dataPrivacyContent: DataPrivacyBaseText,
 }
 
 export default config

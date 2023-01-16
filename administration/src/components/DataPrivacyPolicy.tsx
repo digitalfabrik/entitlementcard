@@ -19,7 +19,7 @@ const DataPrivacyPolicy = (): ReactElement => {
   return (
     <Container>
       <Title>{config.dataPrivacyHeadline}</Title>
-      <config.dataPrivacyText />
+      <config.dataPrivacyContent />
     </Container>
   )
 }

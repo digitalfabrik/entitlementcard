@@ -6,7 +6,7 @@ const config: ProjectConfig = {
   projectId: 'nuernberg.sozialpass.app',
   applicationFeatureEnabled: false,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
-  dataPrivacyText: DataPrivacyBaseText,
+  dataPrivacyContent: DataPrivacyBaseText,
 }
 
 export default config
