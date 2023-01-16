@@ -1,7 +1,9 @@
-import BuildConfigType, {CommonBuildConfigType} from "../types";
+import BuildConfigType, { CommonBuildConfigType } from "../types";
+import publisherText from "./publisherText";
+import disclaimerText from "./disclaimerText";
 
 export const nuernbergCommon: CommonBuildConfigType = {
-    appName: "Sozialpass",
+    appName: "Nürnberg-Pass",
     appIcon: "app_icon_nuernberg",
     projectId: {
         production: "nuernberg.sozialpass.app",
@@ -18,10 +20,13 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
+    mapInitialCoordinatesLat: 49.460983,
+    mapInitialCoordinatesLng: 11.061859,
+    mapInitialZoomLevel: 10,
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
-        local: "http://localhost:7000",
+        local: "http://localhost:8000",
     },
     cardBranding: {
         headerTextColor: "#000000",
@@ -33,7 +38,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogoPadding: 0,
         headerContainerPadding: {top: 0, right: 24, bottom: 0, left: 16},
         bodyContainerPadding: {top: 0, right: 24, bottom: 24, left: 16},
-        bodyLogo: "assets/nuernberg/body-logo.jpeg",
+        bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLabel: "Nürnberg-Pass",
         bodyTextColor: "#000000",
@@ -43,8 +48,13 @@ export const nuernbergCommon: CommonBuildConfigType = {
         colorPremium: "#F9B787",
         boxDecorationRadius: 0,
     },
+    iconInAboutTab: "assets/nuernberg/body-logo.png",
     featureFlags: {},
     applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
+    publisherAddress: "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
+    dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",
+    publisherText: publisherText,
+    disclaimerText: disclaimerText,
 };
 
 let nuernberg: BuildConfigType = {

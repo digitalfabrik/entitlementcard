@@ -32,18 +32,22 @@ class ContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverNavigationBar(
-          title: title,
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.all(10),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(children),
+    final theme = Theme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.backgroundColor),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverNavigationBar(
+            title: title,
           ),
-        )
-      ],
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(children),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

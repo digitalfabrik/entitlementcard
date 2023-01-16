@@ -24,6 +24,9 @@ export type CommonBuildConfigType = {
         production: string,
         local: string,
     },
+    mapInitialCoordinatesLat: number
+    mapInitialCoordinatesLng: number
+    mapInitialZoomLevel: number
     backendUrl: {
         showcase: string,
         production: string,
@@ -49,10 +52,15 @@ export type CommonBuildConfigType = {
         bodyBackgroundImageUrl: string
         boxDecorationRadius: number,
     }
+    iconInAboutTab: string
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
     applicationUrl: string,
+    dataPrivacyPolicyUrl: string,
+    publisherAddress: string
+    publisherText: string
+    disclaimerText: string
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

@@ -40,7 +40,6 @@ dependencies:
   flutter_secure_storage: ^6.0.0
   infinite_scroll_pagination: ^3.2.0
   geolocator: ^9.0.1
-  flutter_launcher_icons: ^0.10.0
   mutex: ^3.0.0
   protobuf: ^2.1.0
   base32: ^2.1.3
@@ -78,15 +77,6 @@ dev_dependencies:
   gql: '>=0.12.3 <1.0.0'
   lint: ^1.7.2
 
-flutter_icons:
-  android: 'launcher_icon'
-  ios: true
-  image_path: 'assets/icon/icon.png'
-  image_path_ios: 'assets/icon/icon.png'
-  image_path_android: 'assets/icon/icon.png'
-  adaptive_icon_background: 'assets/icon/icon_background.png'
-  adaptive_icon_foreground: 'assets/icon/icon_foreground.png'
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -101,13 +91,12 @@ flutter:
   assets:
     - assets/category_icons/
     - assets/detail_headers/
-    - assets/app_icon/
-    - assets/icon/
     - assets/intro_slides/
     - assets/bayern/header-logo.png
     - assets/bayern/body-logo.png
+    - assets/bayern/icon.png
     - assets/nuernberg/header-logo.png
-    - assets/nuernberg/body-logo.jpeg
+    - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
 
   # An image asset can refer to one or more resolution-specific 'variants', see

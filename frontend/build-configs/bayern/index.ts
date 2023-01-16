@@ -1,4 +1,6 @@
-import BuildConfigType, {CommonBuildConfigType} from "../types";
+import BuildConfigType, { CommonBuildConfigType } from "../types";
+import publisherText from "./publisherText";
+import disclaimerText from "./disclaimerText";
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
@@ -18,6 +20,9 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/bayern.ehrenamtskarte.app/map",
     },
+    mapInitialCoordinatesLat: 48.949444,
+    mapInitialCoordinatesLng: 11.395,
+    mapInitialZoomLevel: 6,
     backendUrl: {
         production: "https://api.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
@@ -43,9 +48,14 @@ export const bayernCommon: CommonBuildConfigType = {
         colorPremium: "#cab374",
         boxDecorationRadius: 1,
     },
+    iconInAboutTab: "assets/bayern/icon.png",
     featureFlags: {},
-    applicationUrl: "https://bayern.ehrenamtskarte.app/apply-for-eak",
-};
+    applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
+    dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
+    publisherAddress: "Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München",
+    publisherText,
+    disclaimerText
+}
 
 let bayern: BuildConfigType = {
     common: bayernCommon,
