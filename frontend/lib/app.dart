@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/entry_widget.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
-import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => SettingsModel()..initialize()),
-          ChangeNotifierProvider(create: (context) => CardDetailsModel()..initialize()),
+          ChangeNotifierProvider(create: (context) => ActivationCodeModel()..initialize()),
         ],
         child: const EntryWidget(),
       ),

@@ -1,32 +1,35 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/card/card_content.dart';
-import 'package:ehrenamtskarte/identification/card/id_card.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
-import 'package:ehrenamtskarte/identification/card_detail_view/verification_qr_code_view.dart';
-import 'package:ehrenamtskarte/identification/card_details.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CardDetailView extends StatelessWidget {
-  final CardDetails cardDetails;
-  final VoidCallback startActivateEak;
+  final DynamicActivationCode activationCode;
+  final VoidCallback startActivation;
   final VoidCallback startVerification;
-  final VoidCallback startEakApplication;
+  final VoidCallback startApplication;
 
   const CardDetailView({
     super.key,
-    required this.cardDetails,
-    required this.startActivateEak,
+    required this.activationCode,
+    required this.startActivation,
     required this.startVerification,
-    required this.startEakApplication,
+    required this.startApplication,
   });
 
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    final regionsQuery =
-        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(project: projectId, ids: [cardDetails.regionId]));
+    final regionsQuery = GetRegionsByIdQuery(
+      variables: GetRegionsByIdArguments(
+        project: projectId,
+        ids: [activationCode.info.extensions.extensionRegion.regionId],
+      ),
+    );
 
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
@@ -39,17 +42,15 @@ class CardDetailView extends StatelessWidget {
             ? null
             : regionsQuery.parse(fetchedData).regionsByIdInProject[0];
 
-        final eakCard = Padding(
+        final paddedCard = Padding(
           padding: const EdgeInsets.all(8.0),
           child: IdCard(
-            child: CardContent(
-              cardDetails: cardDetails,
-              region: region != null ? Region(region.prefix, region.name) : null,
-            ),
+            cardInfo: activationCode.info,
+            region: region != null ? Region(region.prefix, region.name) : null,
           ),
         );
         final richQrCode =
-            RichQrCode(cardDetails: cardDetails, onMoreActionsPressed: () => _onMoreActionsPressed(context));
+            RichQrCode(activationCode: activationCode, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
         return orientation == Orientation.landscape
             ? SafeArea(
@@ -61,7 +62,7 @@ class CardDetailView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Flexible(child: eakCard),
+                        Flexible(child: paddedCard),
                         if (constraints.maxWidth > qrCodeMinWidth * 2)
                           Flexible(child: richQrCode)
                         else
@@ -78,7 +79,7 @@ class CardDetailView extends StatelessWidget {
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(children: [eakCard, const SizedBox(height: 16), richQrCode]),
+                    child: Column(children: [paddedCard, const SizedBox(height: 16), richQrCode]),
                   ),
                 ),
               );
@@ -90,8 +91,8 @@ class CardDetailView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => MoreActionsDialog(
-        startActivateEak: startActivateEak,
-        startEakApplication: startEakApplication,
+        startActivation: startActivation,
+        startApplication: startApplication,
         startVerification: startVerification,
       ),
     );
@@ -100,10 +101,10 @@ class CardDetailView extends StatelessWidget {
 
 class RichQrCode extends StatelessWidget {
   final VoidCallback onMoreActionsPressed;
-  final CardDetails cardDetails;
+  final DynamicActivationCode activationCode;
   final bool compact;
 
-  const RichQrCode({super.key, required this.onMoreActionsPressed, required this.cardDetails, this.compact = false});
+  const RichQrCode({super.key, required this.onMoreActionsPressed, required this.activationCode, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +122,7 @@ class RichQrCode extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Flexible(child: VerificationQrCodeView(cardDetails: cardDetails)),
+          Flexible(child: VerificationCodeView(activationCode: activationCode)),
           Container(
             alignment: Alignment.center,
             child: TextButton(

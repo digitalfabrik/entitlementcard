@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class NoCardView extends StatelessWidget {
   final VoidCallback startVerification;
-  final VoidCallback startActivateQrCode;
-  final VoidCallback startEakApplication;
+  final VoidCallback startActivation;
+  final VoidCallback startApplication;
 
   const NoCardView({
     super.key,
     required this.startVerification,
-    required this.startActivateQrCode,
-    required this.startEakApplication,
+    required this.startActivation,
+    required this.startApplication,
   });
 
   @override
@@ -52,7 +52,7 @@ class NoCardView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
-                            onPressed: startActivateQrCode,
+                            onPressed: startActivation,
                             child: const Text("Jetzt Aktivierungscode einscannen"),
                           ),
                         ),
@@ -65,7 +65,7 @@ class NoCardView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: OutlinedButton(
-                            onPressed: startEakApplication,
+                            onPressed: startApplication,
                             child: const Text("Jetzt Ehrenamtskarte beantragen"),
                           ),
                         )

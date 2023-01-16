@@ -1,8 +1,8 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card/card_header_logo.dart';
+import 'package:ehrenamtskarte/identification/id_card/card_header_logo.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -37,30 +37,24 @@ PaddingStyle paddingHeader = PaddingStyle(
   buildConfig.cardBranding.headerContainerPadding.bottom.toDouble(),
 );
 
-class Region with EquatableMixin {
-  final String prefix;
-  final String name;
-
-  Region(this.prefix, this.name);
-
-  @override
-  List<Object> get props => [prefix, name];
-}
-
 class CardContent extends StatelessWidget {
-  final BaseCardDetails cardDetails;
+  final CardInfo cardInfo;
   final Region? region;
 
-  const CardContent({super.key, required this.cardDetails, this.region});
+  const CardContent({super.key, required this.cardInfo, this.region});
 
   String get _formattedExpirationDate {
-    final expirationDate = cardDetails.expirationDate;
-    return expirationDate != null ? DateFormat('dd.MM.yyyy').format(expirationDate) : "unbegrenzt";
+    final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
+    return expirationDay != null
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
+        : "unbegrenzt";
   }
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = cardDetails.cardType == CardType.gold ? premiumCardColor : standardCardColor;
+    final cardColor = cardInfo.extensions.extensionBavariaCardType.cardType == BavariaCardType.GOLD
+        ? premiumCardColor
+        : standardCardColor;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
@@ -132,7 +126,8 @@ class CardContent extends StatelessWidget {
                   child: Column(
                     children: [
                       AspectRatio(
-                        aspectRatio: 6 / 1.2,
+                        // magic number that makes the Nuremberg logos have roughly the same width
+                        aspectRatio: 6 / 1.26,
                         child: Align(
                           alignment: buildConfig.cardBranding.bodyLogoPosition == 'center'
                               ? Alignment.center
@@ -146,7 +141,7 @@ class CardContent extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              cardDetails.fullName,
+                              cardInfo.fullName,
                               style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                               textAlign: TextAlign.start,
                             ),

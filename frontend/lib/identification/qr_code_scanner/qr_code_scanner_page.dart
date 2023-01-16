@@ -1,5 +1,5 @@
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
 
 typedef OnHelpClickedCallback = void Function();

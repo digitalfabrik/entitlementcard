@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MoreActionsDialog extends StatelessWidget {
-  final VoidCallback startActivateEak;
+  final VoidCallback startActivation;
   final VoidCallback startVerification;
-  final VoidCallback startEakApplication;
+  final VoidCallback startApplication;
 
   const MoreActionsDialog({
     super.key,
-    required this.startActivateEak,
+    required this.startActivation,
     required this.startVerification,
-    required this.startEakApplication,
+    required this.startApplication,
   });
 
   @override
@@ -24,7 +24,7 @@ class MoreActionsDialog extends StatelessWidget {
           leading: const Icon(Icons.qr_code_scanner, size: 36),
           onTap: () {
             Navigator.pop(context);
-            startActivateEak();
+            startActivation();
           },
         ),
         ListTile(
@@ -33,7 +33,7 @@ class MoreActionsDialog extends StatelessWidget {
           leading: const Icon(Icons.attach_file, size: 36),
           onTap: () {
             Navigator.pop(context);
-            startEakApplication();
+            startApplication();
           },
         ),
         ListTile(

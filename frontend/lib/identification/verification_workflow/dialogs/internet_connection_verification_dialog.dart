@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/verification/dialogs/verification_result_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_result_dialog.dart';
 import 'package:flutter/material.dart';
 
 class InternetConnectionVerificationDialog extends StatelessWidget {

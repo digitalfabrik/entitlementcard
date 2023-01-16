@@ -1,22 +1,25 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card/card_content.dart';
-import 'package:ehrenamtskarte/identification/card/id_card.dart';
-import 'package:ehrenamtskarte/verification/dialogs/verification_result_dialog.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_result_dialog.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class PositiveVerificationResultDialog extends StatelessWidget {
-  final BaseCardDetails cardDetails;
+  final CardInfo cardInfo;
 
-  const PositiveVerificationResultDialog({super.key, required this.cardDetails});
+  const PositiveVerificationResultDialog({super.key, required this.cardInfo});
 
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    final regionsQuery =
-        GetRegionsByIdQuery(variables: GetRegionsByIdArguments(project: projectId, ids: [cardDetails.regionId]));
+    final regionsQuery = GetRegionsByIdQuery(
+      variables: GetRegionsByIdArguments(
+        project: projectId,
+        ids: [cardInfo.extensions.extensionRegion.regionId],
+      ),
+    );
 
     return Query(
       options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
@@ -28,16 +31,14 @@ class PositiveVerificationResultDialog extends StatelessWidget {
           icon: Icons.verified_user,
           iconColor: Colors.green,
           child: IdCard(
-            child: CardContent(
-              cardDetails: cardDetails,
-              region: region != null ? Region(region.prefix, region.name) : null,
-            ),
+            cardInfo: cardInfo,
+            region: region != null ? Region(region.prefix, region.name) : null,
           ),
         );
       },
     );
   }
 
-  static Future<void> show(BuildContext context, BaseCardDetails cardDetails) =>
-      showDialog(context: context, builder: (_) => PositiveVerificationResultDialog(cardDetails: cardDetails));
+  static Future<void> show(BuildContext context, CardInfo cardInfo) =>
+      showDialog(context: context, builder: (_) => PositiveVerificationResultDialog(cardInfo: cardInfo));
 }

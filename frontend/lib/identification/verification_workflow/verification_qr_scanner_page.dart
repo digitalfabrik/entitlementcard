@@ -1,18 +1,18 @@
+import 'dart:convert';
+
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card_details_model.dart';
+import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_scanner_page.dart';
-import 'package:ehrenamtskarte/verification/dialogs/internet_connection_verification_dialog.dart';
-import 'package:ehrenamtskarte/verification/dialogs/negative_verification_result_dialog.dart';
-import 'package:ehrenamtskarte/verification/dialogs/positive_verification_result_dialog.dart';
-import 'package:ehrenamtskarte/verification/dialogs/verification_info_dialog.dart';
-import 'package:ehrenamtskarte/verification/query_server_verification.dart';
-import 'package:ehrenamtskarte/verification/scanner/verification_encoder.dart';
-import 'package:ehrenamtskarte/verification/verification_card_details.dart';
-import 'package:ehrenamtskarte/verification/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/internet_connection_verification_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/negative_verification_result_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/positive_verification_result_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/navigation_bars.dart' as nav_bars;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -49,14 +49,17 @@ class VerificationQrScannerPage extends StatelessWidget {
           if (config.showDevSettings)
             TextButton(
               onPressed: () async {
-                final provider = Provider.of<CardDetailsModel>(context, listen: false);
-                final cardDetails = provider.cardDetails!;
-                final generator = OTPGenerator(cardDetails.totpSecretBase32);
-                final verifyCodeBase64 =
-                    encodeVerificationCardDetails(VerificationCardDetails(cardDetails, generator.generateOTP().code));
+                final provider = Provider.of<ActivationCodeModel>(context, listen: false);
+                final activationCode = provider.activationCode!;
+                final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
+                final verifyQrCode = QrCode(
+                  dynamicVerifyCode:
+                      DynamicVerifyCode(info: activationCode.info, pepper: activationCode.pepper, otp: otp),
+                );
+                final verifyCodeBase64 = const Base64Encoder().convert(verifyQrCode.writeToBuffer());
                 _handleQrCode(context, verifyCodeBase64);
               },
-              child: const Text("Self Verify"),
+              child: const Text("Verify activated Card"),
             )
         ],
       ),
@@ -68,9 +71,9 @@ class VerificationQrScannerPage extends StatelessWidget {
 
     final client = GraphQLProvider.of(context).value;
     try {
-      final card = processQrCodeContent(rawQrContent);
+      final verifyCode = processQrCodeContent(rawQrContent);
       final projectId = Configuration.of(context).projectId;
-      final valid = await queryServerVerification(client, projectId, card);
+      final valid = await queryServerVerification(client, projectId, verifyCode);
       if (!valid) {
         await _onError(
           context,
@@ -78,7 +81,7 @@ class VerificationQrScannerPage extends StatelessWidget {
           "verifiziert werden!",
         );
       } else {
-        await _onSuccess(context, card.cardDetails);
+        await _onSuccess(context, verifyCode.info);
       }
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
@@ -142,9 +145,9 @@ class VerificationQrScannerPage extends StatelessWidget {
     await InternetConnectionVerificationDialog.show(context, message);
   }
 
-  Future<void> _onSuccess(BuildContext context, BaseCardDetails cardDetails) async {
+  Future<void> _onSuccess(BuildContext context, CardInfo cardInfo) async {
     _closeWaitingDialog(context);
-    await PositiveVerificationResultDialog.show(context, cardDetails);
+    await PositiveVerificationResultDialog.show(context, cardInfo);
   }
 
   void _openWaitingDialog(BuildContext context) {
