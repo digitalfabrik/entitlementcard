@@ -41,12 +41,14 @@ export type CommonBuildConfigType = {
         headerLogoPadding: number,
         headerContainerPadding: { top: number, left: number; bottom: number, right: number }
         headerTextFontSize: number,
+        headerLogoWidth: number,
         bodyTextColor: string,
         colorPremium: string,
         colorStandard: string,
         bodyContainerPadding: { top: number, left: number; bottom: number, right: number }
         bodyLogo: string,
         bodyLogoPosition: string,
+        bodyLogoWidth: number,
         bodyLabel: string,
         bodyBackgroundImage: boolean,
         bodyBackgroundImageUrl: string
