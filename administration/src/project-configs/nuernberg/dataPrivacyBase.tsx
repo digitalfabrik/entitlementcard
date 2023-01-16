@@ -154,19 +154,8 @@ export const DataPrivacyBaseText = () => (
           <br />
         </b>
       </span>
-      Bei jedem Zugriff auf das
-      <span style={{ fontFamily: '"Calibri"', fontSize: '11pt' }}>&nbsp;</span>
-      <a
-        target='_blank'
-        rel='noreferrer'
-        href='https://nuernberg.sozialpass.app/beantragen'
-        title='https://nuernberg.sozialpass.app/beantragen'>
-        <span style={{ color: '#0000ff' }}>
-          <u>Antragsformular</u>
-        </span>
-      </a>{' '}
-      oder die Nutzung der digitalen NürnbergPass-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs. 1 TMG
-      bei jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
+      Bei Nutzung der digitalen NürnbergPass-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs. 1 TMG bei
+      jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
     </p>
     <ul>
       <li>
@@ -261,21 +250,7 @@ export const DataPrivacyBaseText = () => (
         </b>
       </span>
       Außerhalb gesetzlicher Verpflichtungen dürfen personenbezogene Daten nur mit (und im Rahmen) Ihrer Zustimmung
-      erhoben, genutzt oder verarbeitet werden. Um dies zu gewährleisten, müssen Sie z.B. bei der Beantragung des
-      digitalen NürnbergPass explizit der Verarbeitung und Weitergabe Ihrer Daten zustimmen. Sollten Sie den digitalen
-      NürnbergPass über das Online-Formular auf (
-      <a
-        target='_blank'
-        rel='noreferrer'
-        href='https://nuernberg.sozialpass.app/beantragen'
-        title='https://nuernberg.sozialpass.app/beantragen'>
-        <span style={{ color: '#0000ff' }}>
-          <u>https://nuernberg.sozialpass.app/beantragen</u>
-        </span>
-      </a>
-      ) beantragen, wird die Tür an Tür – Digitalfabrik gGmbH die im Antragsformular angegebenen Daten verarbeiten und
-      nutzen. Dies erfolgt ausschließlich für den Zweck der Ausstellung des digitalen NürnbergPass, sowie der damit
-      verbundenen Gewährung von Vergünstigungen und zugehörigen Kommunikationsmaßnahmen.
+      erhoben, genutzt oder verarbeitet werden.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Beim Zugriff auf dieses Internetangebot werden von uns Cookies (kleine Dateien) auf Ihrer Festplatte mit einer
@@ -287,8 +262,8 @@ export const DataPrivacyBaseText = () => (
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Alle Einwilligungen können verweigert bzw. jederzeit ohne Angabe von Gründen durch Mitteilung an
       digitalfabrik@tuerantuer.de widerrufen werden. In diesem Fall werden alle gespeicherten personenbezogenen Daten
-      gelöscht und der digitale NürnbergPass verliert seine Gültigkeit. Aus der Nicht-Einwilligung oder einem Widerruf
-      darf Ihnen kein Nachteil entstehen. Ein Widerruf kann nur mit Wirkung für die Zukunft erklärt werden.
+      gelöscht. Aus der Nicht-Einwilligung oder einem Widerruf darf Ihnen kein Nachteil entstehen. Ein Widerruf kann nur
+      mit Wirkung für die Zukunft erklärt werden.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
