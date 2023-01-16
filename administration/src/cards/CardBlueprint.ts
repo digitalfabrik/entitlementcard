@@ -57,18 +57,19 @@ export class CardBlueprint {
     const totpSecret = new Uint8Array(TOTP_SECRET_LENGTH)
     crypto.getRandomValues(totpSecret)
 
-    const expirationDate = this.expirationDate
-
     let extension_message = {}
 
     for (const state of this.extensionHolders) {
       state.extension.setProtobufData(state, extension_message)
     }
 
+    const expirationDate = this.expirationDate
+
     return new DynamicActivationCode({
       info: new CardInfo({
         fullName: this.fullName,
-        expirationDay: expirationDate !== null ? dateToDaysSinceEpoch(expirationDate) : undefined,
+        expirationDay:
+          expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
         extensions: new CardExtensions(extension_message),
       }),
       pepper: pepper,

@@ -82,9 +82,6 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
           items={Object.values(BavariaCardTypeState)}
           activeItem={state}
           onItemSelect={value => {
-            // TODO: if (state == BavariaCardTypeState.gold) {
-            //  state.expirationDate = null
-            //}
             setState(value)
           }}
           itemRenderer={renderCardType}
