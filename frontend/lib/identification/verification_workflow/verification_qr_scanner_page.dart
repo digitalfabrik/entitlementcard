@@ -13,7 +13,7 @@ import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/veri
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart' as nav_bars;
+import 'package:ehrenamtskarte/widgets/app_bars.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          nav_bars.NavigationBar(
+          CustomAppBar(
             title: "Karte verifizieren",
             actions: [
               IconButton(

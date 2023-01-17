@@ -53,7 +53,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Show Intro Slides'),
-            onTap: () => _showInfoSlides(context),
+            onTap: () => _showIntroSlides(context),
           ),
           ListTile(
             title: const Text('Log sample exception'),
@@ -139,7 +139,7 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  void _showInfoSlides(BuildContext context) {
+  void _showIntroSlides(BuildContext context) {
     Navigator.push(
       context,
       AppRoute(

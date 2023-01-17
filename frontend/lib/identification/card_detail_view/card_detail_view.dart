@@ -43,7 +43,7 @@ class CardDetailView extends StatelessWidget {
             : regionsQuery.parse(fetchedData).regionsByIdInProject[0];
 
         final paddedCard = Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: IdCard(
             cardInfo: activationCode.info,
             region: region != null ? Region(region.prefix, region.name) : null,
@@ -78,7 +78,7 @@ class CardDetailView extends StatelessWidget {
             : SingleChildScrollView(
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Column(children: [paddedCard, const SizedBox(height: 16), richQrCode]),
                   ),
                 ),
@@ -109,12 +109,12 @@ class RichQrCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             constraints: const BoxConstraints(maxWidth: 300),
             child: const Text(
               "Mit diesem QR-Code können Sie sich"

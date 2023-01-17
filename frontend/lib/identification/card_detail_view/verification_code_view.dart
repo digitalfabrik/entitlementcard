@@ -55,8 +55,8 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
             return ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
               child: Material(
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding / 2)),
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Stack(
                   children: [
                     Padding(

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
@@ -20,13 +21,13 @@ class FilterBarButton extends StatefulWidget {
 class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProviderStateMixin {
   bool _selected = false;
   AnimationController? _animationController;
-  Animation<Color?>? _colorTween;
+  Animation<double>? _colorTween;
 
   _FilterBarButtonState();
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
 
     super.initState();
   }
@@ -36,8 +37,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
     final animationController = _animationController;
 
     if (animationController != null) {
-      _colorTween = ColorTween(begin: Theme.of(context).backgroundColor, end: Theme.of(context).primaryColorLight)
-          .animate(animationController);
+      _colorTween = Tween<double>(begin: 0, end: 1).animate(animationController);
       super.didChangeDependencies();
     }
   }
@@ -70,6 +70,12 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
     // In the second row we can use larger width as there are only 4 categories
     final width = isSecondRow ? largeWidth : smallWidth;
 
+    final theme = Theme.of(context);
+
+    final selectedColor = theme.brightness == Brightness.dark
+        ? theme.colorScheme.primary.toHSLColor().withLightness(0.2).toColor()
+        : theme.colorScheme.primary.toHSLColor().withLightness(0.9).toColor();
+
     final colorTween = _colorTween;
     final animationController = _animationController;
     if (colorTween == null || animationController == null) {
@@ -78,39 +84,47 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
 
     return AnimatedBuilder(
       animation: colorTween,
-      builder: (context, child) => RawMaterialButton(
-        elevation: 0.0,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-        constraints: BoxConstraints.tightFor(width: width, height: 70),
-        fillColor: colorTween.value,
-        onPressed: () {
-          final isSelected = !_selected;
-          setState(() {
-            _selected = isSelected;
-            animationController.animateTo(isSelected ? 1 : 0);
-            widget.onCategoryPress(widget.asset, isSelected);
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Column(
-            children: [
-              SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget.asset.shortName,
-                    maxLines: 2,
-                    style: const TextStyle(fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
+      builder: (context, child) {
+        final color = Color.lerp(theme.backgroundColor, selectedColor, colorTween.value);
+        return ConstrainedBox(
+          constraints: BoxConstraints.tightFor(width: width, height: 70),
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: color,
+            elevation: 0,
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: () {
+                final isSelected = !_selected;
+                setState(() {
+                  _selected = isSelected;
+                  animationController.animateTo(isSelected ? 1 : 0);
+                  widget.onCategoryPress(widget.asset, isSelected);
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Column(
+                  children: [
+                    SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.asset.shortName,
+                          maxLines: 2,
+                          style: const TextStyle(fontSize: 10),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

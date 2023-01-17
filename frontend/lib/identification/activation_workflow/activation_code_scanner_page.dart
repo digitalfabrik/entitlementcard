@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/identification/activation_workflow/activation_cod
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -14,9 +14,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const NavigationBar(
-          title: "Karte hinzufügen",
-        ),
+        const CustomAppBar(title: "Karte hinzufügen"),
         Expanded(
           child: QrCodeScannerPage(
             onCodeScanned: (code) async => _onCodeScanned(context, code),

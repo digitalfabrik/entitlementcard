@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/search/filter_bar.dart';
 import 'package:ehrenamtskarte/search/location_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         CustomScrollView(
           slivers: [
-            SliverSearchNavigationBar(
+            SearchSliverAppBar(
               onChanged: (text) => setState(() {
                 searchFieldText = text;
               }),
