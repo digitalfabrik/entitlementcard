@@ -76,8 +76,8 @@ class CardContent extends StatelessWidget {
                   top: paddingHeader.top * scaleFactor,
                   bottom: paddingHeader.bottom * scaleFactor,
                 ),
-                child: AspectRatio(
-                  aspectRatio: 6 / 1,
+                child: SizedBox(
+                  height: 50 * scaleFactor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -92,8 +92,12 @@ class CardContent extends StatelessWidget {
                         child: CardHeaderLogo(
                           title: buildConfig.cardBranding.headerTitleRight,
                           scaleFactor: scaleFactor,
-                          logo: Image(image: AssetImage(buildConfig.cardBranding.headerLogo), fit: BoxFit.contain),
-                          alignment: CrossAxisAlignment.center,
+                          logo: Image(
+                            image: AssetImage(buildConfig.cardBranding.headerLogo),
+                            width: buildConfig.cardBranding.headerLogoWidth * scaleFactor,
+                            fit: BoxFit.contain,
+                          ),
+                          alignment: CrossAxisAlignment.end,
                         ),
                       ),
                     ],
@@ -124,15 +128,18 @@ class CardContent extends StatelessWidget {
                     top: paddingBody.top * scaleFactor,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       AspectRatio(
-                        // magic number that makes the Nuremberg logos have roughly the same width
-                        aspectRatio: 6 / 1.26,
+                        aspectRatio: 6 / 1.5,
                         child: Align(
                           alignment: buildConfig.cardBranding.bodyLogoPosition == 'center'
                               ? Alignment.center
                               : Alignment.centerRight,
-                          child: Image(image: AssetImage(buildConfig.cardBranding.bodyLogo)),
+                          child: Image(
+                            image: AssetImage(buildConfig.cardBranding.bodyLogo),
+                            width: buildConfig.cardBranding.bodyLogoWidth * scaleFactor,
+                          ),
                         ),
                       ),
                       Flexible(
