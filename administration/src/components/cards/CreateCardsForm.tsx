@@ -1,23 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
-import { CardType } from '../../models/CardType'
-import { CardBlueprint, isValid } from './CardBlueprint'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
-import { add } from 'date-fns'
 import { usePrompt } from '../../util/blocker-prompt'
-
-let idCounter = 0
-
-const createEmptyCard = (): CardBlueprint => ({
-  id: idCounter++,
-  forename: '',
-  surname: '',
-  expirationDate: add(Date.now(), { years: 2 }),
-  cardType: CardType.standard,
-})
+import { Region } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
@@ -53,23 +43,25 @@ const FormColumn = styled.div`
 `
 
 interface Props {
+  region: Region
   cardBlueprints: CardBlueprint[]
   setCardBlueprints: (blueprints: CardBlueprint[]) => void
   confirm: () => void
 }
 
 const CreateCardsForm = (props: Props) => {
-  const { cardBlueprints, setCardBlueprints } = props
-  const addForm = () => setCardBlueprints([...cardBlueprints, createEmptyCard()])
-  const updateCardBlueprint = (oldBlueprint: CardBlueprint, newBlueprint: CardBlueprint | null) => {
-    if (newBlueprint === null) setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
-    else {
-      if (newBlueprint.cardType === CardType.gold) newBlueprint.expirationDate = null
-      setCardBlueprints(cardBlueprints.map(blueprint => (blueprint === oldBlueprint ? newBlueprint : blueprint)))
-    }
+  const { cardBlueprints, setCardBlueprints, region } = props
+  const projectConfig = useContext(ProjectConfigContext)
+
+  const addForm = () => setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
+  const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
+    setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
+  }
+  const notifyUpdate = () => {
+    setCardBlueprints([...cardBlueprints])
   }
 
-  const allCardsValid = cardBlueprints.reduce((acc, blueprint) => acc && isValid(blueprint), true)
+  const allCardsValid = cardBlueprints.every(blueprint => blueprint.isValid())
 
   usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardBlueprints.length !== 0)
 
@@ -94,7 +86,8 @@ const CreateCardsForm = (props: Props) => {
           <FormColumn key={blueprint.id}>
             <CreateCardForm
               cardBlueprint={blueprint}
-              onUpdate={newBlueprint => updateCardBlueprint(blueprint, newBlueprint)}
+              onRemove={() => removeCardBlueprint(blueprint)}
+              onUpdate={() => notifyUpdate()}
             />
           </FormColumn>
         ))}

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Navigation from './components/Navigation'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import CreateCardsController from './components/create-cards/CreateCardsController'
+import CreateCardsController from './components/cards/CreateCardsController'
 import styled from 'styled-components'
 import WhoAmIProvider from './WhoAmIProvider'
 import { AuthContext } from './AuthProvider'

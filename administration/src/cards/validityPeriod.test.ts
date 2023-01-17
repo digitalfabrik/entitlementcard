@@ -8,6 +8,12 @@ describe('dateToDaysSinceEpoch', () => {
   test('day after epoch', () => {
     expect(dateToDaysSinceEpoch(new Date('1970-01-02T00:00:00.000Z'))).toEqual(1)
   })
+  test('day before epoch', () => {
+    expect(dateToDaysSinceEpoch(new Date('1969-12-31T00:00:00.000Z'))).toEqual(-1)
+  })
+  test('year before epoch', () => {
+    expect(dateToDaysSinceEpoch(new Date('1969-01-01T00:00:00.000Z'))).toEqual(-365)
+  })
   test('randomDayIsConformantWithBackend', () => {
     // Values taken from backend
     expect(dateToDaysSinceEpoch(new Date('2052-12-20T00:00:00.000Z'))).toEqual(30304)

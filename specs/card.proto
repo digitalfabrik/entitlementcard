@@ -30,7 +30,7 @@ message BavariaCardTypeExtension {
 message CardExtensions {
   optional RegionExtension extension_region = 1;
   optional BirthdayExtension extension_birthday = 2;
-  optional NuernbergPassNumberExtension extension_vag_number = 3;
+  optional NuernbergPassNumberExtension nuernberg_pass_number = 3;
   optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
 }
 

@@ -2,11 +2,14 @@ import { ReactElement } from 'react'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
+import { CardBlueprint } from '../cards/CardBlueprint'
+import { Region } from '../generated/graphql'
 
 export interface ProjectConfig {
   name: string
   projectId: string
   applicationFeatureEnabled: boolean
+  createEmptyCard: (region: Region) => CardBlueprint
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
 }
