@@ -2,10 +2,10 @@ package app.ehrenamtskarte.backend.stores.importer.nuernberg
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.addStep
+import app.ehrenamtskarte.backend.stores.importer.common.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeAddress
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.DownloadCsv
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterData
-import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterGeoData
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.MapFromCsv
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.SanitizeGeocode

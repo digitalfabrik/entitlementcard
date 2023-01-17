@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.nuernberg.steps
+package app.ehrenamtskarte.backend.stores.importer.common.steps
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
