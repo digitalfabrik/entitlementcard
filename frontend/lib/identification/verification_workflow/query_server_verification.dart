@@ -16,7 +16,7 @@ Future<bool> _queryServerVerification(GraphQLClient client, String projectId, St
   final byCardDetailsHash = CardVerificationByHashQuery(
     variables: CardVerificationByHashArguments(
       project: projectId,
-      card: CardVerificationModelInput(cardDetailsHashBase64: verificationHash, totp: totp),
+      card: CardVerificationModelInput(cardInfoHashBase64: verificationHash, totp: totp),
     ),
   );
   final queryOptions = QueryOptions(

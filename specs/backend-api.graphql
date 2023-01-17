@@ -257,14 +257,14 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CardGenerationModelInput {
-  cardDetailsHashBase64: String!
   cardExpirationDay: Long
+  cardInfoHashBase64: String!
   regionId: Int!
   totpSecretBase64: String!
 }
 
 input CardVerificationModelInput {
-  cardDetailsHashBase64: String!
+  cardInfoHashBase64: String!
   totp: Int!
 }
 

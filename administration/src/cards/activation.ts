@@ -15,11 +15,11 @@ export async function activateCard(
   activationCode: DynamicActivationCode,
   region: Region
 ) {
-  const cardDetailsHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
+  const cardInfoHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
   const expirationDay = activationCode.info!.expirationDay
   const card: CardGenerationModelInput = {
     cardExpirationDay: expirationDay ?? null, // JS number can represent integers up to 2^53, so it can represent all values of an uint32 (protobuf)
-    cardDetailsHashBase64: uint8ArrayToBase64(cardDetailsHash),
+    cardInfoHashBase64: uint8ArrayToBase64(cardInfoHash),
     totpSecretBase64: uint8ArrayToBase64(activationCode.totpSecret),
     regionId: region.id,
   }
