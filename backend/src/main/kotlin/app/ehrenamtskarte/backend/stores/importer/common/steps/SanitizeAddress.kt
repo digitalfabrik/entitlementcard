@@ -1,10 +1,10 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.common.steps
 
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.logChange
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 import java.util.Locale

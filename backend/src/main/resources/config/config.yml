@@ -26,7 +26,7 @@ projects:
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: nuernberg.sozialpass.app
-    importUrl: https://example.com
+    importUrl: https://data.entitlementcard.app/2023-01-16-nuernberg-akzeptanzstellen.csv
     pipelineName: SozialpassNuernberg
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung

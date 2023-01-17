@@ -11,7 +11,7 @@ abstract class PipelineStep<In, Out> (protected val config: ImportConfig) {
 
         if (inputSize != null && outputSize != null) {
             val filtered = inputSize - outputSize
-            logger.info("$filtered of $inputSize where filtered out")
+            logger.info("$filtered of $inputSize were filtered out")
         }
 
         return output

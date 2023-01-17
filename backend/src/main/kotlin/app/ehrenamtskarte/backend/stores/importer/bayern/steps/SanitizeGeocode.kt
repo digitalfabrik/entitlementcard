@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.bayern.steps
 
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
@@ -6,8 +6,8 @@ import app.ehrenamtskarte.backend.stores.geocoding.isCloseToBoundingBox
 import app.ehrenamtskarte.backend.stores.geocoding.isInBoundingBox
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.logChange
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
 import org.geojson.Feature

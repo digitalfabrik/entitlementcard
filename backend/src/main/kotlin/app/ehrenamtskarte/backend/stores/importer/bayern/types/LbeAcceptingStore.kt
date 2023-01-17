@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.types
+package app.ehrenamtskarte.backend.stores.importer.bayern.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData

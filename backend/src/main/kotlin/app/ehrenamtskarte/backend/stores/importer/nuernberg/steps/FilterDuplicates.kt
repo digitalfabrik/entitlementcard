@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.nuernberg.steps
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
 import org.slf4j.Logger
 import java.util.Locale
 

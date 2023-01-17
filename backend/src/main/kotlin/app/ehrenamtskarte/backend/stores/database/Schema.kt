@@ -20,7 +20,7 @@ class CategoryEntity(id: EntityID<Int>) : IntEntity(id) {
 object Contacts : IntIdTable() {
     val email = varchar("email", 100).nullable()
     val telephone = varchar("telephone", 100).nullable()
-    val website = varchar("website", 150).nullable()
+    val website = varchar("website", 250).nullable()
 }
 
 class ContactEntity(id: EntityID<Int>) : IntEntity(id) {
