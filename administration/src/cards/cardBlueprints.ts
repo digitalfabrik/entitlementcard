@@ -18,7 +18,7 @@ export const createEmptyBavariaCard = (region: Region): CardBlueprint =>
   ])
 
 export const createEmptyNuernbergCard = (region: Region): CardBlueprint =>
-  new CardBlueprint('', add(Date.now(), { years: 2 }), [
+  new CardBlueprint('', add(Date.now(), { years: 1 }), [
     {
       state: {
         region_id: region.id,

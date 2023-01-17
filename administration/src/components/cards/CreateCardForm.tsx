@@ -32,7 +32,6 @@ const ExtensionForm = (props: { holder: ExtensionHolder<any>; onUpdate: () => vo
 
 const CreateCardForm = (props: Props) => {
   const cardBlueprint = props.cardBlueprint
-  console.log(cardBlueprint.hasInfiniteLifetime())
   return (
     <div>
       <Card>
@@ -43,7 +42,7 @@ const CreateCardForm = (props: Props) => {
           <InputGroup
             placeholder='Erika Mustermann'
             autoFocus
-            intent={cardBlueprint.isNameValid() ? undefined : Intent.DANGER}
+            intent={cardBlueprint.isFullNameValid() ? undefined : Intent.DANGER}
             value={cardBlueprint.fullName}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               cardBlueprint.fullName = event.target.value

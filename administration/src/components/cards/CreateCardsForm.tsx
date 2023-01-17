@@ -61,7 +61,7 @@ const CreateCardsForm = (props: Props) => {
     setCardBlueprints([...cardBlueprints])
   }
 
-  const allCardsValid = cardBlueprints.reduce((acc, blueprint) => acc && blueprint.isValid(), true)
+  const allCardsValid = cardBlueprints.every(blueprint => blueprint.isValid())
 
   usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardBlueprints.length !== 0)
 
@@ -82,8 +82,8 @@ const CreateCardsForm = (props: Props) => {
       </ButtonBar>
       {/* @ts-ignore */}
       <FormsWrapper>
-        {cardBlueprints.map((blueprint, index) => (
-          <FormColumn key={index}>
+        {cardBlueprints.map(blueprint => (
+          <FormColumn key={blueprint.id}>
             <CreateCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}

@@ -10,6 +10,7 @@ const PEPPER_LENGTH = 16
  * Blueprint for a new card. This object contains data about a future card, which will be created.
  */
 export class CardBlueprint {
+  id: number
   fullName: string
   expirationDate: Date | null
   extensionHolders: ExtensionHolder<any>[]
@@ -18,13 +19,15 @@ export class CardBlueprint {
     this.fullName = fullName
     this.expirationDate = expirationDate
     this.extensionHolders = extension_states
+
+    this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
   }
 
   hasInfiniteLifetime(): boolean {
     return !!this.extensionHolders.find(state => state.extension.causesInfiniteLifetime(state.state))
   }
 
-  isNameValid(): boolean {
+  isFullNameValid(): boolean {
     return this.fullName.length > 0 && this.fullName.length < MAX_NAME_LENGTH
   }
 
@@ -35,11 +38,11 @@ export class CardBlueprint {
   isValid(): boolean {
     return (
       // Name valid
-      this.isNameValid() &&
+      this.isFullNameValid() &&
       // Extensions valid
       this.extensionHolders.every(state => state.extension.isValid(state.state)) &&
       // Expiration date valid
-      ((!this.hasInfiniteLifetime() && this.isExpirationDateValid()) || this.hasInfiniteLifetime())
+      (this.isExpirationDateValid() || this.hasInfiniteLifetime())
     )
   }
 

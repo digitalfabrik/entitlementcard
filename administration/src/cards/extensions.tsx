@@ -7,6 +7,14 @@ import { ReactElement, JSXElementConstructor } from 'react'
 import { BavariaCardType, CardExtensions } from '../generated/card_pb'
 import { dateToDaysSinceEpoch, daysSinceEpochToDate } from './validityPeriod'
 
+export interface Extension<T> {
+  initialState: T | null
+  isValid: (state: T | null) => boolean
+  createForm: (state: T | null, setState: (state: T | null) => void) => React.ReactElement | null
+  causesInfiniteLifetime: (state: T) => boolean
+  setProtobufData: (state: T, message: PartialMessage<CardExtensions>) => void
+}
+
 export interface ExtensionHolder<T> {
   state: T
   extension: Extension<T>
@@ -137,22 +145,19 @@ export const nuernberg_pass_number_extension: Extension<NuernbergPassNumberState
   },
 }
 
-export enum BavariaCardTypeState {
-  standard = 'Standard',
-  gold = 'Goldkarte',
-}
+export type BavariaCardTypeState = 'Standard' | 'Goldkarte'
 
 export const bavaria_card_type: Extension<BavariaCardTypeState> = {
-  initialState: BavariaCardTypeState.standard,
+  initialState: 'Standard',
 
   setProtobufData(state: BavariaCardTypeState, message: PartialMessage<CardExtensions>): void {
     message.extensionBavariaCardType = {
-      cardType: state === BavariaCardTypeState.gold ? BavariaCardType.GOLD : BavariaCardType.STANDARD,
+      cardType: state === 'Goldkarte' ? BavariaCardType.GOLD : BavariaCardType.STANDARD,
     }
   },
 
   causesInfiniteLifetime(state: BavariaCardTypeState): boolean {
-    return state === BavariaCardTypeState.gold
+    return state === 'Goldkarte'
   },
 
   createForm(
@@ -179,7 +184,7 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
     return (
       <FormGroup label='Kartentyp'>
         <CardTypeSelect
-          items={Object.values(BavariaCardTypeState)}
+          items={['Standard', 'Goldkarte']}
           activeItem={state}
           onItemSelect={value => {
             setState(value)
@@ -194,12 +199,4 @@ export const bavaria_card_type: Extension<BavariaCardTypeState> = {
   isValid: function (state: BavariaCardTypeState | null): boolean {
     return !!state
   },
-}
-
-export interface Extension<T> {
-  initialState: T | null
-  isValid: (state: T | null) => boolean
-  createForm: (state: T | null, setState: (state: T | null) => void) => React.ReactElement | null
-  causesInfiniteLifetime: (state: T) => boolean
-  setProtobufData: (state: T, message: PartialMessage<CardExtensions>) => void
 }
