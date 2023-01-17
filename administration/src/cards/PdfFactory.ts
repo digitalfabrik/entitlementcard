@@ -1,5 +1,4 @@
 import { jsPDF } from 'jspdf'
-import logo from './bavariaLogo' // FIXME
 import { drawjsPDF } from '../util/qrcode'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
@@ -7,6 +6,7 @@ import { Exception } from '../exception'
 import { Region } from '../generated/graphql'
 import { DynamicActivationCode, QrCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
+import { PdfConfig } from '../project-configs/getProjectConfig'
 
 type TTFFont = {
   /**
@@ -31,7 +31,12 @@ export async function loadTTFFont(name: string, fontStyle: string, path: string)
   }
 }
 
-function addLetter(doc: jsPDF, activationCode: DynamicActivationCode, region: Region) {
+function drawDynamicActivationCode(
+  doc: jsPDF,
+  activationCode: DynamicActivationCode,
+  region: Region,
+  pdfConfig: PdfConfig
+) {
   const info = activationCode.info!
 
   const pageSize = doc.internal.pageSize
@@ -39,8 +44,10 @@ function addLetter(doc: jsPDF, activationCode: DynamicActivationCode, region: Re
   const pageMargin = 20
   const pageBottom = height - pageMargin
 
-  const logoSize = 25
-  doc.addImage(logo, 'PNG', width / 2 - logoSize / 2, pageMargin, logoSize, logoSize)
+  if (pdfConfig.logo) {
+    const logoSize = 25
+    doc.addImage(pdfConfig.logo, 'PNG', width / 2 - logoSize / 2, pageMargin, logoSize, logoSize)
+  }
 
   const greetingY = 60
 
@@ -63,13 +70,14 @@ Ihre digitale Ehrenamtskarte ist da!`,
   doc.text(
     [
       'Anleitung:',
-      '1. Laden Sie sich die App "Ehrenamtskarte" herunter.',
-      '2. Starten Sie die App und folgen Sie den Hinweisen zum Scannen des Anmeldecodes.',
+      `1. Laden Sie sich die App "${pdfConfig.appName}" herunter.`,
+      '2. Starten Sie die App und tippen Sie auf "Ausweisen". Folgen Sie den Hinweisen zum Aktivieren des Anmeldecodes.',
       '3. Scannen Sie den Anmeldecode.',
+      '4. Halten Sie den Anmeldecode geheim und teilen Sie ihn mit niemandem.',
     ],
     pageMargin,
     instructionsY,
-    { baseline: 'middle' }
+    { baseline: 'middle', maxWidth: 100 }
   )
 
   doc.setFontSize(16)
@@ -122,7 +130,12 @@ function checkForeignText(doc: jsPDF, text: string): string | null {
   return null
 }
 
-export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCode[], region: Region) {
+export function generatePdf(
+  font: TTFFont,
+  activationCodes: DynamicActivationCode[],
+  region: Region,
+  pdfConfig: PdfConfig
+) {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -145,15 +158,17 @@ export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCod
       })
     }
 
-    addLetter(doc, activationCodes[k], region)
-    if (k !== activationCodes.length - 1) doc.addPage()
+    drawDynamicActivationCode(doc, activationCodes[k], region, pdfConfig)
+    if (k !== activationCodes.length - 1) {
+      doc.addPage()
+    }
   }
 
   doc.setDocumentProperties({
     title: 'Anmeldecode',
     subject: 'Anmeldecode',
-    author: 'Bayern',
-    creator: 'Bayern',
+    author: pdfConfig.issuer,
+    creator: 'Entitlementcard Project',
   })
 
   try {

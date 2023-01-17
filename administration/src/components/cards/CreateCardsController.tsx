@@ -10,6 +10,7 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Exception } from '../../exception'
 import { activateCards } from '../../cards/activation'
 import { generatePdf, loadTTFFont } from '../../cards/PdfFactory'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 enum CardActivationState {
   input,
@@ -20,6 +21,7 @@ enum CardActivationState {
 const CreateCardsController = () => {
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
+  const projectConfig = useContext(ProjectConfigContext)
   const { region } = useContext(WhoAmIContext).me!
   const [state, setState] = useState(CardActivationState.input)
   const appToaster = useAppToaster()
@@ -42,7 +44,7 @@ const CreateCardsController = () => {
       await activateCards(client, activationCodes, region)
 
       const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
-      const pdfDataUri = generatePdf(font, activationCodes, region)
+      const pdfDataUri = generatePdf(font, activationCodes, region, projectConfig.pdf)
 
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setState(CardActivationState.finished)

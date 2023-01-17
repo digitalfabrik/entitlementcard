@@ -5,6 +5,15 @@ import showcaseConfig from './showcase/config'
 import { CardBlueprint } from '../cards/CardBlueprint'
 import { Region } from '../generated/graphql'
 
+export interface PdfConfig {
+  logo: string | null
+  issuer: string
+  appName: string
+  appDownloadLink: string
+  greeting: (fullName: string) => string[]
+  disclaimer: string[]
+}
+
 export interface ProjectConfig {
   name: string
   projectId: string
@@ -12,6 +21,7 @@ export interface ProjectConfig {
   createEmptyCard: (region: Region) => CardBlueprint
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
+  pdf: PdfConfig
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
