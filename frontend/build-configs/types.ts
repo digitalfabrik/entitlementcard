@@ -11,6 +11,12 @@ export type ThemeType = {
     primaryDark: string
 }
 
+type SlideType = {
+    title: string
+    description: string
+    pathName: string
+}
+
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
@@ -55,6 +61,10 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number,
     }
     iconInAboutTab: string
+    introSlide1: SlideType,
+    introSlide2: SlideType,
+    introSlide3: SlideType,
+    introSlide4: SlideType
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
