@@ -27,7 +27,6 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
             )
             val reader = BufferedReader(inputCSV)
             val rows: List<List<String>> = csvReader { skipEmptyLine = true }.readAll(reader.readText())
-            // generateMissingStoresCSV(rows)
 
             return getCSVAcceptingStores(rows)
         } catch (e: Exception) {
@@ -35,20 +34,6 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
             throw e
         }
     }
-
-    // TODO remove fkt when csv is cleaned
-//    private fun generateMissingStoresCSV(rows: List<List<String>>) {
-//        val iterator = rows.listIterator(0)
-//        csvWriter().open("akzeptanzstellen_fehlende_daten.csv") {
-//            while (iterator.hasNext()) {
-//                val row = iterator.next()
-//                val isFirstRow = iterator.nextIndex() == 1
-//                if (row[2].isEmpty() || row[3].isEmpty() || row[4].isEmpty() || row[5].isEmpty() || row[11].isEmpty() || row[12].isEmpty() || isFirstRow) {
-//                    writeRow(row)
-//                }
-//            }
-//        }
-//    }
 
     private fun getCSVAcceptingStores(rows: List<List<String>>): List<CSVAcceptingStore> {
         val iterator = rows.listIterator(1)

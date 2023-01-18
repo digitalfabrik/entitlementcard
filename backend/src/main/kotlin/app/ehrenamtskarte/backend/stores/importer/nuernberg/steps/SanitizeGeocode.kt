@@ -22,7 +22,7 @@ class SanitizeGeocode(config: ImportConfig, httpClient: HttpClient) :
     private val featureFetcher = FeatureFetcher(config, httpClient)
 
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        // TODO add check config.backendConfig.geocoding.enabled when long/lat get served by csv
+        // TODO improve geodata update https://github.com/digitalfabrik/entitlementcard/issues/735
         input.map { it.sanitize() }
     }
 
