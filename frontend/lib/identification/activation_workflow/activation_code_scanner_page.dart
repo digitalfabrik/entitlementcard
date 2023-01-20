@@ -49,8 +49,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final valid = await queryServerVerification(client, projectId, verifyQrCode);
       if (!valid) {
         await showError(
-          "Die zu prüfende Karte konnte vom Server nicht "
-          "verifiziert werden!",
+          "Die zu prüfende Karte ist ungültig.",
         );
         return;
       }
