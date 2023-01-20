@@ -1,8 +1,8 @@
-import { CardExtensions, CardInfo, DynamicActivationCode } from '../generated/card_pb'
+import { CardExtensions, CardInfo, DynamicActivationCode, QrCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 
-const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
+const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
 const PEPPER_LENGTH = 16
 
@@ -28,7 +28,8 @@ export class CardBlueprint {
   }
 
   isFullNameValid(): boolean {
-    return this.fullName.length > 0 && this.fullName.length < MAX_NAME_LENGTH
+    const encodedName = new TextEncoder().encode(this.fullName)
+    return this.fullName.length > 0 && encodedName.length < MAX_NAME_LENGTH
   }
 
   isExpirationDateValid(): boolean {
@@ -42,8 +43,23 @@ export class CardBlueprint {
       // Extensions valid
       this.extensionHolders.every(state => state.extension.isValid(state.state)) &&
       // Expiration date valid
-      (this.isExpirationDateValid() || this.hasInfiniteLifetime())
+      (this.isExpirationDateValid() || this.hasInfiniteLifetime()) &&
+      // Number of bytes is valid
+      this.hasValidSize()
     )
+  }
+
+  hasValidSize(): boolean {
+    // every four characters in a base64 encoded string correspond to three bytes
+    // the qr code can hold 224 characters
+    // therefore 224 / 4 * 3 = 168
+    // See https://github.com/digitalfabrik/entitlementcard/issues/690  for more context.
+    return this.sizeOfProtobuf() <= 168
+  }
+
+  sizeOfProtobuf(): number {
+    return new QrCode({ qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' } }).toBinary()
+      .length
   }
 
   generateActivationCode = (): DynamicActivationCode => {
