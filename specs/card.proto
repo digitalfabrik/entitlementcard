@@ -9,8 +9,11 @@ message RegionExtension {
 message BirthdayExtension {
   // Days since the birthday (calculated from 1970-01-01).
   // All values of this field are valid, including the 0, which indicates that the birthday is on 1970-01-01.
-  // If you intend to specify that the card does not have an associated birthdate, then exclude the BirthdayExtension.
-  int32 birthday = 1;
+  // We choose sint32 here, as it encodes negative numbers more efficiently: For birthdays between 1900 and 2050, the
+  // BirthdayExtension message takes up to 4 bytes when encoded binary, whereas using int32 would require up to 11 bytes
+  // for birthdays before 1970 and up to 4 bytes for birthdays between 1970 and 2050.
+  // If you want to specify that the card does not have an associated birthdate, then do not set the BirthdayExtension.
+  sint32 birthday = 1;
 }
 
 message NuernbergPassNumberExtension {
