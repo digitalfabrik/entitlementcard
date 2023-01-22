@@ -46,6 +46,7 @@ export const region_extension: Extension<RegionState> = {
 export interface BirthdayState {
   birthday: number
 }
+
 const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
 
 export const birthday_extension: Extension<BirthdayState> = {
@@ -60,16 +61,12 @@ export const birthday_extension: Extension<BirthdayState> = {
       <FormGroup label='Geburtsdatum'>
         <DateInput
           placeholder='Geburtsdatum'
-          value={daysSinceEpochToDate(state?.birthday || initialBirthdayDate)}
-          parseDate={value => new Date(value)}
-          onChange={value => {
-            if (!value) {
-              return setState(null)
-            }
-            setState({
-              birthday: dateToDaysSinceEpoch(value),
-            })
+          value={daysSinceEpochToDate(state?.birthday ?? initialBirthdayDate)}
+          parseDate={value => {
+            const millis = Date.parse(value)
+            return isNaN(millis) ? false : new Date(millis)
           }}
+          onChange={value => setState(value !== null ? { birthday: dateToDaysSinceEpoch(value) } : null)}
           formatDate={date => date.toLocaleDateString()}
           minDate={sub(Date.now(), { years: 150 })}
           maxDate={new Date()}
@@ -136,7 +133,7 @@ export const nuernberg_pass_number_extension: Extension<NuernbergPassNumberState
     return false
   },
   setProtobufData: function (state: NuernbergPassNumberState, message: PartialMessage<CardExtensions>): void {
-    message.nuernbergPassNumber = {
+    message.extensionNuernbergPassNumber = {
       passNumber: state.pass_number,
     }
   },
