@@ -15,7 +15,7 @@ class NoCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.ausweisen.noCardView;
+    final localization = buildConfig.localization.identification.noCardView;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) => SingleChildScrollView(
         child: ConstrainedBox(

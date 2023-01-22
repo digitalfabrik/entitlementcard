@@ -14,7 +14,7 @@ class PositiveVerificationResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.ausweisen.verificationCodeScanner;
+    final localization = buildConfig.localization.identification.verificationCodeScanner;
     final projectId = Configuration.of(context).projectId;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(

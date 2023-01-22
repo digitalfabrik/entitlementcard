@@ -12,7 +12,7 @@ export type ThemeType = {
 }
 
 export type LocalizationType = {
-    ausweisen: {
+    identification: {
         noCardView: {
             applyTitle: string
             applyDescription: string

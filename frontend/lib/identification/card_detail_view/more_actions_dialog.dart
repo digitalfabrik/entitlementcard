@@ -15,7 +15,7 @@ class MoreActionsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.ausweisen.moreActions;
+    final localization = buildConfig.localization.identification.moreActions;
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
       title: const Text("Weitere Aktionen"),

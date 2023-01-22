@@ -1,7 +1,7 @@
 import { LocalizationType } from "../types"
 
 const localization: LocalizationType = {
-    ausweisen: {
+    identification: {
         noCardView: {
             applyTitle: "Beantragen",
             applyDescription:

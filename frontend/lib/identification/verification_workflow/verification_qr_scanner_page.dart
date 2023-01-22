@@ -31,7 +31,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       child: Column(
         children: [
           CustomAppBar(
-            title: buildConfig.localization.ausweisen.verificationCodeScanner.title,
+            title: buildConfig.localization.identification.verificationCodeScanner.title,
             actions: [
               IconButton(
                 icon: const Icon(Icons.help),

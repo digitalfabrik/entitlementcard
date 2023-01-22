@@ -20,7 +20,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.ausweisen.activationCodeScanner;
+    final localization = buildConfig.localization.identification.activationCodeScanner;
     return Column(
       children: [
         CustomAppBar(title: localization.title),

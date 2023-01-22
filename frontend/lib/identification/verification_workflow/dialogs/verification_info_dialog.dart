@@ -9,7 +9,7 @@ class VerificationInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    final localization = buildConfig.localization.ausweisen.verificationCodeScanner;
+    final localization = buildConfig.localization.identification.verificationCodeScanner;
     return AlertDialog(
       title: Text(localization.infoDialogTitle),
       content: SingleChildScrollView(
