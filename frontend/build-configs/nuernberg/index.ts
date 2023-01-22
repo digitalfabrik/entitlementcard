@@ -52,7 +52,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     iconInAboutTab: "assets/nuernberg/body-logo.png",
     featureFlags: {},
-    applicationUrl: "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
+    applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress: "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",
     publisherText: publisherText,
