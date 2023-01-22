@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:flutter/material.dart';
 
 class NoCardView extends StatelessWidget {
@@ -14,6 +15,7 @@ class NoCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = buildConfig.localization.ausweisen.noCardView;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) => SingleChildScrollView(
         child: ConstrainedBox(
@@ -25,23 +27,20 @@ class NoCardView extends StatelessWidget {
               children: [
                 _TapableCardWithArea(
                   onTap: startApplication,
-                  title: "Beantragen",
-                  description:
-                      "Sie sind ehrenamtlich engagiert, haben aber noch keine Ehrenamtskarte? Hier können Sie Ihre Ehrenamtskarte beantragen.",
+                  title: localization.applyTitle,
+                  description: localization.applyDescription,
                   icon: Icons.assignment,
                 ),
                 _TapableCardWithArea(
                   onTap: startActivation,
-                  title: "Karte aktivieren",
-                  description:
-                      "Sie haben die Ehrenamtskarte bereits beantragt und den Aktivierungscode Ihrer digitalen Ehrenamtskarte erhalten? Scannen Sie den Code hier ein.",
+                  title: localization.activateTitle,
+                  description: localization.activateDescription,
                   icon: Icons.add_card,
                 ),
                 _TapableCardWithArea(
                   onTap: startVerification,
-                  title: "Gültigkeit prüfen",
-                  description:
-                      "Sie möchten die Gültigkeit einer digitalen Ehrenamtskarte prüfen? Scannen Sie den Code hier ein.",
+                  title: localization.verifyTitle,
+                  description: localization.verifyDescription,
                   icon: Icons.verified,
                 ),
               ].wrapWithSpacers(height: 24),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
@@ -30,10 +31,11 @@ class VerificationQrScannerPage extends StatelessWidget {
       child: Column(
         children: [
           CustomAppBar(
-            title: "Karte verifizieren",
+            title: buildConfig.localization.ausweisen.verificationCodeScanner.title,
             actions: [
               IconButton(
                 icon: const Icon(Icons.help),
+                color: Theme.of(context).appBarTheme.foregroundColor,
                 onPressed: () async {
                   await settings.setHideVerificationInfo(enabled: false);
                   await VerificationInfoDialog.show(context);
@@ -77,8 +79,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (!valid) {
         await _onError(
           context,
-          "Die zu prüfende Karte konnte vom Server nicht "
-          "verifiziert werden!",
+          "Der eingescannte Code konnte vom Server nicht verifiziert werden!",
         );
       } else {
         await _onSuccess(context, verifyCode.info);
@@ -86,7 +87,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        "Die eingescannte Ehrenamtskarte konnte nicht verifiziert "
+        "Der eingescannte Code konnte nicht verifiziert "
         "werden, da die Kommunikation mit dem Server fehlschlug. "
         "Bitte prüfen Sie Ihre Internetverbindung.",
         e,
@@ -94,7 +95,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        "Die eingescannte Ehrenamtskarte ist nicht gültig, "
+        "Der eingescannte Code ist nicht gültig, "
         "da erforderliche Daten fehlen.",
         e,
       );
@@ -102,8 +103,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       final dateFormat = DateFormat("dd.MM.yyyy");
       await _onError(
         context,
-        "Die eingescannte Karte ist bereits am "
-        "${dateFormat.format(e.expiry)} abgelaufen.",
+        "Der eingescannte Code ist bereits am ${dateFormat.format(e.expiry)} abgelaufen.",
         e,
       );
     } on QrCodeParseException catch (e) {
@@ -111,14 +111,13 @@ class VerificationQrScannerPage extends StatelessWidget {
         context,
         "Der Inhalt des eingescannten Codes kann nicht verstanden "
         "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für "
-        "die Ehrenamtskarte-App generiert wurde.",
+        "diese App generiert wurde.",
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        "Ein unbekannter Fehler beim Einlesen des QR-Codes ist "
-        "aufgetreten.",
+        "Beim Einlesen des QR-Codes ist ein unbekannter Fehler aufgetreten.",
         e,
       );
     } finally {

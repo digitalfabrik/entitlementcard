@@ -113,7 +113,7 @@ class AboutPage extends StatelessWidget {
               title: const Text("Quellcode der App"),
               onTap: () {
                 launchUrlString(
-                  "https://github.com/digitalfabrik/ehrenamtskarte",
+                  "https://github.com/digitalfabrik/entitlementcard",
                   mode: LaunchMode.externalApplication,
                 );
               },

@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
@@ -12,9 +13,10 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = buildConfig.localization.ausweisen.activationCodeScanner;
     return Column(
       children: [
-        const CustomAppBar(title: "Karte hinzufügen"),
+        CustomAppBar(title: localization.title),
         Expanded(
           child: QrCodeScannerPage(
             onCodeScanned: (code) async => _onCodeScanned(context, code),
@@ -32,10 +34,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       provider.setCode(activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
-        "Die eingescannte Karte enthält kein Ablaufdatum, "
-        "obwohl dies für die blaue Ehrenamtskarte erforderlich"
-        " ist. Vermutlich ist beim Erstellen der "
-        "digitalen Ehrenamtskarte ein Fehler passiert.",
+        "Der eingescannte Code enthält kein Ablaufdatum, obwohl dies erforderlich ist.",
       );
     } on QRCodeInvalidTotpSecretException catch (_) {
       await showError(
@@ -51,7 +50,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       await showError(
         "Der Inhalt des eingescannten Codes kann nicht "
         "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
-        "der nicht für die Ehrenamtskarte-App generiert wurde.",
+        "der nicht für diese App generiert wurde.",
       );
       debugPrintStack(stackTrace: s, label: e.toString());
       if (e.cause != null && e.stackTrace != null) {
