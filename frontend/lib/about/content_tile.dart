@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/routing.dart';
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 
 class ContentTile extends StatelessWidget {
@@ -32,18 +32,20 @@ class ContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverNavigationBar(
-          title: title,
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.all(10),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(children),
-          ),
-        )
-      ],
+    final theme = Theme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.backgroundColor),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CustomSliverAppBar(title: title),
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(children),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

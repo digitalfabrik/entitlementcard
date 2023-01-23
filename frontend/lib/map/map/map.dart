@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/map/map/attribution_dialog.dart';
 import 'package:ehrenamtskarte/map/map/map_controller.dart';
@@ -16,9 +17,10 @@ typedef OnNoFeatureClickCallback = void Function();
 typedef OnMapCreatedCallback = void Function(MapController controller);
 
 class MapContainer extends StatefulWidget {
-  static const double userLocationZoomLevel = 13;
-  static const double bavariaZoomLevel = 6;
-  static const LatLng centerOfBavaria = LatLng(48.949444, 11.395);
+  static const double zoomLevelUserLocation = 13;
+  static final double zoomLevelOverview = buildConfig.mapInitialZoomLevel.toDouble();
+  static final LatLng centerOfProject =
+      LatLng(buildConfig.mapInitialCoordinatesLat, buildConfig.mapInitialCoordinatesLng);
   final OnFeatureClickCallback? onFeatureClick;
   final OnNoFeatureClickCallback? onNoFeatureClick;
   final OnMapCreatedCallback? onMapCreated;
@@ -63,8 +65,8 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     final userLocation = widget.userLocation;
     final cameraPosition = userLocation != null
-        ? CameraPosition(target: userLocation, zoom: MapContainer.userLocationZoomLevel)
-        : const CameraPosition(target: MapContainer.centerOfBavaria, zoom: MapContainer.bavariaZoomLevel);
+        ? CameraPosition(target: userLocation, zoom: MapContainer.zoomLevelUserLocation)
+        : CameraPosition(target: MapContainer.centerOfProject, zoom: MapContainer.zoomLevelOverview);
 
     final mapLibreView = Stack(
       children: [
@@ -87,12 +89,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
         ),
         Positioned(
-          bottom: 0,
-          left: 0,
+          bottom: 3,
+          left: 3,
           child: IconButton(
             color: mapboxColor,
-            padding: const EdgeInsets.all(5),
-            constraints: const BoxConstraints(),
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
             tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
@@ -241,7 +241,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         target: LatLng(position.latitude, position.longitude),
         bearing: 0,
         tilt: 0,
-        zoom: MapContainer.userLocationZoomLevel,
+        zoom: MapContainer.zoomLevelUserLocation,
       ),
     );
     await controller.animateCamera(cameraUpdate);

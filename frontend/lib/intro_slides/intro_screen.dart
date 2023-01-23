@@ -25,7 +25,7 @@ class IntroScreenState extends State<IntroScreen> {
         title: "Willkommen!",
         description: "Vielen Dank, dass Sie sich die App zur "
             "Bayerischen Ehrenamtskarte heruntergeladen haben!",
-        pathImage: "assets/icon/icon_foreground.png",
+        pathImage: "assets/bayern/icon.png",
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,

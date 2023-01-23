@@ -1,26 +1,32 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:base32/base32.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/base_card_details.dart';
-import 'package:ehrenamtskarte/identification/card_details.dart';
-import 'package:ehrenamtskarte/identification/card_details_model.dart';
-import 'package:ehrenamtskarte/identification/identification_qr_content_parser.dart';
+import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
-import 'package:ehrenamtskarte/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final validEakDetails = CardDetails(
-  "Jane Doe",
-  const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
-  1677542400,
-  CardType.standard,
-  42,
-  "MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX",
+final sampleEakActivationCode = DynamicActivationCode(
+  info: CardInfo(
+    fullName: "Jane Doe",
+    expirationDay: 1677542400,
+    extensions: CardExtensions(
+      extensionBavariaCardType: BavariaCardTypeExtension(
+        cardType: BavariaCardType.STANDARD,
+      ),
+      extensionRegion: RegionExtension(regionId: 42),
+    ),
+  ),
+  pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
+  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
 );
 
 class DevSettingsView extends StatelessWidget {
@@ -47,7 +53,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Show Intro Slides'),
-            onTap: () => _showInfoSlides(context),
+            onTap: () => _showIntroSlides(context),
           ),
           ListTile(
             title: const Text('Log sample exception'),
@@ -69,11 +75,11 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _resetEakData(BuildContext context) async {
-    Provider.of<CardDetailsModel>(context, listen: false).clearCardDetails();
+    Provider.of<ActivationCodeModel>(context, listen: false).removeCode();
   }
 
   Future<void> _setValidEakData(BuildContext context) async {
-    Provider.of<CardDetailsModel>(context, listen: false).setCardDetails(validEakDetails);
+    Provider.of<ActivationCodeModel>(context, listen: false).setCode(sampleEakActivationCode);
   }
 
   Future<void> _showRawCardInput(BuildContext context) async {
@@ -108,9 +114,10 @@ class DevSettingsView extends StatelessWidget {
               child: const Text("Activate Card"),
               onPressed: () {
                 final messengerState = ScaffoldMessenger.of(context);
-                final provider = Provider.of<CardDetailsModel>(context, listen: false);
+                final provider = Provider.of<ActivationCodeModel>(context, listen: false);
                 try {
-                  IdentificationQrContentParser(provider).processQrCodeContent(base64Controller.text);
+                  final activationCode = const ActivationCodeParser().parseQrCodeContent(base64Controller.text);
+                  provider.setCode(activationCode);
                   messengerState.showSnackBar(
                     const SnackBar(
                       content: Text("Card activated."),
@@ -132,7 +139,7 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  void _showInfoSlides(BuildContext context) {
+  void _showIntroSlides(BuildContext context) {
     Navigator.push(
       context,
       AppRoute(

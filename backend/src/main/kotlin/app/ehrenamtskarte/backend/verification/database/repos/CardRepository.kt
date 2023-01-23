@@ -15,14 +15,14 @@ object CardRepository {
     fun findByHashModel(project: String, hashModel: ByteArray): CardEntity? {
         val query = (Projects innerJoin Regions innerJoin Cards)
             .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardDetailsHash eq hashModel) }
+            .select { Projects.project eq project and (Cards.cardInfoHash eq hashModel) }
             .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardDetailsHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int, issuerId: Int) =
+    fun insert(cardInfoHash: ByteArray, totpSecret: ByteArray, expirationDay: Long?, regionId: Int, issuerId: Int) =
         CardEntity.new {
-            this.cardDetailsHash = cardDetailsHash
+            this.cardInfoHash = cardInfoHash
             this.totpSecret = totpSecret
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()

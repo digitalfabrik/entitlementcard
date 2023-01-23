@@ -77,12 +77,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
+    final theme = Theme.of(context);
     return BottomNavigationBar(
       currentIndex: _currentTabIndex,
+      backgroundColor: theme.colorScheme.surfaceVariant,
       items: appFlows
-          .map(
-            (appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.title),
-          )
+          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.title))
           .toList(),
       onTap: _onTabTapped,
       type: BottomNavigationBarType.fixed,

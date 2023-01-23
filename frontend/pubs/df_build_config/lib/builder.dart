@@ -35,9 +35,14 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
     output.write('  $name get $k => const $name();\n');
     generateDataModel(name, json, root);
   } else if (v is String) {
-    output.write('  String get $k => "$v";\n');
+    final escaped = v.replaceAll('"', '\\"').replaceAll("\n", "\\n");
+    output.write('  String get $k => "$escaped";\n');
   } else if (v is bool) {
     output.write('  bool get $k => $v;\n');
+  } else if (v is double) {
+    output.write('  double get $k => $v;\n');
+    // Ignoring a JS-specific linting rule whose reasoning does not apply here.
+    // ignore: avoid_double_and_int_checks
   } else if (v is int) {
     output.write('  int get $k => $v;\n');
   } else if (v is List) {

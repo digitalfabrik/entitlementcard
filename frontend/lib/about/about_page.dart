@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
 import 'package:ehrenamtskarte/about/texts.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class AboutPage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: const Image(
-                    image: AssetImage("assets/icon/icon.png"),
+                  child: Image(
+                    image: AssetImage(buildConfig.iconInAboutTab),
                     height: 100.0,
                     width: 100.0,
                     fit: BoxFit.cover,
@@ -43,8 +44,9 @@ class AboutPage extends StatelessWidget {
             Center(
               child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyText2),
             ),
+            const SizedBox(height: 20),
             const Divider(
-              height: 40,
+              height: 1,
               thickness: 1,
             ),
             InkWell(
@@ -56,8 +58,8 @@ class AboutPage extends StatelessWidget {
                       child: Text("Herausgeber", style: Theme.of(context).textTheme.subtitle2),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Text(publisherAddress, style: Theme.of(context).textTheme.bodyText1),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
+                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyText1),
                     ),
                     Text(
                       "Mehr Informationen",
@@ -72,25 +74,26 @@ class AboutPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  AppRoute(
                     builder: (context) => ContentPage(title: "Herausgeber", children: getPublisherText(context)),
                   ),
                 );
               },
             ),
             const Divider(
-              height: 40,
+              height: 1,
               thickness: 1,
             ),
+            const SizedBox(height: 20),
             ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
-            ContentTile(
-              icon: Icons.privacy_tip_outlined,
-              title: "Datenschutzerklärung",
-              children: getDataPrivacyText(context),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: const Text("Datenschutzerklärung"),
+              onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
             ),
             ContentTile(
               icon: Icons.info_outline,
-              title: "Haftung, Haftungsausschluss und Disclaimer",
+              title: "Haftung, Haftungsausschluss und Impressum",
               children: getDisclaimerText(context),
             ),
             ListTile(
@@ -110,7 +113,7 @@ class AboutPage extends StatelessWidget {
               title: const Text("Quellcode der App"),
               onTap: () {
                 launchUrlString(
-                  "https://github.com/digitalfabrik/ehrenamtskarte",
+                  "https://github.com/digitalfabrik/entitlementcard",
                   mode: LaunchMode.externalApplication,
                 );
               },

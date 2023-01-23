@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 
-const val CARD_DETAILS_HASH_LENGTH = 32 // Using SHA256-HMAC
+const val CARD_INFO_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
 
 object Cards : IntIdTable() {
@@ -21,7 +21,7 @@ object Cards : IntIdTable() {
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
     val issuerId = reference("issuerId", Administrators)
-    val cardDetailsHash = binary("cardDetailsHash", CARD_DETAILS_HASH_LENGTH).uniqueIndex()
+    val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
 }
 
 class CardEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -31,7 +31,7 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var expirationDay by Cards.expirationDay
     var issueDate by Cards.issueDate
     var revoked by Cards.revoked
-    var cardDetailsHash by Cards.cardDetailsHash
+    var cardInfoHash by Cards.cardInfoHash
     var regionId by Cards.regionId
     var issuerId by Cards.issuerId
 }
