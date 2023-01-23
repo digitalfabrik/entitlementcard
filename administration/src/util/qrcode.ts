@@ -86,9 +86,9 @@ export const drawQRCode = (
     (rectX: number, rectY: number, rectSize: number) => {
       pdfDocument.drawRectangle({
         x: x + rectX,
-        y: y + rectY,
+        y: y + (size - rectY),
         width: rectSize,
-        height: rectSize,
+        height: -rectSize,
       })
     },
     (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
