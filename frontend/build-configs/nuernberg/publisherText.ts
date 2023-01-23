@@ -1,23 +1,31 @@
-export default `Stadt Nürnberg
-Amt für Existenzsicherung und soziale Integration
+export default `Herausgegeben von (nach § 5 Abs. 1 TMG; § 55 Abs. 1 RStV) :
+
+Stadt Nürnberg
+
+Amt für Existenzsicherung und soziale Integration – Sozialamt
 Dietzstraße 4
 90443 Nürnberg
+Telefon : 0911 / 231 - 23 15
+Telefax : 0911 / 231 - 58 80
 
-Telefon: REPLACE
-Telefax: REPLACE
-E-Mail: REPLACE
+Vertretungsberechtigt (nach § 5 Abs. 1 TMG; § 55 Abs. 1 RStV) :
 
-USt-Identifikations-Nr. gemäß § 27 a Umsatzsteuergesetz: DE - REPLACE
+Oberbürgermeister Marcus König
+
+USt-Identifikations-Nr. gemäß § 27 a Umsatzsteuergesetz: DE - 133552578
 
 Verantwortlich für den Inhalt
 
-REPLACE
-Leiter Referat REPLACE
-Telefon: REPLACE
-Telefax: REPLACE
-E-Mail: REPLACE
+Stadt Nürnberg – Sozialamt
+Volker Wolfrum 
+Leiter Amt für Existenzsicherung und soziale Integration
+Dietzstraße 4
+90443 Nürnberg
 
-E-Mail zum Nürnberg-Pass: REPLACE
+Telefon: : 0911 231-2315
+Telefax: : 0911 231 4644
+E-Mail: : SHA@stadt.nuernberg.de
+
 
 Technische Umsetzung:
 Tür an Tür - Digitalfabrik gemeinnützige GmbH

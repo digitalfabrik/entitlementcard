@@ -1,12 +1,12 @@
 export default `Verantwortlich im Sinne § 7 TMG:
-REPLACE
-Leiter Referat REPLACE
-Telefon: REPLACE
-Telefax: REPLACE
-E-Mail: REPLACE
+Volker Wolfrum
+Leiter Amt für Existenzsicherung und soziale Integration – Sozialamt
+Telefon: : 0911 231-2315
+Telefax: : 0911 231 4644
+E-Mail: : SHA@stadt.nuernberg.de
 Haftung im Sinne §§ 7 - 10 TMG
 
-Die Stadt Nürnberg stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
+Das Amt für Existenzsicherung und soziale Integration – Sozialamt der Stadt Nürnberg stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
 
 • Die App "Nürnberg-Pass" ist nach § 7 Abs. 1 TMG für die eigenen Inhalte, die es zur Nutzung bereithält, nach den allgemeinen Vorschriften verantwortlich. Die Haftung für Schäden materieller oder ideeller Art, die durch die Nutzung der Inhalte verursacht wurden, ist ausgeschlossen, sofern nicht Vorsatz oder grobe Fahrlässigkeit vorliegt.
 Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird alle Sorgfalt walten gelassen. Eine Gewähr für die inhaltliche Vollständigkeit und Richtigkeit der Daten kann dennoch nicht übernommen werden. Insbesondere wird jede Haftung für solche Schäden ausgeschlossen, die bei Anwendern direkt oder indirekt daraus entstehen, dass die Daten genutzt werden.
@@ -19,4 +19,4 @@ Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird 
 
 • Die App "Nürnberg-Pass" hat keinen Einfluss auf die aktuelle und zukünftige Gestaltung und Inhalte der Seiten.
 
-• Die App "Nürnberg-Pass" übernimmt keine Haftung für Schäden, die aus der Benutzung der Links entstehen könnten.`
+• Die App "Nürnberg-Pass" übernimmt keine Haftung für Schäden, die aus der Benutzung der Links entstehen könnten.`;

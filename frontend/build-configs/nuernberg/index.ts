@@ -56,7 +56,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     applicationUrl:
         "https://meinkonto.nuernberg.de/intelliform/forms/osg/standard/osg/osg-kette-starten/index?lebenslageIdAuswahl=w_500_sha_d_nuernberg-pass",
     publisherAddress:
-        "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
+        "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration - Sozialamt\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",
     publisherText,
     disclaimerText,
