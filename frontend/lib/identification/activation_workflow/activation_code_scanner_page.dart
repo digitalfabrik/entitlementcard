@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
@@ -19,9 +20,10 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = buildConfig.localization.identification.activationCodeScanner;
     return Column(
       children: [
-        const CustomAppBar(title: "Karte hinzufügen"),
+        CustomAppBar(title: localization.title),
         Expanded(
           child: QrCodeScannerPage(
             onCodeScanned: (code) async => _onCodeScanned(context, code),
@@ -49,7 +51,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final valid = await queryServerVerification(client, projectId, verifyQrCode);
       if (!valid) {
         await showError(
-          "Die zu prüfende Karte ist ungültig.",
+          "Der eingescannte Code ist ungültig.",
         );
         return;
       }
@@ -57,10 +59,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       provider.setCode(activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
-        "Die eingescannte Karte enthält kein Ablaufdatum, "
-        "obwohl dies für die blaue Ehrenamtskarte erforderlich"
-        " ist. Vermutlich ist beim Erstellen der "
-        "digitalen Ehrenamtskarte ein Fehler passiert.",
+        "Der eingescannte Code enthält ein ungültiges Ablaufdatum.",
       );
     } on QRCodeInvalidTotpSecretException catch (_) {
       await showError(
@@ -71,7 +70,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       await showError(
         "Der Inhalt des eingescannten Codes kann nicht "
         "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
-        "der nicht für die Ehrenamtskarte-App generiert wurde.",
+        "der nicht für diese App generiert wurde.",
       );
       debugPrintStack(stackTrace: s, label: e.toString());
       if (e.cause != null && e.stackTrace != null) {
@@ -85,7 +84,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       );
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat("dd.MM.yyyy");
-      await showError("Die eingescannte Karte ist bereits am "
+      await showError("Der eingescannte Code ist bereits am "
           "${dateFormat.format(e.expiry)} abgelaufen.");
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
