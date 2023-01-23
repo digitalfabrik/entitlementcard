@@ -59,7 +59,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       provider.setCode(activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
-        "Der eingescannte Code enthält kein Ablaufdatum, obwohl dies erforderlich ist.",
+        "Der eingescannte Code enthält ein ungültiges Ablaufdatum.",
       );
     } on QRCodeInvalidTotpSecretException catch (_) {
       await showError(
