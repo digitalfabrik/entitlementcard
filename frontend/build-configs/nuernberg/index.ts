@@ -1,6 +1,7 @@
-import BuildConfigType, { CommonBuildConfigType } from "../types";
-import publisherText from "./publisherText";
-import disclaimerText from "./disclaimerText";
+import BuildConfigType, { CommonBuildConfigType } from "../types"
+import publisherText from "./publisherText"
+import disclaimerText from "./disclaimerText"
+import localization from "./localization"
 
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Nürnberg-Pass",
@@ -8,12 +9,12 @@ export const nuernbergCommon: CommonBuildConfigType = {
     projectId: {
         production: "nuernberg.sozialpass.app",
         showcase: "showcase.entitlementcard.app",
-        local: "nuernberg.sozialpass.app"
+        local: "nuernberg.sozialpass.app",
     },
     categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     theme: {
         primaryLight: "#D88C51",
-        primaryDark: "#F9B787"
+        primaryDark: "#F9B787",
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
@@ -37,8 +38,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogo: "assets/nuernberg/header-logo.png",
         headerLogoPadding: 0,
         headerLogoWidth: 60,
-        headerContainerPadding: {top: 0, right: 24, bottom: 0, left: 16},
-        bodyContainerPadding: {top: 0, right: 24, bottom: 24, left: 16},
+        headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
+        bodyContainerPadding: { top: 0, right: 24, bottom: 24, left: 16 },
         bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLogoWidth: 60,
@@ -52,12 +53,15 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     iconInAboutTab: "assets/nuernberg/body-logo.png",
     featureFlags: {},
-    applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
-    publisherAddress: "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
+    applicationUrl:
+        "https://beantragen.nuernberg.sozialpass.app",
+    publisherAddress:
+        "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",
-    publisherText: publisherText,
-    disclaimerText: disclaimerText,
-};
+    publisherText,
+    disclaimerText,
+    localization,
+}
 
 let nuernberg: BuildConfigType = {
     common: nuernbergCommon,
@@ -67,13 +71,13 @@ let nuernberg: BuildConfigType = {
         featureFlags: {
             ...nuernbergCommon.featureFlags,
             excludeLocationPlayServices: false,
-            excludeX86: false
-        }
+            excludeX86: false,
+        },
     },
     ios: {
         ...nuernbergCommon,
-        bundleIdentifier: "de.nrw.it.ehrensachebayern"
-    }
-};
+        bundleIdentifier: "de.nrw.it.ehrensachebayern",
+    },
+}
 
 export default nuernberg

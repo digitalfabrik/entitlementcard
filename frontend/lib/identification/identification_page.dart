@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
