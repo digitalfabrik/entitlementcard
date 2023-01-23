@@ -1,4 +1,3 @@
-import { jsPDF } from 'jspdf'
 import {
   EncodeHintType,
   IllegalStateException,
@@ -6,6 +5,7 @@ import {
   QRCodeEncoder,
   QRCodeEncoderQRCode as QRCode,
 } from '@zxing/library'
+import { PDFPage, rgb } from 'pdf-lib'
 
 const DEFAULT_QUIET_ZONE_SIZE = 10
 
@@ -69,12 +69,12 @@ const createQRCode = (
   }
 }
 
-export const drawjsPDF = (
+export const drawQRCode = (
   text: string,
   x: number,
   y: number,
   size: number,
-  pdfDocument: jsPDF,
+  pdfDocument: PDFPage,
   border: boolean = true,
   version = 7
 ) => {
@@ -84,13 +84,23 @@ export const drawjsPDF = (
   createQRCode(
     text,
     (rectX: number, rectY: number, rectSize: number) => {
-      pdfDocument.rect(x + rectX, y + rectY, rectSize, rectSize, 'FD')
+      pdfDocument.drawRectangle({
+        x: x + rectX,
+        y: y + rectY,
+        width: rectSize,
+        height: rectSize,
+      })
     },
     (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
       if (border) {
-        pdfDocument.setLineWidth(0.4)
-        pdfDocument.roundedRect(x + rectX, y + rectY, rectWidth, rectHeight, 10, 10, 'D')
-        pdfDocument.setLineWidth(0)
+        pdfDocument.drawRectangle({
+          x: x + rectX,
+          y: y + rectY,
+          width: rectWidth,
+          height: rectHeight,
+          borderWidth: 1,
+          color: rgb(1, 1, 1),
+        })
       }
     },
     size,

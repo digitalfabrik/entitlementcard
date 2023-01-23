@@ -15,6 +15,7 @@ const Container = styled.div`
 
 interface Props {
   reset: () => void
+  redo: () => void
 }
 
 const CardsCreatedMessage = (props: Props) => {
@@ -23,6 +24,7 @@ const CardsCreatedMessage = (props: Props) => {
       <Icon icon='tick-circle' color='green' iconSize={100} />
       <p>Die Karten wurden erstellt.</p>
       <Button onClick={props.reset}>Mehr Karten erstellen</Button>
+      <Button onClick={props.redo}>Nochmal erstellen</Button>
     </Container>
   )
 }

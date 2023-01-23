@@ -6,12 +6,8 @@ import { CardBlueprint } from '../cards/CardBlueprint'
 import { Region } from '../generated/graphql'
 
 export interface PdfConfig {
-  logo: string | null
+  templatePath: string | null
   issuer: string
-  appName: string
-  appDownloadLink: string
-  greeting: (fullName: string) => string[]
-  disclaimer: string[]
 }
 
 export interface ProjectConfig {

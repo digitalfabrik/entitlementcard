@@ -1,260 +1,150 @@
-import { jsPDF } from 'jspdf'
-import { drawjsPDF } from '../util/qrcode'
+import { drawQRCode } from '../util/qrcode'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
-import { Exception } from '../exception'
 import { Region } from '../generated/graphql'
-import { DynamicActivationCode, QrCode } from '../generated/card_pb'
+import { CardInfo, DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
 import { PdfConfig } from '../project-configs/getProjectConfig'
-import googlePlayLogo from './assets/google-play-store-badge.png'
-import appleAppStoreLogo from './assets/apple-app-store-badge.png'
+import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
-const originalBadgeWidth = 646
-const originalBadgeHeight = 250
+const dynamicQRCodeSize = 90 // mm
+const dynamicQRCodeX = 105 // mm
+const dynamicQRCodeY = 70 // mm
 
-type TTFFont = {
-  /**
-   * Name of the font. This should not include whitespaces.
-   */
-  name: string
-  /**
-   * Style of the font stored in `data` field. If in doubt use "normal" here.
-   */
-  fontStyle: string
-  /**
-   * TTF file encoded as base64 string
-   */
-  data: string
+const dynamicDetailX = 105 // mm
+const dynamicDetailY = 170 // mm
+const dynamicDetailWidth = 90 // mm
+
+const staticQRCodeSize = 50 // mm
+const staticQRCodeX = 110 // mm
+const staticQRCodeY = 227 // mm
+
+const staticDetailX = 50 // mm
+const staticDetailY = 227 // mm
+const staticDetailWidth = 50 // mm
+
+function mmToPt(mm: number) {
+  return (mm / 25.4) * 72
 }
 
-export async function loadTTFFont(name: string, fontStyle: string, path: string): Promise<TTFFont> {
-  return {
-    name,
-    fontStyle,
-    data: uint8ArrayToBase64(new Uint8Array(await (await fetch(path)).arrayBuffer())),
-  }
-}
-
-function drawDynamicActivationCode(
-  doc: jsPDF,
-  activationCode: DynamicActivationCode,
-  region: Region,
-  pdfConfig: PdfConfig
+async function fillContentAreas(
+  doc: PDFDocument,
+  templatePage: PDFPage,
+  dynamicActivationCode: DynamicActivationCode,
+  region: Region
 ) {
-  const info = activationCode.info!
-  const pageSize = doc.internal.pageSize
-  const { width, height } = { width: pageSize.getWidth(), height: pageSize.getHeight() }
+  const info = dynamicActivationCode.info!
 
-  // BEGIN CONFIG
+  const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
-  // Page
-  const pageMargin = 10
-  const pageBottom = height - pageMargin
-
-  // Greeting
-  const greetingY = 60
-
-  // QRCode
-  const qrCodeSize = 110
-  const qrCodeY = pageBottom - qrCodeSize - 40
-  const qrCodeX = (width - qrCodeSize) / 2
-  const qrCodeMargin = 5
-
-  // Text
-  const fontSizeTiny = 6
-  const fontSizeSmall = 12
-  const fontSizeMedium = 24
-
-  // Badge
-  const badgeSizeFactor = 1 / 15
-  const badgeMargin = 1
-  const badgeWidth = originalBadgeWidth * badgeSizeFactor
-  const badgeHeight = originalBadgeHeight * badgeSizeFactor
-
-  // END CONFIG
-
-  // Logo
-  if (pdfConfig.logo) {
-    const logoSize = 25
-    doc.addImage(pdfConfig.logo, 'PNG', width / 2 - logoSize / 2, pageMargin, logoSize, logoSize)
-  }
-
-  // Greeting
-  doc.setFontSize(fontSizeMedium)
-  doc.text(pdfConfig.greeting(info.fullName), pageMargin, greetingY)
-
-  // Instructions
-  doc.setFontSize(fontSizeSmall)
-  const instructionsY = (qrCodeY - qrCodeMargin - 16 + greetingY) / 2
-
-  doc.html(
-    '\t\t<ol style="font-size: 20pt">\n' +
-      '\t\t\t<li>OL Item (default)</li>\n' +
-      "\t\t\t<li style='list-style-type: decimal'>OL Item (decimal)</li>\n" +
-      '\t\t</ol>',
+  // Dynamic QR code
+  fillCodeArea(
     {
-      callback: function (doc) {
-        doc.save()
-      },
-      x: 10,
-      y: 10,
-    }
+      case: 'dynamicActivationCode',
+      value: dynamicActivationCode,
+    },
+    dynamicQRCodeX,
+    dynamicQRCodeY,
+    dynamicQRCodeSize,
+    templatePage
   )
+  fillDetailsArea(info!, region, dynamicDetailX, dynamicDetailY, dynamicDetailWidth, helveticaFont, templatePage)
 
-  // @ts-ignore
-  doc.rect = () => {}
-  doc.table(
-    pageMargin,
-    instructionsY,
-    [
-      {
-        id: '',
-        line: 'Anleitung:',
-      },
-      {
-        id: '1.',
-        line: `Laden Sie sich die App "${pdfConfig.appName}" im Google Play oder Apple Store herunter.`,
-      },
-      {
-        id: '2.',
-        line: 'Starten Sie die App und tippen Sie auf "Ausweisen". Folgen Sie den Hinweisen zum Aktivieren des Anmeldecodes.',
-      },
-      {
-        id: '3.',
-        line: 'Scannen Sie den Anmeldecode.',
-      },
-      {
-        id: '4.',
-        line: 'Halten Sie den Anmeldecode geheim und teilen Sie ihn mit niemandem.',
-      },
-    ],
-    [
-      { width: 5, name: 'id', align: 'left', padding: 0, prompt: '' },
-      { width: pageSize.width / 2 - pageMargin, name: 'line', align: 'left', padding: 0, prompt: '' },
-    ],
-    { printHeaders: false, margins: 0, autoSize: false, fontSize: fontSizeSmall }
+  // Static QR code
+  fillCodeArea(
+    {
+      case: 'dynamicActivationCode',
+      value: dynamicActivationCode,
+    },
+    staticQRCodeX,
+    staticQRCodeY,
+    staticQRCodeSize,
+    templatePage
   )
+  fillDetailsArea(info!, region, staticDetailX, staticDetailY, staticDetailWidth, helveticaFont, templatePage)
+}
 
-  // QRCode
-  doc.setFontSize(fontSizeSmall)
-  doc.text('Anmeldecode', width / 2, qrCodeY - qrCodeMargin, undefined, 'center')
-  const qrCodeText = uint8ArrayToBase64(
-    new QrCode({
-      qrCode: {
-        value: activationCode,
-        case: 'dynamicActivationCode',
-      },
-    }).toBinary()
-  )
-  drawjsPDF(qrCodeText, qrCodeX, qrCodeY, qrCodeSize, doc)
+function fillDetailsArea(
+  info: CardInfo,
+  region: Region,
+  x: number,
+  y: number,
+  width: number,
+  font: PDFFont,
+  page: PDFPage
+) {
+  const detailXPdf = mmToPt(x)
+  const detailYPdf = page.getSize().height - mmToPt(y)
 
-  // Details
-  const detailY = qrCodeY + qrCodeSize + qrCodeMargin
+  const lineHeight = mmToPt(5)
+
   const expirationDateInt = Number(info.expirationDay)
   const expirationDate =
     expirationDateInt > 0 ? format(daysSinceEpochToDate(expirationDateInt), 'dd.MM.yyyy') : 'unbegrenzt'
-  doc.setFontSize(fontSizeSmall)
-  doc.text(
+  page.drawText(
     `Name: ${info!.fullName}
-Karte ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}
-Karte gültig bis: ${expirationDate}
+Ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}
+Gültig bis: ${expirationDate}
 Aussteller: ${region.prefix} ${region.name}`,
-    width / 2,
-    detailY,
-    { align: 'center', baseline: 'top' }
-  )
-
-  // Badges
-  doc.addImage(
-    googlePlayLogo,
-    'PNG',
-    width - pageMargin - badgeWidth,
-    pageBottom - badgeHeight,
-    badgeWidth,
-    badgeHeight
-  )
-  doc.addImage(
-    appleAppStoreLogo,
-    'PNG',
-    width - pageMargin - 2 * badgeWidth - badgeMargin,
-    pageBottom - badgeHeight,
-    badgeWidth,
-    badgeHeight
-  )
-  doc.setFontSize(fontSizeTiny)
-  doc.textWithLink(
-    pdfConfig.appDownloadLink.replace('https://', ''),
-    width - pageMargin - badgeWidth,
-    pageBottom + badgeMargin,
     {
-      url: pdfConfig.appDownloadLink,
-      align: 'center',
+      font,
+      x: detailXPdf,
+      y: detailYPdf - lineHeight,
+      maxWidth: mmToPt(width),
+      lineHeight,
+      size: 10,
     }
   )
-
-  // Google Play und das Google Play-Logo sind Marken von Google LLC.
 }
 
-function checkForeignText(doc: jsPDF, text: string): string | null {
-  const font = doc.getFont()
-
-  for (let i = 0; i < text.length; i++) {
-    if (font.metadata.characterToGlyph(text.charCodeAt(i)) === 0) {
-      return text.charAt(i)
-    }
-  }
-
-  return null
-}
-
-export function generatePdf(
-  font: TTFFont,
-  activationCodes: DynamicActivationCode[],
-  region: Region,
-  pdfConfig: PdfConfig
+function fillCodeArea(
+  activationCode:
+    | {
+        value: DynamicActivationCode
+        case: 'dynamicActivationCode'
+      }
+    | {
+        value: StaticVerifyCode
+        case: 'staticVerifyCode'
+      },
+  x: number,
+  y: number,
+  size: number,
+  page: PDFPage
 ) {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  })
+  const qrCodeSizePdf = mmToPt(size)
+  const qrCodeXPdf = mmToPt(x)
+  const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
 
-  const fontFileName = `${font.name}.ttf`
-  doc.addFileToVFS(fontFileName, font.data)
-  doc.addFont(fontFileName, font.name, font.fontStyle)
-  doc.setFont(font.name)
+  const dynamicQrCode = uint8ArrayToBase64(
+    new QrCode({
+      qrCode: activationCode,
+    }).toBinary()
+  )
+  drawQRCode(dynamicQrCode, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page)
+}
+
+export async function generatePdf(activationCodes: DynamicActivationCode[], region: Region, pdfConfig: PdfConfig) {
+  const doc = await PDFDocument.create()
+
+  const templateDocument =
+    pdfConfig.templatePath != null
+      ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
+      : null
 
   for (let k = 0; k < activationCodes.length; k++) {
     const activationCode = activationCodes[k]
-    const unsupportedChar = checkForeignText(doc, activationCode.info!.fullName)
 
-    if (unsupportedChar) {
-      throw new Exception({
-        type: 'unicode',
-        unsupportedChar,
-      })
-    }
+    const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
-    drawDynamicActivationCode(doc, activationCodes[k], region, pdfConfig)
-    if (k !== activationCodes.length - 1) {
-      doc.addPage()
-    }
+    const page = doc.addPage(templatePage ? templatePage : undefined)
+
+    await fillContentAreas(doc, page, activationCode, region)
   }
 
-  doc.setDocumentProperties({
-    title: 'Anmeldecode',
-    subject: 'Anmeldecode',
-    author: pdfConfig.issuer,
-    creator: 'Entitlementcard Project',
-  })
+  doc.setTitle('Karten')
+  doc.setAuthor(pdfConfig.issuer)
 
-  try {
-    const output = doc.output('blob')
-    return new Blob([output], { type: 'application/pdf' })
-  } catch {
-    throw new Exception({
-      type: 'pdf-generation',
-    })
-  }
+  const pdfBytes = await doc.save()
+  return new Blob([pdfBytes], { type: 'application/pdf' })
 }

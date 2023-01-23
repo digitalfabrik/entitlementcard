@@ -1,7 +1,8 @@
 import { ProjectConfig } from '../getProjectConfig'
 import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from './dataPrivacyBase'
 import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
-import pdfLogo from './assets/pdf-logo.png'
+// @ts-ignore
+import pdfTemplate from './pdf-template.pdf'
 
 const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',
@@ -11,14 +12,8 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   pdf: {
-    logo: pdfLogo,
+    templatePath: pdfTemplate,
     issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
-    appName: 'Ehrenamtskarte Bayern',
-    appDownloadLink: 'https://download.bayern.ehrenamtskarte.app',
-    greeting: (fullName: string) => [`Guten Tag, ${fullName}`, 'Ihre digitale Eherenamtskarte ist da!'],
-    disclaimer: [
-      'Bitte beachten Sie, dass die Ehrenamtskarte nur in Verbindung mit einem amtlichen und gültigen Lichtbildausweis gültig ist.',
-    ],
   },
 }
 
