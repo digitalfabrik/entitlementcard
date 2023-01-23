@@ -10,7 +10,6 @@ import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.importer.utils.drawSuccessBar
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
@@ -49,9 +48,6 @@ class Store(config: ImportConfig, private val logger: Logger) :
                         storeId = storeEntity.id
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
-                    }
-                    if (!config.backendConfig.production) {
-                        drawSuccessBar(done, input.size)
                     }
                 }
             } catch (e: Exception) {
