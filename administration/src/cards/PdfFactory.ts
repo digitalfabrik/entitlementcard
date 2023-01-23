@@ -5,7 +5,7 @@ import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
 import { Exception } from '../exception'
 import { Region } from '../generated/graphql'
-import { DynamicActivationCode, QrCode } from '../generated/card_pb'
+import { DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
 
 type TTFFont = {
@@ -31,7 +31,12 @@ export async function loadTTFFont(name: string, fontStyle: string, path: string)
   }
 }
 
-function addLetter(doc: jsPDF, activationCode: DynamicActivationCode, region: Region) {
+function addLetter(
+  doc: jsPDF,
+  region: Region,
+  activationCode: DynamicActivationCode,
+  staticVerifyCode: StaticVerifyCode | null
+) {
   const info = activationCode.info!
 
   const pageSize = doc.internal.pageSize
@@ -108,6 +113,19 @@ Aussteller: ${region.prefix} ${region.name}`,
       align: 'center',
     }
   )
+
+  if (staticVerifyCode) {
+    doc.addPage()
+    const qrCodeText2 = uint8ArrayToBase64(
+      new QrCode({
+        qrCode: {
+          value: staticVerifyCode,
+          case: 'staticVerifyCode',
+        },
+      }).toBinary()
+    )
+    drawjsPDF(qrCodeText2, qrCodeX, qrCodeY, qrCodeSize, doc)
+  }
 }
 
 function checkForeignText(doc: jsPDF, text: string): string | null {
@@ -122,7 +140,12 @@ function checkForeignText(doc: jsPDF, text: string): string | null {
   return null
 }
 
-export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCode[], region: Region) {
+export function generatePdf(
+  font: TTFFont,
+  region: Region,
+  activationCodes: DynamicActivationCode[],
+  staticCodes: StaticVerifyCode[] | null
+) {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -145,7 +168,7 @@ export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCod
       })
     }
 
-    addLetter(doc, activationCodes[k], region)
+    addLetter(doc, region, activationCodes[k], staticCodes![k])
     if (k !== activationCodes.length - 1) doc.addPage()
   }
 

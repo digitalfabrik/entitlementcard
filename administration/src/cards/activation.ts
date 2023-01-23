@@ -1,4 +1,4 @@
-import { DynamicActivationCode } from '../generated/card_pb'
+import { DynamicActivationCode, StaticVerifyCode } from '../generated/card_pb'
 import {
   AddCardDocument,
   AddCardMutation,
@@ -12,15 +12,17 @@ import { ApolloClient } from '@apollo/client'
 
 export async function activateCard(
   client: ApolloClient<object>,
-  activationCode: DynamicActivationCode,
+  activationCode: DynamicActivationCode | StaticVerifyCode,
   region: Region
 ) {
   const cardInfoHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
   const expirationDay = activationCode.info!.expirationDay
+  const totpSecret =
+    activationCode instanceof DynamicActivationCode ? uint8ArrayToBase64(activationCode.totpSecret) : null
   const card: CardGenerationModelInput = {
     cardExpirationDay: expirationDay ?? null, // JS number can represent integers up to 2^53, so it can represent all values of an uint32 (protobuf)
     cardInfoHashBase64: uint8ArrayToBase64(cardInfoHash),
-    totpSecretBase64: uint8ArrayToBase64(activationCode.totpSecret),
+    totpSecretBase64: totpSecret,
     regionId: region.id,
   }
 
@@ -32,7 +34,7 @@ export async function activateCard(
 
 export async function activateCards(
   client: ApolloClient<object>,
-  activationCodes: DynamicActivationCode[],
+  activationCodes: DynamicActivationCode[] | StaticVerifyCode[],
   region: Region
 ) {
   const results = await Promise.all(

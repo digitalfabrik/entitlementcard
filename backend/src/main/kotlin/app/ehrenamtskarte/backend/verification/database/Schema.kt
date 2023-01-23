@@ -13,7 +13,7 @@ const val CARD_INFO_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
 
 object Cards : IntIdTable() {
-    val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH)
+    val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH).nullable()
     // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
     val expirationDay = long("expirationDay").nullable()

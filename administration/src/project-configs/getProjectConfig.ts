@@ -9,6 +9,7 @@ export interface ProjectConfig {
   name: string
   projectId: string
   applicationFeatureEnabled: boolean
+  staticQrCodesEnabled: boolean
   createEmptyCard: (region: Region) => CardBlueprint
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement

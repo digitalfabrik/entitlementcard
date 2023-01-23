@@ -260,12 +260,12 @@ input CardGenerationModelInput {
   cardExpirationDay: Long
   cardInfoHashBase64: String!
   regionId: Int!
-  totpSecretBase64: String!
+  totpSecretBase64: String
 }
 
 input CardVerificationModelInput {
   cardInfoHashBase64: String!
-  totp: Int!
+  totp: Int
 }
 
 input CoordinatesInput {
