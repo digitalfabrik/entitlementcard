@@ -1,9 +1,9 @@
 export default `Verantwortlich im Sinne § 7 TMG:
 Volker Wolfrum
 Leiter Amt für Existenzsicherung und soziale Integration – Sozialamt
-Telefon: : 0911 231-2315
-Telefax: : 0911 231 4644
-E-Mail: : SHA@stadt.nuernberg.de
+Telefon: 0911 231-2315
+Telefax: 0911 231 4644
+E-Mail: SHA@stadt.nuernberg.de
 Haftung im Sinne §§ 7 - 10 TMG
 
 Das Amt für Existenzsicherung und soziale Integration – Sozialamt der Stadt Nürnberg stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
@@ -19,4 +19,4 @@ Bei der Zusammenstellung und Abgabe der Informationen von Vergünstigungen wird 
 
 • Die App "Nürnberg-Pass" hat keinen Einfluss auf die aktuelle und zukünftige Gestaltung und Inhalte der Seiten.
 
-• Die App "Nürnberg-Pass" übernimmt keine Haftung für Schäden, die aus der Benutzung der Links entstehen könnten.`;
+• Die App "Nürnberg-Pass" übernimmt keine Haftung für Schäden, die aus der Benutzung der Links entstehen könnten.`
