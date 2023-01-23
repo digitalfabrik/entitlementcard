@@ -29,7 +29,8 @@ class CardMutationService {
                 totpSecret,
                 card.cardExpirationDay,
                 card.regionId,
-                user.id.value
+                user.id.value,
+                card.codeType
             )
         }
         return true

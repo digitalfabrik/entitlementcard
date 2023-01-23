@@ -6,11 +6,19 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.or
 
 const val CARD_INFO_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
+
+enum class CodeType {
+    static,
+    dynamic
+}
 
 object Cards : IntIdTable() {
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH).nullable()
@@ -22,6 +30,14 @@ object Cards : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val issuerId = reference("issuerId", Administrators)
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
+    val codeType = enumeration("codeType", CodeType::class)
+
+    init {
+        check("CodeTypeConstraint") {
+            ((totpSecret eq null) and (codeType eq CodeType.static)) or
+                ((totpSecret neq null) and (codeType eq CodeType.dynamic))
+        }
+    }
 }
 
 class CardEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -34,4 +50,5 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var cardInfoHash by Cards.cardInfoHash
     var regionId by Cards.regionId
     var issuerId by Cards.issuerId
+    var codeType by Cards.codeType
 }

@@ -11,6 +11,7 @@ import { Exception } from '../../exception'
 import { activateCards } from '../../cards/activation'
 import { generatePdf, loadTTFFont } from '../../cards/PdfFactory'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { CodeType } from '../../generated/graphql'
 
 enum CardActivationState {
   input,
@@ -50,9 +51,9 @@ const CreateCardsController = () => {
       const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
       const pdfDataUri = generatePdf(font, region, activationCodes, staticCodes)
 
-      await activateCards(client, activationCodes, region)
+      await activateCards(client, activationCodes, region, CodeType.Dynamic)
 
-      if (staticCodes) await activateCards(client, staticCodes, region)
+      if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
 
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setState(CardActivationState.finished)

@@ -61,7 +61,7 @@ export class CardBlueprint {
     return new QrCode({ qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' } }).toBinary()
       .length
   }
-    
+
   generateCardInfo = (): CardInfo => {
     let extension_message = {}
 

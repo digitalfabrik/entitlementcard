@@ -4,16 +4,18 @@ import {
   AddCardMutation,
   AddCardMutationVariables,
   CardGenerationModelInput,
+  CodeType,
   Region,
 } from '../generated/graphql'
 import hashCardInfo from './hash'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { ApolloClient } from '@apollo/client'
 
-export async function activateCard(
+export async function activateCard<T extends DynamicActivationCode | StaticVerifyCode>(
   client: ApolloClient<object>,
-  activationCode: DynamicActivationCode | StaticVerifyCode,
-  region: Region
+  activationCode: T,
+  region: Region,
+  codeType: T extends DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
 ) {
   const cardInfoHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
   const expirationDay = activationCode.info!.expirationDay
@@ -24,6 +26,7 @@ export async function activateCard(
     cardInfoHashBase64: uint8ArrayToBase64(cardInfoHash),
     totpSecretBase64: totpSecret,
     regionId: region.id,
+    codeType,
   }
 
   return await client.mutate<AddCardMutation, AddCardMutationVariables>({
@@ -32,13 +35,14 @@ export async function activateCard(
   })
 }
 
-export async function activateCards(
+export async function activateCards<T extends DynamicActivationCode | StaticVerifyCode>(
   client: ApolloClient<object>,
-  activationCodes: DynamicActivationCode[] | StaticVerifyCode[],
-  region: Region
+  activationCodes: T[],
+  region: Region,
+  codeType: T extends DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
 ) {
   const results = await Promise.all(
-    activationCodes.map(async activationCode => activateCard(client, activationCode, region))
+    activationCodes.map(async activationCode => activateCard(client, activationCode, region, codeType))
   )
 
   const firstFailure = results.find(result => !result.data?.success)
