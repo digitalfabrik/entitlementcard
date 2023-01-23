@@ -54,8 +54,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
     iconInAboutTab: "assets/nuernberg/body-logo.png",
     introSlide1: {
         title: "Willkommen!",
-        description: "Vielen Dank, dass Sie sich die App zur " +
-            "Bayerischen Ehrenamtskarte heruntergeladen haben!",
+        description: "Vielen Dank, dass Sie sich die App zum " +
+            "Nürnberg-Pass heruntergeladen haben!",
         pathName: "assets/nuernberg/body-logo.png"
     },
     introSlide2: {
@@ -66,11 +66,11 @@ export const nuernbergCommon: CommonBuildConfigType = {
         pathName: "assets/nuernberg/intro_slides/apply_for_sozialpass.png"
     },
     introSlide3: {
-        title: "Wo kann ich meinen Sozialpass?",
+        title: "Wo kann ich meinen Sozialpass nutzen?",
         description: "Auf der Karte von Nürnberg können Sie alle Akzeptanzstellen" +
             " finden. Tippen Sie auf einen Standort, um mehr Informationen " +
             "sehen zu können.",
-        pathName: "assets/nuernberg/intro_slides/map_zoom.jpeg"
+        pathName: "assets/nuernberg/intro_slides/map_zoom.png"
     },
     introSlide4: {
         title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
