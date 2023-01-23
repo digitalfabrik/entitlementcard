@@ -10,10 +10,6 @@ class FilterData(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<CSVAcceptingStore>, List<CSVAcceptingStore>>(config) {
     override fun execute(input: List<CSVAcceptingStore>): List<CSVAcceptingStore> = runBlocking {
         input.filter {
-            if (it.categoryId?.isEmpty()!!) {
-                logger.info("'${it.name}' was filtered out because category is null")
-                return@filter false
-            }
             if (it.postalCode?.isEmpty()!! || it.houseNumber?.isEmpty()!! || it.location?.isEmpty()!!) {
                 logger.info("'${it.name}' was filtered out because location info is insufficient")
                 return@filter false

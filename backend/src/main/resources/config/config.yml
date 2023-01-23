@@ -9,6 +9,8 @@ map:
 geocoding:
   enabled: false
   host: nominatim.maps.tuerantuer.org
+csvWriter:
+  enabled: false
 server:
   host: 0.0.0.0
   port: 8000

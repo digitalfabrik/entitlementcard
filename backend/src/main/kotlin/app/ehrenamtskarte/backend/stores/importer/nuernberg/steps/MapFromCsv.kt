@@ -6,7 +6,6 @@ import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
-import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
 
 /**
@@ -26,8 +25,8 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
             "6" to "16",
             "7" to "17",
             "8" to "18",
-            "9" to "9"
-        )
+            "9" to "9",
+        ).withDefault { "9" }
 
     override fun execute(input: List<CSVAcceptingStore>) = input.mapNotNull {
         val longitude = if (it.longitude?.isNotEmpty()!!) {
@@ -49,7 +48,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
                 null,
                 longitude,
                 latitude,
-                categoryMapping[it.categoryId]?.toInt()!!,
+                categoryMapping.getValue(it.categoryId!!).toInt(),
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
@@ -63,15 +62,8 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
         }
     }
 
-    private fun String.decodeSpecialCharacters(): String {
-        // We often get a double encoded string, i.e. &amp;amp;
-        return StringEscapeUtils
-            .unescapeHtml4(StringEscapeUtils.unescapeHtml4(this))
-            .replace("<br/>", "\n")
-    }
-
     private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-        val trimmed = this?.replaceNa()?.trim()?.decodeSpecialCharacters()
+        val trimmed = this?.replaceNa()?.trim()
         if (removeSubsequentWhitespaces) {
             return trimmed?.replace(Regex("""\s{2,}"""), " ")
         }

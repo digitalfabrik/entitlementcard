@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.bayern.steps
+package app.ehrenamtskarte.backend.stores.importer.common.steps
 
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
 import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
