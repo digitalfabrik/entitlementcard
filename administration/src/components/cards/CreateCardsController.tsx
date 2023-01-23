@@ -69,9 +69,6 @@ const CreateCardsController = () => {
   } else {
     return (
       <GenerationFinished
-        redo={() => {
-          confirm()
-        }}
         reset={() => {
           setCardBlueprints([])
           setState(CardActivationState.input)
