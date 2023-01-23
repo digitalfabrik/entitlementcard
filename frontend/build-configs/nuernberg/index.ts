@@ -53,8 +53,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
     iconInAboutTab: "assets/nuernberg/body-logo.png",
     featureFlags: {},
-    applicationUrl:
-        "https://beantragen.nuernberg.sozialpass.app",
+    applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
         "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",
