@@ -1,4 +1,4 @@
-import BuildConfigType, { CommonBuildConfigType } from "../types"
+import BuildConfigType, {CommonBuildConfigType} from "../types"
 import publisherText from "./publisherText"
 import disclaimerText from "./disclaimerText"
 import localization from "./localization"
@@ -52,6 +52,34 @@ export const nuernbergCommon: CommonBuildConfigType = {
         boxDecorationRadius: 0,
     },
     iconInAboutTab: "assets/nuernberg/body-logo.png",
+    introSlide1: {
+        title: "Willkommen!",
+        description: "Vielen Dank, dass Sie sich die App zum " +
+            "Nürnberg-Pass heruntergeladen haben!",
+        imagePath: "assets/nuernberg/body-logo.png"
+    },
+    introSlide2: {
+        title: "Wie kann ich den Nürnberg-Pass beantragen?",
+        description: "Im Formular geben Sie Ihre " +
+            "persönlichen Informationen an. Anschließend wird " +
+            "der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
+        imagePath: "assets/nuernberg/intro_slides/apply_for_sozialpass.png"
+    },
+    introSlide3: {
+        title: "Wo kann ich den Nürnberg-Pass nutzen?",
+        description: "Auf der Karte von Nürnberg können Sie alle Akzeptanzstellen" +
+            " finden. Tippen Sie auf einen Standort, um mehr Informationen " +
+            "sehen zu können.",
+        imagePath: "assets/nuernberg/intro_slides/map_zoom.png"
+    },
+    introSlide4: {
+        title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
+        description: "Wir können Ihren Standort auf der Karte anzeigen" +
+            " und Akzeptanzstellen in Ihrer Umgebung anzeigen. " +
+            "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre " +
+            "Zustimmung. Ihr Standort wird nicht gespeichert.",
+        imagePath: "assets/nuernberg/intro_slides/search_with_location.png"
+    },
     featureFlags: {},
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
