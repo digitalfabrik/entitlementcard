@@ -14,7 +14,7 @@ export type ThemeType = {
 type SlideType = {
     title: string
     description: string
-    pathName: string
+    imagePath: string
 }
 
 export type LocalizationType = {

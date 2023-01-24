@@ -25,7 +25,7 @@ class IntroScreenState extends State<IntroScreen> {
       Slide(
         title: buildConfig.introSlide1.title,
         description: buildConfig.introSlide1.description,
-        pathImage: buildConfig.introSlide1.pathName,
+        pathImage: buildConfig.introSlide1.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
@@ -36,7 +36,7 @@ class IntroScreenState extends State<IntroScreen> {
       Slide(
         title: buildConfig.introSlide2.title,
         description: buildConfig.introSlide2.description,
-        pathImage: buildConfig.introSlide2.pathName,
+        pathImage: buildConfig.introSlide2.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
@@ -47,7 +47,7 @@ class IntroScreenState extends State<IntroScreen> {
       Slide(
         title: buildConfig.introSlide3.title,
         description: buildConfig.introSlide3.description,
-        pathImage: buildConfig.introSlide3.pathName,
+        pathImage: buildConfig.introSlide3.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
@@ -60,7 +60,7 @@ class IntroScreenState extends State<IntroScreen> {
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
-        pathImage: buildConfig.introSlide4.pathName,
+        pathImage: buildConfig.introSlide4.imagePath,
         widgetDescription: Center(
           child: Column(
             children: [
