@@ -59,7 +59,7 @@ export const bayernCommon: CommonBuildConfigType = {
         pathName: "assets/bayern/icon.png"
     },
     introSlide2: {
-        title: "Wie kann ich eine Ehrenamtskarte beantragen?",
+        title: "Wie kann ich die Ehrenamtskarte beantragen?",
         description: "In dem Formular geben Sie Informationen über Sie und Ihre " +
             "ehrenamtliche Tätigkeit an.\nAnschließend wird " +
             "der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
