@@ -8,9 +8,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 /**
- * This fkt provides missing geoinformation for stores of the provided input file and outputs it in a separate csv file
+ * Writes a CSV file in the same format as the input CSV to the resources folder.
+ * This is used to complement the input file with missing geoinformation.
  */
-
 fun writeCsvWithGeoInformation(input: List<AcceptingStore>) {
     val writer: BufferedWriter =
         Files.newBufferedWriter(Paths.get("src/main/resources/import/nuernberg-akzeptanzstellen_geoinfo.csv"))
