@@ -10,9 +10,13 @@ import org.slf4j.Logger
 class FilterGeoData(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        // writes csv file including geodata. Can be used if import file is lacking geoinformation. Geocoding has to be enabled in the config to get missing geoinformation!
+        // writes csv file including geodata. Can be used if import file is lacking geoinformation.
         if (config.backendConfig.csvWriter.enabled) {
-            writeCsvWithGeoInformation(input)
+            if (config.backendConfig.geocoding.enabled) {
+                writeCsvWithGeoInformation(input)
+            } else {
+                throw Exception("Geocoding has to be enabled to get geoinformation.")
+            }
         }
 
         // TODO can be removed when geodata was added to the csv
