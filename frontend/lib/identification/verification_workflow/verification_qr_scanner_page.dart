@@ -13,6 +13,7 @@ import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/posi
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
@@ -71,7 +72,9 @@ class VerificationQrScannerPage extends StatelessWidget {
     _openWaitingDialog(context);
 
     try {
-      final cardInfo = await verifyQrCodeContent(context, rawQrContent);
+      final qrcode = rawQrContent.parseQRCodeContent();
+
+      final cardInfo = await verifyQrCodeContent(context, qrcode);
       if (cardInfo == null) {
         await _onError(
           context,

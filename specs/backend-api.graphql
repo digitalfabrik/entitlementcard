@@ -271,6 +271,7 @@ input CardGenerationModelInput {
 
 input CardVerificationModelInput {
   cardInfoHashBase64: String!
+  codeType: CodeType!
   totp: Int
 }
 

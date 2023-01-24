@@ -9,7 +9,13 @@ Future<bool> queryDynamicServerVerification(
   DynamicVerifyCode verifyCode,
 ) async {
   final hash = const QrCodeUtils().hashCardInfo(verifyCode.info, verifyCode.pepper);
-  return _queryServerVerification(client, projectId, hash, verifyCode.otp);
+  return _queryServerVerification(
+    client,
+    projectId,
+    hash,
+    verifyCode.otp,
+    CodeType.kw$dynamic,
+  );
 }
 
 Future<bool> queryStaticServerVerification(
@@ -18,15 +24,30 @@ Future<bool> queryStaticServerVerification(
   StaticVerifyCode verifyCode,
 ) async {
   final hash = const QrCodeUtils().hashCardInfo(verifyCode.info, verifyCode.pepper);
-  return _queryServerVerification(client, projectId, hash, null);
+  return _queryServerVerification(
+    client,
+    projectId,
+    hash,
+    null,
+    CodeType.kw$static,
+  );
 }
 
 Future<bool> _queryServerVerification(
-    GraphQLClient client, String projectId, String verificationHash, int? totp) async {
+  GraphQLClient client,
+  String projectId,
+  String verificationHash,
+  int? totp,
+  CodeType codeType,
+) async {
   final byCardDetailsHash = CardVerificationByHashQuery(
     variables: CardVerificationByHashArguments(
       project: projectId,
-      card: CardVerificationModelInput(cardInfoHashBase64: verificationHash, totp: totp),
+      card: CardVerificationModelInput(
+        cardInfoHashBase64: verificationHash,
+        totp: totp,
+        codeType: codeType,
+      ),
     ),
   );
   final queryOptions = QueryOptions(
