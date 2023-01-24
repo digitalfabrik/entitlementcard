@@ -59,7 +59,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         pathName: "assets/nuernberg/body-logo.png"
     },
     introSlide2: {
-        title: "Wie kann ich einen Sozialpass beantragen?",
+        title: "Wie kann ich den Nürnberg-Pass beantragen?",
         description: "In dem Formular geben Sie Ihre " +
             "persönlichen Informationen an. Anschließend wird " +
             "der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
