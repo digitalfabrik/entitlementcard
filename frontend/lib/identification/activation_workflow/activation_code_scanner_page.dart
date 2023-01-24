@@ -48,7 +48,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         pepper: activationCode.pepper,
         otp: otp.code,
       );
-      final valid = await queryServerVerification(client, projectId, verifyQrCode);
+      final valid = await queryDynamicServerVerification(client, projectId, verifyQrCode);
       if (!valid) {
         await showError(
           "Der eingescannte Code ist ungültig.",
