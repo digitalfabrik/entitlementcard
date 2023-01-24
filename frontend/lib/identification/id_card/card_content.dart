@@ -50,6 +50,19 @@ class CardContent extends StatelessWidget {
         : "unbegrenzt";
   }
 
+  String? get _formattedBirthday {
+    final birthday = cardInfo.extensions.hasExtensionBirthday() ? cardInfo.extensions.extensionBirthday.birthday : null;
+    return birthday != null
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: birthday)))
+        : null;
+  }
+
+  String? get _passNumber {
+    return cardInfo.extensions.hasExtensionNuernbergPassNumber()
+        ? cardInfo.extensions.extensionNuernbergPassNumber.passNumber.toString()
+        : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardColor = cardInfo.extensions.extensionBavariaCardType.cardType == BavariaCardType.GOLD
@@ -152,14 +165,34 @@ class CardContent extends StatelessWidget {
                               style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                               textAlign: TextAlign.start,
                             ),
-                            RichText(
-                              maxLines: 1,
-                              text: TextSpan(
-                                text: "Gültig bis: ",
-                                style: TextStyle(fontSize: 12 * scaleFactor, color: textColor),
-                                children: [TextSpan(text: _formattedExpirationDate)],
+                            if (_formattedBirthday != null)
+                              Text(
+                                _formattedBirthday!,
+                                style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                textAlign: TextAlign.start,
                               ),
-                            )
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    maxLines: 1,
+                                    text: TextSpan(
+                                      text: "Gültig bis: ",
+                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      children: [TextSpan(text: _formattedExpirationDate)],
+                                    ),
+                                  ),
+                                  if (_passNumber != null)
+                                    Text(
+                                      _passNumber!,
+                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
