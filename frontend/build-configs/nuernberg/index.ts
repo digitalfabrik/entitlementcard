@@ -66,7 +66,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         pathName: "assets/nuernberg/intro_slides/apply_for_sozialpass.png"
     },
     introSlide3: {
-        title: "Wo kann ich meinen Sozialpass nutzen?",
+        title: "Wo kann ich den Nürnberg-Pass nutzen?",
         description: "Auf der Karte von Nürnberg können Sie alle Akzeptanzstellen" +
             " finden. Tippen Sie auf einen Standort, um mehr Informationen " +
             "sehen zu können.",
