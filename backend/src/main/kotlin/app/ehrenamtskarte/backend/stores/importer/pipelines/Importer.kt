@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.stores.importer.pipelines
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
+import app.ehrenamtskarte.backend.stores.importer.bayern.EhrenamtskarteBayern
+import app.ehrenamtskarte.backend.stores.importer.nuernberg.SozialpassNuernberg
 import org.slf4j.LoggerFactory
 
 object Importer {

@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer
 
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.slf4j.Logger
 
 fun Logger.logChange(storeInfo: String, property: String, oldValue: String?, newValue: String?) {

@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.stores.geocoding
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.STATE
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
