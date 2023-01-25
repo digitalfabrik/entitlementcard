@@ -1,4 +1,4 @@
-const String appEnvironment = String.fromEnvironment("environment", defaultValue: "staging");
+const String appEnvironment = String.fromEnvironment("environment", defaultValue: "showcase");
 
 bool isProduction() {
   return appEnvironment == "production";
