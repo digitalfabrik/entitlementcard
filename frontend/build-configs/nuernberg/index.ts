@@ -39,7 +39,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogoPadding: 0,
         headerLogoWidth: 60,
         headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
-        bodyContainerPadding: { top: 0, right: 24, bottom: 24, left: 16 },
+        bodyContainerPadding: { top: 0, right: 24, bottom: 8, left: 16 },
         bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLogoWidth: 60,
