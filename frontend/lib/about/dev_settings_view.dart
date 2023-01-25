@@ -30,7 +30,7 @@ final sampleEakActivationCodeBavaria = DynamicActivationCode(
   totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
 );
 
-final sampleEakActivationCodeNuernberg = DynamicActivationCode(
+final sampleActivationCodeNuernberg = DynamicActivationCode(
   info: CardInfo(
     fullName: "Jane Doe",
     expirationDay: 19746,
