@@ -1,4 +1,4 @@
-import { CardExtensions, CardInfo, DynamicActivationCode, QrCode } from '../generated/card_pb'
+import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 
@@ -62,6 +62,26 @@ export class CardBlueprint {
       .length
   }
 
+  generateCardInfo = (): CardInfo => {
+    let extension_message = {}
+
+    for (const state of this.extensionHolders) {
+      if (!state) {
+        throw new Error('Tried to add invalid extension')
+      }
+      state.extension.setProtobufData(state, extension_message)
+    }
+
+    const expirationDate = this.expirationDate
+
+    return new CardInfo({
+      fullName: this.fullName,
+      expirationDay:
+        expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
+      extensions: new CardExtensions(extension_message),
+    })
+  }
+
   generateActivationCode = (): DynamicActivationCode => {
     if (!window.isSecureContext) {
       // localhost is considered secure.
@@ -76,26 +96,24 @@ export class CardBlueprint {
     const totpSecret = new Uint8Array(TOTP_SECRET_LENGTH)
     crypto.getRandomValues(totpSecret)
 
-    let extension_message = {}
-
-    for (const state of this.extensionHolders) {
-      if (!state) {
-        throw new Error('Tried to add invalid extension')
-      }
-      state.extension.setProtobufData(state, extension_message)
-    }
-
-    const expirationDate = this.expirationDate
-
     return new DynamicActivationCode({
-      info: new CardInfo({
-        fullName: this.fullName,
-        expirationDay:
-          expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
-        extensions: new CardExtensions(extension_message),
-      }),
+      info: this.generateCardInfo(),
       pepper: pepper,
       totpSecret: totpSecret,
+    })
+  }
+
+  generateStaticVerifyCode = (): StaticVerifyCode => {
+    if (!window.isSecureContext) {
+      // localhost is considered secure.
+      throw Error('Environment is not considered secure nor are we using Internet Explorer.')
+    }
+    const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
+    crypto.getRandomValues(pepper)
+
+    return new StaticVerifyCode({
+      info: this.generateCardInfo(),
+      pepper: pepper,
     })
   }
 }

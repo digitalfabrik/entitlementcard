@@ -15,19 +15,28 @@ val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    fun verifyCardHash(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
+    fun verifyCardHash(project: String, cardHash: ByteArray, totp: Int?, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHashModel(project, cardHash) } ?: return false
-        return verifyCard(card, totp, timezone)
+        return if (totp != null) verifyDynamicCard(card, totp, timezone) else verifyStaticCard(card, timezone)
     }
 
-    private fun verifyCard(card: CardEntity, totp: Int, timezone: ZoneId): Boolean {
-        val expirationDay = card.expirationDay
-        return (expirationDay == null || isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)) &&
+    private fun verifyStaticCard(card: CardEntity, timezone: ZoneId): Boolean {
+        return !isExpired(card.expirationDay, timezone) &&
+            !card.revoked
+    }
+
+    private fun verifyDynamicCard(card: CardEntity, totp: Int, timezone: ZoneId): Boolean {
+        return !isExpired(card.expirationDay, timezone) &&
             !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
 
-    private fun isTotpValid(totp: Int, secret: ByteArray): Boolean {
+    private fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
+        return expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
+    }
+
+    private fun isTotpValid(totp: Int, secret: ByteArray?): Boolean {
+        if (secret == null) return false
         if (generateTotp(secret) == totp) return true
 
         // current TOTP is invalid, but we are also happy with the previous/next one
