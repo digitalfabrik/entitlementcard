@@ -100,15 +100,15 @@ class DevSettingsView extends StatelessWidget {
     switch (projectId) {
       case 'bayern.ehrenamtskarte.app':
         {
-          return sampleEakActivationCodeBavaria;
+          return sampleActivationCodeBavaria;
         }
       case 'nuernberg.sozialpass.app':
         {
-          return sampleEakActivationCodeNuernberg;
+          return sampleActivationCodeNuernberg;
         }
       default:
         {
-          return sampleEakActivationCodeBavaria;
+          return sampleActivationCodeBavaria;
         }
     }
   }
