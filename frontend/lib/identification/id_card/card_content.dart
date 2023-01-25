@@ -68,6 +68,8 @@ class CardContent extends StatelessWidget {
     final cardColor = cardInfo.extensions.extensionBavariaCardType.cardType == BavariaCardType.GOLD
         ? premiumCardColor
         : standardCardColor;
+    final formattedBirthday = _formattedBirthday;
+    final passNumber = _passNumber;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
@@ -165,9 +167,9 @@ class CardContent extends StatelessWidget {
                               style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                               textAlign: TextAlign.start,
                             ),
-                            if (_formattedBirthday != null)
+                            if (formattedBirthday != null)
                               Text(
-                                _formattedBirthday!,
+                                formattedBirthday,
                                 style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                                 textAlign: TextAlign.start,
                               ),
@@ -184,9 +186,9 @@ class CardContent extends StatelessWidget {
                                       children: [TextSpan(text: _formattedExpirationDate)],
                                     ),
                                   ),
-                                  if (_passNumber != null)
+                                  if (passNumber != null)
                                     Text(
-                                      _passNumber!,
+                                      passNumber,
                                       style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                                       textAlign: TextAlign.start,
                                     ),
