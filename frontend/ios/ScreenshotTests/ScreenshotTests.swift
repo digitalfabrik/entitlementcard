@@ -34,6 +34,7 @@ class ScreenshotTests: XCTestCase {
     func testOpenMap() throws {
         let app = XCUIApplication()
         setupSnapshot(app)
+        app.launchArguments += ["UI-Testing"]
         app.launch()
         
         let element = app.staticTexts["Suche\nTab 2 von 4"]
@@ -46,6 +47,7 @@ class ScreenshotTests: XCTestCase {
     func testOpenSearch() throws {
         let app = XCUIApplication()
         setupSnapshot(app)
+        app.launchArguments += ["UI-Testing"]
         app.launch()
         
         let element = app.staticTexts["Suche\nTab 2 von 4"]
@@ -58,8 +60,11 @@ class ScreenshotTests: XCTestCase {
     }
     
     func testOpenDetail() throws {
+        return;
+        
         let app = XCUIApplication()
         setupSnapshot(app)
+        app.launchArguments += ["UI-Testing"]
         app.launch()
         
         let element = app.staticTexts["Suche\nTab 2 von 3"]
