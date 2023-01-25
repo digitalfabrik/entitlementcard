@@ -36,9 +36,9 @@ class ScreenshotTests: XCTestCase {
         setupSnapshot(app)
         app.launch()
         
-        let element = app.staticTexts["Suche\nTab 2 von 3"]
+        let element = app.staticTexts["Suche\nTab 2 von 4"]
         self.waitForElementToAppear(element: element)
-        sleep(5)
+        sleep(10)
         
         snapshot("01Map")
     }
@@ -48,11 +48,11 @@ class ScreenshotTests: XCTestCase {
         setupSnapshot(app)
         app.launch()
         
-        let element = app.staticTexts["Suche\nTab 2 von 3"]
+        let element = app.staticTexts["Suche\nTab 2 von 4"]
         self.waitForElementToAppear(element: element)
         sleep(5)
         
-        XCUIApplication().staticTexts["Suche\nTab 2 von 3"].tap()
+        XCUIApplication().staticTexts["Suche\nTab 2 von 4"].tap()
 
         snapshot("01Search")
     }

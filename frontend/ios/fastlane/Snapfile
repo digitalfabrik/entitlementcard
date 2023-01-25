@@ -1,12 +1,10 @@
 devices([
-    "iPhone 8",
-    "iPhone 8 Plus",
-    "iPhone 11",
-    "iPhone 11 Pro",
-    "iPhone 11 Pro Max",
-    "iPhone SE (2nd generation)",
-    "iPad Pro (12.9-inch) (5th generation)",
-    "iPad Pro (11-inch) (3rd generation)",
+# https://stackoverflow.com/a/52311326
+"iPhone 8 Plus", # 5.5"
+"iPhone 11 Pro Max", # 6.5"  
+"iPhone 14 Pro Max", # 6.7"
+"iPad Pro (12.9-inch) (6th generation)",
+"iPad Pro (12.9-inch) (2nd generation)"
 ])
 
 languages([
