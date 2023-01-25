@@ -16,7 +16,6 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 3.0.5+106
-
 environment:
   sdk: '>=2.18.0 <3.0.0'
   flutter: 3.3.0
