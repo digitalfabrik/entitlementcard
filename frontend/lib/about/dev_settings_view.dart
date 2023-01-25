@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final sampleEakActivationCodeBavaria = DynamicActivationCode(
+final sampleActivationCodeBavaria = DynamicActivationCode(
   info: CardInfo(
     fullName: "Jane Doe",
     expirationDay: 19746,
