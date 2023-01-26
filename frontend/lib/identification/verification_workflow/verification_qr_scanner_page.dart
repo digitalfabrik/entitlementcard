@@ -13,10 +13,10 @@ import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/posi
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -71,18 +71,17 @@ class VerificationQrScannerPage extends StatelessWidget {
   Future<void> _handleQrCode(BuildContext context, String rawQrContent) async {
     _openWaitingDialog(context);
 
-    final client = GraphQLProvider.of(context).value;
     try {
-      final verifyCode = processQrCodeContent(rawQrContent);
-      final projectId = Configuration.of(context).projectId;
-      final valid = await queryServerVerification(client, projectId, verifyCode);
-      if (!valid) {
+      final qrcode = rawQrContent.parseQRCodeContent();
+
+      final cardInfo = await verifyQrCodeContent(context, qrcode);
+      if (cardInfo == null) {
         await _onError(
           context,
           "Der eingescannte Code konnte vom Server nicht verifiziert werden!",
         );
       } else {
-        await _onSuccess(context, verifyCode.info);
+        await _onSuccess(context, cardInfo);
       }
     } on ServerVerificationException catch (e) {
       await _onConnectionError(

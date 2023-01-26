@@ -39,7 +39,7 @@ class ActivationCodeParser {
 
   void _assertConsistentDynamicActivationCode(DynamicActivationCode code) {
     if (!code.hasPepper()) {
-      throw QrCodeFieldMissingException("hashSecretBase64");
+      throw QrCodeFieldMissingException("pepper");
     }
     if (!code.hasTotpSecret()) {
       throw QrCodeFieldMissingException("totpSecret");
