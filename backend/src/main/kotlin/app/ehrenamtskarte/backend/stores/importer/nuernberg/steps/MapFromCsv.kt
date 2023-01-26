@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.nuernberg.constants.categoryMapping
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import org.slf4j.Logger
@@ -14,19 +15,6 @@ import org.slf4j.Logger
  */
 class MapFromCsv(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<CSVAcceptingStore>, List<AcceptingStore>>(config) {
-    private val categoryMapping =
-        mapOf(
-            "0" to "10",
-            "1" to "11",
-            "2" to "12",
-            "3" to "13",
-            "4" to "14",
-            "5" to "15",
-            "6" to "16",
-            "7" to "17",
-            "8" to "18",
-            "9" to "9",
-        ).withDefault { "9" }
 
     override fun execute(input: List<CSVAcceptingStore>) = input.mapNotNull {
         val longitude = if (it.longitude?.isNotEmpty()!!) {
@@ -48,7 +36,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
                 null,
                 longitude,
                 latitude,
-                categoryMapping.getValue(it.categoryId!!).toInt(),
+                categoryMapping.getValue(it.categoryId!!),
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
