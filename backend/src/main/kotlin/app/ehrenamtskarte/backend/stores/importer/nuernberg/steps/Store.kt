@@ -24,11 +24,11 @@ class Store(config: ImportConfig, private val logger: Logger) :
             try {
                 project.deleteAssociatedStores()
 
-                input.forEachIndexed { done, acceptingStore ->
+                input.forEach { acceptingStore ->
                     val address = AddressEntity.new {
-                        street = acceptingStore.street
+                        street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode!!
-                        location = acceptingStore.streetWithHouseNumber!!
+                        location = acceptingStore.location
                         countryCode = "de"
                     }
                     val contact = ContactEntity.new {

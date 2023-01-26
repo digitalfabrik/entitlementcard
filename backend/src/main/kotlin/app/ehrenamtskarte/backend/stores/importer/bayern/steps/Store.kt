@@ -27,7 +27,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
             try {
                 project.deleteAssociatedStores()
 
-                input.forEachIndexed { done, acceptingStore ->
+                input.forEach { acceptingStore ->
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode!!
