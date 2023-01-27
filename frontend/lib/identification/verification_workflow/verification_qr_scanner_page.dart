@@ -27,44 +27,42 @@ class VerificationQrScannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
-    return Expanded(
-      child: Column(
-        children: [
-          CustomAppBar(
-            title: buildConfig.localization.identification.verificationCodeScanner.title,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.help),
-                color: Theme.of(context).appBarTheme.foregroundColor,
-                onPressed: () async {
-                  await settings.setHideVerificationInfo(enabled: false);
-                  await VerificationInfoDialog.show(context);
-                },
-              )
-            ],
-          ),
-          Expanded(
-            child: QrCodeScannerPage(
-              onCodeScanned: (code) => _handleQrCode(context, code),
-            ),
-          ),
-          if (config.showDevSettings)
-            TextButton(
+    return Column(
+      children: [
+        CustomAppBar(
+          title: buildConfig.localization.identification.verificationCodeScanner.title,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.help),
+              color: Theme.of(context).appBarTheme.foregroundColor,
               onPressed: () async {
-                final provider = Provider.of<ActivationCodeModel>(context, listen: false);
-                final activationCode = provider.activationCode!;
-                final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
-                final verifyQrCode = QrCode(
-                  dynamicVerifyCode:
-                      DynamicVerifyCode(info: activationCode.info, pepper: activationCode.pepper, otp: otp),
-                );
-                final verifyCodeBase64 = const Base64Encoder().convert(verifyQrCode.writeToBuffer());
-                _handleQrCode(context, verifyCodeBase64);
+                await settings.setHideVerificationInfo(enabled: false);
+                await VerificationInfoDialog.show(context);
               },
-              child: const Text("Verify activated Card"),
             )
-        ],
-      ),
+          ],
+        ),
+        Expanded(
+          child: QrCodeScannerPage(
+            onCodeScanned: (code) => _handleQrCode(context, code),
+          ),
+        ),
+        if (config.showDevSettings)
+          TextButton(
+            onPressed: () async {
+              final provider = Provider.of<ActivationCodeModel>(context, listen: false);
+              final activationCode = provider.activationCode!;
+              final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
+              final verifyQrCode = QrCode(
+                dynamicVerifyCode:
+                    DynamicVerifyCode(info: activationCode.info, pepper: activationCode.pepper, otp: otp),
+              );
+              final verifyCodeBase64 = const Base64Encoder().convert(verifyQrCode.writeToBuffer());
+              _handleQrCode(context, verifyCodeBase64);
+            },
+            child: const Text("Verify activated Card"),
+          )
+      ],
     );
   }
 
