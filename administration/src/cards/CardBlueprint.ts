@@ -1,4 +1,4 @@
-import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
+import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 
@@ -103,7 +103,7 @@ export class CardBlueprint {
     })
   }
 
-  generateStaticVerifyCode = (): StaticVerifyCode => {
+  generateStaticVerificationCode = (): StaticVerificationCode => {
     if (!window.isSecureContext) {
       // localhost is considered secure.
       throw Error('Environment is not considered secure nor are we using Internet Explorer.')
@@ -111,7 +111,7 @@ export class CardBlueprint {
     const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
     crypto.getRandomValues(pepper)
 
-    return new StaticVerifyCode({
+    return new StaticVerificationCode({
       info: this.generateCardInfo(),
       pepper: pepper,
     })

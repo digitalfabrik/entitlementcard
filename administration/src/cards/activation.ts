@@ -1,4 +1,4 @@
-import { DynamicActivationCode, StaticVerifyCode } from '../generated/card_pb'
+import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import {
   AddCardDocument,
   AddCardMutation,
@@ -11,7 +11,7 @@ import hashCardInfo from './hash'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { ApolloClient } from '@apollo/client'
 
-export async function activateCard<T extends DynamicActivationCode | StaticVerifyCode>(
+export async function activateCard<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
   activationCode: T,
   region: Region,
@@ -35,7 +35,7 @@ export async function activateCard<T extends DynamicActivationCode | StaticVerif
   })
 }
 
-export async function activateCards<T extends DynamicActivationCode | StaticVerifyCode>(
+export async function activateCards<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
   activationCodes: T[],
   region: Region,

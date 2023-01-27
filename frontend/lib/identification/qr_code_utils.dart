@@ -6,10 +6,10 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 class QrCodeUtils {
   const QrCodeUtils();
 
-  String createDynamicVerifyQrCodeData(DynamicActivationCode activationCode, int otpCode) {
+  String createDynamicVerificationQrCodeData(DynamicActivationCode activationCode, int otpCode) {
     return const Base64Encoder().convert(
       QrCode(
-        dynamicVerifyCode: DynamicVerifyCode(
+        dynamicVerificationCode: DynamicVerificationCode(
           info: activationCode.info,
           pepper: activationCode.pepper,
           otp: otpCode,

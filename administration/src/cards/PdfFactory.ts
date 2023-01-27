@@ -5,7 +5,7 @@ import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
 import { Exception } from '../exception'
 import { Region } from '../generated/graphql'
-import { DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
+import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
 
 type TTFFont = {
@@ -35,7 +35,7 @@ function addLetter(
   doc: jsPDF,
   region: Region,
   activationCode: DynamicActivationCode,
-  staticVerifyCode: StaticVerifyCode | null
+  staticVerificationCode: StaticVerificationCode | null
 ) {
   const info = activationCode.info!
 
@@ -114,13 +114,13 @@ Aussteller: ${region.prefix} ${region.name}`,
     }
   )
 
-  if (staticVerifyCode) {
+  if (staticVerificationCode) {
     doc.addPage()
     const qrCodeText2 = uint8ArrayToBase64(
       new QrCode({
         qrCode: {
-          value: staticVerifyCode,
-          case: 'staticVerifyCode',
+          value: staticVerificationCode,
+          case: 'staticVerificationCode',
         },
       }).toBinary()
     )
@@ -144,7 +144,7 @@ export function generatePdf(
   font: TTFFont,
   region: Region,
   activationCodes: DynamicActivationCode[],
-  staticCodes: StaticVerifyCode[] | null
+  staticCodes: StaticVerificationCode[] | null
 ) {
   const doc = new jsPDF({
     orientation: 'portrait',
