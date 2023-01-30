@@ -23,7 +23,7 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
             val url = URL(config.findProject().importUrl)
             val urlConn: URLConnection = url.openConnection()
             val inputCSV = InputStreamReader(
-                urlConn.getInputStream()
+                urlConn.getInputStream(), Charsets.UTF_8
             )
             val records: Iterable<CSVRecord> = CSVFormat.RFC4180.parse(inputCSV)
 
