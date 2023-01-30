@@ -13,7 +13,7 @@ Future<bool> queryDynamicServerVerification(
     client,
     projectId,
     hash,
-    verificaitonCode.otp,
+    verificationCode.otp,
     CodeType.kw$dynamic,
   );
 }

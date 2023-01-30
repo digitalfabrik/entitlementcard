@@ -30,8 +30,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Column(
       children: [
         CustomAppBar(
-          title: buildConfig
-              .localization.identification.verificationCodeScanner.title,
+          title: buildConfig.localization.identification.verificationCodeScanner.title,
           actions: [
             IconButton(
               icon: const Icon(Icons.help),
@@ -51,11 +50,9 @@ class VerificationQrScannerPage extends StatelessWidget {
         if (config.showDevSettings)
           TextButton(
             onPressed: () async {
-              final provider =
-                  Provider.of<ActivationCodeModel>(context, listen: false);
+              final provider = Provider.of<ActivationCodeModel>(context, listen: false);
               final activationCode = provider.activationCode!;
-              final otp =
-                  OTPGenerator(activationCode.totpSecret).generateOTP().code;
+              final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode(
                 dynamicVerificationCode: DynamicVerificationCode(
                   info: activationCode.info,
@@ -63,9 +60,8 @@ class VerificationQrScannerPage extends StatelessWidget {
                   otp: otp,
                 ),
               );
-              final verificationCodeBase64 = const Base64Encoder()
-                  .convert(verificationQrCode.writeToBuffer());
-              _handleQrCode(context, verifificationCodeBase64);
+              final verificationCodeBase64 = const Base64Encoder().convert(verificationQrCode.writeToBuffer());
+              _handleQrCode(context, verificationCodeBase64);
             },
             child: const Text("Verify activated Card"),
           )
@@ -130,8 +126,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     }
   }
 
-  Future<void> _onError(BuildContext context, String message,
-      [Exception? exception]) async {
+  Future<void> _onError(BuildContext context, String message, [Exception? exception]) async {
     if (exception != null) {
       debugPrint("Verification failed: $exception");
     }
@@ -140,8 +135,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     await NegativeVerificationResultDialog.show(context, message);
   }
 
-  Future<void> _onConnectionError(BuildContext context, String message,
-      [Exception? exception]) async {
+  Future<void> _onConnectionError(BuildContext context, String message, [Exception? exception]) async {
     if (exception != null) {
       debugPrint("Connection failed: $exception");
     }
@@ -159,10 +153,8 @@ class VerificationQrScannerPage extends StatelessWidget {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => AlertDialog(
-          title: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [CircularProgressIndicator()])),
+      builder: (context) =>
+          AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])),
     );
   }
 

@@ -25,7 +25,10 @@ Future<CardInfo?> verifyQrCodeContent(
 }
 
 Future<CardInfo?> verifyDynamicVerificationCode(
-    GraphQLClient client, String projectId, DynamicVerificationCode code) async {
+  GraphQLClient client,
+  String projectId,
+  DynamicVerificationCode code,
+) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentDynamicVerificationCode(code);
   if (!(await queryDynamicServerVerification(client, projectId, code))) {
@@ -35,7 +38,10 @@ Future<CardInfo?> verifyDynamicVerificationCode(
 }
 
 Future<CardInfo?> verifyStaticVerificationCode(
-    GraphQLClient client, String projectId, StaticVerificationCode code) async {
+  GraphQLClient client,
+  String projectId,
+  StaticVerificationCode code,
+) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentStaticVerificationCode(code);
   if (!(await queryStaticServerVerification(client, projectId, code))) {
