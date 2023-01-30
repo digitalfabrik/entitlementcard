@@ -43,12 +43,12 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final projectId = Configuration.of(context).projectId;
       final generator = OTPGenerator(activationCode.totpSecret);
       final otp = generator.generateOTP();
-      final verifyQrCode = DynamicVerifyCode(
+      final verificationQrCode = DynamicVerificationCode(
         info: activationCode.info,
         pepper: activationCode.pepper,
         otp: otp.code,
       );
-      final valid = await queryDynamicServerVerification(client, projectId, verifyQrCode);
+      final valid = await queryDynamicServerVerification(client, projectId, verificationQrCode);
       if (!valid) {
         await showError(
           "Der eingescannte Code ist ungültig.",

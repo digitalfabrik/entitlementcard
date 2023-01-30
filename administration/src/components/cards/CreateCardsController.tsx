@@ -44,7 +44,7 @@ const CreateCardsController = () => {
       })
       const staticCodes = projectConfig.staticQrCodesEnabled
         ? cardBlueprints.map(cardBlueprints => {
-            return cardBlueprints.generateStaticVerifyCode()
+            return cardBlueprints.generateStaticVerificationCode()
           })
         : null
 

@@ -53,12 +53,15 @@ class VerificationQrScannerPage extends StatelessWidget {
               final provider = Provider.of<ActivationCodeModel>(context, listen: false);
               final activationCode = provider.activationCode!;
               final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
-              final verifyQrCode = QrCode(
-                dynamicVerifyCode:
-                    DynamicVerifyCode(info: activationCode.info, pepper: activationCode.pepper, otp: otp),
+              final verificationQrCode = QrCode(
+                dynamicVerificationCode: DynamicVerificationCode(
+                  info: activationCode.info,
+                  pepper: activationCode.pepper,
+                  otp: otp,
+                ),
               );
-              final verifyCodeBase64 = const Base64Encoder().convert(verifyQrCode.writeToBuffer());
-              _handleQrCode(context, verifyCodeBase64);
+              final verificationCodeBase64 = const Base64Encoder().convert(verificationQrCode.writeToBuffer());
+              _handleQrCode(context, verificationCodeBase64);
             },
             child: const Text("Verify activated Card"),
           )

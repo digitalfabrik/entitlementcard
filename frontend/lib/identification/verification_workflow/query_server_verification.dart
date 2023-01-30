@@ -6,14 +6,14 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 Future<bool> queryDynamicServerVerification(
   GraphQLClient client,
   String projectId,
-  DynamicVerifyCode verifyCode,
+  DynamicVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verifyCode.info, verifyCode.pepper);
+  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,
     hash,
-    verifyCode.otp,
+    verificationCode.otp,
     CodeType.kw$dynamic,
   );
 }
@@ -21,9 +21,9 @@ Future<bool> queryDynamicServerVerification(
 Future<bool> queryStaticServerVerification(
   GraphQLClient client,
   String projectId,
-  StaticVerifyCode verifyCode,
+  StaticVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verifyCode.info, verifyCode.pepper);
+  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,

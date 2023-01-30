@@ -13,29 +13,37 @@ Future<CardInfo?> verifyQrCodeContent(
   final client = GraphQLProvider.of(context).value;
   final projectId = Configuration.of(context).projectId;
 
-  if (qrcode.hasDynamicVerifyCode()) {
-    final verifyCode = qrcode.dynamicVerifyCode;
-    return verifyDynamicVerifyCode(client, projectId, verifyCode);
-  } else if (qrcode.hasStaticVerifyCode()) {
-    final verifyCode = qrcode.staticVerifyCode;
-    return verifyStaticVerifyCode(client, projectId, verifyCode);
+  if (qrcode.hasDynamicVerificationCode()) {
+    final verificationCode = qrcode.dynamicVerificationCode;
+    return verifyDynamicVerificationCode(client, projectId, verificationCode);
+  } else if (qrcode.hasStaticVerificationCode()) {
+    final verificationCode = qrcode.staticVerificationCode;
+    return verifyStaticVerificationCode(client, projectId, verificationCode);
   } else {
     throw QrCodeWrongTypeException();
   }
 }
 
-Future<CardInfo?> verifyDynamicVerifyCode(GraphQLClient client, String projectId, DynamicVerifyCode code) async {
+Future<CardInfo?> verifyDynamicVerificationCode(
+  GraphQLClient client,
+  String projectId,
+  DynamicVerificationCode code,
+) async {
   assertConsistentCardInfo(code.info);
-  _assertConsistentDynamicVerifyCode(code);
+  _assertConsistentDynamicVerificationCode(code);
   if (!(await queryDynamicServerVerification(client, projectId, code))) {
     return null;
   }
   return code.info;
 }
 
-Future<CardInfo?> verifyStaticVerifyCode(GraphQLClient client, String projectId, StaticVerifyCode code) async {
+Future<CardInfo?> verifyStaticVerificationCode(
+  GraphQLClient client,
+  String projectId,
+  StaticVerificationCode code,
+) async {
   assertConsistentCardInfo(code.info);
-  _assertConsistentStaticVerifyCode(code);
+  _assertConsistentStaticVerificationCode(code);
   if (!(await queryStaticServerVerification(client, projectId, code))) {
     return null;
   }
@@ -59,17 +67,17 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
   }
 }
 
-void _assertConsistentDynamicVerifyCode(DynamicVerifyCode verifyCode) {
-  if (!verifyCode.hasPepper()) {
+void _assertConsistentDynamicVerificationCode(DynamicVerificationCode verificationCode) {
+  if (!verificationCode.hasPepper()) {
     throw QrCodeFieldMissingException("pepper");
   }
-  if (verifyCode.otp <= 0) {
+  if (verificationCode.otp <= 0) {
     throw QrCodeFieldMissingException("otp");
   }
 }
 
-void _assertConsistentStaticVerifyCode(StaticVerifyCode verifyCode) {
-  if (!verifyCode.hasPepper()) {
+void _assertConsistentStaticVerificationCode(StaticVerificationCode verificationCode) {
+  if (!verificationCode.hasPepper()) {
     throw QrCodeFieldMissingException("pepper");
   }
 }
