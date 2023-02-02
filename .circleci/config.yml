@@ -131,18 +131,10 @@ commands:
           command: |
             brew tap leoafarias/fvm
             brew install fvm
-      - restore_cache:
-          keys:
-            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: |
             fvm --verbose install
-      - save_cache:
-          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
-          paths:
-            - .fvm
-            - ~/fvm/
       - run:
           name: Configure Flutter
           command: |
@@ -206,19 +198,12 @@ jobs:
       - install-fvm-linux
       - install-app-toolbelt
       - install-protobuf-linux
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
             fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --android
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
       - run:
           name: Build Runner
           command: |
@@ -247,19 +232,12 @@ jobs:
       - install-fvm-mac
       - install-app-toolbelt
       - install-protobuf-mac
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
       - run:
           name: Install Flutter Packages
           command: |
             fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --ios
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
       - run:
           name: Update Pods
           command: |
