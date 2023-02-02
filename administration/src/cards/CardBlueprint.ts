@@ -66,7 +66,8 @@ export class CardBlueprint {
       encodeQRCode(dynamicCode)
       encodeQRCode(staticCode)
       return true
-    } catch {
+    } catch (e) {
+      console.warn(e)
       return false
     }
   }

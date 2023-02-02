@@ -1,4 +1,5 @@
 import {
+  CharacterSetECI,
   IllegalStateException,
   QRCodeByteMatrix,
   QRCodeEncoder,
@@ -11,7 +12,7 @@ import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
 
 const DEFAULT_QUIET_ZONE_SIZE = 1
 const VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(7)
-const ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.H
+const ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.L
 
 function calculateBitsNeeded(
   mode: QRCodeMode,
@@ -42,6 +43,8 @@ function willFit(
 }
 
 export function encodeQRCode(content: Uint8Array): QRCode {
+  let textContent = 'test'
+
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
 
@@ -50,6 +53,10 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   const headerBits = new BitArray()
 
   // Do not append ECI segment
+  //headerBits.appendBits(QRCodeMode.ECI.getBits(), 4)
+  // This is correct for values up to 127, which is all we need now.
+  //const encoding = CharacterSetECI.ISO8859_1
+  //headerBits.appendBits(encoding.getValue(), 8)
 
   // (With ECI in place,) Write the mode marker
   QRCodeEncoder.appendModeInfo(mode, headerBits)
@@ -59,8 +66,10 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   const dataBits = new BitArray()
   for (let i = 0, length = content.length; i !== length; i++) {
     const b = content[i]
-    dataBits.appendBits(b, 8)
+    dataBits.appendBits(b, 8) // TODO
   }
+
+  //QRCodeEncoder.appendBytes(textContent, QRCodeMode.BYTE, dataBits, encoding.getName()) // TODO
 
   let version: QRCodeVersion = VERSION
   let ecLevel: QRCodeDecoderErrorCorrectionLevel = ERROR_CORRECTION
@@ -73,6 +82,8 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   headerAndDataBits.appendBitArray(headerBits)
   // Find "length" of main segment and write it
   const numLetters = dataBits.getSizeInBytes()
+  //const numLetters = textContent.length // TODO
+
   QRCodeEncoder.appendLengthInfo(numLetters, version, mode, headerAndDataBits)
   // Put data together into the overall payload
   headerAndDataBits.appendBitArray(dataBits)

@@ -39,7 +39,7 @@ class _QRViewState extends State<QrCodeScanner> {
               MobileScanner(
                 key: qrKey,
                 onDetect: (barcode, args) => _onCodeScanned(barcode),
-                allowDuplicates: false,
+                allowDuplicates: true,
                 controller: controller,
               ),
               Padding(
@@ -93,12 +93,13 @@ class _QRViewState extends State<QrCodeScanner> {
   }
 
   Future<void> _onCodeScanned(Barcode scanData) async {
-    final code = scanData.rawValue;
+    final code = scanData.rawBytes;
+
     if (code == null) {
       return;
     }
 
-    await widget.onCodeScanned(code);
+    //await widget.onCodeScanned(code);
   }
 
   @override
