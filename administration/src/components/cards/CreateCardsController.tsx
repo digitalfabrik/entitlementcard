@@ -9,7 +9,7 @@ import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { activateCards } from '../../cards/activation'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { CodeType } from '../../generated/graphql'
+import { CodeType, Region } from '../../generated/graphql'
 import { generatePdf } from '../../cards/PdfFactory'
 
 enum CardActivationState {
@@ -19,12 +19,7 @@ enum CardActivationState {
 }
 
 const CreateCardsController = () => {
-  const projectConfig = useContext(ProjectConfigContext)
-  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
-  const client = useApolloClient()
   const { region } = useContext(WhoAmIContext).me!
-  const [state, setState] = useState(CardActivationState.input)
-  const appToaster = useAppToaster()
 
   if (!region) {
     return (
@@ -33,6 +28,17 @@ const CreateCardsController = () => {
       </div>
     )
   }
+
+  return <InnerCreateCardsController region={region} />
+}
+
+const InnerCreateCardsController = ({ region }: { region: Region }) => {
+  const projectConfig = useContext(ProjectConfigContext)
+  const client = useApolloClient()
+  const appToaster = useAppToaster()
+
+  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([projectConfig.createEmptyCard(region)])
+  const [state, setState] = useState(CardActivationState.input)
 
   const confirm = async () => {
     try {

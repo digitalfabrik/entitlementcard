@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
 import { CardBlueprint } from '../../cards/CardBlueprint'
@@ -52,18 +52,24 @@ interface Props {
 const CreateCardsForm = (props: Props) => {
   const { cardBlueprints, setCardBlueprints, region } = props
   const projectConfig = useContext(ProjectConfigContext)
+  const [isModified, setModified] = useState(false)
 
-  const addForm = () => setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
+  const addForm = () => {
+    setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
+    setModified(true)
+  }
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
+    setModified(true)
   }
   const notifyUpdate = () => {
     setCardBlueprints([...cardBlueprints])
+    setModified(true)
   }
 
   const allCardsValid = cardBlueprints.every(blueprint => blueprint.isValid())
 
-  usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', cardBlueprints.length !== 0)
+  usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', isModified)
 
   return (
     <>
@@ -87,7 +93,9 @@ const CreateCardsForm = (props: Props) => {
             <CreateCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}
-              onUpdate={() => notifyUpdate()}
+              onUpdate={() => {
+                notifyUpdate()
+              }}
             />
           </FormColumn>
         ))}

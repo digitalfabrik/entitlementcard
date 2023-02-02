@@ -8,8 +8,8 @@ import {
   Region,
 } from '../generated/graphql'
 import hashCardInfo from './hash'
-import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { ApolloClient } from '@apollo/client'
+import uint8ArrayToUnpaddedBase64 from '../util/uint8ArrayToUnpaddedBase64'
 
 export async function activateCard<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
@@ -20,10 +20,10 @@ export async function activateCard<T extends DynamicActivationCode | StaticVerif
   const cardInfoHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
   const expirationDay = activationCode.info!.expirationDay
   const totpSecret =
-    activationCode instanceof DynamicActivationCode ? uint8ArrayToBase64(activationCode.totpSecret) : null
+    activationCode instanceof DynamicActivationCode ? uint8ArrayToUnpaddedBase64(activationCode.totpSecret) : null
   const card: CardGenerationModelInput = {
     cardExpirationDay: expirationDay ?? null, // JS number can represent integers up to 2^53, so it can represent all values of an uint32 (protobuf)
-    cardInfoHashBase64: uint8ArrayToBase64(cardInfoHash),
+    cardInfoHashBase64: uint8ArrayToUnpaddedBase64(cardInfoHash),
     totpSecretBase64: totpSecret,
     regionId: region.id,
     codeType,

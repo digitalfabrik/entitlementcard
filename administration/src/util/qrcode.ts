@@ -1,37 +1,128 @@
 import {
-  EncodeHintType,
   IllegalStateException,
-  QRCodeDecoderErrorCorrectionLevel as ErrorCorrectionLevel,
+  QRCodeByteMatrix,
   QRCodeEncoder,
   QRCodeEncoderQRCode as QRCode,
+  QRCodeMatrixUtil,
 } from '@zxing/library'
 import { PDFPage, rgb } from 'pdf-lib'
+import { BitArray, QRCodeMode, QRCodeDecoderErrorCorrectionLevel, QRCodeVersion } from '@zxing/library'
+import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
 
-const DEFAULT_QUIET_ZONE_SIZE = 10
+const DEFAULT_QUIET_ZONE_SIZE = 1
+const VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(7)
+const ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.H
+
+function calculateBitsNeeded(
+  mode: QRCodeMode,
+  headerBitsSize: number,
+  dataBitsSize: number,
+  version: QRCodeVersion
+): number {
+  return headerBitsSize + mode.getCharacterCountBits(version) + dataBitsSize
+}
+
+function willFit(
+  mode: QRCodeMode,
+  headerBitsSize: number,
+  dataBitsSize: number,
+  version: QRCodeVersion,
+  ecLevel: QRCodeDecoderErrorCorrectionLevel
+): boolean {
+  // In the following comments, we use numbers of Version 7-H.
+  // numBytes = 196
+  const numBytes = version.getTotalCodewords()
+  // getNumECBytes = 130
+  const ecBlocks = version.getECBlocksForLevel(ecLevel)
+  const numEcBytes = ecBlocks.getTotalECCodewords()
+  // getNumDataBytes = 196 - 130 = 66
+  const numDataBytes = numBytes - numEcBytes
+  const totalInputBytes = (calculateBitsNeeded(mode, headerBitsSize, dataBitsSize, version) + 7) / 8
+  return numDataBytes >= totalInputBytes
+}
+
+export function encodeQRCode(content: Uint8Array): QRCode {
+  // Pick an encoding mode appropriate for the content.
+  const mode: QRCodeMode = QRCodeMode.BYTE
+
+  // This will store the header information, like mode and
+  // length, as well as "header" segments like an ECI segment.
+  const headerBits = new BitArray()
+
+  // Do not append ECI segment
+
+  // (With ECI in place,) Write the mode marker
+  QRCodeEncoder.appendModeInfo(mode, headerBits)
+
+  // Collect data within the main segment, separately, to count its size if needed. Don't add it to
+  // main payload yet.
+  const dataBits = new BitArray()
+  for (let i = 0, length = content.length; i !== length; i++) {
+    const b = content[i]
+    dataBits.appendBits(b, 8)
+  }
+
+  let version: QRCodeVersion = VERSION
+  let ecLevel: QRCodeDecoderErrorCorrectionLevel = ERROR_CORRECTION
+
+  if (!willFit(mode, headerBits.getSize(), dataBits.getSize(), version, ecLevel)) {
+    throw new Error('Data too big for requested version')
+  }
+
+  const headerAndDataBits = new BitArray()
+  headerAndDataBits.appendBitArray(headerBits)
+  // Find "length" of main segment and write it
+  const numLetters = dataBits.getSizeInBytes()
+  QRCodeEncoder.appendLengthInfo(numLetters, version, mode, headerAndDataBits)
+  // Put data together into the overall payload
+  headerAndDataBits.appendBitArray(dataBits)
+
+  const ecBlocks: ECBlocks = version.getECBlocksForLevel(ecLevel)
+  const numDataBytes = version.getTotalCodewords() - ecBlocks.getTotalECCodewords()
+
+  // Terminate the bits properly.
+  QRCodeEncoder.terminateBits(numDataBytes, headerAndDataBits)
+
+  // Interleave data bits with error correction code.
+  const finalBits: BitArray = QRCodeEncoder.interleaveWithECBytes(
+    headerAndDataBits,
+    version.getTotalCodewords(),
+    numDataBytes,
+    ecBlocks.getNumBlocks()
+  )
+
+  const qrCode = new QRCode()
+
+  qrCode.setECLevel(ecLevel)
+  qrCode.setMode(mode)
+  qrCode.setVersion(version)
+
+  //  Choose the mask pattern and set to "qrCode".
+  const dimension = version.getDimensionForVersion()
+  const matrix: QRCodeByteMatrix = new QRCodeByteMatrix(dimension, dimension)
+  // @ts-ignore
+  const maskPattern = QRCodeEncoder.chooseMaskPattern(finalBits, ecLevel, version, matrix)
+  qrCode.setMaskPattern(maskPattern)
+
+  // Build the matrix and set it to "qrCode".
+  QRCodeMatrixUtil.buildMatrix(finalBits, ecLevel, version, maskPattern, matrix)
+  qrCode.setMatrix(matrix)
+
+  return qrCode
+}
 
 // Adapted from https://github.com/zxing-js/library/blob/d1a270cb8ef3c4dba72966845991f5c876338aac/src/browser/BrowserQRCodeSvgWriter.ts#L91
 const createQRCode = (
-  text: string,
+  content: Uint8Array,
   renderRect: (x: number, y: number, size: number) => void,
   renderBoundary: (x: number, y: number, width: number, height: number) => void,
-  size: number,
-  hints?: Map<EncodeHintType, any>
+  size: number
 ) => {
-  let errorCorrectionLevel = ErrorCorrectionLevel.L
   let quietZone = DEFAULT_QUIET_ZONE_SIZE
+
   const { width, height } = { width: size, height: size }
 
-  if (hints) {
-    if (hints.get(EncodeHintType.ERROR_CORRECTION)) {
-      errorCorrectionLevel = ErrorCorrectionLevel.fromString(hints.get(EncodeHintType.ERROR_CORRECTION).toString())
-    }
-
-    if (hints.get(EncodeHintType.MARGIN) !== undefined) {
-      quietZone = Number.parseInt(hints.get(EncodeHintType.MARGIN).toString(), 10)
-    }
-  }
-
-  const code: QRCode = QRCodeEncoder.encode(text, errorCorrectionLevel, hints)
+  const code: QRCode = encodeQRCode(content)
 
   const input = code.getMatrix()
 
@@ -70,19 +161,15 @@ const createQRCode = (
 }
 
 export const drawQRCode = (
-  text: string,
+  content: Uint8Array,
   x: number,
   y: number,
   size: number,
   pdfDocument: PDFPage,
-  border: boolean = true,
-  version = 7
+  border: boolean = true
 ) => {
-  const hints = new Map()
-  hints.set(EncodeHintType.MARGIN, 0)
-  hints.set(EncodeHintType.QR_VERSION, version)
   createQRCode(
-    text,
+    content,
     (rectX: number, rectY: number, rectSize: number) => {
       pdfDocument.drawRectangle({
         x: x + rectX,
@@ -103,7 +190,6 @@ export const drawQRCode = (
         })
       }
     },
-    size,
-    hints
+    size
   )
 }
