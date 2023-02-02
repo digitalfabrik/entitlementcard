@@ -24,6 +24,8 @@ const LoginForm = (props: Props) => {
           <InputGroup
             placeholder='erika.musterfrau@example.org'
             autoFocus
+            autoComplete='on'
+            name='email'
             value={props.email}
             disabled={!!props.loading}
             onChange={(event: ChangeEvent<HTMLInputElement>) => props.setEmail(event.target.value)}

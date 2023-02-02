@@ -7,11 +7,10 @@ import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Exception } from '../../exception'
 import { activateCards } from '../../cards/activation'
-import { generatePdf, loadTTFFont } from '../../cards/PdfFactory'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { CodeType } from '../../generated/graphql'
+import { generatePdf } from '../../cards/PdfFactory'
 
 enum CardActivationState {
   input,
@@ -48,8 +47,7 @@ const CreateCardsController = () => {
           })
         : null
 
-      const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
-      const pdfDataUri = generatePdf(font, region, activationCodes, staticCodes)
+      const pdfDataUri = await generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
 
       await activateCards(client, activationCodes, region, CodeType.Dynamic)
 
@@ -59,24 +57,10 @@ const CreateCardsController = () => {
       setState(CardActivationState.finished)
     } catch (e) {
       console.error(e)
-      if (e instanceof Exception) {
-        switch (e.data.type) {
-          case 'pdf-generation':
-            appToaster?.show({
-              message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
-              intent: 'danger',
-            })
-            break
-          case 'unicode':
-            appToaster?.show({
-              message: `Ein Zeichen konnte nicht in der PDF eingebunden werden: ${e.data.unsupportedChar}`,
-              intent: 'danger',
-            })
-            break
-        }
-      } else {
-        appToaster?.show({ message: 'Etwas ist schiefgegangen.', intent: 'danger' })
-      }
+      appToaster?.show({
+        message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+        intent: 'danger',
+      })
       setState(CardActivationState.input)
     }
   }

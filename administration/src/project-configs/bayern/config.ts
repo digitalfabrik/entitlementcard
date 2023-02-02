@@ -1,6 +1,8 @@
 import { ProjectConfig } from '../getProjectConfig'
 import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from './dataPrivacyBase'
 import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
+// @ts-ignore
+import pdfTemplate from './pdf-template.pdf'
 
 const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',
@@ -10,6 +12,11 @@ const config: ProjectConfig = {
   createEmptyCard: createEmptyBavariaCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
+  pdf: {
+    title: 'Ehrenamtskarte',
+    templatePath: pdfTemplate,
+    issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
+  },
 }
 
 export default config

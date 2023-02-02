@@ -10,6 +10,11 @@ const config: ProjectConfig = {
   createEmptyCard: createEmptyBavariaCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
+  pdf: {
+    title: 'Karten',
+    templatePath: null,
+    issuer: 'Tür an Tür Digitalfabrik gGmbH',
+  },
 }
 
 export default config
