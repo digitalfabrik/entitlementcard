@@ -11,6 +11,7 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   pdf: {
+    title: 'Karten',
     templatePath: null,
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
   },

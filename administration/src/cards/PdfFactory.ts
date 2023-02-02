@@ -120,6 +120,10 @@ export async function generatePdf(
       ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
       : null
 
+  if (staticCodes != null && activationCodes.length != staticCodes.length) {
+    throw new Error('Activation codes count does not match static codes count.')
+  }
+
   for (let k = 0; k < activationCodes.length; k++) {
     const topCode = activationCodes[k]
     const bottomCode = staticCodes?.at(k)
@@ -145,7 +149,7 @@ export async function generatePdf(
     )
   }
 
-  doc.setTitle('Karten')
+  doc.setTitle(pdfConfig.title)
   doc.setAuthor(pdfConfig.issuer)
 
   const pdfBytes = await doc.save()

@@ -13,6 +13,7 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   pdf: {
+    title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,
     issuer: 'Stadt Nürnberg',
   },
