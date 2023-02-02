@@ -19,16 +19,20 @@ const config: ProjectConfig = {
     title: 'Ehrenamtskarte',
     templatePath: pdfTemplate,
     issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
-    infoToDetails: (info, region) => {
+    infoToDetails: (info, region, shorten) => {
       const expirationDay = info.expirationDay ?? 0
       const expirationDate =
         expirationDay > 0 ? format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy') : 'unbegrenzt'
 
       const cardType = info.extensions?.extensionBavariaCardType?.cardType
-      return `Name: ${info.fullName}
+      return `${info.fullName}
 Kartentyp: ${cardType == BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
-Gültigkeit: ${format(new Date(), 'dd.MM.yyyy')} - ${expirationDate}
-Aussteller: ${region.prefix} ${region.name}`
+Gültig bis: ${expirationDate}
+${
+  shorten
+    ? `Aussteller: ${region.prefix} ${region.name}`
+    : `Ausgestellt am ${format(new Date(), 'dd.MM.yyyy')} von ${region.prefix} ${region.name}`
+}`
     },
   },
 }

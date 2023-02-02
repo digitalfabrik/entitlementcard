@@ -10,7 +10,7 @@ export interface PdfConfig {
   title: string
   templatePath: string | null
   issuer: string
-  infoToDetails: (info: CardInfo, region: Region) => string
+  infoToDetails: (info: CardInfo, region: Region, shorten: boolean) => string
 }
 
 export interface ProjectConfig {

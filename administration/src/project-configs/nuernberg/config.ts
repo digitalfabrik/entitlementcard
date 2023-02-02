@@ -18,16 +18,18 @@ const config: ProjectConfig = {
     title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,
     issuer: 'Stadt Nürnberg',
-    infoToDetails: (info, _region) => {
+    infoToDetails: (info, _region, shorten) => {
       const expirationDay = info.expirationDay
       if (!expirationDay) {
         throw new Error('expirationDay must be defined for Nürnberg')
       }
 
-      return `Name: ${info.fullName}
+      const expirationDate = format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy')
+      return `${info.fullName}
 Passnummer: ${info.extensions?.extensionNuernbergPassNumber?.passNumber}
 Geburtsdatum: ${format(daysSinceEpochToDate(info.extensions?.extensionBirthday?.birthday ?? 0), 'dd.MM.yyyy')}
-Gültigkeit: ${format(new Date(), 'dd.MM.yyyy')} - ${format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy')}`
+Gültig bis: ${expirationDate}
+${shorten ? '' : `Ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}`}`
     },
   },
 }

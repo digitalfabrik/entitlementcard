@@ -1,9 +1,7 @@
 import { drawQRCode } from '../util/qrcode'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
-import { format } from 'date-fns'
 import { Region } from '../generated/graphql'
 import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
-import { daysSinceEpochToDate } from './validityPeriod'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
@@ -14,6 +12,7 @@ const dynamicQRCodeY = 70 // mm
 const dynamicDetailWidth = 90 // mm
 const dynamicDetailX = 105 // mm
 const dynamicDetailY = 170 // mm
+const dynamicDetailFontSize = 10
 
 const staticBackQRCodeSize = 48 // mm
 const staticBackQRCodeX = 51 // mm
@@ -26,6 +25,7 @@ const staticFrontQRCodeY = 249 // mm
 const staticDetailWidth = 46 // mm
 const staticDetailX = 107 // mm
 const staticDetailY = 248 // mm
+const staticDetailFontSize = 8
 
 function mmToPt(mm: number) {
   return (mm / 25.4) * 72
@@ -62,7 +62,9 @@ async function fillContentAreas(
     dynamicDetailY,
     dynamicDetailWidth,
     helveticaFont,
+    dynamicDetailFontSize,
     templatePage,
+    false,
     pdfConfig
   )
 
@@ -71,7 +73,7 @@ async function fillContentAreas(
     // Back
     fillCodeArea(staticCode, staticBackQRCodeX, staticBackQRCodeY, staticBackQRCodeSize, templatePage)
 
-    //Front
+    // Front
     fillCodeArea(staticCode, staticFrontQRCodeX, staticFrontQRCodeY, staticFrontQRCodeSize, templatePage)
     fillDetailsArea(
       staticCode.value.info!,
@@ -80,7 +82,9 @@ async function fillContentAreas(
       staticDetailY,
       staticDetailWidth,
       helveticaFont,
+      staticDetailFontSize,
       templatePage,
+      true,
       pdfConfig
     )
   }
@@ -93,7 +97,9 @@ function fillDetailsArea(
   y: number,
   width: number,
   font: PDFFont,
+  fontSize: number,
   page: PDFPage,
+  shorten: boolean,
   pdfConfig: PdfConfig
 ) {
   const detailXPdf = mmToPt(x)
@@ -101,13 +107,15 @@ function fillDetailsArea(
 
   const lineHeight = mmToPt(5)
 
-  page.drawText(pdfConfig.infoToDetails(info, region), {
+  const text = pdfConfig.infoToDetails(info, region, shorten)
+  page.drawText(text, {
     font,
     x: detailXPdf,
     y: detailYPdf - lineHeight,
     maxWidth: mmToPt(width),
+    wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
-    size: 10,
+    size: fontSize,
   })
 }
 
