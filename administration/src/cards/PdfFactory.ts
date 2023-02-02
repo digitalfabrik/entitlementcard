@@ -48,15 +48,23 @@ async function fillContentAreas(
   templatePage: PDFPage,
   dynamicCode: DynamicPdfQrCode,
   staticCode: StaticPdfQrCode | null,
-  region: Region
+  region: Region,
+  pdfConfig: PdfConfig
 ) {
-  const info = dynamicCode.value.info!
-
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
   // Dynamic QR code
   fillCodeArea(dynamicCode, dynamicQRCodeX, dynamicQRCodeY, dynamicQRCodeSize, templatePage)
-  fillDetailsArea(info!, region, dynamicDetailX, dynamicDetailY, dynamicDetailWidth, helveticaFont, templatePage)
+  fillDetailsArea(
+    dynamicCode.value.info!,
+    region,
+    dynamicDetailX,
+    dynamicDetailY,
+    dynamicDetailWidth,
+    helveticaFont,
+    templatePage,
+    pdfConfig
+  )
 
   // Static QR code
   if (staticCode) {
@@ -65,7 +73,16 @@ async function fillContentAreas(
 
     //Front
     fillCodeArea(staticCode, staticFrontQRCodeX, staticFrontQRCodeY, staticFrontQRCodeSize, templatePage)
-    fillDetailsArea(info!, region, staticDetailX, staticDetailY, staticDetailWidth, helveticaFont, templatePage)
+    fillDetailsArea(
+      staticCode.value.info!,
+      region,
+      staticDetailX,
+      staticDetailY,
+      staticDetailWidth,
+      helveticaFont,
+      templatePage,
+      pdfConfig
+    )
   }
 }
 
@@ -76,30 +93,22 @@ function fillDetailsArea(
   y: number,
   width: number,
   font: PDFFont,
-  page: PDFPage
+  page: PDFPage,
+  pdfConfig: PdfConfig
 ) {
   const detailXPdf = mmToPt(x)
   const detailYPdf = page.getSize().height - mmToPt(y)
 
   const lineHeight = mmToPt(5)
 
-  const expirationDateInt = Number(info.expirationDay)
-  const expirationDate =
-    expirationDateInt > 0 ? format(daysSinceEpochToDate(expirationDateInt), 'dd.MM.yyyy') : 'unbegrenzt'
-  page.drawText(
-    `Name: ${info!.fullName}
-Ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}
-Gültig bis: ${expirationDate}
-Aussteller: ${region.prefix} ${region.name}`,
-    {
-      font,
-      x: detailXPdf,
-      y: detailYPdf - lineHeight,
-      maxWidth: mmToPt(width),
-      lineHeight,
-      size: 10,
-    }
-  )
+  page.drawText(pdfConfig.infoToDetails(info, region), {
+    font,
+    x: detailXPdf,
+    y: detailYPdf - lineHeight,
+    maxWidth: mmToPt(width),
+    lineHeight,
+    size: 10,
+  })
 }
 
 function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, page: PDFPage) {
@@ -153,7 +162,8 @@ export async function generatePdf(
             value: staticCode,
           }
         : null,
-      region
+      region,
+      pdfConfig
     )
   }
 

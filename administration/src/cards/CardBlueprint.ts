@@ -65,11 +65,11 @@ export class CardBlueprint {
   generateCardInfo = (): CardInfo => {
     let extension_message = {}
 
-    for (const state of this.extensionHolders) {
-      if (!state) {
+    for (const holder of this.extensionHolders) {
+      if (!holder.state) {
         throw new Error('Tried to add invalid extension')
       }
-      state.extension.setProtobufData(state, extension_message)
+      holder.extension.setProtobufData(holder.state, extension_message)
     }
 
     const expirationDate = this.expirationDate

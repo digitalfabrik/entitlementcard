@@ -38,7 +38,7 @@ const CreateCardsController = () => {
     try {
       setState(CardActivationState.loading)
 
-      const activationCodes = cardBlueprints.map(cardBlueprint => {
+      const dynamicCodes = cardBlueprints.map(cardBlueprint => {
         return cardBlueprint.generateActivationCode()
       })
       const staticCodes = projectConfig.staticQrCodesEnabled
@@ -47,9 +47,9 @@ const CreateCardsController = () => {
           })
         : null
 
-      const pdfDataUri = await generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
+      const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)
 
-      await activateCards(client, activationCodes, region, CodeType.Dynamic)
+      await activateCards(client, dynamicCodes, region, CodeType.Dynamic)
 
       if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
 

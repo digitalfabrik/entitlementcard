@@ -1,6 +1,7 @@
 import { ProjectConfig } from '../getProjectConfig'
 import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
 import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from '../bayern/dataPrivacyBase'
+import bayern from '../bayern/config'
 
 const config: ProjectConfig = {
   name: 'Showcase Berechtigungskarte',
@@ -14,6 +15,7 @@ const config: ProjectConfig = {
     title: 'Karten',
     templatePath: null,
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
+    infoToDetails: bayern.pdf.infoToDetails,
   },
 }
 
