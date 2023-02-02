@@ -11,52 +11,60 @@ const dynamicQRCodeSize = 90 // mm
 const dynamicQRCodeX = 105 // mm
 const dynamicQRCodeY = 70 // mm
 
+const dynamicDetailWidth = 90 // mm
 const dynamicDetailX = 105 // mm
 const dynamicDetailY = 170 // mm
-const dynamicDetailWidth = 90 // mm
 
-const staticQRCodeSize = 50 // mm
-const staticQRCodeX = 110 // mm
-const staticQRCodeY = 227 // mm
+const staticBackQRCodeSize = 48 // mm
+const staticBackQRCodeX = 51 // mm
+const staticBackQRCodeY = 228 // mm
 
-const staticDetailX = 50 // mm
-const staticDetailY = 227 // mm
-const staticDetailWidth = 50 // mm
+const staticFrontQRCodeSize = 23 // mm
+const staticFrontQRCodeX = 156 // mm
+const staticFrontQRCodeY = 249 // mm
+
+const staticDetailWidth = 46 // mm
+const staticDetailX = 107 // mm
+const staticDetailY = 248 // mm
 
 function mmToPt(mm: number) {
   return (mm / 25.4) * 72
 }
 
-type TopPdfQrCode = {
+type DynamicPdfQrCode = {
   value: DynamicActivationCode
   case: 'dynamicActivationCode'
 }
 
-type BottomPdfQrCode = {
+type StaticPdfQrCode = {
   value: StaticVerificationCode
   case: 'staticVerificationCode'
 }
 
-type PdfQrCode = TopPdfQrCode | BottomPdfQrCode
+type PdfQrCode = DynamicPdfQrCode | StaticPdfQrCode
 
 async function fillContentAreas(
   doc: PDFDocument,
   templatePage: PDFPage,
-  topQrCode: TopPdfQrCode,
-  bottomQrCode: BottomPdfQrCode | null,
+  dynamicCode: DynamicPdfQrCode,
+  staticCode: StaticPdfQrCode | null,
   region: Region
 ) {
-  const info = topQrCode.value.info!
+  const info = dynamicCode.value.info!
 
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
-  // Top QR code
-  fillCodeArea(topQrCode, dynamicQRCodeX, dynamicQRCodeY, dynamicQRCodeSize, templatePage)
+  // Dynamic QR code
+  fillCodeArea(dynamicCode, dynamicQRCodeX, dynamicQRCodeY, dynamicQRCodeSize, templatePage)
   fillDetailsArea(info!, region, dynamicDetailX, dynamicDetailY, dynamicDetailWidth, helveticaFont, templatePage)
 
-  // Bottom QR code
-  if (bottomQrCode) {
-    fillCodeArea(bottomQrCode, staticQRCodeX, staticQRCodeY, staticQRCodeSize, templatePage)
+  // Static QR code
+  if (staticCode) {
+    // Back
+    fillCodeArea(staticCode, staticBackQRCodeX, staticBackQRCodeY, staticBackQRCodeSize, templatePage)
+
+    //Front
+    fillCodeArea(staticCode, staticFrontQRCodeX, staticFrontQRCodeY, staticFrontQRCodeSize, templatePage)
     fillDetailsArea(info!, region, staticDetailX, staticDetailY, staticDetailWidth, helveticaFont, templatePage)
   }
 }
@@ -108,7 +116,7 @@ function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, pag
 }
 
 export async function generatePdf(
-  activationCodes: DynamicActivationCode[],
+  dynamicCodes: DynamicActivationCode[],
   staticCodes: StaticVerificationCode[] | null,
   region: Region,
   pdfConfig: PdfConfig
@@ -120,13 +128,13 @@ export async function generatePdf(
       ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
       : null
 
-  if (staticCodes !== null && activationCodes.length !== staticCodes.length) {
+  if (staticCodes !== null && dynamicCodes.length !== staticCodes.length) {
     throw new Error('Activation codes count does not match static codes count.')
   }
 
-  for (let k = 0; k < activationCodes.length; k++) {
-    const topCode = activationCodes[k]
-    const bottomCode = staticCodes?.at(k)
+  for (let k = 0; k < dynamicCodes.length; k++) {
+    const dynamicCode = dynamicCodes[k]
+    const staticCode = staticCodes?.at(k)
 
     const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
@@ -137,12 +145,12 @@ export async function generatePdf(
       page,
       {
         case: 'dynamicActivationCode',
-        value: topCode,
+        value: dynamicCode,
       },
-      bottomCode
+      staticCode
         ? {
             case: 'staticVerificationCode',
-            value: bottomCode,
+            value: staticCode,
           }
         : null,
       region
