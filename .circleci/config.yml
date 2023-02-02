@@ -92,6 +92,12 @@ commands:
             curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
             unzip protoc*.zip -d $HOME/.local
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Install Flutter plugin
+          # Do not use the dart from fvm here for installing protoc_plugin.
+          # Else we might get a "Can't load Kernel binary: Invalid kernel binary format version" because the dart
+          # versions do not match.
+          command: dart pub global activate protoc_plugin
   install-protobuf-mac:
     steps:
       - run:
@@ -100,9 +106,12 @@ commands:
             curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
             unzip protoc*.zip -d $HOME/.local
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Install Flutter plugin
+          # Use dart directly here. See comment in install-protobuf-linux
+          command: dart pub global activate protoc_plugin
   install-fvm-linux:
     steps:
-      - install-dart-linux
       - run:
           name: Install FVM
           command: |
@@ -113,8 +122,7 @@ commands:
             - fvm-0-{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
-          # We skip the flutter setup so that we do not cache ~/fvm/versions/x.x.z/bin/cache in the next setup
-          command: fvm install --skip-setup
+          command: fvm install
       - save_cache:
           key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
@@ -125,8 +133,8 @@ commands:
           command: fvm flutter --version
       - run:
           name: Configure Flutter
-          command: fvm --verbose flutter config --no-analytics
-  install-fvm-mac:
+          command: fvm flutter config --no-analytics
+  install-dart-fvm-mac:
     steps:
       - run:
           name: Install Standalone FVM (with Dart)
@@ -138,8 +146,7 @@ commands:
             - fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
-          # We skip the flutter setup so that we do not cache ~/fvm/versions/x.x.z/bin/cache in the next setup
-          command: fvm install --skip-setup
+          command: fvm install
       - save_cache:
           key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
@@ -162,14 +169,13 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - install-dart-linux
       - install-fvm-linux
       - install-app-toolbelt
       - install-protobuf-linux
       - run:
           name: Install Flutter Packages
-          command: |
-            fvm dart pub global activate protoc_plugin
-            fvm flutter pub get
+          command: fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
@@ -177,7 +183,7 @@ jobs:
           name: Build Runner
           command: |
             # Statically use "bayern" build config for analyzing here
-            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=bayern"
+            fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
       - run:
           name: Check Analyzer and Linting
           command: |
@@ -208,23 +214,23 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - install-dart-linux
       - install-fvm-linux
       - install-app-toolbelt
       - install-protobuf-linux
       - run:
           name: Install Flutter Packages
           command: |
-            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --android
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+            fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
+            fvm flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
@@ -242,13 +248,12 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - install-fvm-mac
+      - install-dart-fvm-mac
       - install-app-toolbelt
       - install-protobuf-mac
       - run:
           name: Install Flutter Packages
           command: |
-            fvm dart pub global activate protoc_plugin
             fvm flutter pub get
             fvm flutter precache --ios
       - run:
@@ -260,12 +265,12 @@ jobs:
       - run:
           name: Build Runner
           command: |
-            fvm --verbose flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+            fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
             app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
-            fvm --verbose flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
+            fvm flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
 
   backend-build:
     environment:
@@ -318,6 +323,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - install-dart-linux
       - install-protobuf-linux
       - run:
           name: Install node dependencies
