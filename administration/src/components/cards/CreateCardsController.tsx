@@ -47,7 +47,7 @@ const CreateCardsController = () => {
           })
         : null
 
-      const pdfDataUri = generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
+      const pdfDataUri = await generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
 
       await activateCards(client, activationCodes, region, CodeType.Dynamic)
 

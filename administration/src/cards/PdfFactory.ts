@@ -2,7 +2,7 @@ import { drawQRCode } from '../util/qrcode'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { format } from 'date-fns'
 import { Region } from '../generated/graphql'
-import { CardInfo, DynamicActivationCode, QrCode, StaticVerifyCode } from '../generated/card_pb'
+import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { daysSinceEpochToDate } from './validityPeriod'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
@@ -27,42 +27,38 @@ function mmToPt(mm: number) {
   return (mm / 25.4) * 72
 }
 
+type TopPdfQrCode = {
+  value: DynamicActivationCode
+  case: 'dynamicActivationCode'
+}
+
+type BottomPdfQrCode = {
+  value: StaticVerificationCode
+  case: 'staticVerificationCode'
+}
+
+type PdfQrCode = TopPdfQrCode | BottomPdfQrCode
+
 async function fillContentAreas(
   doc: PDFDocument,
   templatePage: PDFPage,
-  dynamicActivationCode: DynamicActivationCode,
+  topQrCode: TopPdfQrCode,
+  bottomQrCode: BottomPdfQrCode | null,
   region: Region
 ) {
-  const info = dynamicActivationCode.info!
+  const info = topQrCode.value.info!
 
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
-  // Dynamic QR code
-  fillCodeArea(
-    {
-      case: 'dynamicActivationCode',
-      value: dynamicActivationCode,
-    },
-    dynamicQRCodeX,
-    dynamicQRCodeY,
-    dynamicQRCodeSize,
-    templatePage
-  )
+  // Top QR code
+  fillCodeArea(topQrCode, dynamicQRCodeX, dynamicQRCodeY, dynamicQRCodeSize, templatePage)
   fillDetailsArea(info!, region, dynamicDetailX, dynamicDetailY, dynamicDetailWidth, helveticaFont, templatePage)
 
-  // Static QR code
-  // TODO: Plug in the Static QR code here. Don't print static qr code for bayern
-  fillCodeArea(
-    {
-      case: 'dynamicActivationCode',
-      value: dynamicActivationCode,
-    },
-    staticQRCodeX,
-    staticQRCodeY,
-    staticQRCodeSize,
-    templatePage
-  )
-  fillDetailsArea(info!, region, staticDetailX, staticDetailY, staticDetailWidth, helveticaFont, templatePage)
+  // Bottom QR code
+  if (bottomQrCode) {
+    fillCodeArea(bottomQrCode, staticQRCodeX, staticQRCodeY, staticQRCodeSize, templatePage)
+    fillDetailsArea(info!, region, staticDetailX, staticDetailY, staticDetailWidth, helveticaFont, templatePage)
+  }
 }
 
 function fillDetailsArea(
@@ -98,21 +94,7 @@ Aussteller: ${region.prefix} ${region.name}`,
   )
 }
 
-function fillCodeArea(
-  qrCode:
-    | {
-        value: DynamicActivationCode
-        case: 'dynamicActivationCode'
-      }
-    | {
-        value: StaticVerifyCode
-        case: 'staticVerifyCode'
-      },
-  x: number,
-  y: number,
-  size: number,
-  page: PDFPage
-) {
+function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, page: PDFPage) {
   const qrCodeSizePdf = mmToPt(size)
   const qrCodeXPdf = mmToPt(x)
   const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
@@ -125,7 +107,12 @@ function fillCodeArea(
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
 }
 
-export async function generatePdf(activationCodes: DynamicActivationCode[], region: Region, pdfConfig: PdfConfig) {
+export async function generatePdf(
+  activationCodes: DynamicActivationCode[],
+  staticCodes: StaticVerificationCode[] | null,
+  region: Region,
+  pdfConfig: PdfConfig
+) {
   const doc = await PDFDocument.create()
 
   const templateDocument =
@@ -134,13 +121,28 @@ export async function generatePdf(activationCodes: DynamicActivationCode[], regi
       : null
 
   for (let k = 0; k < activationCodes.length; k++) {
-    const activationCode = activationCodes[k]
+    const topCode = activationCodes[k]
+    const bottomCode = staticCodes?.at(k)
 
     const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
     const page = doc.addPage(templatePage ? templatePage : undefined)
 
-    await fillContentAreas(doc, page, activationCode, region)
+    await fillContentAreas(
+      doc,
+      page,
+      {
+        case: 'dynamicActivationCode',
+        value: topCode,
+      },
+      bottomCode
+        ? {
+            case: 'staticVerificationCode',
+            value: bottomCode,
+          }
+        : null,
+      region
+    )
   }
 
   doc.setTitle('Karten')
