@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
 workflows:
-  default:
+  frontend:
     jobs:
       - check-frontend
       - frontend-android-build:
@@ -35,6 +35,8 @@ workflows:
           flutterFlavor: "Nuernberg"
           requires:
             - check-frontend
+  backend:
+    jobs:
       - backend-build
       - administration-build
       - martin-build
