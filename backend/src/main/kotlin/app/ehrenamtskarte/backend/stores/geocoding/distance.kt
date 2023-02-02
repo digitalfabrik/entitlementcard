@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.stores.geocoding
 
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.geojson.Feature
 import kotlin.math.cos
 import kotlin.math.max

@@ -35,6 +35,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: fabPadding.toDouble()),
       child: Card(
+        clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),

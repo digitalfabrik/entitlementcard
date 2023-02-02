@@ -8,8 +8,9 @@ import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { activateCards } from '../../cards/activation'
-import { generatePdf } from '../../cards/PdfFactory'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { CodeType } from '../../generated/graphql'
+import { generatePdf } from '../../cards/PdfFactory'
 
 enum CardActivationState {
   input,
@@ -18,9 +19,9 @@ enum CardActivationState {
 }
 
 const CreateCardsController = () => {
+  const projectConfig = useContext(ProjectConfigContext)
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
-  const projectConfig = useContext(ProjectConfigContext)
   const { region } = useContext(WhoAmIContext).me!
   const [state, setState] = useState(CardActivationState.input)
   const appToaster = useAppToaster()
@@ -36,13 +37,21 @@ const CreateCardsController = () => {
   const confirm = async () => {
     try {
       setState(CardActivationState.loading)
+
       const activationCodes = cardBlueprints.map(cardBlueprint => {
         return cardBlueprint.generateActivationCode()
       })
+      const staticCodes = projectConfig.staticQrCodesEnabled
+        ? cardBlueprints.map(cardBlueprints => {
+            return cardBlueprints.generateStaticVerificationCode()
+          })
+        : null
 
-      await activateCards(client, activationCodes, region)
+      const pdfDataUri = generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
 
-      const pdfDataUri = await generatePdf(activationCodes, region, projectConfig.pdf)
+      await activateCards(client, activationCodes, region, CodeType.Dynamic)
+
+      if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
 
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setState(CardActivationState.finished)

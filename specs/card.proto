@@ -9,8 +9,11 @@ message RegionExtension {
 message BirthdayExtension {
   // Days since the birthday (calculated from 1970-01-01).
   // All values of this field are valid, including the 0, which indicates that the birthday is on 1970-01-01.
-  // If you intend to specify that the card does not have an associated birthdate, then exclude the BirthdayExtension.
-  int32 birthday = 1;
+  // We choose sint32 here, as it encodes negative numbers more efficiently: For birthdays between 1900 and 2050, the
+  // BirthdayExtension message takes up to 4 bytes when encoded binary, whereas using int32 would require up to 11 bytes
+  // for birthdays before 1970 and up to 4 bytes for birthdays between 1970 and 2050.
+  // If you want to specify that the card does not have an associated birthdate, then do not set the BirthdayExtension.
+  sint32 birthday = 1;
 }
 
 message NuernbergPassNumberExtension {
@@ -30,7 +33,7 @@ message BavariaCardTypeExtension {
 message CardExtensions {
   optional RegionExtension extension_region = 1;
   optional BirthdayExtension extension_birthday = 2;
-  optional NuernbergPassNumberExtension nuernberg_pass_number = 3;
+  optional NuernbergPassNumberExtension extension_nuernberg_pass_number = 3;
   optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
 }
 
@@ -51,8 +54,8 @@ message CardInfo {
 message QrCode {
   oneof qr_code {
     DynamicActivationCode dynamic_activation_code = 1;
-    DynamicVerifyCode dynamic_verify_code = 2;
-    StaticVerifyCode static_verify_code = 3;
+    DynamicVerificationCode dynamic_verification_code = 2;
+    StaticVerificationCode static_verification_code = 3;
   }
 }
 
@@ -63,13 +66,13 @@ message DynamicActivationCode {
   bytes ec_signature = 4;
 }
 
-message DynamicVerifyCode {
+message DynamicVerificationCode {
   CardInfo info = 1;
   bytes pepper = 2;
   uint32 otp = 3;
 }
 
-message StaticVerifyCode {
+message StaticVerificationCode {
   CardInfo info = 1;
   bytes pepper = 2;
   bytes ec_signature = 3;

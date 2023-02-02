@@ -169,6 +169,11 @@ enum BlueCardEntitlementType {
   WORK_AT_ORGANIZATIONS
 }
 
+enum CodeType {
+  dynamic
+  static
+}
+
 enum GoldenCardEntitlementType {
   HONORED_BY_MINISTER_PRESIDENT
   MILITARY_RESERVE
@@ -257,15 +262,17 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CardGenerationModelInput {
-  cardDetailsHashBase64: String!
   cardExpirationDay: Long
+  cardInfoHashBase64: String!
+  codeType: CodeType!
   regionId: Int!
-  totpSecretBase64: String!
+  totpSecretBase64: String
 }
 
 input CardVerificationModelInput {
-  cardDetailsHashBase64: String!
-  totp: Int!
+  cardInfoHashBase64: String!
+  codeType: CodeType!
+  totp: Int
 }
 
 input CoordinatesInput {

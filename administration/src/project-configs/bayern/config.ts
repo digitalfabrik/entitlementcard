@@ -8,6 +8,7 @@ const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
   applicationFeatureEnabled: true,
+  staticQrCodesEnabled: false,
   createEmptyCard: createEmptyBavariaCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,

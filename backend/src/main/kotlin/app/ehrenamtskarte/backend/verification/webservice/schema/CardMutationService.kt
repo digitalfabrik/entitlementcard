@@ -23,12 +23,14 @@ class CardMutationService {
             if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                 throw UnauthorizedException()
             }
+            val totpSecret = if (card.totpSecretBase64 != null) Base64.getDecoder().decode(card.totpSecretBase64) else null
             CardRepository.insert(
-                Base64.getDecoder().decode(card.cardDetailsHashBase64),
-                Base64.getDecoder().decode(card.totpSecretBase64),
+                Base64.getDecoder().decode(card.cardInfoHashBase64),
+                totpSecret,
                 card.cardExpirationDay,
                 card.regionId,
-                user.id.value
+                user.id.value,
+                card.codeType
             )
         }
         return true

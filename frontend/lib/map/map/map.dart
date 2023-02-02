@@ -89,12 +89,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
         ),
         Positioned(
-          bottom: 0,
-          left: 0,
+          bottom: 3,
+          left: 3,
           child: IconButton(
             color: mapboxColor,
-            padding: const EdgeInsets.all(5),
-            constraints: const BoxConstraints(),
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
             tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',

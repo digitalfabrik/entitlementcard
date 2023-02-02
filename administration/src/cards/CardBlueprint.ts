@@ -1,8 +1,8 @@
-import { CardExtensions, CardInfo, DynamicActivationCode } from '../generated/card_pb'
+import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 
-const MAX_NAME_LENGTH = 60 // TODO: Select proper max value
+const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
 const PEPPER_LENGTH = 16
 
@@ -28,7 +28,8 @@ export class CardBlueprint {
   }
 
   isFullNameValid(): boolean {
-    return this.fullName.length > 0 && this.fullName.length < MAX_NAME_LENGTH
+    const encodedName = new TextEncoder().encode(this.fullName)
+    return this.fullName.length > 0 && encodedName.length < MAX_NAME_LENGTH
   }
 
   isExpirationDateValid(): boolean {
@@ -42,8 +43,43 @@ export class CardBlueprint {
       // Extensions valid
       this.extensionHolders.every(state => state.extension.isValid(state.state)) &&
       // Expiration date valid
-      (this.isExpirationDateValid() || this.hasInfiniteLifetime())
+      (this.isExpirationDateValid() || this.hasInfiniteLifetime()) &&
+      // Number of bytes is valid
+      this.hasValidSize()
     )
+  }
+
+  hasValidSize(): boolean {
+    // every four characters in a base64 encoded string correspond to three bytes
+    // the qr code can hold 224 characters
+    // therefore 224 / 4 * 3 = 168
+    // See https://github.com/digitalfabrik/entitlementcard/issues/690  for more context.
+    return this.sizeOfProtobuf() <= 168
+  }
+
+  sizeOfProtobuf(): number {
+    return new QrCode({ qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' } }).toBinary()
+      .length
+  }
+
+  generateCardInfo = (): CardInfo => {
+    let extension_message = {}
+
+    for (const state of this.extensionHolders) {
+      if (!state) {
+        throw new Error('Tried to add invalid extension')
+      }
+      state.extension.setProtobufData(state, extension_message)
+    }
+
+    const expirationDate = this.expirationDate
+
+    return new CardInfo({
+      fullName: this.fullName,
+      expirationDay:
+        expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
+      extensions: new CardExtensions(extension_message),
+    })
   }
 
   generateActivationCode = (): DynamicActivationCode => {
@@ -60,26 +96,24 @@ export class CardBlueprint {
     const totpSecret = new Uint8Array(TOTP_SECRET_LENGTH)
     crypto.getRandomValues(totpSecret)
 
-    let extension_message = {}
-
-    for (const state of this.extensionHolders) {
-      if (!state) {
-        throw new Error('Tried to add invalid extension')
-      }
-      state.extension.setProtobufData(state, extension_message)
-    }
-
-    const expirationDate = this.expirationDate
-
     return new DynamicActivationCode({
-      info: new CardInfo({
-        fullName: this.fullName,
-        expirationDay:
-          expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
-        extensions: new CardExtensions(extension_message),
-      }),
+      info: this.generateCardInfo(),
       pepper: pepper,
       totpSecret: totpSecret,
+    })
+  }
+
+  generateStaticVerificationCode = (): StaticVerificationCode => {
+    if (!window.isSecureContext) {
+      // localhost is considered secure.
+      throw Error('Environment is not considered secure nor are we using Internet Explorer.')
+    }
+    const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
+    crypto.getRandomValues(pepper)
+
+    return new StaticVerificationCode({
+      info: this.generateCardInfo(),
+      pepper: pepper,
     })
   }
 }

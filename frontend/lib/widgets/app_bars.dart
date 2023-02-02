@@ -5,37 +5,29 @@ library navigation_bars;
 import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
 
-/// null means that the default bg color is chosen. other possibility: Colors.transparent
-const Color? kBackgroundColor = null;
-
-/// null means that the default fg color is chosen.
-const Color? kForegroundColor = null;
-const kElevation = 0.0;
-
-class NavigationBar extends StatelessWidget {
+class CustomAppBar extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
 
-  const NavigationBar({super.key, required this.title, this.actions});
+  const CustomAppBar({super.key, required this.title, this.actions});
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return AppBar(
-      backgroundColor: kBackgroundColor,
-      foregroundColor: kForegroundColor,
-      elevation: kElevation,
+      leading: BackButton(color: foregroundColor),
       title: Text(title),
       actions: actions,
     );
   }
 }
 
-class NavigationBarWithBottom extends StatelessWidget {
+class AppBarWithBottom extends StatelessWidget {
   final Widget flexibleSpace;
   final Color? color;
   final PreferredSizeWidget bottom;
 
-  const NavigationBarWithBottom({
+  const AppBarWithBottom({
     super.key,
     required this.flexibleSpace,
     this.color,
@@ -44,76 +36,76 @@ class NavigationBarWithBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     // Note: A SizedBox is required because AppBar contains a Column.
     // If we want to add a AppBar into a column, then we need to set its size.
     return SizedBox(
       height: MediaQuery.of(context).padding.top + bottom.preferredSize.height + kToolbarHeight,
       child: AppBar(
-        elevation: kElevation,
-        leading: const BackButton(),
+        leading: BackButton(color: foregroundColor),
         flexibleSpace: flexibleSpace,
         backgroundColor: color,
-        foregroundColor: kForegroundColor,
         bottom: bottom,
       ),
     );
   }
 }
 
-class SliverNavigationBar extends StatelessWidget {
+class CustomSliverAppBar extends StatelessWidget {
   final String title;
 
-  const SliverNavigationBar({super.key, required this.title});
+  const CustomSliverAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return SliverAppBar(
-      backgroundColor: kBackgroundColor,
-      elevation: kElevation,
-      foregroundColor: kForegroundColor,
+      leading: BackButton(color: foregroundColor),
+      iconTheme: IconThemeData(color: foregroundColor),
       title: Text(title),
+      pinned: true,
     );
   }
 }
 
-class SliverSearchNavigationBar extends StatefulWidget {
+class SearchSliverAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchNavigationBar({super.key, required this.onChanged});
+  SearchSliverAppBar({super.key, required this.onChanged});
 
   @override
-  _SliverSearchNavigationBarState createState() => _SliverSearchNavigationBarState();
+  _SearchSliverAppBarState createState() => _SearchSliverAppBarState();
 }
 
-class _SliverSearchNavigationBarState extends State<SliverSearchNavigationBar> {
+class _SearchSliverAppBarState extends State<SearchSliverAppBar> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    const appBarTextStyle = TextStyle(color: Colors.white);
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return SliverAppBar(
-      backgroundColor: kBackgroundColor,
-      foregroundColor: kForegroundColor,
       title: TextField(
         onChanged: _onSearchFieldTextChanged,
         controller: textEditingController,
         focusNode: focusNode,
-        decoration: const InputDecoration.collapsed(
+        decoration: InputDecoration.collapsed(
           hintText: "Tippen, um zu suchen …",
-          hintStyle: appBarTextStyle,
+          hintStyle: TextStyle(color: foregroundColor?.withOpacity(0.8)),
         ),
-        cursorColor: Colors.white,
-        style: appBarTextStyle,
+        cursorColor: foregroundColor,
+        style: TextStyle(color: foregroundColor),
       ),
       pinned: true,
+      actionsIconTheme: IconThemeData(color: foregroundColor),
       actions: [
         if (textEditingController.value.text.isNotEmpty)
-          IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput),
+          IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
         IconButton(
           icon: const Icon(Icons.search),
           onPressed: _onSearchPressed,
+          color: foregroundColor,
         )
       ],
     );

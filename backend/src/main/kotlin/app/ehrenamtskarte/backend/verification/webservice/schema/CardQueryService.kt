@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -13,6 +14,13 @@ class CardQueryService {
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw NullPointerException("Project not found")
-        return CardVerifier.verifyCardHash(project, Base64.getDecoder().decode(card.cardDetailsHashBase64), card.totp, projectConfig.timezone)
+        val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
+
+        if (card.codeType == CodeType.static) {
+            return card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+        } else if (card.codeType == CodeType.dynamic) {
+            return card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
+        }
+        return false
     }
 }

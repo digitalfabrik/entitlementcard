@@ -56,6 +56,7 @@ export const DataPrivacyBaseText = () => (
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Der gesamte Programmcode des digitalen NürnbergPass ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
       und kann hier eingesehen werden:
+      <br />
       <a
         target='_blank'
         rel='noreferrer'
@@ -120,6 +121,7 @@ export const DataPrivacyBaseText = () => (
         </span>
       </a>
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Zwecke und Rechtsgrundlagen für die Verarbeitung personenbezogener Daten</b>
@@ -147,6 +149,7 @@ export const DataPrivacyBaseText = () => (
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
+        <br />
         <b>Automatische Speicherung von Daten</b>
       </span>
       <span>
@@ -208,6 +211,7 @@ export const DataPrivacyBaseText = () => (
       und danach gelöscht.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      <br />
       <span>
         <b>Weitergabe erhobener Daten</b>
       </span>
@@ -215,6 +219,7 @@ export const DataPrivacyBaseText = () => (
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Der technische Betrieb unserer Datenverarbeitungssysteme erfolgt durch:
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Tür an Tür – Digitalfabrik gGmbH,
       <span>
@@ -226,6 +231,7 @@ export const DataPrivacyBaseText = () => (
         86153 Augsburg
       </span>
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Gegebenenfalls werden Ihre Daten an die zuständigen Aufsichts- und Rechnungsprüfungsbehörden zur Wahrnehmung der
       jeweiligen Kontrollrechte übermittelt.
@@ -240,6 +246,7 @@ export const DataPrivacyBaseText = () => (
     <p style={{ marginTop: '0pt', marginBottom: '0pt' }}>
       Eine Übermittlung der Daten in andere Drittländer&nbsp;erfolgt nicht. Der Serverstandort ist Deutschland.
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Zustimmung (Einwilligung) zur Erhebung, Nutzung und Verarbeitung personenbezogener Daten</b>
@@ -266,6 +273,7 @@ export const DataPrivacyBaseText = () => (
       mit Wirkung für die Zukunft erklärt werden.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      <br />
       <span>
         <b>Einwilligung durch Minderjährige</b>
       </span>
@@ -274,6 +282,7 @@ export const DataPrivacyBaseText = () => (
       Daten durch Dienstanbieter der Informationsgesellschaft einwilligen. Bei Minderjährigen unter 16 Jahren müssen die
       Erziehungsberechtigten einwilligen.
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Dauer der Speicherung der personenbezogenen Daten</b>
@@ -283,6 +292,7 @@ export const DataPrivacyBaseText = () => (
       Ihre Daten werden nur so lange gespeichert, wie dies unter Beachtung gesetzlicher Aufbewahrungsfristen zur
       Aufgabenerfüllung erforderlich ist. Die Speicherdauer kann bis zu 10 Jahre dauern.
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Ihre Rechte</b>
@@ -331,6 +341,7 @@ export const DataPrivacyBaseText = () => (
         </p>
       </li>
     </ul>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Beschwerderecht bei der Aufsichtsbehörde</b>
@@ -359,6 +370,7 @@ export const DataPrivacyBaseText = () => (
         Internet: www.datenschutz-bayern.de
       </span>
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Datensicherheit</b>
@@ -371,6 +383,7 @@ export const DataPrivacyBaseText = () => (
       Verlust oder Zerstörung zu schützen. Unsere Sicherheitsverfahren überprüfen wir regelmäßig und passen sie dem
       technologischen Fortschritt an.
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Offenlegung und Weitergabe personenbezogener Daten</b>
@@ -381,6 +394,7 @@ export const DataPrivacyBaseText = () => (
         für keine anderen Zwecke als die in unserer Datenschutzerklärung genannten, verwendet.
       </span>
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Datenerhebung, Datennutzung und Verarbeitung</b>
@@ -398,6 +412,7 @@ export const DataPrivacyBaseText = () => (
       Transport über das Internet unter Verwendung von SSL-Verschlüsselung, um Ihre Daten vor einer Kenntnisnahme durch
       Unbefugte zu schützen.
     </p>
+    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Elektronische Post (E-Mail)</b>

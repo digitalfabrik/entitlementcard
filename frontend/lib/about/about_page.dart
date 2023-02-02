@@ -44,8 +44,9 @@ class AboutPage extends StatelessWidget {
             Center(
               child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyText2),
             ),
+            const SizedBox(height: 20),
             const Divider(
-              height: 40,
+              height: 1,
               thickness: 1,
             ),
             InkWell(
@@ -80,9 +81,10 @@ class AboutPage extends StatelessWidget {
               },
             ),
             const Divider(
-              height: 40,
+              height: 1,
               thickness: 1,
             ),
+            const SizedBox(height: 20),
             ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
@@ -111,7 +113,7 @@ class AboutPage extends StatelessWidget {
               title: const Text("Quellcode der App"),
               onTap: () {
                 launchUrlString(
-                  "https://github.com/digitalfabrik/ehrenamtskarte",
+                  "https://github.com/digitalfabrik/entitlementcard",
                   mode: LaunchMode.externalApplication,
                 );
               },

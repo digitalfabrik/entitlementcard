@@ -6,6 +6,7 @@ const config: ProjectConfig = {
   name: 'Showcase Berechtigungskarte',
   projectId: 'showcase.entitlementcard.app',
   applicationFeatureEnabled: true,
+  staticQrCodesEnabled: false,
   createEmptyCard: createEmptyBavariaCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,

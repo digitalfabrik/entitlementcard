@@ -12,25 +12,22 @@ class VerificationParseException extends QrCodeParseException {
       : super(internalMessage);
 }
 
-DynamicVerifyCode parseQRCodeContent(String rawBase64Content) {
-  const base64Decoder = Base64Decoder();
+extension QRParsing on String {
+  QrCode parseQRCodeContent() {
+    const base64Decoder = Base64Decoder();
 
-  // TODO (Max): Refactor into Dart extension
-  QrCode qrcode;
-  try {
-    qrcode = QrCode.fromBuffer(base64Decoder.convert(rawBase64Content));
-  } on Exception catch (e, stackTrace) {
-    throw VerificationParseException(
-      internalMessage: "Failed to parse QrCode from base64 encoded data. "
-          "Message: ${e.toString()}",
-      cause: e,
-      stackTrace: stackTrace,
-    );
-  }
+    QrCode qrcode;
+    try {
+      qrcode = QrCode.fromBuffer(base64Decoder.convert(this));
+    } on Exception catch (e, stackTrace) {
+      throw VerificationParseException(
+        internalMessage: "Failed to parse QrCode from base64 encoded data. "
+            "Message: ${e.toString()}",
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
 
-  // TODO: Allow to parse and verify StaticVerifyCodes.
-  if (!qrcode.hasDynamicVerifyCode()) {
-    throw QrCodeWrongTypeException();
+    return qrcode;
   }
-  return qrcode.dynamicVerifyCode;
 }

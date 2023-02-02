@@ -50,11 +50,26 @@ class CardContent extends StatelessWidget {
         : "unbegrenzt";
   }
 
+  String? get _formattedBirthday {
+    final birthday = cardInfo.extensions.hasExtensionBirthday() ? cardInfo.extensions.extensionBirthday.birthday : null;
+    return birthday != null
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: birthday)))
+        : null;
+  }
+
+  String? get _passNumber {
+    return cardInfo.extensions.hasExtensionNuernbergPassNumber()
+        ? cardInfo.extensions.extensionNuernbergPassNumber.passNumber.toString()
+        : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardColor = cardInfo.extensions.extensionBavariaCardType.cardType == BavariaCardType.GOLD
         ? premiumCardColor
         : standardCardColor;
+    final formattedBirthday = _formattedBirthday;
+    final passNumber = _passNumber;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
@@ -76,8 +91,8 @@ class CardContent extends StatelessWidget {
                   top: paddingHeader.top * scaleFactor,
                   bottom: paddingHeader.bottom * scaleFactor,
                 ),
-                child: AspectRatio(
-                  aspectRatio: 6 / 1,
+                child: SizedBox(
+                  height: 50 * scaleFactor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -92,8 +107,12 @@ class CardContent extends StatelessWidget {
                         child: CardHeaderLogo(
                           title: buildConfig.cardBranding.headerTitleRight,
                           scaleFactor: scaleFactor,
-                          logo: Image(image: AssetImage(buildConfig.cardBranding.headerLogo), fit: BoxFit.contain),
-                          alignment: CrossAxisAlignment.center,
+                          logo: Image(
+                            image: AssetImage(buildConfig.cardBranding.headerLogo),
+                            width: buildConfig.cardBranding.headerLogoWidth * scaleFactor,
+                            fit: BoxFit.contain,
+                          ),
+                          alignment: CrossAxisAlignment.end,
                         ),
                       ),
                     ],
@@ -124,15 +143,18 @@ class CardContent extends StatelessWidget {
                     top: paddingBody.top * scaleFactor,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       AspectRatio(
-                        // magic number that makes the Nuremberg logos have roughly the same width
-                        aspectRatio: 6 / 1.26,
+                        aspectRatio: 6 / 1.5,
                         child: Align(
                           alignment: buildConfig.cardBranding.bodyLogoPosition == 'center'
                               ? Alignment.center
                               : Alignment.centerRight,
-                          child: Image(image: AssetImage(buildConfig.cardBranding.bodyLogo)),
+                          child: Image(
+                            image: AssetImage(buildConfig.cardBranding.bodyLogo),
+                            width: buildConfig.cardBranding.bodyLogoWidth * scaleFactor,
+                          ),
                         ),
                       ),
                       Flexible(
@@ -145,14 +167,34 @@ class CardContent extends StatelessWidget {
                               style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                               textAlign: TextAlign.start,
                             ),
-                            RichText(
-                              maxLines: 1,
-                              text: TextSpan(
-                                text: "Gültig bis: ",
-                                style: TextStyle(fontSize: 12 * scaleFactor, color: textColor),
-                                children: [TextSpan(text: _formattedExpirationDate)],
+                            if (formattedBirthday != null)
+                              Text(
+                                formattedBirthday,
+                                style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                textAlign: TextAlign.start,
                               ),
-                            )
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    maxLines: 1,
+                                    text: TextSpan(
+                                      text: "Gültig bis: ",
+                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      children: [TextSpan(text: _formattedExpirationDate)],
+                                    ),
+                                  ),
+                                  if (passNumber != null)
+                                    Text(
+                                      passNumber,
+                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
