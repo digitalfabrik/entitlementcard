@@ -110,20 +110,22 @@ commands:
             echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - fvm-0-{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
-          command: |
-            fvm --verbose install
+          # We skip the flutter setup so that we do not cache ~/fvm/versions/x.x.z/bin/cache in the next setup
+          command: fvm install --skip-setup
       - save_cache:
-          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
             - ~/fvm/
       - run:
+          name: Setup flutter
+          command: fvm flutter --version
+      - run:
           name: Configure Flutter
-          command: |
-            fvm --verbose flutter config --no-analytics
+          command: fvm --verbose flutter config --no-analytics
   install-fvm-mac:
     steps:
       - run:
@@ -131,14 +133,25 @@ commands:
           command: |
             brew tap leoafarias/fvm
             brew install fvm
+      - restore_cache:
+          keys:
+            - fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
-          command: |
-            fvm --verbose install
+          # We skip the flutter setup so that we do not cache ~/fvm/versions/x.x.z/bin/cache in the next setup
+          command: fvm install --skip-setup
+      - save_cache:
+          key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          paths:
+            - .fvm
+            - ~/fvm/
+      - run:
+          name: Setup flutter
+          command: fvm flutter --version
       - run:
           name: Configure Flutter
           command: |
-            fvm --verbose flutter config --no-analytics
+            fvm flutter config --no-analytics
 
 jobs:
   check-frontend:
