@@ -51,6 +51,7 @@ async function fillContentAreas(
   fillDetailsArea(info!, region, dynamicDetailX, dynamicDetailY, dynamicDetailWidth, helveticaFont, templatePage)
 
   // Static QR code
+  // TODO: Plug in the Static QR code here. Don't print static qr code for bayern
   fillCodeArea(
     {
       case: 'dynamicActivationCode',
@@ -98,7 +99,7 @@ Aussteller: ${region.prefix} ${region.name}`,
 }
 
 function fillCodeArea(
-  activationCode:
+  qrCode:
     | {
         value: DynamicActivationCode
         case: 'dynamicActivationCode'
@@ -116,12 +117,12 @@ function fillCodeArea(
   const qrCodeXPdf = mmToPt(x)
   const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
 
-  const dynamicQrCode = uint8ArrayToBase64(
+  const qrCodeContent = uint8ArrayToBase64(
     new QrCode({
-      qrCode: activationCode,
+      qrCode: qrCode,
     }).toBinary()
   )
-  drawQRCode(dynamicQrCode, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page)
+  drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
 }
 
 export async function generatePdf(activationCodes: DynamicActivationCode[], region: Region, pdfConfig: PdfConfig) {
