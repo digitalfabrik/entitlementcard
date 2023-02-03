@@ -1,6 +1,6 @@
-INSERT INTO categories ("id", "name") 
-    VALUES (0, 'Auto/Zweirad') ON CONFLICT ("id") 
-        DO UPDATE SET 
+INSERT INTO categories ("id", "name")
+    VALUES (0, 'Auto/Zweirad') ON CONFLICT ("id")
+        DO UPDATE SET
             "name"='Auto/Zweirad';
 
 INSERT INTO categories ("id", "name")
@@ -47,3 +47,48 @@ INSERT INTO categories ("id", "name")
 VALUES (9, 'Sonstiges') ON CONFLICT ("id")
     DO UPDATE SET
         "name"='Sonstiges';
+
+INSERT INTO categories ("id", "name")
+VALUES (10, 'Mittagstische') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Mittagstische';
+
+INSERT INTO categories ("id", "name")
+VALUES (11, 'Kleidung/Gebrauchtes') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Kleidung/Gebrauchtes';
+
+INSERT INTO categories ("id", "name")
+VALUES (12, 'Kultur/Museen/Freizeit') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Kultur/Museen/Freizeit';
+
+INSERT INTO categories ("id", "name")
+VALUES (13, 'Bildung') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Bildung';
+
+INSERT INTO categories ("id", "name")
+VALUES (14, 'Kinos/Theater/Konzerte ') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Kinos/Theater/Konzerte ';
+
+INSERT INTO categories ("id", "name")
+VALUES (15, 'Apotheken/Gesundheit') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Apotheken/Gesundheit';
+
+INSERT INTO categories ("id", "name")
+VALUES (16, 'Digitale Teilhabe') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Digitale Teilhabe';
+
+INSERT INTO categories ("id", "name")
+VALUES (17, 'Sport/Bewegung/Tanz') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Sport/Bewegung/Tanz';
+
+INSERT INTO categories ("id", "name")
+VALUES (18, 'Mobilität') ON CONFLICT ("id")
+    DO UPDATE SET
+        "name"='Mobilität';

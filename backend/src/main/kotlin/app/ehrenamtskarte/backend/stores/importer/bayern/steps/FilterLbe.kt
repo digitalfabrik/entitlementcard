@@ -1,11 +1,11 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.bayern.steps
 
 import app.ehrenamtskarte.backend.stores.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.LbeAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.matchesNa
-import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
 import org.slf4j.Logger
 
 /**

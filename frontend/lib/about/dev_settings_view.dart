@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:base32/base32.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
@@ -14,15 +15,32 @@ import 'package:provider/provider.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final sampleEakActivationCode = DynamicActivationCode(
+final sampleActivationCodeBavaria = DynamicActivationCode(
   info: CardInfo(
     fullName: "Jane Doe",
-    expirationDay: 1677542400,
+    expirationDay: 19746,
     extensions: CardExtensions(
       extensionBavariaCardType: BavariaCardTypeExtension(
         cardType: BavariaCardType.STANDARD,
       ),
       extensionRegion: RegionExtension(regionId: 42),
+    ),
+  ),
+  pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
+  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
+);
+
+final sampleActivationCodeNuernberg = DynamicActivationCode(
+  info: CardInfo(
+    fullName: "Jane Doe",
+    expirationDay: 19746,
+    extensions: CardExtensions(
+      extensionBirthday: BirthdayExtension(
+        birthday: 19746,
+      ),
+      extensionNuernbergPassNumber: NuernbergPassNumberExtension(
+        passNumber: 12323123,
+      ),
     ),
   ),
   pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
@@ -78,8 +96,26 @@ class DevSettingsView extends StatelessWidget {
     Provider.of<ActivationCodeModel>(context, listen: false).removeCode();
   }
 
+  DynamicActivationCode _determineActivationCode(String projectId) {
+    switch (projectId) {
+      case 'bayern.ehrenamtskarte.app':
+        {
+          return sampleActivationCodeBavaria;
+        }
+      case 'nuernberg.sozialpass.app':
+        {
+          return sampleActivationCodeNuernberg;
+        }
+      default:
+        {
+          return sampleActivationCodeBavaria;
+        }
+    }
+  }
+
   Future<void> _setValidEakData(BuildContext context) async {
-    Provider.of<ActivationCodeModel>(context, listen: false).setCode(sampleEakActivationCode);
+    Provider.of<ActivationCodeModel>(context, listen: false)
+        .setCode(_determineActivationCode(buildConfig.projectId.local));
   }
 
   Future<void> _showRawCardInput(BuildContext context) async {

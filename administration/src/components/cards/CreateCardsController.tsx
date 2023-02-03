@@ -7,9 +7,10 @@ import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Exception } from '../../exception'
 import { activateCards } from '../../cards/activation'
-import { generatePdf, loadTTFFont } from '../../cards/PdfFactory'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { CodeType } from '../../generated/graphql'
+import { generatePdf } from '../../cards/PdfFactory'
 
 enum CardActivationState {
   input,
@@ -18,6 +19,7 @@ enum CardActivationState {
 }
 
 const CreateCardsController = () => {
+  const projectConfig = useContext(ProjectConfigContext)
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const client = useApolloClient()
   const { region } = useContext(WhoAmIContext).me!
@@ -35,37 +37,30 @@ const CreateCardsController = () => {
   const confirm = async () => {
     try {
       setState(CardActivationState.loading)
+
       const activationCodes = cardBlueprints.map(cardBlueprint => {
         return cardBlueprint.generateActivationCode()
       })
+      const staticCodes = projectConfig.staticQrCodesEnabled
+        ? cardBlueprints.map(cardBlueprints => {
+            return cardBlueprints.generateStaticVerificationCode()
+          })
+        : null
 
-      await activateCards(client, activationCodes, region)
+      const pdfDataUri = await generatePdf(activationCodes, staticCodes, region, projectConfig.pdf)
 
-      const font = await loadTTFFont('NotoSans', 'normal', '/pdf-fonts/NotoSans-Regular.ttf')
-      const pdfDataUri = generatePdf(font, activationCodes, region)
+      await activateCards(client, activationCodes, region, CodeType.Dynamic)
+
+      if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
 
       downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
       setState(CardActivationState.finished)
     } catch (e) {
       console.error(e)
-      if (e instanceof Exception) {
-        switch (e.data.type) {
-          case 'pdf-generation':
-            appToaster?.show({
-              message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
-              intent: 'danger',
-            })
-            break
-          case 'unicode':
-            appToaster?.show({
-              message: `Ein Zeichen konnte nicht in der PDF eingebunden werden: ${e.data.unsupportedChar}`,
-              intent: 'danger',
-            })
-            break
-        }
-      } else {
-        appToaster?.show({ message: 'Etwas ist schiefgegangen.', intent: 'danger' })
-      }
+      appToaster?.show({
+        message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+        intent: 'danger',
+      })
       setState(CardActivationState.input)
     }
   }

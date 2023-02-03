@@ -62,7 +62,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
                     Padding(
                       padding: EdgeInsets.all(padding),
                       child: QrImage(
-                        data: const QrCodeUtils().createDynamicVerifyQrCodeData(activationCode, otpCode.code),
+                        data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
                         version: QrVersions.auto,
                         foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
                         gapless: false,

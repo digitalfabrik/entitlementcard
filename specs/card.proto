@@ -54,8 +54,8 @@ message CardInfo {
 message QrCode {
   oneof qr_code {
     DynamicActivationCode dynamic_activation_code = 1;
-    DynamicVerifyCode dynamic_verify_code = 2;
-    StaticVerifyCode static_verify_code = 3;
+    DynamicVerificationCode dynamic_verification_code = 2;
+    StaticVerificationCode static_verification_code = 3;
   }
 }
 
@@ -66,13 +66,13 @@ message DynamicActivationCode {
   bytes ec_signature = 4;
 }
 
-message DynamicVerifyCode {
+message DynamicVerificationCode {
   CardInfo info = 1;
   bytes pepper = 2;
   uint32 otp = 3;
 }
 
-message StaticVerifyCode {
+message StaticVerificationCode {
   CardInfo info = 1;
   bytes pepper = 2;
   bytes ec_signature = 3;

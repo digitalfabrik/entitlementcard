@@ -1,19 +1,53 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-DynamicVerifyCode processQrCodeContent(String rawBase64Content) {
-  final qrcode = rawBase64Content.parseQRCodeContent();
+Future<CardInfo?> verifyQrCodeContent(
+  BuildContext context,
+  QrCode qrcode,
+) async {
+  final client = GraphQLProvider.of(context).value;
+  final projectId = Configuration.of(context).projectId;
 
-  if (!qrcode.hasDynamicVerifyCode()) {
+  if (qrcode.hasDynamicVerificationCode()) {
+    final verificationCode = qrcode.dynamicVerificationCode;
+    return verifyDynamicVerificationCode(client, projectId, verificationCode);
+  } else if (qrcode.hasStaticVerificationCode()) {
+    final verificationCode = qrcode.staticVerificationCode;
+    return verifyStaticVerificationCode(client, projectId, verificationCode);
+  } else {
     throw QrCodeWrongTypeException();
   }
+}
 
-  final verifyCode = qrcode.dynamicVerifyCode;
-  assertConsistentCardInfo(verifyCode.info);
-  _assertConsistentDynamicVerifyCode(verifyCode);
-  return verifyCode;
+Future<CardInfo?> verifyDynamicVerificationCode(
+  GraphQLClient client,
+  String projectId,
+  DynamicVerificationCode code,
+) async {
+  assertConsistentCardInfo(code.info);
+  _assertConsistentDynamicVerificationCode(code);
+  if (!(await queryDynamicServerVerification(client, projectId, code))) {
+    return null;
+  }
+  return code.info;
+}
+
+Future<CardInfo?> verifyStaticVerificationCode(
+  GraphQLClient client,
+  String projectId,
+  StaticVerificationCode code,
+) async {
+  assertConsistentCardInfo(code.info);
+  _assertConsistentStaticVerificationCode(code);
+  if (!(await queryStaticServerVerification(client, projectId, code))) {
+    return null;
+  }
+  return code.info;
 }
 
 void assertConsistentCardInfo(CardInfo cardInfo) {
@@ -33,12 +67,18 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
   }
 }
 
-void _assertConsistentDynamicVerifyCode(DynamicVerifyCode verifyCode) {
-  if (!verifyCode.hasPepper()) {
-    throw QrCodeFieldMissingException("hashSecretBase64");
+void _assertConsistentDynamicVerificationCode(DynamicVerificationCode verificationCode) {
+  if (!verificationCode.hasPepper()) {
+    throw QrCodeFieldMissingException("pepper");
   }
-  if (verifyCode.otp <= 0) {
+  if (verificationCode.otp <= 0) {
     throw QrCodeFieldMissingException("otp");
+  }
+}
+
+void _assertConsistentStaticVerificationCode(StaticVerificationCode verificationCode) {
+  if (!verificationCode.hasPepper()) {
+    throw QrCodeFieldMissingException("pepper");
   }
 }
 
