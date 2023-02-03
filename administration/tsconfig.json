@@ -5,6 +5,7 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "target": "es2020",
+    "sourceMap": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
