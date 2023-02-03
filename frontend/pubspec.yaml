@@ -92,13 +92,14 @@ flutter:
   assets:
     - assets/category_icons/
     - assets/detail_headers/
-    - assets/intro_slides/
+    - assets/bayern/intro_slides/
     - assets/bayern/header-logo.png
     - assets/bayern/body-logo.png
     - assets/bayern/icon.png
     - assets/nuernberg/header-logo.png
     - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
+    - assets/nuernberg/intro_slides/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -5,7 +5,7 @@ const localization: LocalizationType = {
         noCardView: {
             applyTitle: "Beantragen",
             applyDescription:
-                "Sie sind haben noch keinen Nürnberg-Pass? Hier können Sie Ihren Nürnberg-Pass beantragen.",
+                "Sie haben noch keinen Nürnberg-Pass? Hier können Sie Ihren Nürnberg-Pass beantragen.",
             activateTitle: "Pass aktivieren",
             activateDescription:
                 "Sie haben den Nürnberg-Pass bereits beantragt und einen Aktivierungscode erhalten? Scannen Sie den Code hier ein.",

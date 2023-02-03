@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.bayern.steps
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
-import app.ehrenamtskarte.backend.stores.importer.types.LbeAcceptingStore
-import app.ehrenamtskarte.backend.stores.importer.types.LbeData
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.LbeAcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.LbeData
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule

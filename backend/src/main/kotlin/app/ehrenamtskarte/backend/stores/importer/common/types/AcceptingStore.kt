@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.types
+package app.ehrenamtskarte.backend.stores.importer.common.types
 
 data class AcceptingStore(
     val name: String,

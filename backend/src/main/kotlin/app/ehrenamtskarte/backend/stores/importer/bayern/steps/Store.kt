@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.steps
+package app.ehrenamtskarte.backend.stores.importer.bayern.steps
 
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
-import app.ehrenamtskarte.backend.stores.importer.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgis.Point
@@ -27,7 +27,7 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
             try {
                 project.deleteAssociatedStores()
 
-                input.forEachIndexed { done, acceptingStore ->
+                input.forEach { acceptingStore ->
                     val address = AddressEntity.new {
                         street = acceptingStore.streetWithHouseNumber
                         postalCode = acceptingStore.postalCode!!
@@ -52,25 +52,12 @@ class Store(config: ImportConfig, private val logger: Logger) : PipelineStep<Lis
                         addressId = address.id
                         coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
                     }
-                    if (!config.backendConfig.production) {
-                        drawSuccessBar(done, input.size)
-                    }
                 }
             } catch (e: Exception) {
                 logger.info("Unknown exception while storing to db", e)
                 rollback()
                 throw e
             }
-        }
-    }
-
-    private fun drawSuccessBar(done: Int, of: Int) {
-        if (done % 200 == 0) {
-            var bar = ""
-            repeat(done / 200) { bar += "##" }
-            var remaining = ""
-            repeat((of - done) / 200) { remaining += "__" }
-            println("[$bar$remaining]")
         }
     }
 }

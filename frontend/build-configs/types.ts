@@ -11,6 +11,12 @@ export type ThemeType = {
     primaryDark: string
 }
 
+type SlideType = {
+    title: string
+    description: string
+    imagePath: string
+}
+
 export type LocalizationType = {
     identification: {
         noCardView: {
@@ -94,6 +100,10 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number
     }
     iconInAboutTab: string
+    introSlide1: SlideType,
+    introSlide2: SlideType,
+    introSlide3: SlideType,
+    introSlide4: SlideType
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
