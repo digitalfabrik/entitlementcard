@@ -26,7 +26,7 @@ const config: ProjectConfig = {
 
       const cardType = info.extensions?.extensionBavariaCardType?.cardType
       return `${info.fullName}
-Kartentyp: ${cardType == BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
+Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
 Gültig bis: ${expirationDate}
 ${
   shorten
