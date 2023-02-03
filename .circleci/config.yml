@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
 workflows:
-  default:
+  frontend:
     jobs:
       - check-frontend
       - frontend-android-build:
@@ -35,6 +35,8 @@ workflows:
           flutterFlavor: "Nuernberg"
           requires:
             - check-frontend
+  backend:
+    jobs:
       - backend-build
       - administration-build
       - martin-build
@@ -84,6 +86,13 @@ commands:
           command: |
             curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.18.5/linux_packages/dart_2.18.5-1_amd64.deb
             sudo dpkg -i dart.deb
+  install-dart-mac:
+    steps:
+      - run:
+          name: Install Dart
+          command: |
+            brew tap dart-lang/dart
+            brew install dart
   install-protobuf-linux:
     steps:
       - run:
@@ -110,7 +119,7 @@ commands:
           name: Install Flutter plugin
           # Use dart directly here. See comment in install-protobuf-linux
           command: dart pub global activate protoc_plugin
-  install-fvm-linux:
+  install-linux:
     steps:
       - run:
           name: Install FVM
@@ -129,36 +138,11 @@ commands:
             - .fvm
             - ~/fvm/
       - run:
-          name: Setup flutter
+          name: Show Flutter version
           command: fvm flutter --version
       - run:
           name: Configure Flutter
           command: fvm flutter config --no-analytics
-  install-dart-fvm-mac:
-    steps:
-      - run:
-          name: Install Standalone FVM (with Dart)
-          command: |
-            brew tap leoafarias/fvm
-            brew install fvm
-      - restore_cache:
-          keys:
-            - fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
-      - run:
-          name: Install Flutter
-          command: fvm install
-      - save_cache:
-          key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
-          paths:
-            - .fvm
-            - ~/fvm/
-      - run:
-          name: Setup flutter
-          command: fvm flutter --version
-      - run:
-          name: Configure Flutter
-          command: |
-            fvm flutter config --no-analytics
 
 jobs:
   check-frontend:
@@ -170,7 +154,7 @@ jobs:
       - checkout:
           path: ~/project
       - install-dart-linux
-      - install-fvm-linux
+      - install-fvm
       - install-app-toolbelt
       - install-protobuf-linux
       - run:
@@ -215,7 +199,7 @@ jobs:
       - checkout:
           path: ~/project
       - install-dart-linux
-      - install-fvm-linux
+      - install-fvm
       - install-app-toolbelt
       - install-protobuf-linux
       - run:
@@ -248,7 +232,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - install-dart-fvm-mac
+      - install-dart-mac
+      - install-fvm
       - install-app-toolbelt
       - install-protobuf-mac
       - run:
