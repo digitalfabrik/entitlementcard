@@ -1,10 +1,10 @@
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
+import { PEPPER_LENGTH } from './hashCardInfo'
 
 const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
-const PEPPER_LENGTH = 16
 
 /**
  * Blueprint for a new card. This object contains data about a future card, which will be created.

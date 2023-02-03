@@ -6,7 +6,7 @@ import {
   CardGenerationModelInput,
   Region,
 } from '../generated/graphql'
-import hashCardInfo from './hash'
+import hashCardInfo from './hashCardInfo'
 import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { ApolloClient } from '@apollo/client'
 

@@ -16,6 +16,7 @@
     "@mui/material": "^5.10.9",
     "@zxing/library": "^0.19.1",
     "apollo-upload-client": "^17.0.0",
+    "canonicalize": "^1.0.8",
     "date-fns": "^2.29.3",
     "graphql": "^16.6.0",
     "jasmine": "^4.5.0",

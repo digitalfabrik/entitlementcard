@@ -3,7 +3,7 @@ syntax = "proto3";
 message RegionExtension {
   // Using int32 instead of uint32, even though we do not expect negative values.
   // The reason is that int32 are better supported in GraphQL and SQL.
-  int32 regionId = 1;
+  optional int32 regionId = 1;
 }
 
 message BirthdayExtension {
@@ -13,11 +13,11 @@ message BirthdayExtension {
   // BirthdayExtension message takes up to 4 bytes when encoded binary, whereas using int32 would require up to 11 bytes
   // for birthdays before 1970 and up to 4 bytes for birthdays between 1970 and 2050.
   // If you want to specify that the card does not have an associated birthdate, then do not set the BirthdayExtension.
-  sint32 birthday = 1;
+  optional sint32 birthday = 1;
 }
 
 message NuernbergPassNumberExtension {
-  uint32 pass_number = 1;
+  optional uint32 pass_number = 1;
 }
 
 enum BavariaCardType {
@@ -26,10 +26,9 @@ enum BavariaCardType {
 }
 
 message BavariaCardTypeExtension {
-  BavariaCardType card_type = 1;
+  optional BavariaCardType card_type = 1;
 }
 
-// All fields in this extension are explicitly optional, handle with care!
 message CardExtensions {
   optional RegionExtension extension_region = 1;
   optional BirthdayExtension extension_birthday = 2;
@@ -37,18 +36,25 @@ message CardExtensions {
   optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
 }
 
+// For our hashing approach, we require that all fields (and subfields, recursively) of CardInfo are marked 'optional'.
+// Note that, 'optional' in proto3 only means explicit presence, i.e. it can be determined if a field marked
+// as optional is actually present in an instance of a proto. Using only fields with explicit presence
+// enables us to remove fields from the proto in the future (without making changes to our hashing algorithm).
+// More notes on explicit presence: https://protobuf.dev/programming-guides/field_presence/#presence-in-proto3-apis
 message CardInfo {
-  // Basic information
-  string fullName = 1;
+  // The first and last name of the cardholder.
+  optional string full_name = 1;
+
   // Expiration day (calculated from 1970-01-01).
   // Cards are always invalid on 1970-01-01 (because day = 0 is excluded).
   // The calculated day is inclusive (e.g. if day == 1, then the card is valid on 1970-01-02, but not on 1970-01-03).
   // Because the data type is unsigned, there are no dates before 1970-01-01.
   // 2^32days = 11 759 230.8 years.
+  // Absent, if the card does not expire (in the case of a golden Bavarian EAK).
   optional uint32 expiration_day = 2;
 
   // Extensions
-  CardExtensions extensions = 3;
+  optional CardExtensions extensions = 3;
 }
 
 message QrCode {

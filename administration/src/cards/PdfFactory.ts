@@ -136,7 +136,7 @@ export function generatePdf(font: TTFFont, activationCodes: DynamicActivationCod
 
   for (let k = 0; k < activationCodes.length; k++) {
     const activationCode = activationCodes[k]
-    const unsupportedChar = checkForeignText(doc, activationCode.info!.fullName)
+    const unsupportedChar = checkForeignText(doc, activationCode.info?.fullName ?? '')
 
     if (unsupportedChar) {
       throw new Exception({
