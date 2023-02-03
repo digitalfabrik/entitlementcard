@@ -1,5 +1,4 @@
 import {
-  CharacterSetECI,
   IllegalStateException,
   QRCodeByteMatrix,
   QRCodeEncoder,
@@ -43,8 +42,6 @@ function willFit(
 }
 
 export function encodeQRCode(content: Uint8Array): QRCode {
-  let textContent = 'test'
-
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
 
