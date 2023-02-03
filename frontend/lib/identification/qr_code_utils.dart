@@ -1,7 +1,9 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:protobuf/protobuf.dart';
 
 class QrCodeUtils {
   const QrCodeUtils();
@@ -41,5 +43,34 @@ class QrCodeUtils {
     final fullNameBytes = utf8.encode(cardInfo.fullName);
 
     return buffer.asUint8List() + fullNameBytes + [0];
+  }
+
+  Map<String, dynamic> pbMessageToJson(GeneratedMessage message) {
+
+    if (message.unknownFields.isNotEmpty) throw ArgumentError("Unknown field");
+    final map = HashMap<String, dynamic>();
+    for (final field in message.info_.fieldInfo.values) {
+      if (field.isRepeated) {
+        throw ArgumentError("Repeated fields are currently not supported.");
+      } else if (field.isMapField) {
+        throw ArgumentError("Map fields are currently not supported.");
+      }
+
+      final dynamic value = message.getFieldOrNull(field.tagNumber);
+      if (value == null) {
+        continue;
+      } else if (value is String) {
+        map[field.tagNumber.toString()] = value;
+      } else if (value is int) {
+        map[field.tagNumber.toString()] = value.toString();
+      } else if (value is ProtobufEnum) {
+        map[field.tagNumber.toString()] = value.value.toString();
+      } else if (value is GeneratedMessage) {
+        map[field.tagNumber.toString()] = pbMessageToJson(value);
+      } else {
+        throw ArgumentError("Could not detect type of field.");
+      }
+    }
+    return map;
   }
 }
