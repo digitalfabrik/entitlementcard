@@ -84,6 +84,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           myLocationRenderMode: MyLocationRenderMode.NORMAL,
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
+          onStyleLoadedCallback: () {},
           compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
