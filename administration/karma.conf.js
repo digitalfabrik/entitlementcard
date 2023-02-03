@@ -7,9 +7,9 @@ module.exports = function (config) {
     basePath: 'src',
     frameworks: ['jasmine', 'webpack'],
     files: ['./**/*.test.ts'],
-    plugins: ['karma-webpack', 'karma-jasmine', 'karma-chrome-launcher'],
+    plugins: ['karma-webpack', 'karma-sourcemap-loader', 'karma-jasmine', 'karma-chrome-launcher'],
     preprocessors: {
-      './**/*.test.ts': ['webpack'],
+      './**/*.test.ts': ['webpack', 'sourcemap'],
     },
     webpack: {
       module: {
@@ -34,6 +34,7 @@ module.exports = function (config) {
         alias: {},
       },
       context: path.resolve(__dirname, './src'),
+      devtool: 'inline-source-map',
     },
     browsers: ['ChromeHeadless'],
   })
