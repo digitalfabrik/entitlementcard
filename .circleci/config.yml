@@ -147,7 +147,7 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/node:19.1.0
+      - image: cimg/node:19.1.0-browsers
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -300,7 +300,7 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:19.1.0
+      - image: cimg/node:19.1.0-browsers
     working_directory: ~/project/administration
     steps:
       - checkout:
