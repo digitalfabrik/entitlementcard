@@ -6,7 +6,13 @@ module.exports = function (config) {
   config.set({
     basePath: 'src',
     frameworks: ['jasmine', 'webpack'],
-    files: ['./**/*.test.ts'],
+    files: [
+      {
+        pattern: './**/*.test.ts',
+        // We use webpack's watch functionality.
+        watched: false,
+      },
+    ],
     plugins: ['karma-webpack', 'karma-sourcemap-loader', 'karma-jasmine', 'karma-chrome-launcher'],
     preprocessors: {
       './**/*.test.ts': ['webpack', 'sourcemap'],
