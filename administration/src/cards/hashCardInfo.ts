@@ -2,10 +2,21 @@ import { AnyMessage, Message } from '@bufbuild/protobuf'
 import { CardInfo } from '../generated/card_pb'
 import canonicalize from 'canonicalize'
 
-const messageHasUnknownFields = (message: AnyMessage): boolean =>
-  message.getType().runtime.bin.listUnknownFields(message).length > 0
+function messageHasUnknownFields(message: AnyMessage): boolean {
+  return message.getType().runtime.bin.listUnknownFields(message).length > 0
+}
 
-export const messageToJsonObject = (message: AnyMessage): { [key in string]: any } => {
+/**
+ * Returns a canonical JSON object from the given protobuf message.
+ * It asserts that
+ * 1. the message does not have any unknown fields,
+ * 2. every field in the message (and submessages, recursively) is marked as optional and thus has explicit presence,
+ * 3. there are only singular enums, integers and submessages as fields (no maps or repeated fields).
+ * For every present field in the message, we add an entry to the resulting object where the key is the tagNumber of the
+ * field, and the value is the appropriately encoded JSON value.
+ * Note, that we encode integers as strings because JSON-Number does not allow the full range of uint64 integers.
+ */
+export function messageToJsonObject(message: AnyMessage): { [key in string]: any } {
   if (messageHasUnknownFields(message)) {
     throw Error('Message has unknown fields. You might be running on an outdated proto definition.')
   }
@@ -44,7 +55,10 @@ export const messageToJsonObject = (message: AnyMessage): { [key in string]: any
       case 'enum':
       case 'scalar': {
         const value = message[field.localName]
-        if (value === undefined) continue
+        if (value === undefined) {
+          // The field is not present.
+          continue
+        }
         if (typeof value === 'string') {
           result[field.no.toString()] = value
         } else if (typeof value === 'number') {
@@ -73,7 +87,12 @@ const cardInfoToBinary = (cardInfo: CardInfo) => {
 
 export const PEPPER_LENGTH = 16 // 128 bit randomness
 
-const hashCardInfo = async (pepper: Uint8Array, cardInfo: CardInfo) => {
+/**
+ * Hashes the card info using a pepper.
+ * The card info is first mapped into a JSON object using `messageToJsonObject`.
+ * This JSON object is converted to an RFC 8785 compliant JSON string and encoded in UTF-8.
+ */
+async function hashCardInfo(cardInfo: CardInfo, pepper: Uint8Array): Promise<Uint8Array> {
   if (pepper.length !== PEPPER_LENGTH) {
     throw Error(`The pepper has an invalid length of ${pepper.length}.`)
   }

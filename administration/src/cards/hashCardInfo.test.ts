@@ -107,7 +107,7 @@ describe('hashCardInfo', () => {
       }),
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
-    const hash = await hashCardInfo(pepper, cardInfo)
+    const hash = await hashCardInfo(cardInfo, pepper)
     expect(uint8ArrayToBase64(hash)).toEqual('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
   })
 
@@ -124,7 +124,7 @@ describe('hashCardInfo', () => {
       }),
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
-    const hash = await hashCardInfo(pepper, cardInfo)
+    const hash = await hashCardInfo(cardInfo, pepper)
     expect(uint8ArrayToBase64(hash)).toEqual('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
   })
 
@@ -142,7 +142,7 @@ describe('hashCardInfo', () => {
       }),
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
-    const hash = await hashCardInfo(pepper, cardInfo)
+    const hash = await hashCardInfo(cardInfo, pepper)
     expect(uint8ArrayToBase64(hash)).toEqual('IgLffs+odapQKiGMnbS3ihcIabXRhtpW8TeWgtPHlF0=')
   })
 })
