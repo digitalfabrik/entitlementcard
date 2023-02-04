@@ -21,6 +21,10 @@ export const messageToJsonObject = (message: AnyMessage): { [key in string]: any
       )
     }
     if (field.repeated) {
+      // If we want to support repeated fields in the future, we should probably do the following to avoid breaking
+      // older protos without the field:
+      // If the repeated field is empty (if there are no elements "in the array"), do not emit anything in the JSON.
+      // If there is at least one field, emit a JSON Array by mapping each element to its JSON equivalent (see below).
       throw Error('Repeated fields are currently not supported.')
     }
     if (field.kind === 'map') {
