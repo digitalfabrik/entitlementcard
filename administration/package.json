@@ -52,7 +52,7 @@
   "scripts": {
     "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); react-scripts start",
     "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); react-scripts build",
-    "test": "react-scripts test",
+    "test": "node --experimental-global-webcrypto node_modules/jest/bin/jest.js",
     "eject": "react-scripts eject",
     "lint": "eslint . && prettier . --check",
     "format": "prettier . --write",
