@@ -8,7 +8,7 @@ import {
   RegionExtension,
 } from '../generated/card_pb'
 import hashCardInfo, { messageToJsonObject } from './hashCardInfo'
-import Uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
+import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 
 describe('messageToJsonObject', () => {
   it('should map an empty cardInfo correctly', () => {
@@ -106,11 +106,9 @@ describe('hashCardInfo', () => {
         }),
       }),
     })
-    const pepper = new Uint8Array([
-      0x32, 0xf3, 0x23, 0x12, 0xa6, 0xb4, 0xba, 0x51, 0x43, 0x02, 0x00, 0x02, 0x12, 0x53, 0x23, 0x58,
-    ])
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(pepper, cardInfo)
-    expect(Uint8ArrayToBase64(hash)).toEqual('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
+    expect(uint8ArrayToBase64(hash)).toEqual('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
   })
 
   it('should be stable for a Bavarian Golden EAK', async () => {
@@ -125,11 +123,9 @@ describe('hashCardInfo', () => {
         }),
       }),
     })
-    const pepper = new Uint8Array([
-      0x32, 0xf3, 0x23, 0x12, 0xa6, 0xb4, 0xba, 0x51, 0x43, 0x02, 0x00, 0x02, 0x12, 0x53, 0x23, 0x58,
-    ])
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(pepper, cardInfo)
-    expect(Uint8ArrayToBase64(hash)).toEqual('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
+    expect(uint8ArrayToBase64(hash)).toEqual('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
   })
 
   it('should be stable for a Nuernberg Pass', async () => {
@@ -145,10 +141,8 @@ describe('hashCardInfo', () => {
         }),
       }),
     })
-    const pepper = new Uint8Array([
-      0x32, 0xf3, 0x23, 0x12, 0xa6, 0xb4, 0xba, 0x51, 0x43, 0x02, 0x00, 0x02, 0x12, 0x53, 0x23, 0x58,
-    ])
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(pepper, cardInfo)
-    expect(Uint8ArrayToBase64(hash)).toEqual('IgLffs+odapQKiGMnbS3ihcIabXRhtpW8TeWgtPHlF0=')
+    expect(uint8ArrayToBase64(hash)).toEqual('IgLffs+odapQKiGMnbS3ihcIabXRhtpW8TeWgtPHlF0=')
   })
 })

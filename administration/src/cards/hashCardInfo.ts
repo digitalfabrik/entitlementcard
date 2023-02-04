@@ -2,7 +2,14 @@ import { AnyMessage, Message } from '@bufbuild/protobuf'
 import { CardInfo } from '../generated/card_pb'
 import canonicalize from 'canonicalize'
 
+const messageHasUnknownFields = (message: AnyMessage): boolean =>
+  message.getType().runtime.bin.listUnknownFields(message).length > 0
+
 export const messageToJsonObject = (message: AnyMessage): { [key in string]: any } => {
+  if (messageHasUnknownFields(message)) {
+    throw Error('Message has unknown fields. You might be running on an outdated proto definition.')
+  }
+
   const result: { [key in string]: any } = {}
   for (const field of message.getType().fields.byNumber()) {
     if (!field.opt) {
