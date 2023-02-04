@@ -119,7 +119,7 @@ commands:
           name: Install Flutter plugin
           # Use dart directly here. See comment in install-protobuf-linux
           command: dart pub global activate protoc_plugin
-  install-linux:
+  install-fvm:
     steps:
       - run:
           name: Install FVM
