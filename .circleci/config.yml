@@ -155,6 +155,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - browser-tools/install-chrome
       - install-dart-linux
       - install-fvm
       - install-app-toolbelt
@@ -309,6 +310,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - browser-tools/install-chrome
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
