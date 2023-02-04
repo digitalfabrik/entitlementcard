@@ -3,3 +3,12 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
+
+// Hack around https://github.com/jsdom/jsdom/issues/2524
+const nodeUtil = require('util')
+globalThis.TextEncoder = nodeUtil.TextEncoder
+globalThis.TextDecoder = nodeUtil.TextDecoder
+
+// Hack around https://github.com/jsdom/jsdom/issues/1612
+const nodeCrypto = require('crypto')
+globalThis.crypto = nodeCrypto.webcrypto
