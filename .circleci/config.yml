@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
+  browser-tools: circleci/browser-tools@1.4.1
 workflows:
   frontend:
     jobs:
@@ -148,8 +149,6 @@ jobs:
   check-frontend:
     docker:
       - image: cimg/node:19.1.0-browsers
-    orbs:
-      browser-tools: circleci/browser-tools@1.4.1
     resource_class: small
     working_directory: ~/project/frontend
     steps:
@@ -305,8 +304,6 @@ jobs:
     docker:
       - image: cimg/node:19.1.0-browsers
     working_directory: ~/project/administration
-    orbs:
-      browser-tools: circleci/browser-tools@1.4.1
     steps:
       - checkout:
           path: ~/project
