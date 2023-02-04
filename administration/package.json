@@ -60,7 +60,8 @@
   "scripts": {
     "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); react-scripts start",
     "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); react-scripts build",
-    "test": "karma start --config=karma.config.js --single-run",
+    "test": "karma start --single-run",
+    "test:watch": "karma start --autowatch",
     "eject": "react-scripts eject",
     "lint": "eslint . && prettier . --check",
     "format": "prettier . --write",
