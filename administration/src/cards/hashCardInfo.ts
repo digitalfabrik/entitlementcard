@@ -38,8 +38,6 @@ export function messageToJsonObject(message: AnyMessage): { [key in string]: any
       // If there is at least one field, emit a JSON Array by mapping each element to its JSON equivalent (see below).
       throw Error('Repeated fields are currently not supported.')
     }
-    if (field.kind === 'map') {
-    }
     switch (field.kind) {
       case 'map':
         throw Error('Fields of type map are currently not supported.')
