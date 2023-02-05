@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class VerificationResultDialog extends StatelessWidget {
+class InfoDialog extends StatelessWidget {
   final Widget child;
   final String title;
   final IconData icon;
   final Color? iconColor;
 
-  const VerificationResultDialog({
+  const InfoDialog({
     super.key,
     required this.child,
     required this.title,
