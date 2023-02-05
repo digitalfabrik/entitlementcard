@@ -79,12 +79,16 @@ describe('messageToJsonObject', () => {
         extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
           passNumber: 99999999,
         }),
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
       }),
     })
     expect(messageToJsonObject(cardInfo)).toEqual({
       '1': 'Max Mustermann',
       '2': '14600',
       '3': {
+        '1': { '1': '93' }, // extensionRegion
         '2': { '1': '-3650' }, // extensionBirthday
         '3': { '1': '99999999' }, // extensionNuernbergPassNumber
       },
@@ -135,6 +139,9 @@ describe('hashCardInfo', () => {
       fullName: 'Max Mustermann',
       expirationDay: 365 * 40, // Equals 14.600
       extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
         extensionBirthday: new BirthdayExtension({
           birthday: -365 * 10,
         }),
@@ -145,6 +152,6 @@ describe('hashCardInfo', () => {
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
-    expect(uint8ArrayToBase64(hash)).toEqual('IgLffs+odapQKiGMnbS3ihcIabXRhtpW8TeWgtPHlF0=')
+    expect(uint8ArrayToBase64(hash)).toEqual('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
   })
 })

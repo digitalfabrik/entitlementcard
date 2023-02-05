@@ -63,6 +63,9 @@ void main() {
         fullName: 'Max Mustermann',
         expirationDay: 365 * 40, // Equals 14.600
         extensions: CardExtensions(
+          extensionRegion: RegionExtension(
+            regionId: 93,
+          ),
           extensionBirthday: BirthdayExtension(
             birthday: -365 * 10,
           ),
@@ -75,6 +78,7 @@ void main() {
         '1': 'Max Mustermann',
         '2': '14600',
         '3': {
+          '1': {'1': '93'}, // extensionRegion
           '2': {'1': '-3650'}, // extensionBirthday
           '3': {'1': '99999999'}, // extensionNuernbergPassNumber
         },
@@ -124,6 +128,9 @@ void main() {
         fullName: 'Max Mustermann',
         expirationDay: 365 * 40, // Equals 14.600
         extensions: CardExtensions(
+          extensionRegion: RegionExtension(
+            regionId: 93,
+          ),
           extensionBirthday: BirthdayExtension(
             birthday: -365 * 10,
           ),
@@ -133,7 +140,7 @@ void main() {
         ),
       );
       final pepper = const Base64Decoder().convert("MvMjEqa0ulFDAgACElMjWA==");
-      expect(const QrCodeUtils().hashCardInfo(cardInfo, pepper), 'IgLffs+odapQKiGMnbS3ihcIabXRhtpW8TeWgtPHlF0=');
+      expect(const QrCodeUtils().hashCardInfo(cardInfo, pepper), 'zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=');
     });
   });
 }
