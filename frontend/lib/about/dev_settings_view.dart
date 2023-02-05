@@ -41,6 +41,9 @@ final sampleActivationCodeNuernberg = DynamicActivationCode(
       extensionNuernbergPassNumber: NuernbergPassNumberExtension(
         passNumber: 12323123,
       ),
+      extensionRegion: RegionExtension(
+        regionId: 93,
+      ),
     ),
   ),
   pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
@@ -58,12 +61,12 @@ class DevSettingsView extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: const Text('Reset EAK'),
+            title: const Text('Reset card'),
             onTap: () => _resetEakData(context),
           ),
           ListTile(
-            title: const Text('Set valid EAK data'),
-            onTap: () => _setValidEakData(context),
+            title: const Text('Set (invalid) sample card'),
+            onTap: () => _setSampleCard(context),
           ),
           ListTile(
             title: const Text('Set base64 card'),
@@ -113,7 +116,7 @@ class DevSettingsView extends StatelessWidget {
     }
   }
 
-  Future<void> _setValidEakData(BuildContext context) async {
+  Future<void> _setSampleCard(BuildContext context) async {
     Provider.of<ActivationCodeModel>(context, listen: false)
         .setCode(_determineActivationCode(buildConfig.projectId.local));
   }
