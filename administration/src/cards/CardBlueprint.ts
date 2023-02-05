@@ -68,7 +68,7 @@ export class CardBlueprint {
 
     for (const holder of this.extensionHolders) {
       if (holder.state === null) {
-        // We allow to skip extensions to enable validating the protobuf size.
+        // We allow to skip invalid extensions to enable computing the protobuf size.
         continue
       }
       holder.extension.setProtobufData(holder.state, extensionsMessage)
