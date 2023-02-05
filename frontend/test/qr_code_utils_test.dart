@@ -83,6 +83,8 @@ void main() {
   });
 
   group("hashCardInfo", () {
+    // Equivalent tests exist in administration to ensure that the algorithms produce the same hashes.
+
     test("should be stable for a Bavarian Blue EAK", () {
       final cardInfo = CardInfo(
         fullName: 'Max Mustermann',

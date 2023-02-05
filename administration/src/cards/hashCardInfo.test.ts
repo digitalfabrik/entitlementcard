@@ -93,6 +93,8 @@ describe('messageToJsonObject', () => {
 })
 
 describe('hashCardInfo', () => {
+  // Equivalent tests exist in frontend to ensure that the algorithms produce the same hashes.
+
   it('should be stable for a Bavarian Blue EAK', async () => {
     const cardInfo = new CardInfo({
       fullName: 'Max Mustermann',
