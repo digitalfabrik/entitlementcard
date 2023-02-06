@@ -44,7 +44,7 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
           onSubmit={onSubmit}
           loading={mutationState.loading}
         />
-        {process.env.NODE_ENV == 'development' ? (
+        {process.env.NODE_ENV === 'development' ? (
           <>
             <Button onClick={() => setProjectConfigOverride('nuernberg.sozialpass.app')}>Switch to Nürnberg</Button>
             <Button onClick={() => setProjectConfigOverride('bayern.ehrenamtskarte.app')}>
