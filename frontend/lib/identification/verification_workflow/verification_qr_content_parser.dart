@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -12,13 +12,11 @@ class VerificationParseException extends QrCodeParseException {
       : super(internalMessage);
 }
 
-extension QRParsing on String {
+extension QRParsing on Uint8List {
   QrCode parseQRCodeContent() {
-    const base64Decoder = Base64Decoder();
-
     QrCode qrcode;
     try {
-      qrcode = QrCode.fromBuffer(base64Decoder.convert(this));
+      qrcode = QrCode.fromBuffer(this);
     } on Exception catch (e, stackTrace) {
       throw VerificationParseException(
         internalMessage: "Failed to parse QrCode from base64 encoded data. "

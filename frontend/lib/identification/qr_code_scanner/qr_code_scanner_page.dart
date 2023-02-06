@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class QrCodeScannerPage extends StatelessWidget {
     );
   }
 
-  Future<void> _onCodeScanned(BuildContext context, String code) async {
+  Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
     final currentOnCodeScanned = onCodeScanned;
     try {
       if (currentOnCodeScanned != null) {

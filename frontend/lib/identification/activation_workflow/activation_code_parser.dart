@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
@@ -22,7 +24,7 @@ class QRCodeInvalidFormatException extends QrCodeParseException {
 class ActivationCodeParser {
   const ActivationCodeParser();
 
-  DynamicActivationCode parseQrCodeContent(String rawBase64Content) {
+  DynamicActivationCode parseQrCodeContent(Uint8List rawBase64Content) {
     final QrCode qrCode = rawBase64Content.parseQRCodeContent();
 
     if (!qrCode.hasDynamicActivationCode()) {
