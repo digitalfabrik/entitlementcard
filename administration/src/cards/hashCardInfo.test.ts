@@ -13,6 +13,7 @@ import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 describe('messageToJsonObject', () => {
   it('should map an empty cardInfo correctly', () => {
     const cardInfo = new CardInfo({})
+
     expect(messageToJsonObject(cardInfo)).toEqual({})
   })
 
@@ -21,6 +22,7 @@ describe('messageToJsonObject', () => {
     const cardInfo = new CardInfo({
       fullName: wildName,
     })
+
     expect(messageToJsonObject(cardInfo)).toEqual({ '1': wildName })
   })
 
@@ -37,6 +39,7 @@ describe('messageToJsonObject', () => {
         }),
       }),
     })
+
     expect(messageToJsonObject(cardInfo)).toEqual({
       '1': 'Max Mustermann',
       '2': '14600',
@@ -59,6 +62,7 @@ describe('messageToJsonObject', () => {
         }),
       }),
     })
+
     expect(messageToJsonObject(cardInfo)).toEqual({
       '1': 'Max Mustermann',
       '3': {
@@ -84,6 +88,7 @@ describe('messageToJsonObject', () => {
         }),
       }),
     })
+
     expect(messageToJsonObject(cardInfo)).toEqual({
       '1': 'Max Mustermann',
       '2': '14600',
@@ -114,6 +119,7 @@ describe('hashCardInfo', () => {
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
+
     expect(uint8ArrayToBase64(hash)).toEqual('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
   })
 
@@ -131,6 +137,7 @@ describe('hashCardInfo', () => {
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
+
     expect(uint8ArrayToBase64(hash)).toEqual('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
   })
 
@@ -152,6 +159,7 @@ describe('hashCardInfo', () => {
     })
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
+
     expect(uint8ArrayToBase64(hash)).toEqual('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
   })
 })
