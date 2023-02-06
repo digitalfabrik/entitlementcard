@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class _QRViewState extends State<QrCodeScanner> {
     formats: [BarcodeFormat.qrCode],
   );
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool isProcessingCode = false;
   Uint8List? lastScanned;
 
   @override
@@ -98,7 +98,7 @@ class _QRViewState extends State<QrCodeScanner> {
   Future<void> _onCodeScanned(Barcode scanData) async {
     final code = scanData.rawBytes;
 
-    if (code == null || lastScanned != code) {
+    if (code == null || const ListEquality().equals(lastScanned, code)) {
       return;
     }
 
