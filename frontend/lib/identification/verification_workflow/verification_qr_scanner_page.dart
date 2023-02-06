@@ -4,10 +4,10 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/internet_connection_verification_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
@@ -141,7 +141,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     }
     _closeWaitingDialog(context);
 
-    await InternetConnectionVerificationDialog.show(context, message);
+    await ConnectionFailedDialog.show(context, message);
   }
 
   Future<void> _onSuccess(BuildContext context, CardInfo cardInfo) async {
