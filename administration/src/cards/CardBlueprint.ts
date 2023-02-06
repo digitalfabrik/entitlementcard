@@ -2,7 +2,7 @@ import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifica
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { encodeQRCode, isContentLengthValid } from '../util/qrcode'
+import { isContentLengthValid } from '../util/qrcode'
 
 const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20

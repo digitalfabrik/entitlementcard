@@ -1,5 +1,4 @@
 import { drawQRCode } from '../util/qrcode'
-import { format } from 'date-fns'
 import { Region } from '../generated/graphql'
 import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { PdfConfig } from '../project-configs/getProjectConfig'
