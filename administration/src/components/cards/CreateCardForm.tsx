@@ -21,7 +21,7 @@ interface Props {
   onRemove: () => void
 }
 
-const ExtensionForm = (props: { holder: ExtensionHolder<any>; onUpdate: () => void }) => {
+const ExtensionForm = <T, R>(props: { holder: ExtensionHolder<T, R>; onUpdate: () => void }) => {
   const holder = props.holder
 
   return holder.extension.createForm(holder.state, state => {
