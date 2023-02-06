@@ -5,12 +5,12 @@ import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from 
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
-const dynamicQRCodeSize = 90 // mm
-const dynamicQRCodeX = 105 // mm
-const dynamicQRCodeY = 70 // mm
+const dynamicQRCodeSize = 84 // mm
+const dynamicQRCodeX = 108 // mm
+const dynamicQRCodeY = 73 // mm
 
-const dynamicDetailWidth = 90 // mm
-const dynamicDetailX = 105 // mm
+const dynamicDetailWidth = 84 // mm
+const dynamicDetailX = 108 // mm
 const dynamicDetailY = 170 // mm
 const dynamicDetailFontSize = 10
 
