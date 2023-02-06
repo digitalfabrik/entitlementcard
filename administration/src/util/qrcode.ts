@@ -49,11 +49,7 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   // length, as well as "header" segments like an ECI segment.
   const headerBits = new BitArray()
 
-  // Do not append ECI segment
-  //headerBits.appendBits(QRCodeMode.ECI.getBits(), 4)
-  // This is correct for values up to 127, which is all we need now.
-  //const encoding = CharacterSetECI.ISO8859_1
-  //headerBits.appendBits(encoding.getValue(), 8)
+  // Do not append ECI segment, because we do not define the encoding of the QR code
 
   // (With ECI in place,) Write the mode marker
   QRCodeEncoder.appendModeInfo(mode, headerBits)
@@ -63,10 +59,8 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   const dataBits = new BitArray()
   for (let i = 0, length = content.length; i !== length; i++) {
     const b = content[i]
-    dataBits.appendBits(b, 8) // TODO
+    dataBits.appendBits(b, 8)
   }
-
-  //QRCodeEncoder.appendBytes(textContent, QRCodeMode.BYTE, dataBits, encoding.getName()) // TODO
 
   let version: QRCodeVersion = VERSION
   let ecLevel: QRCodeDecoderErrorCorrectionLevel = ERROR_CORRECTION
@@ -78,10 +72,9 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   const headerAndDataBits = new BitArray()
   headerAndDataBits.appendBitArray(headerBits)
   // Find "length" of main segment and write it
-  const numLetters = dataBits.getSizeInBytes()
-  //const numLetters = textContent.length // TODO
+  const length = dataBits.getSizeInBytes()
 
-  QRCodeEncoder.appendLengthInfo(numLetters, version, mode, headerAndDataBits)
+  QRCodeEncoder.appendLengthInfo(length, version, mode, headerAndDataBits)
   // Put data together into the overall payload
   headerAndDataBits.appendBitArray(dataBits)
 
