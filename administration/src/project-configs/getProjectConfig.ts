@@ -4,11 +4,13 @@ import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 import { CardBlueprint } from '../cards/CardBlueprint'
 import { Region } from '../generated/graphql'
+import { CardInfo } from '../generated/card_pb'
 
 export interface PdfConfig {
   title: string
   templatePath: string | null
   issuer: string
+  infoToDetails: (info: CardInfo, region: Region, shorten: boolean) => string
 }
 
 export interface ProjectConfig {
@@ -20,6 +22,10 @@ export interface ProjectConfig {
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
   pdf: PdfConfig
+}
+
+export const setProjectConfigOverride = (hostname: string) => {
+  window.localStorage.setItem('project-override', hostname)
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {

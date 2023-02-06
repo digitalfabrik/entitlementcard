@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import LoginForm from './LoginForm'
 import { useAppToaster } from '../AppToaster'
-import { Card, H2, H3, H4 } from '@blueprintjs/core'
+import { Button, Card, H2, H3, H4 } from '@blueprintjs/core'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
+import { setProjectConfigOverride } from '../../project-configs/getProjectConfig'
 
 interface State {
   email: string
@@ -27,6 +28,8 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
       },
     })
 
+  console.log(process.env.NODE_ENV)
+
   return (
     <StandaloneCenter>
       <Card style={{ width: '100%', maxWidth: '500px' }}>
@@ -41,6 +44,14 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
           onSubmit={onSubmit}
           loading={mutationState.loading}
         />
+        {process.env.NODE_ENV === 'development' ? (
+          <>
+            <Button onClick={() => setProjectConfigOverride('nuernberg.sozialpass.app')}>Switch to Nürnberg</Button>
+            <Button onClick={() => setProjectConfigOverride('bayern.ehrenamtskarte.app')}>
+              Switch to Ehrenamtskarte Bayern
+            </Button>
+          </>
+        ) : null}
       </Card>
     </StandaloneCenter>
   )
