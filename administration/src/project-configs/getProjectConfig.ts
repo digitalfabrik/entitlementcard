@@ -24,6 +24,10 @@ export interface ProjectConfig {
   pdf: PdfConfig
 }
 
+export const setProjectConfigOverride = (hostname: string) => {
+  window.localStorage.setItem('project-override', hostname)
+}
+
 const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem('project-override') ?? hostname) {
     case 'bayern.ehrenamtskarte.app':
