@@ -21,7 +21,7 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.1"
+    version: "3.3.6"
   args:
     dependency: transitive
     description:
@@ -531,7 +531,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "3.3.0"
   infinite_scroll_pagination:
     dependency: "direct main"
     description:
@@ -599,9 +599,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.16.0"
-      resolved-ref: a133625e088220d7e1f29f3f33f022b8bdad03f4
-      url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
+      ref: reenable-textureMode
+      resolved-ref: b0fb255dc242db07d8de845e5b92e6f7d2eda7fa
+      url: "https://github.com/maxammann/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
   maplibre_gl_dart:
@@ -614,20 +614,20 @@ packages:
     source: git
     version: "0.2.2"
   maplibre_gl_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: maplibre_gl_platform_interface
-      ref: "release-0.16.0"
-      resolved-ref: a133625e088220d7e1f29f3f33f022b8bdad03f4
-      url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
+      ref: reenable-textureMode
+      resolved-ref: b0fb255dc242db07d8de845e5b92e6f7d2eda7fa
+      url: "https://github.com/maxammann/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
   maplibre_gl_web:
     dependency: transitive
     description:
       path: maplibre_gl_web
-      ref: "release-0.16.0"
-      resolved-ref: a133625e088220d7e1f29f3f33f022b8bdad03f4
+      ref: main
+      resolved-ref: "7e6b575001b5d9ab5a976cd8753501db415502e2"
       url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
@@ -855,6 +855,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.6.2"
   pool:
     dependency: transitive
     description:

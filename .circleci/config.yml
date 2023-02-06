@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
+  browser-tools: circleci/browser-tools@1.4.1
 workflows:
   frontend:
     jobs:
@@ -147,12 +148,13 @@ commands:
 jobs:
   check-frontend:
     docker:
-      - image: cimg/node:19.1.0
+      - image: cimg/node:19.1.0-browsers
     resource_class: small
     working_directory: ~/project/frontend
     steps:
       - checkout:
           path: ~/project
+      - browser-tools/install-chrome
       - install-dart-linux
       - install-fvm
       - install-app-toolbelt
@@ -300,11 +302,12 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:19.1.0
+      - image: cimg/node:19.1.0-browsers
     working_directory: ~/project/administration
     steps:
       - checkout:
           path: ~/project
+      - browser-tools/install-chrome
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}

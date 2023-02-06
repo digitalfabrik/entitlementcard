@@ -1,6 +1,7 @@
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
+import { PartialMessage } from '@bufbuild/protobuf'
 
 const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
@@ -13,9 +14,9 @@ export class CardBlueprint {
   id: number
   fullName: string
   expirationDate: Date | null
-  extensionHolders: ExtensionHolder<any>[]
+  extensionHolders: ExtensionHolder<any, any>[]
 
-  constructor(fullName: string, expirationDate: Date | null, extension_states: ExtensionHolder<any>[]) {
+  constructor(fullName: string, expirationDate: Date | null, extension_states: ExtensionHolder<any, any>[]) {
     this.fullName = fullName
     this.expirationDate = expirationDate
     this.extensionHolders = extension_states
@@ -63,13 +64,14 @@ export class CardBlueprint {
   }
 
   generateCardInfo = (): CardInfo => {
-    let extension_message = {}
+    const extensionsMessage: PartialMessage<CardExtensions> = {}
 
     for (const holder of this.extensionHolders) {
-      if (!holder.state) {
-        throw new Error('Tried to add invalid extension')
+      if (holder.state === null) {
+        // We allow to skip invalid extensions to enable computing the protobuf size.
+        continue
       }
-      holder.extension.setProtobufData(holder.state, extension_message)
+      holder.extension.setProtobufData(holder.state, extensionsMessage)
     }
 
     const expirationDate = this.expirationDate
@@ -78,7 +80,7 @@ export class CardBlueprint {
       fullName: this.fullName,
       expirationDay:
         expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
-      extensions: new CardExtensions(extension_message),
+      extensions: new CardExtensions(extensionsMessage),
     })
   }
 
