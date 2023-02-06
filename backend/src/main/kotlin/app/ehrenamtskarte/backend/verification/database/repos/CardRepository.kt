@@ -21,9 +21,10 @@ object CardRepository {
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardInfoHash: ByteArray, totpSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
+    fun insert(cardInfoHash: ByteArray, activationSecret: ByteArray?, totpSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
+            this.activationSecret = activationSecret
             this.totpSecret = totpSecret
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
@@ -32,4 +33,8 @@ object CardRepository {
             this.revoked = false
             this.codeType = codeType
         }
+
+    fun activate(card: CardEntity, totpSecret: ByteArray) {
+        card.totpSecret = totpSecret
+    }
 }

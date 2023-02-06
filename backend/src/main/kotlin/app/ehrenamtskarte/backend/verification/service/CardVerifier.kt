@@ -44,7 +44,7 @@ object CardVerifier {
         return false
     }
 
-    private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
+    public fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
         val totpGenerator = TimeBasedOneTimePasswordGenerator(
             TIME_STEP,
             TOTP_LENGTH,

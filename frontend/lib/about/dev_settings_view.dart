@@ -27,7 +27,7 @@ final sampleActivationCodeBavaria = DynamicActivationCode(
     ),
   ),
   pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
-  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
+  activationSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
 );
 
 final sampleActivationCodeNuernberg = DynamicActivationCode(
@@ -47,7 +47,7 @@ final sampleActivationCodeNuernberg = DynamicActivationCode(
     ),
   ),
   pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
-  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
+  activationSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
 );
 
 class DevSettingsView extends StatelessWidget {

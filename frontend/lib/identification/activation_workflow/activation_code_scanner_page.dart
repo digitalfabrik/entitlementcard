@@ -9,9 +9,7 @@ import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
-import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -57,6 +55,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         return;
       }
 
+      final verificationCode = DynamicVer
       provider.setCode(activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(

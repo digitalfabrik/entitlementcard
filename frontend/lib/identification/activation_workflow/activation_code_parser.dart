@@ -43,8 +43,8 @@ class ActivationCodeParser {
     if (!code.hasPepper()) {
       throw QrCodeFieldMissingException("pepper");
     }
-    if (!code.hasTotpSecret()) {
-      throw QrCodeFieldMissingException("totpSecret");
+    if (!code.hasActivationSecret()) {
+      throw QrCodeFieldMissingException("activationSecret");
     }
   }
 }

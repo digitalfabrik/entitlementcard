@@ -39,7 +39,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
   @override
   Widget build(BuildContext context) {
     final otpCode = _otpCode;
-    final activationCode = widget.activationCode;
+    final verificationCode = widget.verificationCode;
 
     if (otpCode == null) {
       return const SmallButtonSpinner();
