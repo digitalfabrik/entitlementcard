@@ -41,7 +41,8 @@ class _QRViewState extends State<QrCodeScanner> {
               MobileScanner(
                 key: qrKey,
                 onDetect: (barcode, args) => _onCodeScanned(barcode),
-                allowDuplicates: true, // We need allowDuplicates until https://github.com/juliansteenbakker/mobile_scanner/pull/304 is available. It will be available with mobile_scanner 3.0.0
+                allowDuplicates:
+                    true, // We need allowDuplicates until https://github.com/juliansteenbakker/mobile_scanner/pull/304 is available. It will be available with mobile_scanner 3.0.0
                 controller: controller,
               ),
               Padding(
