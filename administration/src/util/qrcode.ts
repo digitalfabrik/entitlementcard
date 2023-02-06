@@ -1,19 +1,27 @@
 import {
+  BitArray,
   IllegalStateException,
   QRCodeByteMatrix,
+  QRCodeDecoderErrorCorrectionLevel,
   QRCodeEncoder,
   QRCodeEncoderQRCode as QRCode,
   QRCodeMatrixUtil,
+  QRCodeMode,
+  QRCodeVersion,
 } from '@zxing/library'
 import { PDFPage, rgb } from 'pdf-lib'
-import { BitArray, QRCodeMode, QRCodeDecoderErrorCorrectionLevel, QRCodeVersion } from '@zxing/library'
 import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
 import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
 import MaskUtil from '@zxing/library/esm/core/qrcode/encoder/MaskUtil'
 
 const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
-const VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(7)
-const ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.L
+
+// Level 8 with EC of M gives 152 bytes
+// Level 7 with EC of L gives 154 bytes
+// Level 8 seems appropriate right now.
+export const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(8)
+// From EC L to M we have a double of EC capability: 7% -> 15%
+export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.M
 
 function calculateBitsNeeded(
   mode: QRCodeMode,
@@ -74,6 +82,23 @@ function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
   )
 }
 
+function createHeader(mode: QRCodeMode) {
+  // This will store the header information, like mode and
+  // length, as well as "header" segments like an ECI segment.
+  const headerBits = new BitArray()
+
+  // Do not append ECI segment, because we do not define the encoding of the QR code
+
+  // (With ECI in place,) Write the mode marker
+  QRCodeEncoder.appendModeInfo(mode, headerBits)
+  return headerBits
+}
+
+export function isContentLengthValid(content: Uint8Array): boolean {
+  let mode = QRCodeMode.BYTE
+  return willFit(mode, createHeader(mode).getSize(), content.length * 8, DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
+}
+
 /**
  * This function has been copied and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L83
  * The main changes are:
@@ -86,14 +111,7 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
 
-  // This will store the header information, like mode and
-  // length, as well as "header" segments like an ECI segment.
-  const headerBits = new BitArray()
-
-  // Do not append ECI segment, because we do not define the encoding of the QR code
-
-  // (With ECI in place,) Write the mode marker
-  QRCodeEncoder.appendModeInfo(mode, headerBits)
+  const headerBits = createHeader(mode)
 
   // Collect data within the main segment, separately, to count its size if needed. Don't add it to
   // main payload yet.
@@ -103,8 +121,8 @@ export function encodeQRCode(content: Uint8Array): QRCode {
     dataBits.appendBits(b, 8)
   }
 
-  let version: QRCodeVersion = VERSION
-  let ecLevel: QRCodeDecoderErrorCorrectionLevel = ERROR_CORRECTION
+  let version: QRCodeVersion = DEFAULT_VERSION
+  let ecLevel: QRCodeDecoderErrorCorrectionLevel = DEFAULT_ERROR_CORRECTION
 
   if (!willFit(mode, headerBits.getSize(), dataBits.getSize(), version, ecLevel)) {
     throw new Error('Data too big for requested version')

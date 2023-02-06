@@ -2,7 +2,7 @@ import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifica
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { encodeQRCode } from '../util/qrcode'
+import { encodeQRCode, isContentLengthValid } from '../util/qrcode'
 
 const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
@@ -62,14 +62,7 @@ export class CardBlueprint {
       qrCode: { value: this.generateStaticVerificationCode(), case: 'dynamicActivationCode' },
     }).toBinary()
 
-    try {
-      encodeQRCode(dynamicCode)
-      encodeQRCode(staticCode)
-      return true
-    } catch (e) {
-      console.warn(e)
-      return false
-    }
+    return isContentLengthValid(dynamicCode) && isContentLengthValid(staticCode)
   }
 
   generateCardInfo = (): CardInfo => {
