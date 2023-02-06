@@ -8,6 +8,8 @@ import {
 import { PDFPage, rgb } from 'pdf-lib'
 import { BitArray, QRCodeMode, QRCodeDecoderErrorCorrectionLevel, QRCodeVersion } from '@zxing/library'
 import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
+import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
+import MaskUtil from '@zxing/library/esm/core/qrcode/encoder/MaskUtil'
 
 const DEFAULT_QUIET_ZONE_SIZE = 1
 const VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(7)
@@ -39,6 +41,37 @@ function willFit(
   const numDataBytes = numBytes - numEcBytes
   const totalInputBytes = (calculateBitsNeeded(mode, headerBitsSize, dataBitsSize, version) + 7) / 8
   return numDataBytes >= totalInputBytes
+}
+
+function chooseMaskPattern(
+  bits: BitArray,
+  ecLevel: QRCodeDecoderErrorCorrectionLevel,
+  version: QRCodeVersion,
+  matrix: QRCodeByteMatrix
+): number {
+  let minPenalty = Number.MAX_SAFE_INTEGER // Lower penalty is better.
+  let bestMaskPattern = -1
+  // We try all mask patterns to choose the best one.
+  for (let maskPattern = 0; maskPattern < QRCode.NUM_MASK_PATTERNS; maskPattern++) {
+    MatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix)
+    let penalty = calculateMaskPenalty(matrix)
+    if (penalty < minPenalty) {
+      minPenalty = penalty
+      bestMaskPattern = maskPattern
+    }
+  }
+  return bestMaskPattern
+}
+
+// The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
+// Basically it applies four rules and summate all penalties.
+function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
+  return (
+    MaskUtil.applyMaskPenaltyRule1(matrix) +
+    MaskUtil.applyMaskPenaltyRule2(matrix) +
+    MaskUtil.applyMaskPenaltyRule3(matrix) +
+    MaskUtil.applyMaskPenaltyRule4(matrix)
+  )
 }
 
 export function encodeQRCode(content: Uint8Array): QRCode {
@@ -101,8 +134,7 @@ export function encodeQRCode(content: Uint8Array): QRCode {
   //  Choose the mask pattern and set to "qrCode".
   const dimension = version.getDimensionForVersion()
   const matrix: QRCodeByteMatrix = new QRCodeByteMatrix(dimension, dimension)
-  // @ts-ignore
-  const maskPattern = QRCodeEncoder.chooseMaskPattern(finalBits, ecLevel, version, matrix)
+  const maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix)
   qrCode.setMaskPattern(maskPattern)
 
   // Build the matrix and set it to "qrCode".
