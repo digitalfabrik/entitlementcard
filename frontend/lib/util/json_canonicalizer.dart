@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 /// Adjusted from https://github.com/aps-lab/jcs_dart/blob/master/lib/src/jcs_dart_base.dart
 /// Under Apache 2.0 License
 class JsonCanonicalizer {
