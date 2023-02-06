@@ -74,6 +74,14 @@ function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
   )
 }
 
+/**
+ * This function has been copied and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L83
+ * The main changes are:
+ * * Do not include ECI segment because we do not have a text encoding (we have binary data)
+ * * Append data as binary using `appendBits`
+ *
+ * @param content binary content
+ */
 export function encodeQRCode(content: Uint8Array): QRCode {
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
