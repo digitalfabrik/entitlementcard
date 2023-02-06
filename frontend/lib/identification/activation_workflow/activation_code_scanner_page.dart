@@ -4,6 +4,7 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
@@ -52,9 +53,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       );
       final valid = await queryDynamicServerVerification(client, projectId, verificationQrCode);
       if (!valid) {
-        await showError(
-          "Der eingescannte Code ist ungültig.",
-        );
+        await showError("Der eingescannte Code ist ungültig.");
         return;
       }
 
@@ -88,6 +87,14 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final dateFormat = DateFormat("dd.MM.yyyy");
       await showError("Der eingescannte Code ist bereits am "
           "${dateFormat.format(e.expiry)} abgelaufen.");
+    } on ServerVerificationException catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace, label: e.toString());
+      await ConnectionFailedDialog.show(
+        context,
+        "Der eingescannte Code konnte nicht verifiziert "
+        "werden, da die Kommunikation mit dem Server fehlschlug. "
+        "Bitte prüfen Sie Ihre Internetverbindung.",
+      );
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError("Ein unerwarteter Fehler ist aufgetreten.");

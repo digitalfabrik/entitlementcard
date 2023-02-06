@@ -74,7 +74,7 @@ class CardContent extends StatelessWidget {
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
-        final headerLeftTitle = currentRegion != null
+        final headerLeftTitle = buildConfig.cardBranding.headerTitleLeft.isEmpty && currentRegion != null
             ? "${currentRegion.prefix} ${currentRegion.name}"
             : buildConfig.cardBranding.headerTitleLeft;
         return Column(

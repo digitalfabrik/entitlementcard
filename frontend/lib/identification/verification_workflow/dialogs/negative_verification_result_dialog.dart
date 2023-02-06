@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_result_dialog.dart';
+import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:flutter/material.dart';
 
 class NegativeVerificationResultDialog extends StatelessWidget {
@@ -8,7 +8,7 @@ class NegativeVerificationResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VerificationResultDialog(
+    return InfoDialog(
       title: "Nicht verifiziert",
       icon: Icons.error,
       iconColor: Colors.red,

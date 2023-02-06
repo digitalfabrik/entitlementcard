@@ -1,15 +1,10 @@
 # Digitale Ehrenamtskarte
 [![CircleCI build status](https://circleci.com/gh/digitalfabrik/ehrenamtskarte.svg?style=svg)](https://app.circleci.com/pipelines/github/ehrenamtskarte/ehrenamtskarte)
 [![frontend style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://pub.dev/packages/effective_dart)
-[![](https://img.shields.io/f-droid/v/app.ehrenamtskarte.bayern.floss)](https://f-droid.org/en/packages/app.ehrenamtskarte.bayern.floss/)
 
 > App for the 'Bayerische Ehrenamtskarte', a benefit card for volunteers in Bavaria, Germany.
 >
 > App for Android & iOS + Backend + Administration Web Portal - **100% Open Source**.
-
-[<img src="https://f-droid.org/badge/get-it-on.png"
-      alt="Get it on F-Droid"
-      height="80">](https://f-droid.org/packages/app.ehrenamtskarte.bayern.floss/)
 
 English | [Deutsch](docs/de/readme.md)
 
