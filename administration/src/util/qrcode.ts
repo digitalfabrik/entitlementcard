@@ -159,10 +159,6 @@ const createQRCode = (
   renderBoundary: (x: number, y: number, width: number, height: number) => void,
   size: number
 ) => {
-  let quietZone = DEFAULT_QUIET_ZONE_SIZE
-
-  const { width, height } = { width: size, height: size }
-
   const code: QRCode = encodeQRCode(content)
 
   const input = code.getMatrix()
@@ -173,28 +169,21 @@ const createQRCode = (
 
   const inputWidth = input.getWidth()
   const inputHeight = input.getHeight()
-  const qrWidth = inputWidth + quietZone * 2
-  const qrHeight = inputHeight + quietZone * 2
-  const outputWidth = Math.max(width, qrWidth)
-  const outputHeight = Math.max(height, qrHeight)
 
-  const multiple = Math.min(Math.floor(outputWidth / qrWidth), Math.floor(outputHeight / qrHeight))
+  if (inputWidth !== inputHeight) {
+    throw new IllegalStateException('QRCode is not quadratic')
+  }
 
-  // Padding includes both the quiet zone and the extra white pixels to accommodate the requested
-  // dimensions. For example, if input is 25x25 the QR will be 33x33 including the quiet zone.
-  // If the requested size is 200x160, the multiple will be 4, for a QR of 132x132. These will
-  // handle all the padding from 100x100 (the actual QR) up to 200x160.
-  const leftPadding = Math.floor((outputWidth - inputWidth * multiple) / 2)
-  const topPadding = Math.floor((outputHeight - inputHeight * multiple) / 2)
+  const multiple = size / inputWidth
 
-  renderBoundary(0, 0, outputWidth, outputHeight)
+  renderBoundary(0, 0, size, size)
 
   for (let inputY = 0; inputY < inputHeight; inputY++) {
     // Write the contents of this row of the barcode
     for (let inputX = 0; inputX < inputWidth; inputX++) {
       if (input.get(inputX, inputY) === 1) {
-        const outputX = leftPadding + inputX * multiple
-        const outputY = topPadding + inputY * multiple
+        const outputX = inputX * multiple
+        const outputY = inputY * multiple
         renderRect(outputX, outputY, multiple)
       }
     }
