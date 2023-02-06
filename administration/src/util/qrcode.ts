@@ -11,7 +11,7 @@ import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
 import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
 import MaskUtil from '@zxing/library/esm/core/qrcode/encoder/MaskUtil'
 
-const DEFAULT_QUIET_ZONE_SIZE = 1
+const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 const VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(7)
 const ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.L
 
@@ -160,6 +160,7 @@ const createQRCode = (
   size: number
 ) => {
   const code: QRCode = encodeQRCode(content)
+  let quietZone = DEFAULT_QUIET_ZONE_SIZE
 
   const input = code.getMatrix()
 
@@ -173,8 +174,12 @@ const createQRCode = (
   if (inputWidth !== inputHeight) {
     throw new IllegalStateException('QRCode is not quadratic')
   }
+  const requestedSize = size - quietZone * 2
 
-  const multiple = size / inputWidth
+  const multiple = requestedSize / inputWidth
+
+  const leftPadding = quietZone
+  const topPadding = quietZone
 
   renderBoundary(0, 0, size, size)
 
@@ -182,8 +187,8 @@ const createQRCode = (
     // Write the contents of this row of the barcode
     for (let inputX = 0; inputX < inputWidth; inputX++) {
       if (input.get(inputX, inputY) === 1) {
-        const outputX = inputX * multiple
-        const outputY = inputY * multiple
+        const outputX = leftPadding + inputX * multiple
+        const outputY = topPadding + inputY * multiple
         renderRect(outputX, outputY, multiple)
       }
     }
