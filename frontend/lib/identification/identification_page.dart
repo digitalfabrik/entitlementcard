@@ -46,26 +46,23 @@ class IdentificationPage extends StatelessWidget {
     );
   }
 
-  Future<bool> _isCameraPermissionDenied() async {
-    return await Permission.camera.status.isPermanentlyDenied || await Permission.camera.status.isDenied;
+  Future<bool> checkCameraPermission(BuildContext context) async {
+    Future<void> showDialog() async => QrCodeCameraPermissionDialog.showPermissionDialog(context);
+    if (await Permission.camera.status.isPermanentlyDenied) {
+      await showDialog();
+    }
+    return Permission.camera.request().isGranted;
   }
 
   Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
-    Future<void> showDialog() async => QrCodeCameraPermissionDialog.showPermissionDialog(context);
-    if (await _isCameraPermissionDenied()) {
-      await showDialog();
-      return;
-    }
+    checkCameraPermission(context);
     await VerificationWorkflow.startWorkflow(context, settings);
   }
 
   Future<void> _startActivation(BuildContext context) async {
-    Future<void> showDialog() async => QrCodeCameraPermissionDialog.showPermissionDialog(context);
-    if (await _isCameraPermissionDenied()) {
-      await showDialog();
-      return;
+    if (await checkCameraPermission(context)) {
+      Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
     }
-    Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
   }
 
   Future<bool> _startApplication() {
