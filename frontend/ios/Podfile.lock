@@ -76,6 +76,8 @@ PODS:
     - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
+  - permission_handler_apple (9.0.4):
+    - Flutter
   - PromisesObjC (2.1.1)
   - Protobuf (3.21.12)
   - ReachabilitySwift (5.0.0)
@@ -95,6 +97,7 @@ DEPENDENCIES:
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -135,6 +138,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   url_launcher_ios:
@@ -162,12 +167,13 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: 0fa3383a235346277d3d57c6fad80526eda80904
+PODFILE CHECKSUM: 9e624ef9ea1950d5ac2524cf89093b7a29070f86
 
 COCOAPODS: 1.11.3
