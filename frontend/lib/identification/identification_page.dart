@@ -32,35 +32,41 @@ class IdentificationPage extends StatelessWidget {
           return CardDetailView(
             activationCode: activationCode,
             startVerification: () => _showVerificationDialog(context, settings),
-            startActivation: () => _startActivation(context),
+            startActivation: () => _startActivation(context, settings),
             startApplication: _startApplication,
           );
         }
 
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
-          startActivation: () => _startActivation(context),
+          startActivation: () => _startActivation(context, settings),
           startApplication: _startApplication,
         );
       },
     );
   }
 
-  Future<bool> checkCameraPermission(BuildContext context) async {
+  Future<bool> checkCameraPermission(BuildContext context, SettingsModel settings) async {
     Future<void> showDialog() async => QrCodeCameraPermissionDialog.showPermissionDialog(context);
-    if (await Permission.camera.status.isPermanentlyDenied) {
+    final bool permissionsDenied =
+        await Permission.camera.status.isPermanentlyDenied || await Permission.camera.status.isDenied;
+    if (permissionsDenied && settings.cameraPermissionRequested) {
       await showDialog();
+    } else {
+      await Permission.camera.request().isGranted;
+      await settings.setCameraPermissionRequested(requested: true);
     }
-    return Permission.camera.request().isGranted;
+    return Permission.camera.isGranted;
   }
 
   Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
-    checkCameraPermission(context);
-    await VerificationWorkflow.startWorkflow(context, settings);
+    if (await checkCameraPermission(context, settings)) {
+      await VerificationWorkflow.startWorkflow(context, settings);
+    }
   }
 
-  Future<void> _startActivation(BuildContext context) async {
-    if (await checkCameraPermission(context)) {
+  Future<void> _startActivation(BuildContext context, SettingsModel settings) async {
+    if (await checkCameraPermission(context, settings)) {
       Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
     }
   }
