@@ -60,8 +60,8 @@ class VerificationQrScannerPage extends StatelessWidget {
                   otp: otp,
                 ),
               );
-              final verificationCodeBase64 = verificationQrCode.writeToBuffer();
-              _handleQrCode(context, verificationCodeBase64);
+              final verificationCode = verificationQrCode.writeToBuffer();
+              _handleQrCode(context, verificationCode);
             },
             child: const Text("Verify activated Card"),
           )

@@ -135,7 +135,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    "Create a QR code from a PDF: pdftoppm ehrenamtskarten.pdf | zbarimg -q --raw  -",
+                    "Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -",
                   ),
                   TextFormField(
                     controller: base64Controller,

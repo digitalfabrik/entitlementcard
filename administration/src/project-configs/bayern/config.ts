@@ -16,7 +16,7 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   pdf: {
-    title: 'Ehrenamtskarte',
+    title: 'Ehrenamtskarten',
     templatePath: pdfTemplate,
     issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
     infoToDetails: (info, region, shorten) => {

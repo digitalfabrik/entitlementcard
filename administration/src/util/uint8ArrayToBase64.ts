@@ -1,4 +1,4 @@
-const uint8ArrayToPaddedBase64 = function (u8: Uint8Array) {
+const uint8ArrayToBase64 = function (u8: Uint8Array) {
   return btoa(
     Array.from(u8.values())
       .map(value => String.fromCharCode(value))
@@ -6,4 +6,4 @@ const uint8ArrayToPaddedBase64 = function (u8: Uint8Array) {
   )
 }
 
-export default uint8ArrayToPaddedBase64
+export default uint8ArrayToBase64

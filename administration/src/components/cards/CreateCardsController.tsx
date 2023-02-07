@@ -59,7 +59,7 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
 
       if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
 
-      downloadDataUri(pdfDataUri, 'ehrenamtskarten.pdf')
+      downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
     } catch (e) {
       console.error(e)

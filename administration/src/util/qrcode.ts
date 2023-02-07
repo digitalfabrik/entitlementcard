@@ -121,8 +121,8 @@ export function encodeQRCode(content: Uint8Array): QRCode {
     dataBits.appendBits(b, 8)
   }
 
-  let version: QRCodeVersion = DEFAULT_VERSION
-  let ecLevel: QRCodeDecoderErrorCorrectionLevel = DEFAULT_ERROR_CORRECTION
+  const version: QRCodeVersion = DEFAULT_VERSION
+  const ecLevel: QRCodeDecoderErrorCorrectionLevel = DEFAULT_ERROR_CORRECTION
 
   if (!willFit(mode, headerBits.getSize(), dataBits.getSize(), version, ecLevel)) {
     throw new Error('Data too big for requested version')

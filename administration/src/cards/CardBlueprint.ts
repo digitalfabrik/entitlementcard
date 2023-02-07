@@ -59,7 +59,7 @@ export class CardBlueprint {
     }).toBinary()
 
     const staticCode = new QrCode({
-      qrCode: { value: this.generateStaticVerificationCode(), case: 'dynamicActivationCode' },
+      qrCode: { value: this.generateStaticVerificationCode(), case: 'staticVerificationCode' },
     }).toBinary()
 
     return isContentLengthValid(dynamicCode) && isContentLengthValid(staticCode)

@@ -24,8 +24,8 @@ class QRCodeInvalidFormatException extends QrCodeParseException {
 class ActivationCodeParser {
   const ActivationCodeParser();
 
-  DynamicActivationCode parseQrCodeContent(Uint8List rawBase64Content) {
-    final QrCode qrCode = rawBase64Content.parseQRCodeContent();
+  DynamicActivationCode parseQrCodeContent(Uint8List rawContent) {
+    final QrCode qrCode = rawContent.parseQRCodeContent();
 
     if (!qrCode.hasDynamicActivationCode()) {
       throw QrCodeWrongTypeException();
