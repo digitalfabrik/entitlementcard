@@ -76,6 +76,6 @@ class SettingsModel extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled}';
+    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled}, _cameraPermissionRequested: $_cameraPermissionRequested}';
   }
 }
