@@ -10,7 +10,7 @@ To install FVM and the project Flutter version
   notify you if this is the case.
 * Make sure you are located in the `frontend` directory. Run `fvm install` to install the correct Flutter version (as
   specified in `.fvm/fvm_config.json`).
-* Install the protobuf dart generator plugin: `fvm flutter pub global activate protoc_plugin`.
+* Install the protobuf dart generator plugin: `dart pub global activate protoc_plugin` (Use `dart` instead of `fvm flutter pub` here).
   * After that, when running `build_runner`, you might still encounter the following error:
 
         Call: "protoc", ["--plugin=protoc-gen-dart=[YOUR_HOME_DIR]/.pub-cache/bin/protoc-gen-dart","--dart_out=lib/proto/","./card.proto"]

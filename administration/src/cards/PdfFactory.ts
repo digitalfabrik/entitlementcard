@@ -1,5 +1,4 @@
 import { drawQRCode } from '../util/qrcode'
-import { uint8ArrayToBase64 } from '../util/base64'
 import { Region } from '../generated/graphql'
 import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { PdfConfig } from '../project-configs/getProjectConfig'
@@ -124,11 +123,10 @@ function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, pag
   const qrCodeXPdf = mmToPt(x)
   const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
 
-  const qrCodeContent = uint8ArrayToBase64(
-    new QrCode({
-      qrCode: qrCode,
-    }).toBinary()
-  )
+  const qrCodeContent = new QrCode({
+    qrCode: qrCode,
+  }).toBinary()
+
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
 }
 

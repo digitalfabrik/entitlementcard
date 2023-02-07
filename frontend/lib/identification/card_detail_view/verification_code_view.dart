@@ -8,7 +8,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart' show QrImage, QrVersions;
+import 'package:qr_flutter/qr_flutter.dart' as qr show QrImage, QrCode, QrVersions, QrErrorCorrectLevel;
 
 class VerificationCodeView extends StatefulWidget {
   final DynamicActivationCode activationCode;
@@ -61,9 +61,12 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(padding),
-                      child: QrImage(
-                        data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
-                        version: QrVersions.auto,
+                      child: qr.QrImage.withQr(
+                        qr: qr.QrCode.fromUint8List(
+                          data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
+                          errorCorrectLevel: qr.QrErrorCorrectLevel.L,
+                        ),
+                        version: qr.QrVersions.auto,
                         foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
                         gapless: false,
                       ),

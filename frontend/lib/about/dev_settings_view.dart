@@ -135,7 +135,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    "Create a QR code from a PDF: pdftoppm ehrenamtskarten.pdf | zbarimg -q --raw  -",
+                    "Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -",
                   ),
                   TextFormField(
                     controller: base64Controller,
@@ -155,7 +155,8 @@ class DevSettingsView extends StatelessWidget {
                 final messengerState = ScaffoldMessenger.of(context);
                 final provider = Provider.of<ActivationCodeModel>(context, listen: false);
                 try {
-                  final activationCode = const ActivationCodeParser().parseQrCodeContent(base64Controller.text);
+                  final activationCode = const ActivationCodeParser()
+                      .parseQrCodeContent(const Base64Decoder().convert(base64Controller.text));
                   provider.setCode(activationCode);
                   messengerState.showSnackBar(
                     const SnackBar(

@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
@@ -60,8 +60,8 @@ class VerificationQrScannerPage extends StatelessWidget {
                   otp: otp,
                 ),
               );
-              final verificationCodeBase64 = const Base64Encoder().convert(verificationQrCode.writeToBuffer());
-              _handleQrCode(context, verificationCodeBase64);
+              final verificationCode = verificationQrCode.writeToBuffer();
+              _handleQrCode(context, verificationCode);
             },
             child: const Text("Verify activated Card"),
           )
@@ -69,7 +69,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     );
   }
 
-  Future<void> _handleQrCode(BuildContext context, String rawQrContent) async {
+  Future<void> _handleQrCode(BuildContext context, Uint8List rawQrContent) async {
     _openWaitingDialog(context);
 
     try {

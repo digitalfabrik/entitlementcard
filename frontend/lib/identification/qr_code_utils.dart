@@ -8,16 +8,14 @@ import 'package:protobuf/protobuf.dart';
 class QrCodeUtils {
   const QrCodeUtils();
 
-  String createDynamicVerificationQrCodeData(DynamicActivationCode activationCode, int otpCode) {
-    return const Base64Encoder().convert(
-      QrCode(
-        dynamicVerificationCode: DynamicVerificationCode(
-          info: activationCode.info,
-          pepper: activationCode.pepper,
-          otp: otpCode,
-        ),
-      ).writeToBuffer(),
-    );
+  Uint8List createDynamicVerificationQrCodeData(DynamicActivationCode activationCode, int otpCode) {
+    return QrCode(
+      dynamicVerificationCode: DynamicVerificationCode(
+        info: activationCode.info,
+        pepper: activationCode.pepper,
+        otp: otpCode,
+      ),
+    ).writeToBuffer();
   }
 
   String hashCardInfo(CardInfo cardInfo, List<int> pepper) {

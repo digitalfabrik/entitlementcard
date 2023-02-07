@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 const scanDelayAfterErrorMs = 500;
 
-typedef OnCodeScannedCallback = Future<void> Function(String code);
+typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
 
 class QrCodeScanner extends StatefulWidget {
   final OnCodeScannedCallback onCodeScanned;
@@ -24,7 +26,7 @@ class _QRViewState extends State<QrCodeScanner> {
     formats: [BarcodeFormat.qrCode],
   );
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool isProcessingCode = false;
+  Uint8List? lastScanned;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,8 @@ class _QRViewState extends State<QrCodeScanner> {
               MobileScanner(
                 key: qrKey,
                 onDetect: (barcode, args) => _onCodeScanned(barcode),
-                allowDuplicates: false,
+                allowDuplicates:
+                    true, // We need allowDuplicates until https://github.com/juliansteenbakker/mobile_scanner/pull/304 is available. It will be available with mobile_scanner 3.0.0
                 controller: controller,
               ),
               Padding(
@@ -93,10 +96,13 @@ class _QRViewState extends State<QrCodeScanner> {
   }
 
   Future<void> _onCodeScanned(Barcode scanData) async {
-    final code = scanData.rawValue;
-    if (code == null) {
+    final code = scanData.rawBytes;
+
+    if (code == null || const ListEquality().equals(lastScanned, code)) {
       return;
     }
+
+    lastScanned = code;
 
     await widget.onCodeScanned(code);
   }
