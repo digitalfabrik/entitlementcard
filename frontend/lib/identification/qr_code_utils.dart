@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
