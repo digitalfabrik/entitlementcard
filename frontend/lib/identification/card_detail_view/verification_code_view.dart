@@ -53,9 +53,9 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
         return Consumer<ActivationCodeModel>(
           builder: (context, cardDetailsModel, child) {
             final qrCode = qr.QrCode.fromUint8List(
-                          data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
-                          errorCorrectLevel: qr.QrErrorCorrectLevel.L,
-                        );
+              data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
+              errorCorrectLevel: qr.QrErrorCorrectLevel.L,
+            );
             qrCode.make();
 
             return ConstrainedBox(
