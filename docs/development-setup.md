@@ -34,12 +34,14 @@ This short guide focuses on setting up the project using IntelliJ instead of And
    |Username|postgres|
    |Password|postgres|
    |Database|ehrenamtskarte|
-6. Install JDK8
-7. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
-8. Create an admin account using `./gradlew run --args="create-admin <email> <password>"`
-9. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
-10. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
-11. Take a look at the backend: [http://localhost:7000](http://localhost:7000) (The public version is available at
+6. Install at least JDK 17 LTS
+7. Open the IntelliJ "Project Structure" and setup the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
+   ![SDK/JDK setup](./img/intellij-sdk-setup.png)
+8. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
+9. Create an admin account using `./gradlew run --args="create-admin <email> <password>"`
+10. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
+11. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
+12. Take a look at the backend: [http://localhost:7000](http://localhost:7000) (The public version is available at
     api.entitlementcard.app)
 
 ## Dumping and restoring the database through docker
