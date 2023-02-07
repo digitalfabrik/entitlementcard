@@ -52,6 +52,12 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
         final padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
         return Consumer<ActivationCodeModel>(
           builder: (context, cardDetailsModel, child) {
+            final qrCode = qr.QrCode.fromUint8List(
+                          data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
+                          errorCorrectLevel: qr.QrErrorCorrectLevel.L,
+                        );
+            qrCode.make();
+
             return ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
               child: Material(
@@ -62,10 +68,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
                     Padding(
                       padding: EdgeInsets.all(padding),
                       child: qr.QrImage.withQr(
-                        qr: qr.QrCode.fromUint8List(
-                          data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
-                          errorCorrectLevel: qr.QrErrorCorrectLevel.L,
-                        ),
+                        qr: qrCode,
                         version: qr.QrVersions.auto,
                         foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
                         gapless: false,
