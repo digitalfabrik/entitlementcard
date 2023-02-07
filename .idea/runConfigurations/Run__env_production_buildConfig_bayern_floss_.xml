@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run (env:showcase+buildConfig:bayern-floss)" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=environment=showcase --flavor BayernFloss" />
-    <option name="attachArgs" value="--dart-define=environment=showcase" />
+  <configuration default="false" name="Run (env:production+buildConfig:bayern-floss)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=environment=production --flavor BayernFloss" />
+    <option name="attachArgs" value="--dart-define=environment=production" />
     <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main.dart" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Select &quot;bayern-floss&quot;" run_configuration_type="ShConfigurationType" />

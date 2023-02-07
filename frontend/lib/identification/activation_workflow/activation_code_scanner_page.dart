@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/activation_code_model.dart';
@@ -34,7 +36,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     );
   }
 
-  Future<void> _onCodeScanned(BuildContext context, String code) async {
+  Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
     final provider = Provider.of<ActivationCodeModel>(context, listen: false);
     Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
 

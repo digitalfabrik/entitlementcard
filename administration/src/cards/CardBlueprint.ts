@@ -2,6 +2,7 @@ import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifica
 import { dateToDaysSinceEpoch } from './validityPeriod'
 import { ExtensionHolder } from './extensions'
 import { PartialMessage } from '@bufbuild/protobuf'
+import { isContentLengthValid } from '../util/qrcode'
 
 const MAX_NAME_LENGTH = 50
 const TOTP_SECRET_LENGTH = 20
@@ -51,16 +52,17 @@ export class CardBlueprint {
   }
 
   hasValidSize(): boolean {
-    // every four characters in a base64 encoded string correspond to three bytes
-    // the qr code can hold 224 characters
-    // therefore 224 / 4 * 3 = 168
     // See https://github.com/digitalfabrik/entitlementcard/issues/690  for more context.
-    return this.sizeOfProtobuf() <= 168
-  }
 
-  sizeOfProtobuf(): number {
-    return new QrCode({ qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' } }).toBinary()
-      .length
+    const dynamicCode = new QrCode({
+      qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' },
+    }).toBinary()
+
+    const staticCode = new QrCode({
+      qrCode: { value: this.generateStaticVerificationCode(), case: 'staticVerificationCode' },
+    }).toBinary()
+
+    return isContentLengthValid(dynamicCode) && isContentLengthValid(staticCode)
   }
 
   generateCardInfo = (): CardInfo => {

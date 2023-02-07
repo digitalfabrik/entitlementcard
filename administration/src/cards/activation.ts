@@ -8,8 +8,8 @@ import {
   Region,
 } from '../generated/graphql'
 import hashCardInfo from './hash'
-import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 import { ApolloClient } from '@apollo/client'
+import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
 
 export async function activateCard<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
