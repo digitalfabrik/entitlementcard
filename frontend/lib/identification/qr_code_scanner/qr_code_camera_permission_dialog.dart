@@ -25,7 +25,7 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
           },
         ),
         TextButton(
-          child: const Text('Ok'),
+          child: const Text('Abbrechen'),
           onPressed: () {
             Navigator.of(context).pop();
           },
