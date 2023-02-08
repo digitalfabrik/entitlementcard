@@ -19,15 +19,15 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Einstellungen öffnen'),
-          onPressed: () {
-            openAppSettings();
-          },
-        ),
-        TextButton(
           child: const Text('Abbrechen'),
           onPressed: () {
             Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('Einstellungen öffnen'),
+          onPressed: () {
+            openAppSettings();
           },
         ),
       ],
@@ -37,7 +37,6 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
   static Future<void> showPermissionDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
       builder: (context) => const QrCodeCameraPermissionDialog(),
     );
   }
