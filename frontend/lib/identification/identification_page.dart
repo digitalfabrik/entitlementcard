@@ -32,30 +32,22 @@ class IdentificationPage extends StatelessWidget {
           return CardDetailView(
             activationCode: activationCode,
             startVerification: () => _showVerificationDialog(context, settings),
-            startActivation: () => _startActivation(context, settings),
+            startActivation: () => _startActivation(context),
             startApplication: _startApplication,
           );
         }
 
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
-          startActivation: () => _startActivation(context, settings),
+          startActivation: () => _startActivation(context),
           startApplication: _startApplication,
         );
       },
     );
   }
 
-  Future<void> checkCameraPermission(BuildContext context, SettingsModel settings) async {
-    Future<void> showDialog() async => QrCodeCameraPermissionDialog.showPermissionDialog(context);
-    // ios & android set different status when access was denied
-    final bool permissionsDenied =
-        await Permission.camera.status.isPermanentlyDenied || await Permission.camera.status.isDenied;
-    if (permissionsDenied && settings.cameraPermissionRequested) {
-      await showDialog();
-      return;
-    }
-    await settings.setCameraPermissionRequested(requested: true);
+  Future<void> handleDeniedCameraPermission(BuildContext context) async {
+    await QrCodeCameraPermissionDialog.showPermissionDialog(context);
   }
 
   Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
@@ -63,15 +55,15 @@ class IdentificationPage extends StatelessWidget {
       await VerificationWorkflow.startWorkflow(context, settings);
       return;
     }
-    checkCameraPermission(context, settings);
+    handleDeniedCameraPermission(context);
   }
 
-  Future<void> _startActivation(BuildContext context, SettingsModel settings) async {
+  Future<void> _startActivation(BuildContext context) async {
     if (await Permission.camera.request().isGranted) {
       Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
       return;
     }
-    checkCameraPermission(context, settings);
+    handleDeniedCameraPermission(context);
   }
 
   Future<bool> _startApplication() {

@@ -12,7 +12,7 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
         child: ListBody(
           children: const <Widget>[
             Text(
-              "Zum Lesen von QR-Codes wird Kamerauzugriff benötigt.\nÖffnen sie die Einstellungen und klicken sie auf Erlauben",
+              "Zum Lesen von QR-Codes wird Kamerauzugriff benötigt.\nÖffnen sie die Einstellungen und wählen sie Kamerazugriff erlauben.",
             ),
           ],
         ),
