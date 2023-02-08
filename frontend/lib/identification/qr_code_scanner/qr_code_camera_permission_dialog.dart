@@ -19,7 +19,7 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Einstellungen'),
+          child: const Text('Einstellungen öffnen'),
           onPressed: () {
             openAppSettings();
           },
