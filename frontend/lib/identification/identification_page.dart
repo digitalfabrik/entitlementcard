@@ -4,9 +4,11 @@ import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -44,12 +46,24 @@ class IdentificationPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
-    await VerificationWorkflow.startWorkflow(context, settings);
+  Future<void> handleDeniedCameraPermission(BuildContext context) async {
+    await QrCodeCameraPermissionDialog.showPermissionDialog(context);
   }
 
-  void _startActivation(BuildContext context) {
-    Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
+  Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
+    if (await Permission.camera.request().isGranted) {
+      await VerificationWorkflow.startWorkflow(context, settings);
+      return;
+    }
+    handleDeniedCameraPermission(context);
+  }
+
+  Future<void> _startActivation(BuildContext context) async {
+    if (await Permission.camera.request().isGranted) {
+      Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
+      return;
+    }
+    handleDeniedCameraPermission(context);
   }
 
   Future<bool> _startApplication() {
