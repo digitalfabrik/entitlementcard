@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
-import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -35,28 +39,12 @@ class ActivationCodeScannerPage extends StatelessWidget {
   }
 
   Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
-    final provider = Provider.of<ActivationCodeModel>(context, listen: false);
     Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
 
-    final client = GraphQLProvider.of(context).value;
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
-      final projectId = Configuration.of(context).projectId;
-      final generator = OTPGenerator(activationCode.totpSecret);
-      final otp = generator.generateOTP();
-      final verificationQrCode = DynamicVerificationCode(
-        info: activationCode.info,
-        pepper: activationCode.pepper,
-        otp: otp.code,
-      );
-      final valid = await queryDynamicServerVerification(client, projectId, verificationQrCode);
-      if (!valid) {
-        await showError("Der eingescannte Code ist ungültig.");
-        return;
-      }
 
-      final verificationCode = DynamicVer
-      provider.setCode(activationCode);
+      await _activateCode(context, activationCode);
     } on QRCodeMissingExpiryException catch (_) {
       await showError(
         "Der eingescannte Code enthält ein ungültiges Ablaufdatum.",
@@ -97,6 +85,45 @@ class ActivationCodeScannerPage extends StatelessWidget {
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError("Ein unerwarteter Fehler ist aufgetreten.");
+    }
+  }
+
+  Future<void> _activateCode(
+    BuildContext context,
+    DynamicActivationCode activationCode,
+  ) async {
+    final client = GraphQLProvider.of(context).value;
+    final projectId = Configuration.of(context).projectId;
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
+
+    final activationResult = await activateCode(
+      client: client,
+      projectId: projectId,
+      code: activationCode,
+      overwriteExisting: true,
+    );
+
+    switch (activationResult.activationState) {
+      case ActivationState.success:
+        if (activationResult.totpSecret != null) {
+          final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
+          final userCode = DynamicUserCode(
+            info: activationCode.info,
+            pepper: activationCode.pepper,
+            totpSecret: totpSecret,
+          );
+          provider.setCode(userCode);
+        }
+        break;
+      case ActivationState.failed:
+        await QrParsingErrorDialog.showErrorDialog(
+          context,
+          "Der eingescannte Code ist ungültig.",
+        );
+        break;
+      case ActivationState.didNotOverwriteExisting:
+      // TODO: ask user to overwrite code
+      default:
     }
   }
 }

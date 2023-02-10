@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 
 class QRCodeInvalidTotpSecretException extends QrCodeParseException {

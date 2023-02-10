@@ -21,6 +21,14 @@ object CardRepository {
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
+    fun findByHashModelAndActivationSecret(project: String, hashModel: ByteArray, activationSecret: ByteArray): CardEntity? {
+        val query = (Projects innerJoin Regions innerJoin Cards)
+            .slice(Cards.columns)
+            .select { Projects.project eq project and (Cards.cardInfoHash eq hashModel) and (Cards.activationSecret eq activationSecret) }
+            .singleOrNull()
+        return if (query == null) null else CardEntity.wrapRow(query)
+    }
+
     fun insert(cardInfoHash: ByteArray, activationSecret: ByteArray?, totpSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
@@ -34,7 +42,7 @@ object CardRepository {
             this.codeType = codeType
         }
 
-    fun activate(card: CardEntity, totpSecret: ByteArray) {
+    fun reactivate(card: CardEntity, totpSecret: ByteArray) {
         card.totpSecret = totpSecret
     }
 }

@@ -8,7 +8,7 @@ Future<bool> queryDynamicServerVerification(
   String projectId,
   DynamicVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
+  final hash = verificationCode.info.hash(verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,
@@ -23,7 +23,7 @@ Future<bool> queryStaticServerVerification(
   String projectId,
   StaticVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
+  final hash = verificationCode.info.hash(verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,

@@ -9,7 +9,7 @@ void main() {
     test("should map an empty cardInfo correctly", () {
       final cardInfo = CardInfo();
       expect(
-        const QrCodeUtils().messageToJsonObject(cardInfo),
+        cardInfo.messageToJsonObject(),
         {},
       );
     });
@@ -27,7 +27,7 @@ void main() {
           ),
         ),
       );
-      expect(const QrCodeUtils().messageToJsonObject(cardInfo), {
+      expect(cardInfo.messageToJsonObject(), {
         '1': 'Max Mustermann',
         '2': '14600',
         '3': {
@@ -49,7 +49,7 @@ void main() {
           ),
         ),
       );
-      expect(const QrCodeUtils().messageToJsonObject(cardInfo), {
+      expect(cardInfo.messageToJsonObject(), {
         '1': 'Max Mustermann',
         '3': {
           '1': {'1': '16'}, // extensionRegion
@@ -74,7 +74,7 @@ void main() {
           ),
         ),
       );
-      expect(const QrCodeUtils().messageToJsonObject(cardInfo), {
+      expect(cardInfo.messageToJsonObject(), {
         '1': 'Max Mustermann',
         '2': '14600',
         '3': {
@@ -103,7 +103,7 @@ void main() {
         ),
       );
       final pepper = const Base64Decoder().convert("MvMjEqa0ulFDAgACElMjWA==");
-      expect(const QrCodeUtils().hashCardInfo(cardInfo, pepper), 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=');
+      expect(cardInfo.hash(pepper), 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=');
     });
 
     test("should be stable for a Bavarian Golden EAK", () {
@@ -120,7 +120,7 @@ void main() {
         ),
       );
       final pepper = const Base64Decoder().convert("MvMjEqa0ulFDAgACElMjWA==");
-      expect(const QrCodeUtils().hashCardInfo(cardInfo, pepper), 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=');
+      expect(cardInfo.hash(pepper), 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=');
     });
 
     test("should be stable for a Nuernberg Pass", () {
@@ -140,7 +140,7 @@ void main() {
         ),
       );
       final pepper = const Base64Decoder().convert("MvMjEqa0ulFDAgACElMjWA==");
-      expect(const QrCodeUtils().hashCardInfo(cardInfo, pepper), 'zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=');
+      expect(cardInfo.hash(pepper), 'zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=');
     });
   });
 }

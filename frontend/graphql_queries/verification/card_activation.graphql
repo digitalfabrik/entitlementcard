@@ -1,0 +1,6 @@
+mutation ActivateCard($project: String!, $card: CardGenerationModelInput!, $overwrite: Boolean!) {
+    activateCard(project: $project, card:$card, overwrite: $overwrite) {
+        activationState,
+        totpSecret
+    }
+}

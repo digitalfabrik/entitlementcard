@@ -45,7 +45,7 @@
                 "flutter",
                 "run",
                 "--dart-define=environment=${input:runEnvironment}",
-                "--flavor=${input:Flavor}"
+                "--flavor=${input:flavor}"
             ],
             "problemMatcher": "$dart-build_runner"
         },

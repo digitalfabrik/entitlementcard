@@ -97,13 +97,13 @@ export class CardBlueprint {
     // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
     // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be? -> 160bit)
     // https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation (How to generate a secret? -> Random)
-    const totpSecret = new Uint8Array(TOTP_SECRET_LENGTH)
-    crypto.getRandomValues(totpSecret)
+    const activationSecret = new Uint8Array(TOTP_SECRET_LENGTH)
+    crypto.getRandomValues(activationSecret)
 
     return new DynamicActivationCode({
       info: this.generateCardInfo(),
       pepper: pepper,
-      totpSecret: totpSecret,
+      activationSecret: activationSecret,
     })
   }
 

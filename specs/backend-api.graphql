@@ -61,6 +61,11 @@ type ApplicationView {
   regionId: Int!
 }
 
+type CardActivationResultModel {
+  activationState: ActivationState!
+  totpSecret: String
+}
+
 type Category {
   id: Int!
   name: String!
@@ -79,6 +84,8 @@ type Coordinates {
 }
 
 type Mutation {
+  "Activate a digital EAK"
+  activateCard(card: CardGenerationModelInput!, overwrite: Boolean!, project: String!): CardActivationResultModel!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new application for an EAK"
@@ -159,6 +166,12 @@ type Region {
 
 type SignInPayload {
   token: String!
+}
+
+enum ActivationState {
+  did_not_overwrite_existing
+  failed
+  success
 }
 
 enum ApplicationType {
@@ -272,11 +285,11 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CardGenerationModelInput {
+  activationSecretBase64: String
   cardExpirationDay: Long
   cardInfoHashBase64: String!
   codeType: CodeType!
   regionId: Int!
-  totpSecretBase64: String
 }
 
 input CardVerificationModelInput {

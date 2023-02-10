@@ -1,41 +1,28 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:crypto/crypto.dart';
-import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
 import 'package:protobuf/protobuf.dart';
 
-class QrCodeUtils {
-  const QrCodeUtils();
-
-  Uint8List createDynamicVerificationQrCodeData(DynamicActivationCode activationCode, int otpCode) {
-    return QrCode(
-      dynamicVerificationCode: DynamicVerificationCode(
-        info: activationCode.info,
-        pepper: activationCode.pepper,
-        otp: otpCode,
-      ),
-    ).writeToBuffer();
-  }
-
-  String hashCardInfo(CardInfo cardInfo, List<int> pepper) {
+extension Hashing on GeneratedMessage {
+  String hash(List<int> pepper) {
     final hasher = Hmac(sha256, pepper);
-    final byteList = _cardInfoToBinary(cardInfo);
+    final byteList = _toBinary();
     final result = hasher.convert(byteList);
     return const Base64Encoder().convert(result.bytes);
   }
 
-  List<int> _cardInfoToBinary(CardInfo cardInfo) {
-    final json = messageToJsonObject(cardInfo);
+  List<int> _toBinary() {
+    final json = messageToJsonObject();
     final canonicalizedJsonString = JsonCanonicalizer().canonicalize(json);
     return utf8.encode(canonicalizedJsonString);
   }
 
-  Map<String, dynamic> messageToJsonObject(GeneratedMessage message) {
-    if (message.unknownFields.isNotEmpty) throw ArgumentError("Unknown field");
+  Map<String, dynamic> messageToJsonObject() {
+    if (unknownFields.isNotEmpty) throw ArgumentError("Unknown field");
     final map = HashMap<String, dynamic>();
-    for (final field in message.info_.fieldInfo.values) {
+    for (final field in info_.fieldInfo.values) {
       if (field.isRepeated) {
         throw ArgumentError("Repeated fields are currently not supported.");
       } else if (field.isMapField) {
@@ -47,7 +34,7 @@ class QrCodeUtils {
       // However, for the Flutter frontend, this is not critical, as we do not generate hashes based on (in this case)
       // faulty protobuf definitions and store them in the DB.
 
-      final dynamic value = message.getFieldOrNull(field.tagNumber);
+      final dynamic value = getFieldOrNull(field.tagNumber);
       if (value == null) {
         continue;
       } else if (value is String) {
@@ -57,7 +44,7 @@ class QrCodeUtils {
       } else if (value is ProtobufEnum) {
         map[field.tagNumber.toString()] = value.value.toString();
       } else if (value is GeneratedMessage) {
-        map[field.tagNumber.toString()] = messageToJsonObject(value);
+        map[field.tagNumber.toString()] = value.messageToJsonObject();
       } else {
         throw ArgumentError("Could not detect type of field.");
       }

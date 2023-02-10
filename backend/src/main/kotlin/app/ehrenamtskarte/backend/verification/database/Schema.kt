@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.or
 
 const val CARD_INFO_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
-const val ACTIVATION_SECRET_LENGTH = 20
 
 enum class CodeType {
     static,
@@ -22,7 +21,7 @@ enum class CodeType {
 }
 
 object Cards : IntIdTable() {
-    val activationSecret = binary("activationSecret", ACTIVATION_SECRET_LENGTH).nullable()
+    val activationSecret = binary("activationSecret", TOTP_SECRET_LENGTH).nullable()
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH).nullable()
     // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
@@ -36,8 +35,8 @@ object Cards : IntIdTable() {
 
     init {
         check("CodeTypeConstraint") {
-            ((totpSecret eq null) and (codeType eq CodeType.static)) or
-                ((totpSecret neq null) and (codeType eq CodeType.dynamic))
+            ((activationSecret eq null) and (totpSecret eq null) and (codeType eq CodeType.static)) or
+                ((activationSecret neq null) and (codeType eq CodeType.dynamic))
         }
     }
 }
