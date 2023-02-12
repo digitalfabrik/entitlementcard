@@ -1,6 +1,6 @@
 import { AnyMessage, Message } from '@bufbuild/protobuf'
 import { CardInfo } from '../generated/card_pb'
-import canonicalize from 'canonicalize'
+import serializeToCanonicalJson from '../util/serializeToCanonicalJson'
 
 function messageHasUnknownFields(message: AnyMessage): boolean {
   return message.getType().runtime.bin.listUnknownFields(message).length > 0
@@ -78,7 +78,7 @@ export function messageToJsonObject(message: AnyMessage): { [key in string]: any
 
 const cardInfoToBinary = (cardInfo: CardInfo) => {
   const object = messageToJsonObject(cardInfo)
-  const canonicalJsonString = canonicalize(object)
+  const canonicalJsonString = serializeToCanonicalJson(object)
   // canonicalJsonString is a (UTF-16) JS string that (except for the encoding) follows RFC 8785.
   return new TextEncoder().encode(canonicalJsonString)
 }
