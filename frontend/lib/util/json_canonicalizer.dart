@@ -3,6 +3,10 @@ import 'dart:convert';
 /// Adjusted from https://github.com/aps-lab/jcs_dart/blob/master/lib/src/jcs_dart_base.dart
 /// Under Apache 2.0 License
 class JsonCanonicalizer {
+  /// Returns a serialization of the passed object according to RFC 8785 JSON Canonicalization Scheme (JCS).
+  ///
+  /// Modifications compared to https://github.com/aps-lab/jcs_dart/blob/master/lib/src/jcs_dart_base.dart:
+  /// 1) Throw, if we cannot serialize the object (instead of returning an empty string).
   String canonicalize(Object? jsonObject) {
     final stringBuffer = StringBuffer();
     _serialize(jsonObject, stringBuffer);
@@ -44,6 +48,8 @@ class JsonCanonicalizer {
         _serialize(jsonObject[element], stringBuffer);
       }
       stringBuffer.write('}');
+    } else {
+      throw ArgumentError("Could not serialize value '$jsonObject'!");
     }
   }
 }
