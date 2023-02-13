@@ -57,7 +57,7 @@ class AcceptingStoreQueryService {
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresByIdInProject"))
     @GraphQLDescription("Returns list of all accepting stores queried by ids in the eak bayern project.")
-    fun physicalStoresById(ids: List<Int>) = physicalStoresByIdInProject(DEFAULT_PROJECT, ids)
+    fun physicalStoresById(params: List<Int>) = physicalStoresByIdInProject(DEFAULT_PROJECT, params)
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("searchAcceptingStoresInProject"))
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds in the eak bayern project.")

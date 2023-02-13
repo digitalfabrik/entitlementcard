@@ -37,5 +37,5 @@ class RegionsQueryService {
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsByIdInProject"))
     @GraphQLDescription("Returns regions queried by ids in the eak bayern project.")
-    fun regionsById(ids: List<Int>) = regionsByIdInProject(DEFAULT_PROJECT, ids)
+    fun regionsById(params: List<Int>) = regionsByIdInProject(DEFAULT_PROJECT, params)
 }
