@@ -82,7 +82,7 @@ class VerificationQrScannerPage extends StatelessWidget {
           "Der eingescannte Code konnte vom Server nicht verifiziert werden!",
         );
       } else {
-        await _onSuccess(context, cardInfo);
+        await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
       }
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
@@ -144,9 +144,13 @@ class VerificationQrScannerPage extends StatelessWidget {
     await ConnectionFailedDialog.show(context, message);
   }
 
-  Future<void> _onSuccess(BuildContext context, CardInfo cardInfo) async {
+  Future<void> _onSuccess(BuildContext context, CardInfo cardInfo, bool hasStaticVerificationCode) async {
     _closeWaitingDialog(context);
-    await PositiveVerificationResultDialog.show(context, cardInfo);
+    await PositiveVerificationResultDialog.show(
+      context: context,
+      cardInfo: cardInfo,
+      hasStaticVerificationCode: hasStaticVerificationCode,
+    );
   }
 
   void _openWaitingDialog(BuildContext context) {
