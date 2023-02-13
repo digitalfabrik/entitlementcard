@@ -4,7 +4,8 @@
 CREATE OR REPLACE FUNCTION physical_stores(z integer, x integer, y integer, query_params json) RETURNS bytea AS
 $$
 DECLARE
-    project_id text = (query_params->>'project_id')::text;
+    -- DEPRECATED: Fallback only used in old ehrenamtskarten app, released January, 2021
+    project_id text = CASE WHEN query_params::jsonb ? 'project_id' THEN (query_params->>'project_id')::text ELSE 'bayern.ehrenamtskarte.app' END;
 BEGIN
 
     IF ((query_params->>'clustered')::boolean) THEN
@@ -12,6 +13,20 @@ BEGIN
     ELSE
         RETURN physical_stores_points(z, x, y, project_id);
     END IF;
+END
+$$ LANGUAGE plpgsql IMMUTABLE
+                    STRICT
+                    PARALLEL SAFE;
+
+
+-- DEPRECATED: Only used in old ehrenamtskarten app, released January, 2021
+CREATE OR REPLACE FUNCTION physical_stores_clustered(z integer, x integer, y integer, query_params json) RETURNS bytea AS
+$$
+DECLARE
+    -- DEPRECATED: Fallback only used in old ehrenamtskarten app, released January, 2021
+    project_id text = CASE WHEN query_params::jsonb ? 'project_id' THEN (query_params->>'project_id')::text ELSE 'bayern.ehrenamtskarte.app' END;
+BEGIN
+    RETURN physical_stores_clusters(z, x, y, project_id);
 END
 $$ LANGUAGE plpgsql IMMUTABLE
                     STRICT
