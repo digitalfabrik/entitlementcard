@@ -23,4 +23,8 @@ class CardQueryService {
         }
         return false
     }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("verifyCardInProject"))
+    @GraphQLDescription("Returns whether there is a card with that hash registered for that this TOTP is currently valid")
+    fun verifyCard(card: CardVerificationModel): Boolean = verifyCardInProject(DEFAULT_PROJECT, card)
 }

@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
@@ -49,6 +50,18 @@ class AcceptingStoreQueryService {
             AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
         }
     }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresInProject"))
+    @GraphQLDescription("Return list of all accepting stores in the eak bayern project.")
+    fun physicalStores(): List<PhysicalStore> = physicalStoresInProject(DEFAULT_PROJECT)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresByIdInProject"))
+    @GraphQLDescription("Returns list of all accepting stores queried by ids in the eak bayern project.")
+    fun physicalStoresById(ids: List<Int>) = physicalStoresByIdInProject(DEFAULT_PROJECT, ids)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("searchAcceptingStoresInProject"))
+    @GraphQLDescription("Search for accepting stores using searchText and categoryIds in the eak bayern project.")
+    fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = searchAcceptingStoresInProject(DEFAULT_PROJECT, params)
 }
 
 data class SearchParams(
