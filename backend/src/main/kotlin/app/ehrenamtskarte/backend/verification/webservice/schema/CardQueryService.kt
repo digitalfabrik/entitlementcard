@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
-import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
