@@ -13,16 +13,25 @@ function hasProp<K extends PropertyKey>(data: object, prop: K): data is Record<K
  * Under Apache 2.0 License
  *
  * Modifications:
- * 1) Throw, if undefined is passed to the function (instead of returning undefined).
- * 2) Throw, if an item of an array is undefined or if it is a Symbol (instead of serializing null).
- * 3) Throw, if the value of an object is undefined or if it is a Symbol (instead of skipping the entry).
+ * 1) Throw, if a non JSON serializable object is passed to the function (instead of returning undefined).
+ *    Especially, in the case of NaN or infinite number values.
  */
 function serializeToCanonicalJson(object: unknown): string {
-  if (typeof object === 'undefined') {
-    throw Error('Invalid argument undefined passed to serializeToCanonicalJson')
+  if (object === undefined) {
+    throw Error('Invalid argument undefined passed to serializeToCanonicalJson.')
   }
-  if (object === null || typeof object !== 'object') {
+  if (object === null || ['string', 'boolean', 'bigint'].includes(typeof object)) {
     return JSON.stringify(object)
+  }
+  if (typeof object === 'number') {
+    // Throw, if number is NaN or infinite.
+    if (!isFinite(object)) {
+      throw Error(`Number with value ${object} cannot be passed to serializeToCanonicalJson.`)
+    }
+    return JSON.stringify(object)
+  }
+  if (typeof object !== 'object') {
+    throw Error(`Invalid argument of type ${typeof object} passed to serializeToCanonicalJson.`)
   }
 
   if (hasProp(object, 'toJSON') && object.toJSON instanceof Function) {
@@ -32,9 +41,6 @@ function serializeToCanonicalJson(object: unknown): string {
   if (Array.isArray(object)) {
     const values = object.reduce((acc, value, index) => {
       const comma = index === 0 ? '' : ','
-      if (value === undefined || typeof value === 'symbol') {
-        throw Error(`Cannot serialize value ${String(value)}.`)
-      }
       return `${acc}${comma}${serializeToCanonicalJson(value)}`
     }, '')
     return `[${values}]`
@@ -44,9 +50,6 @@ function serializeToCanonicalJson(object: unknown): string {
     .sort()
     .reduce((acc, key) => {
       const value = (object as Record<PropertyKey, unknown>)[key]
-      if (value === undefined || typeof value === 'symbol') {
-        throw Error(`Cannot serialize value ${String(value)}.`)
-      }
       const comma = acc.length === 0 ? '' : ','
       return `${acc}${comma}${serializeToCanonicalJson(key)}:${serializeToCanonicalJson(value)}`
     }, '')
