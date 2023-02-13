@@ -7,9 +7,9 @@ import {
   CodeType,
   Region,
 } from '../generated/graphql'
-import hashCardInfo from './hash'
+import hashCardInfo from './hashCardInfo'
 import { ApolloClient } from '@apollo/client'
-import uint8ArrayToBase64 from '../util/uint8ArrayToBase64'
+import { uint8ArrayToBase64 } from '../util/base64'
 
 export async function activateCard<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
@@ -17,7 +17,7 @@ export async function activateCard<T extends DynamicActivationCode | StaticVerif
   region: Region,
   codeType: T extends DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
 ) {
-  const cardInfoHash = await hashCardInfo(activationCode.pepper, activationCode.info!)
+  const cardInfoHash = await hashCardInfo(activationCode.info!, activationCode.pepper)
   const expirationDay = activationCode.info!.expirationDay
   const totpSecret =
     activationCode instanceof DynamicActivationCode ? uint8ArrayToBase64(activationCode.totpSecret) : null
