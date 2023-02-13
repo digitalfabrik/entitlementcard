@@ -121,16 +121,26 @@ type Query {
   getUsersInProject(project: String!): [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Return list of all accepting stores in the eak bayern project."
+  physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
+  "Returns list of all accepting stores queried by ids in the eak bayern project."
+  physicalStoresById(ids: [Int!]!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
+  "Return list of all regions in the eak bayern project."
+  regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
+  "Returns regions queried by ids in the eak bayern project."
+  regionsById(ids: [Int!]!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
+  "Search for accepting stores using searchText and categoryIds in the eak bayern project."
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"

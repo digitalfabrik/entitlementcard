@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -29,4 +30,12 @@ class RegionsQueryService {
 
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))
+    @GraphQLDescription("Return list of all regions in the eak bayern project.")
+    fun regions(): List<Region> = regionsInProject(DEFAULT_PROJECT)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsByIdInProject"))
+    @GraphQLDescription("Returns regions queried by ids in the eak bayern project.")
+    fun regionsById(ids: List<Int>) = regionsByIdInProject(DEFAULT_PROJECT, ids)
 }
