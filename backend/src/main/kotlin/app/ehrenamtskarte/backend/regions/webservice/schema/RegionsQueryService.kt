@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -37,5 +38,5 @@ class RegionsQueryService {
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsByIdInProject"))
     @GraphQLDescription("Returns regions queried by ids in the eak bayern project.")
-    fun regionsById(params: List<Int>) = regionsByIdInProject(DEFAULT_PROJECT, params)
+    fun regionsById(params: IdsParams) = regionsByIdInProject(DEFAULT_PROJECT, params.ids)
 }

@@ -124,7 +124,7 @@ type Query {
   "Return list of all accepting stores in the eak bayern project."
   physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
   "Returns list of all accepting stores queried by ids in the eak bayern project."
-  physicalStoresById(params: [Int!]!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
@@ -134,7 +134,7 @@ type Query {
   "Return list of all regions in the eak bayern project."
   regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
   "Returns regions queried by ids in the eak bayern project."
-  regionsById(params: [Int!]!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
+  regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Return list of all regions in the given project."
@@ -325,6 +325,10 @@ input GoldenCardWorkAtDepartmentEntitlementInput {
 
 input GoldenCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input IdsParamsInput {
+  ids: [Int!]!
 }
 
 input OrganizationContactInput {
