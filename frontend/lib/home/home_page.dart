@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
@@ -27,6 +28,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    final List<AppFlow> additionalTabs = buildConfig.featureFlags.verification
+        ? [
+            AppFlow(
+              const IdentificationPage(title: "Ausweisen"),
+              Icons.remove_red_eye_outlined,
+              "Ausweisen",
+              GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
+            )
+          ]
+        : [];
     appFlows = [
       AppFlow(
         MapPage(
@@ -43,12 +54,7 @@ class _HomePageState extends State<HomePage> {
         "Suche",
         GlobalKey<NavigatorState>(debugLabel: "Search tab key"),
       ),
-      AppFlow(
-        const IdentificationPage(title: "Ausweisen"),
-        Icons.remove_red_eye_outlined,
-        "Ausweisen",
-        GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
-      ),
+      ...additionalTabs,
       AppFlow(const AboutPage(), Icons.info_outline, "Über", GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
   }
