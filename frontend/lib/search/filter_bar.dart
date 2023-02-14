@@ -1,18 +1,21 @@
 import 'package:collection/collection.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
-
-import '../category_assets.dart';
-import 'filter_bar_button.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
-  const FilterBar({Key? key, required this.onCategoryPress}) : super(key: key);
+
+  const FilterBar({super.key, required this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {
     final sortedCategories = [...categoryAssets];
-    sortedCategories.removeLast();
+    sortedCategories.removeWhere((category) => category.id == 9);
     sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
+    final filteredCategories = sortedCategories.where((element) => buildConfig.categories.contains(element.id));
+
     return SliverToBoxAdapter(
       child: Column(
         children: [
@@ -32,7 +35,7 @@ class FilterBar extends StatelessWidget {
                   alignment: WrapAlignment.spaceEvenly,
                   runSpacing: 8,
                   spacing: 4,
-                  children: sortedCategories
+                  children: filteredCategories
                       .mapIndexed(
                         (index, category) => FilterBarButton(
                           key: ValueKey(category.id),

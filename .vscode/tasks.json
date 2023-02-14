@@ -1,0 +1,205 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Import data",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "run",
+                "--args",
+                "import"
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Run Backend",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend",
+                "env": {
+                    "JWT_SECRET": "Hello World!"
+                }
+            },
+            "args": [
+                "run",
+                "--args",
+                "execute"
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Run frontend",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "run",
+                "--dart-define=environment=${input:runEnvironment}",
+                "--flavor=${input:Flavor}"
+            ],
+            "problemMatcher": "$dart-build_runner"
+        },
+        {
+            "label": "Create project admin (env:local+buildConfig:bayern)",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "args": [
+                "run",
+                "--args=\"create-admin bayern.ehrenamtskarte.app PROJECT_ADMIN admin@bayern.ehrenamtskarte.app Administrator!\""
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Create region admin (env:local+buildConfig:bayern)",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "args": [
+                "run",
+                "--args=\"create-admin bayern.ehrenamtskarte.app REGION_ADMIN region-admin@bayern.ehrenamtskarte.app Administrator! 1\""
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Create region admin (env:local+buildConfig:nuernberg)",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "args": [
+                "run",
+                "--args=\"create-admin nuernberg.sozialpass.app REGION_ADMIN region-admin@nuernberg.sozialpass.app Administrator! 93\""
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Create region manager (env:local+buildConfig:bayern)",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "args": [
+                "run",
+                "--args=\"create-admin bayern.ehrenamtskarte.app REGION_MANAGER region-manager@bayern.ehrenamtskarte.app Administrator! 1\""
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Generate React GraphQL Client",
+            "type": "shell",
+            "command": "npm",
+            "options": {
+                "cwd": "${workspaceFolder}/administration"
+            },
+            "args": [
+                "run",
+                "generate-graphql"
+            ],
+            "problemMatcher": "$node-sass"
+        },
+        {
+            "label": "Export GraphQL",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "args": [
+                "run",
+                "--args=\"graphql-export ../specs/backend-api.graphql\""
+            ],
+            "problemMatcher": "$gradle"
+        },
+        {
+            "label": "Format frontend",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "format",
+                "-l",
+                "120",
+                "."
+            ],
+            "problemMatcher": "$dart-build_runner"
+        },
+        {
+            "label": "Set build config",
+            "type": "shell",
+            "command": "fvm",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "args": [
+                "flutter",
+                "pub",
+                "run",
+                "build_runner",
+                "build",
+                "--define",
+                "\"df_build_config=name=${input:buildConfig}\""
+            ],
+            "problemMatcher": "$dart-build_runner"
+        },
+        {
+            "label": "Format backend",
+            "type": "shell",
+            "command": "${workspaceFolder}/backend/gradlew",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "args": [
+                "ktlintformat"
+            ],
+            "problemMatcher": "$gradle"
+        },
+    ],
+    "inputs": [
+        {
+            "id": "runEnvironment",
+            "description": "One of local or showcase",
+            "default": "local",
+            "type": "pickString",
+            "options": ["local", "showcase"]
+        },
+        {
+            "id": "flavor",
+            "description": "The flavor of the app",
+            "default": "Bayern",
+            "type": "pickString",
+            "options": ["Bayern", "Nuernberg"]
+        },
+        {
+            "id": "buildConfig",
+            "description": "The buildConfig used to build the frontend",
+            "default": "bayern",
+            "type": "pickString",
+            "options": ["bayern", "bayern-floss", "nuernberg"]
+        }
+    ]
+}

@@ -3,23 +3,23 @@ schema {
   mutation: Mutation
 }
 
+"Marks the field, argument, input field or enum value as deprecated"
+directive @deprecated(
+    "The reason for the deprecation"
+    reason: String = "No longer supported"
+  ) on FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION
+
 "Directs the executor to include this field or fragment only when the `if` argument is true"
 directive @include(
     "Included when true."
     if: Boolean!
   ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
-"Directs the executor to skip this field or fragment when the `if`'argument is true."
+"Directs the executor to skip this field or fragment when the `if` argument is true."
 directive @skip(
     "Skipped when true."
     if: Boolean!
   ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-"Marks the field or enum value as deprecated"
-directive @deprecated(
-    "The reason for the deprecation"
-    reason: String = "No longer supported"
-  ) on FIELD_DEFINITION | ENUM_VALUE
 
 "Exposes a URL that specifies the behaviour of this scalar."
 directive @specifiedBy(
@@ -49,6 +49,9 @@ type Address {
 type Administrator {
   email: String!
   id: Int!
+  region: Region
+  regionId: Int
+  role: Role!
 }
 
 type ApplicationView {
@@ -76,16 +79,28 @@ type Coordinates {
 }
 
 type Mutation {
-  "Stores a new blue digital EAK"
-  addBlueEakApplication(application: BlueCardApplicationInput!, regionId: Int!): Boolean!
   "Stores a new digital EAK"
   addCard(card: CardGenerationModelInput!): Boolean!
-  "Stores a new golden digital EAK"
-  addGoldenEakApplication(application: GoldenEakCardApplicationInput!, regionId: Int!): Boolean!
+  "Stores a new application for an EAK"
+  addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
+  "Changes an administrator's password"
+  changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
+  "Creates a new administrator"
+  createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Deletes an existing administrator"
+  deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
+  "Edits an existing administrator"
+  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  "Reset the administrator's password"
+  resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
+  "Sends a mail that allows the administrator to reset their password."
+  sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
-  signIn(authData: AuthDataInput!): SignInPayload!
+  signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates the data privacy policy of a region"
+  updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
 }
 
 type PhysicalStore {
@@ -102,35 +117,48 @@ type Query {
   categories: [Category!]!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
-  "Return list of all accepting stores."
-  physicalStores: [PhysicalStore!]!
-  "Returns list of all accepting stores queried by ids."
-  physicalStoresById(params: IdsParamsInput!): [PhysicalStore!]!
-  "Return list of all regions."
-  regions: [Region!]!
-  "Returns regions queried by ids."
-  regionsById(params: IdsParamsInput!): [Region!]!
-  "Search for accepting stores using searchText and categoryIds."
-  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
-  "Returns whether there is a card with that hash registered for that this TOTP is currently valid"
-  verifyCard(card: CardVerificationModelInput!): Boolean!
+  "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
+  getUsersInProject(project: String!): [Administrator!]!
+  "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
+  getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Return list of all accepting stores in the eak bayern project."
+  physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
+  "Returns list of all accepting stores queried by ids in the eak bayern project."
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
+  "Returns list of all accepting stores in the given project queried by ids."
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
+  "Returns list of all accepting stores in the given project."
+  physicalStoresInProject(project: String!): [PhysicalStore!]!
+  "Returns region data for specific region."
+  regionByRegionId(regionId: Int!): Region!
+  "Return list of all regions in the eak bayern project."
+  regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
+  "Returns regions queried by ids in the eak bayern project."
+  regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
+  "Returns regions queried by ids in the given project."
+  regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Return list of all regions in the given project."
+  regionsInProject(project: String!): [Region!]!
+  "Search for accepting stores using searchText and categoryIds in the eak bayern project."
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
+  "Search for accepting stores in the given project using searchText and categoryIds."
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"
+  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
+  "Returns the requesting administrator as retrieved from his JWT token."
+  whoAmI(project: String!): Administrator!
 }
 
 type Region {
+  dataPrivacyPolicy: String
   id: Int!
   name: String!
   prefix: String!
-  regionIdentifier: String!
+  regionIdentifier: String
 }
 
 type SignInPayload {
   token: String!
-  user: Administrator!
-}
-
-enum AmountOfWorkUnit {
-  HOURS_PER_WEEK
-  HOURS_PER_YEAR
 }
 
 enum ApplicationType {
@@ -138,35 +166,69 @@ enum ApplicationType {
   RENEWAL_APPLICATION
 }
 
+enum BavariaCardType {
+  BLUE
+  GOLDEN
+}
+
 enum BlueCardEntitlementType {
   JULEICA
-  SERVICE
-  STANDARD
+  MILITARY_RESERVE
+  VOLUNTEER_SERVICE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
+}
+
+enum CodeType {
+  dynamic
+  static
 }
 
 enum GoldenCardEntitlementType {
-  HONOR_BY_MINISTER_PRESIDENT
-  SERVICE_AWARD
-  STANDARD
+  HONORED_BY_MINISTER_PRESIDENT
+  MILITARY_RESERVE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
 }
 
-"Long type"
+enum Role {
+  NO_RIGHTS
+  PROJECT_ADMIN
+  REGION_ADMIN
+  REGION_MANAGER
+}
+
+"A 64-bit signed integer"
 scalar Long
 
 "A file part in a multipart request"
 scalar Upload
 
 input AddressInput {
-  addressSupplement: String
-  houseNumber: String!
-  location: String!
-  postalCode: String!
-  street: String!
+  addressSupplement: ShortTextInput
+  houseNumber: ShortTextInput!
+  location: ShortTextInput!
+  postalCode: ShortTextInput!
+  street: ShortTextInput!
+}
+
+"""
+An application for the Bayerische Ehrenamtskarte.
+The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+"""
+input ApplicationInput {
+  applicationType: ApplicationType!
+  blueCardEntitlement: BlueCardEntitlementInput
+  cardType: BavariaCardType!
+  givenInformationIsCorrectAndComplete: Boolean!
+  goldenCardEntitlement: GoldenCardEntitlementInput
+  hasAcceptedPrivacyPolicy: Boolean!
+  personalData: PersonalDataInput!
+  wantsDigitalCard: Boolean!
 }
 
 input AttachmentInput {
   data: Upload!
-  fileName: String!
 }
 
 input AuthDataInput {
@@ -174,45 +236,53 @@ input AuthDataInput {
   password: String!
 }
 
-input BlueCardApplicationInput {
-  applicationType: ApplicationType!
-  entitlement: BlueCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
-}
-
-"""
-Entitlement for blue EAK.
-    Either entitlementType == Juleica and juleicaNumber, juleicaExpirationDate, copyOfJuleica are not null
-    or     entitlementType == Service and serviceActivity, serviceCertification are not null
-    or     entitlementType == Standard and workAtOrganizations is not null
-"""
+"Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
 input BlueCardEntitlementInput {
-  copyOfJuleica: AttachmentInput
   entitlementType: BlueCardEntitlementType!
-  juleicaExpirationDate: String
-  juleicaNumber: String
-  serviceEntitlement: BlueCardServiceEntitlementInput
-  workAtOrganizations: [WorkAtOrganizationInput!]
+  juleicaEntitlement: BlueCardJuleicaEntitlementInput
+  militaryReserveEntitlement: BlueCardMilitaryReserveEntitlementInput
+  volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlementInput
+  workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlementInput
 }
 
-input BlueCardServiceEntitlementInput {
-  certificate: AttachmentInput
+input BlueCardJuleicaEntitlementInput {
+  copyOfJuleica: AttachmentInput!
+  juleicaExpirationDate: DateInput!
+  juleicaNumber: ShortTextInput!
+}
+
+input BlueCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input BlueCardVolunteerServiceEntitlementInput {
+  certificate: AttachmentInput!
+  programName: ShortTextInput!
+}
+
+input BlueCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput!
   organization: OrganizationInput!
-  responsibility: String
+  responsibility: ShortTextInput!
+}
+
+input BlueCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input CardGenerationModelInput {
-  cardDetailsHashBase64: String!
-  expirationDate: Long!
+  cardExpirationDay: Long
+  cardInfoHashBase64: String!
+  codeType: CodeType!
   regionId: Int!
-  totpSecretBase64: String!
+  totpSecretBase64: String
 }
 
 input CardVerificationModelInput {
-  cardDetailsHashBase64: String!
-  totp: Int!
+  cardInfoHashBase64: String!
+  codeType: CodeType!
+  totp: Int
 }
 
 input CoordinatesInput {
@@ -220,17 +290,41 @@ input CoordinatesInput {
   lng: Float!
 }
 
-input GoldenCardEntitlementInput {
-  certificate: AttachmentInput
-  goldenEntitlementType: GoldenCardEntitlementType!
-  workAtOrganizations: [WorkAtOrganizationInput!]
+"A local date in the format yyyy-MM-dd"
+input DateInput {
+  date: String!
 }
 
-input GoldenEakCardApplicationInput {
-  entitlement: GoldenCardEntitlementInput!
-  givenInformationIsCorrectAndComplete: Boolean!
-  hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
+"An email address with at most 300 characters"
+input EmailInput {
+  email: String!
+}
+
+"Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
+input GoldenCardEntitlementInput {
+  entitlementType: GoldenCardEntitlementType!
+  honoredByMinisterPresidentEntitlement: GoldenCardHonoredByMinisterPresidentEntitlementInput
+  militaryReserveEntitlement: GoldenCardMilitaryReserveEntitlementInput
+  workAtDepartmentEntitlement: GoldenCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: GoldenCardWorkAtOrganizationsEntitlementInput
+}
+
+input GoldenCardHonoredByMinisterPresidentEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput!
+  organization: OrganizationInput!
+  responsibility: ShortTextInput!
+}
+
+input GoldenCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input IdsParamsInput {
@@ -238,31 +332,26 @@ input IdsParamsInput {
 }
 
 input OrganizationContactInput {
-  email: String!
+  email: EmailInput!
   hasGivenPermission: Boolean!
-  name: String!
-  telephone: String!
+  name: ShortTextInput!
+  telephone: ShortTextInput!
 }
 
 input OrganizationInput {
   address: AddressInput!
-  category: String!
+  category: ShortTextInput!
   contact: OrganizationContactInput!
-  name: String!
-  "Link zu Website oder Satzung"
-  website: String
+  name: ShortTextInput!
 }
 
 input PersonalDataInput {
   address: AddressInput!
-  dateOfBirth: String!
-  emailAddress: String!
-  forenames: String!
-  gender: String
-  nationality: String
-  surname: String!
-  telephone: String
-  title: String
+  dateOfBirth: DateInput!
+  emailAddress: EmailInput!
+  forenames: ShortTextInput!
+  surname: ShortTextInput!
+  telephone: ShortTextInput!
 }
 
 input SearchParamsInput {
@@ -273,12 +362,16 @@ input SearchParamsInput {
   searchText: String
 }
 
+"A String wrapper that expects a non-empty string with at most 300 characters"
+input ShortTextInput {
+  shortText: String!
+}
+
 input WorkAtOrganizationInput {
   amountOfWork: Float!
-  amountOfWorkUnit: AmountOfWorkUnit!
-  certificate: AttachmentInput
+  certificate: AttachmentInput!
   organization: OrganizationInput!
   payment: Boolean!
-  responsibility: String!
-  workSinceDate: String!
+  responsibility: ShortTextInput!
+  workSinceDate: DateInput!
 }

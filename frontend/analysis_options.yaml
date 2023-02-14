@@ -6,7 +6,9 @@ analyzer:
   exclude:
     - build/**
     - lib/graphql/graphql_api*.dart
-    - lib/identification/protobuf/*.dart
+    - lib/build_config/build_config.dart
+    - lib/proto/*.dart
+    - pubs/**
   errors:
     # Analysis options
     missing_required_param: warning

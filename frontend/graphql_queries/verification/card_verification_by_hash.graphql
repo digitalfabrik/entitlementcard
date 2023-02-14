@@ -1,3 +1,3 @@
-query CardVerificationByHash($card: CardVerificationModelInput!) {
-    cardValid: verifyCard(card: $card)
+query CardVerificationByHash($project: String!, $card: CardVerificationModelInput!) {
+    cardValid: verifyCardInProject(project: $project, card: $card)
 }

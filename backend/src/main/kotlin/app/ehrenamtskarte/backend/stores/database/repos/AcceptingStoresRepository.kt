@@ -1,24 +1,40 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ComparisonOp
+import org.jetbrains.exposed.sql.CustomFunction
+import org.jetbrains.exposed.sql.DoubleColumnType
+import org.jetbrains.exposed.sql.Expression
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.OrOp
+import org.jetbrains.exposed.sql.SizedIterable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.doubleParam
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.stringParam
 import org.postgis.Point
 
 object AcceptingStoresRepository {
 
-    fun findByIds(ids: List<Int>) =
-        AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
-
+    fun findByIdsInProject(project: String, ids: List<Int>): List<AcceptingStoreEntity> {
+        val query = (Projects innerJoin AcceptingStores)
+            .slice(AcceptingStores.columns)
+            .select { Projects.project eq project and (AcceptingStores.id inList ids) }
+        return AcceptingStoreEntity.wrapRows(query).toList()
+    }
 
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
     // TODO Probably not relevant right now
     fun findBySearch(
+        project: String,
         searchText: String?,
         categoryIds: List<Int>?,
         coordinates: Coordinates?,
@@ -26,15 +42,16 @@ object AcceptingStoresRepository {
         offset: Long
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
-            if (categoryIds == null)
+            if (categoryIds == null) {
                 Op.TRUE
-            else
+            } else {
                 Op.build { AcceptingStores.categoryId inList categoryIds }
+            }
 
         val textMatcher =
-            if (searchText == null)
+            if (searchText == null) {
                 Op.TRUE
-            else
+            } else {
                 OrOp(
                     listOf(
                         AcceptingStores.name ilike "%$searchText%",
@@ -44,24 +61,28 @@ object AcceptingStoresRepository {
                         Addresses.street ilike "%$searchText%"
                     )
                 )
+            }
 
-        val sortExpression = if (coordinates != null)
+        val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
                 MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
             )
-        else
+        } else {
             AcceptingStores.name
+        }
 
-        return (AcceptingStores leftJoin PhysicalStores leftJoin Addresses)
+        return (Projects innerJoin (AcceptingStores leftJoin PhysicalStores leftJoin Addresses))
             .slice(AcceptingStores.columns)
-            .select(categoryMatcher and textMatcher)
+            .select(Projects.project eq project and categoryMatcher and textMatcher)
             .orderBy(sortExpression)
             .let { AcceptingStoreEntity.wrapRows(it) }
             .limit(limit, offset)
     }
-}
 
+    fun findByIds(ids: List<Int>) =
+        AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
+}
 
 // Postgres' "like" operation uses case sensitive comparison by default.
 // Postgres has a builtin "ilike" operation which does case sensitive comparison.
@@ -75,4 +96,3 @@ class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
 
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
     CustomFunction<Point>("ST_MakePoint", DoubleColumnType(), expr1, expr2)
-

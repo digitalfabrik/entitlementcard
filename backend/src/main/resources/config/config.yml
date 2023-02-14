@@ -1,0 +1,51 @@
+production: false
+postgres:
+  url: jdbc:postgresql://localhost:5432/ehrenamtskarte
+  user: postgres
+  password: postgres
+map:
+  # baseUrl: https://tiles.entitlementcard.app/rpc/physical_stores/{z}/{x}/{y}.pbf
+  baseUrl: http://localhost:5002/rpc/physical_stores/{z}/{x}/{y}.pbf
+geocoding:
+  enabled: false
+  host: nominatim.maps.tuerantuer.org
+csvWriter:
+  enabled: false
+server:
+  host: 0.0.0.0
+  port: 8000
+  dataDirectory: ./data
+projects:
+  - id: bayern.ehrenamtskarte.app
+    importUrl: https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/akzeptanzstellen/app-daten.xml
+    pipelineName: EhrenamtskarteBayern
+    administrationBaseUrl: https://bayern.ehrenamtskarte.app
+    administrationName: Ehrenamtskarte-Bayern-Verwaltung
+    timezone: "Europe/Berlin"
+    smtp:
+      host: mail.ehrenamtskarte.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: nuernberg.sozialpass.app
+    importUrl: https://data.entitlementcard.app/nuernberg-akzeptanzstellen.csv
+    pipelineName: SozialpassNuernberg
+    administrationBaseUrl: https://nuernberg.sozialpass.app
+    administrationName: Nürnberg-Pass-Verwaltung
+    timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: showcase.entitlementcard.app
+    importUrl: https://example.com
+    pipelineName: BerechtigungskarteShowcase
+    administrationBaseUrl: https://showcase.entitlementcard.app
+    administrationName: Showcase-Entitlementcard-Verwaltung
+    timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG

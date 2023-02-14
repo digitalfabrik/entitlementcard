@@ -7,9 +7,10 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:label="Ehrenamt"
-        android:icon="@mipmap/ic_launcher">
-        <activity
+        android:label="@string/BUILD_CONFIG_APP_NAME"
+        android:icon="@mipmap/${icon}"
+        android:roundIcon="@mipmap/${icon}_round">
+        <activity android:exported="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -39,7 +40,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <!-- Remove some permissions which are unused right now -->
-    <uses-permission android:name="android.permission.CAMERA" tools:node="remove"/>
+    <!--<uses-permission android:name="android.permission.CAMERA" tools:node="remove"/>-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

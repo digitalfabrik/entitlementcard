@@ -1,27 +1,26 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
-import com.expediagroup.graphql.annotations.GraphQLDescription
 
 data class Organization(
-    val name: String,
+    val name: ShortTextInput,
     val address: Address,
-    @GraphQLDescription("Link zu Website oder Satzung")
-    val website: String?,
     val contact: OrganizationContact,
-    val category: String
+    val category: ShortTextInput
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "organization", mapOf("de" to "Organisation/Verein"), Type.Array, listOfNotNull(
-                JsonField("name", mapOf("de" to "Name"), Type.String, name),
+            "organization",
+            mapOf("de" to "Angaben zur Organisation"),
+            Type.Array,
+            listOfNotNull(
+                name.toJsonField("name", mapOf("de" to "Name")),
                 address.toJsonField(),
-                if (website != null)
-                    JsonField("website", mapOf("de" to "Link zu Website oder Satzung"), Type.String, website) else null,
-                contact.toJsonField(),
-                JsonField("category", mapOf("de" to "Kategorie"), Type.String, category)
+                category.toJsonField("category", mapOf("de" to "Einsatzgebiet")),
+                contact.toJsonField()
             )
         )
     }

@@ -1,28 +1,42 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
+import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
-import app.ehrenamtskarte.backend.regions.webservice.dataloader.REGION_LOADER_NAME
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
-import com.expediagroup.graphql.annotations.GraphQLDescription
-import graphql.schema.DataFetchingEnvironment
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.concurrent.CompletableFuture
 
 @Suppress("unused")
 class RegionsQueryService {
 
-    @GraphQLDescription("Return list of all regions.")
-    fun regions(): List<Region> = transaction {
-        RegionsRepository.findAll().map {
-            Region(it.id.value, it.prefix, it.name, it.regionIdentifier)
+    @GraphQLDescription("Return list of all regions in the given project.")
+    fun regionsInProject(project: String): List<Region> = transaction {
+        RegionsRepository.findAllInProject(project).map {
+            Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
         }
     }
 
-    @GraphQLDescription("Returns regions queried by ids.")
-    fun regionsById(
-        params: IdsParams,
-        environment: DataFetchingEnvironment
-    ): CompletableFuture<List<Region>> =
-        environment.getDataLoader<Int, Region>(REGION_LOADER_NAME).loadMany(params.ids)
+    @GraphQLDescription("Returns regions queried by ids in the given project.")
+    fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> = transaction {
+        RegionsRepository.findByIdsInProject(project, ids).map {
+            if (it == null) null
+            else Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
+        }
+    }
+
+    @GraphQLDescription("Returns region data for specific region.")
+    fun regionByRegionId(regionId: Int): Region = transaction {
+        val regionEntity = RegionsRepository.findRegionById(regionId)
+
+        Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
+    }
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))
+    @GraphQLDescription("Return list of all regions in the eak bayern project.")
+    fun regions(): List<Region> = regionsInProject(DEFAULT_PROJECT)
+
+    @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsByIdInProject"))
+    @GraphQLDescription("Returns regions queried by ids in the eak bayern project.")
+    fun regionsById(params: IdsParams) = regionsByIdInProject(DEFAULT_PROJECT, params.ids)
 }

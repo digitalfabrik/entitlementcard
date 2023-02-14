@@ -1,7 +1,6 @@
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:tinycolor2/tinycolor2.dart';
-
-import '../category_assets.dart';
 
 Color getReadableOnColor(Color backgroundColor) {
   return backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
@@ -15,7 +14,12 @@ Color? getDarkenedColorForCategory(int categoryId) {
   final categoryColor = categoryAssets[categoryId].color;
   Color? categoryColorDark;
   if (categoryColor != null) {
-    categoryColorDark = TinyColor(categoryColor).darken().color;
+    categoryColorDark = TinyColor.fromColor(categoryColor).darken().color;
   }
   return categoryColorDark;
+}
+
+Color getColorFromHex(String hexColor) {
+  final hexCode = hexColor.replaceAll('#', '');
+  return Color(int.parse('FF$hexCode', radix: 16));
 }

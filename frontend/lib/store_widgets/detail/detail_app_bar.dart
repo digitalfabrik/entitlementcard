@@ -1,35 +1,17 @@
-import 'package:ehrenamtskarte/widgets/navigation_bars.dart';
+import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../category_assets.dart';
-import '../../graphql/graphql_api.dart';
-import '../../graphql/graphql_api.graphql.dart';
-import '../../util/color_utils.dart';
-
 const double bottomSize = 100;
-
-class DetailAppBarBackButton extends StatelessWidget {
-  final Color textColor;
-
-  const DetailAppBarBackButton({Key? key, required this.textColor}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        Icons.arrow_back_ios,
-        color: textColor,
-      ),
-      onPressed: () => Navigator.of(context).maybePop(),
-    );
-  }
-}
 
 class DetailAppBarHeaderImage extends StatelessWidget {
   final int? categoryId;
 
-  const DetailAppBarHeaderImage({Key? key, this.categoryId}) : super(key: key);
+  const DetailAppBarHeaderImage({super.key, this.categoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +41,14 @@ class DetailAppBarBottom extends StatelessWidget {
   final Color? accentColor;
 
   const DetailAppBarBottom({
-    Key? key,
+    super.key,
     this.title,
     this.categoryId,
     this.categoryName,
     this.accentColor,
     required this.textColorGrey,
     required this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +79,7 @@ class DetailAppBarBottom extends StatelessWidget {
 class DetailAppBar extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore matchingStore;
 
-  const DetailAppBar(this.matchingStore, {Key? key}) : super(key: key);
+  const DetailAppBar(this.matchingStore, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +93,7 @@ class DetailAppBar extends StatelessWidget {
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 
-    return NavigationBarWithBottom(
+    return AppBarWithBottom(
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
       bottom: PreferredSize(

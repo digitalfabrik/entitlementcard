@@ -1,28 +1,29 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
+import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 
 data class Address(
-    val street: String,
-    val houseNumber: String,
-    val addressSupplement: String?,
-    val postalCode: String,
-    val location: String
+    val street: ShortTextInput,
+    val houseNumber: ShortTextInput,
+    val addressSupplement: ShortTextInput?,
+    val postalCode: ShortTextInput,
+    val location: ShortTextInput
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
-            "address", mapOf("de" to "Adresse"), Type.Array, listOfNotNull(
-                JsonField("street", mapOf("de" to "Straße"), Type.String, street),
-                JsonField("houseNumber", mapOf("de" to "Hausnummer"), Type.String, houseNumber),
-                if (addressSupplement != null)
-                    JsonField("addressSupplement", mapOf("de" to "Adresszusatz"), Type.String, addressSupplement)
-                else null,
-                JsonField("postalCode", mapOf("de" to "Postleitzahl"), Type.String, postalCode),
-                JsonField("location", mapOf("de" to "Ort"), Type.String, location)
+            "address",
+            mapOf("de" to "Adresse"),
+            Type.Array,
+            listOfNotNull(
+                street.toJsonField("street", mapOf("de" to "Straße")),
+                houseNumber.toJsonField("houseNumber", mapOf("de" to "Hausnummer")),
+                addressSupplement?.toJsonField("addressSupplement", mapOf("de" to "Adresszusatz")),
+                postalCode.toJsonField("postalCode", mapOf("de" to "Postleitzahl")),
+                location.toJsonField("location", mapOf("de" to "Ort"))
             )
         )
     }
-
 }

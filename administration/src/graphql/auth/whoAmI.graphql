@@ -1,0 +1,12 @@
+query whoAmI($project: String!) {
+  me: whoAmI(project: $project) {
+    id
+    email
+    role
+    region {
+      id
+      name
+      prefix
+    }
+  }
+}

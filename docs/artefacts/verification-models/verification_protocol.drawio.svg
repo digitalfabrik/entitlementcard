@@ -955,7 +955,7 @@
         </g>
         <g fill="#000000" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1552-70-460-24-0)" font-size="12px">
             <text x="1553.5" y="82.5">
-                cardDetailsHash: byte[] (SHA256-HMAC of CardDetails for this CardDatabaseModel)
+                cardInfoHash: byte[] (SHA256-HMAC of CardInfo for this CardDatabaseModel)
             </text>
         </g>
         <g fill="#000000" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1552-94-460-26-0)" font-size="12px">
@@ -1030,7 +1030,7 @@
         <path d="M 1591 237 L 1788 237" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
         <g fill="#000000" font-family="Helvetica" font-weight="bold" pointer-events="none" text-anchor="middle" font-size="12px">
             <text x="1689" y="228.5">
-                CardDetails
+                CardInfo
             </text>
         </g>
         <g fill="#000000" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1595-242-189-26-0)" font-size="12px">

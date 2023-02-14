@@ -1,16 +1,15 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/entry_widget.dart';
+import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/slide_object.dart';
-
-import 'location_request_button.dart';
 
 typedef OnFinishedCallback = void Function();
 
 class IntroScreen extends StatefulWidget {
   final OnFinishedCallback? onFinishedCallback;
 
-  const IntroScreen({Key? key, this.onFinishedCallback}) : super(key: key);
+  const IntroScreen({super.key, this.onFinishedCallback});
 
   @override
   IntroScreenState createState() => IntroScreenState();
@@ -24,10 +23,9 @@ class IntroScreenState extends State<IntroScreen> {
     slides.clear();
     slides.add(
       Slide(
-        title: "Willkommen!",
-        description: "Vielen Dank, dass Sie sich die App zur "
-            "Bayerischen Ehrenamtskarte heruntergeladen haben!",
-        pathImage: "assets/icon/icon_foreground.png",
+        title: buildConfig.introSlide1.title,
+        description: buildConfig.introSlide1.description,
+        pathImage: buildConfig.introSlide1.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
@@ -36,11 +34,9 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Wo kann ich meine Ehrenamtskarte nutzen?",
-        description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen"
-            " finden. Tippen Sie auf einen Standort, um mehr Informationen "
-            "sehen zu können.",
-        pathImage: "assets/intro_slides/map_zoom.jpeg",
+        title: buildConfig.introSlide2.title,
+        description: buildConfig.introSlide2.description,
+        pathImage: buildConfig.introSlide2.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
@@ -49,19 +45,27 @@ class IntroScreenState extends State<IntroScreen> {
     );
     slides.add(
       Slide(
-        title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
+        title: buildConfig.introSlide3.title,
+        description: buildConfig.introSlide3.description,
+        pathImage: buildConfig.introSlide3.imagePath,
         backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
         maxLineTitle: 3,
         styleTitle: theme.textTheme.headline5,
-        pathImage: "assets/intro_slides/search_with_location.png",
+        styleDescription: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2),
+      ),
+    );
+    slides.add(
+      Slide(
+        title: buildConfig.introSlide4.title,
+        backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.backgroundColor,
+        maxLineTitle: 3,
+        styleTitle: theme.textTheme.headline5,
+        pathImage: buildConfig.introSlide4.imagePath,
         widgetDescription: Center(
           child: Column(
             children: [
               Text(
-                "Wir können Ihren Standort auf der Karte anzeigen"
-                " und Akzeptanzstellen in Ihrer Umgebung anzeigen. "
-                "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre "
-                "Zustimmung. Ihr Standort wird nicht gespeichert.",
+                buildConfig.introSlide4.description,
                 style: theme.textTheme.bodyText1?.apply(fontSizeFactor: 1.2),
                 textAlign: TextAlign.center,
                 maxLines: 100,

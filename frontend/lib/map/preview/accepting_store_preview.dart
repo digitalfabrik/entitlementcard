@@ -1,19 +1,23 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-import '../../graphql/graphql_api.dart';
-import 'accepting_store_preview_card.dart';
-import 'models.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
   final int acceptingStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {Key? key}) : super(key: key);
+  const AcceptingStorePreview(this.acceptingStoreId, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final projectId = Configuration.of(context).projectId;
     final query = AcceptingStoreSummaryByIdQuery(
-      variables: AcceptingStoreSummaryByIdArguments(ids: IdsParamsInput(ids: [acceptingStoreId])),
+      variables: AcceptingStoreSummaryByIdArguments(
+        project: projectId,
+        ids: [acceptingStoreId],
+      ),
     );
     return Query(
       options: QueryOptions(document: query.document, variables: query.getVariablesMap()),
@@ -31,13 +35,17 @@ class AcceptingStorePreview extends StatelessWidget {
             return const AcceptingStorePreviewCard(isLoading: true);
           }
 
-          final stores = query.parse(fetchedData).physicalStoresById;
-          if (stores.isEmpty) {
-            throw Exception("ID not found");
+          final stores = query.parse(fetchedData).physicalStoresByIdInProject;
+          if (stores.length != 1) {
+            throw Exception("Server unexpectedly returned an array of the wrong size.");
+          }
+          final store = stores[0];
+          if (store == null) {
+            throw Exception("ID not found.");
           }
           return AcceptingStorePreviewCard(
             isLoading: false,
-            acceptingStore: _convertToAcceptingStoreSummary(stores[0]),
+            acceptingStore: _convertToAcceptingStoreSummary(store),
           );
         } on Exception catch (e) {
           debugPrint(e.toString());

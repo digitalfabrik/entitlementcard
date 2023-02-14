@@ -1,0 +1,3 @@
+mutation deleteApplication($applicationId: Int!) {
+  deleted: deleteApplication(applicationId: $applicationId)
+}

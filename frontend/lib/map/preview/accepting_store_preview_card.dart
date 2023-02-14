@@ -1,14 +1,13 @@
 import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
-
-import '../../store_widgets/accepting_store_summary.dart';
-import '../../widgets/error_message.dart';
-import 'models.dart';
 
 class AcceptingStorePreviewError extends StatelessWidget {
   final void Function()? refetch;
 
-  const AcceptingStorePreviewError({Key? key, this.refetch}) : super(key: key);
+  const AcceptingStorePreviewError({super.key, this.refetch});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   final void Function()? refetch;
   final AcceptingStoreSummaryModel? acceptingStore;
 
-  const AcceptingStorePreviewCard({Key? key, required this.isLoading, this.acceptingStore, this.refetch})
-      : super(key: key);
+  const AcceptingStorePreviewCard({super.key, required this.isLoading, this.acceptingStore, this.refetch});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +35,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: fabPadding.toDouble()),
       child: Card(
+        clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),

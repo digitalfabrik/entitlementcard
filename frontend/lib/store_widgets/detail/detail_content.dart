@@ -1,14 +1,15 @@
+import 'dart:io' show Platform;
+
+import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
+import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
+import 'package:ehrenamtskarte/util/color_utils.dart';
+import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../graphql/graphql_api.graphql.dart';
-import '../../home/home_page.dart';
-import '../../map/map_page.dart';
-import '../../util/color_utils.dart';
-import '../../util/sanitize_contact_details.dart';
-import 'contact_info_row.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
@@ -18,11 +19,11 @@ class DetailContent extends StatelessWidget {
 
   const DetailContent(
     this.acceptingStore, {
-    Key? key,
+    super.key,
     this.hideShowOnMapButton = false,
     this.accentColor,
     this.readableOnAccentColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class DetailContent extends StatelessWidget {
                   Icons.location_on,
                   addressString,
                   "Adresse",
-                  onTap: () => MapsLauncher.launchQuery(mapQueryString),
+                  onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
                 ),
@@ -68,7 +69,8 @@ class DetailContent extends StatelessWidget {
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
                     "Website",
-                    onTap: () => launch(prepareWebsiteUrlForLaunch(website)),
+                    onTap: () =>
+                        launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -77,7 +79,8 @@ class DetailContent extends StatelessWidget {
                     Icons.phone,
                     telephone,
                     "Telefon",
-                    onTap: () => launch("tel:${sanitizePhoneNumber(telephone)}"),
+                    onTap: () =>
+                        launchUrlString("tel:${sanitizePhoneNumber(telephone)}", mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -86,7 +89,7 @@ class DetailContent extends StatelessWidget {
                     Icons.alternate_email,
                     email,
                     "E-Mail",
-                    onTap: () => launch("mailto:${email.trim()}"),
+                    onTap: () => launchUrlString("mailto:${email.trim()}", mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -112,6 +115,16 @@ class DetailContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _launchMap(String query) async {
+    if (Platform.isAndroid) {
+      await launchUrl(Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query}));
+    } else if (Platform.isIOS) {
+      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}));
+    } else {
+      await launchUrl(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': query}));
+    }
   }
 
   void _showOnMap(BuildContext context) {

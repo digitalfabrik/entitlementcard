@@ -1,0 +1,7 @@
+query getApplications($regionId: Int!) {
+  applications: getApplications(regionId: $regionId) {
+    id
+    createdDate
+    jsonValue
+  }
+}

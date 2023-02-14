@@ -1,109 +1,129 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:flutter/material.dart';
 
 class NoCardView extends StatelessWidget {
   final VoidCallback startVerification;
-  final VoidCallback startActivateQrCode;
-  final VoidCallback startEakApplication;
+  final VoidCallback startActivation;
+  final VoidCallback startApplication;
 
   const NoCardView({
-    Key? key,
+    super.key,
     required this.startVerification,
-    required this.startActivateQrCode,
-    required this.startEakApplication,
-  }) : super(key: key);
+    required this.startActivation,
+    required this.startApplication,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-
-    Widget wrapIntrinsic(Widget widget) => isLandscape ? IntrinsicHeight(child: widget) : IntrinsicWidth(child: widget);
-
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Icon(Icons.contact_support_outlined, size: 100, color: Theme.of(context).colorScheme.secondary),
+    final localization = buildConfig.localization.identification.noCardView;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewportConstraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: viewportConstraints.maxHeight),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _TapableCardWithArea(
+                  onTap: startApplication,
+                  title: localization.applyTitle,
+                  description: localization.applyDescription,
+                  icon: Icons.assignment,
+                ),
+                _TapableCardWithArea(
+                  onTap: startActivation,
+                  title: localization.activateTitle,
+                  description: localization.activateDescription,
+                  icon: Icons.add_card,
+                ),
+                _TapableCardWithArea(
+                  onTap: startVerification,
+                  title: localization.verifyTitle,
+                  description: localization.verifyDescription,
+                  icon: Icons.verified,
+                ),
+              ].wrapWithSpacers(height: 24),
             ),
-            const SizedBox(height: 12),
-            wrapIntrinsic(
-              Flex(
-                direction: isLandscape ? Axis.horizontal : Axis.vertical,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Sie sind ehrenamtlich engagiert …",
-                          style: Theme.of(context).textTheme.headline6,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24, width: 24),
-                        const Text(
-                          "… und haben bereits einen Aktivierungscode"
-                          " für die digitale Ehrenamtskarte?",
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: OutlinedButton(
-                            onPressed: startActivateQrCode,
-                            child: const Text("Jetzt Aktivierungscode einscannen"),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "… haben aber noch keine"
-                          " Bayerische Ehrenamtskarte?",
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: OutlinedButton(
-                            onPressed: startEakApplication,
-                            child: const Text("Jetzt Ehrenamtskarte beantragen"),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  if (isLandscape) const VerticalDivider(width: 80) else const Divider(height: 30),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Sie arbeiten bei einer Akzeptanzstelle …",
-                          style: Theme.of(context).textTheme.headline6,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                        const Text(
-                          "… und möchten eine Ihnen gezeigte digitale"
-                          " Ehrenamtskarte auf Echtheit prüfen?",
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: OutlinedButton(
-                            onPressed: startVerification,
-                            child: const Text("Jetzt Ehrenamtskarte verifizieren"),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class _TapableCardWithArea extends StatelessWidget {
+  final VoidCallback onTap;
+  final String title;
+  final String description;
+  final IconData icon;
+
+  const _TapableCardWithArea({
+    required this.onTap,
+    required this.title,
+    required this.description,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      clipBehavior: Clip.hardEdge,
+      color: theme.colorScheme.surfaceVariant,
+      elevation: 0,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: theme.colorScheme.background,
+                    child: Icon(icon, size: 24, color: theme.colorScheme.primary),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.headline6,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                description,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.arrow_forward, color: theme.colorScheme.primary, size: 25),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+extension _WrapWithSpacers on List<Widget> {
+  List<Widget> wrapWithSpacers({double? height, double? width}) {
+    final List<Widget> newList = [];
+    final spacer = SizedBox(width: width, height: height);
+    newList.add(spacer);
+    for (final Widget widget in this) {
+      newList.add(widget);
+      newList.add(spacer);
+    }
+    return newList;
   }
 }

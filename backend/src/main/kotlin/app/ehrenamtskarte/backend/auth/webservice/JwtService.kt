@@ -7,21 +7,19 @@ import io.javalin.http.Context
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.*
-import kotlin.NoSuchElementException
+import java.util.Date
 
 object JwtService {
     private val secret by lazy {
         System.getenv("JWT_SECRET")
             ?: readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
-        ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
+            ?: throw NoSuchElementException("Environment variable JWT_SECRET not set")
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
 
     fun createToken(administrator: Administrator): String =
         JWT.create()
-            .withClaim(JwtPayload::email.name, administrator.email)
-            .withClaim(JwtPayload::userId.name, administrator.id)
+            .withClaim(JwtPayload::adminId.name, administrator.id)
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
@@ -34,20 +32,16 @@ object JwtService {
     }
 
     private fun verifyToken(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
-        JwtPayload(it[JwtPayload::email.name]!!.asString(), it[JwtPayload::userId.name]!!.asInt())
+        JwtPayload(it[JwtPayload::adminId.name]!!.asInt())
     }
 
     fun verifyRequest(context: Context): JwtPayload? {
         val header = context.header("Authorization") ?: return null
         val split = header.split(" ")
-        val jwtToken =  if (split.size != 2 || split[0] != "Bearer") null else split[1]
+        val jwtToken = (if (split.size != 2 || split[0] != "Bearer") null else split[1]) ?: return null
 
-        if (jwtToken === null) {
-            return null
-        }
-        
         return verifyToken(jwtToken)
     }
 }
 
-data class JwtPayload(val email: String, val userId: Int)
+data class JwtPayload(val adminId: Int)

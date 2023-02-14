@@ -1,47 +1,71 @@
-import {createContext, ReactNode, useState} from "react"
-import {
-    signIn_signInPayload as SignInPayload,
-    signIn_signInPayload_user as Administrator
-} from "./graphql/auth/__generated__/signIn";
+import { createContext, ReactNode, useMemo, useState } from 'react'
+import { SignInPayload } from './generated/graphql'
 
-export interface AuthContextData {
-    token: string,
-    expiry: Date,
-    administrator: Administrator,
-    password: string
+export interface TokenPayload {
+  token: string
+  expiry: Date
+  adminId: number
 }
 
-const noop = () => {
+const noop = () => {}
+
+export const AuthContext = createContext<{
+  data: TokenPayload | null
+  signIn: (payload: SignInPayload) => void
+  signOut: () => void
+}>({ data: null, signIn: noop, signOut: noop })
+
+const LOCAL_STORAGE_KEY = 'auth-token'
+
+const loadToken = () => window.localStorage.getItem(LOCAL_STORAGE_KEY)
+const storeToken = (token: string) => window.localStorage.setItem(LOCAL_STORAGE_KEY, token)
+const removeToken = () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+
+const extractTokenPayload = (token: string): TokenPayload => {
+  const payload: { exp: number; adminId: number } = JSON.parse(atob(token.split('.')[1]))
+  const expiry = new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
+  return { token, expiry, adminId: payload.adminId }
 }
 
-export const AuthContext =
-    createContext<[
-        AuthContextData | null,
-        (payload: SignInPayload, password: string) => void,
-        () => void]>
-    ([null, noop, noop])
+const loadTokenPayload = (): TokenPayload | null => {
+  const token = loadToken()
+  if (token === null) {
+    return null
+  }
 
-const getExpiryFromToken = (token: string) => {
-    const payload: { exp: number } = JSON.parse(atob(token.split('.')[1]))
-    return new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
+  try {
+    const { expiry, adminId } = extractTokenPayload(token)
+    if (expiry < new Date()) {
+      removeToken()
+      return null
+    }
+    return { token, expiry, adminId }
+  } catch (e) {
+    console.error(e)
+    removeToken()
+  }
+  return null
 }
 
-const convertToAuthContextData: (payload: SignInPayload, password: string) => AuthContextData = (payload, password) => ({
-    token: payload.token,
-    administrator: payload.user,
-    expiry: getExpiryFromToken(payload.token),
-    password
-})
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [tokenPayload, setTokenPayload] = useState<TokenPayload | null>(loadTokenPayload())
+  const contextValue = useMemo(
+    () => ({
+      data: tokenPayload,
+      signIn: (payload: SignInPayload) => {
+        const tokenPayload = extractTokenPayload(payload.token)
+        storeToken(payload.token)
+        setTokenPayload(tokenPayload)
+      },
+      signOut: () => {
+        removeToken()
+        setTokenPayload(null)
+      },
+    }),
+    [tokenPayload]
+  )
 
-const AuthProvider = ({children}: { children: ReactNode }) => {
-    const [authContextData, setAuthContextData] = useState<AuthContextData | null>(null)
-    const onLogIn = (payload: SignInPayload, password: string) =>
-        setAuthContextData(convertToAuthContextData(payload, password))
-    const onLogOut = () => setAuthContextData(null)
-
-    return <AuthContext.Provider value={[authContextData, onLogIn, onLogOut]}>
-        {children}
-    </AuthContext.Provider>
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
 }
 
 export default AuthProvider

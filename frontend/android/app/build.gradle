@@ -1,3 +1,6 @@
+import kotlin.Pair
+import com.android.build.api.dsl.ApplicationProductFlavor
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,45 +24,68 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def dartEnvironmentVariables = [
-        ANDROID_FLOSS: false,
-];
-
-if (project.hasProperty('dart-defines')) {
-    dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
-            .split(',')
-            .collectEntries { entry ->
-                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
-                [(pair.first()): pair.last()]
-            }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: "buildConfigs.gradle"
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+ext.setupApplication = { ApplicationProductFlavor flavor, buildConfigName ->
+    var buildConfig = createBuildConfig(buildConfigName)
+    flavor.applicationId buildConfig.applicationId
+    flavor.manifestPlaceholders = [*:determineIcon(buildConfig)]
+
+    setupResourceValues(buildConfigName, {
+        String type, String name, String value -> flavor.resValue(type, name, value)
+    })
+}
+
+ext.setupVariant = { variant, buildConfigName ->
+    var buildConfig = createBuildConfig(buildConfigName)
+    if (buildConfig.featureFlags.excludeX86) {
+        // Verify this using:
+        // unzip -l frontend/build/app/outputs/apk/Bayern/debug/app-Bayern-debug.apk | grep x86
+        // unzip -l frontend/build/app/outputs/apk/Nuernberg/debug/app-Nuernberg-debug.apk | grep x86
+        variant.packaging.jniLibs.excludes.add('**/lib/x86**')
+    }
+    if (buildConfig.excludeLocationPlayServices) {
+        // Verify this by opening the APKs in Android Studio/IntelliJ. Then select all the .dex files.
+        // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
+        variant.compileConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
+        variant.runtimeConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+}
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
+    flavorDimensions "dummy"
+    productFlavors {
+        Bayern { flavor ->
+            flavor.getIsDefault().set(true)
+            setupApplication(flavor, "bayern")
+        }
+        Nuernberg { flavor ->
+            setupApplication(flavor, "nuernberg")
+        }
+        BayernFloss { flavor ->
+            setupApplication(flavor, "bayern-floss")
+        }
     }
 
-    defaultConfig {
-        if (dartEnvironmentVariables.ANDROID_FLOSS) {
-            applicationId "app.ehrenamtskarte.bayern.floss"
-        } else {
-            applicationId "de.nrw.it.giz.ehrensache.bayern.android"
-        }
-        minSdkVersion 20
-        targetSdkVersion 30
-        multiDexEnabled true
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     signingConfigs {
@@ -81,7 +107,7 @@ android {
                 signingConfig signingConfigs.debug
             }
 
-            
+
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
             // The workaround is from https://github.com/flutter/flutter/issues/58479.
@@ -92,26 +118,30 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        // If we create a FLOSS build, then we want to exclude GMS
-        if (dartEnvironmentVariables.ANDROID_FLOSS) {
-            variant.getCompileConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
-            variant.getRuntimeConfiguration().exclude group: 'com.google.android.gms', module: 'play-services-location'
-        }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+        multiDexEnabled true
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
     }
-    
-    packagingOptions {
-        
-        // Exclude x86 because the app size in F-Droid is limited to 30MB
-        if (dartEnvironmentVariables.EXCLUDE_X86) {
-            exclude 'lib/x86**'
-        }
+
+    androidComponents {
+        onVariants(selector().withFlavor(new Pair("dummy", "Bayern")), { variant ->
+            setupVariant(variant, "bayern")
+        })
+        onVariants(selector().withFlavor(new Pair("dummy", "Nuernberg")), { variant ->
+            setupVariant(variant, "nuernberg")
+        })
+        onVariants(selector().withFlavor(new Pair("dummy", "BayernFloss")), { variant ->
+            setupVariant(variant, "bayern-floss")
+        })
     }
 }
 
 flutter {
     source '../..'
-    target 'lib/main_prod.dart'
+    target 'lib/main.dart'
 }
 
 dependencies {

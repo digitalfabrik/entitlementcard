@@ -1,0 +1,3 @@
+mutation updateDataPolicy($regionId: Int!, $text: String!) {
+  dataPolicy: updateDataPrivacy(regionId: $regionId, dataPrivacyText: $text)
+}

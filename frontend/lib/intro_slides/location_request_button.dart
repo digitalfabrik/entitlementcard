@@ -1,10 +1,10 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../location/determine_position.dart';
 
 class LocationRequestButton extends StatefulWidget {
-  const LocationRequestButton({Key? key}) : super(key: key);
+  const LocationRequestButton({super.key});
 
   @override
   State<StatefulWidget> createState() => _LocationRequestButtonState();
@@ -17,7 +17,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final settings = context.read<SettingsModel>();
 
       checkAndRequestLocationPermission(

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$USER_HOME$/.pub-cache/git/flutter-maplibre-gl-a133625e088220d7e1f29f3f33f022b8bdad03f4/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/connectivity_plus-2.3.6+1/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-6.0.0/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/geolocator_android-4.1.0/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/package_info_plus-1.4.3+1/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.20/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/qr_code_scanner-1.0.1/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences_android-2.0.12/android" />
+    <file type="web" url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.17/android" />
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

@@ -1,67 +1,75 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/identification/activation_code_model.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
+import 'package:ehrenamtskarte/identification/no_card_view.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
-import '../routing.dart';
-import '../verification/verification_workflow.dart';
-import 'card_detail_view/card_detail_view.dart';
-import 'card_details_model.dart';
-import 'identification_qr_scanner_page.dart';
-import 'no_card_view.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatelessWidget {
   final String title;
 
-  const IdentificationPage({Key? key, required this.title}) : super(key: key);
+  const IdentificationPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return Consumer<CardDetailsModel>(
-      builder: (context, cardDetailsModel, child) {
-        if (!cardDetailsModel.isInitialized) {
+    return Consumer<ActivationCodeModel>(
+      builder: (context, activationCodeModel, child) {
+        if (!activationCodeModel.isInitialized) {
           return Container();
         }
 
-        final cardDetails = cardDetailsModel.cardDetails;
-        if (cardDetails != null) {
+        final activationCode = activationCodeModel.activationCode;
+        if (activationCode != null) {
           return CardDetailView(
-            cardDetails: cardDetails,
-            startActivateEak: () => _showActivateQrCode(context),
-            startEakApplication: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: Text('Not yet implemented.'),
-                ),
-              );
-            },
+            activationCode: activationCode,
             startVerification: () => _showVerificationDialog(context, settings),
+            startActivation: () => _startActivation(context),
+            startApplication: _startApplication,
           );
         }
 
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings),
-          startActivateQrCode: () => _showActivateQrCode(context),
-          startEakApplication: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content: Text('Not yet implemented.'),
-              ),
-            );
-          },
+          startActivation: () => _startActivation(context),
+          startApplication: _startApplication,
         );
       },
     );
   }
 
-  Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
-    await VerificationWorkflow.startWorkflow(context, settings);
+  Future<void> handleDeniedCameraPermission(BuildContext context) async {
+    await QrCodeCameraPermissionDialog.showPermissionDialog(context);
   }
 
-  void _showActivateQrCode(BuildContext context) {
-    Navigator.push(context, AppRoute(builder: (context) => const IdentificationQrScannerPage()));
+  Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
+    if (await Permission.camera.request().isGranted) {
+      await VerificationWorkflow.startWorkflow(context, settings);
+      return;
+    }
+    handleDeniedCameraPermission(context);
+  }
+
+  Future<void> _startActivation(BuildContext context) async {
+    if (await Permission.camera.request().isGranted) {
+      Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
+      return;
+    }
+    handleDeniedCameraPermission(context);
+  }
+
+  Future<bool> _startApplication() {
+    return launchUrlString(
+      buildConfig.applicationUrl,
+      mode: LaunchMode.externalApplication,
+    );
   }
 }

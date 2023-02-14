@@ -1,23 +1,43 @@
 version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
+  browser-tools: circleci/browser-tools@1.4.1
 workflows:
-  default:
+  frontend:
     jobs:
       - check-frontend
       - frontend-android-build:
-          floss: true
-          x86: false
+          name: frontend-android-build-bayern-floss
+          buildConfig: "bayern-floss"
+          flutterFlavor: "BayernFloss"
           requires:
-            - check-frontend      
+            - check-frontend
       - frontend-android-build:
-          floss: false
-          x86: true
+          name: frontend-android-build-bayern
+          buildConfig: "bayern"
+          flutterFlavor: "Bayern"
           requires:
             - check-frontend
       - frontend-ios-build:
+          name: frontend-ios-build-bayern
+          buildConfig: "bayern"
+          flutterFlavor: "Bayern"
           requires:
             - check-frontend
+      - frontend-android-build:
+          name: frontend-android-build-nuernberg
+          buildConfig: "nuernberg"
+          flutterFlavor: "Nuernberg"
+          requires:
+            - check-frontend
+      - frontend-ios-build:
+          name: frontend-ios-build-nuernberg
+          buildConfig: "nuernberg"
+          flutterFlavor: "Nuernberg"
+          requires:
+            - check-frontend
+  backend:
+    jobs:
       - backend-build
       - administration-build
       - martin-build
@@ -31,30 +51,77 @@ workflows:
           requires:
             - martin-build
       - meta-pack
-      - styles-pack
       - deploy:
+          context:
+            - entitlementcard-apt
           requires:
             - backend-pack
             - administration-pack
-            - styles-pack
             - martin-pack
             - meta-pack
           filters:
             branches:
               only:
                 - main
+                - whitelabel
 
 commands:
+  setup-npm-global:
+    steps:
+      - run:
+          name: Setup npm
+          command: |
+            mkdir -p ~/.npm-global
+            npm config set prefix '~/.npm-global'
+            echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
+  install-app-toolbelt:
+    steps:
+      - setup-npm-global
+      - run:
+          name: Install app-toolbelt
+          command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
   install-dart-linux:
     steps:
       - run:
           name: Install Dart
           command: |
-            wget https://storage.googleapis.com/dart-archive/channels/stable/release/2.15.1/linux_packages/dart_2.15.1-1_amd64.deb
-            sudo dpkg -i dart_2.15.1-1_amd64.deb
-  install-fvm-linux:
+            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.18.5/linux_packages/dart_2.18.5-1_amd64.deb
+            sudo dpkg -i dart.deb
+  install-dart-mac:
     steps:
-      - install-dart-linux
+      - run:
+          name: Install Dart
+          command: |
+            brew tap dart-lang/dart
+            brew install dart
+  install-protobuf-linux:
+    steps:
+      - run:
+          name: Install protobuf from GitHub
+          command: |
+            curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
+            unzip protoc*.zip -d $HOME/.local
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Install Flutter plugin
+          # Do not use the dart from fvm here for installing protoc_plugin.
+          # Else we might get a "Can't load Kernel binary: Invalid kernel binary format version" because the dart
+          # versions do not match.
+          command: dart pub global activate protoc_plugin
+  install-protobuf-mac:
+    steps:
+      - run:
+          name: Install protobuf
+          command: |
+            curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+            unzip protoc*.zip -d $HOME/.local
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Install Flutter plugin
+          # Use dart directly here. See comment in install-protobuf-linux
+          command: dart pub global activate protoc_plugin
+  install-fvm:
+    steps:
       - run:
           name: Install FVM
           command: |
@@ -62,73 +129,70 @@ commands:
             echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - fvm-0-{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
-          command: |
-            fvm --verbose install
+          command: fvm install
       - save_cache:
-          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+          key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
           paths:
             - .fvm
             - ~/fvm/
       - run:
-          name: Configure Flutter
-          command: |
-            fvm --verbose flutter config --no-analytics
-  install-fvm-mac:
-    steps:
-      - run:
-          name: Install Standalone FVM (with Dart)
-          command: |
-            brew tap leoafarias/fvm
-            brew install fvm
-      - restore_cache:
-          keys:
-            - flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
-      - run:
-          name: Install Flutter
-          command: |
-            fvm --verbose install
-      - save_cache:
-          key: flutter-3-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
-          paths:
-            - .fvm
-            - ~/fvm/
+          name: Show Flutter version
+          command: fvm flutter --version
       - run:
           name: Configure Flutter
-          command: |
-            fvm --verbose flutter config --no-analytics
+          command: fvm flutter config --no-analytics
 
 jobs:
   check-frontend:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/node:19.1.0-browsers
     resource_class: small
     working_directory: ~/project/frontend
     steps:
       - checkout:
           path: ~/project
-      - install-fvm-linux
+      - browser-tools/install-chrome
+      - install-dart-linux
+      - install-fvm
+      - install-app-toolbelt
+      - install-protobuf-linux
+      - run:
+          name: Install Flutter Packages
+          command: fvm flutter pub get
       - run:
           name: Check Formatting
           command: fvm flutter format -l 120 -o none --set-exit-if-changed .
       - run:
+          name: Build Runner
+          command: |
+            # Statically use "bayern" build config for analyzing here
+            fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+      - run:
           name: Check Analyzer and Linting
-          command: fvm flutter analyze --fatal-infos --fatal-warnings
+          command: |
+            fvm flutter analyze --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
+            fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
+      - run:
+          name: Tests
+          command: |
+            fvm flutter test
+            fvm flutter test pubs/df_build_config
+            fvm flutter test pubs/df_protobuf
 
   frontend-android-build:
     docker:
-      - image: circleci/android:api-30
+      - image: cimg/android:2022.09.2-node
     parameters:
-      floss:
-        description: "Build a floss build"
-        default: false
-        type: boolean     
-      x86:
-        description: "Build for x86 architecture"
-        default: true
-        type: boolean
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
+      flutterFlavor:
+        description: "Flutter Flavor to use"
+        type: string
     environment:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
     resource_class: large
@@ -136,48 +200,49 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - install-fvm-linux
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - install-dart-linux
+      - install-fvm
+      - install-app-toolbelt
+      - install-protobuf-linux
       - run:
           name: Install Flutter Packages
           command: |
             fvm flutter pub get
             fvm flutter precache --android
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
+      - run:
+          name: Build Runner
+          command: |
+            fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
       - run:
           name: Build
           command: |
-            fvm --verbose flutter build apk --release -t lib/main_prod.dart <<# parameters.floss >> --dart-define=ANDROID_FLOSS=true <</ parameters.floss >><<^ parameters.x86 >> --dart-define=EXCLUDE_X86=true <</ parameters.x86 >>
+            fvm flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
       - store_artifacts:
           path: build/app/outputs/flutter-apk/
 
-
-
   frontend-ios-build:
     macos:
-      xcode: 13.2.0
+      xcode: 14.0.0
+    parameters:
+      buildConfig:
+        description: "Name of the build config to use"
+        type: string
+      flutterFlavor:
+        description: "Flutter Flavor to use"
+        type: string
     working_directory: ~/project/frontend
     steps:
       - checkout:
           path: ~/project
-      - install-fvm-mac
-      - restore_cache:
-          keys:
-            - pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
+      - install-dart-mac
+      - install-fvm
+      - install-app-toolbelt
+      - install-protobuf-mac
       - run:
           name: Install Flutter Packages
           command: |
             fvm flutter pub get
             fvm flutter precache --ios
-      - save_cache:
-          key: pub-2-{{ checksum "pubspec.lock" }}-{{ arch }}
-          paths:
-            - .dart_tool
       - run:
           name: Update Pods
           command: |
@@ -185,24 +250,40 @@ jobs:
             pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
             pod install
       - run:
+          name: Build Runner
+          command: |
+            fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+      - run:
           name: Build
           command: |
-            fvm --verbose flutter build ios --no-codesign --release -t lib/main_prod.dart
+            app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
+            fvm flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
 
   backend-build:
     environment:
       _JAVA_OPTIONS: "-Xmx3g"
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker:
-      - image: circleci/openjdk:11.0.3-jdk-stretch
+      - image: cimg/openjdk:17.0.6-node
     working_directory: ~/project/backend
     steps:
       - checkout:
           path: ~/project
+      - run: git submodule sync
+      - run: git submodule update --init
       - restore_cache:
           key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - restore_cache:
           key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+      - run:
+          name: Check that GraphQL scheme is stable
+          command: |
+            ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+            git diff --exit-code
+      - run:
+          name: Test
+          command: |
+            ./gradlew test
       - run: ./gradlew build
       - save_cache:
           paths:
@@ -221,21 +302,32 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:15.8.0
+      - image: cimg/node:19.1.0-browsers
     working_directory: ~/project/administration
     steps:
       - checkout:
           path: ~/project
+      - browser-tools/install-chrome
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - install-dart-linux
+      - install-protobuf-linux
       - run:
           name: Install node dependencies
           command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
       - run: |
           npm run generate-graphql
           npm run generate-protobuf
-          npm run-script build
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm run test
+      - run:
+          name: Build
+          command: npm run build
       - save_cache:
           paths:
             - node_modules
@@ -249,7 +341,7 @@ jobs:
 
   martin-build:
     docker:
-      - image: rust:1.50.0
+      - image: rust:bullseye
     working_directory: ~/martin
     steps:
       - run:
@@ -292,14 +384,14 @@ jobs:
 
   backend-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/backend
     steps:
       - checkout:
           path: ~/project
       - attach_workspace:
           at: /tmp/workspace
-      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "default-jre"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
       - run: |
           mkdir -p /tmp/artifacts/debs
           mv *.deb /tmp/artifacts/debs
@@ -312,7 +404,7 @@ jobs:
 
   administration-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -330,29 +422,9 @@ jobs:
           paths:
             - debs/*.deb
 
-  styles-pack:
-    docker:
-      - image: cimg/base:2020.01
-    working_directory: ~/project/map-tiles/styles
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: "Download legacy styles deb"
-          command: wget https://github.com/digitalfabrik/ehrenamtskarte-maplibre-style/releases/download/before-migration/eak-map-styles_0.4785-1_all.deb
-      - run:
-          name: "Move .deb to artifacts folder"
-          command: |
-            mkdir -p /tmp/artifacts/debs
-            mv *.deb /tmp/artifacts/debs
-      - persist_to_workspace:
-          root: /tmp/artifacts
-          paths:
-            - debs/*.deb
-
   martin-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/map-tiles/martin
     steps:
       - checkout:
@@ -362,6 +434,7 @@ jobs:
       - run:
           name: "Build .deb"
           command: |
+            cp ~/project/docker/martin-config.yaml config.yaml
             cp /tmp/workspace/martin/martin .
             ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
       - run:
@@ -378,12 +451,12 @@ jobs:
 
   meta-pack:
     docker:
-      - image: cimg/base:2020.01
+      - image: debian:11 # We deploy on debian -> pack on debian
     working_directory: ~/project/administration
     steps:
       - checkout:
           path: ~/project
-      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-map-styles, eak-martin"
+      - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
       - run: |
           mkdir -p /tmp/artifacts/debs
           cp *.deb /tmp/artifacts/debs
@@ -396,16 +469,16 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2022.09
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - add_ssh_keys:
           fingerprints:
-            - "5c:8a:70:dc:61:9d:fa:c2:c2:6d:2d:fc:4a:ab:d2:e3"
+            - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
       - run:
           name: "SFTP upload"
           command: |
             echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.ehrenamtskarte.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"

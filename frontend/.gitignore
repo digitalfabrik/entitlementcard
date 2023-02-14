@@ -4,8 +4,6 @@
 .dart_tool/
 .packages
 build/
-# If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
@@ -28,6 +26,13 @@ doc/api/
 
 
 vendor/
-schema.graphql
 .fvm/flutter_sdk
 runConfigurations.xml
+
+# Generated code
+lib/build_config/build_config.dart
+lib/graphql/graphql_api.dart
+lib/graphql/graphql_api.graphql.dart
+lib/graphql/graphql_api.graphql.g.dart
+
+lib/proto

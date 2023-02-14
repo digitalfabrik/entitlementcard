@@ -1,58 +1,85 @@
-import {useMutation} from "@apollo/client";
-import {Button, Classes, Dialog} from "@blueprintjs/core";
-import React, {ReactNode, useEffect, useState} from "react";
-import {AuthContextData} from "./AuthProvider";
-import {SIGN_IN} from "./graphql/auth/mutations";
-import {signIn as SignInCarrier, signIn_signInPayload as SignInPayload} from "./graphql/auth/__generated__/signIn";
-import {AppToaster} from "./components/AppToaster";
+import { Button, Classes, Dialog } from '@blueprintjs/core'
+import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import { TokenPayload } from './AuthProvider'
+import { useAppToaster } from './components/AppToaster'
+import { SignInPayload, useSignInMutation } from './generated/graphql'
+import PasswordInput from './components/PasswordInput'
+import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import { WhoAmIContext } from './WhoAmIProvider'
 
 interface Props {
-    authData: AuthContextData,
-    children: ReactNode,
-    onSignIn: (payload: SignInPayload, password: string) => void,
-    onSignOut: () => void
+  authData: TokenPayload
+  children: ReactNode
+  onSignIn: (payload: SignInPayload) => void
+  onSignOut: () => void
 }
 
-const KeepAliveToken = (props: Props) => {
-    const [timeLeft, setTimeLeft] = useState(Math.round((props.authData.expiry.valueOf() - Date.now()) / 1000))
-    useEffect(() => {
-        setTimeout(() => setTimeLeft(Math.round((props.authData.expiry.valueOf() - Date.now()) / 1000)), 1000)
-    })
+const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
-    const [signIn, mutationState] = useMutation(SIGN_IN, {
-        onCompleted: (payload: SignInCarrier) => props.onSignIn(payload.signInPayload, props.authData.password),
-        onError: () => AppToaster.show({intent: "danger", message: "Etwas ist schief gelaufen."})
-    })
-    const extendLogin = () => signIn({
-        variables: {
-            authData: {
-                email: props.authData.administrator.email,
-                password: props.authData.password
-            }
-        }
-    })
+const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
+  const projectId = useContext(ProjectConfigContext).projectId
+  const email = useContext(WhoAmIContext).me!.email
+  const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
+  useEffect(() => {
+    setSecondsLeft(computeSecondsLeft(authData))
+    const interval = setInterval(() => {
+      const timeLeft = computeSecondsLeft(authData)
+      setSecondsLeft(Math.max(timeLeft, 0))
+      if (timeLeft <= 0) {
+        onSignOut()
+      }
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [authData, onSignOut])
+  const appToaster = useAppToaster()
 
-    return <>
-        {props.children}
-        <Dialog isOpen={timeLeft <= 30} title={"Ihr Login-Zeitraum läuft ab!"} icon={"warning-sign"}
-                isCloseButtonShown={false}>
-            <div className={Classes.DIALOG_BODY}>
-                {
-                    timeLeft >= 0
-                        ? <p>Ihr Login-Zeitraum läuft in {timeLeft} Sekunden ab.</p>
-                        : <p>Ihr Login-Zeitraum ist abgelaufen.</p>
-                }
+  const [password, setPassword] = useState('')
+
+  const [signIn, mutationState] = useSignInMutation({
+    onCompleted: payload => {
+      appToaster?.show({ intent: 'success', message: 'Login-Zeitraum verlängert.' })
+      onSignIn(payload.signInPayload)
+      setPassword('')
+    },
+    onError: () => appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' }),
+  })
+  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
+
+  return (
+    <>
+      {children}
+      <Dialog
+        isOpen={secondsLeft <= 180}
+        title={'Ihr Login-Zeitraum läuft ab!'}
+        icon={'warning-sign'}
+        isCloseButtonShown={false}>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            extendLogin()
+          }}>
+          <div className={Classes.DIALOG_BODY}>
+            <p>Ihr Login-Zeitraum läuft in {secondsLeft} Sekunden ab. Danach werden Sie automatisch ausgeloggt.</p>
+            <p>Geben Sie Ihr Passwort ein, um den Login-Zeitraum zu verlängern.</p>
+            <PasswordInput label='' placeholder={'Passwort'} setValue={setPassword} value={password} />
+          </div>
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button onClick={onSignOut} loading={mutationState.loading}>
+                Ausloggen
+              </Button>
+              <Button
+                intent={'primary'}
+                type='submit'
+                loading={mutationState.loading}
+                text='Login-Zeitraum verlängern'
+              />
             </div>
-            <div className={Classes.DIALOG_FOOTER}>
-                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    <Button onClick={props.onSignOut} loading={mutationState.loading}>Ausloggen</Button>
-                    <Button intent={"primary"} onClick={extendLogin} loading={mutationState.loading}>
-                        Login-Zeitraum verlängern
-                    </Button>
-                </div>
-            </div>
-        </Dialog>
+          </div>
+        </form>
+      </Dialog>
     </>
+  )
 }
 
 export default KeepAliveToken

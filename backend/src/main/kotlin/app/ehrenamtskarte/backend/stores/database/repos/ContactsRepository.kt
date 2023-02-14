@@ -8,5 +8,4 @@ object ContactsRepository {
 
     fun findByIds(ids: List<Int>) =
         ContactEntity.find { Contacts.id inList ids }.sortByKeys({ it.id.value }, ids)
-
 }

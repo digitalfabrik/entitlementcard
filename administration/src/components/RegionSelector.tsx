@@ -1,48 +1,80 @@
-import React, {useContext} from "react";
-import {Button, Menu, MenuItem, Spinner} from "@blueprintjs/core";
-import {RegionContext} from "../RegionProvider";
-import {useQuery} from "@apollo/client";
-import {GET_REGIONS} from "../graphql/regions/queries";
-import {ItemListRenderer, ItemRenderer, Select} from "@blueprintjs/select";
-import {getRegions_regions as Region} from "../graphql/regions/__generated__/getRegions";
+import React, { useContext, useMemo } from 'react'
+import { Button, Menu, Spinner } from '@blueprintjs/core'
+import { Classes, ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
+import { Region, useGetRegionsQuery } from '../generated/graphql'
+import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
 const RegionSelect = Select.ofType<Region>()
 
 const getTitle = (region: Region) => `${region.prefix} ${region.name}`
 
-const renderMenu: ItemListRenderer<Region> = ({items, itemsParentRef, renderItem}) => {
-    const renderedItems = items.map(renderItem).filter(item => item != null);
-    return <Menu ulRef={itemsParentRef} style={{maxHeight: 500, overflow: 'auto'}}>
-        {renderedItems}
+const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filteredItems }) => {
+  const renderedItems = filteredItems.map(renderItem).filter(item => item != null)
+  return (
+    <Menu ulRef={itemsParentRef} style={{ maxHeight: 500, overflow: 'auto' }}>
+      {renderedItems}
     </Menu>
-};
+  )
+}
 
-const itemRenderer: ItemRenderer<Region> = (region, {handleClick, modifiers}) => {
-    return <MenuItem
-        active={modifiers.active}
-        disabled={modifiers.disabled}
-        key={region.id}
-        onClick={handleClick}
-        text={getTitle(region)}
-    />
-};
+const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => {
+  return (
+    <Button
+      style={{ display: 'block' }}
+      fill
+      key={region.id}
+      minimal
+      onClick={handleClick}
+      active={modifiers.active}
+      disabled={modifiers.disabled}>
+      {getTitle(region)}
+    </Button>
+  )
+}
 
-const RegionSelector = () => {
-    const [region, setRegion] = useContext(RegionContext)
-    const {loading, error, data, refetch} = useQuery(GET_REGIONS)
-    if (loading) return <Spinner/>
-    if (error || !data) return <Button icon="repeat" onClick={refetch}/>
-    const regions = data.regions
-    const activeItem = regions.find((other: Region) => region?.id === other.id)
-    return <RegionSelect activeItem={activeItem}
-                         items={regions}
-                         itemRenderer={itemRenderer}
-                         filterable={false}
-                         itemListRenderer={renderMenu}
-                         onItemSelect={setRegion}>
-        <span>Region: <Button text={activeItem ? getTitle(activeItem) : 'Auswählen...'}
-                              rightIcon="double-caret-vertical"/></span>
+const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId: number | null }) => {
+  const projectId = useContext(ProjectConfigContext).projectId
+  const { loading, error, data, refetch } = useGetRegionsQuery({
+    variables: { project: projectId },
+  })
+  const regions = useMemo(() => (data ? [...data.regions].sort((a, b) => a.name.localeCompare(b.name)) : null), [data])
+  if (loading) return <Spinner />
+  if (error || regions === null) return <Button icon='repeat' onClick={() => refetch()} />
+  const activeItem = regions.find((other: Region) => props.selectedId === other.id)
+  return (
+    <RegionSelect
+      activeItem={activeItem}
+      items={regions}
+      itemRenderer={itemRenderer}
+      filterable={true}
+      itemListPredicate={(filter, items) =>
+        items.filter(region => getTitle(region).toLowerCase().includes(filter.toLowerCase()))
+      }
+      fill
+      itemListRenderer={renderMenu}
+      onItemSelect={props.onSelect}>
+      <div style={{ position: 'relative' }}>
+        {/* Make the browser think there is an actual select element to make it validate the form. */}
+        <select
+          style={{ height: '30px', opacity: 0, pointerEvents: 'none', position: 'absolute' }}
+          value={activeItem?.id ?? ''}
+          onChange={() => {}}
+          required
+          tabIndex={-1}>
+          <option value={activeItem?.id ?? ''} disabled>
+            {activeItem ? getTitle(activeItem) : 'Auswählen...'}
+          </option>
+        </select>
+        <Button
+          className={Classes.SELECT}
+          style={{ justifyContent: 'space-between', padding: '0 10px' }}
+          fill
+          rightIcon='double-caret-vertical'>
+          {activeItem ? getTitle(activeItem) : 'Auswählen...'}
+        </Button>
+      </div>
     </RegionSelect>
-};
+  )
+}
 
-export default RegionSelector;
+export default RegionSelector

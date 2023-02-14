@@ -1,58 +1,57 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:flutter/material.dart';
 
 class MoreActionsDialog extends StatelessWidget {
-  final VoidCallback startActivateEak;
+  final VoidCallback startActivation;
   final VoidCallback startVerification;
-  final VoidCallback startEakApplication;
+  final VoidCallback startApplication;
 
   const MoreActionsDialog({
-    Key? key,
-    required this.startActivateEak,
+    super.key,
+    required this.startActivation,
     required this.startVerification,
-    required this.startEakApplication,
-  }) : super(key: key);
+    required this.startApplication,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      contentPadding: const EdgeInsets.only(top: 8),
+    final localization = buildConfig.localization.identification.moreActions;
+    return AlertDialog(
+      contentPadding: const EdgeInsets.only(top: 12),
       title: const Text("Weitere Aktionen"),
-      children: [
-        ListTile(
-          title: const Text("Anderen Aktivierungscode einscannen"),
-          subtitle: const Text("Dadurch wird die bestehende Karte vom Gerät gelöscht."),
-          leading: const Icon(Icons.qr_code_scanner, size: 36),
-          onTap: () {
-            Navigator.pop(context);
-            startActivateEak();
-          },
-        ),
-        ListTile(
-          title: const Text("Weitere Ehrenamtskarte beantragen"),
-          subtitle: const Text("Ihre hinterlegte Karte bleibt erhalten."),
-          leading: const Icon(Icons.attach_file, size: 36),
-          onTap: () {
-            Navigator.pop(context);
-            startEakApplication();
-          },
-        ),
-        ListTile(
-          title: const Text("Eine digitale Ehrenamtskarte prüfen"),
-          subtitle: const Text("Verifizieren Sie die Echtheit einer Ehrenamtskarte."),
-          leading: const Icon(Icons.check_circle_outline, size: 36),
-          onTap: () {
-            Navigator.pop(context);
-            startVerification();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Abbrechen"))],
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: Text(localization.applyForAnotherCardTitle),
+            subtitle: Text(localization.applyForAnotherCardDescription),
+            leading: const Icon(Icons.assignment, size: 36),
+            onTap: () {
+              Navigator.pop(context);
+              startApplication();
+            },
           ),
-        )
-      ],
+          ListTile(
+            title: Text(localization.activateAnotherCardTitle),
+            subtitle: Text(localization.activateAnotherCardDescription),
+            leading: const Icon(Icons.add_card, size: 36),
+            onTap: () {
+              Navigator.pop(context);
+              startActivation();
+            },
+          ),
+          ListTile(
+            title: Text(localization.verifyTitle),
+            subtitle: Text(localization.verifyDescription),
+            leading: const Icon(Icons.verified, size: 36),
+            onTap: () {
+              Navigator.pop(context);
+              startVerification();
+            },
+          ),
+        ],
+      ),
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Abbrechen"))],
     );
   }
 }
