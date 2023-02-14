@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/environment.dart';
 import 'package:ehrenamtskarte/location/dialogs.dart';
 import 'package:ehrenamtskarte/location/location_ffi.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -88,7 +89,10 @@ Future<RequestedPosition> determinePosition(
     return RequestedPosition.unknown();
   }
 
-  var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  Position? position;
+  if (!kIsWeb) {
+    await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  }
   position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
 
   return RequestedPosition(position);

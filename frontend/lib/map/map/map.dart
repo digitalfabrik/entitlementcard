@@ -61,7 +61,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     final config = Configuration.of(context);
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
+    final compassMargin = !kIsWeb && Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
 
     final userLocation = widget.userLocation;
     final cameraPosition = userLocation != null
@@ -85,7 +85,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
           onStyleLoadedCallback: () {},
-          compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+          compassViewMargins: math.Point(!kIsWeb && Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
         ),
