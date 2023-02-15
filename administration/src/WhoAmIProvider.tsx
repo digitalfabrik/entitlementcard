@@ -16,16 +16,18 @@ export const WhoAmIContext = createContext<{
 const WhoAmIProvider = ({ children }: { children: ReactNode }) => {
   const { projectId } = useContext(ProjectConfigContext)
   const { signOut } = useContext(AuthContext)
-  const { loading, error, data, refetch } = useWhoAmIQuery({
+  const { loading, error, data, refetch, previousData } = useWhoAmIQuery({
     variables: { project: projectId },
   })
-  if (loading)
+  // Use the previous data (if existent) while potentially loading new data to prevent remounting
+  const dataForContext = data ?? previousData
+  if (!dataForContext && loading)
     return (
       <StandaloneCenter>
         <Spinner />
       </StandaloneCenter>
     )
-  if (error || !data)
+  if (!dataForContext || error)
     return (
       <StandaloneCenter>
         <p>Deine Konto-Informationen konnten nicht geladen werden.</p>
@@ -37,7 +39,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }) => {
         </Button>
       </StandaloneCenter>
     )
-  return <WhoAmIContext.Provider value={{ me: data.me, refetch }}>{children}</WhoAmIContext.Provider>
+  return <WhoAmIContext.Provider value={{ me: dataForContext.me, refetch }}>{children}</WhoAmIContext.Provider>
 }
 
 export default WhoAmIProvider
