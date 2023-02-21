@@ -57,7 +57,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         return InfoDialog(
           title: isUncheckedStaticQrCode ? "Prüfung notwendig" : localization.positiveVerificationDialogTitle,
           icon: isUncheckedStaticQrCode ? Icons.info : Icons.verified_user,
-          iconColor: isUncheckedStaticQrCode ? Colors.yellow : Colors.green,
+          iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
