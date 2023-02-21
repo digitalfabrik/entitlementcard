@@ -149,7 +149,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     await PositiveVerificationResultDialog.show(
       context: context,
       cardInfo: cardInfo,
-      hasStaticVerificationCode: hasStaticVerificationCode,
+      isStaticVerificationCode: isStaticVerificationCode,
     );
   }
 

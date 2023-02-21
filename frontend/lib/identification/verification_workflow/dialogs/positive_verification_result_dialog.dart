@@ -14,19 +14,19 @@ class PositiveVerificationResultDialog extends StatefulWidget {
   const PositiveVerificationResultDialog({
     super.key,
     required this.cardInfo,
-    required this.hasStaticVerificationCode,
+    required this.isStaticVerificationCode,
   });
 
   static Future<void> show({
     required BuildContext context,
     required CardInfo cardInfo,
-    required bool hasStaticVerificationCode,
+    required bool isStaticVerificationCode,
   }) =>
       showDialog(
         context: context,
         builder: (_) => PositiveVerificationResultDialog(
           cardInfo: cardInfo,
-          hasStaticVerificationCode: hasStaticVerificationCode,
+          isStaticVerificationCode: isStaticVerificationCode,
         ),
       );
 
@@ -53,10 +53,10 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
       builder: (result, {refetch, fetchMore}) {
         final data = result.data;
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
-        final bool isUncheckedStaticQrCode = !isChecked && widget.hasStaticVerificationCode;
+        final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
         return InfoDialog(
           title: isUncheckedStaticQrCode ? "Prüfung nötig" : localization.positiveVerificationDialogTitle,
-          icon: isUncheckedStaticQrCode ? Icons.info : Icons.verified_user,
+          icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -67,13 +67,12 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                   region: region != null ? Region(region.prefix, region.name) : null,
                 ),
               ),
-              if (widget.hasStaticVerificationCode)
+              if (widget.isStaticVerificationCode)
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: CheckboxListTile(
                       title: const Text('Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen.'),
-                      checkColor: Theme.of(context).primaryColor,
                       controlAffinity: ListTileControlAffinity.leading,
                       value: isChecked,
                       onChanged: (bool? value) {
@@ -84,8 +83,6 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                     ),
                   ),
                 )
-              else
-                Container()
             ],
           ),
         );

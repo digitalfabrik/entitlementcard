@@ -35,6 +35,10 @@ ThemeData get lightTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
+    checkboxTheme: CheckboxThemeData(
+      checkColor: const MaterialStatePropertyAll(Colors.black),
+      fillColor: MaterialStatePropertyAll(primaryColor),
+    ),
   );
 }
 
@@ -65,6 +69,10 @@ ThemeData get darkTheme {
     appBarTheme: AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light, color: theme.colorScheme.primary),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+    ),
+    checkboxTheme: CheckboxThemeData(
+      checkColor: const MaterialStatePropertyAll(Colors.white),
+      fillColor: MaterialStatePropertyAll(primaryColor),
     ),
   );
 }
