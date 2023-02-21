@@ -78,7 +78,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                       value: isChecked,
                       onChanged: (bool? value) {
                         setState(() {
-                          isChecked = value!;
+                          isChecked = value ?? false;
                         });
                       },
                     ),
