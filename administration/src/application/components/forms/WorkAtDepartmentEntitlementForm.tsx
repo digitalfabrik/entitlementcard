@@ -2,7 +2,7 @@ import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../generated/gra
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import OrganizationForm from './OrganizationForm'
 import {
@@ -29,21 +29,23 @@ const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, Addi
   Component: ({ state, setState }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
-      <OrganizationForm.Component
+      <SubForms.organization.Component
         state={state.organization}
         setState={useUpdateStateCallback(setState, 'organization')}
       />
-      <ShortTextForm.Component
+      <SubForms.responsibility.Component
         label='Funktion oder Tätigkeit'
         state={state.responsibility}
         setState={useUpdateStateCallback(setState, 'responsibility')}
       />
       <h4>Tätigkeitsnachweis</h4>
       <p>
-        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal{' '}
-        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
+        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. {FileRequirementsText}
       </p>
-      <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+      <SubForms.certificate.Component
+        state={state.certificate}
+        setState={useUpdateStateCallback(setState, 'certificate')}
+      />
     </>
   ),
 }

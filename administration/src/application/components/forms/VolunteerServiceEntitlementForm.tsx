@@ -2,7 +2,7 @@ import { BlueCardVolunteerServiceEntitlementInput } from '../../../generated/gra
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import {
   CompoundState,
@@ -34,8 +34,7 @@ const VolunteerServiceEntitlementForm: Form<State, Options, ValidatedInput, Addi
       />
       <h4>Tätigkeitsnachweis</h4>
       <p>
-        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal{' '}
-        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
+        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. {FileRequirementsText}
       </p>
       <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
     </>

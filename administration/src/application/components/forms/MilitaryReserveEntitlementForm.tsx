@@ -1,7 +1,7 @@
 import { BlueCardMilitaryReserveEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import {
   CompoundState,
@@ -27,8 +27,7 @@ const MilitaryReserveEntitlementForm: Form<State, Options, ValidatedInput, Addit
       <CustomDivider label='Angaben zur Tätigkeit' />
       <h4>Tätigkeitsnachweis</h4>
       <p>
-        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal{' '}
-        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
+        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. {FileRequirementsText}
       </p>
       <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
     </>

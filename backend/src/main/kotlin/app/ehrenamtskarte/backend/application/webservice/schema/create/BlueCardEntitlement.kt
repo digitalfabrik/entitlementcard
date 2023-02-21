@@ -29,11 +29,11 @@ enum class BlueCardEntitlementType {
 
     // einen Freiwilligendienst ableisten in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen ökologischem
     // Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).
-    VOLUNTEER_SERVICE
+    VOLUNTEER_SERVICE,
 }
 
 data class BlueCardWorkAtOrganizationsEntitlement(
-    val list: List<WorkAtOrganization>
+    val list: List<WorkAtOrganization>,
 ) : JsonFieldSerializable {
     init {
         if (list.isEmpty()) {
@@ -47,14 +47,14 @@ data class BlueCardWorkAtOrganizationsEntitlement(
         name = "blueCardWorkAtOrganizationsEntitlement",
         type = Type.Array,
         translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich."),
-        value = list.map { it.toJsonField() }
+        value = list.map { it.toJsonField() },
     )
 }
 
 data class BlueCardJuleicaEntitlement(
     val juleicaNumber: ShortTextInput,
     val juleicaExpirationDate: DateInput,
-    val copyOfJuleica: Attachment
+    val copyOfJuleica: Attachment,
 ) : JsonFieldSerializable {
     override fun toJsonField() = JsonField(
         name = "blueCardJuleicaEntitlement",
@@ -63,15 +63,15 @@ data class BlueCardJuleicaEntitlement(
         value = listOf(
             juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
             juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
-            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Kopie der Karte"))
-        )
+            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Kopie der Karte")),
+        ),
     )
 }
 
 data class BlueCardWorkAtDepartmentEntitlement(
     val organization: Organization,
     val responsibility: ShortTextInput,
-    val certificate: Attachment
+    val certificate: Attachment,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -81,14 +81,14 @@ data class BlueCardWorkAtDepartmentEntitlement(
             value = listOfNotNull(
                 organization.toJsonField(),
                 responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
-            )
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
+            ),
         )
     }
 }
 
 data class BlueCardMilitaryReserveEntitlement(
-    val certificate: Attachment
+    val certificate: Attachment,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -96,15 +96,15 @@ data class BlueCardMilitaryReserveEntitlement(
             type = Type.Array,
             translations = mapOf("de" to "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."),
             value = listOfNotNull(
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
-            )
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
+            ),
         )
     }
 }
 
 data class BlueCardVolunteerServiceEntitlement(
     val programName: ShortTextInput,
-    val certificate: Attachment
+    val certificate: Attachment,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -113,14 +113,14 @@ data class BlueCardVolunteerServiceEntitlement(
             translations = mapOf("de" to "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)."),
             value = listOfNotNull(
                 programName.toJsonField("programName", mapOf("de" to "Name des Programms")),
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
-            )
+                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
+            ),
         )
     }
 }
 
 @GraphQLDescription(
-    "Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
+    "Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null.",
 )
 data class BlueCardEntitlement(
     val entitlementType: BlueCardEntitlementType,
@@ -128,14 +128,14 @@ data class BlueCardEntitlement(
     val juleicaEntitlement: BlueCardJuleicaEntitlement?,
     val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
     val militaryReserveEntitlement: BlueCardMilitaryReserveEntitlement?,
-    val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?
+    val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?,
 ) : JsonFieldSerializable {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
         BlueCardEntitlementType.JULEICA to juleicaEntitlement,
         BlueCardEntitlementType.WORK_AT_DEPARTMENT to workAtDepartmentEntitlement,
         BlueCardEntitlementType.MILITARY_RESERVE to militaryReserveEntitlement,
-        BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement
+        BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement,
     )
 
     init {
