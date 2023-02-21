@@ -9,7 +9,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class PositiveVerificationResultDialog extends StatefulWidget {
   final CardInfo cardInfo;
-  final bool hasStaticVerificationCode;
+  final bool isStaticVerificationCode;
 
   const PositiveVerificationResultDialog({
     super.key,
