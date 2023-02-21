@@ -55,7 +55,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         final bool isUncheckedStaticQrCode = !isChecked && widget.hasStaticVerificationCode;
         return InfoDialog(
-          title: isUncheckedStaticQrCode ? "Prüfung notwendig" : localization.positiveVerificationDialogTitle,
+          title: isUncheckedStaticQrCode ? "Prüfung nötig" : localization.positiveVerificationDialogTitle,
           icon: isUncheckedStaticQrCode ? Icons.info : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
