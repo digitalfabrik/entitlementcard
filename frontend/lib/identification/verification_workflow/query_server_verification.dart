@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

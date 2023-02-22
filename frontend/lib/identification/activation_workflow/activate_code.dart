@@ -1,28 +1,19 @@
-import 'dart:convert';
-
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
-import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 Future<ActivateCard$Mutation$CardActivationResultModel> activateCode({
   required GraphQLClient client,
   required String projectId,
-  required DynamicActivationCode code,
+  required String cardInfoHashBase64,
+  required String activationSecretBase64,
   required bool overwriteExisting,
 }) async {
-  final activationSecretBase64 = const Base64Encoder().convert(code.activationSecret);
   final activateCard = ActivateCardMutation(
     variables: ActivateCardArguments(
       project: projectId,
       overwrite: overwriteExisting,
-      card: CardGenerationModelInput(
-        activationSecretBase64: activationSecretBase64,
-        cardInfoHashBase64: code.info.hash(code.pepper),
-        cardExpirationDay: code.info.expirationDay,
-        codeType: CodeType.kw$dynamic,
-        regionId: code.info.extensions.extensionRegion.regionId,
-      ),
+      activationSecretBase64: activationSecretBase64,
+      cardInfoHashBase64: cardInfoHashBase64,
     ),
   );
   final mutationOptions = MutationOptions(

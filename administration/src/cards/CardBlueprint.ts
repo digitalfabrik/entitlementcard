@@ -6,7 +6,7 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { isContentLengthValid } from '../util/qrcode'
 
 const MAX_NAME_LENGTH = 50
-const TOTP_SECRET_LENGTH = 20
+const ACTIVATION_SECRET_LENGTH = 20
 
 /**
  * Blueprint for a new card. This object contains data about a future card, which will be created.
@@ -94,10 +94,7 @@ export class CardBlueprint {
     const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
     crypto.getRandomValues(pepper)
 
-    // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
-    // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be? -> 160bit)
-    // https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation (How to generate a secret? -> Random)
-    const activationSecret = new Uint8Array(TOTP_SECRET_LENGTH)
+    const activationSecret = new Uint8Array(ACTIVATION_SECRET_LENGTH)
     crypto.getRandomValues(activationSecret)
 
     return new DynamicActivationCode({

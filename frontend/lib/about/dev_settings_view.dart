@@ -10,6 +10,7 @@ import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
@@ -176,15 +177,17 @@ class DevSettingsView extends StatelessWidget {
       final activationResult = await activateCode(
         client: client,
         projectId: projectId,
-        code: activationCode,
+        activationSecretBase64: const Base64Encoder().convert(activationCode.activationSecret),
+        cardInfoHashBase64: activationCode.info.hash(activationCode.pepper),
         overwriteExisting: true,
       );
 
       if (activationResult.activationState == ActivationState.failed) {
-        throw QrCodeParseException("Code could not be activated from the server");
+        throw QrCodeParseException("Code ist ungültig.");
       }
       if (activationResult.activationState == ActivationState.didNotOverwriteExisting) {
-        throw QrCodeParseException("Did not overwrite existing QrCode.");
+        throw QrCodeParseException(
+            "Fehler: Der Code wurde bereits genutzt und die zugehörige App wurde nicht deaktiviert.");
       }
       if (activationResult.totpSecret != null) {
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
@@ -198,7 +201,7 @@ class DevSettingsView extends StatelessWidget {
 
       messengerState.showSnackBar(
         const SnackBar(
-          content: Text("Card activated."),
+          content: Text("Aktivierung erfolgreich."),
         ),
       );
       Navigator.pop(context);

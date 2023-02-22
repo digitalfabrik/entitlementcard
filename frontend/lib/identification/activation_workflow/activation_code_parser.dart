@@ -13,14 +13,6 @@ class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
   QRCodeMissingExpiryException() : super("expirationDate");
 }
 
-class QRCodeInvalidFormatException extends QrCodeParseException {
-  final Exception? cause;
-  final StackTrace? stackTrace;
-
-  QRCodeInvalidFormatException([this.cause, this.stackTrace])
-      : super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
-}
-
 class ActivationCodeParser {
   const ActivationCodeParser();
 

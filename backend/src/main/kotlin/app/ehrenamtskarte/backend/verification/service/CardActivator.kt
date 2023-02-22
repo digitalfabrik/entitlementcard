@@ -8,6 +8,9 @@ import javax.crypto.Mac
 object CardActivator {
 
     public fun generateTotpSecret(): ByteArray {
+        // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
+        //      // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be? -> 160bit)
+        //           // https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation (How to generate a secret? -> Random))))
         val totpGenerator = TimeBasedOneTimePasswordGenerator(
             TIME_STEP,
             TOTP_LENGTH,

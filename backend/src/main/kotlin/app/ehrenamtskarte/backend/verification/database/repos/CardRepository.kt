@@ -13,27 +13,27 @@ import java.time.Instant
 
 object CardRepository {
 
-    fun findByHashModel(project: String, hashModel: ByteArray): CardEntity? {
+    fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
         val query = (Projects innerJoin Regions innerJoin Cards)
             .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardInfoHash eq hashModel) }
+            .select { Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash) }
             .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun findByHashModelAndActivationSecret(project: String, hashModel: ByteArray, activationSecret: ByteArray): CardEntity? {
+    fun findByHashAndActivationSecret(project: String, cardInfoHash: ByteArray, activationSecret: ByteArray): CardEntity? {
         val query = (Projects innerJoin Regions innerJoin Cards)
             .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardInfoHash eq hashModel) and (Cards.activationSecret eq activationSecret) }
+            .select { Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash) and (Cards.activationSecret eq activationSecret) }
             .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardInfoHash: ByteArray, activationSecret: ByteArray?, totpSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
+    fun insert(cardInfoHash: ByteArray, activationSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
             this.activationSecret = activationSecret
-            this.totpSecret = totpSecret
+            this.totpSecret = null
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
@@ -42,7 +42,9 @@ object CardRepository {
             this.codeType = codeType
         }
 
-    fun reactivate(card: CardEntity, totpSecret: ByteArray) {
-        card.totpSecret = totpSecret
+    fun activate(card: CardEntity, totpSecret: ByteArray) {
+        if (card.codeType == CodeType.dynamic) {
+            card.totpSecret = totpSecret
+        }
     }
 }

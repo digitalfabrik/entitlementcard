@@ -1,25 +1,8 @@
 import 'dart:collection';
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
-import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
 import 'package:protobuf/protobuf.dart';
 
-extension Hashing on GeneratedMessage {
-  String hash(List<int> pepper) {
-    final hasher = Hmac(sha256, pepper);
-    final byteList = _toBinary();
-    final result = hasher.convert(byteList);
-    return const Base64Encoder().convert(result.bytes);
-  }
-
-  List<int> _toBinary() {
-    final json = messageToJsonObject();
-    final canonicalizedJsonString = JsonCanonicalizer().canonicalize(json);
-    return utf8.encode(canonicalizedJsonString);
-  }
-
-  Map<String, dynamic> messageToJsonObject() {
+extension CanonicalJson on GeneratedMessage {
+  Map<String, dynamic> toCanonicalJsonObject() {
     if (unknownFields.isNotEmpty) throw ArgumentError("Unknown field");
     final map = HashMap<String, dynamic>();
     for (final field in info_.fieldInfo.values) {
@@ -44,7 +27,7 @@ extension Hashing on GeneratedMessage {
       } else if (value is ProtobufEnum) {
         map[field.tagNumber.toString()] = value.value.toString();
       } else if (value is GeneratedMessage) {
-        map[field.tagNumber.toString()] = value.messageToJsonObject();
+        map[field.tagNumber.toString()] = value.toCanonicalJsonObject();
       } else {
         throw ArgumentError("Could not detect type of field.");
       }

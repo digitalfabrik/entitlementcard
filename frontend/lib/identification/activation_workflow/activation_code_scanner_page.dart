@@ -6,12 +6,13 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
@@ -45,40 +46,24 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
-    } on QRCodeMissingExpiryException catch (_) {
-      await showError(
-        "Der eingescannte Code enthält ein ungültiges Ablaufdatum.",
-      );
-    } on QRCodeInvalidTotpSecretException catch (_) {
-      await showError(
-        "Beim Verarbeiten des eingescannten Codes ist ein "
-        "Fehler aufgetreten. Fehlercode: base32TotpSecretInvalid",
-      );
-    } on QRCodeInvalidFormatException catch (e, s) {
-      await showError(
-        "Der Inhalt des eingescannten Codes kann nicht "
-        "verstanden werden. Vermutlich handelt es sich um einen QR Code, "
-        "der nicht für diese App generiert wurde.",
-      );
-      debugPrintStack(stackTrace: s, label: e.toString());
-      if (e.cause != null && e.stackTrace != null) {
-        debugPrint("Caused by:");
-        debugPrintStack(stackTrace: e.stackTrace, label: e.cause.toString());
-      }
+    } on ActivationDidNotOverwriteExisting catch (e) {
+      await showError(e.toString());
     } on QrCodeFieldMissingException catch (e) {
       await showError(
         "Der Inhalt des eingescannten Codes ist unvollständig. "
         "(Fehlercode: ${e.missingFieldName}Missing)",
       );
+    } on QrCodeWrongTypeException catch (_) {
+      await showError("Der eingescannte Code kann nicht in der App gespeichert werden.");
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat("dd.MM.yyyy");
       await showError("Der eingescannte Code ist bereits am "
           "${dateFormat.format(e.expiry)} abgelaufen.");
-    } on ServerVerificationException catch (e, stackTrace) {
+    } on ServerCardActivationException catch (e, stackTrace) {
       debugPrintStack(stackTrace: stackTrace, label: e.toString());
       await ConnectionFailedDialog.show(
         context,
-        "Der eingescannte Code konnte nicht verifiziert "
+        "Der eingescannte Code konnte nicht aktiviert "
         "werden, da die Kommunikation mit dem Server fehlschlug. "
         "Bitte prüfen Sie Ihre Internetverbindung.",
       );
@@ -95,12 +80,15 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
     final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
+    final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
     final activationResult = await activateCode(
       client: client,
       projectId: projectId,
-      code: activationCode,
-      overwriteExisting: true,
+      activationSecretBase64: activationSecretBase64,
+      cardInfoHashBase64: cardInfoBase64,
+      overwriteExisting: false,
     );
 
     switch (activationResult.activationState) {
@@ -113,6 +101,8 @@ class ActivationCodeScannerPage extends StatelessWidget {
             totpSecret: totpSecret,
           );
           provider.setCode(userCode);
+        } else {
+          throw const ActivationInvalidTotpSecretException();
         }
         break;
       case ActivationState.failed:
@@ -122,8 +112,12 @@ class ActivationCodeScannerPage extends StatelessWidget {
         );
         break;
       case ActivationState.didNotOverwriteExisting:
-      // TODO: ask user to overwrite code
+        // TODO: ask user to overwrite code
+        throw const ActivationDidNotOverwriteExisting();
       default:
+        throw const ServerCardActivationException(
+          "Die Aktivierung befindet sich in einem ungültigen Zustand.",
+        );
     }
   }
 }
