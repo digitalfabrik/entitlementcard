@@ -33,6 +33,7 @@ const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, Addi
         state={state.organization}
         setState={useUpdateStateCallback(setState, 'organization')}
       />
+      <h4>Angaben zur Tätigkeit</h4>
       <SubForms.responsibility.Component
         label='Funktion oder Tätigkeit'
         state={state.responsibility}
