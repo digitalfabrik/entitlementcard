@@ -264,7 +264,7 @@ input BlueCardVolunteerServiceEntitlementInput {
 }
 
 input BlueCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }
@@ -320,7 +320,7 @@ input GoldenCardMilitaryReserveEntitlementInput {
 }
 
 input GoldenCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }

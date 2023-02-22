@@ -2,7 +2,7 @@ import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../generated/gra
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
+import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import OrganizationForm from './OrganizationForm'
 import {
@@ -15,7 +15,7 @@ import {
 const SubForms = {
   organization: OrganizationForm,
   responsibility: ShortTextForm,
-  certificate: FileInputForm,
+  certificate: OptionalFileInputForm,
 }
 
 type State = CompoundState<typeof SubForms>
@@ -40,7 +40,8 @@ const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, Addi
       />
       <h4>Tätigkeitsnachweis</h4>
       <p>
-        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. {FileRequirementsText}
+        Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an.{' '}
+        {FileRequirementsText}
       </p>
       <SubForms.certificate.Component
         state={state.certificate}

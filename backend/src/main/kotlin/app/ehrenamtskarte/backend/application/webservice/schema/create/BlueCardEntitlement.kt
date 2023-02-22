@@ -71,7 +71,7 @@ data class BlueCardJuleicaEntitlement(
 data class BlueCardWorkAtDepartmentEntitlement(
     val organization: Organization,
     val responsibility: ShortTextInput,
-    val certificate: Attachment,
+    val certificate: Attachment?,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -81,7 +81,7 @@ data class BlueCardWorkAtDepartmentEntitlement(
             value = listOfNotNull(
                 organization.toJsonField(),
                 responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
+                certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
             ),
         )
     }
