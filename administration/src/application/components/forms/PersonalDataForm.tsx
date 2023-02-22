@@ -1,11 +1,12 @@
 import { PersonalDataInput } from '../../../generated/graphql'
 import AddressForm from './AddressForm'
 import EmailForm from '../primitive-inputs/EmailForm'
-import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
 import DateForm from '../primitive-inputs/DateForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
 import CustomDivider from '../CustomDivider'
+import { sub } from 'date-fns'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -18,9 +19,14 @@ const SubForms = {
   surname: ShortTextForm,
   address: AddressForm,
   emailAddress: EmailForm,
-  telephone: ShortTextForm,
+  telephone: OptionalShortTextForm,
   dateOfBirth: DateForm,
 }
+
+const dateOfBirthOptions = {
+  maximumDate: sub(Date.now(), { years: 16 }),
+  maximumDateErrorMessage: 'Sie müssen mindestens 16 Jahre alt sein, um eine Ehrenamtskarte beantragen zu können.',
+} as const
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput
@@ -29,19 +35,19 @@ type AdditionalProps = {}
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, {}),
+  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions }),
   Component: ({ state, setState }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
-          <ShortTextForm.Component
+          <SubForms.forenames.Component
             state={state.forenames}
             setState={useUpdateStateCallback(setState, 'forenames')}
             label='Vorname(n)'
           />
         </div>
         <div style={{ flex: '1', minWidth: '200px' }}>
-          <ShortTextForm.Component
+          <SubForms.surname.Component
             state={state.surname}
             setState={useUpdateStateCallback(setState, 'surname')}
             label='Nachname'
@@ -49,22 +55,23 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         </div>
       </div>
       <CustomDivider label='Adresse (Erstwohnsitz)' />
-      <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+      <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
       <CustomDivider label='Weitere Angaben' />
-      <EmailForm.Component
+      <SubForms.emailAddress.Component
         state={state.emailAddress}
         setState={useUpdateStateCallback(setState, 'emailAddress')}
         label='E-Mail-Adresse'
       />
-      <ShortTextForm.Component
+      <SubForms.telephone.Component
         state={state.telephone}
         setState={useUpdateStateCallback(setState, 'telephone')}
         label='Telefon'
       />
-      <DateForm.Component
+      <SubForms.dateOfBirth.Component
         state={state.dateOfBirth}
         setState={useUpdateStateCallback(setState, 'dateOfBirth')}
         label='Geburtsdatum'
+        options={dateOfBirthOptions}
       />
     </>
   ),
