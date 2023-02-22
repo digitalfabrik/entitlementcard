@@ -24,7 +24,7 @@ import 'package:provider/provider.dart';
 // for testing, so this is intended
 final sampleActivationCodeBavaria = DynamicUserCode(
   info: CardInfo(
-    fullName: "Jane Doe",
+    fullName: "Erika Mustermann",
     expirationDay: 19746,
     extensions: CardExtensions(
       extensionBavariaCardType: BavariaCardTypeExtension(
@@ -39,7 +39,7 @@ final sampleActivationCodeBavaria = DynamicUserCode(
 
 final sampleActivationCodeNuernberg = DynamicUserCode(
   info: CardInfo(
-    fullName: "Jane Doe",
+    fullName: "Erika Mustermann",
     expirationDay: 19746,
     extensions: CardExtensions(
       extensionBirthday: BirthdayExtension(

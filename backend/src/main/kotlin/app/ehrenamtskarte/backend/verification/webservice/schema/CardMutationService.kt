@@ -78,7 +78,7 @@ class CardMutationService {
         return CardActivationResultModel(ActivationState.success, encodedTotpSecret)
     }
 
-    private fun verifyNewCard(card: CardGenerationModel): Boolean {
+    private fun validateNewCard(card: CardGenerationModel): Boolean {
         return (card.codeType == CodeType.static && card.activationSecretBase64 == null) || (card.codeType == CodeType.dynamic && card.activationSecretBase64 != null)
     }
 }

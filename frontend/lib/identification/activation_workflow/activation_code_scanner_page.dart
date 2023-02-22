@@ -88,7 +88,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       projectId: projectId,
       activationSecretBase64: activationSecretBase64,
       cardInfoHashBase64: cardInfoBase64,
-      overwriteExisting: false,
+      overwriteExisting: true,
     );
 
     switch (activationResult.activationState) {

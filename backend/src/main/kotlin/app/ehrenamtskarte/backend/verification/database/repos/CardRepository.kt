@@ -43,8 +43,9 @@ object CardRepository {
         }
 
     fun activate(card: CardEntity, totpSecret: ByteArray) {
-        if (card.codeType == CodeType.dynamic) {
-            card.totpSecret = totpSecret
+        if (card.codeType != CodeType.dynamic) {
+            throw Exception("Invalid Code Type.")
         }
+        card.totpSecret = totpSecret
     }
 }
