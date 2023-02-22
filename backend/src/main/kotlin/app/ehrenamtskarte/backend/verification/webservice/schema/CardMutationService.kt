@@ -18,7 +18,7 @@ import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
-    @GraphQLDescription("Stores a new digital EAK")
+    @GraphQLDescription("Stores a new digital entitlement card")
     fun addCard(dfe: DataFetchingEnvironment, card: CardGenerationModel): Boolean {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
 
@@ -46,7 +46,7 @@ class CardMutationService {
         return true
     }
 
-    @GraphQLDescription("Activate a dynamic EAK")
+    @GraphQLDescription("Activate a dynamic entitlement card")
     fun activateCard(
         project: String,
         cardInfoHashBase64: String,
@@ -58,7 +58,7 @@ class CardMutationService {
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw NullPointerException("Project not found")
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val activationSecret = Base64.getDecoder().decode(activationSecretBase64)
-        val card = transaction { CardRepository.findByHashAndActivationSecret(project, cardHash, activationSecret,) }
+        val card = transaction { CardRepository.findByHashAndActivationSecret(project, cardHash, activationSecret) }
 
         if (card == null) {
             return CardActivationResultModel(ActivationState.failed)

@@ -93,17 +93,16 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
     switch (activationResult.activationState) {
       case ActivationState.success:
-        if (activationResult.totpSecret != null) {
-          final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-          final userCode = DynamicUserCode(
-            info: activationCode.info,
-            pepper: activationCode.pepper,
-            totpSecret: totpSecret,
-          );
-          provider.setCode(userCode);
-        } else {
+        if (activationResult.totpSecret == null) {
           throw const ActivationInvalidTotpSecretException();
         }
+        final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
+        final userCode = DynamicUserCode(
+          info: activationCode.info,
+          pepper: activationCode.pepper,
+          totpSecret: totpSecret,
+        );
+        provider.setCode(userCode);
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

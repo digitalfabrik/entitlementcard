@@ -8,7 +8,9 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
@@ -182,21 +184,31 @@ class DevSettingsView extends StatelessWidget {
         overwriteExisting: true,
       );
 
-      if (activationResult.activationState == ActivationState.failed) {
-        throw QrCodeParseException("Code ist ungültig.");
-      }
-      if (activationResult.activationState == ActivationState.didNotOverwriteExisting) {
-        throw QrCodeParseException(
-            "Fehler: Der Code wurde bereits genutzt und die zugehörige App wurde nicht deaktiviert.");
-      }
-      if (activationResult.totpSecret != null) {
-        final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        final userCode = DynamicUserCode(
-          info: activationCode.info,
-          pepper: activationCode.pepper,
-          totpSecret: totpSecret,
-        );
-        provider.setCode(userCode);
+      switch (activationResult.activationState) {
+        case ActivationState.success:
+          if (activationResult.totpSecret == null) {
+            throw const ActivationInvalidTotpSecretException();
+          }
+          final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
+          final userCode = DynamicUserCode(
+            info: activationCode.info,
+            pepper: activationCode.pepper,
+            totpSecret: totpSecret,
+          );
+          provider.setCode(userCode);
+          break;
+        case ActivationState.failed:
+          await QrParsingErrorDialog.showErrorDialog(
+            context,
+            "Der eingescannte Code ist ungültig.",
+          );
+          break;
+        case ActivationState.didNotOverwriteExisting:
+          throw const ActivationDidNotOverwriteExisting();
+        default:
+          throw const ServerCardActivationException(
+            "Die Aktivierung befindet sich in einem ungültigen Zustand.",
+          );
       }
 
       messengerState.showSnackBar(
