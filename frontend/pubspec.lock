@@ -599,9 +599,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: reenable-textureMode
-      resolved-ref: b0fb255dc242db07d8de845e5b92e6f7d2eda7fa
-      url: "https://github.com/maxammann/flutter-maplibre-gl.git"
+      ref: c723434d635068157311eb47c26df3e0554ff894
+      resolved-ref: c723434d635068157311eb47c26df3e0554ff894
+      url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
   maplibre_gl_dart:
@@ -614,12 +614,12 @@ packages:
     source: git
     version: "0.2.2"
   maplibre_gl_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: maplibre_gl_platform_interface
-      ref: reenable-textureMode
-      resolved-ref: b0fb255dc242db07d8de845e5b92e6f7d2eda7fa
-      url: "https://github.com/maxammann/flutter-maplibre-gl.git"
+      ref: main
+      resolved-ref: c723434d635068157311eb47c26df3e0554ff894
+      url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
   maplibre_gl_web:
