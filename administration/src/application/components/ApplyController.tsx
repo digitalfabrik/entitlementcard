@@ -83,7 +83,8 @@ const ApplyController = () => {
     })
   }
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
-            Sie können das Fenster schließen.`
+            Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
+            Sie können das Fenster jetzt schließen.`
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>

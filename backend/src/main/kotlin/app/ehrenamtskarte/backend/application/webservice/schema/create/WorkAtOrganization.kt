@@ -13,7 +13,7 @@ data class WorkAtOrganization(
     val responsibility: ShortTextInput,
     val workSinceDate: DateInput,
     val payment: Boolean,
-    val certificate: Attachment
+    val certificate: Attachment?,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -29,10 +29,10 @@ data class WorkAtOrganization(
                     "payment",
                     mapOf("de" to "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt:"),
                     Type.Boolean,
-                    payment
+                    payment,
                 ),
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
-            )
+                certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
+            ),
         )
     }
 }

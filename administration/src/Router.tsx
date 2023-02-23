@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import Navigation from './components/Navigation'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { createBrowserRouter, Outlet, RouteObject, RouterProvider } from 'react-router-dom'
 import CreateCardsController from './components/cards/CreateCardsController'
 import styled from 'styled-components'
 import WhoAmIProvider from './WhoAmIProvider'
@@ -24,48 +24,50 @@ const Main = styled.div`
   flex-direction: column;
   justify-content: center;
 `
+
 const Router = () => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={'/forgot-password'} element={<ForgotPasswordController />} />
-        <Route path={'/data-privacy-policy'} element={<DataPrivacyPolicy />} />
-        {projectConfig.applicationFeatureEnabled ? <Route path={'/beantragen'} element={<ApplyController />} /> : null}
-        <Route path={'/reset-password/:passwordResetKey'} element={<ResetPasswordController />} />
-        <Route
-          path={'*'}
-          element={
-            authData === null || authData.expiry <= new Date() ? (
-              <Login onSignIn={signIn} />
-            ) : (
-              <WhoAmIProvider>
-                <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-                  <Navigation onSignOut={signOut} />
-                  <Main>
-                    <Routes>
-                      {projectConfig.applicationFeatureEnabled ? (
-                        <>
-                          <Route path={'/applications'} element={<ApplicationsController />} />
-                          {/*Currently, '/region' only allows to set the data privacy text for the application form*/}
-                          <Route path={'/region'} element={<RegionsController />} />
-                        </>
-                      ) : null}
-                      <Route path={'/create-cards'} element={<CreateCardsController />} />
-                      <Route path={'/users'} element={<ManageUsersController />} />
-                      <Route path={'/user-settings'} element={<UserSettingsController />} />
-                      <Route path={'*'} element={<HomeController />} />
-                    </Routes>
-                  </Main>
-                </KeepAliveToken>
-              </WhoAmIProvider>
-            )
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  )
+  const router = useMemo(() => {
+    const isLoggedIn = authData !== null && authData.expiry > new Date()
+    const routes: (RouteObject | null)[] = [
+      { path: '/forgot-password', element: <ForgotPasswordController /> },
+      { path: '/reset-password/:passwordResetKey', element: <ResetPasswordController /> },
+      { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
+      projectConfig.applicationFeatureEnabled ? { path: '/beantragen', element: <ApplyController /> } : null,
+      {
+        path: '*',
+        element: !isLoggedIn ? (
+          <Login onSignIn={signIn} />
+        ) : (
+          <WhoAmIProvider>
+            <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
+              <Navigation onSignOut={signOut} />
+              <Main>
+                <Outlet />
+              </Main>
+            </KeepAliveToken>
+          </WhoAmIProvider>
+        ),
+        children: [
+          ...(projectConfig.applicationFeatureEnabled
+            ? [
+                { path: 'applications', element: <ApplicationsController /> },
+                // Currently, '/region' only allows to set the data privacy text for the application form
+                { path: 'region', element: <RegionsController /> },
+              ]
+            : []),
+          { path: 'create-cards', element: <CreateCardsController /> },
+          { path: 'users', element: <ManageUsersController /> },
+          { path: 'user-settings', element: <UserSettingsController /> },
+          { path: '*', element: <HomeController /> },
+        ],
+      },
+    ]
+    return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
+  }, [authData, projectConfig.applicationFeatureEnabled, signIn, signOut])
+
+  return <RouterProvider router={router} />
 }
 
 export default Router

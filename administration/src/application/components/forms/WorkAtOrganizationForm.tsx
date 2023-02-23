@@ -7,7 +7,7 @@ import OrganizationForm from './OrganizationForm'
 import DateForm from '../primitive-inputs/DateForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 import NumberForm from '../primitive-inputs/NumberForm'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
+import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import {
@@ -48,7 +48,7 @@ const SubForms = {
   workSinceDate: DateForm,
   payment: CheckboxForm,
   responsibility: ShortTextForm,
-  certificate: FileInputForm,
+  certificate: OptionalFileInputForm,
 }
 
 type State = CompoundState<typeof SubForms>
@@ -61,30 +61,32 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
   validate: createCompoundValidate(SubForms, {
     amountOfWork: amountOfWorkOptions,
     payment: paymentOptions,
+    workSinceDate: { maximumDate: null },
   }),
   Component: ({ state, setState, onDelete }) => (
     <>
       <ActivityDivider onDelete={onDelete} />
-      <OrganizationForm.Component
+      <SubForms.organization.Component
         state={state.organization}
         setState={useUpdateStateCallback(setState, 'organization')}
       />
       <h4>Angaben zur Tätigkeit</h4>
-      <ShortTextForm.Component
+      <SubForms.responsibility.Component
         state={state.responsibility}
         setState={useUpdateStateCallback(setState, 'responsibility')}
         label='Ehrenamtliche Tätigkeit'
       />
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '2' }}>
-          <DateForm.Component
+          <SubForms.workSinceDate.Component
             label='Tätig seit'
             state={state.workSinceDate}
             setState={useUpdateStateCallback(setState, 'workSinceDate')}
+            options={{ maximumDate: null }}
           />
         </div>
         <div style={{ flex: '3' }}>
-          <NumberForm.Component
+          <SubForms.amountOfWork.Component
             label='Arbeitsstunden pro Woche (Durchschnitt)'
             state={state.amountOfWork}
             setState={useUpdateStateCallback(setState, 'amountOfWork')}
@@ -93,7 +95,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
           />
         </div>
       </div>
-      <CheckboxForm.Component
+      <SubForms.payment.Component
         state={state.payment}
         setState={useUpdateStateCallback(setState, 'payment')}
         label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt.'
@@ -101,10 +103,13 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
       />
       <h4>Tätigkeitsnachweis</h4>
       <p>
-        Hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal{' '}
-        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
+        Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an.{' '}
+        {FileRequirementsText}
       </p>
-      <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+      <SubForms.certificate.Component
+        state={state.certificate}
+        setState={useUpdateStateCallback(setState, 'certificate')}
+      />
     </>
   ),
 }

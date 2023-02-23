@@ -39,13 +39,13 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
     <SwitchComponent value={options.cardType}>
       {{
         [BavariaCardType.Blue]: (
-          <BlueCardEntitlementForm.Component
+          <SubForms.blueCardEntitlement.Component
             state={state.blueCardEntitlement}
             setState={useUpdateStateCallback(setState, 'blueCardEntitlement')}
           />
         ),
         [BavariaCardType.Golden]: (
-          <GoldenCardEntitlementForm.Component
+          <SubForms.goldenCardEntitlement.Component
             state={state.goldenCardEntitlement}
             setState={useUpdateStateCallback(setState, 'goldenCardEntitlement')}
           />
