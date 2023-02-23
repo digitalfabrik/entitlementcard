@@ -28,16 +28,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final List<AppFlow> additionalTabs = buildConfig.featureFlags.verification
-        ? [
-            AppFlow(
-              const IdentificationPage(title: "Ausweisen"),
-              Icons.remove_red_eye_outlined,
-              "Ausweisen",
-              GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
-            )
-          ]
-        : [];
     appFlows = [
       AppFlow(
         MapPage(
@@ -54,7 +44,13 @@ class _HomePageState extends State<HomePage> {
         "Suche",
         GlobalKey<NavigatorState>(debugLabel: "Search tab key"),
       ),
-      ...additionalTabs,
+      if (buildConfig.featureFlags.verification)
+        AppFlow(
+          const IdentificationPage(title: "Ausweisen"),
+          Icons.remove_red_eye_outlined,
+          "Ausweisen",
+          GlobalKey<NavigatorState>(debugLabel: "Auth tab key"),
+        ),
       AppFlow(const AboutPage(), Icons.info_outline, "Über", GlobalKey<NavigatorState>(debugLabel: "About tab key")),
     ];
   }
