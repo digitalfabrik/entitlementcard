@@ -70,7 +70,7 @@ class CardMutationService {
         }
 
         if (card == null) {
-            logger.info("${context.remoteIp} failed to activate")
+            logger.info("${context.remoteIp} failed to activate entitlement card")
             return CardActivationResultModel(ActivationState.failed)
         }
 
