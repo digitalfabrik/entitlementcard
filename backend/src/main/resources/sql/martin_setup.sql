@@ -51,6 +51,7 @@ BEGIN
                       JOIN acceptingstores ON acceptingstores.id = physicalstores."storeId"
                       JOIN projects ON projects.id = acceptingstores."projectId"
              WHERE coordinates && TileBBox(z, x, y, 4326) AND projects.project = project_id
+             LIMIT 100
          ) as tile
     WHERE mvt_geom IS NOT NULL;
 
