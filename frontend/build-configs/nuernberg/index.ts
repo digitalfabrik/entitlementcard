@@ -1,4 +1,4 @@
-import BuildConfigType, { CommonBuildConfigType } from "../types"
+import BuildConfigType, {CommonBuildConfigType} from "../types"
 import publisherText from "./publisherText"
 import disclaimerText from "./disclaimerText"
 import localization from "./localization"
@@ -38,8 +38,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogo: "assets/nuernberg/header-logo.png",
         headerLogoPadding: 0,
         headerLogoWidth: 60,
-        headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
-        bodyContainerPadding: { top: 0, right: 24, bottom: 6, left: 16 },
+        headerContainerPadding: {top: 0, right: 24, bottom: 0, left: 16},
+        bodyContainerPadding: {top: 0, right: 24, bottom: 6, left: 16},
         bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLogoWidth: 60,
@@ -82,7 +82,9 @@ export const nuernbergCommon: CommonBuildConfigType = {
             "Zustimmung. Ihr Standort wird nicht gespeichert.",
         imagePath: "assets/nuernberg/intro_slides/search_with_location.png",
     },
-    featureFlags: {},
+    featureFlags: {
+        verification: true
+    },
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
         "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration - Sozialamt\nDietzstraße 4\n90443 Nürnberg",
