@@ -73,24 +73,21 @@ export const DataPrivacyBaseText = () => (
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
-        <u>Name und Kontaktdaten des Verantwortlichen</u>
+        <u>Verantwortlich für den Inhalt:</u>
       </span>
-      &nbsp;
       <br />
-      Christian K. J. Diener
+      Referat Öffentlichkeitsarbeit
       <br />
-      Leiter Referat Öffentlichkeitsarbeit
-      <br />
-      Telefon: 089 1261-0
+      Telefon: 089 1261-01
       <br />
       E-Mail:{' '}
       <a
         target='_blank'
         rel='noreferrer'
-        href='mailto:Oeffentlichkeitsarbeit@stmas.bayern.de'
-        title='mailto:Oeffentlichkeitsarbeit@stmas.bayern.de'>
+        href='mailto:Poststelle@stmas.bayern.de'
+        title='mailto:Poststelle@stmas.bayern.de'>
         <span style={{ color: '#0000ff' }}>
-          <u>Oeffentlichkeitsarbeit@stmas.bayern.de</u>
+          <u>Poststelle@stmas.bayern.de</u>
         </span>
       </a>
       &nbsp;
