@@ -6,6 +6,7 @@ import javax.crypto.KeyGenerator
 
 object CardActivator {
 
+    @Synchronized
     public fun generateTotpSecret(): ByteArray {
         // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
         // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be?
