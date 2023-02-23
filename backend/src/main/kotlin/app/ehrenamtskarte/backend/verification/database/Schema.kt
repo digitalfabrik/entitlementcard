@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.or
 
 const val CARD_INFO_HASH_LENGTH = 32 // Using SHA256-HMAC
 const val TOTP_SECRET_LENGTH = 20
-const val ACTIVATION_SECRET_LENGTH = 20
+const val ACTIVATION_SECRET_LENGTH = 30
 
 enum class CodeType {
     static,
@@ -36,7 +36,11 @@ object Cards : IntIdTable() {
 
     init {
         check("CodeTypeConstraint") {
-            ((activationSecret eq null) and (totpSecret eq null) and (codeType eq CodeType.static)) or
+            (
+                (activationSecret eq null) and
+                    (totpSecret eq null) and
+                    (codeType eq CodeType.static)
+                ) or
                 ((activationSecret neq null) and (codeType eq CodeType.dynamic))
         }
     }

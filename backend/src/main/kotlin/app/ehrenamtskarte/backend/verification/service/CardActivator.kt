@@ -1,10 +1,12 @@
 package app.ehrenamtskarte.backend.verification.service
 
 import app.ehrenamtskarte.backend.verification.database.TOTP_SECRET_LENGTH
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import javax.crypto.KeyGenerator
 
 object CardActivator {
+    private const val cost = 11
 
     @Synchronized
     public fun generateTotpSecret(): ByteArray {
@@ -17,6 +19,8 @@ object CardActivator {
         val keyGenerator = KeyGenerator.getInstance(algorithm)
         keyGenerator.init(TOTP_SECRET_LENGTH * 8)
 
-        return keyGenerator.generateKey().encoded
+        return hashKey(keyGenerator.generateKey().encoded)
     }
+
+    private fun hashKey(key: ByteArray): ByteArray = BCrypt.withDefaults().hash(cost, key)
 }
