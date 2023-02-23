@@ -5,9 +5,9 @@ import { CardBlueprint } from '../../cards/CardBlueprint'
 import AddEakButton from './AddEakButton'
 import styled from 'styled-components'
 import FlipMove from 'react-flip-move'
-import { usePrompt } from '../../util/blocker-prompt'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import useBlockNavigation from '../../util/useBlockNavigation'
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;
@@ -69,7 +69,7 @@ const CreateCardsForm = (props: Props) => {
 
   const allCardsValid = cardBlueprints.every(blueprint => blueprint.isValid())
 
-  usePrompt('Falls Sie fortfahren, werden alle Eingaben verworfen.', isModified)
+  useBlockNavigation({ when: isModified, message: 'Falls Sie fortfahren, werden alle Eingaben verworfen.' })
 
   return (
     <>

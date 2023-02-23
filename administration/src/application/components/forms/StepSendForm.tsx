@@ -44,7 +44,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
-      <div style={{ alignSelf: 'center' }}>
+      <span>
         Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und
         akzeptiere die{' '}
         <Button
@@ -54,17 +54,17 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           Datenschutzerklärung
         </Button>
         .
-      </div>
+      </span>
     )
     return (
       <>
-        <CheckboxForm.Component
+        <SubForms.hasAcceptedDataPrivacy.Component
           state={state.hasAcceptedDataPrivacy}
           setState={useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')}
           options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
-        <CheckboxForm.Component
+        <SubForms.givenInformationIsCorrectAndComplete.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}
           setState={useUpdateStateCallback(setState, 'givenInformationIsCorrectAndComplete')}

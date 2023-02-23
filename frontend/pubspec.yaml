@@ -21,13 +21,6 @@ environment:
   sdk: '>=2.18.0 <3.0.0'
   flutter: 3.3.0
 
-dependency_overrides:
-  maplibre_gl_platform_interface:
-    git:
-      url: https://github.com/maxammann/flutter-maplibre-gl.git
-      path: maplibre_gl_platform_interface
-      ref: reenable-textureMode
-
 dependencies:
   flutter:
     sdk: flutter
@@ -36,8 +29,8 @@ dependencies:
   intl: ^0.17.0
   maplibre_gl:
     git:
-      url: https://github.com/maxammann/flutter-maplibre-gl.git
-      ref: reenable-textureMode
+      url: https://github.com/m0nac0/flutter-maplibre-gl.git
+      ref: c723434d635068157311eb47c26df3e0554ff894
   provider: ^6.0.3
   graphql_flutter: ^5.1.0
   url_launcher: ^6.1.6
