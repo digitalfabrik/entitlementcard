@@ -3,7 +3,7 @@ import { Button, Chip, FormHelperText } from '@mui/material'
 import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 import { AttachmentInput } from '../../../generated/graphql'
 import globalArrayBuffersManager from '../../globalArrayBuffersManager'
-import { Form } from '../../FormType'
+import { Form, FormComponentProps, ValidationResult } from '../../FormType'
 import { useSnackbar } from 'notistack'
 import { FormContext } from '../SteppedSubForms'
 
@@ -13,8 +13,10 @@ const defaultExtensionsByMIMEType = {
   'image/jpeg': '.jpg',
 }
 
-export const FILE_SIZE_LIMIT_MEGA_BYTES = 5
+const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
+
+export const FileRequirementsText = `Die Datei darf maximal ${FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.`
 
 const FileInputButton = ({
   onChange,
@@ -48,6 +50,75 @@ type State = {
 type ValidatedInput = AttachmentInput
 type Options = {}
 type AdditionalProps = {}
+
+const Component = <I,>({
+  state,
+  setState,
+  required,
+  validate,
+}: FormComponentProps<State, AdditionalProps, Options> & {
+  required: boolean
+  validate: (state: State) => ValidationResult<I>
+}) => {
+  const { enqueueSnackbar } = useSnackbar()
+  const { showAllErrors, disableAllInputs } = useContext(FormContext)
+  const validationResult = validate(state)
+  const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
+    const file = e.target.files![0]
+    if (!(file.type in defaultExtensionsByMIMEType)) {
+      enqueueSnackbar('Die gewählte Datei hat einen unzulässigen Dateityp.', { variant: 'error' })
+      e.target.value = ''
+      return
+    }
+    if (file.size > FILE_SIZE_LIMIT_BYTES) {
+      enqueueSnackbar(
+        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
+        { variant: 'error' }
+      )
+      e.target.value = ''
+      return
+    }
+    const fileType = file.type as keyof typeof defaultExtensionsByMIMEType
+    const name = 'file' + defaultExtensionsByMIMEType[fileType]
+    const arrayBuffer = await file.arrayBuffer()
+    const key = globalArrayBuffersManager.addArrayBuffer(arrayBuffer)
+    setState(() => ({ MIMEType: fileType, filename: name, arrayBufferKey: key }))
+  }
+
+  useEffect(() => {
+    if (state === null) {
+      return
+    }
+    // If the arrayBufferManager doesn't have the specified key, let user reenter a File.
+    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
+      setState(() => null)
+    }
+  }, [state, setState])
+
+  if (state === null) {
+    return (
+      <>
+        <FileInputButton
+          onChange={onInputChange}
+          label={`Datei Anhängen${required ? ' *' : ''}`}
+          disabled={disableAllInputs}
+        />
+        {showAllErrors && validationResult.type === 'error' ? (
+          <FormHelperText error>{validationResult.message}</FormHelperText>
+        ) : null}
+      </>
+    )
+  }
+
+  return (
+    <Chip
+      label={`Datei angehängt`}
+      icon={<Attachment />}
+      onDelete={disableAllInputs ? undefined : () => setState(() => null)}
+    />
+  )
+}
+
 const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
@@ -62,61 +133,18 @@ const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       },
     }
   },
-  Component: ({ state, setState }) => {
-    const { enqueueSnackbar } = useSnackbar()
-    const { showAllErrors, disableAllInputs } = useContext(FormContext)
-    const validationResult = FileInputForm.validate(state)
-    const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
-      const file = e.target.files![0]
-      if (!(file.type in defaultExtensionsByMIMEType)) {
-        enqueueSnackbar('Die gewählte Datei hat einen unzulässigen Dateityp.', { variant: 'error' })
-        e.target.value = ''
-        return
-      }
-      if (file.size > FILE_SIZE_LIMIT_BYTES) {
-        enqueueSnackbar(
-          `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
-          { variant: 'error' }
-        )
-        e.target.value = ''
-        return
-      }
-      const fileType = file.type as keyof typeof defaultExtensionsByMIMEType
-      const name = 'file' + defaultExtensionsByMIMEType[fileType]
-      const arrayBuffer = await file.arrayBuffer()
-      const key = globalArrayBuffersManager.addArrayBuffer(arrayBuffer)
-      setState(() => ({ MIMEType: fileType, filename: name, arrayBufferKey: key }))
-    }
+  Component: ({ state, setState }) => Component({ state, setState, required: true, validate: FileInputForm.validate }),
+}
 
-    useEffect(() => {
-      if (state === null) {
-        return
-      }
-      // If the arrayBufferManager doesn't have the specified key, let user reenter a File.
-      if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
-        setState(() => null)
-      }
-    }, [state, setState])
-
-    if (state === null) {
-      return (
-        <>
-          <FileInputButton onChange={onInputChange} label='Datei Anhängen' disabled={disableAllInputs} />
-          {showAllErrors && validationResult.type === 'error' ? (
-            <FormHelperText error>{validationResult.message}</FormHelperText>
-          ) : null}
-        </>
-      )
-    }
-
-    return (
-      <Chip
-        label={`Datei angehängt`}
-        icon={<Attachment />}
-        onDelete={disableAllInputs ? undefined : () => setState(() => null)}
-      />
-    )
+export const OptionalFileInputForm: Form<State, Options, ValidatedInput | null, AdditionalProps> = {
+  initialState: FileInputForm.initialState,
+  getArrayBufferKeys: FileInputForm.getArrayBufferKeys,
+  validate: state => {
+    if (state === null) return { type: 'valid', value: null }
+    return FileInputForm.validate(state)
   },
+  Component: ({ state, setState }) =>
+    Component({ state, setState, required: false, validate: OptionalFileInputForm.validate }),
 }
 
 export default FileInputForm

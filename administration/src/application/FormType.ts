@@ -5,7 +5,7 @@ export type Form<State, Options extends {}, ValidatedInput, AdditionalProps exte
   initialState: State
   validate: Validate<State, Options, ValidatedInput>
   getArrayBufferKeys: (state: State) => number[]
-  Component: (props: Props<State, AdditionalProps, Options>) => ReactElement | null
+  Component: (props: FormComponentProps<State, AdditionalProps, Options>) => ReactElement | null
 }
 
 export type ValidationSuccess<I> = { type: 'valid'; value: I }
@@ -20,7 +20,7 @@ export type Validate<State, Options, ValidatedInput> = {} extends Options
 // Do not require `options` prop, if Options is an empty object.
 type OptionsProps<Options extends {}> = {} extends Options ? { options?: Options } : { options: Options }
 
-type Props<State, AdditionalProps extends {}, Options extends {}> = AdditionalProps &
+export type FormComponentProps<State, AdditionalProps extends {}, Options extends {}> = AdditionalProps &
   OptionsProps<Options> & {
     state: State
     setState: SetState<State>

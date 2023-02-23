@@ -206,6 +206,7 @@ scalar Upload
 
 input AddressInput {
   addressSupplement: ShortTextInput
+  country: ShortTextInput!
   houseNumber: ShortTextInput!
   location: ShortTextInput!
   postalCode: ShortTextInput!
@@ -215,9 +216,10 @@ input AddressInput {
 """
 An application for the Bayerische Ehrenamtskarte.
 The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
 """
 input ApplicationInput {
-  applicationType: ApplicationType!
+  applicationType: ApplicationType
   blueCardEntitlement: BlueCardEntitlementInput
   cardType: BavariaCardType!
   givenInformationIsCorrectAndComplete: Boolean!
@@ -262,7 +264,7 @@ input BlueCardVolunteerServiceEntitlementInput {
 }
 
 input BlueCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }
@@ -318,7 +320,7 @@ input GoldenCardMilitaryReserveEntitlementInput {
 }
 
 input GoldenCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }
@@ -351,7 +353,7 @@ input PersonalDataInput {
   emailAddress: EmailInput!
   forenames: ShortTextInput!
   surname: ShortTextInput!
-  telephone: ShortTextInput!
+  telephone: ShortTextInput
 }
 
 input SearchParamsInput {
@@ -369,7 +371,7 @@ input ShortTextInput {
 
 input WorkAtOrganizationInput {
   amountOfWork: Float!
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   payment: Boolean!
   responsibility: ShortTextInput!
