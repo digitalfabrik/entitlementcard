@@ -52,7 +52,7 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
   }),
   Component: ({ state, setState }) => (
     <>
-      <EntitlementTypeRadioGroupForm.Component
+      <SubForms.entitlementType.Component
         state={state.entitlementType}
         setState={useUpdateStateCallback(setState, 'entitlementType')}
         options={entitlementTypeOptions}
@@ -62,25 +62,25 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
       <SwitchComponent value={state.entitlementType.selectedValue}>
         {{
           [GoldenCardEntitlementType.WorkAtOrganizations]: (
-            <WorkAtOrganizationsEntitlementForm.Component
+            <SubForms.workAtOrganizationsEntitlement.Component
               state={state.workAtOrganizationsEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
             />
           ),
           [GoldenCardEntitlementType.HonoredByMinisterPresident]: (
-            <HonoredByMinisterPresidentEntitlementForm.Component
+            <SubForms.honoredByMinisterPresidentEntitlement.Component
               state={state.honoredByMinisterPresidentEntitlement}
               setState={useUpdateStateCallback(setState, 'honoredByMinisterPresidentEntitlement')}
             />
           ),
           [GoldenCardEntitlementType.WorkAtDepartment]: (
-            <WorkAtDepartmentEntitlementForm.Component
+            <SubForms.workAtDepartmentEntitlement.Component
               state={state.workAtDepartmentEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
             />
           ),
           [GoldenCardEntitlementType.MilitaryReserve]: (
-            <MilitaryReserveEntitlementForm.Component
+            <SubForms.militaryReserveEntitlement.Component
               state={state.militaryReserveEntitlement}
               setState={useUpdateStateCallback(setState, 'militaryReserveEntitlement')}
             />

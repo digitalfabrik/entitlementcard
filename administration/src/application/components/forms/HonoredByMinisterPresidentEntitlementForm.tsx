@@ -1,7 +1,7 @@
 import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import FileInputForm, { FILE_SIZE_LIMIT_MEGA_BYTES } from '../primitive-inputs/FileInputForm'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
 import {
   CompoundState,
@@ -24,10 +24,7 @@ const HonoredByMinisterPresidentEntitlementForm: Form<State, Options, ValidatedI
     <>
       <CustomDivider label='Angaben zum Ehrenzeichen' />
       <h4>Urkunde</h4>
-      <p>
-        Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. Die Datei darf maximal{' '}
-        {FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.
-      </p>
+      <p>Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. {FileRequirementsText}</p>
       <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
     </>
   ),

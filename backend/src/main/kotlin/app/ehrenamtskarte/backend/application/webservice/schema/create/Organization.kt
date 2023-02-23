@@ -9,7 +9,7 @@ data class Organization(
     val name: ShortTextInput,
     val address: Address,
     val contact: OrganizationContact,
-    val category: ShortTextInput
+    val category: ShortTextInput,
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -20,8 +20,8 @@ data class Organization(
                 name.toJsonField("name", mapOf("de" to "Name")),
                 address.toJsonField(),
                 category.toJsonField("category", mapOf("de" to "Einsatzgebiet")),
-                contact.toJsonField()
-            )
+                contact.toJsonField(),
+            ),
         )
     }
 }
