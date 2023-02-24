@@ -3,8 +3,10 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.DateInput
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -34,7 +36,7 @@ enum class BlueCardEntitlementType {
 
 data class BlueCardWorkAtOrganizationsEntitlement(
     val list: List<WorkAtOrganization>,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     init {
         if (list.isEmpty()) {
             throw IllegalArgumentException("List may not be empty.")
@@ -49,6 +51,10 @@ data class BlueCardWorkAtOrganizationsEntitlement(
         translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich."),
         value = list.map { it.toJsonField() },
     )
+
+    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
+        return list.map { it.organization.extractApplicationVerifications() }.flatten()
+    }
 }
 
 data class BlueCardJuleicaEntitlement(
@@ -72,7 +78,7 @@ data class BlueCardWorkAtDepartmentEntitlement(
     val organization: Organization,
     val responsibility: ShortTextInput,
     val certificate: Attachment?,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "blueCardWorkAtDepartmentEntitlement",
@@ -84,6 +90,10 @@ data class BlueCardWorkAtDepartmentEntitlement(
                 certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis")),
             ),
         )
+    }
+
+    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
+        return organization.extractApplicationVerifications()
     }
 }
 
@@ -129,7 +139,7 @@ data class BlueCardEntitlement(
     val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
     val militaryReserveEntitlement: BlueCardMilitaryReserveEntitlement?,
     val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
         BlueCardEntitlementType.JULEICA to juleicaEntitlement,
@@ -146,5 +156,12 @@ data class BlueCardEntitlement(
 
     override fun toJsonField(): JsonField {
         return entitlementByEntitlementType[entitlementType]!!.toJsonField()
+    }
+
+    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
+        return listOfNotNull(
+            workAtOrganizationsEntitlement?.extractApplicationVerifications(),
+            workAtDepartmentEntitlement?.extractApplicationVerifications(),
+        ).flatten()
     }
 }
