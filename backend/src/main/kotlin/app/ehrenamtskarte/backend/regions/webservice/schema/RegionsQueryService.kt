@@ -2,6 +2,8 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -28,14 +30,13 @@ class RegionsQueryService {
     @GraphQLDescription("Returns region data for specific region.")
     fun regionByRegionId(regionId: Int): Region = transaction {
         val regionEntity = RegionsRepository.findRegionById(regionId)
-
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 
     @GraphQLDescription("Returns region data by postal code.")
-    fun regionByPostalCode(postalCode: String): Region = transaction {
-        if (postalCode.length > 5) null
-        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode)
+    fun regionByPostalCode(postalCode: String, projectId: String): Region? = transaction {
+        val projectEntity = ProjectEntity.find { Projects.project eq projectId }.firstOrNull() ?: throw Exception("Project couldn't be found")
+        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode, projectEntity.id)
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 

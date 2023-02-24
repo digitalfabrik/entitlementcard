@@ -58,6 +58,7 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       </div>
       <CustomDivider label='Adresse (Erstwohnsitz)' />
       <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+      <CustomDivider label='Region (wird ermittelt)' />
       <SubForms.region.Component
         state={state.region}
         setState={useUpdateStateCallback(setState, 'region')}

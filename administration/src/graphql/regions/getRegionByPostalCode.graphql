@@ -1,5 +1,7 @@
-query getRegionByPostalCode($postalCode: String!) {
-  region: regionByPostalCode(postalCode: $postalCode) {
+query getRegionByPostalCode($postalCode: String!, $projectId: String!) {
+  region: regionByPostalCode(postalCode: $postalCode, projectId: $projectId) {
     id
+    name
+    prefix
   }
 }

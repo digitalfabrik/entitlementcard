@@ -1,4 +1,4 @@
-import { AddressInput, useGetRegionByPostalCodeQuery } from '../../../generated/graphql'
+import { AddressInput } from '../../../generated/graphql'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
@@ -8,7 +8,6 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
-import { useSnackbar } from 'notistack'
 
 const SubForms = {
   street: ShortTextForm,
