@@ -14,6 +14,7 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGener
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.LoggerFactory
 import java.util.Base64
 
 @Suppress("unused")
@@ -58,6 +59,7 @@ class CardMutationService {
         overwrite: Boolean,
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
+        val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig =
             context.backendConfiguration.projects.find { it.id == project }
@@ -72,6 +74,7 @@ class CardMutationService {
         }
 
         if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
+            logger.info("${context.remoteIp} failed to activate entitlement card")
             return CardActivationResultModel(ActivationState.failed)
         }
 
