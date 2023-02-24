@@ -9,7 +9,7 @@ object CardActivator {
     private const val cost = 11
 
     @Synchronized
-    public fun generateTotpSecret(): ByteArray {
+    fun generateTotpSecret(): ByteArray {
         // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
         // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be?
         // -> 160bit)
@@ -22,11 +22,11 @@ object CardActivator {
         return keyGenerator.generateKey().encoded
     }
 
-    public fun hashActivationSecret(rawActivationSecret: ByteArray): ByteArray =
-            BCrypt.withDefaults().hash(cost, rawActivationSecret)
+    fun hashActivationSecret(rawActivationSecret: ByteArray): ByteArray =
+        BCrypt.withDefaults().hash(cost, rawActivationSecret)
 
-    public fun verifyActivationSecret(
-            rawActivationSecret: ByteArray,
-            activationSecretHash: ByteArray
+    fun verifyActivationSecret(
+        rawActivationSecret: ByteArray,
+        activationSecretHash: ByteArray,
     ): Boolean = BCrypt.verifyer().verify(rawActivationSecret, activationSecretHash).verified
 }
