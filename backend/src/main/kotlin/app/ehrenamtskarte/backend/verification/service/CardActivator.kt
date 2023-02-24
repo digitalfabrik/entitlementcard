@@ -19,8 +19,14 @@ object CardActivator {
         val keyGenerator = KeyGenerator.getInstance(algorithm)
         keyGenerator.init(TOTP_SECRET_LENGTH * 8)
 
-        return hashKey(keyGenerator.generateKey().encoded)
+        return keyGenerator.generateKey().encoded
     }
 
-    private fun hashKey(key: ByteArray): ByteArray = BCrypt.withDefaults().hash(cost, key)
+    public fun hashActivationSecret(rawActivationSecret: ByteArray): ByteArray =
+            BCrypt.withDefaults().hash(cost, rawActivationSecret)
+
+    public fun verifyActivationSecret(
+            rawActivationSecret: ByteArray,
+            activationSecretHash: ByteArray
+    ): Boolean = BCrypt.verifyer().verify(rawActivationSecret, activationSecretHash).verified
 }
