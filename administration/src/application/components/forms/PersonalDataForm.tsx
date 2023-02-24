@@ -37,6 +37,7 @@ type AdditionalProps = { regionData: Region[] }
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+// @ts-ignore // TODO fix issue
   validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions}),
   Component: ({ state, setState, regionData }) => (
     <>
