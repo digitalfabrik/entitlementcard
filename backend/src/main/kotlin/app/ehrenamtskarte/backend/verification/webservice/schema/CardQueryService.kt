@@ -16,9 +16,9 @@ class CardQueryService {
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw NullPointerException("Project not found")
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
 
-        if (card.codeType == CodeType.static) {
+        if (card.codeType == CodeType.STATIC) {
             return card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
-        } else if (card.codeType == CodeType.dynamic) {
+        } else if (card.codeType == CodeType.DYNAMIC) {
             return card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
         return false

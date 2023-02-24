@@ -90,7 +90,7 @@ class CardMutationService {
     }
 
     private fun validateNewCard(card: CardGenerationModel): Boolean {
-        return (card.codeType == CodeType.static && card.activationSecretBase64 == null) ||
-            (card.codeType == CodeType.dynamic && card.activationSecretBase64 != null)
+        return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
+            (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
     }
 }

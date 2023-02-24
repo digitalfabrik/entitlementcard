@@ -6,7 +6,6 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
@@ -17,14 +16,15 @@ const val TOTP_SECRET_LENGTH = 20
 const val ACTIVATION_SECRET_HASH_LENGTH = 70
 
 enum class CodeType {
-    static,
-    dynamic
+    STATIC,
+    DYNAMIC,
 }
 
 object Cards : IntIdTable() {
     val activationSecretHash =
-            binary("activationSecretHash", ACTIVATION_SECRET_HASH_LENGTH).nullable()
+        binary("activationSecretHash", ACTIVATION_SECRET_HASH_LENGTH).nullable()
     val totpSecret = binary("totpSecret", TOTP_SECRET_LENGTH).nullable()
+
     // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
     val expirationDay = long("expirationDay").nullable()
@@ -37,10 +37,12 @@ object Cards : IntIdTable() {
 
     init {
         check("CodeTypeConstraint") {
-            ((activationSecretHash eq null) and
+            (
+                (activationSecretHash eq null) and
                     (totpSecret eq null) and
-                    (codeType eq CodeType.static)) or
-                    ((activationSecretHash neq null) and (codeType eq CodeType.dynamic))
+                    (codeType eq CodeType.STATIC)
+                ) or
+                ((activationSecretHash neq null) and (codeType eq CodeType.DYNAMIC))
         }
     }
 }

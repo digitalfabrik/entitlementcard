@@ -30,7 +30,7 @@ object CardRepository {
         expirationDay: Long?,
         regionId: Int,
         issuerId: Int,
-        codeType: CodeType
+        codeType: CodeType,
     ) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
@@ -45,7 +45,7 @@ object CardRepository {
         }
 
     fun activate(card: CardEntity, totpSecret: ByteArray) {
-        if (card.codeType != CodeType.dynamic) {
+        if (card.codeType != CodeType.DYNAMIC) {
             throw Exception("Invalid Code Type.")
         }
         card.totpSecret = totpSecret
