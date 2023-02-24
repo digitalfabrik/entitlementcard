@@ -1,16 +1,16 @@
-import React, {useContext, useState} from 'react'
-import {Spinner} from '@blueprintjs/core'
-import {CardBlueprint} from '../../cards/CardBlueprint'
+import React, { useContext, useState } from 'react'
+import { Spinner } from '@blueprintjs/core'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import CreateCardsForm from './CreateCardsForm'
-import {useApolloClient} from '@apollo/client'
-import {useAppToaster} from '../AppToaster'
+import { useApolloClient } from '@apollo/client'
+import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
-import {WhoAmIContext} from '../../WhoAmIProvider'
-import {createCards} from '../../cards/activation'
-import {ProjectConfigContext} from '../../project-configs/ProjectConfigContext'
-import {CodeType, Region} from '../../generated/graphql'
-import {generatePdf} from '../../cards/PdfFactory'
+import { WhoAmIContext } from '../../WhoAmIProvider'
+import { createCards } from '../../cards/activation'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { CodeType, Region } from '../../generated/graphql'
+import { generatePdf } from '../../cards/PdfFactory'
 
 enum CardActivationState {
   input,
@@ -19,11 +19,11 @@ enum CardActivationState {
 }
 
 const CreateCardsController = () => {
-  const {region} = useContext(WhoAmIContext).me!
+  const { region } = useContext(WhoAmIContext).me!
 
   if (!region) {
     return (
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p>Sie sind nicht berechtigt, Karten auszustellen.</p>
       </div>
     )
@@ -32,7 +32,7 @@ const CreateCardsController = () => {
   return <InnerCreateCardsController region={region} />
 }
 
-const InnerCreateCardsController = ({region}: {region: Region}) => {
+const InnerCreateCardsController = ({ region }: { region: Region }) => {
   const projectConfig = useContext(ProjectConfigContext)
   const client = useApolloClient()
   const appToaster = useAppToaster()
@@ -49,8 +49,8 @@ const InnerCreateCardsController = ({region}: {region: Region}) => {
       })
       const staticCodes = projectConfig.staticQrCodesEnabled
         ? cardBlueprints.map(cardBlueprints => {
-          return cardBlueprints.generateStaticVerificationCode()
-        })
+            return cardBlueprints.generateStaticVerificationCode()
+          })
         : null
 
       const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)

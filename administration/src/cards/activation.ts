@@ -1,4 +1,4 @@
-import {DynamicActivationCode, StaticVerificationCode} from '../generated/card_pb'
+import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import {
   AddCardDocument,
   AddCardMutation,
@@ -8,8 +8,8 @@ import {
   Region,
 } from '../generated/graphql'
 import hashCardInfo from './hashCardInfo'
-import {ApolloClient} from '@apollo/client'
-import {uint8ArrayToBase64} from '../util/base64'
+import { ApolloClient } from '@apollo/client'
+import { uint8ArrayToBase64 } from '../util/base64'
 
 export async function createCard<T extends DynamicActivationCode | StaticVerificationCode>(
   client: ApolloClient<object>,
@@ -31,7 +31,7 @@ export async function createCard<T extends DynamicActivationCode | StaticVerific
 
   return await client.mutate<AddCardMutation, AddCardMutationVariables>({
     mutation: AddCardDocument,
-    variables: {card},
+    variables: { card },
   })
 }
 
