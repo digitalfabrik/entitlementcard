@@ -45,7 +45,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     return {
       type: 'valid',
       value: [
-        1, // TODO: Add a mechanism to retrieve this regionId
+        Number(state.stepPersonalData.region.region.selectedText), // TODO: Add check for regionId, uncomment options validation
         {
           personalData: personalData.value,
           cardType: stepCardType.value.cardType,
