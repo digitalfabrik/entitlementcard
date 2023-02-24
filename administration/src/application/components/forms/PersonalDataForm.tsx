@@ -1,4 +1,4 @@
-import {PersonalDataInput, Region, ShortTextInput} from '../../../generated/graphql'
+import { PersonalDataInput, Region, ShortTextInput } from '../../../generated/graphql'
 import AddressForm from './AddressForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
@@ -13,7 +13,7 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
-import RegionForm, {getOptions} from './RegionForm'
+import RegionForm, { getOptions } from './RegionForm'
 
 const SubForms = {
   forenames: ShortTextForm,
@@ -37,8 +37,8 @@ type AdditionalProps = { regionData: Region[] }
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-// @ts-ignore // TODO fix issue
-  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions}),
+  // @ts-ignore // TODO fix issue
+  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions }),
   Component: ({ state, setState, regionData }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

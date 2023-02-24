@@ -31,8 +31,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   validate: state => {
     const personalData = PersonalDataForm.validate(state.stepPersonalData)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
-    if (personalData.type === 'error' || stepCardType.type === 'error')
-      return { type: 'error' }
+    if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
     const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
