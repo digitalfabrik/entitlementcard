@@ -60,31 +60,29 @@ class ScreenshotTests: XCTestCase {
     }
     
     func testOpenDetail() throws {
-        return;
-        
         let app = XCUIApplication()
         setupSnapshot(app)
         app.launchArguments += ["UI-Testing"]
         app.launch()
         
-        let element = app.staticTexts["Suche\nTab 2 von 3"]
+        let element = app.staticTexts["Suche\nTab 2 von 4"]
         self.waitForElementToAppear(element: element)
         sleep(5)
         
-        app.staticTexts["Suche\nTab 2 von 3"].tap()
+        app.staticTexts["Suche\nTab 2 von 4"].tap()
         let search = app.textFields["Tippen, um zu suchen …"]
         search.tap()
         
 
         search.tap()
-        search.typeText("Alpha-Caf")
+        search.typeText("Eiscafe")
         search.typeText("\n") // Close keyboard for more space
         
         app.images.matching(identifier: "Essen/Trinken/Gastronomie").element(boundBy: 0).tap()
 
         // on ipads the list element is a "otherElements" element, on iphones it is a "staticTexts"
-        var result = app.descendants(matching: .any).element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
-            
+        var result = app.descendants(matching: .any).element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Dolomiti"))
+        
         //if (!result.exists || !result.isHittable) {
         //    result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", "Alpha"))
         //}
