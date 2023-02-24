@@ -13,18 +13,46 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const organizationCategoryOptions = [
-  'Soziales/Jugend/Senioren',
-  'Tierschutz',
-  'Sport',
-  'Bildung',
-  'Umwelt-/Naturschutz',
-  'Kultur',
-  'Gesundheit',
-  'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-  'Kirchen',
-  'Andere',
-]
+const organizationCategoryOptions = {
+  items: [
+    {
+      label: 'Soziales/Jugend/Senioren',
+      value: 'Soziales/Jugend/Senioren',
+    },
+    {
+      label: 'Tierschutz',
+      value: 'Tierschutz',
+    },
+    {
+      label: 'Sport',
+      value: 'Sport',
+    },
+    {
+      label: 'Umwelt-/Naturschutz',
+      value: 'Umwelt-/Naturschutz',
+    },
+    {
+      label: 'Kultur',
+      value: 'Kultur',
+    },
+    {
+      label: 'Gesundheit',
+      value: 'Gesundheit',
+    },
+    {
+      label: 'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+      value: 'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+    },
+    {
+      label: 'Kirchen',
+      value: 'Kirchen',
+    },
+    {
+      label: 'Andere',
+      value: 'Andere',
+    },
+  ],
+}
 
 const contactHasGivenPermissionOptions = {
   required: true,
