@@ -32,6 +32,13 @@ class RegionsQueryService {
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 
+    @GraphQLDescription("Returns region data by postal code.")
+    fun regionByPostalCode(postalCode: String): Region = transaction {
+        if (postalCode.length > 5) null
+        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode)
+        Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
+    }
+
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))
     @GraphQLDescription("Return list of all regions in the eak bayern project.")
     fun regions(): List<Region> = regionsInProject(DEFAULT_PROJECT)

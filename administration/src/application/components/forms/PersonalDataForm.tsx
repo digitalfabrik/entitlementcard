@@ -1,4 +1,4 @@
-import { PersonalDataInput } from '../../../generated/graphql'
+import { PersonalDataInput, Region } from '../../../generated/graphql'
 import AddressForm from './AddressForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
@@ -13,6 +13,7 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
+import RegionForm from './RegionForm'
 
 const SubForms = {
   forenames: ShortTextForm,
@@ -21,6 +22,7 @@ const SubForms = {
   emailAddress: EmailForm,
   telephone: OptionalShortTextForm,
   dateOfBirth: DateForm,
+  region: RegionForm,
 }
 
 const dateOfBirthOptions = {
@@ -31,12 +33,12 @@ const dateOfBirthOptions = {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { regionData: Region[] }
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions }),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState, regionData }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
@@ -56,6 +58,12 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       </div>
       <CustomDivider label='Adresse (Erstwohnsitz)' />
       <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+      <SubForms.region.Component
+        state={state.region}
+        setState={useUpdateStateCallback(setState, 'region')}
+        regionData={regionData}
+        postalCode={state.address.postalCode.shortText}
+      />
       <CustomDivider label='Weitere Angaben' />
       <SubForms.emailAddress.Component
         state={state.emailAddress}

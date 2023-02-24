@@ -3,16 +3,17 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { useAddEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
+import { useAddEakApplicationMutation, useGetDataPolicyQuery, useGetRegionsQuery } from '../../generated/graphql'
 import { DialogActions, Typography } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -28,7 +29,7 @@ const SuccessContent = styled.div`
   margin-bottom: 1rem;
 `
 
-const ApplyController = () => {
+const ApplyController = (): React.ReactElement | null => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const [addBlueEakApplication, { loading }] = useAddEakApplicationMutation({
@@ -55,6 +56,18 @@ const ApplyController = () => {
     // TODO: Add proper error handling and a refetch button when regionId query is implemented
     onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
   })
+  const projectId = useContext(ProjectConfigContext).projectId
+  const {
+    loading: loadingRegions,
+    error,
+    data: regionData,
+  } = useGetRegionsQuery({
+    variables: { project: projectId },
+  })
+  const regions = useMemo(
+    () => (regionData ? [...regionData.regions].sort((a, b) => a.name.localeCompare(b.name)) : null),
+    [regionData]
+  )
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -86,6 +99,10 @@ const ApplyController = () => {
             Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
             Sie können das Fenster jetzt schließen.`
 
+  if (!regions) {
+    return null
+  }
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
@@ -103,6 +120,7 @@ const ApplyController = () => {
             onSubmit={submit}
             loading={loading || loadingPolicy}
             privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+            regionData={regions}
           />
         )}
         <DialogActions>

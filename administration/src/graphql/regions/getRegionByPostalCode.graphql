@@ -1,0 +1,5 @@
+query getRegionByPostalCode($postalCode: String!) {
+  region: regionByPostalCode(postalCode: $postalCode) {
+    id
+  }
+}

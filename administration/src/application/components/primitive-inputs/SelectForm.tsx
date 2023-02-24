@@ -6,14 +6,14 @@ import { FormContext } from '../SteppedSubForms'
 
 type State = { selectedText: string }
 type ValidatedInput = ShortTextInput
-type Options = { items: string[] }
-type AdditionalProps = { label: string }
+type Options = string[]
+type AdditionalProps = { label: string; default?: string }
 const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { selectedText: '' },
   getArrayBufferKeys: () => [],
   validate: ({ selectedText }, options) => {
     if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!options.items.includes(selectedText))
+    if (!options.includes(selectedText))
       return {
         type: 'error',
         message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
@@ -35,7 +35,7 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           label={label}
           onBlur={() => setTouched(true)}
           onChange={e => setState(() => ({ selectedText: e.target.value }))}>
-          {options.items.map(item => (
+          {options.map(item => (
             <MenuItem key={item} value={item}>
               {item}
             </MenuItem>

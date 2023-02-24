@@ -1,4 +1,4 @@
-import { ApplicationInput, BavariaCardType } from '../../../generated/graphql'
+import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
 import { Form } from '../../FormType'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -7,11 +7,13 @@ import StepSendForm from './StepSendForm'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
+import AddressForm from './AddressForm'
 
 type RegionId = number
 
 const SubForms = {
   stepPersonalData: PersonalDataForm,
+  stepAddressData: AddressForm,
   stepCardType: StepCardTypeForm,
   stepRequirements: StepRequirementsForm,
   stepSend: StepSendForm,
@@ -20,7 +22,7 @@ const SubForms = {
 type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = {}
-type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
+type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string; regionData: Region[] }
 const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
@@ -29,8 +31,10 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const personalData = PersonalDataForm.validate(state.stepPersonalData)
+    const addressData = AddressForm.validate(state.stepAddressData)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
-    if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
+    if (personalData.type === 'error' || stepCardType.type === 'error' || addressData.type === 'error')
+      return { type: 'error' }
 
     const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
@@ -57,7 +61,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       ],
     }
   },
-  Component: ({ state, setState, onSubmit, loading, privacyPolicy }) => {
+  Component: ({ state, setState, onSubmit, loading, privacyPolicy, regionData }) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,
@@ -65,7 +69,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       setState,
       'stepPersonalData',
       {},
-      {}
+      { regionData }
     )
     const cardTypeStep = useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {})
     const requirementsStep = useFormAsStep(

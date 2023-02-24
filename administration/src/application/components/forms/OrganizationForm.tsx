@@ -13,20 +13,18 @@ import {
   createCompoundInitialState,
 } from '../../compoundFormUtils'
 
-const organizationCategoryOptions = {
-  items: [
-    'Soziales/Jugend/Senioren',
-    'Tierschutz',
-    'Sport',
-    'Bildung',
-    'Umwelt-/Naturschutz',
-    'Kultur',
-    'Gesundheit',
-    'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-    'Kirchen',
-    'Andere',
-  ],
-}
+const organizationCategoryOptions = [
+  'Soziales/Jugend/Senioren',
+  'Tierschutz',
+  'Sport',
+  'Bildung',
+  'Umwelt-/Naturschutz',
+  'Kultur',
+  'Gesundheit',
+  'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+  'Kirchen',
+  'Andere',
+]
 
 const contactHasGivenPermissionOptions = {
   required: true,
