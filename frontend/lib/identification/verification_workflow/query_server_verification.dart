@@ -14,7 +14,7 @@ Future<bool> queryDynamicServerVerification(
     projectId,
     hash,
     verificationCode.otp,
-    CodeType.kw$dynamic,
+    CodeType.kw$DYNAMIC,
   );
 }
 
@@ -29,7 +29,7 @@ Future<bool> queryStaticServerVerification(
     projectId,
     hash,
     null,
-    CodeType.kw$static,
+    CodeType.kw$STATIC,
   );
 }
 

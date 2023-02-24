@@ -193,8 +193,8 @@ enum BlueCardEntitlementType {
 }
 
 enum CodeType {
-  dynamic
-  static
+  DYNAMIC
+  STATIC
 }
 
 enum GoldenCardEntitlementType {
