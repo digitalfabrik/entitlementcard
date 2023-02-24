@@ -10,11 +10,9 @@ USt-Identifikations-Nr. gemäß § 27 a Umsatzsteuergesetz: DE - 811335517
 
 Verantwortlich für den Inhalt
 
-Christian K. J. Diener
-Leiter Referat Öffentlichkeitsarbeit
-Telefon: 089 1261-1640
-Telefax: 089 1261-181640
-E-Mail: Oeffentlichkeitsarbeit@stmas.bayern.de
+Referat Öffentlichkeitsarbeit
+Telefon: 089 1261-01
+E-Mail: Poststelle@stmas.bayern.de
 
 E-Mail zur Ehrenamtskarte: Ehrenamtskarte@stmas.bayern.de
 

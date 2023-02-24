@@ -3,17 +3,17 @@ import 'dart:typed_data';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
+import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
@@ -50,13 +50,13 @@ class VerificationQrScannerPage extends StatelessWidget {
         if (config.showDevSettings)
           TextButton(
             onPressed: () async {
-              final provider = Provider.of<ActivationCodeModel>(context, listen: false);
-              final activationCode = provider.activationCode!;
-              final otp = OTPGenerator(activationCode.totpSecret).generateOTP().code;
+              final provider = Provider.of<UserCodeModel>(context, listen: false);
+              final userCode = provider.userCode!;
+              final otp = OTPGenerator(userCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode(
                 dynamicVerificationCode: DynamicVerificationCode(
-                  info: activationCode.info,
-                  pepper: activationCode.pepper,
+                  info: userCode.info,
+                  pepper: userCode.pepper,
                   otp: otp,
                 ),
               );

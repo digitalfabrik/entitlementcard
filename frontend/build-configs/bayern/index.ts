@@ -80,7 +80,9 @@ export const bayernCommon: CommonBuildConfigType = {
             "Zustimmung.\nIhr Standort wird nicht gespeichert.",
         imagePath: "assets/bayern/intro_slides/search_with_location.png"
     },
-    featureFlags: {},
+    featureFlags: {
+        verification: false
+    },
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
     publisherAddress:

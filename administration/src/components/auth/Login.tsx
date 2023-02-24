@@ -28,8 +28,6 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
       },
     })
 
-  console.log(process.env.NODE_ENV)
-
   return (
     <StandaloneCenter>
       <Card style={{ width: '100%', maxWidth: '500px' }}>

@@ -1,15 +1,15 @@
 import 'dart:developer';
 
-import 'package:ehrenamtskarte/identification/activation_code_store.dart';
+import 'package:ehrenamtskarte/identification/user_code_store.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/foundation.dart';
 
-class ActivationCodeModel extends ChangeNotifier {
-  DynamicActivationCode? _activationCode;
+class UserCodeModel extends ChangeNotifier {
+  DynamicUserCode? _userCode;
   bool _isInitialized = false;
 
-  DynamicActivationCode? get activationCode {
-    return _activationCode;
+  DynamicUserCode? get userCode {
+    return _userCode;
   }
 
   bool get isInitialized {
@@ -21,7 +21,7 @@ class ActivationCodeModel extends ChangeNotifier {
       return;
     }
     try {
-      _activationCode = await const ActivationCodeStore().load();
+      _userCode = await const UserCodeStore().load();
     } on Exception catch (e) {
       log("Failed to initialize activation code from secure storage.", error: e);
     } finally {
@@ -30,15 +30,15 @@ class ActivationCodeModel extends ChangeNotifier {
     }
   }
 
-  void setCode(DynamicActivationCode code) {
-    const ActivationCodeStore().store(code);
-    _activationCode = code;
+  void setCode(DynamicUserCode code) {
+    const UserCodeStore().store(code);
+    _userCode = code;
     notifyListeners();
   }
 
   void removeCode() {
-    const ActivationCodeStore().remove();
-    _activationCode = null;
+    const UserCodeStore().remove();
+    _userCode = null;
     notifyListeners();
   }
 }

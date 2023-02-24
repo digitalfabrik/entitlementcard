@@ -13,18 +13,29 @@ import java.time.Instant
 
 object CardRepository {
 
-    fun findByHashModel(project: String, hashModel: ByteArray): CardEntity? {
-        val query = (Projects innerJoin Regions innerJoin Cards)
-            .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardInfoHash eq hashModel) }
-            .singleOrNull()
+    fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
+        val query =
+            (Projects innerJoin Regions innerJoin Cards)
+                .slice(Cards.columns)
+                .select {
+                    Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash)
+                }
+                .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun insert(cardInfoHash: ByteArray, totpSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
+    fun insert(
+        cardInfoHash: ByteArray,
+        activationSecretHash: ByteArray?,
+        expirationDay: Long?,
+        regionId: Int,
+        issuerId: Int,
+        codeType: CodeType,
+    ) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
-            this.totpSecret = totpSecret
+            this.activationSecretHash = activationSecretHash
+            this.totpSecret = null
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
@@ -32,4 +43,11 @@ object CardRepository {
             this.revoked = false
             this.codeType = codeType
         }
+
+    fun activate(card: CardEntity, totpSecret: ByteArray) {
+        if (card.codeType != CodeType.DYNAMIC) {
+            throw Exception("Invalid Code Type.")
+        }
+        card.totpSecret = totpSecret
+    }
 }

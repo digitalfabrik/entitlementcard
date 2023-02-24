@@ -69,6 +69,13 @@ message QrCode {
 message DynamicActivationCode {
   CardInfo info = 1;
   bytes pepper = 2;
+  bytes activation_secret = 3;
+  bytes ec_signature = 4;
+}
+
+message DynamicUserCode {
+  CardInfo info = 1;
+  bytes pepper = 2;
   bytes totp_secret = 3;
   bytes ec_signature = 4;
 }

@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -8,13 +8,13 @@ Future<bool> queryDynamicServerVerification(
   String projectId,
   DynamicVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
+  final hash = verificationCode.info.hash(verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,
     hash,
     verificationCode.otp,
-    CodeType.kw$dynamic,
+    CodeType.kw$DYNAMIC,
   );
 }
 
@@ -23,13 +23,13 @@ Future<bool> queryStaticServerVerification(
   String projectId,
   StaticVerificationCode verificationCode,
 ) async {
-  final hash = const QrCodeUtils().hashCardInfo(verificationCode.info, verificationCode.pepper);
+  final hash = verificationCode.info.hash(verificationCode.pepper);
   return _queryServerVerification(
     client,
     projectId,
     hash,
     null,
-    CodeType.kw$static,
+    CodeType.kw$STATIC,
   );
 }
 

@@ -7,7 +7,7 @@ import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { activateCards } from '../../cards/activation'
+import { createCards } from '../../cards/activation'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { CodeType, Region } from '../../generated/graphql'
 import { generatePdf } from '../../cards/PdfFactory'
@@ -55,9 +55,9 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
 
       const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)
 
-      await activateCards(client, dynamicCodes, region, CodeType.Dynamic)
+      await createCards(client, dynamicCodes, region, CodeType.Dynamic)
 
-      if (staticCodes) await activateCards(client, staticCodes, region, CodeType.Static)
+      if (staticCodes) await createCards(client, staticCodes, region, CodeType.Static)
 
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)

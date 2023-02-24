@@ -1,9 +1,7 @@
 export default `Verantwortlich im Sinne § 7 TMG:
-Christian K. J. Diener
-Leiter Referat Öffentlichkeitsarbeit
-Telefon: 089 1261-1640
-Telefax: 089 1261-181640
-E-Mail: Oeffentlichkeitsarbeit@stmas.bayern.de
+Referat Öffentlichkeitsarbeit
+Telefon: 089 1261-01
+E-Mail: Poststelle@stmas.bayern.de
 Haftung im Sinne §§ 7 - 10 TMG
 
 Das Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration stellt sein App-Angebot unter folgenden Nutzungsbedingungen zur Verfügung:
