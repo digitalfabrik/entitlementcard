@@ -14,25 +14,27 @@ import java.time.Instant
 object CardRepository {
 
     fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
-        val query = (Projects innerJoin Regions innerJoin Cards)
-            .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash) }
-            .singleOrNull()
+        val query =
+            (Projects innerJoin Regions innerJoin Cards)
+                .slice(Cards.columns)
+                .select {
+                    Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash)
+                }
+                .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
-    fun findByHashAndActivationSecret(project: String, cardInfoHash: ByteArray, activationSecret: ByteArray): CardEntity? {
-        val query = (Projects innerJoin Regions innerJoin Cards)
-            .slice(Cards.columns)
-            .select { Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash) and (Cards.activationSecret eq activationSecret) }
-            .singleOrNull()
-        return if (query == null) null else CardEntity.wrapRow(query)
-    }
-
-    fun insert(cardInfoHash: ByteArray, activationSecret: ByteArray?, expirationDay: Long?, regionId: Int, issuerId: Int, codeType: CodeType) =
+    fun insert(
+        cardInfoHash: ByteArray,
+        activationSecretHash: ByteArray?,
+        expirationDay: Long?,
+        regionId: Int,
+        issuerId: Int,
+        codeType: CodeType,
+    ) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
-            this.activationSecret = activationSecret
+            this.activationSecretHash = activationSecretHash
             this.totpSecret = null
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
@@ -43,7 +45,7 @@ object CardRepository {
         }
 
     fun activate(card: CardEntity, totpSecret: ByteArray) {
-        if (card.codeType != CodeType.dynamic) {
+        if (card.codeType != CodeType.DYNAMIC) {
             throw Exception("Invalid Code Type.")
         }
         card.totpSecret = totpSecret

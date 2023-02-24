@@ -35,7 +35,8 @@ class CardMutationService {
             }
             val activationSecret =
                 card.activationSecretBase64?.let {
-                    Base64.getDecoder().decode(card.activationSecretBase64)
+                    val decodedRawActivationSecret = Base64.getDecoder().decode(it)
+                    CardActivator.hashActivationSecret(decodedRawActivationSecret)
                 }
 
             CardRepository.insert(
@@ -44,7 +45,7 @@ class CardMutationService {
                 card.cardExpirationDay,
                 card.regionId,
                 user.id.value,
-                card.codeType
+                card.codeType,
             )
         }
         return true
@@ -56,7 +57,7 @@ class CardMutationService {
         cardInfoHashBase64: String,
         activationSecretBase64: String,
         overwrite: Boolean,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.getContext<GraphQLContext>()
@@ -64,12 +65,15 @@ class CardMutationService {
             context.backendConfiguration.projects.find { it.id == project }
                 ?: throw NullPointerException("Project not found")
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
-        val activationSecret = Base64.getDecoder().decode(activationSecretBase64)
-        val card = transaction {
-            CardRepository.findByHashAndActivationSecret(project, cardHash, activationSecret)
+        val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
+        val card = transaction { CardRepository.findByHash(project, cardHash) }
+        val activationSecretHash = card?.activationSecretHash
+
+        if (card == null || activationSecretHash == null) {
+            return CardActivationResultModel(ActivationState.failed)
         }
 
-        if (card == null) {
+        if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
             logger.info("${context.remoteIp} failed to activate entitlement card")
             return CardActivationResultModel(ActivationState.failed)
         }
@@ -89,7 +93,7 @@ class CardMutationService {
     }
 
     private fun validateNewCard(card: CardGenerationModel): Boolean {
-        return (card.codeType == CodeType.static && card.activationSecretBase64 == null) ||
-            (card.codeType == CodeType.dynamic && card.activationSecretBase64 != null)
+        return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
+            (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
     }
 }

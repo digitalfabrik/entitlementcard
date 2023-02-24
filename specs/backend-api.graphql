@@ -84,9 +84,9 @@ type Coordinates {
 }
 
 type Mutation {
-  "Activate a dynamic EAK"
+  "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
-  "Stores a new digital EAK"
+  "Stores a new digital entitlement card"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
@@ -193,8 +193,8 @@ enum BlueCardEntitlementType {
 }
 
 enum CodeType {
-  dynamic
-  static
+  DYNAMIC
+  STATIC
 }
 
 enum GoldenCardEntitlementType {
@@ -219,6 +219,7 @@ scalar Upload
 
 input AddressInput {
   addressSupplement: ShortTextInput
+  country: ShortTextInput!
   houseNumber: ShortTextInput!
   location: ShortTextInput!
   postalCode: ShortTextInput!
@@ -228,9 +229,10 @@ input AddressInput {
 """
 An application for the Bayerische Ehrenamtskarte.
 The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
 """
 input ApplicationInput {
-  applicationType: ApplicationType!
+  applicationType: ApplicationType
   blueCardEntitlement: BlueCardEntitlementInput
   cardType: BavariaCardType!
   givenInformationIsCorrectAndComplete: Boolean!
@@ -275,7 +277,7 @@ input BlueCardVolunteerServiceEntitlementInput {
 }
 
 input BlueCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }
@@ -331,7 +333,7 @@ input GoldenCardMilitaryReserveEntitlementInput {
 }
 
 input GoldenCardWorkAtDepartmentEntitlementInput {
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   responsibility: ShortTextInput!
 }
@@ -364,7 +366,7 @@ input PersonalDataInput {
   emailAddress: EmailInput!
   forenames: ShortTextInput!
   surname: ShortTextInput!
-  telephone: ShortTextInput!
+  telephone: ShortTextInput
 }
 
 input SearchParamsInput {
@@ -382,7 +384,7 @@ input ShortTextInput {
 
 input WorkAtOrganizationInput {
   amountOfWork: Float!
-  certificate: AttachmentInput!
+  certificate: AttachmentInput
   organization: OrganizationInput!
   payment: Boolean!
   responsibility: ShortTextInput!
