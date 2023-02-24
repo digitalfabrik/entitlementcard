@@ -1,4 +1,4 @@
-import { PersonalDataInput, Region } from '../../../generated/graphql'
+import {PersonalDataInput, Region, ShortTextInput} from '../../../generated/graphql'
 import AddressForm from './AddressForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
@@ -13,7 +13,7 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
-import RegionForm from './RegionForm'
+import RegionForm, {getOptions} from './RegionForm'
 
 const SubForms = {
   forenames: ShortTextForm,
@@ -37,7 +37,7 @@ type AdditionalProps = { regionData: Region[] }
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions }),
+  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions}),
   Component: ({ state, setState, regionData }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -64,6 +64,7 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         setState={useUpdateStateCallback(setState, 'region')}
         regionData={regionData}
         postalCode={state.address.postalCode.shortText}
+        options={{ items: getOptions(regionData) }}
       />
       <CustomDivider label='Weitere Angaben' />
       <SubForms.emailAddress.Component

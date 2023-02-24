@@ -13,7 +13,6 @@ type RegionId = number
 
 const SubForms = {
   stepPersonalData: PersonalDataForm,
-  stepAddressData: AddressForm,
   stepCardType: StepCardTypeForm,
   stepRequirements: StepRequirementsForm,
   stepSend: StepSendForm,
@@ -31,9 +30,8 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const personalData = PersonalDataForm.validate(state.stepPersonalData)
-    const addressData = AddressForm.validate(state.stepAddressData)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
-    if (personalData.type === 'error' || stepCardType.type === 'error' || addressData.type === 'error')
+    if (personalData.type === 'error' || stepCardType.type === 'error')
       return { type: 'error' }
 
     const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {

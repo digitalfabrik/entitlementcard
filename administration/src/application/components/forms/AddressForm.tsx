@@ -27,8 +27,7 @@ const AddressForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { ...createCompoundInitialState(SubForms), country: { shortText: 'Deutschland' } },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => {
-    return (
+  Component: ({ state, setState }) =>  (
       <>
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           <div style={{ flex: '3' }}>
@@ -69,13 +68,12 @@ const AddressForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           </div>
           <SubForms.country.Component
             state={state.country}
-            setState={useUpdateStateCallback(setState, 'postalCode')}
+            setState={useUpdateStateCallback(setState, 'country')}
             label='Land'
           />
         </div>
       </>
-    )
-  },
+    ),
 }
 
 export default AddressForm

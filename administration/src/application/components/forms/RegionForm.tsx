@@ -23,7 +23,7 @@ type AdditionalProps = { regionData: Region[]; postalCode: string }
 
 const getOptionsLabel = (prefix: string, name: string) => `${name} (${prefix})`
 
-const getOptions = (regions: Region[]): SelectItem[] =>
+export const getOptions = (regions: Region[]): SelectItem[] =>
   regions.map(region => {
     return { label: getOptionsLabel(region.prefix, region.name), value: region.id.toString() }
   })
