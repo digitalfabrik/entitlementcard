@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_content_parser.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 
 class QRCodeInvalidTotpSecretException extends QrCodeParseException {
@@ -11,14 +11,6 @@ class QRCodeInvalidTotpSecretException extends QrCodeParseException {
 
 class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
   QRCodeMissingExpiryException() : super("expirationDate");
-}
-
-class QRCodeInvalidFormatException extends QrCodeParseException {
-  final Exception? cause;
-  final StackTrace? stackTrace;
-
-  QRCodeInvalidFormatException([this.cause, this.stackTrace])
-      : super("invalid format${cause == null ? "" : " (${cause.toString()})"}");
 }
 
 class ActivationCodeParser {
@@ -43,8 +35,8 @@ class ActivationCodeParser {
     if (!code.hasPepper()) {
       throw QrCodeFieldMissingException("pepper");
     }
-    if (!code.hasTotpSecret()) {
-      throw QrCodeFieldMissingException("totpSecret");
+    if (!code.hasActivationSecret()) {
+      throw QrCodeFieldMissingException("activationSecret");
     }
   }
 }

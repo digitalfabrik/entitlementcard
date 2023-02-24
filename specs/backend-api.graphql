@@ -61,6 +61,11 @@ type ApplicationView {
   regionId: Int!
 }
 
+type CardActivationResultModel {
+  activationState: ActivationState!
+  totpSecret: String
+}
+
 type Category {
   id: Int!
   name: String!
@@ -79,7 +84,9 @@ type Coordinates {
 }
 
 type Mutation {
-  "Stores a new digital EAK"
+  "Activate a dynamic entitlement card"
+  activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Stores a new digital entitlement card"
   addCard(card: CardGenerationModelInput!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
@@ -161,6 +168,12 @@ type SignInPayload {
   token: String!
 }
 
+enum ActivationState {
+  did_not_overwrite_existing
+  failed
+  success
+}
+
 enum ApplicationType {
   FIRST_APPLICATION
   RENEWAL_APPLICATION
@@ -180,8 +193,8 @@ enum BlueCardEntitlementType {
 }
 
 enum CodeType {
-  dynamic
-  static
+  DYNAMIC
+  STATIC
 }
 
 enum GoldenCardEntitlementType {
@@ -274,11 +287,11 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CardGenerationModelInput {
+  activationSecretBase64: String
   cardExpirationDay: Long
   cardInfoHashBase64: String!
   codeType: CodeType!
   regionId: Int!
-  totpSecretBase64: String
 }
 
 input CardVerificationModelInput {

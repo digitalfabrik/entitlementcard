@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/identification/activation_code_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/animated_progressbar.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
-import 'package:ehrenamtskarte/identification/qr_code_utils.dart';
+import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +11,10 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart' as qr show QrImage, QrCode, QrVersions, QrErrorCorrectLevel;
 
 class VerificationCodeView extends StatefulWidget {
-  final DynamicActivationCode activationCode;
+  final DynamicUserCode userCode;
   final OTPGenerator _otpGenerator;
 
-  VerificationCodeView({super.key, required this.activationCode})
-      : _otpGenerator = OTPGenerator(activationCode.totpSecret);
+  VerificationCodeView({super.key, required this.userCode}) : _otpGenerator = OTPGenerator(userCode.totpSecret);
 
   @override
   _VerificationCodeViewState createState() => _VerificationCodeViewState();
@@ -39,7 +38,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
   @override
   Widget build(BuildContext context) {
     final otpCode = _otpCode;
-    final activationCode = widget.activationCode;
+    final userCode = widget.userCode;
 
     if (otpCode == null) {
       return const SmallButtonSpinner();
@@ -50,10 +49,10 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final padding = min(constraints.maxWidth, constraints.maxHeight) < 400 ? 12.0 : 24.0;
-        return Consumer<ActivationCodeModel>(
+        return Consumer<UserCodeModel>(
           builder: (context, cardDetailsModel, child) {
             final qrCode = qr.QrCode.fromUint8List(
-              data: const QrCodeUtils().createDynamicVerificationQrCodeData(activationCode, otpCode.code),
+              data: createDynamicVerificationQrCodeData(userCode, otpCode.code),
               errorCorrectLevel: qr.QrErrorCorrectLevel.L,
             );
             qrCode.make();

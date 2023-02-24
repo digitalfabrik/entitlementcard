@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CardDetailView extends StatelessWidget {
-  final DynamicActivationCode activationCode;
+  final DynamicUserCode userCode;
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
 
   const CardDetailView({
     super.key,
-    required this.activationCode,
+    required this.userCode,
     required this.startActivation,
     required this.startVerification,
     required this.startApplication,
@@ -27,7 +27,7 @@ class CardDetailView extends StatelessWidget {
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(
         project: projectId,
-        ids: [activationCode.info.extensions.extensionRegion.regionId],
+        ids: [userCode.info.extensions.extensionRegion.regionId],
       ),
     );
 
@@ -45,12 +45,11 @@ class CardDetailView extends StatelessWidget {
         final paddedCard = Padding(
           padding: const EdgeInsets.all(8),
           child: IdCard(
-            cardInfo: activationCode.info,
+            cardInfo: userCode.info,
             region: region != null ? Region(region.prefix, region.name) : null,
           ),
         );
-        final richQrCode =
-            RichQrCode(activationCode: activationCode, onMoreActionsPressed: () => _onMoreActionsPressed(context));
+        final richQrCode = RichQrCode(userCode: userCode, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
         return orientation == Orientation.landscape
             ? SafeArea(
@@ -101,10 +100,10 @@ class CardDetailView extends StatelessWidget {
 
 class RichQrCode extends StatelessWidget {
   final VoidCallback onMoreActionsPressed;
-  final DynamicActivationCode activationCode;
+  final DynamicUserCode userCode;
   final bool compact;
 
-  const RichQrCode({super.key, required this.onMoreActionsPressed, required this.activationCode, this.compact = false});
+  const RichQrCode({super.key, required this.onMoreActionsPressed, required this.userCode, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +121,7 @@ class RichQrCode extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Flexible(child: VerificationCodeView(activationCode: activationCode)),
+          Flexible(child: VerificationCodeView(userCode: userCode)),
           Container(
             alignment: Alignment.center,
             child: TextButton(

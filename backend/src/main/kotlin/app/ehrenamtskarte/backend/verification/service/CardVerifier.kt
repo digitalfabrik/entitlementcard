@@ -15,19 +15,19 @@ const val TOTP_LENGTH = 6
 
 object CardVerifier {
     public fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
-        val card = transaction { CardRepository.findByHashModel(project, cardHash) } ?: return false
+        val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) &&
             !card.revoked
     }
 
     public fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
-        val card = transaction { CardRepository.findByHashModel(project, cardHash) } ?: return false
+        val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) &&
             !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
 
-    private fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
+    public fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
         return expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
     }
 
