@@ -19,34 +19,38 @@ import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
-    @GraphQLDescription("Stores a new digital entitlement card")
-    fun addCard(dfe: DataFetchingEnvironment, card: CardGenerationModel): Boolean {
+    @GraphQLDescription("Stores a batch of new digital entitlementcards")
+    fun addCards(dfe: DataFetchingEnvironment, cards: List<CardGenerationModel>): Boolean {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
-
-        if (!validateNewCard(card)) throw Exception("Card invalid.")
 
         transaction {
             val user =
                 AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw UnauthorizedException()
-            val targetedRegionId = card.regionId
-            if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
-                throw UnauthorizedException()
-            }
-            val activationSecret =
-                card.activationSecretBase64?.let {
-                    val decodedRawActivationSecret = Base64.getDecoder().decode(it)
-                    CardActivator.hashActivationSecret(decodedRawActivationSecret)
-                }
 
-            CardRepository.insert(
-                Base64.getDecoder().decode(card.cardInfoHashBase64),
-                activationSecret,
-                card.cardExpirationDay,
-                card.regionId,
-                user.id.value,
-                card.codeType,
-            )
+            for (card in cards) {
+                val targetedRegionId = card.regionId
+                if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
+                    throw UnauthorizedException()
+                }
+                if (!validateNewCard(card)) {
+                    throw Exception("Invalid cart.")
+                }
+                val activationSecret =
+                    card.activationSecretBase64?.let {
+                        val decodedRawActivationSecret = Base64.getDecoder().decode(it)
+                        CardActivator.hashActivationSecret(decodedRawActivationSecret)
+                    }
+
+                CardRepository.insert(
+                    Base64.getDecoder().decode(card.cardInfoHashBase64),
+                    activationSecret,
+                    card.cardExpirationDay,
+                    card.regionId,
+                    user.id.value,
+                    card.codeType
+                )
+            }
         }
         return true
     }
