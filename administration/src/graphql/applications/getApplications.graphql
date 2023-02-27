@@ -3,5 +3,11 @@ query getApplications($regionId: Int!) {
     id
     createdDate
     jsonValue
+    verifications {
+      contactEmailAddress
+      organizationName
+      verifiedDate
+      rejectedDate
+    }
   }
 }

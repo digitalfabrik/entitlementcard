@@ -54,11 +54,20 @@ type Administrator {
   role: Role!
 }
 
+type ApplicationVerificationView {
+  contactEmailAddress: String!
+  contactName: String!
+  organizationName: String!
+  rejectedDate: String
+  verifiedDate: String
+}
+
 type ApplicationView {
   createdDate: String!
   id: Int!
   jsonValue: String!
   regionId: Int!
+  verifications: [ApplicationVerificationView!]!
 }
 
 type CardActivationResultModel {

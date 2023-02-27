@@ -116,9 +116,9 @@ const EditUserDialog = ({
           <Callout intent='primary'>
             {selectedUser?.id === me?.id ? (
               <>
-                Sie können Ihr eigenes Passwort unter{' '}
+                Sie können Ihr eigenes Passwort in den{' '}
                 <a href={window.location.origin + '/user-settings'} target='_blank' rel='noreferrer'>
-                  {window.location.origin + '/user-settings'}
+                  Benutzereinstellungen
                 </a>{' '}
                 ändern.
               </>

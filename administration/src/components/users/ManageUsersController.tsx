@@ -1,4 +1,4 @@
-import { Button, Card, H3, Spinner } from '@blueprintjs/core'
+import { Button, Card, H3, NonIdealState, Spinner } from '@blueprintjs/core'
 import { ReactElement, useContext } from 'react'
 import {
   Region,
@@ -88,9 +88,11 @@ const ManageUsersController = () => {
     return <ManageProjectUsers />
   } else {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <p>Sie sind nicht berechtigt, Benutzer zu verwalten.</p>
-      </div>
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Benutzer zu verwalten.'
+      />
     )
   }
 }

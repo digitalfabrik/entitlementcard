@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
+import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.javalin.util.FileUtil
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
@@ -85,7 +87,8 @@ object ApplicationRepository {
     fun getApplications(regionId: Int): List<ApplicationView> {
         return transaction {
             ApplicationEntity.find { Applications.regionId eq regionId }
-                .map { ApplicationView(it.id.value, it.regionId.value, it.createdDate.toString(), it.jsonValue) }
+                .orderBy(Applications.createdDate to SortOrder.ASC)
+                .map { ApplicationView.fromDbEntity(it) }
         }
     }
 
@@ -103,6 +106,22 @@ object ApplicationRepository {
             } else {
                 false
             }
+        }
+    }
+
+    fun findByIds(ids: List<Int>): List<ApplicationEntity?> {
+        return transaction {
+            ApplicationEntity
+                .find { Applications.id inList ids }
+                .sortByKeys({ it.id.value }, ids)
+        }
+    }
+
+    fun findVerificationsByIds(ids: List<Int>): List<ApplicationVerificationEntity?> {
+        return transaction {
+            ApplicationVerificationEntity
+                .find { ApplicationVerifications.id inList ids }
+                .sortByKeys({ it.id.value }, ids)
         }
     }
 }

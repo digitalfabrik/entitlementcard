@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Spinner } from '@blueprintjs/core'
+import { NonIdealState, Spinner } from '@blueprintjs/core'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
@@ -23,9 +23,11 @@ const CreateCardsController = () => {
 
   if (!region) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <p>Sie sind nicht berechtigt, Karten auszustellen.</p>
-      </div>
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Karten auszustellen.'
+      />
     )
   }
 

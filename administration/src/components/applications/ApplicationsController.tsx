@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Spinner } from '@blueprintjs/core'
+import { NonIdealState, Spinner } from '@blueprintjs/core'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import ApplicationsOverview from './ApplicationsOverview'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
@@ -20,9 +20,11 @@ const ControllerWithRegion = () => {
 
   if (!region) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <p>Sie sind nicht berechtigt, Anträge einzusehen.</p>
-      </div>
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Anträge einzusehen.'
+      />
     )
   } else {
     return <ApplicationsController region={region} />
