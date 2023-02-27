@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import CreateCardsForm from './CreateCardsForm'
@@ -7,10 +7,10 @@ import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
 import downloadDataUri from '../../util/downloadDataUri'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { createCards } from '../../cards/activation'
+import { createCards } from '../../cards/creation'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { CodeType, Region } from '../../generated/graphql'
 import { generatePdf } from '../../cards/PdfFactory'
+import { Region } from '../../generated/graphql'
 
 enum CardActivationState {
   input,
@@ -51,13 +51,12 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
         ? cardBlueprints.map(cardBlueprints => {
             return cardBlueprints.generateStaticVerificationCode()
           })
-        : null
+        : []
 
       const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)
 
-      await createCards(client, dynamicCodes, region, CodeType.Dynamic)
-
-      if (staticCodes) await createCards(client, staticCodes, region, CodeType.Static)
+      const codes = [...dynamicCodes, ...staticCodes]
+      await createCards(client, codes, region)
 
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
