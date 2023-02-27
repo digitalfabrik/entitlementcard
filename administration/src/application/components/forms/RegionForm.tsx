@@ -1,12 +1,7 @@
-import { Region, ShortTextInput, useGetRegionByPostalCodeQuery } from '../../../generated/graphql'
+import { Region, useGetRegionByPostalCodeQuery } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { Form } from '../../FormType'
-import {
-  CompoundState,
-  createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
-  createCompoundInitialState,
-} from '../../compoundFormUtils'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useContext } from 'react'
@@ -17,7 +12,7 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = { region: ShortTextInput }
+type ValidatedInput = { regionId: number }
 type Options = { regions: Region[] }
 type AdditionalProps = { postalCode: string }
 
@@ -31,7 +26,13 @@ export const getOptions = (regions: Region[]): SelectItem[] =>
 const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { ...createCompoundInitialState(SubForms) },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, { region: { items: [] } }),
+  validate: (state, options) => {
+    const result = SubForms.region.validate(state.region, { items: getOptions(options.regions) })
+    if (result.type === 'error') {
+      return { type: 'error' }
+    }
+    return { type: 'valid', value: { regionId: Number(result.value.shortText) } }
+  },
   Component: ({ state, setState, options, postalCode }) => {
     const projectId = useContext(ProjectConfigContext).projectId
     const { enqueueSnackbar } = useSnackbar()
@@ -53,7 +54,6 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       variables: { postalCode: postalCode, projectId: projectId },
       skip: postalCode.length !== 5,
     })
-    // TODO adjust validation
 
     return (
       <SubForms.region.Component

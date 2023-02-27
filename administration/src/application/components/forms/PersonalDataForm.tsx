@@ -58,13 +58,6 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       </div>
       <CustomDivider label='Adresse (Erstwohnsitz)' />
       <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
-      <CustomDivider label='Region (wird ermittelt)' />
-      <SubForms.region.Component
-        state={state.region}
-        setState={useUpdateStateCallback(setState, 'region')}
-        postalCode={state.address.postalCode.shortText}
-        options={{ regions: options.regions }}
-      />
       <CustomDivider label='Weitere Angaben' />
       <SubForms.emailAddress.Component
         state={state.emailAddress}
@@ -81,6 +74,13 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         setState={useUpdateStateCallback(setState, 'dateOfBirth')}
         label='Geburtsdatum'
         options={dateOfBirthOptions}
+      />
+      <CustomDivider label='Region (wird ermittelt)' />
+      <SubForms.region.Component
+        state={state.region}
+        setState={useUpdateStateCallback(setState, 'region')}
+        postalCode={state.address.postalCode.shortText}
+        options={{ regions: options.regions }}
       />
     </>
   ),
