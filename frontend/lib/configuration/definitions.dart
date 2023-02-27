@@ -1,13 +1,16 @@
-const String appEnvironment = String.fromEnvironment("environment", defaultValue: "staging");
+const String showcase = "showcase";
+const String production = "production";
+const String local = "local";
+const String appEnvironment = String.fromEnvironment("environment", defaultValue: showcase);
 
 bool isProduction() {
-  return appEnvironment == "production";
+  return appEnvironment == production;
 }
 
 bool isLocal() {
-  return appEnvironment == "local";
+  return appEnvironment == local;
 }
 
 bool isShowcase() {
-  return appEnvironment == "showcase";
+  return appEnvironment == showcase;
 }

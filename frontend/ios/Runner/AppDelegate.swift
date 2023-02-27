@@ -3,14 +3,19 @@ import Flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    clearITNRWStorage()
-    GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        clearITNRWStorage()
+        
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+            UserDefaults.standard.set(false, forKey: "flutter.firstStart");
+        }
+        
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
     
     func clearITNRWStorage() {
         let preferences = UserDefaults.standard
@@ -19,12 +24,12 @@ import Flutter
         if preferences.string(forKey: key) != nil {
             //clear preferences
             resetDefaults()
-
+            
             //clear storage
             removeCache()
         }
     }
-
+    
     func resetDefaults() {
         let defs = UserDefaults.standard
         let dict = defs.dictionaryRepresentation()
