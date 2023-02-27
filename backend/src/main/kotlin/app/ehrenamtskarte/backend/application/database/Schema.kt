@@ -37,7 +37,7 @@ object ApplicationVerifications : IntIdTable() {
 
     init {
         check("notVerifiedAndRejected") {
-            not(verifiedDate.isNotNull() and verifiedDate.isNotNull())
+            not(verifiedDate.isNotNull() and rejectedDate.isNotNull())
         }
     }
 }
