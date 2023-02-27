@@ -89,7 +89,10 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   const submit = () => {
-    const validationResult = ApplicationForm.validate(state, { regions: [] })
+    if (!regions) {
+      return
+    }
+    const validationResult = ApplicationForm.validate(state, { regions: regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',
