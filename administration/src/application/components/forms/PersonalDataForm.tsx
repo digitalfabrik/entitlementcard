@@ -31,13 +31,14 @@ const dateOfBirthOptions = {
 } as const
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = PersonalDataInput
+type ValidatedInput = PersonalDataInput & { region: { regionId: number } }
 type Options = { regions: Region[] }
 type AdditionalProps = {}
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: { regions: [] } }),
+  validate: (state, options) =>
+    createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: options })(state),
   Component: ({ state, setState, options }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

@@ -17,7 +17,7 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {
     if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!options.items.map(item => item.label === selectedValue))
+    if (!(selectedValue in options.items.map(item => item.value)))
       return {
         type: 'error',
         message: `Wert muss einer der auswählbaren Optionen entsprechen.`,

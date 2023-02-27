@@ -27,10 +27,10 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     activeStep: 0,
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: state => {
-    const personalData = PersonalDataForm.validate(state.stepPersonalData, { regions: [] })
+  validate: (state, options) => {
+    const stepPersonalData = PersonalDataForm.validate(state.stepPersonalData, options)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
-    if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
+    if (stepPersonalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
     const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
@@ -38,12 +38,14 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     const stepSend = StepSendForm.validate(state.stepSend)
     if (stepRequirements.type === 'error' || stepSend.type === 'error') return { type: 'error' }
 
+    const { region, ...personalDataInput } = stepPersonalData.value
+
     return {
       type: 'valid',
       value: [
-        Number(state.stepPersonalData.region.region.selectedValue), // TODO: Add check for regionId, uncomment options validation
+        region.regionId,
         {
-          personalData: personalData.value,
+          personalData: personalDataInput,
           cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
           wantsDigitalCard: stepCardType.value.wantsDigitalCard,
