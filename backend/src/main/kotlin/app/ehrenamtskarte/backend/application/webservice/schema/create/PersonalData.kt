@@ -17,6 +17,7 @@ data class PersonalData(
     val dateOfBirth: DateInput,
     val telephone: ShortTextInput?,
     val emailAddress: EmailInput,
+    val region: ShortTextInput
 ) : JsonFieldSerializable {
 
     init {
@@ -38,6 +39,7 @@ data class PersonalData(
                 dateOfBirth.toJsonField("dateOfBirth", mapOf("de" to "Geburtsdatum")),
                 telephone?.toJsonField("telephone", mapOf("de" to "Telefonnummer")),
                 emailAddress.toJsonField("emailAddress", mapOf("de" to "Email-Adresse")),
+                region.toJsonField("region", mapOf("de" to "Region"))
             ),
         )
     }

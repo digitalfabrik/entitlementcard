@@ -14,6 +14,8 @@ import styled from 'styled-components'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import ErrorHandler from '../../ErrorHandler'
+import { Spinner } from '@blueprintjs/core'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -51,9 +53,13 @@ const ApplyController = (): React.ReactElement | null => {
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
+  const {
+    loading: loadingPolicy,
+    error: errorPolicy,
+    data: policyData,
+    refetch: refetchPolicy,
+  } = useGetDataPolicyQuery({
     variables: { regionId: regionId },
-    // TODO: Add proper error handling and a refetch button when regionId query is implemented
     onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
   })
   const projectId = useContext(ProjectConfigContext).projectId
@@ -61,6 +67,7 @@ const ApplyController = (): React.ReactElement | null => {
     loading: loadingRegions,
     error,
     data: regionData,
+    refetch: refetchRegions,
   } = useGetRegionsQuery({
     variables: { project: projectId },
   })
@@ -82,7 +89,7 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   const submit = () => {
-    const validationResult = ApplicationForm.validate(state)
+    const validationResult = ApplicationForm.validate(state, { regions: [] })
     console.log(state)
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
@@ -100,9 +107,9 @@ const ApplyController = (): React.ReactElement | null => {
             Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
             Sie können das Fenster jetzt schließen.`
 
-  if (!regions) {
-    return null
-  }
+  if (loadingRegions || loadingPolicy) return <Spinner />
+  else if (error || !regions) return <ErrorHandler refetch={refetchRegions} />
+  else if (errorPolicy || !policyData) return <ErrorHandler refetch={refetchPolicy} />
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
@@ -121,7 +128,7 @@ const ApplyController = (): React.ReactElement | null => {
             onSubmit={submit}
             loading={loading || loadingPolicy}
             privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
-            regionData={regions}
+            options={{ regions: regions }}
           />
         )}
         <DialogActions>

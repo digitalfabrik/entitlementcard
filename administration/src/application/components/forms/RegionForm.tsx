@@ -18,8 +18,8 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = { region: ShortTextInput }
-type Options = {}
-type AdditionalProps = { regionData: Region[]; postalCode: string }
+type Options = { regions: Region[] }
+type AdditionalProps = { postalCode: string }
 
 const getOptionsLabel = (prefix: string, name: string) => `${name} (${prefix})`
 
@@ -32,7 +32,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { ...createCompoundInitialState(SubForms) },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, { region: { items: [] } }),
-  Component: ({ state, setState, regionData, postalCode }) => {
+  Component: ({ state, setState, options, postalCode }) => {
     const projectId = useContext(ProjectConfigContext).projectId
     const { enqueueSnackbar } = useSnackbar()
     const {} = useGetRegionByPostalCodeQuery({
@@ -47,7 +47,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           enqueueSnackbar(`${getOptionsLabel(prefix, name)} wurde als ihre Region ermittelt.`, {
             variant: 'success',
           })
-          setState(() => ({ region: { selectedText: id.toString() } }))
+          setState(() => ({ region: { selectedValue: id.toString() } }))
         }
       },
       variables: { postalCode: postalCode, projectId: projectId },
@@ -60,7 +60,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         state={state.region}
         setState={useUpdateStateCallback(setState, 'region')}
         label='Region'
-        options={{ items: getOptions(regionData) }}
+        options={{ items: getOptions(options.regions) }}
       />
     )
   },

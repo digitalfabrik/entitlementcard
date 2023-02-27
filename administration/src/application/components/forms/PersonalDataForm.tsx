@@ -1,4 +1,4 @@
-import { PersonalDataInput, Region, ShortTextInput } from '../../../generated/graphql'
+import { PersonalDataInput, Region } from '../../../generated/graphql'
 import AddressForm from './AddressForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
@@ -13,7 +13,7 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
-import RegionForm, { getOptions } from './RegionForm'
+import RegionForm from './RegionForm'
 
 const SubForms = {
   forenames: ShortTextForm,
@@ -32,14 +32,13 @@ const dateOfBirthOptions = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput
-type Options = {}
-type AdditionalProps = { regionData: Region[] }
+type Options = { regions: Region[] }
+type AdditionalProps = {}
 const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  // @ts-ignore // TODO fix issue
-  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions }),
-  Component: ({ state, setState, regionData }) => (
+  validate: createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: { regions: [] } }),
+  Component: ({ state, setState, options }) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>
@@ -63,9 +62,8 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       <SubForms.region.Component
         state={state.region}
         setState={useUpdateStateCallback(setState, 'region')}
-        regionData={regionData}
         postalCode={state.address.postalCode.shortText}
-        options={{ items: getOptions(regionData) }}
+        options={{ regions: options.regions }}
       />
       <CustomDivider label='Weitere Angaben' />
       <SubForms.emailAddress.Component

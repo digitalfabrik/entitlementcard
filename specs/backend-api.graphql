@@ -367,6 +367,7 @@ input PersonalDataInput {
   dateOfBirth: DateInput!
   emailAddress: EmailInput!
   forenames: ShortTextInput!
+  region: ShortTextInput!
   surname: ShortTextInput!
   telephone: ShortTextInput
 }

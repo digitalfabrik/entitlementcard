@@ -7,7 +7,6 @@ import StepSendForm from './StepSendForm'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../../useUpdateStateCallback'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
-import AddressForm from './AddressForm'
 
 type RegionId = number
 
@@ -20,8 +19,8 @@ const SubForms = {
 
 type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
-type Options = {}
-type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string; regionData: Region[] }
+type Options = { regions: Region[] }
+type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
 const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
@@ -29,7 +28,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
-    const personalData = PersonalDataForm.validate(state.stepPersonalData)
+    const personalData = PersonalDataForm.validate(state.stepPersonalData, { regions: [] })
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
     if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
@@ -42,7 +41,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     return {
       type: 'valid',
       value: [
-        Number(state.stepPersonalData.region.region.selectedText), // TODO: Add check for regionId, uncomment options validation
+        Number(state.stepPersonalData.region.region.selectedValue), // TODO: Add check for regionId, uncomment options validation
         {
           personalData: personalData.value,
           cardType: stepCardType.value.cardType,
@@ -58,15 +57,15 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       ],
     }
   },
-  Component: ({ state, setState, onSubmit, loading, privacyPolicy, regionData }) => {
+  Component: ({ state, setState, options, onSubmit, loading, privacyPolicy }) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,
       state,
       setState,
       'stepPersonalData',
-      {},
-      { regionData }
+      { regions: options.regions },
+      {}
     )
     const cardTypeStep = useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {})
     const requirementsStep = useFormAsStep(

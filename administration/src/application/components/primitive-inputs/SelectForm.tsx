@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-type State = { selectedText: string }
+type State = { selectedValue: string }
 type ValidatedInput = ShortTextInput
 
 export type SelectItem = { label: string; value: string }
@@ -13,16 +13,16 @@ type Options = {
 }
 type AdditionalProps = { label: string }
 const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { selectedText: '' },
+  initialState: { selectedValue: '' },
   getArrayBufferKeys: () => [],
-  validate: ({ selectedText }, options) => {
-    if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    // if (!options.includes(selectedText))
-    //   return {
-    //     type: 'error',
-    //     message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
-    //   }
-    return { type: 'valid', value: { shortText: selectedText } }
+  validate: ({ selectedValue }, options) => {
+    if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (!options.items.map(item => item.label === selectedValue))
+      return {
+        type: 'error',
+        message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
+      }
+    return { type: 'valid', value: { shortText: selectedValue } }
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
@@ -35,10 +35,10 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         <InputLabel>{label}</InputLabel>
         <Select
           disabled={disableAllInputs}
-          value={state.selectedText}
+          value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
-          onChange={e => setState(() => ({ selectedText: e.target.value }))}>
+          onChange={e => setState(() => ({ selectedValue: e.target.value }))}>
           {options.items.map(item => (
             <MenuItem key={item.label} value={item.value}>
               {item.label}
