@@ -76,7 +76,7 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         label='Geburtsdatum'
         options={dateOfBirthOptions}
       />
-      <CustomDivider label='Region (wird ermittelt)' />
+      <CustomDivider label='Zuständige Behörde' />
       <SubForms.region.Component
         state={state.region}
         setState={useUpdateStateCallback(setState, 'region')}
