@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.mail.sendMail
+import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -12,25 +12,29 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 
 @Suppress("unused")
 class ResetPasswordMutationService {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
-        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.projects.first { it.id == project }
+        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (Administrators.email eq email))
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             val key = AdministratorsRepository.setNewPasswordResetKey(user)
-            sendMail(
+            Mailer.sendMail(
+                backendConfig,
                 projectConfig.smtp,
                 projectConfig.administrationName,
                 email,
                 "Passwort Zurücksetzen",
-                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl)
+                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl),
             )
         }
         return true
@@ -39,14 +43,14 @@ class ResetPasswordMutationService {
     private fun generateResetMailMessage(
         key: String,
         administrationName: String,
-        administrationBaseUrl: String
+        administrationBaseUrl: String,
     ): String {
         return """
             Guten Tag,
             
             Sie haben angefragt, Ihr Passwort für $administrationName zurückzusetzen.
             Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
-            $administrationBaseUrl/reset-password/$key
+            $administrationBaseUrl/reset-password/${URLEncoder.encode(key, StandardCharsets.UTF_8)}
             
             Dieser Link ist 24 Stunden gültig.
             
