@@ -3,8 +3,8 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { useAddEakApplicationMutation, useGetDataPolicyQuery, useGetRegionsQuery } from '../../generated/graphql'
-import { DialogActions, Typography } from '@mui/material'
+import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
+import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
@@ -15,14 +15,12 @@ import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ErrorHandler from '../../ErrorHandler'
-import { Spinner } from '@blueprintjs/core'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
 
 export const applicationStorageKey = 'applicationState'
-const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
 const SuccessContent = styled.div`
   white-space: pre-line;
@@ -53,19 +51,11 @@ const ApplyController = (): React.ReactElement | null => {
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  const {
-    loading: loadingPolicy,
-    error: errorPolicy,
-    data: policyData,
-    refetch: refetchPolicy,
-  } = useGetDataPolicyQuery({
-    variables: { regionId: regionId },
-    onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
-  })
+
   const projectId = useContext(ProjectConfigContext).projectId
   const {
     loading: loadingRegions,
-    error,
+    error: errorRegions,
     data: regionData,
     refetch: refetchRegions,
   } = useGetRegionsQuery({
@@ -88,10 +78,14 @@ const ApplyController = (): React.ReactElement | null => {
     return null
   }
 
+  const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
+            Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
+            Sie können das Fenster jetzt schließen.`
+
+  if (loadingRegions) return <CircularProgress style={{ margin: 'auto' }} />
+  else if (errorRegions || !regions) return <ErrorHandler refetch={refetchRegions} />
+
   const submit = () => {
-    if (!regions) {
-      return
-    }
     const validationResult = ApplicationForm.validate(state, { regions: regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
@@ -105,13 +99,6 @@ const ApplyController = (): React.ReactElement | null => {
       variables: { regionId, application },
     })
   }
-  const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
-            Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
-            Sie können das Fenster jetzt schließen.`
-
-  if (loadingRegions || loadingPolicy) return <Spinner />
-  else if (error || !regions) return <ErrorHandler refetch={refetchRegions} />
-  else if (errorPolicy || !policyData) return <ErrorHandler refetch={refetchPolicy} />
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
@@ -128,13 +115,12 @@ const ApplyController = (): React.ReactElement | null => {
             state={state}
             setState={setState}
             onSubmit={submit}
-            loading={loading || loadingPolicy}
-            privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+            loading={loading}
             options={{ regions: regions }}
           />
         )}
         <DialogActions>
-          {loading || loadingPolicy || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
         </DialogActions>
       </div>
     </div>

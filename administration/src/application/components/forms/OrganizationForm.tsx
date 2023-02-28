@@ -15,43 +15,17 @@ import {
 
 const organizationCategoryOptions = {
   items: [
-    {
-      label: 'Soziales/Jugend/Senioren',
-      value: 'Soziales/Jugend/Senioren',
-    },
-    {
-      label: 'Tierschutz',
-      value: 'Tierschutz',
-    },
-    {
-      label: 'Sport',
-      value: 'Sport',
-    },
-    {
-      label: 'Umwelt-/Naturschutz',
-      value: 'Umwelt-/Naturschutz',
-    },
-    {
-      label: 'Kultur',
-      value: 'Kultur',
-    },
-    {
-      label: 'Gesundheit',
-      value: 'Gesundheit',
-    },
-    {
-      label: 'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-      value: 'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-    },
-    {
-      label: 'Kirchen',
-      value: 'Kirchen',
-    },
-    {
-      label: 'Andere',
-      value: 'Andere',
-    },
-  ],
+    'Soziales/Jugend/Senioren',
+    'Tierschutz',
+    'Sport',
+    'Bildung',
+    'Umwelt-/Naturschutz',
+    'Kultur',
+    'Gesundheit',
+    'Katastrophenschutz/Feuerwehr/Rettungsdienst',
+    'Kirchen',
+    'Andere',
+  ].map(item => ({ label: item, value: item })),
 }
 
 const contactHasGivenPermissionOptions = {

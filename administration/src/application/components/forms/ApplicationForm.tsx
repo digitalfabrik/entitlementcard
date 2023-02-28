@@ -20,7 +20,7 @@ const SubForms = {
 type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = { regions: Region[] }
-type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
+type AdditionalProps = { onSubmit: () => void; loading: boolean }
 const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
@@ -59,7 +59,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       ],
     }
   },
-  Component: ({ state, setState, options, onSubmit, loading, privacyPolicy }) => {
+  Component: ({ state, setState, options, onSubmit, loading }) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,
@@ -79,7 +79,15 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       { cardType: state.stepCardType.cardType.selectedValue },
       {}
     )
-    const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, { privacyPolicy })
+    const sendStep = useFormAsStep(
+      'Antrag Senden',
+      StepSendForm,
+      state,
+      setState,
+      'stepSend',
+      {},
+      { regionId: Number(state.stepPersonalData.region.region.selectedValue) }
+    )
     return (
       <SteppedSubForms
         activeStep={state.activeStep}

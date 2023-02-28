@@ -34,8 +34,8 @@ class RegionsQueryService {
     }
 
     @GraphQLDescription("Returns region data by postal code.")
-    fun regionByPostalCode(postalCode: String, projectId: String): Region? = transaction {
-        val projectEntity = ProjectEntity.find { Projects.project eq projectId }.firstOrNull() ?: throw Exception("Project couldn't be found")
+    fun regionByPostalCode(postalCode: String, project: String): Region? = transaction {
+        val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw Exception("Project couldn't be found")
         val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode, projectEntity.id)
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
