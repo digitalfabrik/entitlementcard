@@ -59,7 +59,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       <SubForms.region.Component
         state={state.region}
         setState={useUpdateStateCallback(setState, 'region')}
-        label='Region'
+        label='Empfänger des Antrags'
         options={{ items: getOptions(options.regions) }}
       />
     )
