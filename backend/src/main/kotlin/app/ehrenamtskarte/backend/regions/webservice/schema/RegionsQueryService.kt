@@ -1,12 +1,14 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -33,10 +35,11 @@ class RegionsQueryService {
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 
-    @GraphQLDescription("Returns region data by postal code.")
-    fun regionByPostalCode(postalCode: String, project: String): Region? = transaction {
+    @GraphQLDescription("Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
+    fun regionByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): Region = transaction {
+        val postalCodes = dfe.getContext<GraphQLContext>().postalCodes
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw Exception("Project couldn't be found")
-        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode, projectEntity.id)
+        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode, projectEntity.id, postalCodes)
         Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
     }
 

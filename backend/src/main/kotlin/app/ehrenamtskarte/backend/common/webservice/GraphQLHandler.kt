@@ -117,9 +117,9 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
+    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File, postalCodes: Map<String, String>) =
         try {
-            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, remoteIp, backendConfiguration)
+            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, remoteIp, backendConfiguration, postalCodes)
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
@@ -128,7 +128,8 @@ class GraphQLHandler(
                     null,
                     files,
                     remoteIp,
-                    backendConfiguration
+                    backendConfiguration,
+                    postalCodes
                 )
 
                 else -> throw e
@@ -138,12 +139,12 @@ class GraphQLHandler(
     /**
      * Execute a query against schema
      */
-    fun handle(context: Context, applicationData: File) {
+    fun handle(context: Context, applicationData: File, postalCodes: Map<String, String>) {
         // Execute the query against the schema
         try {
             val (payload, files) = getPayload(context)
             val remoteIp = getIpAdress(context)
-            val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData)
+            val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData, postalCodes)
 
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
             val executionInput =

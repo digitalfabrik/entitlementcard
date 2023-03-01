@@ -136,8 +136,8 @@ type Query {
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
-  "Returns region data by postal code."
-  regionByPostalCode(postalCode: String!, project: String!): Region
+  "Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  regionByPostalCode(postalCode: String!, project: String!): Region!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Return list of all regions in the eak bayern project."

@@ -4,12 +4,10 @@ import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
-import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import java.io.FileReader
 
 object RegionsRepository {
 
@@ -38,20 +36,13 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
-    fun findRegionByPostalCode(postalCode: String, projectId: EntityID<Int>): RegionEntity {
-        try {
-            val csvInput = FileReader("src/main/resources/import/plz_ort_bayern.csv")
-            val records: Iterable<CSVRecord> = CSVFormat.RFC4180.parse(csvInput)
-            val postalCodes: MutableMap<String, String> = getPostalCodes(records)
-            val regionIdentifier = postalCodes[postalCode] ?: throw Exception("Region couldn't be found")
-            val regionId = RegionEntity.find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }.single().id
-            return RegionEntity[regionId]
-        } catch (e: Exception) {
-            throw Exception("Couldn't read CSV")
-        }
+    fun findRegionByPostalCode(postalCode: String, projectId: EntityID<Int>, postalCodes: Map<String, String>): RegionEntity {
+        val regionIdentifier = postalCodes[postalCode] ?: throw Exception("Region couldn't be found")
+        val regionId = RegionEntity.find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }.single().id
+        return RegionEntity[regionId]
     }
 
-    private fun getPostalCodes(records: Iterable<CSVRecord>): MutableMap<String, String> {
+    fun getPostalCodes(records: Iterable<CSVRecord>): MutableMap<String, String> {
         val postalCodes: MutableMap<String, String> = mutableMapOf()
         records.forEachIndexed { index, record ->
             val headline = index == 0
