@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
@@ -52,7 +51,7 @@ class ManageUsersMutationService {
                 throw UnauthorizedException()
             }
 
-            if (!AdministratorEntity.find { Administrators.email eq email }.empty()) {
+            if (!AdministratorsRepository.emailAlreadyExists(email)) {
                 throw EmailAlreadyExistsException()
             }
 
@@ -102,7 +101,7 @@ class ManageUsersMutationService {
 
             if (
                 newEmail != existingAdmin.email &&
-                !AdministratorEntity.find { Administrators.email eq newEmail }.empty()
+                AdministratorsRepository.emailAlreadyExists(newEmail)
             ) {
                 throw EmailAlreadyExistsException()
             }

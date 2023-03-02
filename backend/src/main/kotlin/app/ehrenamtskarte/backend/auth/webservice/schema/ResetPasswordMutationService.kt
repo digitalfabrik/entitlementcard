@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
@@ -24,7 +25,7 @@ class ResetPasswordMutationService {
         val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (Administrators.email eq email))
+                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             val key = AdministratorsRepository.setNewPasswordResetKey(user)
@@ -64,7 +65,7 @@ class ResetPasswordMutationService {
     fun resetPassword(project: String, email: String, passwordResetKey: String, newPassword: String): Boolean {
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (Administrators.email eq email))
+                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             if (user.passwordResetKeyExpiry!!.isBefore(LocalDateTime.now())) {
