@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.database
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -66,6 +67,17 @@ class Database {
                 setupDatabaseForApplication()
                 setupDatabaseForAuth()
             }
+
+            migrate(config)
+        }
+
+        fun migrate(config: BackendConfiguration) {
+            val flyway = Flyway.configure()
+                .baselineOnMigrate(true) // remove after first production release
+                .dataSource(config.postgres.url, config.postgres.user, config.postgres.password)
+                .locations("classpath:db/migrations")
+                .load()
+            flyway.migrate()
         }
     }
 }

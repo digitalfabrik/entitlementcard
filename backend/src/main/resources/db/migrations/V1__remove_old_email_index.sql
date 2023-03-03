@@ -1,0 +1,1 @@
+alter table administrators drop constraint administrators_email_unique;
