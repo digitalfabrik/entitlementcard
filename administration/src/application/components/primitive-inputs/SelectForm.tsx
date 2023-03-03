@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-type State = { selectedValue: string; autoSelected: boolean }
+type State = { selectedValue: string; manuallySelected: boolean }
 type ValidatedInput = ShortTextInput
 
 export type SelectItem = { label: string; value: string }
@@ -13,7 +13,7 @@ type Options = {
 }
 type AdditionalProps = { label: string }
 const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { selectedValue: '', autoSelected: false },
+  initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {
     if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
@@ -39,7 +39,7 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
-          onChange={e => setState(() => ({ selectedValue: e.target.value, autoSelected: false }))}>
+          onChange={e => setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))}>
           {options.items.map(item => (
             <MenuItem key={item.label} value={item.value}>
               {item.label}
