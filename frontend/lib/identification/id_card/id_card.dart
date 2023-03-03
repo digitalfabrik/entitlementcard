@@ -25,6 +25,7 @@ class IdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQueryData = MediaQuery.of(context);
     return Card(
       elevation: 5,
       margin: EdgeInsets.zero,
@@ -34,9 +35,13 @@ class IdCard extends StatelessWidget {
         constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
         child: AspectRatio(
           aspectRatio: creditCardAspectRatio,
-          child: CardContent(
-            cardInfo: cardInfo,
-            region: region,
+          child: MediaQuery(
+            // Ignore text scale factor to enforce the same layout on all devices.
+            data: mediaQueryData.copyWith(textScaleFactor: 1),
+            child: CardContent(
+              cardInfo: cardInfo,
+              region: region,
+            ),
           ),
         ),
       ),
