@@ -3,6 +3,7 @@ import { useContext, useState } from 'react'
 import { Form } from '../../FormType'
 import { DateInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
+import { formatISO, parseISO } from 'date-fns'
 
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
@@ -13,22 +14,17 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
     if (value === '') return { type: 'error', message: 'Feld ist erforderlich.' }
-    const dateMillisecondsSinceEpoch = Date.parse(value)
-    if (isNaN(dateMillisecondsSinceEpoch)) {
+    const date = parseISO(value)
+    if (isNaN(date.valueOf())) {
       return { type: 'error', message: 'Eingabe ist kein gültiges Datum.' }
     }
-    const date = new Date(dateMillisecondsSinceEpoch)
 
     if (options.maximumDate !== null) {
       if (date > options.maximumDate) {
         return { type: 'error', message: options.maximumDateErrorMessage }
       }
     }
-
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const localISODate = `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
+    const localISODate = formatISO(date, { representation: 'date' })
     return { type: 'valid', value: { date: localISODate } }
   },
   Component: ({ state, setState, label, minWidth = 100, options }) => {
@@ -46,6 +42,10 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         type='date'
         label={label}
         required
+        inputProps={{
+          max: options.maximumDate ? formatISO(options.maximumDate, { representation: 'date' }) : undefined,
+          min: '1900-01-01',
+        }}
         disabled={disableAllInputs}
         error={touched && isInvalid}
         value={state.value}
