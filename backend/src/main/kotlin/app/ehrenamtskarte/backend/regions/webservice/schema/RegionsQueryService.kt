@@ -24,23 +24,40 @@ class RegionsQueryService {
     @GraphQLDescription("Returns regions queried by ids in the given project.")
     fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> = transaction {
         RegionsRepository.findByIdsInProject(project, ids).map {
-            if (it == null) null
-            else Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
+            if (it == null) {
+                null
+            } else {
+                Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy)
+            }
         }
     }
 
     @GraphQLDescription("Returns region data for specific region.")
     fun regionByRegionId(regionId: Int): Region = transaction {
         val regionEntity = RegionsRepository.findRegionById(regionId)
-        Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
+        Region(
+            regionEntity.id.value,
+            regionEntity.prefix,
+            regionEntity.name,
+            regionEntity.regionIdentifier,
+            regionEntity.dataPrivacyPolicy,
+        )
     }
 
     @GraphQLDescription("Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
     fun regionByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): Region = transaction {
-        val postalCodes = dfe.getContext<GraphQLContext>().postalCodes
-        val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw Exception("Project couldn't be found")
-        val regionEntity = RegionsRepository.findRegionByPostalCode(postalCode, projectEntity.id, postalCodes)
-        Region(regionEntity.id.value, regionEntity.prefix, regionEntity.name, regionEntity.regionIdentifier, regionEntity.dataPrivacyPolicy)
+        val regionIdentifier = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode[postalCode]
+            ?: throw Exception("Region couldn't be found")
+        val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+            ?: throw Exception("Project couldn't be found")
+        val regionEntity = RegionsRepository.findRegionByRegionIdentifier(regionIdentifier, projectEntity.id)
+        Region(
+            regionEntity.id.value,
+            regionEntity.prefix,
+            regionEntity.name,
+            regionEntity.regionIdentifier,
+            regionEntity.dataPrivacyPolicy,
+        )
     }
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))

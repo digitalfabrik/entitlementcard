@@ -4,7 +4,6 @@ import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
-import org.apache.commons.csv.CSVRecord
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
@@ -36,20 +35,13 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
-    fun findRegionByPostalCode(postalCode: String, projectId: EntityID<Int>, postalCodes: Map<String, String>): RegionEntity {
-        val regionIdentifier = postalCodes[postalCode] ?: throw Exception("Region couldn't be found")
-        val regionId = RegionEntity.find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }.single().id
+    fun findRegionByRegionIdentifier(
+        regionIdentifier: String,
+        projectId: EntityID<Int>,
+    ): RegionEntity {
+        val regionId = RegionEntity
+            .find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }
+            .single().id
         return RegionEntity[regionId]
-    }
-
-    fun getPostalCodes(records: Iterable<CSVRecord>): MutableMap<String, String> {
-        val postalCodes: MutableMap<String, String> = mutableMapOf()
-        records.forEachIndexed { index, record ->
-            val headline = index == 0
-            if (record[1].isNotEmpty() && !headline) {
-                postalCodes[record[1]] = '0' + record[0].substring(0, 4)
-            }
-        }
-        return postalCodes
     }
 }

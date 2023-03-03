@@ -3,13 +3,9 @@ package app.ehrenamtskarte.backend.common.webservice
 import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVRecord
 import java.io.File
-import java.io.FileReader
 import kotlin.math.pow
 
 class WebService {
@@ -24,7 +20,6 @@ class WebService {
         val dataDirectory = config.server.dataDirectory
 
         val applicationData = File(dataDirectory, "applications")
-        val postalCodes: Map<String, String> = RegionsRepository.getPostalCodes(readPostalCodesFromCSV())
 
         if (applicationData.exists()) {
             if (!applicationData.isDirectory) {
@@ -64,7 +59,7 @@ class WebService {
                 ctx.header("Access-Control-Allow-Headers: Authorization")
                 ctx.header("Access-Control-Allow-Origin: *")
             }
-            graphQLHandler.handle(ctx, applicationData, postalCodes)
+            graphQLHandler.handle(ctx, applicationData)
         }
 
         app.get(mapStyleHandler.getPath()) { ctx ->
@@ -77,16 +72,6 @@ class WebService {
 
         app.get(applicationHandler.getPath()) { ctx ->
             applicationHandler.handle(ctx)
-        }
-    }
-
-    private fun readPostalCodesFromCSV(): Iterable<CSVRecord> {
-        try {
-
-            val csvInput = FileReader(File(ClassLoader.getSystemResource("import/plz_ort_bayern.csv").toURI()))
-            return CSVFormat.RFC4180.parse(csvInput)
-        } catch (e: Exception) {
-            throw Exception("Couldn't read CSV", e)
         }
     }
 }
