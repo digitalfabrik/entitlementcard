@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.primitive
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -34,7 +35,7 @@ enum class BlueCardEntitlementType {
 
 data class BlueCardWorkAtOrganizationsEntitlement(
     val list: List<WorkAtOrganization>,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     init {
         if (list.isEmpty()) {
             throw IllegalArgumentException("List may not be empty.")
@@ -46,9 +47,12 @@ data class BlueCardWorkAtOrganizationsEntitlement(
     override fun toJsonField() = JsonField(
         name = "blueCardWorkAtOrganizationsEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich."),
+        translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich"),
         value = list.map { it.toJsonField() },
     )
+
+    override fun extractApplicationVerifications() =
+        list.map { it.organization.extractApplicationVerifications() }.flatten()
 }
 
 data class BlueCardJuleicaEntitlement(
@@ -59,7 +63,7 @@ data class BlueCardJuleicaEntitlement(
     override fun toJsonField() = JsonField(
         name = "blueCardJuleicaEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)."),
+        translations = mapOf("de" to "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)"),
         value = listOf(
             juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
             juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
@@ -72,7 +76,7 @@ data class BlueCardWorkAtDepartmentEntitlement(
     val organization: Organization,
     val responsibility: ShortTextInput,
     val certificate: Attachment?,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "blueCardWorkAtDepartmentEntitlement",
@@ -85,6 +89,8 @@ data class BlueCardWorkAtDepartmentEntitlement(
             ),
         )
     }
+
+    override fun extractApplicationVerifications() = organization.extractApplicationVerifications()
 }
 
 data class BlueCardMilitaryReserveEntitlement(
@@ -129,7 +135,7 @@ data class BlueCardEntitlement(
     val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
     val militaryReserveEntitlement: BlueCardMilitaryReserveEntitlement?,
     val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?,
-) : JsonFieldSerializable {
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
         BlueCardEntitlementType.JULEICA to juleicaEntitlement,
@@ -147,4 +153,9 @@ data class BlueCardEntitlement(
     override fun toJsonField(): JsonField {
         return entitlementByEntitlementType[entitlementType]!!.toJsonField()
     }
+
+    override fun extractApplicationVerifications() = listOfNotNull(
+        workAtOrganizationsEntitlement?.extractApplicationVerifications(),
+        workAtDepartmentEntitlement?.extractApplicationVerifications(),
+    ).flatten()
 }

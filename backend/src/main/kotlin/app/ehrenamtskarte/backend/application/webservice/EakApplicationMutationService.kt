@@ -18,7 +18,7 @@ class EakApplicationMutationService {
     fun addEakApplication(
         regionId: Int,
         application: Application,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         // Validate that all files are png, jpeg or pdf files and at most 5MB.
@@ -28,19 +28,23 @@ class EakApplicationMutationService {
             throw IllegalArgumentException("An uploaded file does not adhere to the file upload requirements.")
         }
 
-        ApplicationRepository.persistApplication(
+        val (applicationEntity, verificationEntities) = ApplicationRepository.persistApplication(
             application.toJsonField(),
+            application.extractApplicationVerifications(),
             regionId,
             context.applicationData,
-            context.files
+            context.files,
         )
+
+        // TODO: Send mails
+
         return true
     }
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
         applicationId: Int,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
