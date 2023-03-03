@@ -68,7 +68,7 @@ const AddressForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         </div>
         <SubForms.country.Component
           state={state.country}
-          setState={useUpdateStateCallback(setState, 'postalCode')}
+          setState={useUpdateStateCallback(setState, 'country')}
           label='Land'
         />
       </div>

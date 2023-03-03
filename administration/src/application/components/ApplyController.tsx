@@ -3,23 +3,24 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { useAddEakApplicationMutation, useGetDataPolicyQuery } from '../../generated/graphql'
-import { DialogActions, Typography } from '@mui/material'
+import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
+import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import useVersionedLocallyStoredState from '../useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from '../globalArrayBuffersManager'
 import ApplicationForm from './forms/ApplicationForm'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import styled from 'styled-components'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationErrorBoundary from '../ApplicationErrorBoundary'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import ErrorHandler from '../../ErrorHandler'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
 
 export const applicationStorageKey = 'applicationState'
-const regionId = 1 // TODO: Add a mechanism to retrieve the regionId
 
 const SuccessContent = styled.div`
   white-space: pre-line;
@@ -28,10 +29,10 @@ const SuccessContent = styled.div`
   margin-bottom: 1rem;
 `
 
-const ApplyController = () => {
+const ApplyController = (): React.ReactElement | null => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
-  const [addBlueEakApplication, { loading }] = useAddEakApplicationMutation({
+  const [addBlueEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       console.error(error)
       enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
@@ -50,10 +51,15 @@ const ApplyController = () => {
     applicationStorageKey,
     lastCommitForApplicationForm
   )
-  const { loading: loadingPolicy, data: policyData } = useGetDataPolicyQuery({
-    variables: { regionId: regionId },
-    // TODO: Add proper error handling and a refetch button when regionId query is implemented
-    onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
+
+  const projectId = useContext(ProjectConfigContext).projectId
+  const {
+    loading: loadingRegions,
+    error: errorRegions,
+    data: regionsData,
+    refetch: refetchRegions,
+  } = useGetRegionsQuery({
+    variables: { project: projectId },
   })
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
@@ -68,8 +74,15 @@ const ApplyController = () => {
     return null
   }
 
+  const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
+            Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
+            Sie können das Fenster jetzt schließen.`
+
+  if (loadingRegions) return <CircularProgress style={{ margin: 'auto' }} />
+  else if (errorRegions || !regionsData) return <ErrorHandler refetch={refetchRegions} />
+
   const submit = () => {
-    const validationResult = ApplicationForm.validate(state)
+    const validationResult = ApplicationForm.validate(state, { regions: regionsData.regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',
@@ -82,9 +95,6 @@ const ApplyController = () => {
       variables: { regionId, application },
     })
   }
-  const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
-            Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
-            Sie können das Fenster jetzt schließen.`
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
@@ -101,12 +111,12 @@ const ApplyController = () => {
             state={state}
             setState={setState}
             onSubmit={submit}
-            loading={loading || loadingPolicy}
-            privacyPolicy={policyData?.dataPolicy.dataPrivacyPolicy ?? ''}
+            loading={loadingSubmit}
+            options={{ regions: regionsData.regions }}
           />
         )}
         <DialogActions>
-          {loading || loadingPolicy || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {loadingSubmit || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
         </DialogActions>
       </div>
     </div>

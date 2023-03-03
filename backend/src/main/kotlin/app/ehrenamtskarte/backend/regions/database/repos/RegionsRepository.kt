@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
@@ -34,5 +35,15 @@ object RegionsRepository {
 
     fun updateDataPolicy(region: RegionEntity, dataPrivacyText: String) {
         region.dataPrivacyPolicy = dataPrivacyText
+    }
+
+    fun findRegionByRegionIdentifier(
+        regionIdentifier: String,
+        projectId: EntityID<Int>,
+    ): RegionEntity {
+        val regionId = RegionEntity
+            .find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }
+            .single().id
+        return RegionEntity[regionId]
     }
 }

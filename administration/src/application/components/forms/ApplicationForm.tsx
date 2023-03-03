@@ -1,4 +1,4 @@
-import { ApplicationInput, BavariaCardType } from '../../../generated/graphql'
+import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
 import { Form } from '../../FormType'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -19,18 +19,18 @@ const SubForms = {
 
 type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
-type Options = {}
-type AdditionalProps = { onSubmit: () => void; loading: boolean; privacyPolicy: string }
+type Options = { regions: Region[] }
+type AdditionalProps = { onSubmit: () => void; loading: boolean }
 const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     activeStep: 0,
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: state => {
-    const personalData = PersonalDataForm.validate(state.stepPersonalData)
+  validate: (state, options) => {
+    const stepPersonalData = PersonalDataForm.validate(state.stepPersonalData, options)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
-    if (personalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
+    if (stepPersonalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
 
     const stepRequirements = StepRequirementsForm.validate(state.stepRequirements, {
       cardType: stepCardType.value.cardType,
@@ -38,12 +38,14 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     const stepSend = StepSendForm.validate(state.stepSend)
     if (stepRequirements.type === 'error' || stepSend.type === 'error') return { type: 'error' }
 
+    const { region, ...personalDataInput } = stepPersonalData.value
+
     return {
       type: 'valid',
       value: [
-        1, // TODO: Add a mechanism to retrieve this regionId
+        region.regionId,
         {
-          personalData: personalData.value,
+          personalData: personalDataInput,
           cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
           wantsDigitalCard: stepCardType.value.wantsDigitalCard,
@@ -57,14 +59,14 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       ],
     }
   },
-  Component: ({ state, setState, onSubmit, loading, privacyPolicy }) => {
+  Component: ({ state, setState, options, onSubmit, loading }) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,
       state,
       setState,
       'stepPersonalData',
-      {},
+      { regions: options.regions },
       {}
     )
     const cardTypeStep = useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {})
@@ -77,7 +79,15 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       { cardType: state.stepCardType.cardType.selectedValue },
       {}
     )
-    const sendStep = useFormAsStep('Antrag Senden', StepSendForm, state, setState, 'stepSend', {}, { privacyPolicy })
+    const sendStep = useFormAsStep(
+      'Antrag Senden',
+      StepSendForm,
+      state,
+      setState,
+      'stepSend',
+      {},
+      { regionId: Number(state.stepPersonalData.region.region.selectedValue) }
+    )
     return (
       <SteppedSubForms
         activeStep={state.activeStep}

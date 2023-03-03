@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParam
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
 import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
@@ -31,14 +32,15 @@ class GraphQLHandler(
     private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
-            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams
+            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
+    private val regionIdentifierByPostalCode: Map<String, String> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config
             .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema"))),
         graphQLParams.queries,
         graphQLParams.mutations,
-        graphQLParams.subscriptions
+        graphQLParams.subscriptions,
     )
     private val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
 
@@ -119,16 +121,25 @@ class GraphQLHandler(
 
     private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
         try {
-            GraphQLContext(applicationData, JwtService.verifyRequest(context), files, remoteIp, backendConfiguration)
+            GraphQLContext(
+                applicationData,
+                JwtService.verifyRequest(context),
+                files,
+                remoteIp,
+                backendConfiguration,
+                regionIdentifierByPostalCode,
+            )
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException -> GraphQLContext(
+                is InvalidClaimException, is TokenExpiredException,
+                -> GraphQLContext(
                     applicationData,
                     null,
                     files,
                     remoteIp,
-                    backendConfiguration
+                    backendConfiguration,
+                    regionIdentifierByPostalCode,
                 )
 
                 else -> throw e

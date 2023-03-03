@@ -4,21 +4,26 @@ import { Form } from '../../FormType'
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 
-type State = { selectedText: string }
+type State = { selectedValue: string; manuallySelected: boolean }
 type ValidatedInput = ShortTextInput
-type Options = { items: string[] }
+
+export type SelectItem = { label: string; value: string }
+type Options = {
+  items: SelectItem[]
+}
 type AdditionalProps = { label: string }
 const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { selectedText: '' },
+  initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
-  validate: ({ selectedText }, options) => {
-    if (selectedText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!options.items.includes(selectedText))
+  validate: ({ selectedValue }, options) => {
+    if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (!options.items.map(item => item.value).includes(selectedValue)) {
       return {
         type: 'error',
         message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
       }
-    return { type: 'valid', value: { shortText: selectedText } }
+    }
+    return { type: 'valid', value: { shortText: selectedValue } }
   },
   Component: ({ state, setState, label, options }) => {
     const [touched, setTouched] = useState(false)
@@ -31,13 +36,13 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         <InputLabel>{label}</InputLabel>
         <Select
           disabled={disableAllInputs}
-          value={state.selectedText}
+          value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
-          onChange={e => setState(() => ({ selectedText: e.target.value }))}>
+          onChange={e => setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))}>
           {options.items.map(item => (
-            <MenuItem key={item} value={item}>
-              {item}
+            <MenuItem key={item.label} value={item.value}>
+              {item.label}
             </MenuItem>
           ))}
         </Select>

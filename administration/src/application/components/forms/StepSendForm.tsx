@@ -7,10 +7,12 @@ import {
   createCompoundValidate,
   createCompoundInitialState,
 } from '../../compoundFormUtils'
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import BasicDialog from '../BasicDialog'
 import { useContext, useState } from 'react'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { useGetDataPolicyQuery } from '../../../generated/graphql'
+import ErrorHandler from '../../../ErrorHandler'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
@@ -32,7 +34,7 @@ type ValidatedInput = {
   givenInformationIsCorrectAndComplete: boolean
 }
 type Options = {}
-type AdditionalProps = { privacyPolicy: string }
+type AdditionalProps = { regionId: number }
 const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
@@ -40,7 +42,13 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     hasAcceptedDataPrivacy: hasAcceptedDatePrivacyOptions,
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
   }),
-  Component: ({ state, setState, privacyPolicy }) => {
+  Component: ({ state, setState, regionId }) => {
+    const setHasAcceptedDataPrivacyState = useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')
+    const setGivenInformationIsCorrectAndComplete = useUpdateStateCallback(
+      setState,
+      'givenInformationIsCorrectAndComplete'
+    )
+    const policyQuery = useGetDataPolicyQuery({ variables: { regionId: regionId } })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
@@ -56,18 +64,25 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         .
       </span>
     )
+
+    if (policyQuery.loading) return <CircularProgress />
+    if (policyQuery.error || !policyQuery.data)
+      return (
+        <ErrorHandler title='Die Datenschutzerklärung konnte nicht geladen werden.' refetch={policyQuery.refetch} />
+      )
+
     return (
       <>
         <SubForms.hasAcceptedDataPrivacy.Component
           state={state.hasAcceptedDataPrivacy}
-          setState={useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')}
+          setState={setHasAcceptedDataPrivacyState}
           options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
         <SubForms.givenInformationIsCorrectAndComplete.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}
-          setState={useUpdateStateCallback(setState, 'givenInformationIsCorrectAndComplete')}
+          setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
         />
         <BasicDialog
@@ -78,7 +93,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           content={
             <>
               <config.dataPrivacyContent />
-              <div>{privacyPolicy}</div>
+              <div>{policyQuery.data.dataPolicy.dataPrivacyPolicy}</div>
             </>
           }
         />

@@ -25,7 +25,7 @@ const organizationCategoryOptions = {
     'Katastrophenschutz/Feuerwehr/Rettungsdienst',
     'Kirchen',
     'Andere',
-  ],
+  ].map(item => ({ label: item, value: item })),
 }
 
 const contactHasGivenPermissionOptions = {
