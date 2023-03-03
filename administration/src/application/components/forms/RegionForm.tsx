@@ -4,7 +4,7 @@ import { Form } from '../../FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../../compoundFormUtils'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect } from 'react'
 import { Alert, CircularProgress, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 
@@ -44,24 +44,25 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     const project = useContext(ProjectConfigContext).projectId
     const regionQuery = useGetRegionByPostalCodeQuery({
       onCompleted: result => {
-        if (state.region.manuallySelected) {
-          return
-        }
-        const { id } = result.region
-        setState(() => ({
-          region: { selectedValue: id.toString(), manuallySelected: false },
-          postalCodeUsedForAutoSelect: postalCode,
-        }))
+        setState(prevState => {
+          if (prevState.region.manuallySelected) return prevState
+          return {
+            region: { selectedValue: result.region.id.toString(), manuallySelected: false },
+            postalCodeUsedForAutoSelect: postalCode,
+          }
+        })
       },
-      variables: useMemo(() => ({ postalCode, project }), [postalCode, project]),
+      variables: { postalCode, project },
       skip: postalCode.length !== 5 || state.region.manuallySelected,
     })
 
-    // Remove autoselected value when postal code changes
+    // Clear auto-selected region when postal code changes
     useEffect(() => {
       if (state.region.manuallySelected && state.postalCodeUsedForAutoSelect !== null) {
+        // Clear postalCodeUsedForAutoSelect, as the region was manually selected.
         setState(prevState => ({ ...prevState, postalCodeUsedForAutoSelect: null }))
       } else if (state.postalCodeUsedForAutoSelect !== null && postalCode !== state.postalCodeUsedForAutoSelect) {
+        // Clear the auto-selected region
         setState(() => ({
           region: { selectedValue: '', manuallySelected: false },
           postalCodeUsedForAutoSelect: null,
@@ -81,15 +82,9 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           </a>
           {` einsehen.`}
           <br />
-          Eine Liste der teilnehmenden Landkreise und kreisfreien Städte finden Sie Auswahlfeld.
+          Eine Liste der teilnehmenden Landkreise und kreisfreien Städte finden Sie im Auswahlfeld unten.
         </Typography>
-        {renderAlert({
-          manuallySelected: state.region.manuallySelected,
-          postalCodeInvalid: postalCode.length !== 5,
-          loading: regionQuery.loading,
-          erroneous: !!regionQuery.error,
-          successful: !!regionQuery.data,
-        })}
+        {renderAlert(state, postalCode, regionQuery)}
         <SubForms.region.Component
           state={state.region}
           setState={setRegionState}
@@ -101,46 +96,32 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   },
 }
 
-const renderAlert = ({
-  manuallySelected,
-  postalCodeInvalid,
-  loading,
-  erroneous,
-  successful,
-}: {
-  manuallySelected: boolean
-  postalCodeInvalid: boolean
-  loading: boolean
-  erroneous: boolean
-  successful: boolean
-}) => {
-  if (manuallySelected) {
-    return null
-  } else if (postalCodeInvalid) {
+const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionByPostalCodeQuery>) => {
+  if (state.region.manuallySelected) return null
+  else if (postalCode.length !== 5) {
     return (
       <StyledAlert severity='error'>
         Bitte geben Sie oben eine 5-stellige Postleitzahl an, sodass die zuständige Behörde automatisch ermittelt werden
         kann.
       </StyledAlert>
     )
-  } else if (loading) {
+  } else if (query.loading) {
     return <StyledAlert severity='info' icon={<CircularProgress size={'1em'} />}></StyledAlert>
-  } else if (erroneous) {
+  } else if (query.error) {
     return (
       <StyledAlert severity='warning'>
         Leider konnte die zuständige Behörde nicht automatisch anhand Ihrer Postleitzahl ermittelt werden. <br />
         Bitte nutzen Sie das folgende Auswahlfeld, um Ihre zuständige Behörde auszuwählen.
       </StyledAlert>
     )
-  } else if (successful) {
+  } else if (query.data) {
     return (
       <StyledAlert severity='success'>
         Die zuständige Behörde konnte anhand Ihrer Postleitzahl automatisch ermittelt werden.
       </StyledAlert>
     )
-  } else {
-    return null
   }
+  return null
 }
 
 export default RegionForm
