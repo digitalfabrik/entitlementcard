@@ -12,7 +12,6 @@ import BasicDialog from '../BasicDialog'
 import { useContext, useState } from 'react'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
-import { useSnackbar } from 'notistack'
 import ErrorHandler from '../../../ErrorHandler'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
@@ -49,16 +48,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       setState,
       'givenInformationIsCorrectAndComplete'
     )
-    const { enqueueSnackbar } = useSnackbar()
-    const {
-      loading: loadingPolicy,
-      error: errorPolicy,
-      data: policyData,
-      refetch: refetchPolicy,
-    } = useGetDataPolicyQuery({
-      variables: { regionId: regionId },
-      onError: () => enqueueSnackbar('Datenschutzerklärung konnte nicht geladen werden', { variant: 'error' }),
-    })
+    const policyQuery = useGetDataPolicyQuery({ variables: { regionId: regionId } })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
@@ -75,8 +65,11 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       </span>
     )
 
-    if (loadingPolicy) return <CircularProgress />
-    if (errorPolicy || !policyData) return <ErrorHandler refetch={refetchPolicy} />
+    if (policyQuery.loading) return <CircularProgress />
+    if (policyQuery.error || !policyQuery.data)
+      return (
+        <ErrorHandler title='Die Datenschutzerklärung konnte nicht geladen werden.' refetch={policyQuery.refetch} />
+      )
 
     return (
       <>
@@ -100,7 +93,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           content={
             <>
               <config.dataPrivacyContent />
-              <div>{policyData.dataPolicy.dataPrivacyPolicy}</div>
+              <div>{policyQuery.data.dataPolicy.dataPrivacyPolicy}</div>
             </>
           }
         />
