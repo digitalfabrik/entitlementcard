@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.create
 
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
@@ -47,12 +46,10 @@ data class Application(
         }
     }
 
-    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
-        return listOfNotNull(
-            blueCardEntitlement?.extractApplicationVerifications(),
-            goldenCardEntitlement?.extractApplicationVerifications(),
-        ).flatten()
-    }
+    override fun extractApplicationVerifications() = listOfNotNull(
+        blueCardEntitlement?.extractApplicationVerifications(),
+        goldenCardEntitlement?.extractApplicationVerifications(),
+    ).flatten()
 
     override fun toJsonField(): JsonField {
         return JsonField(

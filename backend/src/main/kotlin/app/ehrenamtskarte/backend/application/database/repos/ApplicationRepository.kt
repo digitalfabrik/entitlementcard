@@ -4,9 +4,9 @@ import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
+import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -28,7 +28,7 @@ import java.util.Base64
 object ApplicationRepository {
     fun persistApplication(
         applicationJson: JsonField,
-        applicationVerifications: List<ApplicationVerificationView>,
+        applicationVerifications: List<ExtractedApplicationVerification>,
         regionId: Int,
         applicationData: File,
         files: List<Part>,

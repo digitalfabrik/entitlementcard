@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
@@ -46,9 +45,8 @@ data class GoldenCardWorkAtOrganizationsEntitlement(
         value = list.map { it.toJsonField() },
     )
 
-    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
-        return list.map { it.organization.extractApplicationVerifications() }.flatten()
-    }
+    override fun extractApplicationVerifications() =
+        list.map { it.organization.extractApplicationVerifications() }.flatten()
 }
 
 data class GoldenCardHonoredByMinisterPresidentEntitlement(
@@ -80,9 +78,7 @@ data class GoldenCardWorkAtDepartmentEntitlement(
         ),
     )
 
-    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
-        return organization.extractApplicationVerifications()
-    }
+    override fun extractApplicationVerifications() = organization.extractApplicationVerifications()
 }
 
 data class GoldenCardMilitaryReserveEntitlement(
@@ -125,10 +121,8 @@ data class GoldenCardEntitlement(
         return entitlementByEntitlementType[entitlementType]!!.toJsonField()
     }
 
-    override fun extractApplicationVerifications(): List<ApplicationVerificationView> {
-        return listOfNotNull(
-            workAtOrganizationsEntitlement?.extractApplicationVerifications(),
-            workAtDepartmentEntitlement?.extractApplicationVerifications(),
-        ).flatten()
-    }
+    override fun extractApplicationVerifications() = listOfNotNull(
+        workAtOrganizationsEntitlement?.extractApplicationVerifications(),
+        workAtDepartmentEntitlement?.extractApplicationVerifications(),
+    ).flatten()
 }
