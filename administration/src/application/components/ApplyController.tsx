@@ -32,7 +32,7 @@ const SuccessContent = styled.div`
 const ApplyController = (): React.ReactElement | null => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
-  const [addBlueEakApplication, { loading }] = useAddEakApplicationMutation({
+  const [addBlueEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       console.error(error)
       enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
@@ -56,15 +56,11 @@ const ApplyController = (): React.ReactElement | null => {
   const {
     loading: loadingRegions,
     error: errorRegions,
-    data: regionData,
+    data: regionsData,
     refetch: refetchRegions,
   } = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regions = useMemo(
-    () => (regionData ? [...regionData.regions].sort((a, b) => a.name.localeCompare(b.name)) : null),
-    [regionData]
-  )
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -83,10 +79,10 @@ const ApplyController = (): React.ReactElement | null => {
             Sie können das Fenster jetzt schließen.`
 
   if (loadingRegions) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (errorRegions || !regions) return <ErrorHandler refetch={refetchRegions} />
+  else if (errorRegions || !regionsData) return <ErrorHandler refetch={refetchRegions} />
 
   const submit = () => {
-    const validationResult = ApplicationForm.validate(state, { regions: regions })
+    const validationResult = ApplicationForm.validate(state, { regions: regionsData.regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',
@@ -115,12 +111,12 @@ const ApplyController = (): React.ReactElement | null => {
             state={state}
             setState={setState}
             onSubmit={submit}
-            loading={loading}
-            options={{ regions: regions }}
+            loading={loadingSubmit}
+            options={{ regions: regionsData.regions }}
           />
         )}
         <DialogActions>
-          {loading || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {loadingSubmit || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
         </DialogActions>
       </div>
     </div>
