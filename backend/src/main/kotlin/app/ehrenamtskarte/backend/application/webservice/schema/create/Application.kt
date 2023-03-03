@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create
 
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -30,8 +31,8 @@ data class Application(
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
     val givenInformationIsCorrectAndComplete: Boolean,
-) : JsonFieldSerializable {
-    private val entitlementByCardType = mapOf(
+) : JsonFieldSerializable, ApplicationVerificationsHolder {
+    private val entitlementByCardType: Map<BavariaCardType, JsonFieldSerializable?> = mapOf(
         BavariaCardType.BLUE to blueCardEntitlement,
         BavariaCardType.GOLDEN to goldenCardEntitlement,
     )
@@ -44,6 +45,11 @@ data class Application(
             throw IllegalArgumentException("Application type must not be null if and only if card type is blue.")
         }
     }
+
+    override fun extractApplicationVerifications() = listOfNotNull(
+        blueCardEntitlement?.extractApplicationVerifications(),
+        goldenCardEntitlement?.extractApplicationVerifications(),
+    ).flatten()
 
     override fun toJsonField(): JsonField {
         return JsonField(

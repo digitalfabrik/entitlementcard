@@ -20,6 +20,14 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 5. Run `flutter pub get` in `frontend/`
 6. Execute the "Run Flutter" (upper right corner of IDE) configuration from within IntelliJ
 
+As there are several services running and interacting some ports need to be forwarded.
+This includes the backend port 8000 and the map tiles port at 5002.
+For this run:
+```
+adb reverse tcp:5002 tcp:5002
+adb reverse tcp:8000 tcp:8000
+```
+
 # Backend
 
 1. Install docker and docker-compose

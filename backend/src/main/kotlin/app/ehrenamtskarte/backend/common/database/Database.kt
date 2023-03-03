@@ -4,8 +4,8 @@ import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import org.jetbrains.exposed.sql.Database.Companion.connect
+import org.jetbrains.exposed.sql.DatabaseConfig
 import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
@@ -38,7 +38,7 @@ class Database {
             email: String,
             password: String,
             roleDbValue: String,
-            projectId: Int? = null
+            projectId: Int? = null,
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
@@ -51,14 +51,16 @@ class Database {
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
                 user = config.postgres.user,
-                password = config.postgres.password
+                password = config.postgres.password,
+                databaseConfig = if (config.production) {
+                    null
+                } else {
+                    DatabaseConfig.invoke {
+                        this.sqlLogger = StdOutSqlLogger
+                    }
+                },
             )
-
             transaction {
-                if (!config.production) {
-                    addLogger(StdOutSqlLogger)
-                }
-
                 setupDatabaseForProjects(config)
                 setupDatabaseForRegions()
                 setupDatabaseForStores(Companion::executeScript)

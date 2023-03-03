@@ -86,8 +86,8 @@ type Coordinates {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
-  "Stores a new digital entitlement card"
-  addCard(card: CardGenerationModelInput!): Boolean!
+  "Stores a batch of new digital entitlementcards"
+  addCards(cards: [CardGenerationModelInput!]!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
   "Changes an administrator's password"

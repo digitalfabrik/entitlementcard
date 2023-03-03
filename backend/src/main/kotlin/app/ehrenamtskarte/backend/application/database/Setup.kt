@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 
 fun setupDatabase() {
     SchemaUtils.create(
-        Applications
+        Applications,
+        ApplicationVerifications,
     )
 }

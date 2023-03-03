@@ -132,7 +132,7 @@ function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, pag
 
 export async function generatePdf(
   dynamicCodes: DynamicActivationCode[],
-  staticCodes: StaticVerificationCode[] | null,
+  staticCodes: StaticVerificationCode[],
   region: Region,
   pdfConfig: PdfConfig
 ) {
@@ -143,7 +143,7 @@ export async function generatePdf(
       ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
       : null
 
-  if (staticCodes !== null && dynamicCodes.length !== staticCodes.length) {
+  if (staticCodes.length !== 0 && dynamicCodes.length !== staticCodes.length) {
     throw new Error('Activation codes count does not match static codes count.')
   }
 

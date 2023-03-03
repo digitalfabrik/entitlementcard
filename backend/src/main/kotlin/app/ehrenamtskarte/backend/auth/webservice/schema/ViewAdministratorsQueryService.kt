@@ -9,10 +9,13 @@ import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.Regions
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.not
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -36,7 +39,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns all administrators in a project. This query requires the role PROJECT_ADMIN.")
     fun getUsersInProject(
         project: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
@@ -47,9 +50,11 @@ class ViewAdministratorsQueryService {
             if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw UnauthorizedException()
             }
-            val administrators =
-                AdministratorEntity.find { Administrators.projectId eq projectId and not(Administrators.deleted) }
-
+            val administrators = (Administrators innerJoin Regions)
+                .slice(Administrators.columns)
+                .select { Administrators.projectId eq projectId and not(Administrators.deleted) }
+                .orderBy(Regions.name to SortOrder.ASC, Administrators.email to SortOrder.ASC)
+                .let { AdministratorEntity.wrapRows(it) }
             administrators.map { Administrator.fromDbEntity(it) }
         }
     }
@@ -57,7 +62,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN.")
     fun getUsersInRegion(
         regionId: Int,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
@@ -68,8 +73,9 @@ class ViewAdministratorsQueryService {
             if (!Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw UnauthorizedException()
             }
-            val administrators =
-                AdministratorEntity.find { Administrators.regionId eq regionId and not(Administrators.deleted) }
+            val administrators = AdministratorEntity
+                .find { Administrators.regionId eq regionId and not(Administrators.deleted) }
+                .orderBy(Administrators.email to SortOrder.ASC)
 
             administrators.map { Administrator.fromDbEntity(it) }
         }

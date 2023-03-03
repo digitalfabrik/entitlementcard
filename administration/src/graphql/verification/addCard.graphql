@@ -1,3 +1,3 @@
-mutation addCard($card: CardGenerationModelInput!) {
-  success: addCard(card: $card)
+mutation addCards($cards: [CardGenerationModelInput!]!) {
+  success: addCards(cards: $cards)
 }
