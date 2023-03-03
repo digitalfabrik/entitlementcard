@@ -45,10 +45,7 @@ class WebService {
                 it.hostedPath = "/graphiql"
                 it.location = Location.CLASSPATH
             }
-        }.start(host, port)
-
-        println("Server is running at http://$host:$port")
-        println("Goto http://$host:$port/graphiql/ for a graphical editor")
+        }
 
         val graphQLHandler = GraphQLHandler(config)
         val mapStyleHandler = MapStyleHandler(config)
@@ -73,5 +70,9 @@ class WebService {
         app.get(applicationHandler.getPath()) { ctx ->
             applicationHandler.handle(ctx)
         }
+
+        app.start(host, port)
+        println("Server is running at http://$host:$port")
+        println("Goto http://$host:$port/graphiql/ for a graphical editor")
     }
 }
