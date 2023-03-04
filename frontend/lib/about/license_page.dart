@@ -100,7 +100,7 @@ class SingleLicensePage extends StatelessWidget {
               (BuildContext context, int index) {
                 final paragraph = paragraphs.toList()[index];
 
-                return Text("\t" * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyText1);
+                return Text("\t" * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
               },
               childCount: paragraphs.length,
             ),

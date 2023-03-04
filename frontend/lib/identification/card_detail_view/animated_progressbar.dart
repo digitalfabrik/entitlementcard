@@ -8,10 +8,10 @@ class AnimatedProgressbar extends StatefulWidget {
   const AnimatedProgressbar({super.key, required this.initialProgress});
 
   @override
-  _AnimatedProgressbarState createState() => _AnimatedProgressbarState();
+  AnimatedProgressbarState createState() => AnimatedProgressbarState();
 }
 
-class _AnimatedProgressbarState extends State<AnimatedProgressbar> with SingleTickerProviderStateMixin {
+class AnimatedProgressbarState extends State<AnimatedProgressbar> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
 

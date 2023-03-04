@@ -40,7 +40,7 @@ class _LocationButtonState extends State<LocationButton> {
         padding: const EdgeInsets.all(10),
         child: FloatingActionButton.extended(
           heroTag: "fab_search_view",
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           elevation: 1,
           onPressed:
               _locationStatus == LocationRequestStatus.requesting ? null : () => _determinePosition(true, settings),

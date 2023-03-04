@@ -15,8 +15,8 @@ List<Widget> toWidgets(ThemeData theme, List<Paragraph> paragraphs) {
         final title = e.title;
         final content = e.content;
         return [
-          if (title != null) Text(title, style: theme.textTheme.headline6),
-          if (content != null) Text(content, style: theme.textTheme.bodyText1)
+          if (title != null) Text(title, style: theme.textTheme.titleLarge),
+          if (content != null) Text(content, style: theme.textTheme.bodyLarge)
         ];
       })
       .expand((i) => i)

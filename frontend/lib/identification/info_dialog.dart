@@ -20,7 +20,7 @@ class InfoDialog extends StatelessWidget {
     return AlertDialog(
       title: ListTile(
         leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryContainer, size: 30),
-        title: Text(title, style: theme.textTheme.headline5),
+        title: Text(title, style: theme.textTheme.headlineSmall),
       ),
       content: child,
       actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK"))],

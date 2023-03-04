@@ -50,7 +50,7 @@ class DetailContent extends StatelessWidget {
             if (storeDescription != null) ...[
               Text(
                 storeDescription,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               Divider(thickness: 0.7, height: 48, color: Theme.of(context).primaryColorLight),
             ],
