@@ -6,21 +6,13 @@ import 'package:intro_slider/intro_slider.dart';
 
 typedef OnFinishedCallback = void Function();
 
-class IntroScreen extends StatefulWidget {
+class IntroScreen extends StatelessWidget {
   final OnFinishedCallback? onFinishedCallback;
 
   const IntroScreen({super.key, this.onFinishedCallback});
 
-  @override
-  IntroScreenState createState() => IntroScreenState();
-}
-
-class IntroScreenState extends State<IntroScreen> {
-  void onDonePress() {
-    final onFinishedCallback = widget.onFinishedCallback;
-    if (onFinishedCallback != null) {
-      onFinishedCallback();
-    }
+  void onDonePress(BuildContext context) {
+    onFinishedCallback?.call();
     Navigator.of(context).pushReplacementNamed(homeRouteName);
   }
 
@@ -28,7 +20,7 @@ class IntroScreenState extends State<IntroScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return IntroSlider(
-      onDonePress: onDonePress,
+      onDonePress: () => onDonePress(context),
       renderDoneBtn: const Text("Fertig"),
       renderNextBtn: const Text("Weiter"),
       renderPrevBtn: const Text("Zurück"),
