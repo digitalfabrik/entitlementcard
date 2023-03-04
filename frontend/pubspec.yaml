@@ -38,10 +38,10 @@ dependencies:
   permission_handler: ^10.2.0
   package_info_plus: ^3.0.3 # for about dialog
   mobile_scanner:
-    # Can be reverted to ^3.0.1 once https://github.com/juliansteenbakker/mobile_scanner/pull/529 is deployed
+    # Can be reverted to ^3.0.1 once https://github.com/juliansteenbakker/mobile_scanner/pull/529 and 527 are deployed
     git:
       url: https://github.com/michael-markl/mobile_scanner.git
-      ref: 3a4f39ccebb99673f63b95560e5abc1710ba4096
+      ref: 4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485
   flutter_secure_storage: ^8.0.0
   infinite_scroll_pagination: ^3.2.0
   geolocator: ^9.0.2
