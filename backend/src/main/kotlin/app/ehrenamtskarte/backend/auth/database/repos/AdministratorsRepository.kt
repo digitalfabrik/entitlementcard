@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
@@ -24,11 +25,14 @@ object AdministratorsRepository {
     fun findByIds(ids: List<Int>) =
         AdministratorEntity.find { Administrators.id inList ids }.sortByKeys({ it.id.value }, ids)
 
+    fun emailAlreadyExists(email: String) =
+        !AdministratorEntity.find { LowerCase(Administrators.email) eq email.lowercase() }.empty()
+
     fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? {
         val resultRow = (Administrators innerJoin Projects)
             .slice(Administrators.columns)
             .select(
-                (Projects.project eq project) and (Administrators.email eq email)
+                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase())
             )
             .firstOrNull()
         return resultRow?.let {

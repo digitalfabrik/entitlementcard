@@ -11,9 +11,10 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 
 object Administrators : IntIdTable() {
-    val email = varchar("email", 100).uniqueIndex()
+    val email = varchar("email", 100)
     val projectId = reference("projectId", Projects)
     val regionId = optReference("regionId", Regions)
     val role = varchar("role", 32)
@@ -34,6 +35,11 @@ object Administrators : IntIdTable() {
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
     }
+}
+
+fun createEmailIndexIfNotExists() {
+    val sql = "CREATE UNIQUE INDEX IF NOT EXISTS email_lower_idx ON ${Administrators.nameInDatabaseCase()} (lower(${Administrators.email.nameInDatabaseCase()}))"
+    TransactionManager.current().exec(sql)
 }
 
 class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
