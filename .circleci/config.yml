@@ -129,7 +129,7 @@ commands:
             echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - fvm-0-{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+            - fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
       - run:
           name: Install Flutter
           command: fvm install
