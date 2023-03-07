@@ -715,8 +715,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "3a4f39ccebb99673f63b95560e5abc1710ba4096"
-      resolved-ref: "3a4f39ccebb99673f63b95560e5abc1710ba4096"
+      ref: "4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485"
+      resolved-ref: "4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485"
       url: "https://github.com/michael-markl/mobile_scanner.git"
     source: git
     version: "3.0.0"
