@@ -1,11 +1,10 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.dataloader.APPLICATION_LOADER_NAME
-import app.ehrenamtskarte.backend.application.webservice.dataloader.VERIFICATIONS_BY_APPLICATION_LOADER_NAME
 import app.ehrenamtskarte.backend.application.webservice.dataloader.applicationLoader
 import app.ehrenamtskarte.backend.application.webservice.dataloader.verificationsByApplicationLoader
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.UploadKey
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
+import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
@@ -16,15 +15,7 @@ import graphql.schema.CoercingParseValueException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLType
-import org.dataloader.DataLoaderRegistry
 import kotlin.reflect.KType
-
-private fun createDataLoaderRegistry(): DataLoaderRegistry {
-    val dataLoaderRegistry = DataLoaderRegistry()
-    dataLoaderRegistry.register(APPLICATION_LOADER_NAME, applicationLoader)
-    dataLoaderRegistry.register(VERIFICATIONS_BY_APPLICATION_LOADER_NAME, verificationsByApplicationLoader)
-    return dataLoaderRegistry
-}
 
 val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
     .name("Upload")
@@ -70,7 +61,10 @@ val applicationGraphQlParams = GraphQLParams(
                 }
         },
     ),
-    dataLoaderRegistry = createDataLoaderRegistry(),
+    dataLoaderRegistry = createRegistryFromNamedDataLoaders(
+        applicationLoader,
+        verificationsByApplicationLoader,
+    ),
     queries = listOf(
         TopLevelObject(EakApplicationQueryService()),
     ),
