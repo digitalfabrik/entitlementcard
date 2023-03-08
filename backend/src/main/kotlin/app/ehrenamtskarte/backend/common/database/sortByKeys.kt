@@ -9,6 +9,6 @@ package app.ehrenamtskarte.backend.common.database
  * Otherwise, if there are multiple values with the i-th key, then the method will throw.
  */
 fun <TValue, TKey> Iterable<TValue>.sortByKeys(keySelector: (TValue) -> TKey, keys: Iterable<TKey>): List<TValue?> {
-    val objectsMap = groupBy(keySelector)
-    return keys.map { objectsMap[it]?.single() }
+    val valuesByKey = groupBy(keySelector)
+    return keys.map { valuesByKey[it]?.single() }
 }
