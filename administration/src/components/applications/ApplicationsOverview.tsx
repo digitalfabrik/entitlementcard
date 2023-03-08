@@ -1,4 +1,4 @@
-import { Alert, Button, Card, H4, IResizeEntry, ResizeSensor } from '@blueprintjs/core'
+import { Alert, Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
@@ -7,6 +7,7 @@ import { useAppToaster } from '../AppToaster'
 import FlipMove from 'react-flip-move'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 
 type Application = GetApplicationsQuery['applications'][number]
 
@@ -78,8 +79,19 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
       </ExpandContainer>
       <ResizeSensor onResize={handleResize}>
         <div style={{ overflow: 'visible', padding: `${CARD_PADDING}px` }}>
-          <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}>
+            <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
+            <VerificationsQuickIndicator verifications={application.verifications} />
+          </div>
           <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
+          <Divider style={{ margin: '24px 0px' }} />
+          <VerificationsView verifications={application.verifications} />
           <div
             style={{
               display: 'flex',
@@ -133,6 +145,13 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
           gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
         />
       ))}
+      {updatedApplications.length === 0 ? (
+        <NonIdealState
+          title='Keine Anträge vorhanden'
+          icon='clean'
+          description='Aktuell liegen keine eingehenden Anträge vor. Schauen Sie später wieder vorbei.'
+        />
+      ) : null}
     </FlipMove>
   )
 }

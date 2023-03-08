@@ -83,7 +83,7 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
   return (
     <>
       <ButtonBar stickyTop={0}>
-        <Button icon='lock' text='Speichern' intent='success' onClick={onSave} />
+        <Button icon='floppy-disk' text='Speichern' intent='success' onClick={onSave} />
       </ButtonBar>
       <Content>
         <Label>Datenschutzerklärung</Label>
