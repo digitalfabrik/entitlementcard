@@ -14,8 +14,7 @@ data class PhysicalStore(
 ) {
 
     fun store(environment: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
-        acceptingStoreLoader.fromEnvironment(environment).load(storeId)
-            .thenApply { it!! }
+        acceptingStoreLoader.fromEnvironment(environment).load(storeId).thenApply { it!! }
 
     fun address(environment: DataFetchingEnvironment): CompletableFuture<Address> =
         addressLoader.fromEnvironment(environment).load(addressId).thenApply { it!! }
