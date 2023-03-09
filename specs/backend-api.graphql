@@ -117,6 +117,8 @@ type Mutation {
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Verifies or rejects an application verification"
+  verifyOrRejectApplicationVerification(accessKey: String!, verified: Boolean!): Boolean!
 }
 
 type PhysicalStore {
@@ -131,6 +133,10 @@ type PhysicalStore {
 type Query {
   "Return list of all categories."
   categories: [Category!]!
+  "Queries an application by application accessKey"
+  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationView!
+  "Queries an application verification by application accessKey"
+  getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."

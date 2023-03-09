@@ -63,4 +63,18 @@ class EakApplicationMutationService {
             ApplicationRepository.delete(applicationId, context)
         }
     }
+
+    @GraphQLDescription("Verifies or rejects an application verification")
+    fun verifyOrRejectApplicationVerification(
+        accessKey: String,
+        verified: Boolean
+    ): Boolean {
+        return transaction {
+            if (verified) {
+                ApplicationRepository.verifyApplicationVerification(accessKey)
+            } else {
+                ApplicationRepository.rejectApplicationVerification(accessKey)
+            }
+        }
+    }
 }
