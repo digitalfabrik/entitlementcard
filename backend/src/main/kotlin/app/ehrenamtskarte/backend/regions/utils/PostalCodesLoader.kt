@@ -1,14 +1,13 @@
 package app.ehrenamtskarte.backend.regions.utils
 
 import org.apache.commons.csv.CSVFormat
-import java.io.File
-import java.io.FileReader
+import java.io.InputStream
 
 object PostalCodesLoader {
     fun loadRegionIdentifierByPostalCodeMap(): Map<String, String> {
         try {
-            val csvInput = FileReader(File(ClassLoader.getSystemResource("import/plz_ort_bayern.csv").toURI()))
-            val records = CSVFormat.RFC4180.parse(csvInput)
+            val csvInput: InputStream = ClassLoader.getSystemResourceAsStream("import/plz_ort_bayern.csv")
+            val records = CSVFormat.RFC4180.parse(csvInput.reader())
             val postalCodes: MutableMap<String, String> = mutableMapOf()
             records.forEachIndexed { index, record ->
                 val headline = index == 0
