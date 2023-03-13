@@ -80,7 +80,7 @@ class _EnumeratedListItem extends StatelessWidget {
             child: Text(
               "${index + 1}",
               style: TextStyle(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 fontWeight: FontWeight.bold,
               ),
             ),

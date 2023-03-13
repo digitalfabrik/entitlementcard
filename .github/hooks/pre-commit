@@ -14,7 +14,7 @@ if [ ! -x "$(command -v fvm)" ]; then
 fi
 
 # Prettify all selected files
-echo "$FILES" | xargs fvm flutter format -l 120
+echo "$FILES" | xargs fvm dart format -l 120
 
 # Add back the modified/prettified files to staging
 echo "$FILES" | xargs git add

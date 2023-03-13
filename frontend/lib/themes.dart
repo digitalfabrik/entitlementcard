@@ -11,14 +11,14 @@ ThemeData get lightTheme {
       primary: primaryColor,
       secondary: primaryColor,
       background: Colors.white,
-      surfaceVariant: const Color(0xffededed),
+      surfaceVariant: const Color(0xffefefef),
     ),
     textTheme: defaultTypography.copyWith(
-      headline4: defaultTypography.headline4?.apply(color: Colors.black87),
-      headline5: defaultTypography.headline4?.apply(color: Colors.black87),
-      headline6: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-      bodyText1: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
-      bodyText2: const TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
+      headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.black87),
+      headlineSmall: defaultTypography.headlineMedium?.apply(color: Colors.black87),
+      titleLarge: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      bodyLarge: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
+      bodyMedium: const TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
     ),
     useMaterial3: true,
   );
@@ -26,6 +26,9 @@ ThemeData get lightTheme {
     textSelectionTheme: const TextSelectionThemeData(
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
+    ),
+    dividerTheme: DividerThemeData(
+      color: Color(0xffeeeeee),
     ),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -53,11 +56,11 @@ ThemeData get darkTheme {
       surfaceVariant: const Color(0xff262626),
     ),
     textTheme: defaultTypography.copyWith(
-      headline4: defaultTypography.headline4?.apply(color: Colors.white),
-      headline5: defaultTypography.headline4?.apply(color: Colors.white),
-      headline6: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-      bodyText1: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
-      bodyText2: const TextStyle(fontSize: 15.0, color: Color(0xFFC6C4C4)),
+      headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.white),
+      headlineSmall: defaultTypography.headlineMedium?.apply(color: Colors.white),
+      titleLarge: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      bodyLarge: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
+      bodyMedium: const TextStyle(fontSize: 15.0, color: Color(0xFFC6C4C4)),
     ),
     useMaterial3: true,
   );
@@ -65,6 +68,9 @@ ThemeData get darkTheme {
     textSelectionTheme: const TextSelectionThemeData(
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
+    ),
+    dividerTheme: DividerThemeData(
+      color: Color(0xFF505050),
     ),
     appBarTheme: AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light, color: theme.colorScheme.primary),
     outlinedButtonTheme: OutlinedButtonThemeData(

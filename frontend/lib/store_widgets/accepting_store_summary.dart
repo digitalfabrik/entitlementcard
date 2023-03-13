@@ -155,14 +155,14 @@ class StoreTextOverview extends StatelessWidget {
             store.name ?? "Akzeptanzstelle",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
             store.description ?? "Keine Beschreibung verfügbar",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
         ],
@@ -189,7 +189,7 @@ class DistanceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(_formatDistance(distance), maxLines: 1, style: Theme.of(context).textTheme.bodyText2),
+      child: Text(_formatDistance(distance), maxLines: 1, style: Theme.of(context).textTheme.bodyMedium),
     );
   }
 }

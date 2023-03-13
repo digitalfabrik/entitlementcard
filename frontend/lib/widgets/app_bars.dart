@@ -75,10 +75,10 @@ class SearchSliverAppBar extends StatefulWidget {
   SearchSliverAppBar({super.key, required this.onChanged});
 
   @override
-  _SearchSliverAppBarState createState() => _SearchSliverAppBarState();
+  SearchSliverAppBarState createState() => SearchSliverAppBarState();
 }
 
-class _SearchSliverAppBarState extends State<SearchSliverAppBar> {
+class SearchSliverAppBarState extends State<SearchSliverAppBar> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 

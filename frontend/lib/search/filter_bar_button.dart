@@ -85,7 +85,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
     return AnimatedBuilder(
       animation: colorTween,
       builder: (context, child) {
-        final color = Color.lerp(theme.backgroundColor, selectedColor, colorTween.value);
+        final color = Color.lerp(theme.colorScheme.background, selectedColor, colorTween.value);
         return ConstrainedBox(
           constraints: BoxConstraints.tightFor(width: width, height: 70),
           child: Card(

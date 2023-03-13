@@ -60,13 +60,13 @@ class DetailAppBarBottom extends StatelessWidget {
         children: [
           Text(
             categoryName ?? "",
-            style: Theme.of(context).textTheme.bodyText2?.apply(color: textColorGrey),
+            style: Theme.of(context).textTheme.bodyMedium?.apply(color: textColorGrey),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             title ?? "",
-            style: Theme.of(context).textTheme.headline6?.apply(color: textColor),
+            style: Theme.of(context).textTheme.titleLarge?.apply(color: textColor),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )

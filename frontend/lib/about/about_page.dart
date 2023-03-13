@@ -39,10 +39,10 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             Center(
-              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.headline5),
+              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.headlineSmall),
             ),
             Center(
-              child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyText2),
+              child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyMedium),
             ),
             const SizedBox(height: 20),
             const Divider(
@@ -55,17 +55,17 @@ class AboutPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Center(
-                      child: Text("Herausgeber", style: Theme.of(context).textTheme.subtitle2),
+                      child: Text("Herausgeber", style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
-                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyText1),
+                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
                     ),
                     Text(
                       "Mehr Informationen",
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText2
+                          .bodyMedium
                           ?.merge(TextStyle(color: Theme.of(context).colorScheme.secondary)),
                     ),
                   ],

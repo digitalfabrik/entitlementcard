@@ -164,7 +164,7 @@ jobs:
           command: fvm flutter pub get
       - run:
           name: Check Formatting
-          command: fvm flutter format -l 120 -o none --set-exit-if-changed .
+          command: fvm dart format -l 120 -o none --set-exit-if-changed .
       - run:
           name: Build Runner
           command: |

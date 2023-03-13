@@ -1,13 +1,10 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
-const scanDelayAfterErrorMs = 500;
 
 typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
 
@@ -23,60 +20,77 @@ class QrCodeScanner extends StatefulWidget {
 class _QRViewState extends State<QrCodeScanner> {
   final MobileScannerController _controller = MobileScannerController(
     torchEnabled: false,
+    detectionSpeed: DetectionSpeed.normal,
     formats: [BarcodeFormat.qrCode],
+    returnImage: false,
   );
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Uint8List? lastScanned;
+
+  // Determines whether a code is currently processed by the onCodeScanned callback
+  // During this time, we do not re-trigger the callback.
+  bool processingCode = false;
+
+  bool showWaiting = false;
 
   @override
   Widget build(BuildContext context) {
     final controller = _controller;
-    return Column(
-      children: <Widget>[
-        Expanded(
-          flex: 4,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              MobileScanner(
-                key: qrKey,
-                onDetect: (barcode, args) => _onCodeScanned(barcode),
-                allowDuplicates:
-                    true, // We need allowDuplicates until https://github.com/juliansteenbakker/mobile_scanner/pull/304 is available. It will be available with mobile_scanner 3.0.0
-                controller: controller,
-              ),
-              Padding(
-                padding: EdgeInsets.zero,
-                child: DecoratedBox(
-                  decoration: ShapeDecoration(
-                    shape: QrScannerOverlayShape(
-                      borderRadius: 10,
-                      borderColor: Theme.of(context).colorScheme.secondary,
-                      borderLength: 30,
-                      borderWidth: 10,
-                      cutOutSize: _calculateScanArea(context),
+    return Stack(
+      children: [
+        Column(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  MobileScanner(
+                    key: qrKey,
+                    placeholderBuilder: (context, _) => Align(
+                      alignment: Alignment.center,
+                      child: Icon(Icons.camera_alt_outlined, size: 128, color: Colors.grey),
+                    ),
+                    onDetect: (barcodes) => _onCodeScanned(barcodes),
+                    controller: controller,
+                  ),
+                  DecoratedBox(
+                    decoration: ShapeDecoration(
+                      shape: QrScannerOverlayShape(
+                        borderRadius: 10,
+                        borderColor: Theme.of(context).colorScheme.secondary,
+                        borderLength: 30,
+                        borderWidth: 10,
+                        cutOutSize: _calculateScanArea(context),
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                    ),
+                    QrCodeScannerControls(controller: controller)
+                  ],
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
-        Expanded(
-          flex: 1,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(8),
-                  child: const Text('Halten Sie die Kamera auf den QR Code.'),
-                ),
-                QrCodeScannerControls(controller: controller)
-              ],
-            ),
-          ),
-        )
+        if (showWaiting)
+          Center(
+              child: Card(
+                  child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: CircularProgressIndicator(),
+          ))),
       ],
     );
   }
@@ -95,16 +109,26 @@ class _QRViewState extends State<QrCodeScanner> {
     return scanArea;
   }
 
-  Future<void> _onCodeScanned(Barcode scanData) async {
-    final code = scanData.rawBytes;
+  Future<void> _onCodeScanned(BarcodeCapture capture) async {
+    if (capture.barcodes.length != 1) return;
+    final barcode = capture.barcodes[0];
+    final code = barcode.rawBytes;
+    if (code == null) return;
 
-    if (code == null || const ListEquality().equals(lastScanned, code)) {
-      return;
+    if (processingCode) return;
+    setState(() {
+      processingCode = true;
+      showWaiting = true;
+    });
+    try {
+      await widget.onCodeScanned(code);
+    } finally {
+      setState(() {
+        showWaiting = false;
+      });
+      await Future.delayed(Duration(milliseconds: 500));
+      processingCode = false;
     }
-
-    lastScanned = code;
-
-    await widget.onCodeScanned(code);
   }
 
   @override

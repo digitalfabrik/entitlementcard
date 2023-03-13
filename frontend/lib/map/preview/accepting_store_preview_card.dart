@@ -32,11 +32,13 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentAcceptingStore = acceptingStore;
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: fabPadding.toDouble()),
       child: Card(
         clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
+        color: Theme.of(context).colorScheme.surfaceVariant,
+        surfaceTintColor: Colors.transparent,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: isLoading

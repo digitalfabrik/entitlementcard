@@ -70,8 +70,6 @@ class VerificationQrScannerPage extends StatelessWidget {
   }
 
   Future<void> _handleQrCode(BuildContext context, Uint8List rawQrContent) async {
-    _openWaitingDialog(context);
-
     try {
       final qrcode = rawQrContent.parseQRCodeContent();
 
@@ -122,7 +120,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       );
     } finally {
       // close current "Karte verifizieren" view
-      Navigator.of(context).pop();
+      await Navigator.of(context).maybePop();
     }
   }
 
@@ -130,8 +128,6 @@ class VerificationQrScannerPage extends StatelessWidget {
     if (exception != null) {
       debugPrint("Verification failed: $exception");
     }
-    _closeWaitingDialog(context);
-
     await NegativeVerificationResultDialog.show(context, message);
   }
 
@@ -139,30 +135,14 @@ class VerificationQrScannerPage extends StatelessWidget {
     if (exception != null) {
       debugPrint("Connection failed: $exception");
     }
-    _closeWaitingDialog(context);
-
     await ConnectionFailedDialog.show(context, message);
   }
 
   Future<void> _onSuccess(BuildContext context, CardInfo cardInfo, bool isStaticVerificationCode) async {
-    _closeWaitingDialog(context);
     await PositiveVerificationResultDialog.show(
       context: context,
       cardInfo: cardInfo,
       isStaticVerificationCode: isStaticVerificationCode,
     );
-  }
-
-  void _openWaitingDialog(BuildContext context) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) =>
-          AlertDialog(title: Column(mainAxisSize: MainAxisSize.min, children: const [CircularProgressIndicator()])),
-    );
-  }
-
-  void _closeWaitingDialog(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).pop();
   }
 }

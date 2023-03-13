@@ -17,10 +17,10 @@ class VerificationCodeView extends StatefulWidget {
   VerificationCodeView({super.key, required this.userCode}) : _otpGenerator = OTPGenerator(userCode.totpSecret);
 
   @override
-  _VerificationCodeViewState createState() => _VerificationCodeViewState();
+  VerificationCodeViewState createState() => VerificationCodeViewState();
 }
 
-class _VerificationCodeViewState extends State<VerificationCodeView> {
+class VerificationCodeViewState extends State<VerificationCodeView> {
   OTPCode? _otpCode;
 
   @override
@@ -69,7 +69,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
                       child: qr.QrImage.withQr(
                         qr: qrCode,
                         version: qr.QrVersions.auto,
-                        foregroundColor: Theme.of(context).textTheme.bodyText2?.color,
+                        foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
                         gapless: false,
                       ),
                     ),
