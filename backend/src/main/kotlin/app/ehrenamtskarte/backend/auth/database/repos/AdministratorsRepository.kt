@@ -32,7 +32,7 @@ object AdministratorsRepository {
         val resultRow = (Administrators innerJoin Projects)
             .slice(Administrators.columns)
             .select(
-                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase())
+                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()),
             )
             .firstOrNull()
         return resultRow?.let {
@@ -51,7 +51,7 @@ object AdministratorsRepository {
         email: String,
         password: String?,
         role: Role,
-        regionId: Int? = null
+        regionId: Int? = null,
     ): AdministratorEntity {
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw IllegalArgumentException("Project does not exist.")

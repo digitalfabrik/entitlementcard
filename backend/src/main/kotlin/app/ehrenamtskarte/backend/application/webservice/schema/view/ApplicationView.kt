@@ -1,7 +1,8 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.webservice.dataloader.VERIFICATIONS_BY_APPLICATION_LOADER_NAME
+import app.ehrenamtskarte.backend.application.webservice.dataloader.verificationsByApplicationLoader
+import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 
@@ -12,9 +13,6 @@ data class ApplicationView(val id: Int, val regionId: Int, val createdDate: Stri
             ApplicationView(entity.id.value, entity.regionId.value, entity.createdDate.toString(), entity.jsonValue)
     }
 
-    fun verifications(dfe: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> {
-        return dfe.getDataLoader<Int, List<ApplicationVerificationView>?>(
-            VERIFICATIONS_BY_APPLICATION_LOADER_NAME,
-        ).load(this.id)!!
-    }
+    fun verifications(environment: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =
+        verificationsByApplicationLoader.fromEnvironment(environment).load(id).thenApply { it!! }
 }

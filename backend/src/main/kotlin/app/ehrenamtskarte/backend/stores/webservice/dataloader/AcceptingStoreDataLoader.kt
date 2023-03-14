@@ -1,23 +1,15 @@
 package app.ehrenamtskarte.backend.stores.webservice.dataloader
 
+import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
-import kotlinx.coroutines.runBlocking
-import org.dataloader.DataLoader
-import org.dataloader.DataLoaderFactory
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.concurrent.CompletableFuture
 
-const val ACCEPTING_STORE_LOADER_NAME = "ACCEPTING_STORE_LOADER"
-
-val acceptingStoreLoader: DataLoader<Int, AcceptingStore?> = DataLoaderFactory.newDataLoader { ids ->
-    CompletableFuture.supplyAsync {
-        runBlocking {
-            transaction {
-                AcceptingStoresRepository.findByIds(ids).map {
-                    if (it == null) null
-                    else AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
-                }
+val acceptingStoreLoader = newNamedDataLoader("ACCEPTING_STORE_LOADER") { ids ->
+    transaction {
+        AcceptingStoresRepository.findByIds(ids).map {
+            it?.let {
+                AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
             }
         }
     }

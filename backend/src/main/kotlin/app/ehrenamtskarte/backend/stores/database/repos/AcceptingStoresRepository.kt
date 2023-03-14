@@ -23,13 +23,6 @@ import org.postgis.Point
 
 object AcceptingStoresRepository {
 
-    fun findByIdsInProject(project: String, ids: List<Int>): List<AcceptingStoreEntity> {
-        val query = (Projects innerJoin AcceptingStores)
-            .slice(AcceptingStores.columns)
-            .select { Projects.project eq project and (AcceptingStores.id inList ids) }
-        return AcceptingStoreEntity.wrapRows(query).toList()
-    }
-
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
     // TODO Probably not relevant right now
@@ -39,7 +32,7 @@ object AcceptingStoresRepository {
         categoryIds: List<Int>?,
         coordinates: Coordinates?,
         limit: Int,
-        offset: Long
+        offset: Long,
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
             if (categoryIds == null) {
@@ -58,15 +51,15 @@ object AcceptingStoresRepository {
                         AcceptingStores.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
-                        Addresses.street ilike "%$searchText%"
-                    )
+                        Addresses.street ilike "%$searchText%",
+                    ),
                 )
             }
 
         val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
-                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
+                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)),
             )
         } else {
             AcceptingStores.name

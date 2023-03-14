@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun setupDatabase(config: BackendConfiguration) {
     SchemaUtils.create(
-        Projects
+        Projects,
     )
 
     transaction {
