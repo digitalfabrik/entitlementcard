@@ -17,6 +17,7 @@ import ForgotPasswordController from './components/auth/ForgotPasswordController
 import ManageUsersController from './components/users/ManageUsersController'
 import ApplyController from './application/components/ApplyController'
 import DataPrivacyPolicy from './components/DataPrivacyPolicy'
+import ApplicationUserOverviewController from './components/applications/ApplicationUserOverviewController'
 
 const Main = styled.div`
   flex-grow: 1;
@@ -34,7 +35,12 @@ const Router = () => {
       { path: '/forgot-password', element: <ForgotPasswordController /> },
       { path: '/reset-password/:passwordResetKey', element: <ResetPasswordController /> },
       { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
-      projectConfig.applicationFeatureEnabled ? { path: '/beantragen', element: <ApplyController /> } : null,
+      ...(projectConfig.applicationFeatureEnabled
+        ? [
+            { path: '/beantragen', element: <ApplyController /> },
+            { path: '/antrag-einsehen/:accessKey', element: <ApplicationUserOverviewController /> },
+          ]
+        : []),
       {
         path: '*',
         element: !isLoggedIn ? (

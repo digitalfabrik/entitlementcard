@@ -36,20 +36,23 @@ object ApplicationRepository {
         files: List<Part>,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         return transaction {
+            val random = SecureRandom.getInstanceStrong()
+            val byteArray = ByteArray(64)
+            random.nextBytes(byteArray)
+            val applicationKey = Base64.getUrlEncoder().encodeToString(byteArray)
             val newApplication =
                 ApplicationEntity.new {
                     this.regionId = EntityID(regionId, Regions)
                     this.jsonValue = toString(applicationJson)
+                    this.accessKey = applicationKey
                 }
 
-            val random = SecureRandom.getInstanceStrong()
             val verificationEntities = applicationVerifications.map {
-                val byteArray = ByteArray(64)
                 random.nextBytes(byteArray)
-                val key = Base64.getUrlEncoder().encodeToString(byteArray)
+                val verificationKey = Base64.getUrlEncoder().encodeToString(byteArray)
                 ApplicationVerificationEntity.new {
                     this.applicationId = newApplication.id
-                    this.accessKey = key
+                    this.accessKey = verificationKey
                     this.contactName = it.contactName
                     this.organizationName = it.organizationName
                     this.contactEmailAddress = it.contactEmailAddress
@@ -89,6 +92,17 @@ object ApplicationRepository {
             ApplicationEntity.find { Applications.regionId eq regionId }
                 .orderBy(Applications.createdDate to SortOrder.ASC)
                 .map { ApplicationView.fromDbEntity(it) }
+        }
+    }
+
+    fun getApplication(accessKey: String): ApplicationView {
+        return transaction {
+            (Applications innerJoin ApplicationVerifications)
+                .select { Applications.accessKey eq accessKey }
+                .single()
+                .let {
+                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
+                }
         }
     }
 

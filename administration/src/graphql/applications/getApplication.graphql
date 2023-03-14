@@ -1,0 +1,8 @@
+query getApplication($accessKey: String!) {
+  application: getApplication(accessKey: $accessKey) {
+    id
+    createdDate
+    jsonValue
+    withdrawalDate
+  }
+}
