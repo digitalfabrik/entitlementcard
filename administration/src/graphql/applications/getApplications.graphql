@@ -3,6 +3,7 @@ query getApplications($regionId: Int!) {
     id
     createdDate
     jsonValue
+    withdrawalDate
     verifications {
       contactEmailAddress
       organizationName

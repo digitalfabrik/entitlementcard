@@ -1,20 +1,26 @@
-import { Alert, Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
+import { Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import { useAppToaster } from '../AppToaster'
 import FlipMove from 'react-flip-move'
-import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
+import {
+  GetApplicationsQuery,
+  useDeleteApplicationMutation,
+  useWithdrawApplicationMutation,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import ApplicationAction from './ApplicationAction'
+import { useParams } from 'react-router-dom'
 
-type Application = GetApplicationsQuery['applications'][number]
+export type Application = GetApplicationsQuery['applications'][number]
 
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
-const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number }>`
+const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number; $centered: boolean }>`
   transition: height 0.2s;
   height: ${props => (props.$collapsed ? COLLAPSED_HEIGHT : props.$contentHeight + 2 * CARD_PADDING)}px;
   width: 600px;
@@ -22,6 +28,7 @@ const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: 
   margin: 10px;
   padding: 0;
   position: relative;
+  ${props => props.$centered && 'align-self: center;'}
 `
 
 const ExpandContainer = styled.div<{ $collapsed: boolean }>`
@@ -40,11 +47,13 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
-const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void }> = ({
+const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void; mode: string }> = ({
   application,
   gotDeleted,
+  mode,
 }) => {
   const { createdDate: createdDateString, jsonValue, id } = application
+  const { accessKey } = useParams()
   const createdDate = new Date(createdDateString)
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -52,7 +61,6 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
   const [collapsed, setCollapsed] = useState(false)
   const [height, setHeight] = useState(0)
   const appToaster = useAppToaster()
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
       console.error(error)
@@ -67,13 +75,27 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
     },
   })
 
+  const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation()
+
+  const submitWithdrawal = () => {
+    if (accessKey) {
+      withdrawApplication({
+        variables: {
+          accessKey: accessKey,
+        },
+      })
+    }
+  }
+
   const handleResize = (entries: IResizeEntry[]) => {
     setHeight(entries[0].contentRect.height)
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }
 
+  // TODO use enum for mode, add error handling for withdraw && getApplicationByUserAccessKey, check withdrawal date for internal application
+
   return (
-    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height}>
+    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height} $centered={mode === 'withdrawal'}>
       <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
@@ -104,20 +126,26 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
                 Weniger anzeigen
               </Button>
             ) : null}
-            <Button onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
-              Antrag löschen
-            </Button>
-            <Alert
-              cancelButtonText='Abbrechen'
-              confirmButtonText='Antrag löschen'
-              icon='trash'
-              intent='danger'
-              isOpen={deleteDialogOpen}
-              loading={loading}
-              onCancel={() => setDeleteDialogOpen(false)}
-              onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
-              <p>Möchten Sie den Antrag unwiderruflich löschen?</p>
-            </Alert>
+            {mode === 'delete' && (
+              <ApplicationAction
+                confirmAction={() => deleteApplication({ variables: { applicationId: application.id } })}
+                loading={loading}
+                cancelButtonText='Abbrechen'
+                confirmButtonText='Antrag löschen'
+                buttonLabel='Antrag löschen'
+                dialogText='Möchten Sie den Antrag unwiderruflich löschen?'
+              />
+            )}
+            {mode === 'withdrawal' && (
+              <ApplicationAction
+                confirmAction={submitWithdrawal}
+                loading={withdrawalLoading}
+                cancelButtonText='Abbrechen'
+                confirmButtonText='Antrag zurückziehen'
+                buttonLabel='Antrag zurückziehen'
+                dialogText='Möchten Sie den Antrag zurückziehen?'
+              />
+            )}
           </div>
         </div>
       </ResizeSensor>
@@ -126,7 +154,11 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
 }
 
 // Necessary for FlipMove, as it cannot handle functional components
-class ApplicationViewComponent extends React.Component<{ application: Application; gotDeleted: () => void }> {
+export class ApplicationViewComponent extends React.Component<{
+  application: Application
+  gotDeleted: () => void
+  mode: string
+}> {
   render() {
     return <ApplicationView {...this.props} />
   }
@@ -140,6 +172,7 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent
+          mode={'delete'}
           key={application.id}
           application={application}
           gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}

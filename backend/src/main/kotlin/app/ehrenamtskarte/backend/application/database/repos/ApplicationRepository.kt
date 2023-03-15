@@ -96,7 +96,7 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplication(accessKey: String): ApplicationView {
+    fun getApplicationByUserAccessKey(accessKey: String): ApplicationView {
         return transaction {
             (Applications innerJoin ApplicationVerifications)
                 .select { Applications.accessKey eq accessKey }
