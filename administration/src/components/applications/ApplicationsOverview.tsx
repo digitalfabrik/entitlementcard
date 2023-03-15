@@ -126,6 +126,9 @@ const ApplicationView: FunctionComponent<{
             <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
+          {actionType === 'delete' && application.withdrawalDate && (
+            <div style={{ marginBottom: '16px', color: 'red' }}>Antrag wurde zurückgezogen.</div>
+          )}
           <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
           <Divider style={{ margin: '24px 0px' }} />
           <VerificationsView verifications={application.verifications} />
