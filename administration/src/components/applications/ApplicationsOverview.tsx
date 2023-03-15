@@ -16,6 +16,7 @@ import ApplicationAction from './ApplicationAction'
 import { useParams } from 'react-router-dom'
 
 export type Application = GetApplicationsQuery['applications'][number]
+export type ActionType = 'delete' | 'withdraw'
 
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
@@ -47,11 +48,11 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
-const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void; mode: string }> = ({
-  application,
-  gotDeleted,
-  mode,
-}) => {
+const ApplicationView: FunctionComponent<{
+  application: Application
+  gotConfirmed: () => void
+  actionType: ActionType
+}> = ({ application, gotConfirmed, actionType }) => {
   const { createdDate: createdDateString, jsonValue, id } = application
   const { accessKey } = useParams()
   const createdDate = new Date(createdDateString)
@@ -67,7 +68,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
       appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
-      if (deleted) gotDeleted()
+      if (deleted) gotConfirmed()
       else {
         console.error('Delete operation returned false.')
         appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
@@ -75,7 +76,19 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
     },
   })
 
-  const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation()
+  const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
+    onError: error => {
+      console.error(error)
+      appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
+    },
+    onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
+      if (withdrawed) gotConfirmed()
+      else {
+        console.error('Witdraw operation returned false.')
+        appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
+      }
+    },
+  })
 
   const submitWithdrawal = () => {
     if (accessKey) {
@@ -92,10 +105,12 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }
 
-  // TODO use enum for mode, add error handling for withdraw && getApplicationByUserAccessKey, check withdrawal date for internal application
-
   return (
-    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height} $centered={mode === 'withdrawal'}>
+    <ApplicationViewCard
+      elevation={2}
+      $collapsed={collapsed}
+      $contentHeight={height}
+      $centered={actionType === 'withdraw'}>
       <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
@@ -126,7 +141,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
                 Weniger anzeigen
               </Button>
             ) : null}
-            {mode === 'delete' && (
+            {actionType === 'delete' && (
               <ApplicationAction
                 confirmAction={() => deleteApplication({ variables: { applicationId: application.id } })}
                 loading={loading}
@@ -136,7 +151,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
                 dialogText='Möchten Sie den Antrag unwiderruflich löschen?'
               />
             )}
-            {mode === 'withdrawal' && (
+            {actionType === 'withdraw' && !application.withdrawalDate && (
               <ApplicationAction
                 confirmAction={submitWithdrawal}
                 loading={withdrawalLoading}
@@ -156,8 +171,8 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
 // Necessary for FlipMove, as it cannot handle functional components
 export class ApplicationViewComponent extends React.Component<{
   application: Application
-  gotDeleted: () => void
-  mode: string
+  gotConfirmed: () => void
+  actionType: ActionType
 }> {
   render() {
     return <ApplicationView {...this.props} />
@@ -172,10 +187,10 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent
-          mode={'delete'}
+          actionType={'delete'}
           key={application.id}
           application={application}
-          gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+          gotConfirmed={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
         />
       ))}
       {updatedApplications.length === 0 ? (

@@ -12,7 +12,7 @@ const ApplicationsController = (props: { region: Region }) => {
   })
   if (loading) return <Spinner />
   else if (error || !data) return <ErrorHandler refetch={refetch} />
-  else return <ApplicationsOverview applications={data.applications} />
+  else return <ApplicationsOverview applications={data.applications.filter(application=>!application.withdrawalDate)} />
 }
 
 const ControllerWithRegion = () => {
