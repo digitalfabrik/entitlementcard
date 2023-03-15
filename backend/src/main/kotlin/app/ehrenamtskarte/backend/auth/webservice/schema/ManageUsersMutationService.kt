@@ -51,7 +51,7 @@ class ManageUsersMutationService {
                 throw UnauthorizedException()
             }
 
-            if (!AdministratorsRepository.emailAlreadyExists(email)) {
+            if (AdministratorsRepository.emailAlreadyExists(email)) {
                 throw EmailAlreadyExistsException()
             }
 
