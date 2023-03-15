@@ -63,4 +63,11 @@ class EakApplicationMutationService {
             ApplicationRepository.delete(applicationId, context)
         }
     }
+
+    @GraphQLDescription("Withdraws the application")
+    fun withdrawApplication(accessKey: String): Boolean {
+        return transaction {
+            ApplicationRepository.withdrawApplication(accessKey)
+        }
+    }
 }

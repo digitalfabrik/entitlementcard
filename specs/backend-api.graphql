@@ -118,6 +118,8 @@ type Mutation {
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Withdraws the application"
+  withdrawApplication(accessKey: String!): Boolean!
 }
 
 type PhysicalStore {

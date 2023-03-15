@@ -25,6 +25,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.nio.file.Paths
 import java.security.SecureRandom
+import java.time.LocalDateTime
 import java.util.Base64
 
 object ApplicationRepository {
@@ -117,6 +118,18 @@ object ApplicationRepository {
                 ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq applicationId }
                 application.delete()
                 applicationDirectory.toFile().deleteRecursively()
+            } else {
+                false
+            }
+        }
+    }
+
+    fun withdrawApplication(accessKey: String): Boolean {
+        return transaction {
+            val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
+            if (application != null) {
+                application.withdrawalDate = LocalDateTime.now()
+                true
             } else {
                 false
             }

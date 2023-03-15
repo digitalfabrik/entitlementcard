@@ -1,0 +1,3 @@
+mutation withdrawApplication($accessKey: String!) {
+  withdrawed: withdrawApplication(accessKey: $accessKey)
+}
