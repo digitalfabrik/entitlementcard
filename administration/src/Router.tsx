@@ -17,7 +17,7 @@ import ForgotPasswordController from './components/auth/ForgotPasswordController
 import ManageUsersController from './components/users/ManageUsersController'
 import ApplyController from './application/components/ApplyController'
 import DataPrivacyPolicy from './components/DataPrivacyPolicy'
-import ApplicationUserOverviewController from './components/applications/ApplicationUserOverviewController'
+import ApplicationUserController from './components/applications/ApplicationUserController'
 
 const Main = styled.div`
   flex-grow: 1;
@@ -38,7 +38,7 @@ const Router = () => {
       ...(projectConfig.applicationFeatureEnabled
         ? [
             { path: '/beantragen', element: <ApplyController /> },
-            { path: '/antrag-einsehen/:accessKey', element: <ApplicationUserOverviewController /> },
+            { path: '/antrag-einsehen/:accessKey', element: <ApplicationUserController /> },
           ]
         : []),
       {

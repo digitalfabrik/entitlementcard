@@ -14,6 +14,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 import ApplicationAction from './ApplicationAction'
 import { useParams } from 'react-router-dom'
+import { Alert } from '@mui/material'
 
 export type Application = GetApplicationsQuery['applications'][number]
 export type ActionType = 'delete' | 'withdraw'
@@ -46,6 +47,10 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   align-items: flex-end;
   padding: ${CARD_PADDING}px;
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
+`
+
+const WithdrawAlert = styled(Alert)`
+  margin-bottom: 16px;
 `
 
 const ApplicationView: FunctionComponent<{
@@ -127,7 +132,7 @@ const ApplicationView: FunctionComponent<{
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
           {actionType === 'delete' && application.withdrawalDate && (
-            <div style={{ marginBottom: '16px', color: 'red' }}>Antrag wurde zurückgezogen.</div>
+            <WithdrawAlert severity='warning'>Antrag wurde vom Antragssteller zurückgezogen.</WithdrawAlert>
           )}
           <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
           <Divider style={{ margin: '24px 0px' }} />
