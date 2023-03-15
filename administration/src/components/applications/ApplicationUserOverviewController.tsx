@@ -16,11 +16,11 @@ const CenteredMessage = styled(NonIdealState)`
   margin: auto;
 `
 
-const ApplicationUserOverviewController = (props: { accessKey: string }) => {
+const ApplicationUserOverviewController = (props: { providedKey: string }) => {
   const [withdrawed, setWithdrawed] = useState<boolean>(false)
   const appToaster = useAppToaster()
   const { loading, error, data, refetch } = useGetApplicationByUserAccessKeyQuery({
-    variables: { accessKey: props.accessKey },
+    variables: { accessKey: props.providedKey },
     onError: error => {
       console.error(error)
       appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
@@ -48,7 +48,7 @@ const ApplicationUserController = () => {
   if (!accessKey) {
     return <NotFound title='Nicht gefunden' description='Diese Seite konnte nicht gefunden werden.' />
   } else {
-    return <ApplicationUserOverviewController accessKey={accessKey} />
+    return <ApplicationUserOverviewController providedKey={accessKey} />
   }
 }
 
