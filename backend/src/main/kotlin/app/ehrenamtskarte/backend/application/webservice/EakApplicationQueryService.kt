@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
@@ -37,6 +38,26 @@ class EakApplicationQueryService {
     ): ApplicationView {
         return transaction {
             ApplicationRepository.getApplicationByApplicant(accessKey)
+        }
+    }
+
+    @GraphQLDescription("Queries an application by application accessKey")
+    fun getApplicationByApplicationVerificationAccessKey(
+        applicationVerificationAccessKey: String
+    ): ApplicationView {
+        return transaction {
+            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey)
+        }
+    }
+
+    @GraphQLDescription("Queries an application verification by application accessKey")
+    fun getApplicationVerification(
+        accessKey: String
+    ): ApplicationVerificationView {
+        return transaction {
+            ApplicationRepository.getApplicationVerification(accessKey).let {
+                ApplicationVerificationView.fromDbEntity(it)
+            } ?: throw IllegalArgumentException("Verification does not exist")
         }
     }
 }

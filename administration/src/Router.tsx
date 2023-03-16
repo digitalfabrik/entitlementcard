@@ -17,6 +17,7 @@ import ForgotPasswordController from './components/auth/ForgotPasswordController
 import ManageUsersController from './components/users/ManageUsersController'
 import ApplyController from './application/components/ApplyController'
 import DataPrivacyPolicy from './components/DataPrivacyPolicy'
+import ApplicationVerificationController from './application-verification/VerificationController'
 import ApplicationApplicantController from './components/applications/ApplicationApplicantController'
 
 const Main = styled.div`
@@ -38,6 +39,10 @@ const Router = () => {
       ...(projectConfig.applicationFeatureEnabled
         ? [
             { path: '/beantragen', element: <ApplyController /> },
+            {
+              path: '/antrag-verifizieren/:applicationVerificationAccessKey',
+              element: <ApplicationVerificationController />,
+            },
             { path: '/antrag-einsehen/:accessKey', element: <ApplicationApplicantController /> },
           ]
         : []),

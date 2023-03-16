@@ -107,12 +107,62 @@ object ApplicationRepository {
         }
     }
 
+    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView {
+        return transaction {
+            (Applications innerJoin ApplicationVerifications)
+                .slice(Applications.columns)
+                .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
+                .single()
+                .let {
+                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
+                }
+        }
+    }
+
+    fun getApplicationVerification(accessKey: String): ApplicationVerificationEntity {
+        return transaction {
+            ApplicationVerificationEntity.find { ApplicationVerifications.accessKey eq accessKey }
+                .single()
+        }
+    }
+
+    private fun isAlreadyVerified(applicationVerification: ApplicationVerificationEntity): Boolean {
+        return applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
+    }
+
+    fun verifyApplicationVerification(accessKey: String): Boolean {
+        return transaction {
+            val applicationVerification = getApplicationVerification(accessKey)
+            if (isAlreadyVerified(applicationVerification)) {
+                false
+            } else {
+                applicationVerification.verifiedDate = LocalDateTime.now()
+                true
+            }
+        }
+    }
+
+    fun rejectApplicationVerification(accessKey: String): Boolean {
+        return transaction {
+            val applicationVerification = getApplicationVerification(accessKey)
+            if (isAlreadyVerified(applicationVerification)) {
+                false
+            } else {
+                applicationVerification.rejectedDate = LocalDateTime.now()
+                true
+            }
+        }
+    }
+
     fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
-                val project = (Projects innerJoin Regions).select { Regions.id eq application.regionId }.single()
-                    .let { ProjectEntity.wrapRow(it) }
+                val project =
+                    (Projects innerJoin Regions)
+                        .select { Regions.id eq application.regionId }
+                        .single()
+                        .let { ProjectEntity.wrapRow(it) }
                 val applicationDirectory =
                     Paths.get(graphQLContext.applicationData.absolutePath, project.project, application.id.toString())
                 ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq applicationId }

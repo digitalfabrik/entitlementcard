@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
+import app.ehrenamtskarte.backend.application.webservice.HealthHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import io.javalin.Javalin
@@ -50,6 +51,7 @@ class WebService {
         val graphQLHandler = GraphQLHandler(config)
         val mapStyleHandler = MapStyleHandler(config)
         val applicationHandler = ApplicationAttachmentHandler(applicationData)
+        val healthHandler = HealthHandler(config)
 
         app.post("/") { ctx ->
             if (!production) {
@@ -70,6 +72,8 @@ class WebService {
         app.get(applicationHandler.getPath()) { ctx ->
             applicationHandler.handle(ctx)
         }
+
+        app.get("/health") { ctx -> healthHandler.handle(ctx) }
 
         app.start(host, port)
         println("Server is running at http://$host:$port")
