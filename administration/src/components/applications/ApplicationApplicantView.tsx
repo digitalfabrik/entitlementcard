@@ -13,7 +13,7 @@ import { Delete } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
 
 const ApplicationViewCard = styled(Card)`
-  max-width: 600px;
+  max-width: 800px;
   margin: 10px;
   align-self: center;
 `
