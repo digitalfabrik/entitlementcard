@@ -73,12 +73,7 @@ const ApplicationApplicantView = ({
   return (
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <VerificationsQuickIndicator verifications={application.verifications} style={{ textAlign: 'end' }} />
           <Typography my='8px' variant='h6'>
             Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
