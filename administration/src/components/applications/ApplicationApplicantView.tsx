@@ -78,34 +78,24 @@ const ApplicationApplicantView = ({
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
         <Divider style={{ margin: '24px 0px' }} />
         <VerificationsView verifications={application.verifications} />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: '20px',
-          }}>
-          {!application.withdrawalDate && (
-            <>
-              <ActionContainer>
-                <Divider style={{ margin: '12px 0px' }} />
-                <Typography mt='8px' mb='16px' variant='body2'>
-                  Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.
-                </Typography>
-                <Button variant='contained' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
-                  Antrag zurückziehen
-                </Button>
-                <ConfirmDialog
-                  open={dialogOpen}
-                  onUpdateOpen={setDialogOpen}
-                  title='Antrag zurückziehen?'
-                  content='Möchten Sie den Antrag zurückziehen?'
-                  onConfirm={submitWithdrawal}
-                />
-              </ActionContainer>
-            </>
-          )}
-        </div>
+        {!application.withdrawalDate && (
+          <>
+            <Divider style={{ margin: '24px 0px' }} />
+            <Typography mt='8px' mb='16px' variant='body2'>
+              Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.
+            </Typography>
+            <Button variant='contained' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+              Antrag zurückziehen
+            </Button>
+            <ConfirmDialog
+              open={dialogOpen}
+              onUpdateOpen={setDialogOpen}
+              title='Antrag zurückziehen?'
+              content='Möchten Sie den Antrag zurückziehen?'
+              onConfirm={submitWithdrawal}
+            />
+          </>
+        )}
       </div>
     </ApplicationViewCard>
   )
