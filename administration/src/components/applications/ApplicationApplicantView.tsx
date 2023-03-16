@@ -13,7 +13,6 @@ import { Delete } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
 
 const ApplicationViewCard = styled(Card)`
-  transition: height 0.2s;
   max-width: 600px;
   overflow: hidden;
   margin: 10px;
