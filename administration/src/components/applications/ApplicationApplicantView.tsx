@@ -81,7 +81,7 @@ const ApplicationApplicantView = ({
           }}>
           <VerificationsQuickIndicator verifications={application.verifications} style={{ textAlign: 'end' }} />
           <Typography my='8px' variant='h6'>
-            Ihr Antrag auf die {config.name} vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
+            Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
           </Typography>
         </div>
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
