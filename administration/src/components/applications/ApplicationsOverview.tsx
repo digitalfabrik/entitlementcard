@@ -1,28 +1,21 @@
-import { Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
+import { Alert, Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import { useAppToaster } from '../AppToaster'
 import FlipMove from 'react-flip-move'
-import {
-  GetApplicationsQuery,
-  useDeleteApplicationMutation,
-  useWithdrawApplicationMutation,
-} from '../../generated/graphql'
+import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
-import ApplicationAction from './ApplicationAction'
-import { useParams } from 'react-router-dom'
-import { Alert } from '@mui/material'
+import { Alert as MuiAlert } from '@mui/material'
 
 export type Application = GetApplicationsQuery['applications'][number]
-export type ActionType = 'delete' | 'withdraw'
 
 const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
-const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number; $centered: boolean }>`
+const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number }>`
   transition: height 0.2s;
   height: ${props => (props.$collapsed ? COLLAPSED_HEIGHT : props.$contentHeight + 2 * CARD_PADDING)}px;
   width: 600px;
@@ -30,7 +23,6 @@ const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: 
   margin: 10px;
   padding: 0;
   position: relative;
-  ${props => props.$centered && 'align-self: center;'}
 `
 
 const ExpandContainer = styled.div<{ $collapsed: boolean }>`
@@ -49,17 +41,15 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
-const WithdrawAlert = styled(Alert)`
+const WithdrawAlert = styled(MuiAlert)`
   margin-bottom: 16px;
 `
 
-const ApplicationView: FunctionComponent<{
-  application: Application
-  gotConfirmed: () => void
-  actionType: ActionType
-}> = ({ application, gotConfirmed, actionType }) => {
+const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void }> = ({
+  application,
+  gotDeleted,
+}) => {
   const { createdDate: createdDateString, jsonValue, id } = application
-  const { accessKey } = useParams()
   const createdDate = new Date(createdDateString)
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -67,13 +57,14 @@ const ApplicationView: FunctionComponent<{
   const [collapsed, setCollapsed] = useState(false)
   const [height, setHeight] = useState(0)
   const appToaster = useAppToaster()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
       console.error(error)
       appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
-      if (deleted) gotConfirmed()
+      if (deleted) gotDeleted()
       else {
         console.error('Delete operation returned false.')
         appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
@@ -81,41 +72,13 @@ const ApplicationView: FunctionComponent<{
     },
   })
 
-  const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
-    onError: error => {
-      console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
-    },
-    onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
-      if (withdrawed) gotConfirmed()
-      else {
-        console.error('Witdraw operation returned false.')
-        appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
-      }
-    },
-  })
-
-  const submitWithdrawal = () => {
-    if (accessKey) {
-      withdrawApplication({
-        variables: {
-          accessKey: accessKey,
-        },
-      })
-    }
-  }
-
   const handleResize = (entries: IResizeEntry[]) => {
     setHeight(entries[0].contentRect.height)
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }
 
   return (
-    <ApplicationViewCard
-      elevation={2}
-      $collapsed={collapsed}
-      $contentHeight={height}
-      $centered={actionType === 'withdraw'}>
+    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height}>
       <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
@@ -131,7 +94,7 @@ const ApplicationView: FunctionComponent<{
             <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
-          {actionType === 'delete' && application.withdrawalDate && (
+          {application.withdrawalDate && (
             <WithdrawAlert severity='warning'>Antrag wurde vom Antragssteller zurückgezogen.</WithdrawAlert>
           )}
           <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
@@ -149,26 +112,20 @@ const ApplicationView: FunctionComponent<{
                 Weniger anzeigen
               </Button>
             ) : null}
-            {actionType === 'delete' && (
-              <ApplicationAction
-                confirmAction={() => deleteApplication({ variables: { applicationId: application.id } })}
-                loading={loading}
-                cancelButtonText='Abbrechen'
-                confirmButtonText='Antrag löschen'
-                buttonLabel='Antrag löschen'
-                dialogText='Möchten Sie den Antrag unwiderruflich löschen?'
-              />
-            )}
-            {actionType === 'withdraw' && !application.withdrawalDate && (
-              <ApplicationAction
-                confirmAction={submitWithdrawal}
-                loading={withdrawalLoading}
-                cancelButtonText='Abbrechen'
-                confirmButtonText='Antrag zurückziehen'
-                buttonLabel='Antrag zurückziehen'
-                dialogText='Möchten Sie den Antrag zurückziehen?'
-              />
-            )}
+            <Button onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
+              Antrag löschen
+            </Button>
+            <Alert
+              cancelButtonText='Abbrechen'
+              confirmButtonText='Antrag löschen'
+              icon='trash'
+              intent='danger'
+              isOpen={deleteDialogOpen}
+              loading={loading}
+              onCancel={() => setDeleteDialogOpen(false)}
+              onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
+              <p>Möchten Sie den Antrag unwiderruflich löschen?</p>
+            </Alert>
           </div>
         </div>
       </ResizeSensor>
@@ -177,11 +134,7 @@ const ApplicationView: FunctionComponent<{
 }
 
 // Necessary for FlipMove, as it cannot handle functional components
-export class ApplicationViewComponent extends React.Component<{
-  application: Application
-  gotConfirmed: () => void
-  actionType: ActionType
-}> {
+export class ApplicationViewComponent extends React.Component<{ application: Application; gotDeleted: () => void }> {
   render() {
     return <ApplicationView {...this.props} />
   }
@@ -195,10 +148,9 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent
-          actionType={'delete'}
           key={application.id}
           application={application}
-          gotConfirmed={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+          gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
         />
       ))}
       {updatedApplications.length === 0 ? (

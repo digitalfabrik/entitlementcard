@@ -56,7 +56,13 @@ const getStatus = (verification: Application['verifications'][number]) => {
   }
 }
 
-export const VerificationsQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
+export const VerificationsQuickIndicator = ({
+  verifications,
+  style,
+}: {
+  verifications: Application['verifications']
+  style?: React.CSSProperties
+}) => {
   const verificationStati = verifications.map(getStatus)
   return (
     <Tooltip2
@@ -67,7 +73,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
           Bestätigt/Ausstehend/Widersprochen
         </div>
       }>
-      <div>
+      <div id='test' style={style}>
         <Indicator
           status={VerificationStatus.Verified}
           text={verificationStati.filter(v => v === VerificationStatus.Verified).length}

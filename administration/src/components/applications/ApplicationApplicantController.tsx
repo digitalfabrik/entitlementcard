@@ -1,42 +1,39 @@
 import React, { useState } from 'react'
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
 
-import { useGetApplicationByUserAccessKeyQuery } from '../../generated/graphql'
 import ErrorHandler from '../../ErrorHandler'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { ApplicationViewComponent } from './ApplicationsOverview'
-import { useAppToaster } from '../AppToaster'
-
-const NotFound = styled(NonIdealState)`
-  margin: auto;
-`
+import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
+import ApplicationApplicantView from './ApplicationApplicantView'
+import { CircularProgress } from '@mui/material'
+import { SnackbarProvider, useSnackbar } from 'notistack'
 
 const CenteredMessage = styled(NonIdealState)`
   margin: auto;
 `
 
-const ApplicationUserController = (props: { providedKey: string }) => {
+const ApplicationApplicantController = (props: { providedKey: string }) => {
   const [withdrawed, setWithdrawed] = useState<boolean>(false)
-  const appToaster = useAppToaster()
-  const { loading, error, data, refetch } = useGetApplicationByUserAccessKeyQuery({
+  const { enqueueSnackbar } = useSnackbar()
+  const { loading, error, data, refetch } = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' + error })
+      enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
     },
   })
 
-  if (loading) return <Spinner />
+  if (loading) return <CircularProgress style={{ margin: 'auto' }} />
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.application.withdrawalDate) return <CenteredMessage title='Ihr Antrag wurde bereits zurückgezogen' />
   if (withdrawed) return <CenteredMessage title='Ihr Antrag wurde zurückgezogen' />
   else {
     return (
-      <ApplicationViewComponent
+      <ApplicationApplicantView
         application={data.application}
-        gotConfirmed={() => setWithdrawed(true)}
-        actionType={'withdraw'}
+        gotWithdrawed={() => setWithdrawed(true)}
+        providedKey={props.providedKey}
       />
     )
   }
@@ -46,9 +43,13 @@ const ControllerWithAccessKey = () => {
   const { accessKey } = useParams()
 
   if (!accessKey) {
-    return <NotFound title='Nicht gefunden' description='Diese Seite konnte nicht gefunden werden.' />
+    return null
   } else {
-    return <ApplicationUserController providedKey={accessKey} />
+    return (
+      <SnackbarProvider>
+        <ApplicationApplicantController providedKey={accessKey} />
+      </SnackbarProvider>
+    )
   }
 }
 

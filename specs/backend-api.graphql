@@ -135,7 +135,7 @@ type Query {
   "Return list of all categories."
   categories: [Category!]!
   "Queries an application by application accessKey"
-  getApplicationByUserAccessKey(accessKey: String!): ApplicationView!
+  getApplicationByApplicant(accessKey: String!): ApplicationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."

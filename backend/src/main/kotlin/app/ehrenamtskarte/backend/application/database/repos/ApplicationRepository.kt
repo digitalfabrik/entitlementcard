@@ -96,7 +96,7 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplicationByUserAccessKey(accessKey: String): ApplicationView {
+    fun getApplicationByApplicant(accessKey: String): ApplicationView {
         return transaction {
             (Applications innerJoin ApplicationVerifications)
                 .select { Applications.accessKey eq accessKey }
@@ -127,7 +127,7 @@ object ApplicationRepository {
     fun withdrawApplication(accessKey: String): Boolean {
         return transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
-            if (application != null) {
+            if (application.withdrawalDate == null) {
                 application.withdrawalDate = LocalDateTime.now()
                 true
             } else {
