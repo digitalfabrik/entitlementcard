@@ -95,7 +95,10 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
           {application.withdrawalDate && (
-            <WithdrawAlert severity='warning'>Antrag wurde vom Antragssteller zurückgezogen.</WithdrawAlert>
+            <WithdrawAlert severity='warning'>
+              Der Antrag wurde vom Antragssteller zurückgezogen. <br />
+              Bitte löschen Sie den Antrag zeitnah.
+            </WithdrawAlert>
           )}
           <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
           <Divider style={{ margin: '24px 0px' }} />
