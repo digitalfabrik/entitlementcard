@@ -1,0 +1,14 @@
+query getApplicationByApplicant($accessKey: String!) {
+  application: getApplicationByApplicant(accessKey: $accessKey) {
+    id
+    createdDate
+    jsonValue
+    withdrawalDate
+    verifications {
+      contactEmailAddress
+      organizationName
+      verifiedDate
+      rejectedDate
+    }
+  }
+}
