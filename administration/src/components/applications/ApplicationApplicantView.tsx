@@ -54,7 +54,7 @@ const ApplicationApplicantView = ({
     onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
       if (withdrawed) gotWithdrawed()
       else {
-        console.error('Witdraw operation returned false.')
+        console.error('Withdraw operation returned false.')
         enqueueSnackbar('Der Antrag wurde bereits zurückgezogen.', { variant: 'error' })
       }
     },
