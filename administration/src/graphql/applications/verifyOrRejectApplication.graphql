@@ -1,0 +1,3 @@
+mutation verifyOrRejectApplicationVerification($accessKey: String!, $verified: Boolean!) {
+  result: verifyOrRejectApplicationVerification(accessKey: $accessKey, verified: $verified)
+}

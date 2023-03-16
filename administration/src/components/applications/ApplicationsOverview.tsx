@@ -11,7 +11,7 @@ import VerificationsView, { VerificationsQuickIndicator } from './VerificationsV
 
 type Application = GetApplicationsQuery['applications'][number]
 
-const CARD_PADDING = 20
+export const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
 const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number }>`

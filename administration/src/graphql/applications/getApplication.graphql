@@ -1,0 +1,15 @@
+query getApplicationByApplicationVerificationAccessKey($applicationVerificationAccessKey: String!) {
+  application: getApplicationByApplicationVerificationAccessKey(
+    applicationVerificationAccessKey: $applicationVerificationAccessKey
+  ) {
+    id
+    createdDate
+    jsonValue
+  }
+  verification: getApplicationVerification(accessKey: $applicationVerificationAccessKey) {
+    contactName
+    organizationName
+    verifiedDate
+    rejectedDate
+  }
+}
