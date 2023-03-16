@@ -14,10 +14,7 @@ import { useSnackbar } from 'notistack'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 600px;
-  overflow: hidden;
   margin: 10px;
-  padding: 0;
-  position: relative;
   align-self: center;
 `
 
