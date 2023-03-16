@@ -5,7 +5,7 @@ import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useWithdrawApplicationMutation } from '../../generated/graphql'
 
-import styled from 'styled-components'
+import { styled } from '@mui/system'
 import { Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
 import { format } from 'date-fns'
 import ConfirmDialog from '../../application/components/ConfirmDialog'
