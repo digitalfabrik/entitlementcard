@@ -1,6 +1,6 @@
 import { Button, Card, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
-import styled from 'styled-components'
+import { styled } from '@mui/system'
 
 type ErrorHandlerProps = {
   title?: string
