@@ -73,7 +73,7 @@ export const VerificationsQuickIndicator = ({
           Bestätigt/Ausstehend/Widersprochen
         </div>
       }>
-      <div id='test' style={style}>
+      <div style={style}>
         <Indicator
           status={VerificationStatus.Verified}
           text={verificationStati.filter(v => v === VerificationStatus.Verified).length}
