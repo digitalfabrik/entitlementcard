@@ -1,12 +1,17 @@
-import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup, NonIdealState } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import { useAppToaster } from '../AppToaster'
-import { useResetPasswordMutation } from '../../generated/graphql'
+import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import PasswordInput from '../PasswordInput'
 import validateNewPasswordInput from './validateNewPasswordInput'
+import styled from 'styled-components'
+
+const CenteredMessage = styled(NonIdealState)`
+  margin: auto;
+`
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
@@ -16,6 +21,15 @@ const ResetPasswordController = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
   const { passwordResetKey } = useParams()
   const navigate = useNavigate()
+
+  const { error } = useCheckPasswordResetLinkQuery({
+    variables: {
+      resetKey: passwordResetKey!,
+    },
+    onCompleted: result => {
+      setEmail(result.admin.email)
+    },
+  })
 
   const [resetPassword, { loading }] = useResetPasswordMutation({
     onCompleted: () => {
@@ -41,6 +55,25 @@ const ResetPasswordController = () => {
 
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
+
+  if (error) {
+    if (error.message.includes('key has expired')) {
+      return (
+        <CenteredMessage title='Die Gültigkeit ihres Links ist abgelaufen'>
+          Sie können ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
+          <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
+            {window.location.origin + '/forgot-password'}
+          </a>
+        </CenteredMessage>
+      )
+    }
+    return (
+      <CenteredMessage
+        title='Ihr Link ist ungültig'
+        description='Ihr Link konnte nicht korrekt aufgelöst werden. Bitte kopieren Sie den Link manuell aus Ihrer E-Mail.'
+      />
+    )
+  }
 
   return (
     <StandaloneCenter>

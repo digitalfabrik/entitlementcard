@@ -53,6 +53,9 @@ class ResetPasswordMutationService {
             Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
             $administrationBaseUrl/reset-password/${URLEncoder.encode(key, StandardCharsets.UTF_8)}
             
+            Falls ihr Browser den Link nicht korrekt auflösen kann, kopieren Sie bitte folgenden Link:
+            $key
+            
             Dieser Link ist 24 Stunden gültig.
             
             Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
