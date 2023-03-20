@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useState } from 'react'
 import { Application } from './ApplicationsOverview'
-import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import VerificationsView from './VerificationsView'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useWithdrawApplicationMutation } from '../../generated/graphql'
@@ -16,11 +16,6 @@ const ApplicationViewCard = styled(Card)`
   max-width: 800px;
   margin: 10px;
   align-self: center;
-`
-
-const ActionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
 `
 
 type ApplicationApplicantViewProps = {
@@ -69,12 +64,9 @@ const ApplicationApplicantView = ({
   return (
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <VerificationsQuickIndicator verifications={application.verifications} style={{ textAlign: 'end' }} />
-          <Typography my='8px' variant='h6'>
-            Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
-          </Typography>
-        </div>
+        <Typography mb='8px' variant='h6'>
+          Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
+        </Typography>
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
         <Divider style={{ margin: '24px 0px' }} />
         <VerificationsView verifications={application.verifications} />

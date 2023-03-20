@@ -98,12 +98,9 @@ object ApplicationRepository {
 
     fun getApplicationByApplicant(accessKey: String): ApplicationView {
         return transaction {
-            (Applications innerJoin ApplicationVerifications)
-                .select { Applications.accessKey eq accessKey }
+            ApplicationEntity.find { Applications.accessKey eq accessKey }
                 .single()
-                .let {
-                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
-                }
+                .let { ApplicationView.fromDbEntity(it) }
         }
     }
 

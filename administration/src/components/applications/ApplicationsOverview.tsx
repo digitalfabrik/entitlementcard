@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
+import { Alert, Button, Callout, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
@@ -8,7 +8,6 @@ import FlipMove from 'react-flip-move'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
-import { Alert as MuiAlert } from '@mui/material'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -41,7 +40,7 @@ const ExpandContainer = styled.div<{ $collapsed: boolean }>`
   pointer-events: ${props => (props.$collapsed ? 'all' : 'none')};
 `
 
-const WithdrawAlert = styled(MuiAlert)`
+const WithdrawAlert = styled(Callout)`
   margin-bottom: 16px;
 `
 
@@ -49,7 +48,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
   application,
   gotDeleted,
 }) => {
-  const { createdDate: createdDateString, jsonValue, id } = application
+  const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
   const createdDate = new Date(createdDateString)
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -94,9 +93,10 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
             <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
-          {application.withdrawalDate && (
-            <WithdrawAlert severity='warning'>
-              Der Antrag wurde vom Antragssteller zurückgezogen. <br />
+          {withdrawalDate && (
+            <WithdrawAlert intent='warning'>
+              Der Antrag wurde vom Antragssteller am {format(new Date(withdrawalDate), 'dd.MM.yyyy, HH:mm')}{' '}
+              zurückgezogen. <br />
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>
           )}
