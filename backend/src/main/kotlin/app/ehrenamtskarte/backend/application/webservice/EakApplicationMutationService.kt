@@ -64,6 +64,13 @@ class EakApplicationMutationService {
         }
     }
 
+    @GraphQLDescription("Withdraws the application")
+    fun withdrawApplication(accessKey: String): Boolean {
+        return transaction {
+            ApplicationRepository.withdrawApplication(accessKey)
+        }
+    }
+
     @GraphQLDescription("Verifies or rejects an application verification")
     fun verifyOrRejectApplicationVerification(
         accessKey: String,

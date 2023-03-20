@@ -14,6 +14,8 @@ object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
     val createdDate = datetime("createdDate").defaultExpression(CurrentDateTime)
+    val accessKey = varchar("accessKey", 100).uniqueIndex()
+    val withdrawalDate = datetime("withdrawalDate").nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -24,6 +26,8 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var regionId by Applications.regionId
     var jsonValue by Applications.jsonValue
     var createdDate by Applications.createdDate
+    var accessKey by Applications.accessKey
+    var withdrawalDate by Applications.withdrawalDate
 }
 
 object ApplicationVerifications : IntIdTable() {

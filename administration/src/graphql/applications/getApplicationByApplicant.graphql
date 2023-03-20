@@ -1,5 +1,5 @@
-query getApplications($regionId: Int!) {
-  applications: getApplications(regionId: $regionId) {
+query getApplicationByApplicant($accessKey: String!) {
+  application: getApplicationByApplicant(accessKey: $accessKey) {
     id
     createdDate
     jsonValue

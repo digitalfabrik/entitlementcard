@@ -61,7 +61,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
   return (
     <Tooltip2
       content={
-        <div style={{ textAlign: 'center' }}>
+        <div>
           <b>Bestätigung(en) durch Organisationen:</b>
           <br />
           Bestätigt/Ausstehend/Widersprochen

@@ -33,6 +33,15 @@ class EakApplicationQueryService {
     }
 
     @GraphQLDescription("Queries an application by application accessKey")
+    fun getApplicationByApplicant(
+        accessKey: String
+    ): ApplicationView {
+        return transaction {
+            ApplicationRepository.getApplicationByApplicant(accessKey)
+        }
+    }
+
+    @GraphQLDescription("Queries an application by application accessKey")
     fun getApplicationByApplicationVerificationAccessKey(
         applicationVerificationAccessKey: String
     ): ApplicationView {

@@ -18,6 +18,7 @@ import ManageUsersController from './components/users/ManageUsersController'
 import ApplyController from './application/components/ApplyController'
 import DataPrivacyPolicy from './components/DataPrivacyPolicy'
 import ApplicationVerificationController from './application-verification/VerificationController'
+import ApplicationApplicantController from './components/applications/ApplicationApplicantController'
 
 const Main = styled.div`
   flex-grow: 1;
@@ -42,6 +43,7 @@ const Router = () => {
               path: '/antrag-verifizieren/:applicationVerificationAccessKey',
               element: <ApplicationVerificationController />,
             },
+            { path: '/antrag-einsehen/:accessKey', element: <ApplicationApplicantController /> },
           ]
         : []),
       {
