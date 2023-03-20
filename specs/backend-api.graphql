@@ -99,7 +99,7 @@ type Mutation {
   "Stores a batch of new digital entitlementcards"
   addCards(cards: [CardGenerationModelInput!]!): Boolean!
   "Stores a new application for an EAK"
-  addEakApplication(application: ApplicationInput!, regionId: Int!): Boolean!
+  addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"

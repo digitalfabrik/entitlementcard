@@ -92,7 +92,7 @@ const ApplyController = (): React.ReactElement | null => {
     const [regionId, application] = validationResult.value
 
     addBlueEakApplication({
-      variables: { regionId, application },
+      variables: { regionId, application, project: projectId },
     })
   }
 
