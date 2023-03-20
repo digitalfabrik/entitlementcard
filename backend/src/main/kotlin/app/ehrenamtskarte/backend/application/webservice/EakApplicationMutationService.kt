@@ -9,9 +9,12 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsI
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
 import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.simplejavamail.MailException
+import org.slf4j.LoggerFactory
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -25,9 +28,15 @@ class EakApplicationMutationService {
         project: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
+        val logger = LoggerFactory.getLogger(Mailer::class.java)
         val context = dfe.getContext<GraphQLContext>()
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
+
+        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) }
+        if (region == null) {
+            throw IllegalArgumentException("The region is not related to the project.")
+        }
 
         // Validate that all files are png, jpeg or pdf files and at most 5MB.
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
@@ -36,16 +45,18 @@ class EakApplicationMutationService {
             throw IllegalArgumentException("An uploaded file does not adhere to the file upload requirements.")
         }
 
-        transaction {
-            val (applicationEntity, verificationEntities) = ApplicationRepository.persistApplication(
+        val (applicationEntity, verificationEntities) = transaction {
+            ApplicationRepository.persistApplication(
                 application.toJsonField(),
                 application.extractApplicationVerifications(),
                 regionId,
                 context.applicationData,
                 context.files,
             )
+        }
 
-            for (applicationVerification in verificationEntities) {
+        for (applicationVerification in verificationEntities) {
+            try {
                 Mailer.sendMail(
                     backendConfig,
                     projectConfig.smtp,
@@ -54,9 +65,10 @@ class EakApplicationMutationService {
                     "Antrag Verifizieren",
                     generateApplicationVerificationMailMessage(projectConfig.administrationName, projectConfig.administrationBaseUrl, applicationVerification)
                 )
+            } catch (exception: MailException) {
+                logger.error(exception.message)
             }
         }
-
         return true
     }
 
