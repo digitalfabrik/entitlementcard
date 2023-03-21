@@ -24,6 +24,7 @@ const ResetPasswordController = () => {
 
   const { error } = useCheckPasswordResetLinkQuery({
     variables: {
+      project: config.projectId,
       resetKey: passwordResetKey!,
     },
     onCompleted: result => {
@@ -60,7 +61,7 @@ const ResetPasswordController = () => {
     if (error.message.includes('key has expired')) {
       return (
         <CenteredMessage title='Die Gültigkeit ihres Links ist abgelaufen'>
-          Sie können ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
+          Unter folgendem Link können Sie Ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
           <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
             {window.location.origin + '/forgot-password'}
           </a>
