@@ -149,7 +149,7 @@ class ManageUsersMutationService {
             für Sie wurde ein Account für $administrationName erstellt.
             Sie können Ihr Passwort unter dem folgenden Link setzen:
             $administrationBaseUrl/reset-password/${URLEncoder.encode(key, StandardCharsets.UTF_8)}
-    
+            
             Dieser Link ist 24 Stunden gültig.
             
             Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
