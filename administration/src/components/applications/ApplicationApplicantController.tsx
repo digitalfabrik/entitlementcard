@@ -8,6 +8,7 @@ import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import ApplicationApplicantView from './ApplicationApplicantView'
 import { CircularProgress } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
+import InvalidLink from '../InvalidLink'
 
 const CenteredMessage = styled(NonIdealState)`
   margin: auto;
@@ -25,6 +26,7 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
   })
 
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
+  else if (error?.message.includes('Collection is empty')) return <InvalidLink />
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.application.withdrawalDate) return <CenteredMessage title='Ihr Antrag wurde bereits zurückgezogen' />
   if (withdrawed) return <CenteredMessage title='Ihr Antrag wurde zurückgezogen' />

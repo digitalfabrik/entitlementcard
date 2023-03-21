@@ -12,6 +12,7 @@ import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../components/AppToaster'
 import { CARD_PADDING } from '../components/applications/ApplicationsOverview'
 import { format } from 'date-fns'
+import InvalidLink from '../components/InvalidLink'
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
         console.error(error)
         showErrorToaster()
       },
-      onCompleted: ({ result }, clientOptions) => {
+      onCompleted: ({ result }) => {
         if (!result) {
           console.error('Verify operation returned false.')
           showErrorToaster()
@@ -87,6 +88,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   })
 
   if (loading) return <Spinner />
+  else if (error?.message.includes('Collection is empty')) return <InvalidLink />
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage title='Sie haben diesen Antrag bereits bearbeitet.' />
