@@ -114,7 +114,7 @@ class EakApplicationMutationService {
         return """
         Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
 
-        Ihr Antrag zur Bayrischen Ehrenamtskarte wurde erfolgreich abgeschickt. 
+        Ihr Antrag zur Bayrischen Ehrenamtskarte wurde erfolgreich eingereicht. 
         
         Sie können den Status Ihres Antrags unter folgendem Link einsehen und falls gewünscht ihren Antrag zurückziehen:
         $administrationBaseUrl/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
