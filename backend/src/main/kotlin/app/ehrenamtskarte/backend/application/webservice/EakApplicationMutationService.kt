@@ -62,7 +62,7 @@ class EakApplicationMutationService {
                 projectConfig.smtp,
                 projectConfig.administrationName,
                 application.personalData.emailAddress.email,
-                "Antrag erfolgreich gesendet",
+                "Antrag erfolgreich eingereicht",
                 generateApplicationApplicantMailMessage(projectConfig.administrationName, projectConfig.administrationBaseUrl, application.personalData, applicationEntity.accessKey)
             )
         } catch (exception: MailException) {
