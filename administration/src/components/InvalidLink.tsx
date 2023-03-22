@@ -8,7 +8,7 @@ const CenteredAlert = styled(Alert)`
 const InvalidLink = (): ReactElement => (
   <CenteredAlert severity='info'>
     <AlertTitle>Ihr Link ist ungültig</AlertTitle>
-    Ihr Link konnte nicht korrekt aufgelöst werden. Bitte kopieren Sie den Link manuell aus Ihrer E-Mail.
+    Ihr Link ist ungültig. Versuchen Sie, den Link manuell aus Ihrer E-Mail in die Addresszeile Ihres Browsers zu kopieren.
   </CenteredAlert>
 )
 
