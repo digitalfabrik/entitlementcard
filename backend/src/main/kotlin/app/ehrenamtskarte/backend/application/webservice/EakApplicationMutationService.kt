@@ -116,7 +116,7 @@ class EakApplicationMutationService {
 
         Ihr Antrag zur Bayrischen Ehrenamtskarte wurde erfolgreich eingereicht. 
         
-        Sie können den Status Ihres Antrags unter folgendem Link einsehen und falls gewünscht ihren Antrag zurückziehen:
+        Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:
         $administrationBaseUrl/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
 
         Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
