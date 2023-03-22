@@ -90,6 +90,15 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage title='Sie haben diesen Antrag bereits bearbeitet.' />
+  if (data.application.withdrawalDate)
+    return (
+      <CenteredMessage
+        title={`Der Antrag wurde vom Antragssteller am ${format(
+          new Date(data.application.withdrawalDate),
+          'dd.MM.yyyy, HH:mm'
+        )} zurückgezogen.`}
+      />
+    )
   if (verificationFinised)
     return (
       <CenteredMessage

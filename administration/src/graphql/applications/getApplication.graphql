@@ -5,6 +5,7 @@ query getApplicationByApplicationVerificationAccessKey($applicationVerificationA
     id
     createdDate
     jsonValue
+    withdrawalDate
   }
   verification: getApplicationVerification(accessKey: $applicationVerificationAccessKey) {
     contactName
