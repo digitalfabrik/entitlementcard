@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
 import JsonFieldView from '../components/applications/JsonFieldView'
 import ErrorHandler from '../ErrorHandler'
 import {
@@ -10,7 +9,7 @@ import {
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import { format } from 'date-fns'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
+import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
 import { Close, Check } from '@mui/icons-material'
 
 const ApplicationViewCard = styled(Card)`
@@ -27,7 +26,7 @@ const CenteredMessage = styled(Alert)`
   margin: auto;
 `
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled('div')`
   display: flex;
   width: inherit;
   flex-direction: row;
@@ -75,6 +74,15 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
+  if (data.application.withdrawalDate)
+    return (
+      <CenteredMessage
+        title={`Der Antrag wurde vom Antragssteller am ${format(
+          new Date(data.application.withdrawalDate),
+          'dd.MM.yyyy, HH:mm'
+        )} zurückgezogen.`}
+      />
+    )
   if (verificationFinised)
     return (
       <CenteredMessage>
