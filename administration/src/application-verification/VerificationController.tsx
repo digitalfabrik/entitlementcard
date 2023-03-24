@@ -1,7 +1,5 @@
-import { Button, Card, H1, H4, NonIdealState, Spinner } from '@blueprintjs/core'
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
 import JsonFieldView from '../components/applications/JsonFieldView'
 import ErrorHandler from '../ErrorHandler'
 import {
@@ -9,43 +7,30 @@ import {
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../components/AppToaster'
-import { CARD_PADDING } from '../components/applications/ApplicationsOverview'
 import { format } from 'date-fns'
+import { SnackbarProvider, useSnackbar } from 'notistack'
+import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
+import { Close, Check } from '@mui/icons-material'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+const ApplicationViewCard = styled(Card)`
   max-width: 800px;
-  margin: auto;
-  justify-content: center;
-  padding: ${CARD_PADDING}px;
+  margin: 10px;
+  align-self: center;
 `
 
-const CenteredMessage = styled(NonIdealState)`
+const StyledAlert = styled(Alert)`
+  margin: 20px 0;
+`
+
+const CenteredMessage = styled(Alert)`
   margin: auto;
 `
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled('div')`
   display: flex;
   width: inherit;
   flex-direction: row;
   justify-content: space-around;
-`
-
-const Text = styled.p`
-  margin: 20px 0 10px 0;
-`
-
-const Info = styled.aside`
-  background-color: #f8f8f8;
-  width: inherit;
-  border-left: solid 3px;
-  border-color: gray;
-  padding: 5px;
-  margin: 10px;
 `
 
 type ApplicationVerificationProps = {
@@ -55,23 +40,22 @@ type ApplicationVerificationProps = {
 const ApplicationVerification = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
   const [verificationFinised, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
-  const appToaster = useAppToaster()
-  const showErrorToaster = () => appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
-  const [verifyOrRejectApplicationVerification, { loading: verificationLoading }] =
-    useVerifyOrRejectApplicationVerificationMutation({
-      onError: error => {
-        console.error(error)
-        showErrorToaster()
-      },
-      onCompleted: ({ result }, clientOptions) => {
-        if (!result) {
-          console.error('Verify operation returned false.')
-          showErrorToaster()
-        } else {
-          setVerificationFinished(true)
-        }
-      },
-    })
+  const { enqueueSnackbar } = useSnackbar()
+  const showErrorSnackbar = () => enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
+  const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
+    onError: error => {
+      console.error(error)
+      showErrorSnackbar()
+    },
+    onCompleted: ({ result }) => {
+      if (!result) {
+        console.error('Verify operation returned false.')
+        showErrorSnackbar()
+      } else {
+        setVerificationFinished(true)
+      }
+    },
+  })
 
   const submitApplicationVerification = (verified: boolean) => {
     verifyOrRejectApplicationVerification({
@@ -86,10 +70,10 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     variables: { applicationVerificationAccessKey },
   })
 
-  if (loading) return <Spinner />
+  if (loading) return <CircularProgress style={{ margin: 'auto' }} />
   else if (error || !data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
-    return <CenteredMessage title='Sie haben diesen Antrag bereits bearbeitet.' />
+    return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
   if (data.application.withdrawalDate)
     return (
       <CenteredMessage
@@ -101,10 +85,10 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     )
   if (verificationFinised)
     return (
-      <CenteredMessage
-        title={'Ihre Eingaben wurden erfolgreich gespeichert.'}
-        description='Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.'
-      />
+      <CenteredMessage>
+        <AlertTitle>Ihre Eingaben wurden erfolgreich gespeichert.</AlertTitle>
+        Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.
+      </CenteredMessage>
     )
 
   const { jsonValue, createdDate: createdDateString, id } = data.application
@@ -112,38 +96,52 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const jsonField = JSON.parse(jsonValue)
   const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
   return (
-    <Container>
-      <H1>{config.name}</H1>
-      <Text>
-        Guten Tag {data.verification.contactName},
-        <br />
-        <br />
-        Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
-        Antragssteller hat Sie als Kontaktperson der Organisation {data.verification.organizationName} angegeben. Im
-        Folgenden können Sie den zugehörigen Antrag einsehen. Wir bitten Sie, die enthaltenen Angaben, welche die
-        Organisation {data.verification.organizationName} betreffen, zu bestätigen. Falls Sie denken, die Angaben wurden
-        fälschlicherweise gemacht, bitten wir Sie, den Angaben zu widersprechen.
-      </Text>
-      <Card>
-        <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
+    <ApplicationViewCard elevation={2}>
+      <div style={{ overflow: 'visible', padding: '20px' }}>
+        <Typography mb='12px' variant='h4'>
+          {config.name}
+        </Typography>
+        <Typography my='8px' variant='body1'>
+          Guten Tag {data.verification.contactName},
+          <br />
+          <br />
+          Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
+          Antragssteller hat Sie als Kontaktperson der Organisation {data.verification.organizationName} angegeben. Im
+          Folgenden können Sie den zugehörigen Antrag einsehen. Wir bitten Sie, die enthaltenen Angaben, welche die
+          Organisation {data.verification.organizationName} betreffen, zu bestätigen. Falls Sie denken, die Angaben
+          wurden fälschlicherweise gemacht, bitten wir Sie, den Angaben zu widersprechen.
+        </Typography>
+        <Divider style={{ margin: '24px 0px' }} />
+        <Typography variant='h6' mb='8px'>
+          Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
+        </Typography>
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} />
-      </Card>
-      <Text>
-        Können Sie die Angaben, welche die Organisation <b>{data.verification.organizationName}</b> betreffen,
-        bestätigen?
-      </Text>
-      <Info>
-        <b>Wichtig!</b> Die Eingabe kann nicht rückgängig gemacht werden.
-      </Info>
-      <ButtonContainer>
-        <Button icon='cross' loading={verificationLoading} onClick={() => submitApplicationVerification(false)}>
-          Widersprechen
-        </Button>
-        <Button icon='tick' loading={verificationLoading} onClick={() => submitApplicationVerification(true)}>
-          Bestätigen
-        </Button>
-      </ButtonContainer>
-    </Container>
+        <Divider style={{ margin: '24px 0px' }} />
+        <Typography mt='8px' variant='body1'>
+          Können Sie die Angaben, welche die Organisation <b>{data.verification.organizationName}</b> betreffen,
+          bestätigen?
+        </Typography>
+        <StyledAlert severity='warning'>
+          <b>Wichtig!</b> Die Eingabe kann nicht rückgängig gemacht werden.
+        </StyledAlert>
+        <ButtonContainer>
+          <Button
+            variant='contained'
+            color='error'
+            endIcon={<Close />}
+            onClick={() => submitApplicationVerification(false)}>
+            Widersprechen
+          </Button>
+          <Button
+            variant='contained'
+            color='success'
+            endIcon={<Check />}
+            onClick={() => submitApplicationVerification(true)}>
+            Bestätigen
+          </Button>
+        </ButtonContainer>
+      </div>
+    </ApplicationViewCard>
   )
 }
 
@@ -151,10 +149,19 @@ const ApplicationVerificationController = () => {
   const { applicationVerificationAccessKey } = useParams()
 
   if (!applicationVerificationAccessKey) {
-    return <CenteredMessage title='Nicht gefunden' description='Die Seite konnte nicht gefunden werden.' />
+    return (
+      <CenteredMessage>
+        <AlertTitle>Nicht gefunden</AlertTitle>
+        Die Seite konnte nicht gefunden werden.
+      </CenteredMessage>
+    )
   }
 
-  return <ApplicationVerification applicationVerificationAccessKey={applicationVerificationAccessKey} />
+  return (
+    <SnackbarProvider>
+      <ApplicationVerification applicationVerificationAccessKey={applicationVerificationAccessKey} />
+    </SnackbarProvider>
+  )
 }
 
 export default ApplicationVerificationController
