@@ -24,7 +24,7 @@ const DeleteUserDialog = ({
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
+      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error).title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich gelöscht.' })

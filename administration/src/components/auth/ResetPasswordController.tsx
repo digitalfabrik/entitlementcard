@@ -1,6 +1,6 @@
 import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup, NonIdealState } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import { useAppToaster } from '../AppToaster'
@@ -8,6 +8,7 @@ import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../
 import PasswordInput from '../PasswordInput'
 import validateNewPasswordInput from './validateNewPasswordInput'
 import styled from 'styled-components'
+import getMessageFromApolloError from '../getMessageFromApolloError'
 
 const CenteredMessage = styled(NonIdealState)`
   margin: auto;
@@ -16,19 +17,16 @@ const CenteredMessage = styled(NonIdealState)`
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [email, setEmail] = useState('')
+  const [queryParams] = useSearchParams()
+  const [adminEmail, setAdminEmail] = useState(queryParams.get('email') ?? '')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
-  const { passwordResetKey } = useParams()
   const navigate = useNavigate()
 
   const { error } = useCheckPasswordResetLinkQuery({
     variables: {
       project: config.projectId,
-      resetKey: passwordResetKey!,
-    },
-    onCompleted: result => {
-      setEmail(result.admin.email)
+      resetKey: queryParams.get('token')!,
     },
   })
 
@@ -48,9 +46,9 @@ const ResetPasswordController = () => {
     resetPassword({
       variables: {
         project: config.projectId,
-        email,
+        email: adminEmail,
         newPassword,
-        passwordResetKey: passwordResetKey!,
+        passwordResetKey: queryParams.get('token')!,
       },
     })
 
@@ -58,21 +56,11 @@ const ResetPasswordController = () => {
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
   if (error) {
-    if (error.message.includes('key has expired')) {
-      return (
-        <CenteredMessage title='Die Gültigkeit ihres Links ist abgelaufen'>
-          Unter folgendem Link können Sie Ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
-          <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
-            {window.location.origin + '/forgot-password'}
-          </a>
-        </CenteredMessage>
-      )
-    }
+    console.log(getMessageFromApolloError(error))
     return (
-      <CenteredMessage
-        title='Ihr Link ist ungültig'
-        description='Ihr Link konnte nicht korrekt aufgelöst werden. Bitte kopieren Sie den Link manuell aus Ihrer E-Mail.'
-      />
+      <CenteredMessage title={getMessageFromApolloError(error).title}>
+        {getMessageFromApolloError(error).description}
+      </CenteredMessage>
     )
   }
 
@@ -93,8 +81,8 @@ const ResetPasswordController = () => {
           }}>
           <FormGroup label='Email-Adresse'>
             <InputGroup
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              value={adminEmail}
+              onChange={e => setAdminEmail(e.target.value)}
               type='email'
               placeholder='erika.musterfrau@example.org'
             />

@@ -39,7 +39,7 @@ const CreateUserDialog = ({
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
+      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error).title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich erstellt.' })

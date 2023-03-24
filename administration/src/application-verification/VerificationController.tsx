@@ -13,6 +13,7 @@ import { useAppToaster } from '../components/AppToaster'
 import { CARD_PADDING } from '../components/applications/ApplicationsOverview'
 import { format } from 'date-fns'
 import InvalidLink from '../components/InvalidLink'
+import getMessageFromApolloError from '../components/getMessageFromApolloError'
 
 const Container = styled.div`
   display: flex;
@@ -87,9 +88,17 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     variables: { applicationVerificationAccessKey },
   })
 
+  // TODO handle two error messages of graphQL queries
+
   if (loading) return <Spinner />
-  else if (error?.message.includes('Collection is empty')) return <InvalidLink />
-  else if (error || !data) return <ErrorHandler refetch={refetch} />
+  else if (error)
+    return (
+      <InvalidLink
+        title={getMessageFromApolloError(error).title}
+        description={getMessageFromApolloError(error).description}
+      />
+    )
+  else if (!data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage title='Sie haben diesen Antrag bereits bearbeitet.' />
   if (verificationFinised)

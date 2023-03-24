@@ -9,6 +9,7 @@ import ApplicationApplicantView from './ApplicationApplicantView'
 import { CircularProgress } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import InvalidLink from '../InvalidLink'
+import getMessageFromApolloError from '../getMessageFromApolloError'
 
 const CenteredMessage = styled(NonIdealState)`
   margin: auto;
@@ -26,8 +27,14 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
   })
 
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (error?.message.includes('Collection is empty')) return <InvalidLink />
-  else if (error || !data) return <ErrorHandler refetch={refetch} />
+  else if (error) {
+    return (
+      <InvalidLink
+        title={getMessageFromApolloError(error).title}
+        description={getMessageFromApolloError(error).description}
+      />
+    )
+  } else if (!data) return <ErrorHandler refetch={refetch} />
   if (data.application.withdrawalDate) return <CenteredMessage title='Ihr Antrag wurde bereits zurückgezogen' />
   if (withdrawed) return <CenteredMessage title='Ihr Antrag wurde zurückgezogen' />
   else {

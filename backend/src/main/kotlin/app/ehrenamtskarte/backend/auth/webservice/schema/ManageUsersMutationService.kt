@@ -69,6 +69,7 @@ class ManageUsersMutationService {
                         key,
                         projectConfig.administrationName,
                         projectConfig.administrationBaseUrl,
+                        email
                     ),
                 )
             }
@@ -142,13 +143,14 @@ class ManageUsersMutationService {
         key: String,
         administrationName: String,
         administrationBaseUrl: String,
+        email: String
     ): String {
         return """
             Guten Tag,
             
             für Sie wurde ein Account für $administrationName erstellt.
             Sie können Ihr Passwort unter dem folgenden Link setzen:
-            $administrationBaseUrl/reset-password/${URLEncoder.encode(key, StandardCharsets.UTF_8)}
+            $administrationBaseUrl/reset-password?email=${URLEncoder.encode(email, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(key, StandardCharsets.UTF_8)}
             
             Dieser Link ist 24 Stunden gültig.
             

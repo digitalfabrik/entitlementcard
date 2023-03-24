@@ -137,7 +137,7 @@ type Query {
   "Return list of all categories."
   categories: [Category!]!
   "Verify password reset link"
-  checkPasswordResetLink(project: String!, resetKey: String!): Administrator!
+  checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
   "Queries an application by application accessKey"

@@ -48,7 +48,7 @@ const EditUserDialog = ({
   const [editAdministrator, { loading }] = useEditAdministratorMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
+      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error).title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich bearbeitet.' })

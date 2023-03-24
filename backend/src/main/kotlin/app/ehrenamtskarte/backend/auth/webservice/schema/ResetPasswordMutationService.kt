@@ -35,7 +35,7 @@ class ResetPasswordMutationService {
                 projectConfig.administrationName,
                 email,
                 "Passwort Zurücksetzen",
-                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl),
+                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl, email),
             )
         }
         return true
@@ -45,13 +45,14 @@ class ResetPasswordMutationService {
         key: String,
         administrationName: String,
         administrationBaseUrl: String,
+        email: String
     ): String {
         return """
             Guten Tag,
             
             Sie haben angefragt, Ihr Passwort für $administrationName zurückzusetzen.
             Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
-            $administrationBaseUrl/reset-password/${URLEncoder.encode(key, StandardCharsets.UTF_8)}
+            $administrationBaseUrl/reset-password?email=${URLEncoder.encode(email, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(key, StandardCharsets.UTF_8)}
             
             Dieser Link ist 24 Stunden gültig.
             

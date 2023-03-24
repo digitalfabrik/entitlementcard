@@ -1,18 +1,43 @@
 import { ApolloError } from '@apollo/client'
+import { ReactNode } from 'react'
 
-const getMessageFromApolloError = (error: ApolloError): string => {
+type GraphQLErrorMessage = {
+  title: string
+  description?: string | ReactNode
+}
+const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
   const defaultMessage = 'Etwas ist schief gelaufen.'
   if (error.graphQLErrors.length !== 1) {
-    return defaultMessage
+    return { title: defaultMessage }
   }
+
   const graphQLError = error.graphQLErrors[0]
   if ('code' in graphQLError.extensions) {
     switch (graphQLError.extensions['code']) {
       case 'EMAIL_ALREADY_EXISTS':
-        return 'Die Email-Adresse wird bereits verwendet.'
+        return { title: 'Die Email-Adresse wird bereits verwendet.' }
+      case 'PASSWORD_RESET_KEY_EXPIRED':
+        return {
+          title: 'Die Gültigkeit ihres Links ist abgelaufen',
+          description: (
+            <>
+              {' '}
+              Unter folgendem Link können Sie Ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
+              <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
+                {window.location.origin + '/forgot-password'}
+              </a>
+            </>
+          ),
+        }
+      case 'INVALID_LINK':
+        return {
+          title: 'Ihr Link ist ungültig',
+          description:
+            'Ihr Link konnte nicht korrekt aufgelöst werden. Bitte kopieren Sie den Link manuell aus Ihrer E-Mail.',
+        }
     }
   }
-  return defaultMessage
+  return { title: defaultMessage }
 }
 
 export default getMessageFromApolloError
