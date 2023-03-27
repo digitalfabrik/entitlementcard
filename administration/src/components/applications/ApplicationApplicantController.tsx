@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
-import { NonIdealState } from '@blueprintjs/core'
 
 import ErrorHandler from '../../ErrorHandler'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import ApplicationApplicantView from './ApplicationApplicantView'
-import { CircularProgress } from '@mui/material'
+import { Alert, CircularProgress } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import InvalidLink from '../InvalidLink'
 import getMessageFromApolloError from '../getMessageFromApolloError'
 
-const CenteredMessage = styled(NonIdealState)`
+const CenteredMessage = styled(Alert)`
   margin: auto;
 `
 
@@ -35,8 +34,8 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
       />
     )
   } else if (!data) return <ErrorHandler refetch={refetch} />
-  if (data.application.withdrawalDate) return <CenteredMessage title='Ihr Antrag wurde bereits zurückgezogen' />
-  if (withdrawed) return <CenteredMessage title='Ihr Antrag wurde zurückgezogen' />
+  if (data.application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
+  if (withdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
   else {
     return (
       <ApplicationApplicantView
