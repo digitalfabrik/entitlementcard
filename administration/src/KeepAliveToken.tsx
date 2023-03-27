@@ -6,6 +6,7 @@ import { SignInPayload, useSignInMutation } from './generated/graphql'
 import PasswordInput from './components/PasswordInput'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { WhoAmIContext } from './WhoAmIProvider'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   authData: TokenPayload
@@ -17,6 +18,7 @@ interface Props {
 const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
 const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
+  const navigate = useNavigate()
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useContext(WhoAmIContext).me!.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
@@ -27,10 +29,11 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
       setSecondsLeft(Math.max(timeLeft, 0))
       if (timeLeft <= 0) {
         onSignOut()
+        navigate('/')
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [authData, onSignOut])
+  }, [authData, onSignOut, navigate])
   const appToaster = useAppToaster()
 
   const [password, setPassword] = useState('')

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Button, Navbar } from '@blueprintjs/core'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment'
 import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
@@ -13,6 +13,12 @@ interface Props {
 const Navigation = (props: Props) => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
+  const navigate = useNavigate()
+  const signOutAndRedirect = () => {
+    props.onSignOut()
+    navigate('/')
+  }
+
   return (
     <Navbar style={{ height: 'auto' }}>
       <Navbar.Group>
@@ -54,7 +60,7 @@ const Navigation = (props: Props) => {
         <NavLink to={'/user-settings'}>
           <Button minimal icon='settings' text='Benutzereinstellungen' />
         </NavLink>
-        <Button minimal icon='log-out' text='Logout' onClick={props.onSignOut} />
+        <Button minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />
       </Navbar.Group>
     </Navbar>
   )
