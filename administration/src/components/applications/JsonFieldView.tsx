@@ -141,7 +141,7 @@ const JsonFieldView = (props: {
           {props.attachmentAccessible ? (
             <Button icon='download' onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</Button>
           ) : (
-            <span>vorhanden</span>
+            <span>eingereicht, nicht sichtbar</span>
           )}
         </p>
       )
