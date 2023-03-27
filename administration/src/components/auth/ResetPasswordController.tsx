@@ -56,10 +56,10 @@ const ResetPasswordController = () => {
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
   if (error) {
-    console.log(getMessageFromApolloError(error))
+    const { title, description } = getMessageFromApolloError(error)
     return (
-      <CenteredMessage title={getMessageFromApolloError(error).title}>
-        {getMessageFromApolloError(error).description}
+      <CenteredMessage title={title}>
+        {description}
       </CenteredMessage>
     )
   }
