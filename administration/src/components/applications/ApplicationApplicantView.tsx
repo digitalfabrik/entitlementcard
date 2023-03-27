@@ -67,7 +67,13 @@ const ApplicationApplicantView = ({
         <Typography mb='8px' variant='h6'>
           Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
         </Typography>
-        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
+        <JsonFieldView
+          jsonField={jsonField}
+          baseUrl={baseUrl}
+          key={0}
+          hierarchyIndex={0}
+          attachmentAccessible={false}
+        />
         <Divider style={{ margin: '24px 0px' }} />
         <VerificationsView verifications={application.verifications} />
         {!application.withdrawalDate && (

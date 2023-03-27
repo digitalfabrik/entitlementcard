@@ -44,7 +44,12 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   }
 `
 
-const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; hierarchyIndex: number }) => {
+const JsonFieldView = (props: {
+  jsonField: GeneralJsonField
+  baseUrl: string
+  hierarchyIndex: number
+  attachmentAccessible: boolean
+}) => {
   const appToaster = useAppToaster()
   const token = useContext(AuthContext).data?.token
 
@@ -56,6 +61,7 @@ const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; hi
           baseUrl={props.baseUrl}
           key={index}
           hierarchyIndex={props.hierarchyIndex + 1}
+          attachmentAccessible={props.attachmentAccessible}
         />
       ))
       return props.jsonField.translations.de.length === 0 ? (
@@ -132,7 +138,11 @@ const JsonFieldView = (props: { jsonField: GeneralJsonField; baseUrl: string; hi
       return (
         <p>
           {props.jsonField.translations.de}:&nbsp;
-          <Button icon='download' onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</Button>
+          {props.attachmentAccessible ? (
+            <Button icon='download' onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</Button>
+          ) : (
+            <span>eingereicht, nicht sichtbar</span>
+          )}
         </p>
       )
   }
