@@ -1,4 +1,4 @@
-import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup, NonIdealState } from '@blueprintjs/core'
+import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -7,12 +7,8 @@ import { useAppToaster } from '../AppToaster'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import PasswordInput from '../PasswordInput'
 import validateNewPasswordInput from './validateNewPasswordInput'
-import styled from 'styled-components'
 import getMessageFromApolloError from '../getMessageFromApolloError'
-
-const CenteredMessage = styled(NonIdealState)`
-  margin: auto;
-`
+import ErrorHandler from '../../ErrorHandler'
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
@@ -23,7 +19,7 @@ const ResetPasswordController = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
   const navigate = useNavigate()
 
-  const { error } = useCheckPasswordResetLinkQuery({
+  const { error, refetch } = useCheckPasswordResetLinkQuery({
     variables: {
       project: config.projectId,
       resetKey: queryParams.get('token')!,
@@ -57,7 +53,7 @@ const ResetPasswordController = () => {
 
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
-    return <CenteredMessage title={title}>{description}</CenteredMessage>
+    return <ErrorHandler title={title} refetch={refetch} description={description} />
   }
 
   return (
