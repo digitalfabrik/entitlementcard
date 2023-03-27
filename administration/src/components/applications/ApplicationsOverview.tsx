@@ -100,7 +100,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>
           )}
-          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} />
+          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
           <Divider style={{ margin: '24px 0px' }} />
           <VerificationsView verifications={application.verifications} />
           <div

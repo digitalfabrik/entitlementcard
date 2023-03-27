@@ -115,7 +115,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
         <Typography variant='h6' mb='8px'>
           Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
         </Typography>
-        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} />
+        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} attachmentAccessible={false} />
         <Divider style={{ margin: '24px 0px' }} />
         <Typography mt='8px' variant='body1'>
           Können Sie die Angaben, welche die Organisation <b>{data.verification.organizationName}</b> betreffen,
