@@ -82,7 +82,7 @@ const ResetPasswordController = () => {
           <FormGroup label='Email-Adresse'>
             <InputGroup
               value={adminEmail}
-              onChange={e => setAdminEmail(e.target.value)}
+              disabled
               type='email'
               placeholder='erika.musterfrau@example.org'
             />
