@@ -18,7 +18,7 @@ const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [queryParams] = useSearchParams()
-  const [adminEmail, setAdminEmail] = useState(queryParams.get('email') ?? '')
+  const adminEmail = queryParams.get('email')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
   const navigate = useNavigate()
