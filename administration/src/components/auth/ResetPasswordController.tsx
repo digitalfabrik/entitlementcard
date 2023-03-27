@@ -76,7 +76,7 @@ const ResetPasswordController = () => {
             submit()
           }}>
           <FormGroup label='Email-Adresse'>
-            <InputGroup value={adminEmail} disabled type='email' placeholder='erika.musterfrau@example.org' />
+            <InputGroup value={adminEmail} disabled type='email' />
           </FormGroup>
           <PasswordInput label='Neues Passwort' setValue={setNewPassword} value={newPassword} />
           <PasswordInput label='Neues Passwort bestätigen' setValue={setRepeatNewPassword} value={repeatNewPassword} />
