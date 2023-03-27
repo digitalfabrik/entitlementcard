@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.GraphqlErrorException
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.not
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
@@ -26,7 +27,7 @@ class ResetPasswordQueryService {
         return transaction {
             val projectId = ProjectEntity.find { Projects.project eq project }.single().id.value
             val admin = AdministratorEntity
-                .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) }.singleOrNull()
+                .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) and not(Administrators.deleted) }.singleOrNull()
             if (admin == null) {
                 throw InvalidLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(LocalDateTime.now())) {

@@ -7,7 +7,10 @@ type GraphQLErrorMessage = {
 }
 const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
   const defaultMessage = 'Etwas ist schief gelaufen.'
-  if (error.graphQLErrors.length !== 1) {
+  const codesEqual = error.graphQLErrors.every(
+    (value, index, array) => value.extensions.code === array[0].extensions.code
+  )
+  if (error.graphQLErrors.length !== 1 && !codesEqual) {
     return { title: defaultMessage }
   }
 
@@ -21,7 +24,6 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
           title: 'Die Gültigkeit ihres Links ist abgelaufen',
           description: (
             <>
-              {' '}
               Unter folgendem Link können Sie Ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
               <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
                 {window.location.origin + '/forgot-password'}

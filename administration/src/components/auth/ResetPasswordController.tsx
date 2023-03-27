@@ -18,7 +18,7 @@ const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [queryParams] = useSearchParams()
-  const adminEmail = queryParams.get('email')
+  const adminEmail = queryParams.get('email') ?? ''
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
   const navigate = useNavigate()
@@ -57,11 +57,7 @@ const ResetPasswordController = () => {
 
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
-    return (
-      <CenteredMessage title={title}>
-        {description}
-      </CenteredMessage>
-    )
+    return <CenteredMessage title={title}>{description}</CenteredMessage>
   }
 
   return (
@@ -80,12 +76,7 @@ const ResetPasswordController = () => {
             submit()
           }}>
           <FormGroup label='Email-Adresse'>
-            <InputGroup
-              value={adminEmail}
-              disabled
-              type='email'
-              placeholder='erika.musterfrau@example.org'
-            />
+            <InputGroup value={adminEmail} disabled type='email' placeholder='erika.musterfrau@example.org' />
           </FormGroup>
           <PasswordInput label='Neues Passwort' setValue={setNewPassword} value={newPassword} />
           <PasswordInput label='Neues Passwort bestätigen' setValue={setRepeatNewPassword} value={repeatNewPassword} />
