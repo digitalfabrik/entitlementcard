@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { ReactNode } from 'react'
+import InvalidLinkTemplate from './applications/InvalidLinkTemplate'
 
 type GraphQLErrorMessage = {
   title: string
@@ -34,8 +35,7 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
       case 'INVALID_LINK':
         return {
           title: 'Ihr Link ist ungültig',
-          description:
-            'Ihr Link konnte nicht korrekt aufgelöst werden. Bitte kopieren Sie den Link manuell aus Ihrer E-Mail.',
+          description: <InvalidLinkTemplate />,
         }
     }
   }

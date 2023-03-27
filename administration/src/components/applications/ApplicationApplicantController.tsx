@@ -7,7 +7,6 @@ import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import ApplicationApplicantView from './ApplicationApplicantView'
 import { Alert, CircularProgress } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import InvalidLink from '../InvalidLink'
 import getMessageFromApolloError from '../getMessageFromApolloError'
 
 const CenteredMessage = styled(Alert)`
@@ -27,12 +26,8 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
 
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
   else if (error) {
-    return (
-      <InvalidLink
-        title={getMessageFromApolloError(error).title}
-        description={getMessageFromApolloError(error).description}
-      />
-    )
+    const { title, description } = getMessageFromApolloError(error)
+    return <ErrorHandler title={title} description={description} refetch={refetch} />
   } else if (!data) return <ErrorHandler refetch={refetch} />
   if (data.application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
   if (withdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>

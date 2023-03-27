@@ -11,7 +11,6 @@ import { format } from 'date-fns'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
 import { Close, Check } from '@mui/icons-material'
-import InvalidLink from '../components/InvalidLink'
 import getMessageFromApolloError from '../components/getMessageFromApolloError'
 
 const ApplicationViewCard = styled(Card)`
@@ -72,17 +71,11 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     variables: { applicationVerificationAccessKey },
   })
 
-  // TODO handle two error messages of graphQL queries
-
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (error)
-    return (
-      <InvalidLink
-        title={getMessageFromApolloError(error).title}
-        description={getMessageFromApolloError(error).description}
-      />
-    )
-  else if (!data) return <ErrorHandler refetch={refetch} />
+  else if (error) {
+    const { title, description } = getMessageFromApolloError(error)
+    return <ErrorHandler title={title} description={description} refetch={refetch} />
+  } else if (!data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
   if (data.application.withdrawalDate)
