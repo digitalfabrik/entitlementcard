@@ -11,6 +11,7 @@ import { format } from 'date-fns'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
 import { Close, Check } from '@mui/icons-material'
+import getMessageFromApolloError from '../components/errors/getMessageFromApolloError'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -71,7 +72,10 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   })
 
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (error || !data) return <ErrorHandler refetch={refetch} />
+  else if (error) {
+    const { title, description } = getMessageFromApolloError(error)
+    return <ErrorHandler title={title} description={description} refetch={refetch} />
+  } else if (!data) return <ErrorHandler refetch={refetch} />
   if (data.verification.rejectedDate || data.verification.verifiedDate)
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
   if (data.application.withdrawalDate)

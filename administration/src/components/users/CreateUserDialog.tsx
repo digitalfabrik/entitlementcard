@@ -7,7 +7,7 @@ import RoleHelpButton from './RoleHelpButton'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import RegionSelector from '../RegionSelector'
 import RoleSelector from './RoleSelector'
-import getMessageFromApolloError from '../getMessageFromApolloError'
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const RoleFormGroupLabel = styled.span`
   & span {
@@ -39,7 +39,7 @@ const CreateUserDialog = ({
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
+      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error).title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich erstellt.' })

@@ -34,7 +34,7 @@ const Router = () => {
     const isLoggedIn = authData !== null && authData.expiry > new Date()
     const routes: (RouteObject | null)[] = [
       { path: '/forgot-password', element: <ForgotPasswordController /> },
-      { path: '/reset-password/:passwordResetKey', element: <ResetPasswordController /> },
+      { path: '/reset-password/', element: <ResetPasswordController /> },
       { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
       ...(projectConfig.applicationFeatureEnabled
         ? [

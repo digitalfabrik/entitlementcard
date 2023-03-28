@@ -1,21 +1,30 @@
 import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import { useAppToaster } from '../AppToaster'
-import { useResetPasswordMutation } from '../../generated/graphql'
+import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import PasswordInput from '../PasswordInput'
 import validateNewPasswordInput from './validateNewPasswordInput'
+import ErrorHandler from '../../ErrorHandler'
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [email, setEmail] = useState('')
+  const [queryParams] = useSearchParams()
+  const adminEmail = queryParams.get('email') ?? ''
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
-  const { passwordResetKey } = useParams()
   const navigate = useNavigate()
+
+  const { error, refetch } = useCheckPasswordResetLinkQuery({
+    variables: {
+      project: config.projectId,
+      resetKey: queryParams.get('token')!,
+    },
+  })
 
   const [resetPassword, { loading }] = useResetPasswordMutation({
     onCompleted: () => {
@@ -33,14 +42,19 @@ const ResetPasswordController = () => {
     resetPassword({
       variables: {
         project: config.projectId,
-        email,
+        email: adminEmail,
         newPassword,
-        passwordResetKey: passwordResetKey!,
+        passwordResetKey: queryParams.get('token')!,
       },
     })
 
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
+
+  if (error) {
+    const { title, description } = getMessageFromApolloError(error)
+    return <ErrorHandler title={title} refetch={refetch} description={description} />
+  }
 
   return (
     <StandaloneCenter>
@@ -58,12 +72,7 @@ const ResetPasswordController = () => {
             submit()
           }}>
           <FormGroup label='Email-Adresse'>
-            <InputGroup
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              type='email'
-              placeholder='erika.musterfrau@example.org'
-            />
+            <InputGroup value={adminEmail} disabled type='email' />
           </FormGroup>
           <PasswordInput label='Neues Passwort' setValue={setNewPassword} value={newPassword} />
           <PasswordInput label='Neues Passwort bestätigen' setValue={setRepeatNewPassword} value={repeatNewPassword} />

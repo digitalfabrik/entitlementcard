@@ -4,8 +4,8 @@ import { Administrator, useDeleteAdministratorMutation } from '../../generated/g
 import { useAppToaster } from '../AppToaster'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { AuthContext } from '../../AuthProvider'
-import getMessageFromApolloError from '../getMessageFromApolloError'
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const DeleteUserDialog = ({
   selectedUser,
@@ -24,7 +24,7 @@ const DeleteUserDialog = ({
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
     onError: error => {
       console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error) })
+      appToaster?.show({ intent: 'danger', message: 'Fehler: ' + getMessageFromApolloError(error).title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich gelöscht.' })

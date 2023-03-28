@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.InvalidLinkException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
@@ -98,28 +99,28 @@ object ApplicationRepository {
 
     fun getApplicationByApplicant(accessKey: String): ApplicationView {
         return transaction {
-            ApplicationEntity.find { Applications.accessKey eq accessKey }
-                .single()
-                .let { ApplicationView.fromDbEntity(it) }
+            val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
+                .singleOrNull()
+            application?.let { ApplicationView.fromDbEntity(it) } ?: throw InvalidLinkException()
         }
     }
 
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView {
         return transaction {
-            (Applications innerJoin ApplicationVerifications)
+            val application = (Applications innerJoin ApplicationVerifications)
                 .slice(Applications.columns)
                 .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
-                .single()
-                .let {
-                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
-                }
+                .singleOrNull()
+            application?.let {
+                ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
+            } ?: throw InvalidLinkException()
         }
     }
 
     fun getApplicationVerification(accessKey: String): ApplicationVerificationEntity {
         return transaction {
             ApplicationVerificationEntity.find { ApplicationVerifications.accessKey eq accessKey }
-                .single()
+                .singleOrNull() ?: throw InvalidLinkException()
         }
     }
 
