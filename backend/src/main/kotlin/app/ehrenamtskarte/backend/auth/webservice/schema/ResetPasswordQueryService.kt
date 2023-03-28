@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.common.webservice.InvalidLinkException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -20,6 +19,14 @@ class PasswordResetKeyExpiredException() : GraphqlErrorException(
     ),
 )
 
+class InvalidPasswordResetLinkException() : GraphqlErrorException(
+    newErrorException().extensions(
+        mapOf(
+            Pair("code", "INVALID_PASSWORD_RESET_LINK"),
+        ),
+    ),
+)
+
 @Suppress("unused")
 class ResetPasswordQueryService {
     @GraphQLDescription("Verify password reset link")
@@ -29,7 +36,7 @@ class ResetPasswordQueryService {
             val admin = AdministratorEntity
                 .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) and not(Administrators.deleted) }.singleOrNull()
             if (admin == null) {
-                throw InvalidLinkException()
+                throw InvalidPasswordResetLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(LocalDateTime.now())) {
                 throw PasswordResetKeyExpiredException()
             }

@@ -1,6 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { ReactNode } from 'react'
-import InvalidLinkTemplate from './applications/InvalidLinkTemplate'
+import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
+import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
+import InvalidLink from './templates/InvalidLink'
 
 type GraphQLErrorMessage = {
   title: string
@@ -23,19 +25,17 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
       case 'PASSWORD_RESET_KEY_EXPIRED':
         return {
           title: 'Die Gültigkeit ihres Links ist abgelaufen',
-          description: (
-            <>
-              Unter folgendem Link können Sie Ihr Passwort erneut zurücksetzen und erhalten einen neuen Link.
-              <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
-                {window.location.origin + '/forgot-password'}
-              </a>
-            </>
-          ),
+          description: <PasswordResetKeyExpired />,
         }
       case 'INVALID_LINK':
         return {
           title: 'Ihr Link ist ungültig',
-          description: <InvalidLinkTemplate />,
+          description: <InvalidLink />,
+        }
+      case 'INVALID_PASSWORD_RESET_LINK':
+        return {
+          title: 'Ihr Link ist ungültig',
+          description: <InvalidPasswordResetLink />,
         }
     }
   }

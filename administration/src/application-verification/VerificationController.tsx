@@ -11,7 +11,7 @@ import { format } from 'date-fns'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
 import { Close, Check } from '@mui/icons-material'
-import getMessageFromApolloError from '../components/getMessageFromApolloError'
+import getMessageFromApolloError from '../components/errors/getMessageFromApolloError'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;

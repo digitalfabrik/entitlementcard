@@ -4,8 +4,8 @@ import { Administrator, useDeleteAdministratorMutation } from '../../generated/g
 import { useAppToaster } from '../AppToaster'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { AuthContext } from '../../AuthProvider'
-import getMessageFromApolloError from '../getMessageFromApolloError'
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const DeleteUserDialog = ({
   selectedUser,

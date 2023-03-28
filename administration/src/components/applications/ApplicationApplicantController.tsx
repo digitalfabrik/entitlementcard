@@ -7,7 +7,7 @@ import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import ApplicationApplicantView from './ApplicationApplicantView'
 import { Alert, CircularProgress } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import getMessageFromApolloError from '../getMessageFromApolloError'
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const CenteredMessage = styled(Alert)`
   margin: auto;
