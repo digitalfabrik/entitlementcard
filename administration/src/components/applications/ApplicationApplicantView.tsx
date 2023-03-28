@@ -7,10 +7,11 @@ import { useWithdrawApplicationMutation } from '../../generated/graphql'
 
 import { styled } from '@mui/system'
 import { Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
-import { format } from 'date-fns'
 import ConfirmDialog from '../../application/components/ConfirmDialog'
 import { Delete } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
+import getDateFromUTC from '../../util/getDateFromUTC'
+import { formatInTimeZone } from 'date-fns-tz'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -31,7 +32,6 @@ const ApplicationApplicantView = ({
 }: ApplicationApplicantViewProps): ReactElement => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const { createdDate: createdDateString, jsonValue, id } = application
-  const createdDate = new Date(createdDateString)
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
@@ -65,7 +65,8 @@ const ApplicationApplicantView = ({
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>
         <Typography mb='8px' variant='h6'>
-          Ihr Antrag auf die Ehrenamtskarte Bayern vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
+          Ihr Antrag auf die Ehrenamtskarte Bayern vom{' '}
+          {formatInTimeZone(getDateFromUTC(createdDateString), config.timezone, 'dd.MM.yyyy, HH:mm')}
         </Typography>
         <JsonFieldView
           jsonField={jsonField}

@@ -22,6 +22,7 @@ export interface ProjectConfig {
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
   pdf: PdfConfig
+  timezone: string
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

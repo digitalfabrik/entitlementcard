@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File
+import java.util.TimeZone
 import kotlin.math.pow
 
 class WebService {
@@ -19,8 +20,9 @@ class WebService {
         val host = config.server.host
         val port = Integer.parseInt(config.server.port)
         val dataDirectory = config.server.dataDirectory
-
         val applicationData = File(dataDirectory, "applications")
+
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
         if (applicationData.exists()) {
             if (!applicationData.isDirectory) {

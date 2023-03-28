@@ -14,6 +14,7 @@ const config: ProjectConfig = {
   createEmptyCard: createEmptyNuernbergCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
+  timezone: 'Europe/Berlin',
   pdf: {
     title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,
