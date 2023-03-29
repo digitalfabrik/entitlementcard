@@ -17,7 +17,6 @@
     "@zxing/library": "^0.19.2",
     "apollo-upload-client": "^17.0.0",
     "date-fns": "^2.29.3",
-    "date-fns-tz": "^2.0.0",
     "graphql": "^16.6.0",
     "localforage": "^1.10.0",
     "notistack": "^2.0.8",

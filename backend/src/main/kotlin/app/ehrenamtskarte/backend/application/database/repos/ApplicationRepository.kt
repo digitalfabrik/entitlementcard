@@ -26,7 +26,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.nio.file.Paths
 import java.security.SecureRandom
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.Base64
 
 object ApplicationRepository {
@@ -47,6 +47,7 @@ object ApplicationRepository {
                     this.regionId = EntityID(regionId, Regions)
                     this.jsonValue = toString(applicationJson)
                     this.accessKey = applicationKey
+                    this.createdDate = Instant.now()
                 }
 
             val verificationEntities = applicationVerifications.map {
@@ -134,7 +135,7 @@ object ApplicationRepository {
             if (isAlreadyVerified(applicationVerification)) {
                 false
             } else {
-                applicationVerification.verifiedDate = LocalDateTime.now()
+                applicationVerification.verifiedDate = Instant.now()
                 true
             }
         }
@@ -146,7 +147,7 @@ object ApplicationRepository {
             if (isAlreadyVerified(applicationVerification)) {
                 false
             } else {
-                applicationVerification.rejectedDate = LocalDateTime.now()
+                applicationVerification.rejectedDate = Instant.now()
                 true
             }
         }
@@ -176,7 +177,7 @@ object ApplicationRepository {
         return transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
             if (application.withdrawalDate == null) {
-                application.withdrawalDate = LocalDateTime.now()
+                application.withdrawalDate = Instant.now()
                 true
             } else {
                 false

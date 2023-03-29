@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Suppress("unused")
 class ResetPasswordMutationService {
@@ -69,7 +69,7 @@ class ResetPasswordMutationService {
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
                 .single().let { AdministratorEntity.wrapRow(it) }
 
-            if (user.passwordResetKeyExpiry!!.isBefore(LocalDateTime.now())) {
+            if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw Exception("Password reset key has expired.")
             } else if (user.passwordResetKey != passwordResetKey) {
                 throw Exception("Password reset keys do not match.")

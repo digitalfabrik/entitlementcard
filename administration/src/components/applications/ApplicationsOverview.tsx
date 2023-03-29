@@ -7,8 +7,7 @@ import FlipMove from 'react-flip-move'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
-import getDateFromUTC from '../../util/getDateFromUTC'
-import { formatInTimeZone } from 'date-fns-tz'
+import formatDateWithTimezone from '../../util/formatDate'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -90,16 +89,13 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
               flexWrap: 'wrap',
               justifyContent: 'space-between',
             }}>
-            <H4>
-              Antrag vom {formatInTimeZone(getDateFromUTC(createdDateString), config.timezone, 'dd.MM.yyyy, HH:mm')}
-            </H4>
+            <H4>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}</H4>
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
           {withdrawalDate && (
             <WithdrawAlert intent='warning'>
-              Der Antrag wurde vom Antragssteller am{' '}
-              {formatInTimeZone(getDateFromUTC(withdrawalDate), config.timezone, 'dd.MM.yyyy, HH:mm')} zurückgezogen.{' '}
-              <br />
+              Der Antrag wurde vom Antragssteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
+              zurückgezogen. <br />
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>
           )}

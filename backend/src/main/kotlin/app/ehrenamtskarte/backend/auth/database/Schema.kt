@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 
@@ -20,7 +20,7 @@ object Administrators : IntIdTable() {
     val role = varchar("role", 32)
     val passwordHash = binary("passwordHash").nullable()
     val passwordResetKey = varchar("passwordResetKey", 100).nullable()
-    val passwordResetKeyExpiry = datetime("passwordResetKeyExpiry").nullable()
+    val passwordResetKeyExpiry = timestamp("passwordResetKeyExpiry").nullable()
     val deleted = bool("deleted")
 
     init {
