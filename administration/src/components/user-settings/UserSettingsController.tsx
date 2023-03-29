@@ -6,7 +6,10 @@ import ChangePasswordForm from './ChangePasswordForm'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 
+import ApplicationLinkCard from './ApplicationLinkCard'
+
 const UserSettingsController = () => {
+  const { applicationFeatureEnabled } = useContext(ProjectConfigContext)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -52,18 +55,21 @@ const UserSettingsController = () => {
   const valid = warnMessage === null
 
   return (
-    <ChangePasswordForm
-      currentPassword={currentPassword}
-      setCurrentPassword={setCurrentPassword}
-      newPassword={newPassword}
-      setNewPassword={setNewPassword}
-      repeatNewPassword={repeatNewPassword}
-      setRepeatNewPassword={setRepeatNewPassword}
-      submitDisabled={!valid}
-      warnMessage={isDirty ? warnMessage : null}
-      loading={loading}
-      submit={submit}
-    />
+    <>
+      <ChangePasswordForm
+        currentPassword={currentPassword}
+        setCurrentPassword={setCurrentPassword}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        repeatNewPassword={repeatNewPassword}
+        setRepeatNewPassword={setRepeatNewPassword}
+        submitDisabled={!valid}
+        warnMessage={isDirty ? warnMessage : null}
+        loading={loading}
+        submit={submit}
+      />
+      {applicationFeatureEnabled && <ApplicationLinkCard />}
+    </>
   )
 }
 
