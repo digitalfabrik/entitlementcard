@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.migration.runAllMigrations
 import app.ehrenamtskarte.backend.stores.importer.Importer
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
@@ -18,6 +19,7 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
 import java.io.File
+import java.time.Clock
 import java.util.TimeZone
 
 class Entry : CliktCommand() {
@@ -121,4 +123,19 @@ fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
     Entry().subcommands(Execute(), Import(), ImportSingle(), CreateAdmin(), GraphQLExport()).main(args)
+}
+class Migrate : CliktCommand(help = "Migrates the database") {
+    private val config by requireObject<BackendConfiguration>()
+
+    override fun run() {
+        val db = Database.setup(config)
+        runAllMigrations(db, Clock.systemDefaultZone())
+    }
+}
+
+fun main(args: Array<String>) = {
+    // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+
+    Entry().subcommands(Execute(), Import(), ImportSingle(), Migrate(), CreateAdmin(), GraphQLExport()).main(args)
 }

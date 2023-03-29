@@ -46,8 +46,8 @@ class Database {
             }
         }
 
-        fun setup(config: BackendConfiguration) {
-            connect(
+        fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
+            val database = connect(
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
                 user = config.postgres.user,
@@ -73,6 +73,7 @@ class Database {
                 setupDatabaseForApplication()
                 setupDatabaseForAuth()
             }
+            return database
         }
     }
 }
