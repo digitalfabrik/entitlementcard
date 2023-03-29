@@ -7,4 +7,5 @@ fun setupDatabase() {
         Applications,
         ApplicationVerifications,
     )
+    SchemaUtils.createMissingTablesAndColumns(Applications, ApplicationVerifications)
 }

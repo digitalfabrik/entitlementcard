@@ -8,6 +8,7 @@ fun setupDatabase(config: BackendConfiguration) {
     SchemaUtils.create(
         Projects,
     )
+    SchemaUtils.createMissingTablesAndColumns(Projects)
 
     transaction {
         val dbProjects = ProjectEntity.all()

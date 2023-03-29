@@ -6,5 +6,6 @@ fun setupDatabase() {
     SchemaUtils.create(
         Administrators,
     )
+    SchemaUtils.createMissingTablesAndColumns(Administrators)
     createEmailIndexIfNotExists()
 }

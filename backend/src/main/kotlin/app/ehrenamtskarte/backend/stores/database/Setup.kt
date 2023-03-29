@@ -10,6 +10,13 @@ fun setupDatabase(executeScript: (path: String) -> Unit) {
         PhysicalStores,
         Addresses
     )
+    SchemaUtils.createMissingTablesAndColumns(
+        Categories,
+        Contacts,
+        AcceptingStores,
+        PhysicalStores,
+        Addresses
+    )
 
     executeScript("sql/martin_setup.sql")
     executeScript("sql/create_categories.sql")

@@ -10,6 +10,7 @@ fun setupDatabase() {
     SchemaUtils.create(
         Regions
     )
+    SchemaUtils.createMissingTablesAndColumns(Regions)
 
     transaction {
         val projects = ProjectEntity.all()
