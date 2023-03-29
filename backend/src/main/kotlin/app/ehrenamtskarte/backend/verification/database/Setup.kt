@@ -6,4 +6,5 @@ fun setupDatabase() {
     SchemaUtils.create(
         Cards
     )
+    SchemaUtils.createMissingTablesAndColumns(Cards)
 }
