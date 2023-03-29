@@ -34,7 +34,7 @@ object Cards : IntIdTable() {
     val issuerId = reference("issuerId", Administrators)
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
     val codeType = enumeration("codeType", CodeType::class)
-    val activationDate = timestamp("activationDate").nullable()
+    val firstActivationDate = timestamp("firstActivationDate").nullable()
 
     init {
         check("CodeTypeConstraint") {
@@ -60,5 +60,5 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var regionId by Cards.regionId
     var issuerId by Cards.issuerId
     var codeType by Cards.codeType
-    var activationDate by Cards.activationDate
+    var firstActivationDate by Cards.firstActivationDate
 }

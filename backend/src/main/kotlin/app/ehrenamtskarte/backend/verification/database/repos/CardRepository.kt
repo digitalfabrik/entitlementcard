@@ -49,6 +49,8 @@ object CardRepository {
             throw Exception("Invalid Code Type.")
         }
         card.totpSecret = totpSecret
-        card.activationDate = Instant.now()
+        if (card.firstActivationDate == null) {
+            card.firstActivationDate = Instant.now()
+        }
     }
 }
