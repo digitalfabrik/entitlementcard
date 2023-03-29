@@ -68,6 +68,7 @@ const UserSettingsController = () => {
         loading={loading}
         submit={submit}
       />
+      {/* TODO #897: [Application] Remove Redirect for bayern */}
       {applicationFeatureEnabled && <ApplicationLinkCard />}
     </>
   )
