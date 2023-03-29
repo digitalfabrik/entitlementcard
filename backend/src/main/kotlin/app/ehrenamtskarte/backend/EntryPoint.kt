@@ -118,11 +118,20 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
-fun main(args: Array<String>) {
+class Migrate : CliktCommand(help = "Migrates the database") {
+    private val config by requireObject<BackendConfiguration>()
+
+    override fun run() {
+        val db = Database.setup(config)
+        runAllMigrations(db, Clock.systemDefaultZone())
+    }
+}
+
+fun main(args: Array<String>) = {
     // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-    Entry().subcommands(Execute(), Import(), ImportSingle(), CreateAdmin(), GraphQLExport()).main(args)
+    Entry().subcommands(Execute(), Import(), ImportSingle(), Migrate(), CreateAdmin(), GraphQLExport()).main(args)
 }
 class Migrate : CliktCommand(help = "Migrates the database") {
     private val config by requireObject<BackendConfiguration>()
