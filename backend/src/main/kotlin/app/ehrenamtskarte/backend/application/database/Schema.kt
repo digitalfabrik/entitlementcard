@@ -6,13 +6,14 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.not
 
 object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
-    val createdDate = timestamp("createdDate")
+    val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp())
     val accessKey = varchar("accessKey", 100).uniqueIndex()
     val withdrawalDate = timestamp("withdrawalDate").nullable()
 }

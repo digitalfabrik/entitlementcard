@@ -47,7 +47,6 @@ object ApplicationRepository {
                     this.regionId = EntityID(regionId, Regions)
                     this.jsonValue = toString(applicationJson)
                     this.accessKey = applicationKey
-                    this.createdDate = Instant.now()
                 }
 
             val verificationEntities = applicationVerifications.map {
