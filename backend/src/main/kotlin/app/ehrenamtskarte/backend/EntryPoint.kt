@@ -18,6 +18,7 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
 import java.io.File
+import java.util.TimeZone
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
@@ -38,15 +39,15 @@ class Entry : CliktCommand() {
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,
-                password = postgresPassword ?: backendConfiguration.postgres.password
+                password = postgresPassword ?: backendConfiguration.postgres.password,
             ),
             geocoding = backendConfiguration.geocoding.copy(
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
-                host = geocodingHost ?: backendConfiguration.geocoding.host
+                host = geocodingHost ?: backendConfiguration.geocoding.host,
             ),
             csvWriter = backendConfiguration.csvWriter.copy(
-                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled
-            )
+                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled,
+            ),
         )
     }
 }
@@ -115,5 +116,9 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
-fun main(args: Array<String>) =
+fun main(args: Array<String>) {
+    // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+
     Entry().subcommands(Execute(), Import(), ImportSingle(), CreateAdmin(), GraphQLExport()).main(args)
+}

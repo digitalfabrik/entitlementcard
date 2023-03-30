@@ -52,6 +52,11 @@ class Database {
                 driver = "org.postgresql.Driver",
                 user = config.postgres.user,
                 password = config.postgres.password,
+                setupConnection = {
+                    // Set session time zone to UTC, to make timestamps work properly in every configuration.
+                    // Note(michael-markl): I believe this is postgres specific syntax.
+                    it.prepareStatement("SET TIME ZONE 'UTC';").executeUpdate()
+                },
                 databaseConfig = if (config.production) {
                     null
                 } else {
