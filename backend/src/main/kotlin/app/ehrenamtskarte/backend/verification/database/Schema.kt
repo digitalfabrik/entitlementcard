@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.or
 
@@ -27,7 +28,7 @@ object Cards : IntIdTable() {
     // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
     val expirationDay = long("expirationDay").nullable()
-    val issueDate = timestamp("issueDate")
+    val issueDate = timestamp("issueDate").defaultExpression(CurrentTimestamp())
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
     val issuerId = reference("issuerId", Administrators)

@@ -6,6 +6,7 @@
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/ehrenamtskarte</jdbc-url>
+      <time-zone>UTC</time-zone>
     </data-source>
   </component>
 </project>
