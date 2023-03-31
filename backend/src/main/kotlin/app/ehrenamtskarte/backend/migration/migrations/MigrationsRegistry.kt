@@ -6,5 +6,6 @@ object MigrationsRegistry {
         V2_Baseline(),
         V3_AddTestColumn(),
         V4_RemoveTestColumn(),
+        V5_FirstProductionMigration()
     )
 }

@@ -22,7 +22,6 @@ import com.github.ajalt.clikt.parameters.types.int
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
-import java.time.Clock
 import java.util.TimeZone
 
 class Entry : CliktCommand() {
@@ -126,7 +125,7 @@ class Migrate : CliktCommand(help = "Migrates the database") {
 
     override fun run() {
         val db = Database.setupWithoutMigrationCheck(config)
-        MigrationUtils.applyRequiredMigrations(db, Clock.systemDefaultZone())
+        MigrationUtils.applyRequiredMigrations(db)
     }
 }
 
@@ -147,13 +146,21 @@ class MigrateSkipBaseline : CliktCommand(
         if (transaction { Migrations.exists() }) {
             throw IllegalArgumentException("The migrations table has already been created. Use the migrate command instead.")
         }
-        MigrationUtils.applyRequiredMigrations(db, Clock.systemDefaultZone(), skipBaseline = true)
+        MigrationUtils.applyRequiredMigrations(db, skipBaseline = true)
     }
 }
 
-fun main(args: Array<String>) = {
+fun main(args: Array<String>) {
     // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-    Entry().subcommands(Execute(), Import(), ImportSingle(), Migrate(), MigrateSkipBaseline(), CreateAdmin(), GraphQLExport()).main(args)
+    Entry().subcommands(
+        Execute(),
+        Import(),
+        ImportSingle(),
+        Migrate(),
+        MigrateSkipBaseline(),
+        CreateAdmin(),
+        GraphQLExport()
+    ).main(args)
 }

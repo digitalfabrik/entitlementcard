@@ -10,18 +10,17 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.vendors.currentDialect
 import org.slf4j.LoggerFactory
-import java.time.Clock
 import java.time.Instant.now
 
-private val logger = LoggerFactory.getLogger(Migrations::class.java)
-
 object MigrationUtils {
+    private val logger = LoggerFactory.getLogger(MigrationUtils::class.java)
+
     class MigrationException(message: String, cause: Exception? = null) : Exception(message, cause)
 
     /**
      * @throws MigrationException
      */
-    fun applyRequiredMigrations(database: Database, clock: Clock, skipBaseline: Boolean = false) {
+    fun applyRequiredMigrations(database: Database, skipBaseline: Boolean = false) {
         val migrations = MigrationsRegistry.getAllMigrations()
 
         if (migrations.map { it.version } != (1..migrations.size).toList()) {
@@ -53,7 +52,7 @@ object MigrationUtils {
                     MigrationEntity.new {
                         version = EntityID(migration.version, Migrations)
                         name = migration.name
-                        executedAt = now(clock)
+                        executedAt = now()
                     }
                 }
 
