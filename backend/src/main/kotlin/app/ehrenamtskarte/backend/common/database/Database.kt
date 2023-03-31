@@ -3,6 +3,11 @@ package app.ehrenamtskarte.backend.common.database
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
+import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
+import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
+import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
+import app.ehrenamtskarte.backend.stores.database.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.DatabaseConfig
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -11,12 +16,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.stream.Collectors
-import app.ehrenamtskarte.backend.application.database.setupDatabase as setupDatabaseForApplication
-import app.ehrenamtskarte.backend.auth.database.setupDatabase as setupDatabaseForAuth
-import app.ehrenamtskarte.backend.projects.database.setupDatabase as setupDatabaseForProjects
-import app.ehrenamtskarte.backend.regions.database.setupDatabase as setupDatabaseForRegions
-import app.ehrenamtskarte.backend.stores.database.setupDatabase as setupDatabaseForStores
-import app.ehrenamtskarte.backend.verification.database.setupDatabase as setupDatabaseForVerification
 
 class Database {
 
@@ -47,6 +46,18 @@ class Database {
         }
 
         fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
+            val database = setupWithoutMigrationCheck(config)
+            transaction {
+                assertDatabaseIsInSync(database)
+                insertOrUpdateProjects(config)
+                insertOrUpdateRegions()
+                insertOrUpdateCategories(Companion::executeScript)
+                createOrReplaceStoreFunctions(Companion::executeScript)
+            }
+            return database
+        }
+
+        fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = connect(
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
@@ -65,14 +76,6 @@ class Database {
                     }
                 },
             )
-            transaction {
-                setupDatabaseForProjects(config)
-                setupDatabaseForRegions()
-                setupDatabaseForStores(Companion::executeScript)
-                setupDatabaseForVerification()
-                setupDatabaseForApplication()
-                setupDatabaseForAuth()
-            }
             return database
         }
     }

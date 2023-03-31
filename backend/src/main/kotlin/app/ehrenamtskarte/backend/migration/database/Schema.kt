@@ -4,8 +4,11 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.max
+import org.jetbrains.exposed.sql.selectAll
 
 object Migrations : IdTable<Int>() {
     override val id = integer("version").entityId()
@@ -13,6 +16,12 @@ object Migrations : IdTable<Int>() {
 
     val name = varchar("name", length = 400).index()
     val executedAt = timestamp("executed_at").defaultExpression(CurrentTimestamp())
+
+    fun getCurrentVersionOrNull() = if (Migrations.exists()) {
+        Migrations.slice(id.max()).selectAll().singleOrNull()?.get(id.max())?.value
+    } else {
+        null
+    }
 }
 
 class MigrationEntity(id: EntityID<Int>) : IntEntity(id) {
