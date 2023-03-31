@@ -1,4 +1,4 @@
-import { Button, Card, H3, NonIdealState, Spinner } from '@blueprintjs/core'
+import { Card, H3, NonIdealState, Spinner } from '@blueprintjs/core'
 import { ReactElement, useContext } from 'react'
 import {
   Region,
@@ -11,17 +11,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import StandaloneCenter from '../StandaloneCenter'
 import UsersTable from './UsersTable'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-
-const RefetchCard = (props: { refetch: () => void }) => {
-  return (
-    <Card>
-      Etwas ist schief gelaufen.
-      <Button intent='primary' onClick={() => props.refetch()}>
-        Erneut versuchen
-      </Button>
-    </Card>
-  )
-}
+import ErrorHandler from '../ErrorHandler'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
   return (
@@ -42,9 +32,9 @@ const ManageProjectUsers = () => {
   if (regionsQuery.loading || usersQuery.loading) {
     return <Spinner />
   } else if (!regionsQuery.data || regionsQuery.error) {
-    return <RefetchCard refetch={regionsQuery.refetch} />
+    return <ErrorHandler refetch={regionsQuery.refetch} />
   } else if (!usersQuery.data || usersQuery.error) {
-    return <RefetchCard refetch={usersQuery.refetch} />
+    return <ErrorHandler refetch={usersQuery.refetch} />
   }
 
   const regions = regionsQuery.data!!.regions
@@ -65,9 +55,9 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   if (regionsQuery.loading || usersQuery.loading) {
     return <Spinner />
   } else if (!regionsQuery.data || regionsQuery.error) {
-    return <RefetchCard refetch={regionsQuery.refetch} />
+    return <ErrorHandler refetch={regionsQuery.refetch} />
   } else if (!usersQuery.data || usersQuery.error) {
-    return <RefetchCard refetch={usersQuery.refetch} />
+    return <ErrorHandler refetch={usersQuery.refetch} />
   }
 
   const regions = regionsQuery.data!!.regions

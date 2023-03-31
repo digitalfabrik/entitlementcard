@@ -8,7 +8,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import RegionSelector from '../RegionSelector'
 import RoleSelector from './RoleSelector'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 
 const RoleFormGroupLabel = styled.span`
   & span {

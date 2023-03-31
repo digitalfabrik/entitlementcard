@@ -15,10 +15,10 @@ import UserSettingsController from './components/user-settings/UserSettingsContr
 import ResetPasswordController from './components/auth/ResetPasswordController'
 import ForgotPasswordController from './components/auth/ForgotPasswordController'
 import ManageUsersController from './components/users/ManageUsersController'
-import ApplyController from './application/components/ApplyController'
+import ApplyController from './mui-components/application/ApplyController'
 import DataPrivacyPolicy from './components/DataPrivacyPolicy'
-import ApplicationVerificationController from './application-verification/VerificationController'
-import ApplicationApplicantController from './components/applications/ApplicationApplicantController'
+import ApplicationVerificationController from './mui-components/application-verification/ApplicationVerificationController'
+import ApplicationApplicantController from './mui-components/application-verification/ApplicationApplicantController'
 
 const Main = styled.div`
   flex-grow: 1;

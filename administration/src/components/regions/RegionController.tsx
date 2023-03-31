@@ -2,7 +2,7 @@ import React, { ReactElement, useContext } from 'react'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import RegionOverview from './RegionOverview'
 import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
-import ErrorHandler from '../../ErrorHandler'
+import ErrorHandler from '../ErrorHandler'
 import { NonIdealState, Spinner } from '@blueprintjs/core'
 
 const RegionController = ({ regionId }: { regionId: number }) => {

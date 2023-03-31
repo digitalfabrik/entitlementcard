@@ -7,8 +7,8 @@ import { useAppToaster } from '../AppToaster'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import PasswordInput from '../PasswordInput'
 import validateNewPasswordInput from './validateNewPasswordInput'
-import ErrorHandler from '../../ErrorHandler'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import ErrorHandler from '../ErrorHandler'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
