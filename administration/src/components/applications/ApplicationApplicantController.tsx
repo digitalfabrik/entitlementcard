@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import ApplicationApplicantView from './ApplicationApplicantView'
 import { Alert, CircularProgress } from '@mui/material'
-import { SnackbarProvider, useSnackbar } from 'notistack'
+import { SnackbarProvider } from 'notistack'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
 const CenteredMessage = styled(Alert)`
@@ -15,13 +15,8 @@ const CenteredMessage = styled(Alert)`
 
 const ApplicationApplicantController = (props: { providedKey: string }) => {
   const [withdrawed, setWithdrawed] = useState<boolean>(false)
-  const { enqueueSnackbar } = useSnackbar()
   const { loading, error, data, refetch } = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
-    onError: error => {
-      console.error(error)
-      enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
-    },
   })
 
   if (loading) return <CircularProgress style={{ margin: 'auto' }} />
