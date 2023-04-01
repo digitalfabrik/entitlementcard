@@ -6,7 +6,7 @@ import java.io.InputStream
 object PostalCodesLoader {
     fun loadRegionIdentifierByPostalCodeMap(): Map<String, String> {
         try {
-            val csvInput: InputStream = ClassLoader.getSystemResourceAsStream("import/plz_ort_bayern.csv")
+            val csvInput: InputStream = ClassLoader.getSystemResourceAsStream("import/plz_ort_bayern.csv")!!
             val records = CSVFormat.RFC4180.parse(csvInput.reader())
             val postalCodes: MutableMap<String, String> = mutableMapOf()
             records.forEachIndexed { index, record ->
