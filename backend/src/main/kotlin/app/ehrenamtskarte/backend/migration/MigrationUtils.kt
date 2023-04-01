@@ -3,10 +3,12 @@ package app.ehrenamtskarte.backend.migration
 import app.ehrenamtskarte.backend.migration.database.MigrationEntity
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.migration.migrations.MigrationsRegistry
-import app.ehrenamtskarte.backend.migration.migrations.V2_Baseline
+import app.ehrenamtskarte.backend.migration.migrations.V1_Baseline
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.vendors.currentDialect
 import org.slf4j.LoggerFactory
@@ -31,16 +33,27 @@ object MigrationUtils {
 
         val versionBeforeMigration = transaction { Migrations.getCurrentVersionOrNull() }
 
-        logger.info("Database version before migrations: $versionBeforeMigration / ${migrations.size}")
+        logger.info("Database version before migrations: ${versionBeforeMigration ?: "(none)"}")
+        logger.info("Latest migration version:           ${migrations.maxBy { it.version }}")
         try {
             transaction {
+                if (!Migrations.exists()) {
+                    logger.info("Migrations table did not exist. Creating it.")
+                    SchemaUtils.create(Migrations)
+                } else {
+                    // If changes to the Migrations table ever need to made, they need to be handled here (before any
+                    // migrations are applied).
+                    // Changes to the Migrations table should not be done through migrations (see discussion on
+                    // https://github.com/digitalfabrik/entitlementcard/pull/906)
+                }
+
                 for (migration in migrations) {
                     if (versionBeforeMigration != null && migration.version <= versionBeforeMigration) {
                         logger.debug("Skipping ${migration.javaClass.simpleName}")
                         continue
                     }
 
-                    if (migration is V2_Baseline && skipBaseline) {
+                    if (migration is V1_Baseline && skipBaseline) {
                         logger.info("Skipping ${migration.javaClass.simpleName} as requested.")
                     } else {
                         logger.info("Applying ${migration.javaClass.simpleName}")
@@ -61,12 +74,12 @@ object MigrationUtils {
         } catch (exception: DatabaseOutOfSyncException) {
             throw MigrationException(
                 "Database was still out sync after attempted migration. Hence, NO CHANGES were committed onto the DB.",
-                exception,
+                exception
             )
         } catch (exception: ExposedSQLException) {
             throw MigrationException(
                 "The above SQL error occuring during attempted migration. Hence, NO CHANGES were committed onto the DB.",
-                exception,
+                exception
             )
         }
         logger.info("Migrations finished successfully")

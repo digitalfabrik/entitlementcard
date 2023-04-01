@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.migration.migrations
 import app.ehrenamtskarte.backend.migration.Migration
 import app.ehrenamtskarte.backend.migration.Statement
 
-internal class V2_Baseline() : Migration() {
+internal class V1_Baseline() : Migration() {
     override val migrate: Statement = {
         exec(
             """
@@ -23,7 +23,7 @@ internal class V2_Baseline() : Migration() {
             CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, "name" VARCHAR(50) NOT NULL);
             CREATE TABLE IF NOT EXISTS acceptingstores (id SERIAL PRIMARY KEY, "name" VARCHAR(150) NOT NULL, description VARCHAR(2500) NULL, "contactId" INT NOT NULL, "categoryId" INT NOT NULL, "projectId" INT NOT NULL, "regionId" INT NULL, CONSTRAINT fk_acceptingstores_contactid__id FOREIGN KEY ("contactId") REFERENCES contacts(id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_acceptingstores_categoryid__id FOREIGN KEY ("categoryId") REFERENCES categories(id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_acceptingstores_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_acceptingstores_regionid__id FOREIGN KEY ("regionId") REFERENCES regions(id) ON DELETE RESTRICT ON UPDATE RESTRICT);
             CREATE TABLE IF NOT EXISTS physicalstores (id SERIAL PRIMARY KEY, coordinates GEOMETRY(Point, 4326) NOT NULL, "addressId" INT NOT NULL, "storeId" INT NOT NULL, CONSTRAINT fk_physicalstores_addressid__id FOREIGN KEY ("addressId") REFERENCES addresses(id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_physicalstores_storeid__id FOREIGN KEY ("storeId") REFERENCES acceptingstores(id) ON DELETE RESTRICT ON UPDATE RESTRICT);
-            """.trimIndent(),
+            """.trimIndent()
         )
     }
 }
