@@ -12,7 +12,7 @@ abstract class Migration {
     init {
         val className = this::class.simpleName!!
         val groups =
-            Regex("^V(\\d+)_(.*)").matchEntire(className)?.groupValues ?: throw IllegalArgumentException(
+            Regex("^V(\\d{4})_(.*)").matchEntire(className)?.groupValues ?: throw IllegalArgumentException(
                 "Migration class name $className doesn't match convention.",
             )
         version = groups[1].toInt()

@@ -48,7 +48,7 @@ class Database {
         fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = setupWithoutMigrationCheck(config)
             transaction {
-                assertDatabaseIsInSync(database)
+                assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
                 insertOrUpdateRegions()
                 insertOrUpdateCategories(Companion::executeScript)
@@ -68,10 +68,10 @@ class Database {
                     // Note(michael-markl): I believe this is postgres specific syntax.
                     it.prepareStatement("SET TIME ZONE 'UTC';").executeUpdate()
                 },
-                databaseConfig = if (config.production) {
-                    null
-                } else {
-                    DatabaseConfig.invoke {
+                databaseConfig = DatabaseConfig.invoke {
+                    // Nested transactions are helpful for applying migrations in subtransactions.
+                    useNestedTransactions = true
+                    if (!config.production) {
                         this.sqlLogger = StdOutSqlLogger
                     }
                 },

@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.migration
 import app.ehrenamtskarte.backend.migration.database.MigrationEntity
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.migration.migrations.MigrationsRegistry
-import app.ehrenamtskarte.backend.migration.migrations.V1_Baseline
+import app.ehrenamtskarte.backend.migration.migrations.V0001_Baseline
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
@@ -30,16 +30,18 @@ object MigrationUtils {
         }
 
         logger.info("Running migrations on database ${database.url}")
-
-        val versionBeforeMigration = transaction { Migrations.getCurrentVersionOrNull() }
-
-        logger.info("Database version before migrations: ${versionBeforeMigration ?: "(none)"}")
-        logger.info("Latest migration version:           ${migrations.maxBy { it.version }}")
         try {
+            // Apply all migrations in a single transaction, to make sure nothing changes if any migration step fails.
             transaction {
+                val versionBeforeMigration = transaction { Migrations.getCurrentVersionOrNull() }
+
+                logger.info("Database version before migrations: ${versionBeforeMigration ?: "(none)"}")
+                logger.info("Latest migration version:           ${migrations.maxOfOrNull { it.version } ?: "(none)"}")
+
                 if (!Migrations.exists()) {
                     logger.info("Migrations table did not exist. Creating it.")
-                    SchemaUtils.create(Migrations)
+                    transaction { SchemaUtils.create(Migrations) }
+                    currentDialect.resetCaches()
                 } else {
                     // If changes to the Migrations table ever need to made, they need to be handled here (before any
                     // migrations are applied).
@@ -52,24 +54,24 @@ object MigrationUtils {
                         logger.debug("Skipping ${migration.javaClass.simpleName}")
                         continue
                     }
-
-                    if (migration is V1_Baseline && skipBaseline) {
+                    if (migration is V0001_Baseline && skipBaseline) {
                         logger.info("Skipping ${migration.javaClass.simpleName} as requested.")
                     } else {
                         logger.info("Applying ${migration.javaClass.simpleName}")
-                        // If we create or drop tables in a migration, we need to reset Exposed's caches.
                         transaction(statement = migration.migrate)
+                        // If we create or drop tables in a migration, we need to reset Exposed's caches.
                         currentDialect.resetCaches()
                     }
-
-                    MigrationEntity.new {
-                        version = EntityID(migration.version, Migrations)
-                        name = migration.name
-                        executedAt = now()
+                    transaction {
+                        MigrationEntity.new {
+                            version = EntityID(migration.version, Migrations)
+                            name = migration.name
+                            executedAt = now()
+                        }
                     }
                 }
 
-                assertDatabaseIsInSync(database)
+                assertDatabaseIsInSync()
             }
         } catch (exception: DatabaseOutOfSyncException) {
             throw MigrationException(
