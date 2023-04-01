@@ -13,7 +13,7 @@ data class AcceptingStore(
     val name: String?,
     val description: String?,
     val contactId: Int,
-    val categoryId: Int,
+    val categoryId: Int
 ) {
 
     fun contact(environment: DataFetchingEnvironment): CompletableFuture<Contact> =

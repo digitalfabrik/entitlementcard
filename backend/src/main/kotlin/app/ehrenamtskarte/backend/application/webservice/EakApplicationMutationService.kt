@@ -27,7 +27,7 @@ class EakApplicationMutationService {
         regionId: Int,
         application: Application,
         project: String,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
         val context = dfe.getContext<GraphQLContext>()
@@ -52,7 +52,7 @@ class EakApplicationMutationService {
                 application.extractApplicationVerifications(),
                 regionId,
                 context.applicationData,
-                context.files,
+                context.files
             )
         }
 
@@ -128,7 +128,7 @@ class EakApplicationMutationService {
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
         applicationId: Int,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()

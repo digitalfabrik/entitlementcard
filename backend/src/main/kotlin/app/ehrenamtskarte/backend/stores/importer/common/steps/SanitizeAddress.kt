@@ -76,7 +76,9 @@ class SanitizeAddress(config: ImportConfig, private val logger: Logger) : Pipeli
             val residue = if (houseNumberMatch.range.last < address.length - 1) {
                 val res = address.substring(houseNumberMatch.range.last + 1).trim { !it.isLetterOrDigit() }
                 if (res != cleanHouseNumber && res.isNotEmpty()) res else null
-            } else null
+            } else {
+                null
+            }
 
             val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).filterNot { it.isEmpty() }.joinToString("|")
             logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)

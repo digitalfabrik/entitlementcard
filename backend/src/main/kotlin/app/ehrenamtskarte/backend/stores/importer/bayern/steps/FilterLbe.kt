@@ -51,8 +51,9 @@ class FilterLbe(config: ImportConfig, private val logger: Logger) :
         val validCategories = (0..MISCELLANEOUS_CATEGORY_ID) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID)
         val valid = category?.toIntOrNull() in validCategories
 
-        if (!valid)
+        if (!valid) {
             logger.info("'$name' was filtered out because category '$category' is invalid")
+        }
 
         return valid
     }

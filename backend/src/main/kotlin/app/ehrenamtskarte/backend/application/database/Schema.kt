@@ -20,7 +20,7 @@ object Applications : IntIdTable() {
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApplicationEntity>(
-        Applications,
+        Applications
     )
 
     var regionId by Applications.regionId
@@ -48,7 +48,7 @@ object ApplicationVerifications : IntIdTable() {
 
 class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApplicationVerificationEntity>(
-        ApplicationVerifications,
+        ApplicationVerifications
     )
 
     var applicationId by ApplicationVerifications.applicationId

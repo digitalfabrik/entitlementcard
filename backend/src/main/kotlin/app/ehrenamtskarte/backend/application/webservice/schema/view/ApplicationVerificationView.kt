@@ -7,7 +7,7 @@ data class ApplicationVerificationView(
     val contactEmailAddress: String,
     val organizationName: String,
     val verifiedDate: String?,
-    val rejectedDate: String?,
+    val rejectedDate: String?
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationVerificationEntity): ApplicationVerificationView {
@@ -16,7 +16,7 @@ data class ApplicationVerificationView(
                 entity.contactEmailAddress,
                 entity.organizationName,
                 entity.verifiedDate?.toString(),
-                entity.rejectedDate?.toString(),
+                entity.rejectedDate?.toString()
             )
         }
     }

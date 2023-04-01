@@ -28,13 +28,16 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
     fun physicalStoresByIdInProject(project: String, ids: List<Int>): List<PhysicalStore?> = transaction {
         PhysicalStoresRepository.findByIdsInProject(project, ids).map {
-            if (it == null) null
-            else PhysicalStore(
-                it.id.value,
-                it.storeId.value,
-                it.addressId.value,
-                Coordinates(it.coordinates.x, it.coordinates.y)
-            )
+            if (it == null) {
+                null
+            } else {
+                PhysicalStore(
+                    it.id.value,
+                    it.storeId.value,
+                    it.addressId.value,
+                    Coordinates(it.coordinates.x, it.coordinates.y)
+                )
+            }
         }
     }
 

@@ -19,10 +19,10 @@ val authGraphQlParams = GraphQLParams(
         TopLevelObject(SignInMutationService()),
         TopLevelObject(ChangePasswordMutationService()),
         TopLevelObject(ResetPasswordMutationService()),
-        TopLevelObject(ManageUsersMutationService()),
+        TopLevelObject(ManageUsersMutationService())
     ),
     queries = listOf(
         TopLevelObject(ViewAdministratorsQueryService()),
         TopLevelObject(ResetPasswordQueryService())
-    ),
+    )
 )

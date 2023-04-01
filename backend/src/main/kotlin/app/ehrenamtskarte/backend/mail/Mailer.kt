@@ -14,7 +14,7 @@ object Mailer {
         fromName: String,
         to: String,
         subject: String,
-        message: String,
+        message: String
     ) {
         if (!backendConfig.production) {
             val logger = LoggerFactory.getLogger(Mailer::class.java)
@@ -26,7 +26,7 @@ object Mailer {
                 Subject: $subject
                 -----------------------
                 
-                """.trimIndent() + message,
+                """.trimIndent() + message
             )
         }
         MailerBuilder.withSMTPServer(smtpConfig.host, smtpConfig.port, smtpConfig.username, smtpConfig.password)
@@ -39,7 +39,7 @@ object Mailer {
                     .withSubject(subject)
                     .withPlainText(message)
                     .withHeader("Content-Type", "text/plain; charset=utf8")
-                    .buildEmail(),
+                    .buildEmail()
             ).join()
     }
 }

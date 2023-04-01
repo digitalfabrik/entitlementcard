@@ -35,7 +35,7 @@ class ResetPasswordMutationService {
                 projectConfig.administrationName,
                 email,
                 "Passwort Zurücksetzen",
-                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl, email),
+                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl, email)
             )
         }
         return true

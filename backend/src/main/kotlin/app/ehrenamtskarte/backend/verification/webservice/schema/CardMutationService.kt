@@ -61,7 +61,7 @@ class CardMutationService {
         cardInfoHashBase64: String,
         activationSecretBase64: String,
         overwrite: Boolean,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): CardActivationResultModel {
         val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.getContext<GraphQLContext>()

@@ -17,7 +17,7 @@ const val ACTIVATION_SECRET_HASH_LENGTH = 70
 
 enum class CodeType {
     STATIC,
-    DYNAMIC,
+    DYNAMIC
 }
 
 object Cards : IntIdTable() {

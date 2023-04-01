@@ -38,7 +38,7 @@ class Database {
             email: String,
             password: String,
             roleDbValue: String,
-            projectId: Int? = null,
+            projectId: Int? = null
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
@@ -63,7 +63,7 @@ class Database {
                     DatabaseConfig.invoke {
                         this.sqlLogger = StdOutSqlLogger
                     }
-                },
+                }
             )
             transaction {
                 setupDatabaseForProjects(config)

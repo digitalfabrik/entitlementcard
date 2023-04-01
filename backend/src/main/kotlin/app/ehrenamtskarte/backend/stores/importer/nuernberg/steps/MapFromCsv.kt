@@ -19,11 +19,15 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
     override fun execute(input: List<CSVAcceptingStore>) = input.mapNotNull {
         val longitude = if (it.longitude?.isNotEmpty()!!) {
             it.longitude!!.toDouble()
-        } else null
+        } else {
+            null
+        }
 
         val latitude = if (it.latitude?.isNotEmpty()!!) {
             it.latitude!!.toDouble()
-        } else null
+        } else {
+            null
+        }
 
         try {
             AcceptingStore(

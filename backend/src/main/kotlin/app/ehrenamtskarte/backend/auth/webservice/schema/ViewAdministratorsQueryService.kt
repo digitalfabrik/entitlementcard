@@ -39,7 +39,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns all administrators in a project. This query requires the role PROJECT_ADMIN.")
     fun getUsersInProject(
         project: String,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
@@ -62,7 +62,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN.")
     fun getUsersInRegion(
         regionId: Int,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()

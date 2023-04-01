@@ -18,7 +18,9 @@ class Administrator(
     }
 
     fun region(dataFetchingEnvironment: DataFetchingEnvironment): CompletableFuture<Region?> =
-        if (regionId == null) CompletableFuture.completedFuture(null) else {
+        if (regionId == null) {
+            CompletableFuture.completedFuture(null)
+        } else {
             dataFetchingEnvironment.getDataLoader<Int, Region?>(REGION_LOADER_NAME).load(regionId)
         }
 }

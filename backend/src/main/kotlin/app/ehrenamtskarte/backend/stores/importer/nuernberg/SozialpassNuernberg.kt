@@ -17,7 +17,6 @@ import org.slf4j.Logger
 object SozialpassNuernberg : Pipeline {
     private val httpClient = HttpClient()
     override fun import(config: ImportConfig, logger: Logger) {
-
         Unit.addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
             .addStep(FilterData(config, logger), logger) { logger.info(" ==Filter Data ==") }
             .addStep(MapFromCsv(config, logger), logger) { logger.info("== Map CSV Data ==") }

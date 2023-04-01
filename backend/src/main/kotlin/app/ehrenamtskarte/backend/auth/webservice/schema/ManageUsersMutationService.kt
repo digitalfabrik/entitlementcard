@@ -20,9 +20,9 @@ import java.nio.charset.StandardCharsets
 class EmailAlreadyExistsException() : GraphqlErrorException(
     newErrorException().extensions(
         mapOf(
-            Pair("code", "EMAIL_ALREADY_EXISTS"),
-        ),
-    ),
+            Pair("code", "EMAIL_ALREADY_EXISTS")
+        )
+    )
 )
 
 @Suppress("unused")
@@ -35,7 +35,7 @@ class ManageUsersMutationService {
         role: Role,
         regionId: Int?,
         sendWelcomeMail: Boolean,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
@@ -70,7 +70,7 @@ class ManageUsersMutationService {
                         projectConfig.administrationName,
                         projectConfig.administrationBaseUrl,
                         email
-                    ),
+                    )
                 )
             }
         }
@@ -84,7 +84,7 @@ class ManageUsersMutationService {
         newEmail: String,
         newRole: Role,
         newRegionId: Int?,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
@@ -118,7 +118,7 @@ class ManageUsersMutationService {
     fun deleteAdministrator(
         project: String,
         adminId: Int,
-        dfe: DataFetchingEnvironment,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()

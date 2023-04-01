@@ -21,10 +21,10 @@ val storesGraphQlParams = GraphQLParams(
         categoryLoader,
         physicalStoreLoader,
         physicalStoreByStoreIdLoader,
-        addressLoader,
+        addressLoader
     ),
     queries = listOf(
         TopLevelObject(AcceptingStoreQueryService()),
-        TopLevelObject(CategoriesQueryService()),
-    ),
+        TopLevelObject(CategoriesQueryService())
+    )
 )

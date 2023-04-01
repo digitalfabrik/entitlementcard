@@ -35,7 +35,7 @@ object ApplicationRepository {
         applicationVerifications: List<ExtractedApplicationVerification>,
         regionId: Int,
         applicationData: File,
-        files: List<Part>,
+        files: List<Part>
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         return transaction {
             val random = SecureRandom.getInstanceStrong()
@@ -71,7 +71,7 @@ object ApplicationRepository {
                 files.forEachIndexed { index, part ->
                     FileUtil.streamToFile(
                         part.inputStream,
-                        File(applicationDirectory, "$index").absolutePath,
+                        File(applicationDirectory, "$index").absolutePath
                     )
                     File(applicationDirectory, "$index.contentType").writeText(part.contentType)
                 }

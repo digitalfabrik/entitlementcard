@@ -30,7 +30,7 @@ object CardRepository {
         expirationDay: Long?,
         regionId: Int,
         issuerId: Int,
-        codeType: CodeType,
+        codeType: CodeType
     ) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash

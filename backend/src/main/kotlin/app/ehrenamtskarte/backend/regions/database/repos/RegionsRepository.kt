@@ -47,7 +47,7 @@ object RegionsRepository {
 
     fun findRegionByRegionIdentifier(
         regionIdentifier: String,
-        projectId: EntityID<Int>,
+        projectId: EntityID<Int>
     ): RegionEntity {
         val regionId = RegionEntity
             .find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }

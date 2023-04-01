@@ -33,14 +33,14 @@ class GraphQLHandler(
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
-    private val regionIdentifierByPostalCode: Map<String, String> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
+    private val regionIdentifierByPostalCode: Map<String, String> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
 ) {
     val graphQLSchema = toSchema(
         graphQLParams.config
             .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema"))),
         graphQLParams.queries,
         graphQLParams.mutations,
-        graphQLParams.subscriptions,
+        graphQLParams.subscriptions
     )
     private val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
 
@@ -127,19 +127,19 @@ class GraphQLHandler(
                 files,
                 remoteIp,
                 backendConfiguration,
-                regionIdentifierByPostalCode,
+                regionIdentifierByPostalCode
             )
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException,
+                is InvalidClaimException, is TokenExpiredException
                 -> GraphQLContext(
                     applicationData,
                     null,
                     files,
                     remoteIp,
                     backendConfiguration,
-                    regionIdentifierByPostalCode,
+                    regionIdentifierByPostalCode
                 )
 
                 else -> throw e

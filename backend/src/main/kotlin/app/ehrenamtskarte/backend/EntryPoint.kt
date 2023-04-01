@@ -39,15 +39,15 @@ class Entry : CliktCommand() {
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,
-                password = postgresPassword ?: backendConfiguration.postgres.password,
+                password = postgresPassword ?: backendConfiguration.postgres.password
             ),
             geocoding = backendConfiguration.geocoding.copy(
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
-                host = geocodingHost ?: backendConfiguration.geocoding.host,
+                host = geocodingHost ?: backendConfiguration.geocoding.host
             ),
             csvWriter = backendConfiguration.csvWriter.copy(
-                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled,
-            ),
+                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled
+            )
         )
     }
 }
