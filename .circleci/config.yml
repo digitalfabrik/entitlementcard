@@ -36,34 +36,7 @@ workflows:
           flutterFlavor: "Nuernberg"
           requires:
             - check-frontend
-  backend-production:
-    jobs:
-      - backend-build
-      - administration-build
-      - martin-build
-      - backend-pack:
-          requires:
-            - backend-build
-      - administration-pack:
-          requires:
-            - administration-build
-      - martin-pack:
-          requires:
-            - martin-build
-      - meta-pack
-      - deploy:
-          context:
-            - entitlementcard-apt
-          requires:
-            - backend-pack
-            - administration-pack
-            - martin-pack
-            - meta-pack
-          filters:
-            branches:
-              only:
-                - /release\/.*/
-  backend-staging:
+  backend:
     jobs:
       - backend-build
       - administration-build-staging
@@ -90,6 +63,33 @@ workflows:
             branches:
               only:
                 - main
+  backend-production:
+    jobs:
+      - backend-build
+      - administration-build
+      - martin-build
+      - backend-pack:
+          requires:
+            - backend-build
+      - administration-pack:
+          requires:
+            - administration-build
+      - martin-pack:
+          requires:
+            - martin-build
+      - meta-pack
+      - deploy-production:
+          context:
+            - entitlementcard-apt
+          requires:
+            - backend-pack
+            - administration-pack
+            - martin-pack
+            - meta-pack
+          filters:
+            branches:
+              only:
+                - /release\/.*/
 
 commands:
   setup-npm-global:
@@ -532,7 +532,7 @@ jobs:
           paths:
             - debs/*.deb
 
-  deploy-prod:
+  deploy-production:
     docker:
       - image: cimg/base:2022.09
     steps:
