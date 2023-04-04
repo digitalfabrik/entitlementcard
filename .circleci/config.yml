@@ -88,8 +88,9 @@ workflows:
             - meta-pack
           filters:
             tags:
-              only:
-                - /release\/.*/
+              only: /.*/
+            branches:
+              ignore: /.*/
 
 commands:
   setup-npm-global:
