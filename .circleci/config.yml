@@ -51,7 +51,7 @@ workflows:
           requires:
             - martin-build
       - meta-pack
-      - deploy:
+      - deploy-staging:
           context:
             - entitlementcard-apt
           requires:
@@ -87,7 +87,7 @@ workflows:
             - martin-pack
             - meta-pack
           filters:
-            branches:
+            tags:
               only:
                 - /release\/.*/
 
@@ -548,18 +548,18 @@ jobs:
             echo "Uploading: " /tmp/workspace/debs/*.deb
             sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
 
-    deploy-staging:
-      docker:
-        - image: cimg/base:2022.09
-      steps:
-        - attach_workspace:
-            at: /tmp/workspace
-        - add_ssh_keys:
-            fingerprints:
-              - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
-        - run:
-            name: "SFTP upload"
-            command: |
+  deploy-staging:
+    docker:
+      - image: cimg/base:2022.09
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
+      - run:
+          name: "SFTP upload"
+          command: |
               echo $APT_HOST_FINGERPRINT > known_hosts
               echo "Uploading: " /tmp/workspace/debs/*.deb
               sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.staging.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
