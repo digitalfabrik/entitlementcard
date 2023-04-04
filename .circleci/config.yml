@@ -36,7 +36,7 @@ workflows:
           flutterFlavor: "Nuernberg"
           requires:
             - check-frontend
-  backend:
+  backend-production:
     jobs:
       - backend-build
       - administration-build
@@ -62,8 +62,34 @@ workflows:
           filters:
             branches:
               only:
+                - /release\/.*/
+  backend-staging:
+    jobs:
+      - backend-build
+      - administration-build-staging
+      - martin-build
+      - backend-pack:
+          requires:
+            - backend-build
+      - administration-pack:
+          requires:
+            - administration-build-staging
+      - martin-pack:
+          requires:
+            - martin-build
+      - meta-pack
+      - deploy:
+          context:
+            - entitlementcard-apt
+          requires:
+            - backend-pack
+            - administration-pack
+            - martin-pack
+            - meta-pack
+          filters:
+            branches:
+              only:
                 - main
-                - whitelabel
 
 commands:
   setup-npm-global:
@@ -339,6 +365,45 @@ jobs:
           paths:
             - administration/build
 
+  administration-build-staging:
+    docker:
+      - image: cimg/node:19.1.0-browsers
+    working_directory: ~/project/administration
+    steps:
+      - checkout:
+          path: ~/project
+      - browser-tools/install-chrome
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - install-dart-linux
+      - install-protobuf-linux
+      - run:
+          name: Install node dependencies
+          command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
+      - run: |
+          npm run generate-graphql
+          npm run generate-protobuf
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm run test
+      - run:
+          name: Build
+          command: npm run build:staging
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      - store_artifacts:
+          path: build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - administration/build
+
   martin-build:
     docker:
       - image: rust:bullseye
@@ -467,7 +532,7 @@ jobs:
           paths:
             - debs/*.deb
 
-  deploy:
+  deploy-prod:
     docker:
       - image: cimg/base:2022.09
     steps:
@@ -482,3 +547,19 @@ jobs:
             echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
             sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+
+    deploy-staging:
+      docker:
+        - image: cimg/base:2022.09
+      steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - add_ssh_keys:
+            fingerprints:
+              - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
+        - run:
+            name: "SFTP upload"
+            command: |
+              echo $APT_HOST_FINGERPRINT > known_hosts
+              echo "Uploading: " /tmp/workspace/debs/*.deb
+              sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.staging.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
