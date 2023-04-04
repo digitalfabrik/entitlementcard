@@ -65,19 +65,40 @@ workflows:
                 - main
   backend-production:
     jobs:
-      - backend-build
-      - administration-build
-      - martin-build
+      - backend-build:
+          filters:
+            tags:
+              only: /.*/
+      - administration-build:
+          filters:
+            tags:
+              only: /.*/
+      - martin-build:
+          filters:
+            tags:
+              only: /.*/
       - backend-pack:
           requires:
             - backend-build
+          filters:
+            tags:
+              only: /.*/
       - administration-pack:
           requires:
             - administration-build
+          filters:
+            tags:
+              only: /.*/
       - martin-pack:
           requires:
             - martin-build
-      - meta-pack
+          filters:
+            tags:
+              only: /.*/
+      - meta-pack:
+          filters:
+            tags:
+              only: /.*/
       - deploy-production:
           context:
             - entitlementcard-apt
@@ -89,8 +110,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-            branches:
-              ignore: /.*/
 
 commands:
   setup-npm-global:
