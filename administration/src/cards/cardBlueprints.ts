@@ -10,7 +10,7 @@ import { CardBlueprint } from './CardBlueprint'
 import { add } from 'date-fns'
 
 export const createEmptyBavariaCard = (region: Region): CardBlueprint =>
-  new CardBlueprint('', add(Date.now(), { years: 2 }), [
+  new CardBlueprint('', add(Date.now(), { years: 3 }), [
     createExtensionHolder(region_extension, region),
     createExtensionHolder(bavaria_card_type, null),
   ])
