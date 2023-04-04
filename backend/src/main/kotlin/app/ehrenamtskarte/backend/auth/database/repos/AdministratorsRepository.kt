@@ -16,7 +16,8 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import java.security.SecureRandom
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.Period
 import java.util.Base64
 import java.util.UUID
 
@@ -108,7 +109,7 @@ object AdministratorsRepository {
         SecureRandom.getInstanceStrong().nextBytes(byteArray)
         val key = Base64.getUrlEncoder().encodeToString(byteArray)
         administrator.passwordResetKey = key
-        administrator.passwordResetKeyExpiry = LocalDateTime.now().plusDays(1)
+        administrator.passwordResetKeyExpiry = Instant.now().plus(Period.ofDays(1))
         return key
     }
 }

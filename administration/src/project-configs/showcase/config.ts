@@ -11,6 +11,7 @@ const config: ProjectConfig = {
   createEmptyCard: createEmptyBavariaCard,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
+  timezone: 'Europe/Berlin',
   pdf: {
     title: 'Karten',
     templatePath: null,

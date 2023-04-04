@@ -19,7 +19,6 @@ class WebService {
         val host = config.server.host
         val port = Integer.parseInt(config.server.port)
         val dataDirectory = config.server.dataDirectory
-
         val applicationData = File(dataDirectory, "applications")
 
         if (applicationData.exists()) {

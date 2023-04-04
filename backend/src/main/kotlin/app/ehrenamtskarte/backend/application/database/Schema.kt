@@ -6,16 +6,16 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.javatime.CurrentDateTime
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
+import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.not
 
 object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
-    val createdDate = datetime("createdDate").defaultExpression(CurrentDateTime)
+    val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp())
     val accessKey = varchar("accessKey", 100).uniqueIndex()
-    val withdrawalDate = datetime("withdrawalDate").nullable()
+    val withdrawalDate = timestamp("withdrawalDate").nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -35,8 +35,8 @@ object ApplicationVerifications : IntIdTable() {
     val contactEmailAddress = varchar("contactEmailAddress", 300)
     val contactName = varchar("contactName", 300)
     val organizationName = varchar("organizationName", 300)
-    val verifiedDate = datetime("verifiedDate").nullable()
-    val rejectedDate = datetime("rejectedDate").nullable()
+    val verifiedDate = timestamp("verifiedDate").nullable()
+    val rejectedDate = timestamp("rejectedDate").nullable()
     val accessKey = varchar("accessKey", 100).uniqueIndex()
 
     init {

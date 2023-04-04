@@ -6,6 +6,7 @@ import { SignInMutation, SignInPayload, useSignInMutation } from '../../generate
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import { setProjectConfigOverride } from '../../project-configs/getProjectConfig'
+import { useNavigate } from 'react-router-dom'
 
 interface State {
   email: string
@@ -13,6 +14,7 @@ interface State {
 }
 
 const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
+  const navigate = useNavigate()
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [state, setState] = React.useState<State>({ email: '', password: '' })
@@ -27,6 +29,11 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
         authData: { email: state.email, password: state.password },
       },
     })
+
+  const switchProject = (project: string) => {
+    setProjectConfigOverride(project)
+    navigate(0)
+  }
 
   return (
     <StandaloneCenter>
@@ -44,10 +51,8 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
         />
         {process.env.NODE_ENV === 'development' ? (
           <>
-            <Button onClick={() => setProjectConfigOverride('nuernberg.sozialpass.app')}>Switch to Nürnberg</Button>
-            <Button onClick={() => setProjectConfigOverride('bayern.ehrenamtskarte.app')}>
-              Switch to Ehrenamtskarte Bayern
-            </Button>
+            <Button onClick={() => switchProject('nuernberg.sozialpass.app')}>Switch to Nürnberg</Button>
+            <Button onClick={() => switchProject('bayern.ehrenamtskarte.app')}>Switch to Ehrenamtskarte Bayern</Button>
           </>
         ) : null}
       </Card>

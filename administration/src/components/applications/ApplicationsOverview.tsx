@@ -1,5 +1,4 @@
 import { Alert, Button, Callout, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
-import { format } from 'date-fns'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import styled from 'styled-components'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
@@ -8,6 +7,7 @@ import FlipMove from 'react-flip-move'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import formatDateWithTimezone from '../../util/formatDate'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -49,7 +49,6 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
   gotDeleted,
 }) => {
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
-  const createdDate = new Date(createdDateString)
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
@@ -90,12 +89,12 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
               flexWrap: 'wrap',
               justifyContent: 'space-between',
             }}>
-            <H4>Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}</H4>
+            <H4>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}</H4>
             <VerificationsQuickIndicator verifications={application.verifications} />
           </div>
           {withdrawalDate && (
             <WithdrawAlert intent='warning'>
-              Der Antrag wurde vom Antragssteller am {format(new Date(withdrawalDate), 'dd.MM.yyyy, HH:mm')}{' '}
+              Der Antrag wurde vom Antragssteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
               zurückgezogen. <br />
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>

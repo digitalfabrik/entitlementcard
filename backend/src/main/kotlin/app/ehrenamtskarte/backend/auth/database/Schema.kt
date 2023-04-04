@@ -9,9 +9,8 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.or
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 
 object Administrators : IntIdTable() {
     val email = varchar("email", 100)
@@ -20,7 +19,7 @@ object Administrators : IntIdTable() {
     val role = varchar("role", 32)
     val passwordHash = binary("passwordHash").nullable()
     val passwordResetKey = varchar("passwordResetKey", 100).nullable()
-    val passwordResetKeyExpiry = datetime("passwordResetKeyExpiry").nullable()
+    val passwordResetKeyExpiry = timestamp("passwordResetKeyExpiry").nullable()
     val deleted = bool("deleted")
 
     init {
@@ -35,11 +34,6 @@ object Administrators : IntIdTable() {
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
     }
-}
-
-fun createEmailIndexIfNotExists() {
-    val sql = "CREATE UNIQUE INDEX IF NOT EXISTS email_lower_idx ON ${Administrators.nameInDatabaseCase()} (lower(${Administrators.email.nameInDatabaseCase()}))"
-    TransactionManager.current().exec(sql)
 }
 
 class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {

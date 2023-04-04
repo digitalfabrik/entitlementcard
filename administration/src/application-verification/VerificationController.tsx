@@ -7,11 +7,11 @@ import {
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
-import { format } from 'date-fns'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
 import { Close, Check } from '@mui/icons-material'
 import getMessageFromApolloError from '../components/errors/getMessageFromApolloError'
+import formatDateWithTimezone from '../util/formatDate'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -81,9 +81,9 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   if (data.application.withdrawalDate)
     return (
       <CenteredMessage
-        title={`Der Antrag wurde vom Antragssteller am ${format(
-          new Date(data.application.withdrawalDate),
-          'dd.MM.yyyy, HH:mm'
+        title={`Der Antrag wurde vom Antragssteller am ${formatDateWithTimezone(
+          data.application.withdrawalDate,
+          config.timezone
         )} zurückgezogen.`}
       />
     )
@@ -96,7 +96,6 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     )
 
   const { jsonValue, createdDate: createdDateString, id } = data.application
-  const createdDate = new Date(createdDateString)
   const jsonField = JSON.parse(jsonValue)
   const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
   return (
@@ -117,7 +116,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
         </Typography>
         <Divider style={{ margin: '24px 0px' }} />
         <Typography variant='h6' mb='8px'>
-          Antrag vom {format(createdDate, 'dd.MM.yyyy, HH:mm')}
+          Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
         </Typography>
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} attachmentAccessible={false} />
         <Divider style={{ margin: '24px 0px' }} />

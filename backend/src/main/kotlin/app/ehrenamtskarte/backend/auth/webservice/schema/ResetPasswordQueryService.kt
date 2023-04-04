@@ -9,7 +9,7 @@ import graphql.GraphqlErrorException
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.not
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalDateTime
+import java.time.Instant
 
 class PasswordResetKeyExpiredException() : GraphqlErrorException(
     newErrorException().extensions(
@@ -37,7 +37,7 @@ class ResetPasswordQueryService {
                 .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) and not(Administrators.deleted) }.singleOrNull()
             if (admin == null) {
                 throw InvalidPasswordResetLinkException()
-            } else if (admin.passwordResetKeyExpiry!!.isBefore(LocalDateTime.now())) {
+            } else if (admin.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw PasswordResetKeyExpiredException()
             }
             true
