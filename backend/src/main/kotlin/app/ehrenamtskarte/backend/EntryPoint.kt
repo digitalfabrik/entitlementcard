@@ -4,6 +4,8 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.migration.MigrationUtils
+import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.stores.importer.Importer
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
@@ -17,6 +19,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
+import org.jetbrains.exposed.sql.exists
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.util.TimeZone
 
@@ -116,9 +120,47 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
+class Migrate : CliktCommand(help = "Migrates the database") {
+    private val config by requireObject<BackendConfiguration>()
+
+    override fun run() {
+        val db = Database.setupWithoutMigrationCheck(config)
+        MigrationUtils.applyRequiredMigrations(db)
+    }
+}
+
+class MigrateSkipBaseline : CliktCommand(
+    help = """
+    Applies all migrations except for the baseline step.
+    
+    This command allows the production system to be upgraded to the new DB migration system.
+    It adds the migrations table without applying the baseline migration step.
+    It should be used only once when introducing the new DB migration system on the production server.
+    Once this is done, this command can be safely removed.
+    """.trimIndent(),
+) {
+    private val config by requireObject<BackendConfiguration>()
+
+    override fun run() {
+        val db = Database.setupWithoutMigrationCheck(config)
+        if (transaction { Migrations.exists() }) {
+            throw IllegalArgumentException("The migrations table has already been created. Use the migrate command instead.")
+        }
+        MigrationUtils.applyRequiredMigrations(db, skipBaseline = true)
+    }
+}
+
 fun main(args: Array<String>) {
     // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-    Entry().subcommands(Execute(), Import(), ImportSingle(), CreateAdmin(), GraphQLExport()).main(args)
+    Entry().subcommands(
+        Execute(),
+        Import(),
+        ImportSingle(),
+        Migrate(),
+        MigrateSkipBaseline(),
+        CreateAdmin(),
+        GraphQLExport()
+    ).main(args)
 }
