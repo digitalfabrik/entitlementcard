@@ -3,14 +3,9 @@ package app.ehrenamtskarte.backend.regions.database
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun setupDatabase() {
-    SchemaUtils.create(
-        Regions
-    )
-
+fun insertOrUpdateRegions() {
     transaction {
         val projects = ProjectEntity.all()
         val dbRegions = RegionEntity.all()

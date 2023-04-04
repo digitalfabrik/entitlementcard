@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.net.URL
 import java.nio.file.Paths
 import java.time.ZoneId
 
@@ -55,7 +56,7 @@ data class BackendConfiguration(
             ).registerModule(JavaTimeModule())
         private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
 
-        fun load(configFile: File?): BackendConfiguration {
+        fun load(configFile: URL?): BackendConfiguration {
             val fallbacks = listOfNotNull(
                 ClassLoader.getSystemResource("config/config.local.yml"),
                 ClassLoader.getSystemResource("config/config.yml")
@@ -64,15 +65,17 @@ data class BackendConfiguration(
                 throw Error("Fallback backend configuration resource 'config/config.yml' missing!")
             }
 
-            val file =
-                configFile ?: possibleBackendConfigurationFiles.find { it.exists() } ?: File(fallbacks[0].toURI())
+            val url =
+                configFile
+                    ?: possibleBackendConfigurationFiles.find { it.exists() }?.toURI()?.toURL()
+                    ?: fallbacks[0]
 
-            logger.info("Loading backend configuration from ${file.absolutePath}.")
+            logger.info("Loading backend configuration from $url.")
 
-            return from(file)
+            return from(url)
         }
 
-        private fun from(file: File): BackendConfiguration =
-            file.bufferedReader().use { mapper.readValue(it, BackendConfiguration::class.java) }
+        private fun from(url: URL): BackendConfiguration =
+            mapper.readValue(url, BackendConfiguration::class.java)
     }
 }
