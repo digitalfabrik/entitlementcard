@@ -36,7 +36,7 @@ class Entry : CliktCommand() {
     private val csvwriter by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
     override fun run() {
-        val backendConfiguration = BackendConfiguration.load(config)
+        val backendConfiguration = BackendConfiguration.load(config?.toURI()?.toURL())
 
         currentContext.obj = backendConfiguration.copy(
             production = production ?: backendConfiguration.production,
