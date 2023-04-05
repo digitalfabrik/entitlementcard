@@ -12,6 +12,7 @@ import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typ
 import { Close, Check } from '@mui/icons-material'
 import getMessageFromApolloError from '../components/errors/getMessageFromApolloError'
 import formatDateWithTimezone from '../util/formatDate'
+import getApiBaseUrl from '../util/getApiBaseUrl'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -97,7 +98,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
 
   const { jsonValue, createdDate: createdDateString, id } = data.application
   const jsonField = JSON.parse(jsonValue)
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   return (
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>

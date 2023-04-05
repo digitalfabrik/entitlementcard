@@ -55,6 +55,8 @@ workflows:
             - martin-build
       - meta-pack
       - deploy:
+          name: deploy-staging
+          server: staging.entitlementcard.app
           context:
             - entitlementcard-apt
           requires:
@@ -67,7 +69,22 @@ workflows:
             branches:
               only:
                 - main
-                - whitelabel
+      - deploy:
+          name: deploy-production
+          server: entitlementcard.app
+          context:
+            - entitlementcard-apt
+          requires:
+            - backend-pack
+            - administration-pack
+            - martin-pack
+            - meta-pack
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only: /.*/
 
 commands:
   setup-npm-global:
@@ -509,6 +526,12 @@ jobs:
   deploy:
     docker:
       - image: cimg/base:2022.09
+    parameters:
+        server:
+            enum:
+              - entitlementcard.app
+              - staging.entitlementcard.app
+            type: enum
     steps:
       - attach_workspace:
           at: /tmp/workspace
@@ -520,4 +543,4 @@ jobs:
           command: |
             echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.entitlementcard.app:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"

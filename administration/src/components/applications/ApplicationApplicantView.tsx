@@ -11,6 +11,7 @@ import ConfirmDialog from '../../application/components/ConfirmDialog'
 import { Delete } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
 import formatDateWithTimezone from '../../util/formatDate'
+import getApiBaseUrl from '../../util/getApiBaseUrl'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -33,7 +34,7 @@ const ApplicationApplicantView = ({
   const { createdDate: createdDateString, jsonValue, id } = application
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const { enqueueSnackbar } = useSnackbar()
 
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
