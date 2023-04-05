@@ -534,7 +534,7 @@ jobs:
           at: /tmp/workspace
       - add_ssh_keys:
           fingerprints:
-            - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
+            - "|1|pA+q8/NJVpIa5ypMTVYP5I/eLsQ=|rz/JwX/KEGiLS8AIfNIWVp04xrI= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k"
       - run:
           name: "SFTP upload"
           command: |
