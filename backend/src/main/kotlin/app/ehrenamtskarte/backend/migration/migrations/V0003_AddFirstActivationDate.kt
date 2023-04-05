@@ -13,13 +13,10 @@ internal class V0003_AddFirstActivationDate() : Migration() {
         exec(
             """
             ALTER TABLE cards ADD "firstActivationDate" TIMESTAMP NULL;
-            """.trimIndent()
-        )
-        exec(
-            """
+            
             UPDATE cards
-            SET "firstActivationDate" = current_timestamp
-            where "totpSecret" is not null;
+            SET "firstActivationDate" = CURRENT_TIMESTAMP
+            WHERE "totpSecret" IS NOT NULL;
             """.trimIndent()
         )
     }
