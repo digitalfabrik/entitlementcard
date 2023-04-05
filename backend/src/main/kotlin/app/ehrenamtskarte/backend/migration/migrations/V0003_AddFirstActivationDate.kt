@@ -19,7 +19,7 @@ internal class V0003_AddFirstActivationDate() : Migration() {
             """
             UPDATE cards
             SET "firstActivationDate" = current_timestamp
-            where "totpSecret" is not null
+            where "totpSecret" is not null;
             """.trimIndent()
         )
     }
