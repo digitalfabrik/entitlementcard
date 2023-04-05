@@ -65,7 +65,6 @@ workflows:
             - administration-pack
             - martin-pack
             - meta-pack
-
       - deploy:
           name: deploy-production
           server: entitlementcard.app
@@ -532,9 +531,12 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - "|1|RsTIk2v2F985My9AzKdmRu//pXk=|B8KL158xsFZIc486BWbVmXW+1Lg= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k"
       - run:
           name: "SFTP upload"
           command: |
+            echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o StrictHostKeyChecking=no ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
-            cat ~/.ssh/known_hosts
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
