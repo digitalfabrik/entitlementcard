@@ -81,7 +81,7 @@ export const bayernCommon: CommonBuildConfigType = {
         imagePath: "assets/bayern/intro_slides/search_with_location.png"
     },
     featureFlags: {
-        verification: false
+        verification: true
     },
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",

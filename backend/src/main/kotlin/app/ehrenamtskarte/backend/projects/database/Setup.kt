@@ -1,14 +1,9 @@
 package app.ehrenamtskarte.backend.projects.database
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun setupDatabase(config: BackendConfiguration) {
-    SchemaUtils.create(
-        Projects
-    )
-
+fun insertOrUpdateProjects(config: BackendConfiguration) {
     transaction {
         val dbProjects = ProjectEntity.all()
 
