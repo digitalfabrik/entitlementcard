@@ -8,6 +8,7 @@ import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../genera
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 import formatDateWithTimezone from '../../util/formatDate'
+import getApiBaseUrl from '../../util/getApiBaseUrl'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -51,7 +52,7 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const [collapsed, setCollapsed] = useState(false)
   const [height, setHeight] = useState(0)
   const appToaster = useAppToaster()

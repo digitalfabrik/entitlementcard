@@ -3,8 +3,9 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { AuthContext } from './AuthProvider'
 import { createUploadLink } from 'apollo-upload-client'
+import getApiBaseUrl from './util/getApiBaseUrl'
 
-const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_BASE_URL })
+const httpLink = createUploadLink({ uri: getApiBaseUrl() })
 
 const createAuthLink = (token?: string) =>
   setContext((_, { headers }) => ({

@@ -39,9 +39,7 @@ workflows:
   backend:
     jobs:
       - backend-build
-      - administration-build:
-          name: administration-build-staging
-          build_command: build:staging
+      - administration-build
       - martin-build
       - backend-pack:
           requires:
@@ -51,7 +49,7 @@ workflows:
             - backend-pack
       - administration-pack:
           requires:
-            - administration-build-staging
+            - administration-build
       - martin-pack:
           requires:
             - martin-build
@@ -80,8 +78,6 @@ workflows:
             branches:
               ignore: /.*/
       - administration-build:
-          name: administration-build-production
-          build_command: build
           filters:
             tags:
               only: /.*/
@@ -104,7 +100,7 @@ workflows:
             - backend-pack
       - administration-pack:
           requires:
-            - administration-build-production
+            - administration-build
           filters:
             tags:
               only: /.*/
@@ -372,12 +368,6 @@ jobs:
   administration-build:
     docker:
       - image: cimg/node:19.1.0-browsers
-    parameters:
-      build_command:
-        enum:
-          - build
-          - build:staging
-        type: enum
     working_directory: ~/project/administration
     steps:
       - checkout:
@@ -402,7 +392,7 @@ jobs:
           command: npm run test
       - run:
           name: Build
-          command: npm run << parameters.build_command >>
+          command: npm run build
       - save_cache:
           paths:
             - node_modules
