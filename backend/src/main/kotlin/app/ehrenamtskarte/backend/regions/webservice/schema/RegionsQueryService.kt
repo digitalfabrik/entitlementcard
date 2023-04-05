@@ -40,7 +40,7 @@ class RegionsQueryService {
             regionEntity.prefix,
             regionEntity.name,
             regionEntity.regionIdentifier,
-            regionEntity.dataPrivacyPolicy,
+            regionEntity.dataPrivacyPolicy
         )
     }
 
@@ -56,7 +56,7 @@ class RegionsQueryService {
             regionEntity.prefix,
             regionEntity.name,
             regionEntity.regionIdentifier,
-            regionEntity.dataPrivacyPolicy,
+            regionEntity.dataPrivacyPolicy
         )
     }
 

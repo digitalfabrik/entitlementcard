@@ -11,9 +11,9 @@ val verificationGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.verification.webservice.schema")),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(
-        TopLevelObject(CardQueryService()),
+        TopLevelObject(CardQueryService())
     ),
     mutations = listOf(
-        TopLevelObject(CardMutationService()),
-    ),
+        TopLevelObject(CardMutationService())
+    )
 )

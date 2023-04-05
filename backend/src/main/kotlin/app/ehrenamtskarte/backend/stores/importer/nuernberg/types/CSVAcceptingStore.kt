@@ -13,5 +13,5 @@ data class CSVAcceptingStore(
     var email: String?,
     var homepage: String?,
     var discount: String?,
-    var categoryId: String?,
+    var categoryId: String?
 )

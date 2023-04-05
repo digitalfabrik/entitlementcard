@@ -14,17 +14,17 @@ import java.time.Instant
 class PasswordResetKeyExpiredException() : GraphqlErrorException(
     newErrorException().extensions(
         mapOf(
-            Pair("code", "PASSWORD_RESET_KEY_EXPIRED"),
-        ),
-    ),
+            Pair("code", "PASSWORD_RESET_KEY_EXPIRED")
+        )
+    )
 )
 
 class InvalidPasswordResetLinkException() : GraphqlErrorException(
     newErrorException().extensions(
         mapOf(
-            Pair("code", "INVALID_PASSWORD_RESET_LINK"),
-        ),
-    ),
+            Pair("code", "INVALID_PASSWORD_RESET_LINK")
+        )
+    )
 )
 
 @Suppress("unused")

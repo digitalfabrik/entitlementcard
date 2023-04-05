@@ -43,15 +43,15 @@ class Entry : CliktCommand() {
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,
-                password = postgresPassword ?: backendConfiguration.postgres.password,
+                password = postgresPassword ?: backendConfiguration.postgres.password
             ),
             geocoding = backendConfiguration.geocoding.copy(
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
-                host = geocodingHost ?: backendConfiguration.geocoding.host,
+                host = geocodingHost ?: backendConfiguration.geocoding.host
             ),
             csvWriter = backendConfiguration.csvWriter.copy(
-                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled,
-            ),
+                enabled = csvwriter ?: backendConfiguration.csvWriter.enabled
+            )
         )
     }
 }
@@ -137,7 +137,7 @@ class MigrateSkipBaseline : CliktCommand(
     It adds the migrations table without applying the baseline migration step.
     It should be used only once when introducing the new DB migration system on the production server.
     Once this is done, this command can be safely removed.
-    """.trimIndent(),
+    """.trimIndent()
 ) {
     private val config by requireObject<BackendConfiguration>()
 

@@ -26,6 +26,6 @@ object TablesRegistry {
         AcceptingStores,
         Addresses,
         Contacts,
-        Categories,
+        Categories
     )
 }

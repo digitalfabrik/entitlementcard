@@ -10,7 +10,7 @@ data class OrganizationContact(
     val name: ShortTextInput,
     val telephone: ShortTextInput,
     val email: EmailInput,
-    val hasGivenPermission: Boolean,
+    val hasGivenPermission: Boolean
 ) : JsonFieldSerializable {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -25,9 +25,9 @@ data class OrganizationContact(
                     "hasGivenPermission",
                     mapOf("de" to "Die Kontaktperson hat der Weitergabe seiner Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden"),
                     Type.Boolean,
-                    hasGivenPermission,
-                ),
-            ),
+                    hasGivenPermission
+                )
+            )
         )
     }
 }

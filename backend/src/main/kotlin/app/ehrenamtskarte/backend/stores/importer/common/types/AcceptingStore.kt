@@ -22,6 +22,9 @@ data class AcceptingStore(
     val districtName: String?,
 
     val streetWithHouseNumber: String? =
-        if (street != null || houseNumber != null) listOfNotNull(street, houseNumber).joinToString(" ")
-        else null
+        if (street != null || houseNumber != null) {
+            listOfNotNull(street, houseNumber).joinToString(" ")
+        } else {
+            null
+        }
 )

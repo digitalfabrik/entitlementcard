@@ -32,7 +32,7 @@ object AcceptingStoresRepository {
         categoryIds: List<Int>?,
         coordinates: Coordinates?,
         limit: Int,
-        offset: Long,
+        offset: Long
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
             if (categoryIds == null) {
@@ -51,15 +51,15 @@ object AcceptingStoresRepository {
                         AcceptingStores.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
-                        Addresses.street ilike "%$searchText%",
-                    ),
+                        Addresses.street ilike "%$searchText%"
+                    )
                 )
             }
 
         val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
-                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)),
+                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
             )
         } else {
             AcceptingStores.name

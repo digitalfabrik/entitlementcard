@@ -35,7 +35,7 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
                     "Expected type " +
                         Int::class.java.name +
                         " but was " +
-                        input.javaClass.name,
+                        input.javaClass.name
                 )
             }
         }
@@ -43,7 +43,7 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
         @Deprecated("Deprecated in Java")
         override fun parseLiteral(input: Any): UploadKey {
             throw CoercingParseLiteralException(
-                "Must use variables to specify Upload values",
+                "Must use variables to specify Upload values"
             )
         }
     })
@@ -59,16 +59,16 @@ val applicationGraphQlParams = GraphQLParams(
                     Long::class -> GraphQLLong
                     else -> null
                 }
-        },
+        }
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(
         applicationLoader,
-        verificationsByApplicationLoader,
+        verificationsByApplicationLoader
     ),
     queries = listOf(
-        TopLevelObject(EakApplicationQueryService()),
+        TopLevelObject(EakApplicationQueryService())
     ),
     mutations = listOf(
-        TopLevelObject(EakApplicationMutationService()),
-    ),
+        TopLevelObject(EakApplicationMutationService())
+    )
 )

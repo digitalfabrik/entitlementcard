@@ -21,7 +21,7 @@ class DatabaseOutOfSyncException(suggestedMigrationStatements: List<String>? = n
                     "\n--- END OF SUGGESTED MIGRATIONS"
             }
             message
-        },
+        }
     )
 
 fun assertDatabaseIsInSync() {
@@ -99,7 +99,7 @@ internal fun statementsRequiredToActualizeScheme(vararg tables: Table): List<Str
     val problematicStatements = problematicColumns.map {
         currentDialect.modifyColumn(
             it,
-            ColumnDiff(defaults = true, nullability = false, autoInc = false, caseSensitiveName = false),
+            ColumnDiff(defaults = true, nullability = false, autoInc = false, caseSensitiveName = false)
         ).single()
     }
     return statements.filter { it !in problematicStatements }

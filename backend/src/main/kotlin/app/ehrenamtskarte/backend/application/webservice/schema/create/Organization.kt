@@ -11,7 +11,7 @@ data class Organization(
     val name: ShortTextInput,
     val address: Address,
     val contact: OrganizationContact,
-    val category: ShortTextInput,
+    val category: ShortTextInput
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     override fun toJsonField(): JsonField {
         return JsonField(
@@ -22,8 +22,8 @@ data class Organization(
                 name.toJsonField("name", mapOf("de" to "Name")),
                 address.toJsonField(),
                 category.toJsonField("category", mapOf("de" to "Einsatzgebiet")),
-                contact.toJsonField(),
-            ),
+                contact.toJsonField()
+            )
         )
     }
 
@@ -31,7 +31,7 @@ data class Organization(
         ExtractedApplicationVerification(
             contactName = contact.name.shortText,
             contactEmailAddress = contact.email.email,
-            organizationName = name.shortText,
-        ),
+            organizationName = name.shortText
+        )
     )
 }

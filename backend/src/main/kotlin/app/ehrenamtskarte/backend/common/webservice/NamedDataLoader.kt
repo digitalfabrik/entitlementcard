@@ -27,7 +27,7 @@ fun <K, V> newNamedDataLoader(name: String, loadBatch: suspend (ids: List<K>) ->
                     runBlocking { loadBatch(ids) }
                 }
             },
-            DataLoaderOptions.newOptions().setCachingEnabled(false),
+            DataLoaderOptions.newOptions().setCachingEnabled(false)
         )
     }
 }

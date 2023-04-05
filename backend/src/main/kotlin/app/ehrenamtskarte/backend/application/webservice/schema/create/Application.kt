@@ -9,18 +9,18 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class ApplicationType {
     FIRST_APPLICATION,
-    RENEWAL_APPLICATION,
+    RENEWAL_APPLICATION
 }
 
 enum class BavariaCardType {
     BLUE,
-    GOLDEN,
+    GOLDEN
 }
 
 @GraphQLDescription(
     "An application for the Bayerische Ehrenamtskarte.\n" +
         "The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.\n" +
-        "The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.",
+        "The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE."
 )
 data class Application(
     val personalData: PersonalData,
@@ -30,11 +30,11 @@ data class Application(
     val blueCardEntitlement: BlueCardEntitlement?,
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
-    val givenInformationIsCorrectAndComplete: Boolean,
+    val givenInformationIsCorrectAndComplete: Boolean
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     private val entitlementByCardType: Map<BavariaCardType, JsonFieldSerializable?> = mapOf(
         BavariaCardType.BLUE to blueCardEntitlement,
-        BavariaCardType.GOLDEN to goldenCardEntitlement,
+        BavariaCardType.GOLDEN to goldenCardEntitlement
     )
 
     init {
@@ -48,7 +48,7 @@ data class Application(
 
     override fun extractApplicationVerifications() = listOfNotNull(
         blueCardEntitlement?.extractApplicationVerifications(),
-        goldenCardEntitlement?.extractApplicationVerifications(),
+        goldenCardEntitlement?.extractApplicationVerifications()
     ).flatten()
 
     override fun toJsonField(): JsonField {
@@ -65,7 +65,7 @@ data class Application(
                     value = when (cardType) {
                         BavariaCardType.BLUE -> "Blaue Ehrenamtskarte"
                         BavariaCardType.GOLDEN -> "Goldene Ehrenamtskarte"
-                    },
+                    }
                 ),
                 applicationType?.let {
                     JsonField(
@@ -75,29 +75,29 @@ data class Application(
                         value = when (applicationType) {
                             ApplicationType.FIRST_APPLICATION -> "Erstantrag"
                             ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
-                        },
+                        }
                     )
                 },
                 JsonField(
                     name = "wantsDigitalCard",
                     translations = mapOf("de" to "Ich beantrage neben der physischen auch die digitale Ehrenamtskarte"),
                     type = Type.Boolean,
-                    value = wantsDigitalCard,
+                    value = wantsDigitalCard
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(
                     "hasAcceptedPrivacyPolicy",
                     mapOf("de" to "Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung"),
                     Type.Boolean,
-                    hasAcceptedPrivacyPolicy,
+                    hasAcceptedPrivacyPolicy
                 ),
                 JsonField(
                     "givenInformationIsCorrectAndComplete",
                     mapOf("de" to "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind"),
                     Type.Boolean,
-                    givenInformationIsCorrectAndComplete,
-                ),
-            ),
+                    givenInformationIsCorrectAndComplete
+                )
+            )
         )
     }
 }
