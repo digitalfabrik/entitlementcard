@@ -56,7 +56,8 @@ workflows:
       - meta-pack
       - deploy:
           name: deploy-staging
-          server: staging.entitlementcard.app
+          server: entitlementcard-test.tuerantuer.org
+          ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
           context:
             - entitlementcard-apt
           requires:
@@ -71,7 +72,8 @@ workflows:
                 - main
       - deploy:
           name: deploy-production
-          server: entitlementcard.app
+          server: entitlementcard.tuerantuer.org
+          ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
           context:
             - entitlementcard-apt
           requires:
@@ -529,8 +531,13 @@ jobs:
     parameters:
         server:
             enum:
-              - entitlementcard.app
-              - staging.entitlementcard.app
+              - entitlementcard.tuerantuer.org
+              - entitlementcard-test.tuerantuer.org
+            type: enum
+        ssh-host-fingerprint:
+            enum:
+                - '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+                - '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
             type: enum
     steps:
       - attach_workspace:
@@ -541,6 +548,6 @@ jobs:
       - run:
           name: "SFTP upload"
           command: |
-            echo $APT_HOST_FINGERPRINT > known_hosts
+            echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
