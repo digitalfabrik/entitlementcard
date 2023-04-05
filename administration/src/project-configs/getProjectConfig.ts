@@ -32,8 +32,10 @@ export const setProjectConfigOverride = (hostname: string) => {
 const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem('project-override') ?? hostname) {
     case 'bayern.ehrenamtskarte.app':
+    case 'staging.bayern.ehrenamtskarte.app':
       return bayernConfig
     case 'nuernberg.sozialpass.app':
+    case 'staging.nuernberg.sozialpass.app':
       return nuernbergConfig
     default:
       console.debug('Falling back to showcase.')
