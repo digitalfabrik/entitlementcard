@@ -1,8 +1,7 @@
 import { createContext, ReactNode } from 'react'
 import getProjectConfig, { ProjectConfig } from './getProjectConfig'
 
-const STAGING_PREFIX = 'staging.'
-const projectConfig = getProjectConfig(window.location.hostname.replace(STAGING_PREFIX, ''))
+const projectConfig = getProjectConfig(window.location.hostname)
 
 export const ProjectConfigContext = createContext<ProjectConfig>(projectConfig)
 
