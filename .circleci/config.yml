@@ -69,53 +69,6 @@ workflows:
             branches:
               only:
                 - main
-  backend-production:
-    jobs:
-      - backend-build:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - administration-build:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - martin-build:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - backend-pack:
-          requires:
-            - backend-build
-          filters:
-            tags:
-              only: /.*/
-      - backend-health-check:
-          requires:
-            - backend-pack
-      - administration-pack:
-          requires:
-            - administration-build
-          filters:
-            tags:
-              only: /.*/
-      - martin-pack:
-          requires:
-            - martin-build
-          filters:
-            tags:
-              only: /.*/
-      - meta-pack:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
       - deploy:
           name: deploy-production
           server: entitlementcard.app
@@ -127,6 +80,9 @@ workflows:
             - martin-pack
             - meta-pack
           filters:
+            branches:
+              ignore:
+                - /.*/
             tags:
               only: /.*/
 
