@@ -532,13 +532,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - add_ssh_keys:
-          fingerprints:
-            - "|1|bvcgs9cpfmZFr4MEuwF25JHJHas=|N3QoDScBm/YN2hih9iYh2oyemXs= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66"
       - run:
           name: "SFTP upload"
           command: |
-            echo "Server fingerprint: " $APT_HOST_FINGERPRINT
-            echo $APT_HOST_FINGERPRINT > known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - -o StrictHostKeyChecking=no ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
