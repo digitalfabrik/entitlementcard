@@ -539,6 +539,6 @@ jobs:
           name: "SFTP upload"
           command: |
             echo "Server fingerprint: " $APT_HOST_FINGERPRINT
-            echo $APT_HOST_FINGERPRINT > known_hosts
+            echo $APT_HOST_FINGERPRINT > $Home/known_hosts
             echo "Uploading: " /tmp/workspace/debs/*.deb
-            sftp -b - -o UserKnownHostsFile=known_hosts ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+            sftp -b - ci@apt.<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
