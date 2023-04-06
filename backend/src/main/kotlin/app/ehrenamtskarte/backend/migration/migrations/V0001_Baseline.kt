@@ -8,6 +8,7 @@ internal class V0001_Baseline() : Migration() {
     override val migrate: Statement = {
         exec(
             """
+            CREATE EXTENSION postgis;
             CREATE FUNCTION physical_stores(z integer, x integer, y integer, query_params json) RETURNS bytea
                 LANGUAGE plpgsql IMMUTABLE STRICT PARALLEL SAFE
             AS ${'$'}${'$'}
