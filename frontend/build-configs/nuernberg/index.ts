@@ -26,6 +26,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     mapInitialZoomLevel: 10,
     backendUrl: {
         production: "https://api.entitlementcard.app",
+        staging: "https://api.staging.entitlementcard.app",
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },

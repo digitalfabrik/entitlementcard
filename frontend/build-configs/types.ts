@@ -66,6 +66,7 @@ export type CommonBuildConfigType = {
     mapInitialZoomLevel: number
     backendUrl: {
         showcase: string
+        staging: string
         production: string
         local: string
     }
