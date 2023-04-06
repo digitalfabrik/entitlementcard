@@ -649,7 +649,7 @@ packages:
       path: "."
       ref: f35709343e03439746857a9fbbd23dbb9bbafafc
       resolved-ref: f35709343e03439746857a9fbbd23dbb9bbafafc
-      url: "https://github.com/m0nac0/flutter-maplibre-gl.git"
+      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
     source: git
     version: "0.16.0"
   maplibre_gl_dart:
@@ -714,12 +714,11 @@ packages:
   mobile_scanner:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485"
-      resolved-ref: "4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485"
-      url: "https://github.com/michael-markl/mobile_scanner.git"
-    source: git
-    version: "3.0.0"
+      name: mobile_scanner
+      sha256: bcc0926b5e7f0c62c4e5a56bc66d93af619373f19e1117e553d49af3c9293b3a
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   nested:
     dependency: transitive
     description:
