@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema.types
 
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleException
+
 enum class Role(val db_value: String) {
     // A Project Admin has the right to (de)nominate Region Admins for each region in his project
     PROJECT_ADMIN("PROJECT_ADMIN"),
@@ -16,7 +18,7 @@ enum class Role(val db_value: String) {
 
     companion object {
         fun fromDbValue(db_value: String): Role {
-            return values().find { it.db_value == db_value } ?: throw IllegalArgumentException("Role does not exist!")
+            return values().find { it.db_value == db_value } ?: throw InvalidRoleException()
         }
     }
 }

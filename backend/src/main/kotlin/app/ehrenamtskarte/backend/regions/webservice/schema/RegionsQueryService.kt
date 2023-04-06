@@ -3,6 +3,8 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
@@ -47,9 +49,9 @@ class RegionsQueryService {
     @GraphQLDescription("Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
     fun regionByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): Region = transaction {
         val regionIdentifier = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode[postalCode]
-            ?: throw Exception("Region couldn't be found")
+            ?: throw RegionNotFoundException()
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-            ?: throw Exception("Project couldn't be found")
+            ?: throw ProjectNotFoundException(project)
         val regionEntity = RegionsRepository.findRegionByRegionIdentifier(regionIdentifier, projectEntity.id)
         Region(
             regionEntity.id.value,

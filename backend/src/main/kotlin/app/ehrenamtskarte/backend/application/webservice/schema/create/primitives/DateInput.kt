@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create.primitiv
 
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDateFormatException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -14,7 +14,7 @@ data class DateInput(val date: String) {
         try {
             LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
         } catch (e: DateTimeParseException) {
-            throw GraphQLKotlinException("DateInput must be in the format yyyy-MM-dd.")
+            throw InvalidDateFormatException()
         }
     }
 

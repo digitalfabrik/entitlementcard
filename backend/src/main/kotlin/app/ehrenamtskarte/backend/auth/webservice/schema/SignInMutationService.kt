@@ -6,8 +6,8 @@ import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.AuthData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.SignInPayload
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -24,7 +24,7 @@ class SignInMutationService {
         if (administratorEntity == null) {
             val context = dfe.getContext<GraphQLContext>()
             logger.info("${context.remoteIp} ${authData.email} failed to log in")
-            throw GraphQLKotlinException("Invalid credentials")
+            throw InvalidCredentialsException()
         }
 
         val administrator = Administrator.fromDbEntity(administratorEntity)

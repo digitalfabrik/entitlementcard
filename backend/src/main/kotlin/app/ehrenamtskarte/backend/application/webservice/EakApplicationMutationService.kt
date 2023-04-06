@@ -8,10 +8,17 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.PersonalD
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.simplejavamail.MailException
@@ -28,22 +35,21 @@ class EakApplicationMutationService {
         application: Application,
         project: String,
         dfe: DataFetchingEnvironment
-    ): Boolean {
+    ): DataFetcherResult<Boolean> {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
         val context = dfe.getContext<GraphQLContext>()
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
-        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) }
-        if (region == null) {
-            throw IllegalArgumentException("The region is not related to the project.")
-        }
-
+        transaction { RegionsRepository.findByIdInProject(project, regionId) } ?: throw RegionNotFoundException()
         // Validate that all files are png, jpeg or pdf files and at most 5MB.
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
         val maxFileSizeBytes = 5 * 1000 * 1000
-        if (!context.files.all { it.contentType in allowedContentTypes && it.size <= maxFileSizeBytes }) {
-            throw IllegalArgumentException("An uploaded file does not adhere to the file upload requirements.")
+        if (!context.files.all { it.contentType in allowedContentTypes }) {
+            throw InvalidFileTypeException()
+        }
+        if (!context.files.all { it.size <= maxFileSizeBytes }) {
+            throw InvalidFileSizeException()
         }
 
         val (applicationEntity, verificationEntities) = transaction {
@@ -67,8 +73,9 @@ class EakApplicationMutationService {
             )
         } catch (exception: MailException) {
             logger.error(exception.message)
+            throw MailNotSentException()
         }
-
+        val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
         for (applicationVerification in verificationEntities) {
             try {
                 Mailer.sendMail(
@@ -81,9 +88,10 @@ class EakApplicationMutationService {
                 )
             } catch (exception: MailException) {
                 logger.error(exception.message)
+                dataFetcherResultBuilder.error(MailNotSentException())
             }
         }
-        return true
+        return dataFetcherResultBuilder.data(true).build()
     }
 
     private fun generateApplicationVerificationMailMessage(
@@ -139,9 +147,10 @@ class EakApplicationMutationService {
             // `applicationId` and whether this application was contained in the user's project & region.
 
             val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw IllegalArgumentException("Admin does not exist")
+                ?: throw UserNotFoundException()
+
             if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
 
             ApplicationRepository.delete(applicationId, context)
