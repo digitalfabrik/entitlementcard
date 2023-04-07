@@ -66,10 +66,7 @@ workflows:
             - administration-pack
             - martin-pack
             - meta-pack
-          filters:
-            branches:
-              only:
-                - main
+
       - deploy:
           name: deploy-production
           server: entitlementcard.tuerantuer.org

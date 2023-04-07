@@ -35,6 +35,7 @@ done
 debworkdir=$(mktemp -d)
 fullname=${name}_${version}-${revision}_${architecture}
 debfile=${fullname}.deb
+timestamp=date +%Y-%m-%d_%H:%M:%S
 
 # init deb workdir
 mkdir "${debworkdir}/DEBIAN"
@@ -43,6 +44,7 @@ echo "Creating control file in $ctrlfile …"
 touch "$ctrlfile"
 echo "Package: $name" >> "$ctrlfile"
 echo "Version: $version" >> "$ctrlfile"
+echo "Date: $timestamp" >> "$ctrlfile"
 echo "Architecture: $architecture" >> "$ctrlfile"
 echo "Maintainer: $maintainer" >> "$ctrlfile"
 if [[ -n "$description" ]]; then
