@@ -1,8 +1,9 @@
 import { ApolloError } from '@apollo/client'
 import { ReactElement } from 'react'
+
+import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
 import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
-import InvalidLink from './templates/InvalidLink'
 
 type GraphQLErrorMessage = {
   title: string

@@ -1,10 +1,11 @@
-import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
 import { Typography } from '@mui/material'
-import CheckboxForm from '../primitive-inputs/CheckboxForm'
+
+import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,

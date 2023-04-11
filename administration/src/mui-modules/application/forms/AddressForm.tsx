@@ -1,12 +1,12 @@
 import { AddressInput } from '../../../generated/graphql'
-import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
 import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
 
 const SubForms = {

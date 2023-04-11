@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
+
+import { WhoAmIContext } from '../../WhoAmIProvider'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
-import ChangePasswordForm from './ChangePasswordForm'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
-import { WhoAmIContext } from '../../WhoAmIProvider'
-
 import ApplicationLinkCard from './ApplicationLinkCard'
+import ChangePasswordForm from './ChangePasswordForm'
 
 const UserSettingsController = () => {
   const { applicationFeatureEnabled } = useContext(ProjectConfigContext)

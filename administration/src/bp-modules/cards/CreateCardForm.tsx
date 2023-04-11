@@ -1,10 +1,11 @@
-import React, { ChangeEvent } from 'react'
 import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { DateInput } from '@blueprintjs/datetime'
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
-import styled from 'styled-components'
-import { CardBlueprint } from '../../cards/CardBlueprint'
 import { add } from 'date-fns'
+import React, { ChangeEvent } from 'react'
+import styled from 'styled-components'
+
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import { ExtensionHolder } from '../../cards/extensions'
 
 const CardHeader = styled.div`

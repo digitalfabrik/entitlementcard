@@ -1,4 +1,7 @@
+import { add } from 'date-fns'
+
 import { Region } from '../generated/graphql'
+import { CardBlueprint } from './CardBlueprint'
 import {
   bavaria_card_type,
   birthday_extension,
@@ -6,8 +9,6 @@ import {
   nuernberg_pass_number_extension,
   region_extension,
 } from './extensions'
-import { CardBlueprint } from './CardBlueprint'
-import { add } from 'date-fns'
 
 export const createEmptyBavariaCard = (region: Region): CardBlueprint =>
   new CardBlueprint('', add(Date.now(), { years: 3 }), [

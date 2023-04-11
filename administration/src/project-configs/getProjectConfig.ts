@@ -1,10 +1,11 @@
 import { ReactElement } from 'react'
+
+import { CardBlueprint } from '../cards/CardBlueprint'
+import { CardInfo } from '../generated/card_pb'
+import { Region } from '../generated/graphql'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
-import { CardBlueprint } from '../cards/CardBlueprint'
-import { Region } from '../generated/graphql'
-import { CardInfo } from '../generated/card_pb'
 
 export interface PdfConfig {
   title: string

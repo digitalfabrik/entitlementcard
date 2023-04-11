@@ -1,8 +1,9 @@
-import { drawQRCode } from '../util/qrcode'
-import { Region } from '../generated/graphql'
-import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
-import { PdfConfig } from '../project-configs/getProjectConfig'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
+
+import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
+import { Region } from '../generated/graphql'
+import { PdfConfig } from '../project-configs/getProjectConfig'
+import { drawQRCode } from '../util/qrcode'
 
 const dynamicQRCodeSize = 84 // mm
 const dynamicQRCodeX = 108 // mm

@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-
-import ErrorHandler from '../ErrorHandler'
-import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import ApplicationApplicantView from './ApplicationApplicantView'
 import { Alert, CircularProgress } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
+
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
+import ErrorHandler from '../ErrorHandler'
+import ApplicationApplicantView from './ApplicationApplicantView'
 
 const CenteredMessage = styled(Alert)`
   margin: auto;

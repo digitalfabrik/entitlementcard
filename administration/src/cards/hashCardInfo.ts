@@ -1,4 +1,5 @@
 import { AnyMessage, Message } from '@bufbuild/protobuf'
+
 import { CardInfo } from '../generated/card_pb'
 import serializeToCanonicalJson from '../util/serializeToCanonicalJson'
 

@@ -1,11 +1,12 @@
 import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
 import { useContext } from 'react'
-import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
   selectedUser,

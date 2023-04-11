@@ -1,7 +1,8 @@
-import React, { useContext } from 'react'
 import { Button, Navbar } from '@blueprintjs/core'
-import { NavLink, useNavigate } from 'react-router-dom'
 import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment'
+import React, { useContext } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+
 import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'

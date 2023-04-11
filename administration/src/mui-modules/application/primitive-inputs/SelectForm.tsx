@@ -1,8 +1,9 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
 import { useContext, useState } from 'react'
-import { Form } from '../util/FormType'
+
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
+import { Form } from '../util/FormType'
 
 type State = { selectedValue: string; manuallySelected: boolean }
 type ValidatedInput = ShortTextInput

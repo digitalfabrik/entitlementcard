@@ -1,11 +1,12 @@
 import { Alert, Button } from '@mui/material'
-import WorkAtOrganizationForm from './WorkAtOrganizationForm'
-import { SetState } from '../hooks/useUpdateStateCallback'
 import { useCallback, useMemo } from 'react'
-import { Form } from '../util/FormType'
-import CustomDivider from '../CustomDivider'
+
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
+import CustomDivider from '../CustomDivider'
+import { SetState } from '../hooks/useUpdateStateCallback'
+import { Form } from '../util/FormType'
 import { InferState } from '../util/compoundFormUtils'
+import WorkAtOrganizationForm from './WorkAtOrganizationForm'
 
 type WorkAtOrganizationFormState = InferState<typeof WorkAtOrganizationForm>
 

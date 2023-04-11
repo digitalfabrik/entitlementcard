@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+
 import { dateToDaysSinceEpoch, daysSinceEpochToDate } from './validityPeriod'
 
 describe('dateToDaysSinceEpoch', () => {

@@ -1,10 +1,10 @@
-import { BlueCardEntitlementInput, BavariaCardType, GoldenCardEntitlementInput } from '../../../generated/graphql'
+import { BavariaCardType, BlueCardEntitlementInput, GoldenCardEntitlementInput } from '../../../generated/graphql'
+import SwitchComponent from '../SwitchComponent'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { Form } from '../util/FormType'
-import SwitchComponent from '../SwitchComponent'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import BlueCardEntitlementForm from './BlueCardEntitlementForm'
 import GoldenCardEntitlementForm from './GoldenCardEntitlementForm'
-import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 
 const SubForms = {
   blueCardEntitlement: BlueCardEntitlementForm,

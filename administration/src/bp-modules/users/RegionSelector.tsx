@@ -1,6 +1,7 @@
-import React, { useContext, useMemo } from 'react'
 import { Button, Menu, Spinner } from '@blueprintjs/core'
 import { Classes, ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
+import React, { useContext, useMemo } from 'react'
+
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 

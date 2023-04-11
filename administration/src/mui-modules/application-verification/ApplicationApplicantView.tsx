@@ -1,17 +1,17 @@
-import React, { ReactElement, useContext, useState } from 'react'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useWithdrawApplicationMutation } from '../../generated/graphql'
-
-import { styled } from '@mui/system'
-import { Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
-import ConfirmDialog from '../application/ConfirmDialog'
 import { Delete } from '@mui/icons-material'
+import { Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
-import formatDateWithTimezone from '../../util/formatDate'
+import React, { ReactElement, useContext, useState } from 'react'
+
+import { Application } from '../../bp-modules/applications/ApplicationsOverview'
 import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/JsonFieldView'
 import VerificationsView from '../../bp-modules/applications/VerificationsView'
-import { Application } from '../../bp-modules/applications/ApplicationsOverview'
+import { useWithdrawApplicationMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
+import ConfirmDialog from '../application/ConfirmDialog'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;

@@ -1,8 +1,9 @@
 import { Colors, Icon } from '@blueprintjs/core'
+import { Tooltip2 } from '@blueprintjs/popover2'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
+
 import { GetApplicationsQuery } from '../../generated/graphql'
-import { Tooltip2 } from '@blueprintjs/popover2'
 
 type Application = GetApplicationsQuery['applications'][number]
 

@@ -1,11 +1,12 @@
 import { Button } from '@blueprintjs/core'
 import { useState } from 'react'
 import styled from 'styled-components'
+
 import { Administrator, Region, Role } from '../../generated/graphql'
 import CreateUserDialog from './CreateUserDialog'
-import RoleHelpButton from './RoleHelpButton'
-import EditUserDialog from './EditUserDialog'
 import DeleteUserDialog from './DeleteUserDialog'
+import EditUserDialog from './EditUserDialog'
+import RoleHelpButton from './RoleHelpButton'
 
 const StyledTable = styled.table`
   border-spacing: 0;

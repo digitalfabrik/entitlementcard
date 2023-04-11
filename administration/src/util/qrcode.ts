@@ -1,18 +1,18 @@
 import {
   BitArray,
   IllegalStateException,
+  QRCodeEncoderQRCode as QRCode,
   QRCodeByteMatrix,
   QRCodeDecoderErrorCorrectionLevel,
   QRCodeEncoder,
-  QRCodeEncoderQRCode as QRCode,
   QRCodeMatrixUtil,
   QRCodeMode,
   QRCodeVersion,
 } from '@zxing/library'
-import { PDFPage, rgb } from 'pdf-lib'
 import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
-import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
 import MaskUtil from '@zxing/library/esm/core/qrcode/encoder/MaskUtil'
+import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
+import { PDFPage, rgb } from 'pdf-lib'
 
 const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 

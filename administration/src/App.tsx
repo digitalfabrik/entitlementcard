@@ -1,10 +1,11 @@
 import React from 'react'
-import AuthProvider from './AuthProvider'
-import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
-import { AppToasterProvider } from './bp-modules/AppToaster'
+
 import AppApolloProvider from './AppApolloProvider'
+import AuthProvider from './AuthProvider'
 import Router from './Router'
+import { AppToasterProvider } from './bp-modules/AppToaster'
 import useMetaTags from './hooks/useMetaTags'
+import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')

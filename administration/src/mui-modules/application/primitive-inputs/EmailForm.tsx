@@ -1,9 +1,10 @@
 import { TextField } from '@mui/material'
 import { useContext, useState } from 'react'
-import { Form } from '../util/FormType'
+
 import { EmailInput } from '../../../generated/graphql'
-import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 import { FormContext } from '../SteppedSubForms'
+import { Form } from '../util/FormType'
+import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 
 type State = { email: string }
 type ValidatedInput = EmailInput

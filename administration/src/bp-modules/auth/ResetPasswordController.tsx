@@ -1,14 +1,15 @@
 import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
-import { useAppToaster } from '../AppToaster'
-import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
-import PasswordInput from '../PasswordInput'
-import validateNewPasswordInput from './validateNewPasswordInput'
-import ErrorHandler from '../ErrorHandler'
+
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../AppToaster'
+import ErrorHandler from '../ErrorHandler'
+import PasswordInput from '../PasswordInput'
+import StandaloneCenter from '../StandaloneCenter'
+import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
