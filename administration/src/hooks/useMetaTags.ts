@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
-const useMetaTagsManager = () => {
+const useMetaTags = () => {
   const config = useContext(ProjectConfigContext)
   useEffect(() => {
     document.title = config.name + ' Verwaltung'
@@ -16,4 +16,4 @@ const useMetaTagsManager = () => {
   }, [config])
 }
 
-export default useMetaTagsManager
+export default useMetaTags
