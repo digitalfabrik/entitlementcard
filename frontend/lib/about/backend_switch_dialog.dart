@@ -1,9 +1,9 @@
+import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import '../configuration/configuration.dart';
 
 class BackendSwitchDialog extends StatefulWidget {
-  final password = 'wirschaffendas';
+  final passwordToUnlock = 'wirschaffendas';
   const BackendSwitchDialog({super.key});
 
   static Future<void> show(BuildContext context) =>
@@ -14,7 +14,7 @@ class BackendSwitchDialog extends StatefulWidget {
 }
 
 class BackendSwitchDialogState extends State<BackendSwitchDialog> {
-  String inputPassword = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
                 child: TextField(
                   onChanged: (text) {
                     setState(() {
-                      inputPassword = text;
+                      password = text;
                     });
                   },
                   decoration: InputDecoration(
@@ -58,7 +58,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
                   ),
                 ),
               ),
-              inputPassword == widget.password
+              password == widget.passwordToUnlock
                   ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),

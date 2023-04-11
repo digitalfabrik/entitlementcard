@@ -23,12 +23,13 @@ class Configuration extends StatefulWidget {
   final String projectId;
   final bool showDevSettings;
 
-  Configuration({
-    required this.child,
+  const Configuration({
+    super.key,
     required this.mapStyleUrl,
     required this.graphqlUrl,
     required this.projectId,
     required this.showDevSettings,
+    required this.child,
   });
 
   static StateConfigurationState of(BuildContext context) {
