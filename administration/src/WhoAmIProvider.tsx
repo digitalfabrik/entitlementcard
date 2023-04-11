@@ -2,7 +2,7 @@ import { Button, Spinner } from '@blueprintjs/core'
 import { createContext, ReactNode, useContext } from 'react'
 import { useWhoAmIQuery, WhoAmIQuery } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
-import StandaloneCenter from './components/StandaloneCenter'
+import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { AuthContext } from './AuthProvider'
 
 export const WhoAmIContext = createContext<{
