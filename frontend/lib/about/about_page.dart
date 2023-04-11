@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/about/backend_switch_view.dart';
+import 'package:ehrenamtskarte/about/backend_switch_dialog.dart';
 import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatefulWidget {
+  final countToEnableSwitch = 10;
   const AboutPage({super.key});
 
   @override
@@ -149,15 +150,14 @@ class AboutPageState extends State<AboutPage> {
   }
 
   activateDialog(BuildContext context) {
-    print(clickCount);
     setState(() {
       clickCount += 1;
     });
-    if (clickCount == 10) {
+    if (clickCount == widget.countToEnableSwitch) {
       setState(() {
         clickCount = 0;
       });
-      BackendSwitchView.show(context);
+      BackendSwitchDialog.show(context);
     }
   }
 }

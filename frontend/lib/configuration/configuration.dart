@@ -1,36 +1,74 @@
 import 'package:flutter/widgets.dart';
 
-class Configuration extends InheritedWidget {
+class _Configuration extends InheritedWidget {
+  final StateConfigurationState configuration;
+
+  _Configuration({
+    required this.configuration,
+    required Widget child,
+  }) : super(child: child);
+
+  @override
+  bool updateShouldNotify(covariant _Configuration oldWidget) =>
+      configuration.mapStyleUrl != oldWidget.configuration.mapStyleUrl ||
+      configuration.graphqlUrl != oldWidget.configuration.graphqlUrl ||
+      configuration.projectId != oldWidget.configuration.projectId ||
+      configuration.showDevSettings != oldWidget.configuration.showDevSettings;
+}
+
+class Configuration extends StatefulWidget {
+  final Widget child;
   final String mapStyleUrl;
-  String graphqlUrl;
+  final String graphqlUrl;
   final String projectId;
   final bool showDevSettings;
 
   Configuration({
-    super.key,
+    required this.child,
     required this.mapStyleUrl,
     required this.graphqlUrl,
     required this.projectId,
     required this.showDevSettings,
-    required super.child,
   });
 
-  @override
-  bool updateShouldNotify(covariant Configuration oldWidget) =>
-      mapStyleUrl != oldWidget.mapStyleUrl ||
-      graphqlUrl != oldWidget.graphqlUrl ||
-      projectId != oldWidget.projectId ||
-      showDevSettings != oldWidget.showDevSettings;
-
-  void setGraphqlUrl({required String url}) {
-    graphqlUrl = url;
-  }
-
-  static Configuration of(BuildContext context) {
-    final configuration = context.dependOnInheritedWidgetOfExactType<Configuration>();
-    if (configuration == null) {
+  static StateConfigurationState of(BuildContext context) {
+    final configurationContext = context.dependOnInheritedWidgetOfExactType<_Configuration>();
+    if (configurationContext == null) {
       throw Exception("Config was not found in component tree!");
     }
-    return configuration;
+    return configurationContext.configuration;
+  }
+
+  @override
+  StateConfigurationState createState() => StateConfigurationState();
+}
+
+class StateConfigurationState extends State<Configuration> {
+  late String mapStyleUrl;
+  late String graphqlUrl;
+  late String projectId;
+  late bool showDevSettings;
+
+  @override
+  void initState() {
+    super.initState();
+    mapStyleUrl = widget.mapStyleUrl;
+    graphqlUrl = widget.graphqlUrl;
+    projectId = widget.projectId;
+    showDevSettings = widget.showDevSettings;
+  }
+
+  void updateGraphqlUrl(String url) {
+    setState(() {
+      graphqlUrl = url;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _Configuration(
+      configuration: this,
+      child: widget.child,
+    );
   }
 }
