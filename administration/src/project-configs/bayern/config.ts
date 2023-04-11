@@ -1,11 +1,12 @@
-import { ProjectConfig } from '../getProjectConfig'
-import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from './dataPrivacyBase'
+import { format } from 'date-fns'
+
 import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
+import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import { BavariaCardType } from '../../generated/card_pb'
+import { ProjectConfig } from '../getProjectConfig'
+import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
-import { format } from 'date-fns'
-import { BavariaCardType } from '../../generated/card_pb'
 
 const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',

@@ -1,5 +1,6 @@
 import { Button, H4 } from '@blueprintjs/core'
 import { Popover2 } from '@blueprintjs/popover2'
+
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
 

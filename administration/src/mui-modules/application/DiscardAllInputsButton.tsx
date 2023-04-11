@@ -1,6 +1,7 @@
 import { Delete } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import { useState } from 'react'
+
 import ConfirmDialog from './ConfirmDialog'
 
 const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }) => {

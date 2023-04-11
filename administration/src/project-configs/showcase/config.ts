@@ -1,7 +1,7 @@
-import { ProjectConfig } from '../getProjectConfig'
 import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
-import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from '../bayern/dataPrivacyBase'
 import bayern from '../bayern/config'
+import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
+import { ProjectConfig } from '../getProjectConfig'
 
 const config: ProjectConfig = {
   name: 'Showcase Berechtigungskarte',

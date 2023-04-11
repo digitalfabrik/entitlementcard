@@ -1,5 +1,7 @@
 import { Card, H3, NonIdealState, Spinner } from '@blueprintjs/core'
 import { ReactElement, useContext } from 'react'
+
+import { WhoAmIContext } from '../../WhoAmIProvider'
 import {
   Region,
   Role,
@@ -8,10 +10,9 @@ import {
   useGetUsersInRegionQuery,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import ErrorHandler from '../ErrorHandler'
 import StandaloneCenter from '../StandaloneCenter'
 import UsersTable from './UsersTable'
-import { WhoAmIContext } from '../../WhoAmIProvider'
-import ErrorHandler from '../ErrorHandler'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
   return (

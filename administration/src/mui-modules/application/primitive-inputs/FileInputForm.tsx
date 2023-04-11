@@ -1,11 +1,12 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip, FormHelperText } from '@mui/material'
-import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
-import { AttachmentInput } from '../../../generated/graphql'
-import globalArrayBuffersManager from '../util/globalArrayBuffersManager'
-import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 import { useSnackbar } from 'notistack'
+import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
+
+import { AttachmentInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
+import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
+import globalArrayBuffersManager from '../util/globalArrayBuffersManager'
 
 const defaultExtensionsByMIMEType = {
   'application/pdf': '.pdf',

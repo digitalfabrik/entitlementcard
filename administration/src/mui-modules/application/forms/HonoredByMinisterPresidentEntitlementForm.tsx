@@ -1,13 +1,13 @@
 import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
-import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
 
 const SubForms = { certificate: FileInputForm }

@@ -3,9 +3,10 @@ import { DateInput } from '@blueprintjs/datetime'
 import { ItemRenderer, Select } from '@blueprintjs/select'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { sub } from 'date-fns'
+
 import { BavariaCardType, CardExtensions } from '../generated/card_pb'
-import { dateToDaysSinceEpoch, daysSinceEpochToDate } from './validityPeriod'
 import { Region } from '../generated/graphql'
+import { dateToDaysSinceEpoch, daysSinceEpochToDate } from './validityPeriod'
 
 export type Extension<T, R> = {
   getInitialState: (args: R) => T | null

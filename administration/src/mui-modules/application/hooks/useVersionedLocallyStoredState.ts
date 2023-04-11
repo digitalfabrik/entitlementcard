@@ -1,5 +1,6 @@
 import localforage from 'localforage'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 function useLocallyStoredState<T>(

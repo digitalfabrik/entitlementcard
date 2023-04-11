@@ -5,5 +5,8 @@
   "printWidth": 120,
   "bracketSameLine": true,
   "jsxSingleQuote": true,
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "importOrderSeparation": true,
+  "importOrder": ["<THIRD_PARTY_MODULES>", "^[./]"],
+  "importOrderSortSpecifiers": true
 }

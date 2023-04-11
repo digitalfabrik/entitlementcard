@@ -1,16 +1,16 @@
 import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
-import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
-import OrganizationForm from './OrganizationForm'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
+import OrganizationForm from './OrganizationForm'
 
 const SubForms = {
   organization: OrganizationForm,

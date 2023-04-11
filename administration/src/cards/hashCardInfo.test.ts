@@ -7,8 +7,8 @@ import {
   NuernbergPassNumberExtension,
   RegionExtension,
 } from '../generated/card_pb'
-import hashCardInfo, { messageToJsonObject } from './hashCardInfo'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
+import hashCardInfo, { messageToJsonObject } from './hashCardInfo'
 
 describe('messageToJsonObject', () => {
   it('should map an empty cardInfo correctly', () => {

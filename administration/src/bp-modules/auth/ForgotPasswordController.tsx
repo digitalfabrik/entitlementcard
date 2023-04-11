@@ -1,10 +1,11 @@
 import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
-import { useAppToaster } from '../AppToaster'
+
 import { useSendResetMailMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../AppToaster'
+import StandaloneCenter from '../StandaloneCenter'
 
 const ForgotPasswordController = () => {
   const config = useContext(ProjectConfigContext)

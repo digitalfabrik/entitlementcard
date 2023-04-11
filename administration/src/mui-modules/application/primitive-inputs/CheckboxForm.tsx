@@ -1,7 +1,8 @@
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
-import { useContext, useState, ReactElement } from 'react'
-import { Form } from '../util/FormType'
+import { ReactElement, useContext, useState } from 'react'
+
 import { FormContext } from '../SteppedSubForms'
+import { Form } from '../util/FormType'
 
 type State = { checked: boolean }
 type ValidatedInput = boolean

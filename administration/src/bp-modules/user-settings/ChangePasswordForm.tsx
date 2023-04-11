@@ -1,4 +1,5 @@
 import { Button, Callout, Card, H2 } from '@blueprintjs/core'
+
 import PasswordInput from '../PasswordInput'
 
 const ChangePasswordForm = (props: {

@@ -1,7 +1,8 @@
 import { TextField } from '@mui/material'
 import { useContext, useState } from 'react'
-import { Form } from '../util/FormType'
+
 import { FormContext } from '../SteppedSubForms'
+import { Form } from '../util/FormType'
 
 type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number

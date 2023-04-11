@@ -1,10 +1,11 @@
-import { ProjectConfig } from '../getProjectConfig'
+import { format } from 'date-fns'
+
 import { createEmptyNuernbergCard } from '../../cards/cardBlueprints'
-import { dataPrivacyBaseHeadline, DataPrivacyBaseText } from './dataPrivacyBase'
+import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import { ProjectConfig } from '../getProjectConfig'
+import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
-import { format } from 'date-fns'
 
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',

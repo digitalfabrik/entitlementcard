@@ -1,18 +1,18 @@
 import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
 import SwitchComponent from '../SwitchComponent'
-import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
-import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
-import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
-import HonoredByMinisterPresidentEntitlementForm from './HonoredByMinisterPresidentEntitlementForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createSwitchValidate,
 } from '../util/compoundFormUtils'
+import HonoredByMinisterPresidentEntitlementForm from './HonoredByMinisterPresidentEntitlementForm'
+import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
+import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
+import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {

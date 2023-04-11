@@ -1,18 +1,19 @@
+import { Check, Close } from '@mui/icons-material'
+import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, Typography, styled } from '@mui/material'
+import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import ErrorHandler from '../ErrorHandler'
+
+import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { SnackbarProvider, useSnackbar } from 'notistack'
-import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, styled, Typography } from '@mui/material'
-import { Close, Check } from '@mui/icons-material'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import formatDateWithTimezone from '../../util/formatDate'
-import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
+import ErrorHandler from '../ErrorHandler'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;

@@ -1,3 +1,5 @@
+import { ApolloClient } from '@apollo/client'
+
 import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import {
   AddCardsDocument,
@@ -7,9 +9,8 @@ import {
   CodeType,
   Region,
 } from '../generated/graphql'
-import hashCardInfo from './hashCardInfo'
-import { ApolloClient } from '@apollo/client'
 import { uint8ArrayToBase64 } from '../util/base64'
+import hashCardInfo from './hashCardInfo'
 
 type Codes = (DynamicActivationCode | StaticVerificationCode)[]
 

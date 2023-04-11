@@ -1,12 +1,12 @@
 import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
+import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { Form } from '../util/FormType'
+import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
 import StepRequirementsForm from './StepRequirementsForm'
 import StepSendForm from './StepSendForm'
-import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 
 type RegionId = number
 

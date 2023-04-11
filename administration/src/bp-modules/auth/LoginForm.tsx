@@ -1,7 +1,8 @@
-import React, { ChangeEvent } from 'react'
 import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
-import PasswordInput from '../PasswordInput'
+import React, { ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
+
+import PasswordInput from '../PasswordInput'
 
 interface Props {
   loading?: boolean

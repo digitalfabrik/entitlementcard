@@ -1,8 +1,9 @@
 import { TextField } from '@mui/material'
 import { useContext, useState } from 'react'
-import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
+
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
+import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 
 export const MAX_SHORT_TEXT_LENGTH = 300
 

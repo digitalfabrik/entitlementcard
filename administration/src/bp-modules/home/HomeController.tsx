@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
 import { Button, H3 } from '@blueprintjs/core'
-import { Role } from '../../generated/graphql'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import { Role } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 const StyledButton = styled(Button)`
   margin: 10px;

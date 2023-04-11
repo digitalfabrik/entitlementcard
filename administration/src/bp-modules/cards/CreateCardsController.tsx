@@ -1,16 +1,17 @@
-import { useContext, useState } from 'react'
-import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { CardBlueprint } from '../../cards/CardBlueprint'
-import CreateCardsForm from './CreateCardsForm'
 import { useApolloClient } from '@apollo/client'
+import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { useContext, useState } from 'react'
+
+import { WhoAmIContext } from '../../WhoAmIProvider'
+import { CardBlueprint } from '../../cards/CardBlueprint'
+import { generatePdf } from '../../cards/PdfFactory'
+import { createCards } from '../../cards/creation'
+import { Region } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
 import GenerationFinished from './CardsCreatedMessage'
-import downloadDataUri from '../../util/downloadDataUri'
-import { WhoAmIContext } from '../../WhoAmIProvider'
-import { createCards } from '../../cards/creation'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { generatePdf } from '../../cards/PdfFactory'
-import { Region } from '../../generated/graphql'
+import CreateCardsForm from './CreateCardsForm'
 
 enum CardActivationState {
   input,

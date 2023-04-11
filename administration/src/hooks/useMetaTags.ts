@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react'
+
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
 const useMetaTags = () => {

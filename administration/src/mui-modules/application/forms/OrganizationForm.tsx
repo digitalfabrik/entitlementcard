@@ -1,17 +1,17 @@
 import { OrganizationInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
-import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import AddressForm from './AddressForm'
-import SelectForm from '../primitive-inputs/SelectForm'
-import EmailForm from '../primitive-inputs/EmailForm'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import EmailForm from '../primitive-inputs/EmailForm'
+import SelectForm from '../primitive-inputs/SelectForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
+import AddressForm from './AddressForm'
 
 const organizationCategoryOptions = {
   items: [

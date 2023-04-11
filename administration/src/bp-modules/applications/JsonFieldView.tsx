@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
 import { Button, Icon } from '@blueprintjs/core'
+import React, { useContext } from 'react'
+import styled from 'styled-components'
+
+import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
-import styled from 'styled-components'
-import { AuthContext } from '../../AuthProvider'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string

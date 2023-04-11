@@ -1,18 +1,19 @@
+import { sub } from 'date-fns'
+
 import { PersonalDataInput, Region } from '../../../generated/graphql'
-import AddressForm from './AddressForm'
+import CustomDivider from '../CustomDivider'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import DateForm from '../primitive-inputs/DateForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
-import DateForm from '../primitive-inputs/DateForm'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { Form } from '../util/FormType'
-import CustomDivider from '../CustomDivider'
-import { sub } from 'date-fns'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
+import AddressForm from './AddressForm'
 import RegionForm from './RegionForm'
 
 const SubForms = {

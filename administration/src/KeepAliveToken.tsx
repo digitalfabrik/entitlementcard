@@ -1,12 +1,13 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
 import React, { ReactNode, useContext, useEffect, useState } from 'react'
-import { TokenPayload } from './AuthProvider'
-import { useAppToaster } from './bp-modules/AppToaster'
-import { SignInPayload, useSignInMutation } from './generated/graphql'
-import PasswordInput from './bp-modules/PasswordInput'
-import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
-import { WhoAmIContext } from './WhoAmIProvider'
 import { useNavigate } from 'react-router-dom'
+
+import { TokenPayload } from './AuthProvider'
+import { WhoAmIContext } from './WhoAmIProvider'
+import { useAppToaster } from './bp-modules/AppToaster'
+import PasswordInput from './bp-modules/PasswordInput'
+import { SignInPayload, useSignInMutation } from './generated/graphql'
+import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
 interface Props {
   authData: TokenPayload

@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
 import { NonIdealState, Spinner } from '@blueprintjs/core'
+import React, { useContext } from 'react'
+
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import ApplicationsOverview from './ApplicationsOverview'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
 import ErrorHandler from '../ErrorHandler'
+import ApplicationsOverview from './ApplicationsOverview'
 
 const ApplicationsController = (props: { region: Region }) => {
   const { loading, error, data, refetch } = useGetApplicationsQuery({

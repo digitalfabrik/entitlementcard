@@ -1,19 +1,19 @@
 import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
 import SwitchComponent from '../SwitchComponent'
-import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
-import JuleicaEntitlementForm from './JuleicaEntitlementForm'
-import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
-import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
-import VolunteerServiceEntitlementForm from './VolunteerServiceEntitlementForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createSwitchValidate,
 } from '../util/compoundFormUtils'
+import JuleicaEntitlementForm from './JuleicaEntitlementForm'
+import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
+import VolunteerServiceEntitlementForm from './VolunteerServiceEntitlementForm'
+import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
+import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
 
 const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {

@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react'
 import { Button, NonIdealState } from '@blueprintjs/core'
+import React, { ReactElement } from 'react'
 
 type ErrorHandlerProps = {
   title?: string

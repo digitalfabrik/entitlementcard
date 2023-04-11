@@ -1,9 +1,10 @@
+import { PartialMessage } from '@bufbuild/protobuf'
+
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
-import { dateToDaysSinceEpoch } from './validityPeriod'
+import { isContentLengthValid } from '../util/qrcode'
 import { ExtensionHolder } from './extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
-import { PartialMessage } from '@bufbuild/protobuf'
-import { isContentLengthValid } from '../util/qrcode'
+import { dateToDaysSinceEpoch } from './validityPeriod'
 
 const MAX_NAME_LENGTH = 50
 const ACTIVATION_SECRET_LENGTH = 20

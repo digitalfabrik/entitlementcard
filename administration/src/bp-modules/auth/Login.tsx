@@ -1,12 +1,13 @@
-import React, { useContext } from 'react'
-import LoginForm from './LoginForm'
-import { useAppToaster } from '../AppToaster'
 import { Button, Card, H2, H3, H4 } from '@blueprintjs/core'
+import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
 import { setProjectConfigOverride } from '../../project-configs/getProjectConfig'
-import { useNavigate } from 'react-router-dom'
+import { useAppToaster } from '../AppToaster'
+import StandaloneCenter from '../StandaloneCenter'
+import LoginForm from './LoginForm'
 
 interface State {
   email: string

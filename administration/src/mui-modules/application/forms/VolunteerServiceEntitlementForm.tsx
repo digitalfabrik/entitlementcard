@@ -1,14 +1,14 @@
 import { BlueCardVolunteerServiceEntitlementInput } from '../../../generated/graphql'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
-import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
+import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
 
 const SubForms = {

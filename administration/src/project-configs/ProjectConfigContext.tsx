@@ -1,4 +1,5 @@
-import { createContext, ReactNode } from 'react'
+import { ReactNode, createContext } from 'react'
+
 import getProjectConfig, { ProjectConfig } from './getProjectConfig'
 
 const projectConfig = getProjectConfig(window.location.hostname)

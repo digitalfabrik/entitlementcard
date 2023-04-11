@@ -1,9 +1,10 @@
+import { NonIdealState, Spinner } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
+
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import RegionOverview from './RegionOverview'
 import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
 import ErrorHandler from '../ErrorHandler'
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import RegionOverview from './RegionOverview'
 
 const RegionController = ({ regionId }: { regionId: number }) => {
   const { loading, error, data, refetch } = useGetDataPolicyQuery({

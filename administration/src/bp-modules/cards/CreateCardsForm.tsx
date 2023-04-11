@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react'
-import CreateCardForm from './CreateCardForm'
 import { Button, Card, Tooltip } from '@blueprintjs/core'
-import { CardBlueprint } from '../../cards/CardBlueprint'
-import AddEakButton from './AddEakButton'
-import styled from 'styled-components'
+import React, { useContext, useState } from 'react'
 import FlipMove from 'react-flip-move'
+import styled from 'styled-components'
+
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import useBlockNavigation from '../../util/useBlockNavigation'
+import AddEakButton from './AddEakButton'
+import CreateCardForm from './CreateCardForm'
 
 const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
   width: 100%;

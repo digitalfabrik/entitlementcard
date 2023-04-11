@@ -1,13 +1,14 @@
 import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 import { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
-import RoleHelpButton from './RoleHelpButton'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import RegionSelector from './RegionSelector'
-import RoleSelector from './RoleSelector'
+
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../AppToaster'
+import RegionSelector from './RegionSelector'
+import RoleHelpButton from './RoleHelpButton'
+import RoleSelector from './RoleSelector'
 
 const RoleFormGroupLabel = styled.span`
   & span {

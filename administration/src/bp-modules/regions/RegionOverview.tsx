@@ -1,6 +1,7 @@
 import { Button, Card, H3, TextArea } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
+
 import { useUpdateDataPolicyMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 

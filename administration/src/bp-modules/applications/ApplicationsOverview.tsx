@@ -1,14 +1,15 @@
 import { Alert, Button, Callout, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import React, { FunctionComponent, useContext, useState } from 'react'
-import styled from 'styled-components'
-import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
-import { useAppToaster } from '../AppToaster'
 import FlipMove from 'react-flip-move'
+import styled from 'styled-components'
+
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
+import { useAppToaster } from '../AppToaster'
+import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
+import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 
 export type Application = GetApplicationsQuery['applications'][number]
 

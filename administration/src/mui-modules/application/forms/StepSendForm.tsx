@@ -1,18 +1,19 @@
+import { Button, CircularProgress } from '@mui/material'
+import { useContext, useState } from 'react'
+
+import { useGetDataPolicyQuery } from '../../../generated/graphql'
+import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import ErrorHandler from '../../ErrorHandler'
+import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
-import { Button, CircularProgress } from '@mui/material'
-import BasicDialog from '../BasicDialog'
-import { useContext, useState } from 'react'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import { useGetDataPolicyQuery } from '../../../generated/graphql'
-import ErrorHandler from '../../ErrorHandler'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,

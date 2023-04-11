@@ -1,21 +1,22 @@
-import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import { useState } from 'react'
+
+import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import ConfirmDialog from '../ConfirmDialog'
-import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
-import OrganizationForm from './OrganizationForm'
-import DateForm from '../primitive-inputs/DateForm'
-import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import NumberForm from '../primitive-inputs/NumberForm'
-import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import CustomDivider from '../CustomDivider'
+import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import DateForm from '../primitive-inputs/DateForm'
+import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
+import NumberForm from '../primitive-inputs/NumberForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import { Form } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
-  createCompoundValidate,
   createCompoundInitialState,
+  createCompoundValidate,
 } from '../util/compoundFormUtils'
+import OrganizationForm from './OrganizationForm'
 
 const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)

@@ -1,4 +1,5 @@
 import { HTMLSelect } from '@blueprintjs/core'
+
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
 
