@@ -29,7 +29,7 @@ dependencies:
   intl: ^0.17.0
   maplibre_gl:
     git:
-      url: https://github.com/m0nac0/flutter-maplibre-gl.git
+      url: https://github.com/maplibre/flutter-maplibre-gl.git
       ref: f35709343e03439746857a9fbbd23dbb9bbafafc
   provider: ^6.0.3
   graphql_flutter: ^5.1.2
@@ -37,11 +37,7 @@ dependencies:
   flutter_svg: ^2.0.2
   permission_handler: ^10.2.0
   package_info_plus: ^3.0.3 # for about dialog
-  mobile_scanner:
-    # Can be reverted to ^3.0.1 once https://github.com/juliansteenbakker/mobile_scanner/pull/529 and 527 are deployed
-    git:
-      url: https://github.com/michael-markl/mobile_scanner.git
-      ref: 4bdbbc3d5613bc3055611a1cc06ba0eb88a2e485
+  mobile_scanner: 3.1.1 # Pinning this version because of https://github.com/juliansteenbakker/mobile_scanner/issues/582
   flutter_secure_storage: ^8.0.0
   infinite_scroll_pagination: ^3.2.0
   geolocator: ^9.0.2
