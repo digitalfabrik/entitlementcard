@@ -2,11 +2,17 @@ import { Button, Navbar } from '@blueprintjs/core'
 import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment'
 import React, { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
+const PrintAwareNavbar = styled(Navbar)`
+  @media print {
+    display: none;
+  }
+`
 interface Props {
   onSignOut: () => void
 }
@@ -21,7 +27,7 @@ const Navigation = (props: Props) => {
   }
 
   return (
-    <Navbar style={{ height: 'auto' }}>
+    <PrintAwareNavbar style={{ height: 'auto' }}>
       <Navbar.Group>
         <Navbar.Heading>
           <NavLink to={'/'} style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
@@ -63,7 +69,7 @@ const Navigation = (props: Props) => {
         </NavLink>
         <Button minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />
       </Navbar.Group>
-    </Navbar>
+    </PrintAwareNavbar>
   )
 }
 

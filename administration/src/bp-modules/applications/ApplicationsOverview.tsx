@@ -1,9 +1,10 @@
 import { Alert, Button, Callout, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import FlipMove from 'react-flip-move'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
+import usePrintMode from '../../hooks/usePrintMode'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
@@ -16,7 +17,7 @@ export type Application = GetApplicationsQuery['applications'][number]
 export const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
-const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number }>`
+const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: number; $hideInPrintMode?: boolean }>`
   transition: height 0.2s;
   height: ${props => (props.$collapsed ? COLLAPSED_HEIGHT : props.$contentHeight + 2 * CARD_PADDING)}px;
   width: 600px;
@@ -24,6 +25,17 @@ const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: 
   margin: 10px;
   padding: 0;
   position: relative;
+  @media print {
+    width: 100%;
+    height: auto;
+  }
+  ${props =>
+    props.$hideInPrintMode &&
+    css`
+      @media print {
+        display: none;
+      }
+    `};
 `
 
 const ExpandContainer = styled.div<{ $collapsed: boolean }>`
@@ -46,10 +58,18 @@ const WithdrawAlert = styled(Callout)`
   margin-bottom: 16px;
 `
 
-const ApplicationView: FunctionComponent<{ application: Application; gotDeleted: () => void }> = ({
-  application,
-  gotDeleted,
-}) => {
+const PrintAwareButton = styled(Button)`
+  @media print {
+    display: none;
+  }
+`
+
+const ApplicationView: FunctionComponent<{
+  application: Application
+  gotDeleted: () => void
+  enablePrintMode: (applicationId: number) => void
+  printApplicationId: number | null
+}> = ({ application, gotDeleted, enablePrintMode, printApplicationId }) => {
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -78,7 +98,11 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
   }
 
   return (
-    <ApplicationViewCard elevation={2} $collapsed={collapsed} $contentHeight={height}>
+    <ApplicationViewCard
+      elevation={2}
+      $collapsed={collapsed}
+      $contentHeight={height}
+      $hideInPrintMode={id !== printApplicationId}>
       <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
@@ -112,13 +136,16 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
               marginTop: '20px',
             }}>
             {height > COLLAPSED_HEIGHT ? (
-              <Button onClick={() => setCollapsed(true)} icon='caret-up'>
+              <PrintAwareButton onClick={() => setCollapsed(true)} icon='caret-up'>
                 Weniger anzeigen
-              </Button>
+              </PrintAwareButton>
             ) : null}
-            <Button onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
+            <PrintAwareButton onClick={() => enablePrintMode(id)} intent='primary' icon='print'>
+              PDF Export
+            </PrintAwareButton>
+            <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
               Antrag löschen
-            </Button>
+            </PrintAwareButton>
             <Alert
               cancelButtonText='Abbrechen'
               confirmButtonText='Antrag löschen'
@@ -138,7 +165,12 @@ const ApplicationView: FunctionComponent<{ application: Application; gotDeleted:
 }
 
 // Necessary for FlipMove, as it cannot handle functional components
-export class ApplicationViewComponent extends React.Component<{ application: Application; gotDeleted: () => void }> {
+export class ApplicationViewComponent extends React.Component<{
+  application: Application
+  gotDeleted: () => void
+  enablePrintMode: (applicationId: number) => void
+  printApplicationId: number | null
+}> {
   render() {
     return <ApplicationView {...this.props} />
   }
@@ -146,12 +178,15 @@ export class ApplicationViewComponent extends React.Component<{ application: App
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
+  const { printApplicationId, setPrintApplicationId } = usePrintMode()
 
   return (
     // @ts-ignore
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent
+          printApplicationId={printApplicationId}
+          enablePrintMode={setPrintApplicationId}
           key={application.id}
           application={application}
           gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
