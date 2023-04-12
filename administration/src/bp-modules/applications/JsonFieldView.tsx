@@ -45,6 +45,18 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   }
 `
 
+const PrintAwareButton = styled(Button)`
+  @media print {
+    display: none;
+  }
+`
+
+const PrintOnlySpan = styled.span`
+  @media not print {
+    display: none;
+  }
+`
+
 const JsonFieldView = (props: {
   jsonField: GeneralJsonField
   baseUrl: string
@@ -140,7 +152,12 @@ const JsonFieldView = (props: {
         <p>
           {props.jsonField.translations.de}:&nbsp;
           {props.attachmentAccessible ? (
-            <Button icon='download' onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</Button>
+            <>
+              <PrintAwareButton
+                icon='download'
+                onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</PrintAwareButton>
+              <PrintOnlySpan>{`(siehe Anhang ${props.jsonField.value.fileIndex})`}</PrintOnlySpan>
+            </>
           ) : (
             <span>eingereicht, nicht sichtbar</span>
           )}
