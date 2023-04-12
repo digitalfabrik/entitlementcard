@@ -128,7 +128,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         <CustomDivider />
         <Typography>
           Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.
-          Hier können Sie auswählen welchen Kartentyp Sie beantragen möchten.
+          Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.
         </Typography>
         <SubForms.wantsDigitalCard.Component
           state={state.wantsDigitalCard}
