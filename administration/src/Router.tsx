@@ -26,6 +26,9 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media print {
+    justify-content: start;
+  }
 `
 
 const Router = () => {

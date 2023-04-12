@@ -4,13 +4,13 @@ import FlipMove from 'react-flip-move'
 import styled, { css } from 'styled-components'
 
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
-import usePrintMode from '../../hooks/usePrintMode'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import usePrintApplication from './hooks/usePrintApplication'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -28,6 +28,7 @@ const ApplicationViewCard = styled(Card)<{ $collapsed: boolean; $contentHeight: 
   @media print {
     width: 100%;
     height: auto;
+    box-shadow: none;
   }
   ${props =>
     props.$hideInPrintMode &&
@@ -67,9 +68,9 @@ const PrintAwareButton = styled(Button)`
 const ApplicationView: FunctionComponent<{
   application: Application
   gotDeleted: () => void
-  enablePrintMode: (applicationId: number) => void
-  printApplicationId: number | null
-}> = ({ application, gotDeleted, enablePrintMode, printApplicationId }) => {
+  printApplicationById: (applicationId: number) => void
+  isSelectedForPrint: boolean
+}> = ({ application, gotDeleted, printApplicationById, isSelectedForPrint }) => {
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
   const jsonField: GeneralJsonField = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -96,7 +97,6 @@ const ApplicationView: FunctionComponent<{
     setHeight(entries[0].contentRect.height)
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }
-  const isSelectedForPrint = id === printApplicationId
 
   return (
     <ApplicationViewCard
@@ -126,13 +126,7 @@ const ApplicationView: FunctionComponent<{
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>
           )}
-          <JsonFieldView
-            jsonField={jsonField}
-            baseUrl={baseUrl}
-            key={0}
-            hierarchyIndex={0}
-            attachmentAccessible={!isSelectedForPrint}
-          />
+          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
           <Divider style={{ margin: '24px 0px' }} />
           <VerificationsView verifications={application.verifications} />
           <div
@@ -147,7 +141,7 @@ const ApplicationView: FunctionComponent<{
                 Weniger anzeigen
               </PrintAwareButton>
             ) : null}
-            <PrintAwareButton onClick={() => enablePrintMode(id)} intent='primary' icon='print'>
+            <PrintAwareButton onClick={() => printApplicationById(id)} intent='primary' icon='print'>
               PDF Export
             </PrintAwareButton>
             <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
@@ -175,8 +169,8 @@ const ApplicationView: FunctionComponent<{
 export class ApplicationViewComponent extends React.Component<{
   application: Application
   gotDeleted: () => void
-  enablePrintMode: (applicationId: number) => void
-  printApplicationId: number | null
+  printApplicationById: (applicationId: number) => void
+  isSelectedForPrint: boolean
 }> {
   render() {
     return <ApplicationView {...this.props} />
@@ -185,15 +179,15 @@ export class ApplicationViewComponent extends React.Component<{
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
-  const { printApplicationId, setPrintApplicationId } = usePrintMode()
+  const { applicationIdForPrint, printApplicationById } = usePrintApplication()
 
   return (
     // @ts-ignore
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent
-          printApplicationId={printApplicationId}
-          enablePrintMode={setPrintApplicationId}
+          isSelectedForPrint={application.id === applicationIdForPrint}
+          printApplicationById={printApplicationById}
           key={application.id}
           application={application}
           gotDeleted={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
