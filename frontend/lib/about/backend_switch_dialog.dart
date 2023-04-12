@@ -58,7 +58,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
                   ),
                 ),
               ),
-              password == widget.passwordToUnlock
+              password.toLowerCase() == widget.passwordToUnlock
                   ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
