@@ -96,13 +96,14 @@ const ApplicationView: FunctionComponent<{
     setHeight(entries[0].contentRect.height)
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }
+  const isSelectedForPrint = id === printApplicationId
 
   return (
     <ApplicationViewCard
       elevation={2}
       $collapsed={collapsed}
       $contentHeight={height}
-      $hideInPrintMode={id !== printApplicationId}>
+      $hideInPrintMode={!isSelectedForPrint}>
       <ExpandContainer onClick={() => setCollapsed(false)} $collapsed={collapsed}>
         <Button icon='caret-down'>Mehr anzeigen</Button>
       </ExpandContainer>
@@ -125,7 +126,13 @@ const ApplicationView: FunctionComponent<{
               Bitte löschen Sie den Antrag zeitnah.
             </WithdrawAlert>
           )}
-          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
+          <JsonFieldView
+            jsonField={jsonField}
+            baseUrl={baseUrl}
+            key={0}
+            hierarchyIndex={0}
+            attachmentAccessible={!isSelectedForPrint}
+          />
           <Divider style={{ margin: '24px 0px' }} />
           <VerificationsView verifications={application.verifications} />
           <div
