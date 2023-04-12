@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script determines the last commit of the folder administration/src/application.
+# This script determines the last commit of the folder administration/src/mui-modules/application.
 # This is used as a version for the application form. The form should reset whenever there are changes to the source
 # code of the application form.
 
@@ -11,11 +11,19 @@ then
 fi
 
 basedir=$(dirname "$0")
-commit=$(git log -n 1 --format="%h" -- "${basedir}/src/application")
-if [ -z "$commit" ]
+application_src_dir="${basedir}/src/mui-modules/application"
+
+if [ ! -d "${application_src_dir}" ]
+then
+  >&2 echo "The application source directory could not be found: ${application_src_dir}"
+  exit 1
+fi
+
+commit=$(git log -n 1 --format="%h" -- "${application_src_dir}")
+if [ -z "${commit}" ]
 then
   >&2 echo "Could not determine last application commit!"
   exit 1
 else
-  echo "$commit"
+  echo "${commit}"
 fi
