@@ -27,6 +27,7 @@ data class Application(
     val cardType: BavariaCardType,
     val applicationType: ApplicationType?,
     val wantsDigitalCard: Boolean,
+    val wantsPhysicalCard: Boolean,
     val blueCardEntitlement: BlueCardEntitlement?,
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
@@ -80,9 +81,15 @@ data class Application(
                 },
                 JsonField(
                     name = "wantsDigitalCard",
-                    translations = mapOf("de" to "Ich beantrage neben der physischen auch die digitale Ehrenamtskarte"),
+                    translations = mapOf("de" to "Ich beantrage eine digitale Ehrenamtskarte"),
                     type = Type.Boolean,
                     value = wantsDigitalCard
+                ),
+                JsonField(
+                    name = "wantsPhysicalCard",
+                    translations = mapOf("de" to "Ich beantrage eine physische Ehrenamtskarte"),
+                    type = Type.Boolean,
+                    value = wantsPhysicalCard
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(

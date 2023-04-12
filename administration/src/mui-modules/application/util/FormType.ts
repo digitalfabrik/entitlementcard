@@ -10,7 +10,7 @@ export type Form<State, Options extends {}, ValidatedInput, AdditionalProps exte
 }
 
 export type ValidationSuccess<I> = { type: 'valid'; value: I }
-export type ValidationError = { type: 'error'; message?: string }
+export type ValidationError = { type: 'error'; message?: string; code?: string }
 export type ValidationResult<I> = ValidationError | ValidationSuccess<I>
 
 // Do not require an `options` parameter, if Options is an empty object.

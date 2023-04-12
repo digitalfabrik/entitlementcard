@@ -264,6 +264,7 @@ input ApplicationInput {
   hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
   wantsDigitalCard: Boolean!
+  wantsPhysicalCard: Boolean!
 }
 
 input AttachmentInput {
