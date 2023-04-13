@@ -39,4 +39,4 @@ To keep the usage of the libraries separated (to keep a unified look and feel) t
   - ...global modules
   - ...global components
 
-(the \* refers to optional compontents)
+(the \* refers to optional components)
