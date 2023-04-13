@@ -49,6 +49,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           cardType: stepCardType.value.cardType,
           applicationType: stepCardType.value.applicationType,
           wantsDigitalCard: stepCardType.value.wantsDigitalCard,
+          wantsPhysicalCard: stepCardType.value.wantsPhysicalCard,
           blueCardEntitlement:
             stepRequirements.value.type === BavariaCardType.Blue ? stepRequirements.value.value : null,
           goldenCardEntitlement:

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Alert, Typography, styled } from '@mui/material'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
@@ -12,6 +12,10 @@ import {
   createCompoundInitialState,
   createCompoundValidate,
 } from '../util/compoundFormUtils'
+
+const CardTypeAlert = styled(Alert)`
+  margin: 8px 0;
+`
 
 const CardTypeForm = createRadioGroupForm<BavariaCardType>()
 const cardTypeOptions = {
@@ -30,25 +34,37 @@ const applicationTypeOptions = {
 }
 
 const wantsDigitalCardOptions = { required: false } as const
+const wantsPhysicalCardOptions = { required: false } as const
 
 const SubForms = {
   cardType: CardTypeForm,
   applicationType: ApplicationTypeForm,
+  wantsPhysicalCard: CheckboxForm,
   wantsDigitalCard: CheckboxForm,
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = { cardType: BavariaCardType; applicationType: ApplicationType | null; wantsDigitalCard: boolean }
+type ValidatedInput = {
+  cardType: BavariaCardType
+  applicationType: ApplicationType | null
+  wantsPhysicalCard: boolean
+  wantsDigitalCard: boolean
+}
 type Options = {}
 type AdditionalProps = {}
 const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
-  initialState: { ...createCompoundInitialState(SubForms), wantsDigitalCard: { checked: true } },
+  initialState: {
+    ...createCompoundInitialState(SubForms),
+    wantsDigitalCard: { checked: true },
+    wantsPhysicalCard: { checked: true },
+  },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const partialValidationResult = createCompoundValidate(
-      { cardType: CardTypeForm, wantsDigitalCard: CheckboxForm },
+      { cardType: CardTypeForm, wantsPhysicalCard: CheckboxForm, wantsDigitalCard: CheckboxForm },
       {
         cardType: cardTypeOptions,
+        wantsPhysicalCard: wantsPhysicalCardOptions,
         wantsDigitalCard: wantsDigitalCardOptions,
       }
     )(state)
@@ -57,12 +73,18 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
     if (partialValidationResult.value.cardType !== BavariaCardType.Blue) {
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
     }
+    if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
+      return { type: 'error', message: 'Es muss mindestens ein Kartentyp ausgewählt sein.' }
+    }
     const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
     if (applicationTypeResult.type === 'error') return { type: 'error' }
     return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
   },
   Component: ({ state, setState }) => {
     const updateApplicationType = useUpdateStateCallback(setState, 'applicationType')
+    const validationResult = StepCardTypeForm.validate(state)
+    const isInvalid = validationResult.type === 'error'
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Typography>
@@ -105,15 +127,23 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         <CustomDivider />
         <Typography>
           Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.
-          Hier können Sie wählen, ob Sie neben der physischen auch kostenfrei die digitale Ehrenamtskarte beantragen
-          möchten.
+          Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.
         </Typography>
         <SubForms.wantsDigitalCard.Component
           state={state.wantsDigitalCard}
           setState={useUpdateStateCallback(setState, 'wantsDigitalCard')}
-          label='Ich beantrage neben der physischen auch die digitale Ehrenamtskarte.'
+          label='Ich beantrage eine digitale Ehrenamtskarte.'
           options={wantsDigitalCardOptions}
         />
+        <SubForms.wantsPhysicalCard.Component
+          state={state.wantsPhysicalCard}
+          setState={useUpdateStateCallback(setState, 'wantsPhysicalCard')}
+          label='Ich beantrage eine physische Ehrenamtskarte.'
+          options={wantsPhysicalCardOptions}
+        />
+        {isInvalid && validationResult.message && (
+          <CardTypeAlert severity='error'>{validationResult.message}</CardTypeAlert>
+        )}
       </div>
     )
   },

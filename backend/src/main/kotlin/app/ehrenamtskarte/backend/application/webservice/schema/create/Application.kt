@@ -27,6 +27,7 @@ data class Application(
     val cardType: BavariaCardType,
     val applicationType: ApplicationType?,
     val wantsDigitalCard: Boolean,
+    val wantsPhysicalCard: Boolean,
     val blueCardEntitlement: BlueCardEntitlement?,
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
@@ -43,6 +44,9 @@ data class Application(
         }
         if ((applicationType != null) != (cardType == BavariaCardType.BLUE)) {
             throw IllegalArgumentException("Application type must not be null if and only if card type is blue.")
+        }
+        if (!wantsPhysicalCard && !wantsDigitalCard) {
+            throw IllegalArgumentException("Does not apply for a physical nor for a digital card.")
         }
     }
 
@@ -80,9 +84,15 @@ data class Application(
                 },
                 JsonField(
                     name = "wantsDigitalCard",
-                    translations = mapOf("de" to "Ich beantrage neben der physischen auch die digitale Ehrenamtskarte"),
+                    translations = mapOf("de" to "Ich beantrage eine digitale Ehrenamtskarte"),
                     type = Type.Boolean,
                     value = wantsDigitalCard
+                ),
+                JsonField(
+                    name = "wantsPhysicalCard",
+                    translations = mapOf("de" to "Ich beantrage eine physische Ehrenamtskarte"),
+                    type = Type.Boolean,
+                    value = wantsPhysicalCard
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(
