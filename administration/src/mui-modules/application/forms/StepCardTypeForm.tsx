@@ -35,7 +35,6 @@ const applicationTypeOptions = {
 
 const wantsDigitalCardOptions = { required: false } as const
 const wantsPhysicalCardOptions = { required: false } as const
-const CARD_TYPE_ERROR = 'NO_CARD_TYPES_SELECTED'
 
 const SubForms = {
   cardType: CardTypeForm,
@@ -75,7 +74,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
     }
     if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
-      return { type: 'error', message: 'Es muss mindestens ein Kartentyp ausgewählt sein.', code: CARD_TYPE_ERROR }
+      return { type: 'error', message: 'Es muss mindestens ein Kartentyp ausgewählt sein.' }
     }
     const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
     if (applicationTypeResult.type === 'error') return { type: 'error' }

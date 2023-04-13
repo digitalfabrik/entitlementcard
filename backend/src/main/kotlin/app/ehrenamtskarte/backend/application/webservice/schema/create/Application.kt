@@ -45,6 +45,9 @@ data class Application(
         if ((applicationType != null) != (cardType == BavariaCardType.BLUE)) {
             throw IllegalArgumentException("Application type must not be null if and only if card type is blue.")
         }
+        if (!wantsPhysicalCard && !wantsDigitalCard) {
+            throw IllegalArgumentException("Does not apply for a physical nor for a digital card.")
+        }
     }
 
     override fun extractApplicationVerifications() = listOfNotNull(
