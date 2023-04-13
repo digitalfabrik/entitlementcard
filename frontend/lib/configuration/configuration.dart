@@ -59,9 +59,10 @@ class StateConfigurationState extends State<Configuration> {
     showDevSettings = widget.showDevSettings;
   }
 
-  void updateGraphqlUrl(String url) {
+  void switchEndpoint(String newGraphqlUrl, String newMapStyleUrl) {
     setState(() {
-      graphqlUrl = url;
+      graphqlUrl = newGraphqlUrl;
+      mapStyleUrl = newMapStyleUrl;
     });
   }
 

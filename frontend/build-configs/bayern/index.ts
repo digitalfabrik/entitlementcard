@@ -18,6 +18,7 @@ export const bayernCommon: CommonBuildConfigType = {
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/bayern.ehrenamtskarte.app/map",
+        staging: "https://api.staging.entitlementcard.app/project/bayern.ehrenamtskarte.app/map",
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/bayern.ehrenamtskarte.app/map",
     },
