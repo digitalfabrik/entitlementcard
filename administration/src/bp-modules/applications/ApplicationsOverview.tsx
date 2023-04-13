@@ -142,7 +142,7 @@ const ApplicationView: FunctionComponent<{
               </PrintAwareButton>
             ) : null}
             <PrintAwareButton onClick={() => printApplicationById(id)} intent='primary' icon='print'>
-              PDF Export
+              PDF exportieren
             </PrintAwareButton>
             <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
               Antrag löschen
