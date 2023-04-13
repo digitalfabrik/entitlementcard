@@ -142,7 +142,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
           label='Ich beantrage eine physische Ehrenamtskarte.'
           options={wantsPhysicalCardOptions}
         />
-        {isInvalid && validationResult.code === CARD_TYPE_ERROR && (
+        {isInvalid && validationResult.message && (
           <CardTypeAlert severity='error'>{validationResult.message}</CardTypeAlert>
         )}
       </div>
