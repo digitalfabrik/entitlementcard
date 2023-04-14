@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice
 
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.MissingAuthorizationException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.javalin.http.Context
@@ -14,7 +14,7 @@ object JwtService {
     private val secret by lazy {
         System.getenv("JWT_SECRET")
             ?: readJwtSecretFile(System.getenv("JWT_SECRET_FILE"))
-            ?: throw MissingAuthorizationException()
+            ?: throw UnauthorizedException()
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
 
