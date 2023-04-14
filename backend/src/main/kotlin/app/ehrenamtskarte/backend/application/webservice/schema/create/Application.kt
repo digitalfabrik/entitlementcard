@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class ApplicationType {
@@ -40,13 +41,13 @@ data class Application(
 
     init {
         if (!onlySelectedIsPresent(entitlementByCardType, cardType)) {
-            throw IllegalArgumentException("The specified entitlement(s) do not match card type.")
+            throw InvalidJsonException("The specified entitlement(s) do not match card type.")
         }
         if ((applicationType != null) != (cardType == BavariaCardType.BLUE)) {
-            throw IllegalArgumentException("Application type must not be null if and only if card type is blue.")
+            throw InvalidJsonException("Application type must not be null if and only if card type is blue.")
         }
         if (!wantsPhysicalCard && !wantsDigitalCard) {
-            throw IllegalArgumentException("Does not apply for a physical nor for a digital card.")
+            throw InvalidJsonException("Does not apply for a physical nor for a digital card.")
         }
     }
 

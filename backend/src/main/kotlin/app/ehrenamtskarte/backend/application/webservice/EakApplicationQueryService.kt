@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,7 +24,7 @@ class EakApplicationQueryService {
         val jwtPayload = context.enforceSignedIn()
         return transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UserNotFoundException()
+                ?: throw UnauthorizedException()
             if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
                 throw ForbiddenException()
             }

@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.primitive
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.TooYoungException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -22,7 +22,7 @@ data class PersonalData(
     init {
         val maximumBirthDate = LocalDate.now(ZoneId.of("Europe/Berlin")).minusYears(16)
         if (maximumBirthDate.isBefore(dateOfBirth.getDate())) {
-            throw TooYoungException()
+            throw InvalidJsonException("Date of birth must be at least 16 years ago.")
         }
     }
 

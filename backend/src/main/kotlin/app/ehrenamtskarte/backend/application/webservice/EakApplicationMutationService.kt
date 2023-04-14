@@ -14,7 +14,6 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSiz
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -147,7 +146,7 @@ class EakApplicationMutationService {
             // `applicationId` and whether this application was contained in the user's project & region.
 
             val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UserNotFoundException()
+                ?: throw UnauthorizedException()
 
             if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
                 throw ForbiddenException()

@@ -9,7 +9,6 @@ import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
@@ -36,7 +35,7 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
             val project = ProjectEntity.find { Projects.project eq projectId }.singleOrNull() ?: throw ProjectNotFoundException(projectId)
             val admin =
                 AdministratorEntity.findById(jwtPayload.adminId)
-                    ?: throw UserNotFoundException()
+                    ?: throw UnauthorizedException()
             if (admin.projectId != project.id) throw UnauthorizedException()
             val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException()
 

@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
 import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.Attachment
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 enum class Type {
@@ -27,12 +28,12 @@ data class JsonField(
 ) {
     init {
         when (type) {
-            Type.String -> if (value !is String) throw IllegalArgumentException("Expected String.")
-            Type.Number -> if (value !is Number) throw IllegalArgumentException("Expected Number.")
-            Type.Array -> if (!isListOfJsonFields(value)) throw IllegalArgumentException("Expected List of JsonFields.")
-            Type.Attachment -> if (value !is AttachmentView) throw IllegalArgumentException("Expected AttachmentView.")
-            Type.Boolean -> if (value !is Boolean) throw IllegalArgumentException("Expected Boolean.")
-            Type.Date -> if (value !is String) throw IllegalArgumentException("Expected String for Date.")
+            Type.String -> if (value !is String) throw InvalidJsonException("Expected String.")
+            Type.Number -> if (value !is Number) throw InvalidJsonException("Expected Number.")
+            Type.Array -> if (!isListOfJsonFields(value)) throw InvalidJsonException("Expected List of JsonFields.")
+            Type.Attachment -> if (value !is AttachmentView) throw InvalidJsonException("Expected AttachmentView.")
+            Type.Boolean -> if (value !is Boolean) throw InvalidJsonException("Expected Boolean.")
+            Type.Date -> if (value !is String) throw InvalidJsonException("Expected String for Date.")
         }
     }
 }
