@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
@@ -10,7 +9,6 @@ import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 const mapTabIndex = 0;
@@ -62,7 +60,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    loadConfigFromSettings();
+
     return ConfiguredGraphQlProvider(
       child: HomePageData(
         navigateToMapTab: _navigateToMapTab,
@@ -121,27 +119,6 @@ class HomePageState extends State<HomePage> {
     });
 
     await mapPageController?.showAcceptingStore(idWithCoordinates);
-  }
-
-  // loads config data from settings if they exists and wait until app was build before setting state
-  Future<bool> loadConfigFromSettings() async {
-    final settings = Provider.of<SettingsModel>(context, listen: false);
-    if (settings.graphqlUrl.isEmpty || settings.mapStyleUrl.isEmpty) {
-      return false;
-    }
-
-    if (!mounted) return false;
-
-    // if there's a current frame,
-    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
-      // wait for the end of that frame.
-      await SchedulerBinding.instance.endOfFrame;
-      if (!mounted) return false;
-    }
-
-    final config = Configuration.of(context);
-    config.switchEndpoint(settings.graphqlUrl, settings.mapStyleUrl);
-    return true;
   }
 }
 

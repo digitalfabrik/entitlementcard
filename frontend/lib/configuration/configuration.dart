@@ -1,23 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class _Configuration extends InheritedWidget {
-  final StateConfigurationState configuration;
-
-  _Configuration({
-    required this.configuration,
-    required Widget child,
-  }) : super(child: child);
-
-  @override
-  bool updateShouldNotify(covariant _Configuration oldWidget) =>
-      configuration.mapStyleUrl != oldWidget.configuration.mapStyleUrl ||
-      configuration.graphqlUrl != oldWidget.configuration.graphqlUrl ||
-      configuration.projectId != oldWidget.configuration.projectId ||
-      configuration.showDevSettings != oldWidget.configuration.showDevSettings;
-}
-
-class Configuration extends StatefulWidget {
-  final Widget child;
+class Configuration extends InheritedWidget {
   final String mapStyleUrl;
   final String graphqlUrl;
   final String projectId;
@@ -29,48 +12,21 @@ class Configuration extends StatefulWidget {
     required this.graphqlUrl,
     required this.projectId,
     required this.showDevSettings,
-    required this.child,
+    required super.child,
   });
 
-  static StateConfigurationState of(BuildContext context) {
-    final configurationContext = context.dependOnInheritedWidgetOfExactType<_Configuration>();
-    if (configurationContext == null) {
+  @override
+  bool updateShouldNotify(covariant Configuration oldWidget) =>
+      mapStyleUrl != oldWidget.mapStyleUrl ||
+      graphqlUrl != oldWidget.graphqlUrl ||
+      projectId != oldWidget.projectId ||
+      showDevSettings != oldWidget.showDevSettings;
+
+  static Configuration of(BuildContext context) {
+    final configuration = context.dependOnInheritedWidgetOfExactType<Configuration>();
+    if (configuration == null) {
       throw Exception("Config was not found in component tree!");
     }
-    return configurationContext.configuration;
-  }
-
-  @override
-  StateConfigurationState createState() => StateConfigurationState();
-}
-
-class StateConfigurationState extends State<Configuration> {
-  late String mapStyleUrl;
-  late String graphqlUrl;
-  late String projectId;
-  late bool showDevSettings;
-
-  @override
-  void initState() {
-    super.initState();
-    mapStyleUrl = widget.mapStyleUrl;
-    graphqlUrl = widget.graphqlUrl;
-    projectId = widget.projectId;
-    showDevSettings = widget.showDevSettings;
-  }
-
-  void switchEndpoint(String newGraphqlUrl, String newMapStyleUrl) {
-    setState(() {
-      graphqlUrl = newGraphqlUrl;
-      mapStyleUrl = newMapStyleUrl;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _Configuration(
-      configuration: this,
-      child: widget.child,
-    );
+    return configuration;
   }
 }

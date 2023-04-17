@@ -2,7 +2,6 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:provider/provider.dart';
 
 class BackendSwitchDialog extends StatefulWidget {
@@ -83,20 +82,12 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
     switch (endpoint) {
       case 'https://api.entitlementcard.app':
         {
-          config.switchEndpoint(buildConfig.backendUrl.staging, buildConfig.mapStyleUrl.staging);
-          updateSettings(
-              stagingEnabled: true,
-              graphqlUrl: buildConfig.backendUrl.staging,
-              mapStyleUrl: buildConfig.mapStyleUrl.staging);
+          updateSettings(stagingEnabled: true);
           break;
         }
       case 'https://api.staging.entitlementcard.app':
         {
-          config.switchEndpoint(buildConfig.backendUrl.production, buildConfig.mapStyleUrl.production);
-          updateSettings(
-              stagingEnabled: false,
-              graphqlUrl: buildConfig.backendUrl.production,
-              mapStyleUrl: buildConfig.mapStyleUrl.production);
+          updateSettings(stagingEnabled: false);
           break;
         }
     }
@@ -110,11 +101,9 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
     card.removeCode();
   }
 
-  void updateSettings({required String graphqlUrl, required String mapStyleUrl, required bool stagingEnabled}) {
+  void updateSettings({required bool stagingEnabled}) {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     clearData();
-    settings.setGraqhqlUrl(url: graphqlUrl);
-    settings.setMapStyleUrl(url: mapStyleUrl);
     settings.setStaging(enabled: stagingEnabled);
   }
 }
