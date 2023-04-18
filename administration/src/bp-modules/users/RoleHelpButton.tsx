@@ -23,7 +23,12 @@ const RoleHelpButton = () => {
                 <li>Kann verwaltende Benutzer in seiner Region verwalten.</li>
                 <li>Kann digitale Karten in seiner Region erstellen.</li>
                 <li>Kann Anträge in seiner Region verwalten.</li>
+                <li>Kann regionsspezifische Datenschutzerklärung anpassen.</li>
               </ul>
+              <div>
+                <span style={{ color: 'red', fontWeight: 'bold' }}>Hinweis: </span>
+                Mindestens ein Nutzer pro Region empfohlen.
+              </div>
             </li>
             <li>
               <b>{roleToText(Role.RegionManager)}:</b>
