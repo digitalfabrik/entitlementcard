@@ -23,6 +23,6 @@ extension Hashing on CardInfo {
 bool isCardExpired(CardInfo cardInfo) {
   final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
   return expirationDay == null
-      ? true
+      ? false
       : DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)).isBefore(DateTime.now());
 }
