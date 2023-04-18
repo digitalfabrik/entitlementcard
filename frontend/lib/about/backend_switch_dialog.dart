@@ -77,20 +77,9 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
   }
 
   void switchBackendUrl(BuildContext context) {
-    final config = Configuration.of(context);
-    final String endpoint = config.graphqlUrl;
-    switch (endpoint) {
-      case 'https://api.entitlementcard.app':
-        {
-          updateSettings(stagingEnabled: true);
-          break;
-        }
-      case 'https://api.staging.entitlementcard.app':
-        {
-          updateSettings(stagingEnabled: false);
-          break;
-        }
-    }
+    final settings = Provider.of<SettingsModel>(context, listen: false);
+    clearData();
+    settings.setEnableStaging(enabled: !settings.enableStaging);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -99,11 +88,5 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
     final card = Provider.of<UserCodeModel>(context, listen: false);
     settings.clearPreferences();
     card.removeCode();
-  }
-
-  void updateSettings({required bool stagingEnabled}) {
-    final settings = Provider.of<SettingsModel>(context, listen: false);
-    clearData();
-    settings.setStaging(enabled: stagingEnabled);
   }
 }

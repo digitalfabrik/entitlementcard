@@ -15,17 +15,21 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    final mapStyleUrl = isProduction()
-        ? buildConfig.mapStyleUrl.production
-        : isLocal()
-            ? buildConfig.mapStyleUrl.local
-            : buildConfig.mapStyleUrl.showcase;
+    final mapStyleUrl = settings.enableStaging
+        ? buildConfig.mapStyleUrl.staging
+        : isProduction()
+            ? buildConfig.mapStyleUrl.production
+            : isLocal()
+                ? buildConfig.mapStyleUrl.local
+                : buildConfig.mapStyleUrl.showcase;
 
-    final graphqlUrl = isProduction()
-        ? buildConfig.backendUrl.production
-        : isLocal()
-            ? buildConfig.backendUrl.local
-            : buildConfig.backendUrl.showcase;
+    final graphqlUrl = settings.enableStaging
+        ? buildConfig.backendUrl.staging
+        : isProduction()
+            ? buildConfig.backendUrl.production
+            : isLocal()
+                ? buildConfig.backendUrl.local
+                : buildConfig.backendUrl.showcase;
 
     final projectId = isProduction()
         ? buildConfig.projectId.production
@@ -34,8 +38,8 @@ class App extends StatelessWidget {
             : buildConfig.projectId.showcase;
 
     return Configuration(
-      mapStyleUrl: settings.staging ? buildConfig.mapStyleUrl.staging : mapStyleUrl,
-      graphqlUrl: settings.staging ? buildConfig.backendUrl.staging : graphqlUrl,
+      mapStyleUrl: mapStyleUrl,
+      graphqlUrl: graphqlUrl,
       projectId: projectId,
       showDevSettings: kDebugMode,
       child: ConfiguredGraphQlProvider(

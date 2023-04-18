@@ -7,7 +7,7 @@ class SettingsModel extends ChangeNotifier {
   var _firstStart = false;
   var _hideVerificationInfo = false;
   var _locationFeatureEnabled = false;
-  var _staging = false;
+  var _enableStaging = false;
 
   SharedPreferences? _preferences;
 
@@ -17,7 +17,7 @@ class SettingsModel extends ChangeNotifier {
       _firstStart = await loadFirstStart();
       _hideVerificationInfo = await loadHideVerificationInfo();
       _locationFeatureEnabled = await loadLocationFeatureEnabled();
-      _staging = await loadStaging();
+      _enableStaging = await loadEnableStaging();
     } on Exception {
       _preferences?.clear();
     }
@@ -25,7 +25,8 @@ class SettingsModel extends ChangeNotifier {
   }
 
   Future<void> clearPreferences() async {
-    _preferences?.clear();
+    notifyListeners();
+    await _preferences?.clear();
   }
 
   Future<bool> loadFirstStart() async {
@@ -39,15 +40,15 @@ class SettingsModel extends ChangeNotifier {
     await _preferences?.setBool("firstStart", enabled);
   }
 
-  Future<bool> loadStaging() async {
-    return _preferences?.getBool("staging") ?? false;
+  Future<bool> loadEnableStaging() async {
+    return _preferences?.getBool("enableStaging") ?? false;
   }
 
   // default false
-  Future<void> setStaging({required bool enabled}) async {
-    _staging = enabled;
+  Future<void> setEnableStaging({required bool enabled}) async {
+    _enableStaging = enabled;
     notifyListeners();
-    await _preferences?.setBool("staging", enabled);
+    await _preferences?.setBool("enableStaging", enabled);
   }
 
   Future<bool> loadHideVerificationInfo() async {
@@ -77,10 +78,10 @@ class SettingsModel extends ChangeNotifier {
 
   bool get locationFeatureEnabled => _locationFeatureEnabled;
 
-  bool get staging => _staging;
+  bool get enableStaging => _enableStaging;
 
   @override
   String toString() {
-    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled, _staging:$_staging}';
+    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled, _enableStaging:$_enableStaging}';
   }
 }

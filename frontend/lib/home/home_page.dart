@@ -64,7 +64,7 @@ class HomePageState extends State<HomePage> {
     return ConfiguredGraphQlProvider(
       child: HomePageData(
         navigateToMapTab: _navigateToMapTab,
-        child: settings.staging
+        child: settings.enableStaging
             ? Banner(
                 message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
             : _buildScaffold(context),
