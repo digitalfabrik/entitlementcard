@@ -7,6 +7,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { Application } from '../../bp-modules/applications/ApplicationsOverview'
 import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/JsonFieldView'
 import VerificationsView from '../../bp-modules/applications/VerificationsView'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useWithdrawApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
@@ -39,8 +40,8 @@ const ApplicationApplicantView = ({
 
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
-      console.error(error)
-      enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
       if (withdrawed) gotWithdrawed()

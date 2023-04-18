@@ -1,19 +1,21 @@
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
-import ErrorHandler from '../ErrorHandler'
+import useQueryHandler from '../hooks/useQueryHandler'
 import RegionOverview from './RegionOverview'
 
 const RegionController = ({ regionId }: { regionId: number }) => {
-  const { loading, error, data, refetch } = useGetDataPolicyQuery({
+  const dataPolicyQuery = useGetDataPolicyQuery({
     variables: { regionId: regionId },
     onError: error => console.error(error),
   })
-  if (loading) return <Spinner />
-  else if (error || !data) return <ErrorHandler refetch={refetch} />
-  else return <RegionOverview dataPrivacyPolicy={data.dataPolicy.dataPrivacyPolicy ?? ''} regionId={regionId} />
+  const dataPolicyQueryResult = useQueryHandler(dataPolicyQuery)
+  if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
+
+  const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''
+  return <RegionOverview dataPrivacyPolicy={dataPrivacyPolicy} regionId={regionId} />
 }
 
 const ControllerWithRegion = (): ReactElement => {

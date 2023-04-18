@@ -2,6 +2,7 @@ import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@bluep
 import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useSendResetMailMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
@@ -15,11 +16,13 @@ const ForgotPasswordController = () => {
 
   const [sendResetMail, { loading }] = useSendResetMailMutation({
     onCompleted: () => setFinished(true),
-    onError: () =>
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
-        message: 'Etwas ist schief gelaufen. Prüfen Sie Ihre Eingaben.',
-      }),
+        message: title,
+      })
+    },
   })
 
   const submit = () =>

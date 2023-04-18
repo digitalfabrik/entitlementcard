@@ -1,9 +1,10 @@
-import { Button, Menu, Spinner } from '@blueprintjs/core'
+import { Button, Menu } from '@blueprintjs/core'
 import { Classes, ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
 import React, { useContext, useMemo } from 'react'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import useQueryHandler from '../hooks/useQueryHandler'
 
 const RegionSelect = Select.ofType<Region>()
 
@@ -35,13 +36,22 @@ const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) 
 
 const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId: number | null }) => {
   const projectId = useContext(ProjectConfigContext).projectId
-  const { loading, error, data, refetch } = useGetRegionsQuery({
+  const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regions = useMemo(() => (data ? [...data.regions].sort((a, b) => a.name.localeCompare(b.name)) : null), [data])
-  if (loading) return <Spinner />
-  if (error || regions === null) return <Button icon='repeat' onClick={() => refetch()} />
-  const activeItem = regions.find((other: Region) => props.selectedId === other.id)
+  const regionsQueryResult = useQueryHandler(regionsQuery)
+
+  const regions = useMemo(
+    () =>
+      regionsQueryResult.successful
+        ? [...regionsQueryResult.data.regions].sort((a, b) => a.name.localeCompare(b.name))
+        : [],
+    [regionsQueryResult]
+  )
+
+  if (!regionsQueryResult.successful) return regionsQueryResult.component
+
+  const activeItem = regions?.find((other: Region) => props.selectedId === other.id)
   return (
     <RegionSelect
       activeItem={activeItem}

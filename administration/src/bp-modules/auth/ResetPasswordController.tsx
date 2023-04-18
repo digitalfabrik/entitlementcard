@@ -3,13 +3,21 @@ import { useContext, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import InvalidPasswordResetLink from '../../errors/templates/InvalidPasswordResetLink'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
-import ErrorHandler from '../ErrorHandler'
 import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
+import useQueryHandler from '../hooks/useQueryHandler'
 import validateNewPasswordInput from './validateNewPasswordInput'
+
+const overwriteErrors = {
+  INVALID_LINK: {
+    title: 'Ungültiger Link',
+    description: <InvalidPasswordResetLink />,
+  },
+}
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
@@ -20,7 +28,7 @@ const ResetPasswordController = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
   const navigate = useNavigate()
 
-  const { error, refetch } = useCheckPasswordResetLinkQuery({
+  const checkPasswordResetLinkQuery = useCheckPasswordResetLinkQuery({
     variables: {
       project: config.projectId,
       resetKey: queryParams.get('token')!,
@@ -32,11 +40,13 @@ const ResetPasswordController = () => {
       appToaster?.show({ intent: 'success', message: 'Ihr Passwort wurde erfolgreich zurückgesetzt.' })
       navigate('/')
     },
-    onError: () =>
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
-        message: 'Etwas ist schief gelaufen. Prüfen Sie Ihre Eingaben.',
-      }),
+        message: title,
+      })
+    },
   })
 
   const submit = () =>
@@ -52,10 +62,9 @@ const ResetPasswordController = () => {
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  if (error) {
-    const { title, description } = getMessageFromApolloError(error)
-    return <ErrorHandler title={title} refetch={refetch} description={description} />
-  }
+  const checkPasswordResetLinkQueryResult = useQueryHandler(checkPasswordResetLinkQuery, overwriteErrors)
+
+  if (!checkPasswordResetLinkQueryResult.successful) return checkPasswordResetLinkQueryResult.component
 
   return (
     <StandaloneCenter>

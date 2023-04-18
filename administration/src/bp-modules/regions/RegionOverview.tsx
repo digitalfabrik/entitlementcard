@@ -2,6 +2,7 @@ import { Button, Card, H3, TextArea } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateDataPolicyMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 
@@ -49,11 +50,22 @@ type RegionOverviewProps = {
 }
 
 const MAX_CHARS = 20000
+const overwriteError = {
+  INVALID_FILE_SIZE: {
+    title: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`,
+  },
+}
 
 const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
-  const [updateDataPrivacy] = useUpdateDataPolicyMutation({})
+  const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error, overwriteError)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: () => appToaster?.show({ intent: 'success', message: 'Datenschutzerklärung erfolgreich geändert.' }),
+  })
   const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 
   const onSave = async () => {
@@ -63,28 +75,14 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
         message: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`,
       })
     } else {
-      try {
-        const result = await updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
-        if (result.errors) {
-          console.error(result.errors)
-          appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung.' })
-        } else {
-          appToaster?.show({
-            intent: 'success',
-            message: 'Datenschutzerklärung erfolgreich geändert.',
-          })
-        }
-      } catch (e) {
-        console.error(e)
-        appToaster?.show({ intent: 'danger', message: 'Fehler beim Speichern der Datenschutzerklärung' })
-      }
+      updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
     }
   }
 
   return (
     <>
       <ButtonBar stickyTop={0}>
-        <Button icon='floppy-disk' text='Speichern' intent='success' onClick={onSave} />
+        <Button icon='floppy-disk' text='Speichern' intent='success' onClick={onSave} loading={loading} />
       </ButtonBar>
       <Content>
         <Label>Datenschutzerklärung</Label>

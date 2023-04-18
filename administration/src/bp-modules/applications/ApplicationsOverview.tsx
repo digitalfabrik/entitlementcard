@@ -3,6 +3,7 @@ import React, { FunctionComponent, useContext, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled, { css } from 'styled-components'
 
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { GetApplicationsQuery, useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
@@ -81,8 +82,8 @@ const ApplicationView: FunctionComponent<{
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
-      console.error(error)
-      appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) gotDeleted()

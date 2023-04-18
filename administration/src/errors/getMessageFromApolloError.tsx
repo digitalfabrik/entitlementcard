@@ -1,15 +1,17 @@
 import { ApolloError } from '@apollo/client'
 import { ReactElement } from 'react'
 
-import InvalidLink from './templates/InvalidLink'
-import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
-import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
+import { GraphQlExceptionCode } from '../generated/graphql'
+import defaultErrorMap from './DefaultErrorMap'
 
 type GraphQLErrorMessage = {
   title: string
   description?: string | ReactElement
 }
-const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
+
+export type OverwriteError = { [Code in GraphQlExceptionCode]?: GraphQLErrorMessage }
+
+const getMessageFromApolloError = (error: ApolloError, overwriteError: OverwriteError = {}): GraphQLErrorMessage => {
   const defaultMessage = 'Etwas ist schief gelaufen.'
 
   if (error.networkError) {
@@ -24,26 +26,13 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
   }
 
   const graphQLError = error.graphQLErrors[0]
-  if ('code' in graphQLError.extensions) {
-    switch (graphQLError.extensions['code']) {
-      case 'EMAIL_ALREADY_EXISTS':
-        return { title: 'Die Email-Adresse wird bereits verwendet.' }
-      case 'PASSWORD_RESET_KEY_EXPIRED':
-        return {
-          title: 'Die Gültigkeit ihres Links ist abgelaufen',
-          description: <PasswordResetKeyExpired />,
-        }
-      case 'INVALID_LINK':
-        return {
-          title: 'Ihr Link ist ungültig',
-          description: <InvalidLink />,
-        }
-      case 'INVALID_PASSWORD_RESET_LINK':
-        return {
-          title: 'Ihr Link ist ungültig',
-          description: <InvalidPasswordResetLink />,
-        }
+  if ('code' in graphQLError.extensions && (graphQLError.extensions['code'] as any) in defaultErrorMap) {
+    const code = graphQLError.extensions['code'] as GraphQlExceptionCode
+
+    if (code in overwriteError) {
+      return overwriteError[code] ?? { title: defaultMessage }
     }
+    return defaultErrorMap[code]
   }
   return { title: defaultMessage }
 }

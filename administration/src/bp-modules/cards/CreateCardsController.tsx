@@ -4,8 +4,8 @@ import { useContext, useState } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { CardBlueprint } from '../../cards/CardBlueprint'
-import { generatePdf } from '../../cards/PdfFactory'
-import { createCards } from '../../cards/creation'
+import { PDFError, generatePdf } from '../../cards/PdfFactory'
+import { CreateCardsError, createCards } from '../../cards/creation'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
@@ -64,11 +64,17 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
     } catch (e) {
-      console.error(e)
-      appToaster?.show({
-        message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
-        intent: 'danger',
-      })
+      if (e instanceof PDFError)
+        appToaster?.show({
+          message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+          intent: 'danger',
+        })
+      else if (e instanceof CreateCardsError) {
+        appToaster?.show({ intent: 'danger', message: e.message })
+      } else {
+        console.error(e)
+        appToaster?.show({ intent: 'danger', message: 'Etwas ist schiefgegangen.' })
+      }
       setState(CardActivationState.input)
     }
   }
