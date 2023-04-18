@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.WrongPasswordException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,7 +24,7 @@ class ChangePasswordMutationService {
         transaction {
             val administratorEntity =
                 AdministratorsRepository.findByAuthData(project, email, currentPassword)
-                    ?: throw WrongPasswordException()
+                    ?: throw InvalidCredentialsException()
 
             if (administratorEntity.id.value != jwtPayload.adminId) {
                 throw UnauthorizedException()
