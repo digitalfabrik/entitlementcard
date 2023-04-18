@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const hideVerificationInfoPropertyName = "hideVerificationInfo";
 
 class SettingsModel extends ChangeNotifier {
-  var _firstStart = false;
+  var _firstStart = true;
   var _hideVerificationInfo = false;
   var _locationFeatureEnabled = false;
   var _enableStaging = false;
@@ -24,7 +24,11 @@ class SettingsModel extends ChangeNotifier {
     return this;
   }
 
-  Future<void> clearPreferences() async {
+  Future<void> clearSettings() async {
+    _firstStart = true;
+    _hideVerificationInfo = false;
+    _locationFeatureEnabled = false;
+    _enableStaging = false;
     notifyListeners();
     await _preferences?.clear();
   }
@@ -63,7 +67,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   Future<bool> loadLocationFeatureEnabled() async {
-    return _preferences?.getBool("location") ?? true;
+    return _preferences?.getBool("location") ?? false;
   }
 
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {

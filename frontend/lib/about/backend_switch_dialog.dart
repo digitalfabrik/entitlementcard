@@ -86,7 +86,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
   void clearData() {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     final card = Provider.of<UserCodeModel>(context, listen: false);
-    settings.clearPreferences();
+    settings.clearSettings();
     card.removeCode();
   }
 }
