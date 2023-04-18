@@ -3,7 +3,9 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.regions.database.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -19,10 +21,10 @@ class RegionsMutationService {
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
-                throw RuntimeException()
+                throw InvalidFileSizeException()
             }
             if (!Authorizer.mayUpdatePrivacyPolicyInRegion(user, regionId)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)
             RegionsRepository.updateDataPolicy(region, dataPrivacyText)

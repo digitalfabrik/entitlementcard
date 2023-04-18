@@ -4,8 +4,14 @@ import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import io.javalin.http.Context
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
@@ -24,30 +30,30 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
         }
 
         val applicationId = context.pathParam("applicationId").toInt()
-        val projectName = context.pathParam("project")
+        val projectId = context.pathParam("project")
         val (admin, application) = transaction {
-            val project = ProjectEntity.find { Projects.project eq projectName }.single()
+            val project = ProjectEntity.find { Projects.project eq projectId }.singleOrNull() ?: throw ProjectNotFoundException(projectId)
             val admin =
                 AdministratorEntity.findById(jwtPayload.adminId)
-                    ?: throw IllegalArgumentException("Admin does not exist.")
-            if (admin.projectId != project.id) throw IllegalArgumentException("Project of admin does not match project")
+                    ?: throw UnauthorizedException()
+            if (admin.projectId != project.id) throw UnauthorizedException()
+            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException()
 
-            Pair(admin, ApplicationEntity.findById(applicationId))
+            RegionsRepository.findByIdInProject(project.project, application.regionId.value) ?: throw RegionNotFoundException()
+            Pair(admin, application)
         }
 
-        val regionId = application?.regionId
-        if (regionId == null || !Authorizer.mayViewApplicationsInRegion(admin, regionId.value)) {
-            context.status(404)
-            return
+        if (!Authorizer.mayViewApplicationsInRegion(admin, application.regionId.value)) {
+            throw ForbiddenException()
         }
 
         val fileIndex = context.pathParam("fileIndex").toInt()
-        val file = File(this.applicationData, "$projectName/$applicationId/$fileIndex")
+        val file = File(this.applicationData, "$projectId/$applicationId/$fileIndex")
         if (!file.isFile) {
-            context.status(404)
+            throw NotFoundException()
         } else {
             val contentType =
-                File(this.applicationData, "$projectName/$applicationId/$fileIndex.contentType").readLines()[0]
+                File(this.applicationData, "$projectId/$applicationId/$fileIndex.contentType").readLines()[0]
             context.contentType(contentType)
             context.result(file.inputStream())
         }

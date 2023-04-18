@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.auth.database.repos
 
-import app.ehrenamtskarte.backend.auth.InvalidPasswordException
 import app.ehrenamtskarte.backend.auth.PasswordValidationResult
 import app.ehrenamtskarte.backend.auth.PasswordValidator
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
@@ -8,9 +7,13 @@ import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidPasswordException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -55,18 +58,14 @@ object AdministratorsRepository {
         regionId: Int? = null
     ): AdministratorEntity {
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-            ?: throw IllegalArgumentException("Project does not exist.")
+            ?: throw ProjectNotFoundException(project)
 
-        val region = regionId?.let { RegionEntity.findById(regionId) }
-
-        if (region != null && region.projectId != projectEntity.id) {
-            throw IllegalArgumentException("Specified region is not part of specified project.")
-        }
+        val region = regionId?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
 
         if (role in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER) && region == null) {
-            throw IllegalArgumentException("Role ${role.db_value} needs to have a region assigned.")
+            throw InvalidRoleException()
         } else if (role in setOf(Role.PROJECT_ADMIN) && region != null) {
-            throw IllegalArgumentException("Role ${role.db_value} cannot have a region assigned.")
+            throw InvalidRoleException()
         }
 
         val passwordHash = password?.let {

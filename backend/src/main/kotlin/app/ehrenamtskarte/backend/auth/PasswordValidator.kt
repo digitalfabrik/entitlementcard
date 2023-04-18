@@ -39,6 +39,3 @@ object PasswordValidator {
         return PasswordValidationResult.VALID
     }
 }
-
-class InvalidPasswordException(passwordValidation: PasswordValidationResult) :
-    Throwable(message = passwordValidation.toString())

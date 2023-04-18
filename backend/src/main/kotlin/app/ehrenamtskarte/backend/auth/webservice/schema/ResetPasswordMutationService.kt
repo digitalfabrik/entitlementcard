@@ -4,6 +4,8 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -70,9 +72,9 @@ class ResetPasswordMutationService {
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
-                throw Exception("Password reset key has expired.")
+                throw PasswordResetKeyExpiredException()
             } else if (user.passwordResetKey != passwordResetKey) {
-                throw Exception("Password reset keys do not match.")
+                throw InvalidLinkException()
             }
 
             AdministratorsRepository.changePassword(user, newPassword)
