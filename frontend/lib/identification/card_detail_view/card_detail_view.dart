@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -45,9 +46,9 @@ class CardDetailView extends StatelessWidget {
         final paddedCard = Padding(
           padding: const EdgeInsets.all(8),
           child: IdCard(
-            cardInfo: userCode.info,
-            region: region != null ? Region(region.prefix, region.name) : null,
-          ),
+              cardInfo: userCode.info,
+              region: region != null ? Region(region.prefix, region.name) : null,
+              isExpired: isCardExpired(userCode.info)),
         );
         final richQrCode = RichQrCode(userCode: userCode, onMoreActionsPressed: () => _onMoreActionsPressed(context));
 
@@ -107,6 +108,7 @@ class RichQrCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isExpired = isCardExpired(userCode.info);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
@@ -115,13 +117,15 @@ class RichQrCode extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(bottom: 4),
             constraints: const BoxConstraints(maxWidth: 300),
-            child: const Text(
-              "Mit diesem QR-Code können Sie sich"
-              " bei Akzeptanzstellen ausweisen:",
+            child: Text(
+              isExpired
+                  ? "Ihre Karte ist abgelaufen.\n Unter weitere Aktionen können sie einen Antrag zur Verlängerung stellen."
+                  : "Mit diesem QR-Code können Sie sich"
+                      " bei Akzeptanzstellen ausweisen:",
               textAlign: TextAlign.center,
             ),
           ),
-          Flexible(child: VerificationCodeView(userCode: userCode)),
+          Flexible(child: isExpired ? Container() : VerificationCodeView(userCode: userCode)),
           Container(
             alignment: Alignment.center,
             child: TextButton(

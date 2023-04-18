@@ -19,3 +19,10 @@ extension Hashing on CardInfo {
     return utf8.encode(canonicalizedJsonString);
   }
 }
+
+bool isCardExpired(CardInfo cardInfo) {
+  final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
+  return expirationDay == null
+      ? true
+      : DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)).isBefore(DateTime.now());
+}

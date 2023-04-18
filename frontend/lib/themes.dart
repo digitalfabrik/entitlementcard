@@ -12,6 +12,7 @@ ThemeData get lightTheme {
       secondary: primaryColor,
       background: Colors.white,
       surfaceVariant: const Color(0xffefefef),
+      error: const Color(0xffcc0000),
     ),
     textTheme: defaultTypography.copyWith(
       headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.black87),
@@ -54,6 +55,7 @@ ThemeData get darkTheme {
       secondary: primaryColor,
       background: const Color(0xff121212),
       surfaceVariant: const Color(0xff262626),
+      error: const Color(0xff8b0000),
     ),
     textTheme: defaultTypography.copyWith(
       headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.white),

@@ -20,8 +20,9 @@ class Region with EquatableMixin {
 class IdCard extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
+  final bool isExpired;
 
-  const IdCard({super.key, required this.cardInfo, required this.region});
+  const IdCard({super.key, required this.cardInfo, required this.region, required this.isExpired});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +39,7 @@ class IdCard extends StatelessWidget {
           child: MediaQuery(
             // Ignore text scale factor to enforce the same layout on all devices.
             data: mediaQueryData.copyWith(textScaleFactor: 1),
-            child: CardContent(
-              cardInfo: cardInfo,
-              region: region,
-            ),
+            child: CardContent(cardInfo: cardInfo, region: region, isExpired: isExpired),
           ),
         ),
       ),

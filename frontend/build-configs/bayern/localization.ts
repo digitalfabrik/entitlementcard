@@ -22,7 +22,7 @@ const localization: LocalizationType = {
             positiveVerificationDialogTitle: "Karte ist gültig",
         },
         moreActions: {
-            applyForAnotherCardTitle: "Weitere Ehrenamtskarte beantragen",
+            applyForAnotherCardTitle: "Weitere Ehrenamtskarte beantragen oder bestehende verlängern",
             applyForAnotherCardDescription: "Ihre hinterlegte Karte bleibt erhalten.",
             activateAnotherCardTitle: "Anderen Aktivierungscode einscannen",
             activateAnotherCardDescription: "Dadurch wird die hinterlegte Karte vom Gerät gelöscht.",

@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/identification/id_card/card_header_logo.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -40,8 +40,9 @@ PaddingStyle paddingHeader = PaddingStyle(
 class CardContent extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
+  final bool isExpired;
 
-  const CardContent({super.key, required this.cardInfo, this.region});
+  const CardContent({super.key, required this.cardInfo, this.region, required this.isExpired});
 
   String get _formattedExpirationDate {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
@@ -182,7 +183,9 @@ class CardContent extends StatelessWidget {
                                     maxLines: 1,
                                     text: TextSpan(
                                       text: "Gültig bis: ",
-                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      style: TextStyle(
+                                          fontSize: 14 * scaleFactor,
+                                          color: isExpired ? Theme.of(context).colorScheme.error : textColor),
                                       children: [TextSpan(text: _formattedExpirationDate)],
                                     ),
                                   ),

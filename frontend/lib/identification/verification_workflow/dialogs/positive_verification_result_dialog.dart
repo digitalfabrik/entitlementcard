@@ -63,9 +63,9 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
             children: <Widget>[
               Flexible(
                 child: IdCard(
-                  cardInfo: widget.cardInfo,
-                  region: region != null ? Region(region.prefix, region.name) : null,
-                ),
+                    cardInfo: widget.cardInfo,
+                    region: region != null ? Region(region.prefix, region.name) : null,
+                    isExpired: false),
               ),
               if (widget.isStaticVerificationCode)
                 Flexible(
