@@ -21,6 +21,9 @@ export interface ActivityLogConfig {
 }
 
 export interface CardConfig {
+  nameColumnName: string
+  expiryColumnName: string
+  extensionColumnNames: (string | null)[]
   defaultValidity: Duration
   extensions: ExtensionClass[]
 }

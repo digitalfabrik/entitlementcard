@@ -8,7 +8,7 @@ type NuernbergPassNumberState = { passNumber: number }
 
 const nuernbergPassNumberLength = 8
 class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, null> {
-  public readonly name: string = NuernbergPassNumberExtension.name
+  public readonly name = NuernbergPassNumberExtension.name
 
   setInitialState() {}
   createForm(onUpdate: () => void) {
@@ -52,8 +52,17 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
       passNumber: this.state?.passNumber,
     }
   }
+
   isValid() {
     return this.state?.passNumber.toString().length === nuernbergPassNumberLength
+  }
+
+  fromString(state: string) {
+    this.state = { passNumber: parseInt(state, 10) }
+  }
+
+  toString() {
+    return this.state ? `${this.state.passNumber}` : ''
   }
 }
 

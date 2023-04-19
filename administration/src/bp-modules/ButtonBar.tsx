@@ -5,7 +5,7 @@ const ButtonBar = styled(Card)`
   width: 100%;
   padding: 15px;
   background: #fafafa;
-  bottom: 0;
+  z-index: 100;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;

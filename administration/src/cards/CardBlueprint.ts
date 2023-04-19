@@ -29,20 +29,25 @@ export class CardBlueprint implements JSONCardBlueprint {
   expirationDate: Date | null
   extensions: ExtensionInstance[]
 
-  constructor(fullName: string, region: Region, cardConfig: CardConfig) {
+  constructor(fullName: string, cardConfig: CardConfig, initParams?: Parameters<CardBlueprint['initialize']>) {
     this.fullName = fullName
-    this.expirationDate = cardConfig.defaultValidity ? add(new Date(), cardConfig.defaultValidity) : null
-    this.extensions = cardConfig.extensions.map(Ext => new Ext())
+    this.expirationDate = cardConfig.defaultValidity && initParams ? add(new Date(), cardConfig.defaultValidity) : null
+    this.extensions = cardConfig.extensions.map(Extension => new Extension())
+    this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
+    if (initParams) {
+      this.initialize(...initParams)
+    }
+  }
+
+  initialize(region: Region) {
     this.extensions.forEach(ext => {
       if (ext instanceof RegionExtension) ext.setInitialState(region)
       else ext.setInitialState()
     })
-
-    this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
   }
 
   hasInfiniteLifetime(): boolean {
-    return !!this.extensions.find(ext => ext.causesInfiniteLifetime())
+    return this.extensions.some(ext => ext.causesInfiniteLifetime())
   }
 
   isFullNameValid(): boolean {

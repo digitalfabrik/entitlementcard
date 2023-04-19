@@ -1,7 +1,8 @@
 import { FormGroup } from '@blueprintjs/core'
 import { DateInput } from '@blueprintjs/datetime'
+import { isDateValid } from '@blueprintjs/datetime/lib/esm/common/dateUtils'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { sub } from 'date-fns'
+import { format, parse, sub } from 'date-fns'
 
 import { CardExtensions } from '../../generated/card_pb'
 import { dateToDaysSinceEpoch, daysSinceEpochToDate } from '../validityPeriod'
@@ -12,7 +13,7 @@ type BirthdayState = { birthday: number }
 const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
 
 class BirthdayExtension extends Extension<BirthdayState, null> {
-  public readonly name: string = BirthdayExtension.name
+  public readonly name = BirthdayExtension.name
 
   setInitialState() {
     this.state = { birthday: initialBirthdayDate }
@@ -55,6 +56,14 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
 
   isValid() {
     return this.state !== null
+  }
+
+  fromString(value: string) {
+    const birthday = parse(value, 'dd.MM.yyyy', new Date())
+    this.state = isDateValid(birthday) ? { birthday: dateToDaysSinceEpoch(birthday) } : null
+  }
+  toString() {
+    return this.state ? format(daysSinceEpochToDate(this.state.birthday), 'dd.MM.yyyy') : ''
   }
 }
 

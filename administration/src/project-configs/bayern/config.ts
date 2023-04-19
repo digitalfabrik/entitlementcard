@@ -16,6 +16,9 @@ const config: ProjectConfig = {
   staticQrCodesEnabled: false,
   card: {
     defaultValidity: { years: 3 },
+    nameColumnName: 'Name',
+    expiryColumnName: 'Ablaufdatum',
+    extensionColumnNames: ['Kartentyp', null],
     extensions: [BavariaCardTypeExtension, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,

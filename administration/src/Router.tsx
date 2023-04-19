@@ -10,7 +10,9 @@ import ApplicationsController from './bp-modules/applications/ApplicationsContro
 import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
 import Login from './bp-modules/auth/Login'
 import ResetPasswordController from './bp-modules/auth/ResetPasswordController'
+import AddCardsController from './bp-modules/cards/AddCardsController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
+import ImportCardsController from './bp-modules/cards/ImportCardsController'
 import HomeController from './bp-modules/home/HomeController'
 import DataPrivacyPolicy from './bp-modules/regions/DataPrivacyPolicy'
 import RegionsController from './bp-modules/regions/RegionController'
@@ -72,7 +74,9 @@ const Router = () => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
-          { path: 'create-cards', element: <CreateCardsController /> },
+          { path: 'cards', element: <CreateCardsController /> },
+          { path: 'cards/add', element: <AddCardsController /> },
+          { path: 'cards/import', element: <ImportCardsController /> },
           { path: 'users', element: <ManageUsersController /> },
           { path: 'user-settings', element: <UserSettingsController /> },
           { path: '*', element: <HomeController /> },

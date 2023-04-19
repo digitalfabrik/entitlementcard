@@ -7,7 +7,7 @@ import { Extension } from './extensions'
 type RegionState = { regionId: number }
 
 class RegionExtension extends Extension<RegionState, Region> {
-  public readonly name: string = RegionExtension.name
+  public readonly name = RegionExtension.name
 
   setInitialState(region: Region) {
     this.state = { regionId: region.id }
@@ -25,6 +25,13 @@ class RegionExtension extends Extension<RegionState, Region> {
   }
   isValid() {
     return this.state !== null
+  }
+
+  fromString(state: string) {
+    this.state = { regionId: parseInt(state, 10) }
+  }
+  toString() {
+    return this.state ? `${this.state.regionId}` : ''
   }
 }
 

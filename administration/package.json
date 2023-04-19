@@ -8,6 +8,7 @@
     "@blueprintjs/datetime": "^4.3.12",
     "@blueprintjs/popover2": "^1.13.3",
     "@blueprintjs/select": "^4.9.3",
+    "@blueprintjs/table": "^4.9.3",
     "@bufbuild/protobuf": "^1.0.0",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.9",
