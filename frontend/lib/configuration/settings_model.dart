@@ -1,91 +1,67 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const hideVerificationInfoPropertyName = "hideVerificationInfo";
-
 class SettingsModel extends ChangeNotifier {
-  var _firstStart = true;
-  var _hideVerificationInfo = false;
-  var _locationFeatureEnabled = false;
-  var _enableStaging = false;
-
   SharedPreferences? _preferences;
 
-  Future<SettingsModel> initialize() async {
-    try {
-      _preferences = await SharedPreferences.getInstance();
-      _firstStart = await loadFirstStart();
-      _hideVerificationInfo = await loadHideVerificationInfo();
-      _locationFeatureEnabled = await loadLocationFeatureEnabled();
-      _enableStaging = await loadEnableStaging();
-    } on Exception {
-      _preferences?.clear();
+  Future<void> initialize() async {
+    if (_preferences != null) {
+      // Already initialized
+      return;
     }
-    return this;
+
+    _preferences = await SharedPreferences.getInstance();
   }
 
   Future<void> clearSettings() async {
-    _firstStart = true;
-    _hideVerificationInfo = false;
-    _locationFeatureEnabled = false;
-    _enableStaging = false;
-    notifyListeners();
     await _preferences?.clear();
+    notifyListeners();
   }
 
-  Future<bool> loadFirstStart() async {
-    return _preferences?.getBool("firstStart") ?? true;
+  bool? _getBool(String key) {
+    final obj = _preferences?.get(key);
+    if (obj == null) {
+      return null;
+    } else if (obj is! bool) {
+      log("Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.",
+          level: 1000);
+      return null;
+    }
+    return obj;
   }
 
-  // default false
+  bool get firstStart => _getBool("firstStart") ?? true;
+
   Future<void> setFirstStart({required bool enabled}) async {
-    _firstStart = enabled;
-    notifyListeners();
     await _preferences?.setBool("firstStart", enabled);
+    notifyListeners();
   }
 
-  Future<bool> loadEnableStaging() async {
-    return _preferences?.getBool("enableStaging") ?? false;
-  }
+  bool get enableStaging => _getBool("enableStaging") ?? false;
 
-  // default false
   Future<void> setEnableStaging({required bool enabled}) async {
-    _enableStaging = enabled;
-    notifyListeners();
     await _preferences?.setBool("enableStaging", enabled);
-  }
-
-  Future<bool> loadHideVerificationInfo() async {
-    return _preferences?.getBool(hideVerificationInfoPropertyName) ?? false;
-  }
-
-  // default true
-  Future<void> setHideVerificationInfo({required bool enabled}) async {
-    _hideVerificationInfo = enabled;
     notifyListeners();
-    await _preferences?.setBool(hideVerificationInfoPropertyName, enabled);
   }
 
-  Future<bool> loadLocationFeatureEnabled() async {
-    return _preferences?.getBool("location") ?? false;
+  bool get hideVerificationInfo => _getBool("hideVerificationInfo") ?? true;
+
+  Future<void> setHideVerificationInfo({required bool enabled}) async {
+    await _preferences?.setBool("hideVerificationInfo", enabled);
+    notifyListeners();
   }
+
+  bool get locationFeatureEnabled => _getBool("location") ?? false;
 
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {
-    _locationFeatureEnabled = enabled;
-    notifyListeners();
     await _preferences?.setBool("location", enabled);
+    notifyListeners();
   }
-
-  bool get firstStart => _firstStart;
-
-  bool get hideVerificationInfo => _hideVerificationInfo;
-
-  bool get locationFeatureEnabled => _locationFeatureEnabled;
-
-  bool get enableStaging => _enableStaging;
 
   @override
   String toString() {
-    return 'SettingsModel{_firstStart: $_firstStart, _hideVerificationInfo: $_hideVerificationInfo, _locationFeatureEnabled: $_locationFeatureEnabled, _enableStaging:$_enableStaging}';
+    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging}';
   }
 }
