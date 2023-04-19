@@ -53,7 +53,7 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get locationFeatureEnabled => _getBool("location") ?? true;
+  bool get locationFeatureEnabled => _getBool("location") ?? false;
 
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {
     await _preferences?.setBool("location", enabled);
