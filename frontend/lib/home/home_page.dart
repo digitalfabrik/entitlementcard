@@ -1,5 +1,6 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
@@ -8,6 +9,7 @@ import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 const mapTabIndex = 0;
 
@@ -57,24 +59,33 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsModel>(context);
+
     return ConfiguredGraphQlProvider(
       child: HomePageData(
         navigateToMapTab: _navigateToMapTab,
-        child: Scaffold(
-          body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: _currentTabIndex == mapTabIndex
-              ? FloatingActionMapBar(
-                  bringCameraToUser: (position) async {
-                    await mapPageController?.bringCameraToUser(position);
-                  },
-                  selectedAcceptingStoreId: selectedAcceptingStoreId,
-                )
-              // Returning a Container() instead of null avoids animations
-              : Container(),
-          bottomNavigationBar: _buildBottomNavigationBar(context),
-        ),
+        child: settings.enableStaging
+            ? Banner(
+                message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
+            : _buildScaffold(context),
       ),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
+      body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _currentTabIndex == mapTabIndex
+          ? FloatingActionMapBar(
+              bringCameraToUser: (position) async {
+                await mapPageController?.bringCameraToUser(position);
+              },
+              selectedAcceptingStoreId: selectedAcceptingStoreId,
+            )
+          // Returning a Container() instead of null avoids animations
+          : Container(),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
