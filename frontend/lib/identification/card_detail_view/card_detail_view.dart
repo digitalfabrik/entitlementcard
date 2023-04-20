@@ -119,7 +119,7 @@ class RichQrCode extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 300),
             child: Text(
               isExpired
-                  ? "Ihre Karte ist abgelaufen.\n Unter weitere Aktionen können sie einen Antrag zur Verlängerung stellen."
+                  ? "Ihre Karte ist abgelaufen.\nUnter "Weitere Aktionen" können Sie einen Antrag auf Verlängerung stellen."
                   : "Mit diesem QR-Code können Sie sich"
                       " bei Akzeptanzstellen ausweisen:",
               textAlign: TextAlign.center,
