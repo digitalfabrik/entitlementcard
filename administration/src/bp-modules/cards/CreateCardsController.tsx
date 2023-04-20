@@ -37,6 +37,7 @@ const CreateCardsController = () => {
 
 const InnerCreateCardsController = ({ region }: { region: Region }) => {
   const projectConfig = useContext(ProjectConfigContext)
+  const activityLog = projectConfig.activityLog
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
@@ -48,6 +49,9 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
       setState(CardActivationState.loading)
 
       const dynamicCodes = cardBlueprints.map(cardBlueprint => {
+        if (activityLog) {
+          activityLog.createActivityLog(cardBlueprint)
+        }
         return cardBlueprint.generateActivationCode()
       })
       const staticCodes = projectConfig.staticQrCodesEnabled

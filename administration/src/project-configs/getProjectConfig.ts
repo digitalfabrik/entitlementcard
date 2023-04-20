@@ -14,6 +14,11 @@ export interface PdfConfig {
   infoToDetails: (info: CardInfo, region: Region, shorten: boolean) => string
 }
 
+interface ActivityLogConfig {
+  fields: string[]
+  createActivityLog: (cardBlueprint: CardBlueprint) => void
+}
+
 export interface ProjectConfig {
   name: string
   projectId: string
@@ -24,6 +29,7 @@ export interface ProjectConfig {
   dataPrivacyContent: () => ReactElement
   pdf: PdfConfig
   timezone: string
+  activityLog?: ActivityLogConfig
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 
+import { createActivityLogNuernberg } from '../../bp-modules/user-settings/activityLogs'
 import { createEmptyNuernbergCard } from '../../cards/cardBlueprints'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { ProjectConfig } from '../getProjectConfig'
@@ -16,6 +17,10 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
+  activityLog: {
+    fields: ['Erstellt', 'Name', 'Passnummer', 'Geburtstag', 'Gültig bis'],
+    createActivityLog: createActivityLogNuernberg,
+  },
   pdf: {
     title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,
