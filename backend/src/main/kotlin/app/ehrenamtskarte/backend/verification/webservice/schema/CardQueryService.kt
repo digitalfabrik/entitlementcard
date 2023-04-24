@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
@@ -13,7 +14,7 @@ class CardQueryService {
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid")
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw NullPointerException("Project not found")
+        val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
 
         if (card.codeType == CodeType.STATIC) {

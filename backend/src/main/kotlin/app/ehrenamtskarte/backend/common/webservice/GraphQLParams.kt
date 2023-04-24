@@ -34,6 +34,7 @@ infix operator fun SchemaGeneratorConfig.plus(other: SchemaGeneratorConfig): Sch
     val hooks = if (hooks == NoopSchemaGeneratorHooks) other.hooks else hooks
     return SchemaGeneratorConfig(
         this.supportedPackages + other.supportedPackages,
-        hooks = hooks
+        hooks = hooks,
+        additionalTypes = this.additionalTypes + other.additionalTypes
     )
 }

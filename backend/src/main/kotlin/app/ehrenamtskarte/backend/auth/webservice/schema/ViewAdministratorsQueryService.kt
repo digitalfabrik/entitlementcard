@@ -5,7 +5,10 @@ import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
@@ -28,8 +31,9 @@ class ViewAdministratorsQueryService {
 
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
-            val projectId = ProjectEntity.find { Projects.project eq project }.single().id
-            if (admin == null || admin.deleted || admin.projectId != projectId) {
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+            if (admin == null || admin.deleted || admin.projectId != projectEntity.id) {
                 throw UnauthorizedException()
             }
             Administrator.fromDbEntity(admin)
@@ -46,9 +50,11 @@ class ViewAdministratorsQueryService {
 
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
-            val projectId = ProjectEntity.find { Projects.project eq project }.single().id.value
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+            val projectId = projectEntity.id.value
             if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
             val administrators = (Administrators innerJoin Regions)
                 .slice(Administrators.columns)
@@ -69,9 +75,9 @@ class ViewAdministratorsQueryService {
 
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
-            val region = RegionEntity.findById(regionId) ?: throw UnauthorizedException()
+            val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
             if (!Authorizer.mayViewUsersInRegion(admin, region)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
             val administrators = AdministratorEntity
                 .find { Administrators.regionId eq regionId and not(Administrators.deleted) }

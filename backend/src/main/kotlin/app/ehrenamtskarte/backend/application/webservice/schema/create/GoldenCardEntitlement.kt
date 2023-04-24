@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.application.webservice.utils.onlySelectedIsPresent
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class GoldenCardEntitlementType {
@@ -32,9 +33,9 @@ data class GoldenCardWorkAtOrganizationsEntitlement(
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     init {
         if (list.isEmpty()) {
-            throw IllegalArgumentException("List may not be empty.")
+            throw InvalidJsonException("List may not be empty.")
         } else if (list.size > 5) {
-            throw IllegalArgumentException("List may contain at most 5 entries.")
+            throw InvalidJsonException("List may contain at most 5 entries.")
         }
     }
 
@@ -113,7 +114,7 @@ data class GoldenCardEntitlement(
 
     init {
         if (!onlySelectedIsPresent(entitlementByEntitlementType, entitlementType)) {
-            throw IllegalArgumentException("The specified entitlements do not match entitlementType.")
+            throw InvalidJsonException("The specified entitlements do not match entitlementType.")
         }
     }
 

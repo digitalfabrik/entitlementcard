@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.application.webservice.schema.create.primitiv
 
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.exceptions.GraphQLKotlinException
 
 const val MAX_SHORT_TEXT_LENGTH = 300
 
@@ -11,9 +11,9 @@ const val MAX_SHORT_TEXT_LENGTH = 300
 data class ShortTextInput(val shortText: String) {
     init {
         if (shortText.isEmpty()) {
-            throw GraphQLKotlinException("Value of ShortTextInput should not be empty.")
+            throw InvalidJsonException("Value of ShortTextInput should not be empty.")
         } else if (shortText.length > MAX_SHORT_TEXT_LENGTH) {
-            throw GraphQLKotlinException("Value of ShortTextInput should have at most $MAX_SHORT_TEXT_LENGTH characters.")
+            throw InvalidJsonException("Value of ShortTextInput should have at most $MAX_SHORT_TEXT_LENGTH characters.")
         }
     }
 

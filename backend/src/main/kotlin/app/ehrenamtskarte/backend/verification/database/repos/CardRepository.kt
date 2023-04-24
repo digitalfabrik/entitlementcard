@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.database.repos
 
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.verification.database.CardEntity
@@ -46,7 +47,7 @@ object CardRepository {
 
     fun activate(card: CardEntity, totpSecret: ByteArray) {
         if (card.codeType != CodeType.DYNAMIC) {
-            throw Exception("Invalid Code Type.")
+            throw InvalidCodeTypeException()
         }
         card.totpSecret = totpSecret
         if (card.firstActivationDate == null) {

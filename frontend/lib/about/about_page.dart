@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/about/backend_switch_dialog.dart';
 import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
@@ -9,8 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget {
+  final countToEnableSwitch = 10;
   const AboutPage({super.key});
+
+  @override
+  AboutPageState createState() => AboutPageState();
+}
+
+class AboutPageState extends State<AboutPage> {
+  int clickCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +38,14 @@ class AboutPage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: Image(
-                    image: AssetImage(buildConfig.iconInAboutTab),
-                    height: 100.0,
-                    width: 100.0,
-                    fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () => activateDialog(context),
+                    child: Image(
+                      image: AssetImage(buildConfig.iconInAboutTab),
+                      height: 100.0,
+                      width: 100.0,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -135,5 +147,17 @@ class AboutPage extends StatelessWidget {
         return ListView(children: children);
       },
     );
+  }
+
+  activateDialog(BuildContext context) {
+    setState(() {
+      clickCount += 1;
+    });
+    if (clickCount == widget.countToEnableSwitch) {
+      setState(() {
+        clickCount = 0;
+      });
+      BackendSwitchDialog.show(context);
+    }
   }
 }

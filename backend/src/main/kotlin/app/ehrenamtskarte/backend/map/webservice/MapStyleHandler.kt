@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.map.webservice
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
@@ -78,7 +79,7 @@ class MapStyleHandler(config: BackendConfiguration) {
     fun handle(context: Context) {
         try {
             val projectId: String = context.pathParam("project_id")
-            val style: String = this.styles[projectId] ?: throw NullPointerException()
+            val style: String = this.styles[projectId] ?: throw ProjectNotFoundException(projectId)
             context.result(style)
             context.contentType("application/json")
         } catch (e: IOException) {

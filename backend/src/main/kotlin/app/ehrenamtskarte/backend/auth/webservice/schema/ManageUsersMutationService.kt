@@ -5,25 +5,20 @@ import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.EmailAlreadyExistsException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import graphql.GraphqlErrorException
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-
-class EmailAlreadyExistsException() : GraphqlErrorException(
-    newErrorException().extensions(
-        mapOf(
-            Pair("code", "EMAIL_ALREADY_EXISTS")
-        )
-    )
-)
 
 @Suppress("unused")
 class ManageUsersMutationService {
@@ -44,11 +39,11 @@ class ManageUsersMutationService {
         transaction {
             val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
 
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
-            val region = regionId?.let { RegionEntity.findById(it) }
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.singleOrNull() ?: throw ProjectNotFoundException(project)
+            val region = regionId?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
 
             if (!Authorizer.mayCreateUser(actingAdmin, projectEntity.id.value, role, region)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
 
             if (AdministratorsRepository.emailAlreadyExists(email)) {
@@ -93,11 +88,12 @@ class ManageUsersMutationService {
             val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
-            val newRegion = newRegionId?.let { RegionEntity.findById(it) }
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+            val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(project, it) }
 
             if (!Authorizer.mayEditUser(actingAdmin, existingAdmin, projectEntity.id.value, newRole, newRegion)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
 
             if (
@@ -126,12 +122,12 @@ class ManageUsersMutationService {
         transaction {
             val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.first()
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
 
             if (existingAdmin.projectId != projectEntity.id) throw UnauthorizedException()
 
             if (!Authorizer.mayDeleteUser(actingAdmin, existingAdmin)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
 
             AdministratorsRepository.deleteAdministrator(existingAdmin)

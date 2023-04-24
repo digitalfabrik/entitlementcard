@@ -1,8 +1,6 @@
 import 'package:ehrenamtskarte/app.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart';
-import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -10,31 +8,5 @@ Future<void> main() async {
 
   debugPrint("Environment: $appEnvironment");
 
-  final mapStyleUrl = isProduction()
-      ? buildConfig.mapStyleUrl.production
-      : isLocal()
-          ? buildConfig.mapStyleUrl.local
-          : buildConfig.mapStyleUrl.showcase;
-
-  final graphqlUrl = isProduction()
-      ? buildConfig.backendUrl.production
-      : isLocal()
-          ? buildConfig.backendUrl.local
-          : buildConfig.backendUrl.showcase;
-
-  final projectId = isProduction()
-      ? buildConfig.projectId.production
-      : isLocal()
-          ? buildConfig.projectId.local
-          : buildConfig.projectId.showcase;
-
-  runApp(
-    Configuration(
-      mapStyleUrl: mapStyleUrl,
-      graphqlUrl: graphqlUrl,
-      projectId: projectId,
-      showDevSettings: kDebugMode,
-      child: const App(),
-    ),
-  );
+  runApp(SettingsProvider(child: const App()));
 }

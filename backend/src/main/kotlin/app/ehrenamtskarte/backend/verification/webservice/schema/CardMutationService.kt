@@ -3,7 +3,10 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
@@ -31,10 +34,10 @@ class CardMutationService {
             for (card in cards) {
                 val targetedRegionId = card.regionId
                 if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
-                    throw UnauthorizedException()
+                    throw ForbiddenException()
                 }
                 if (!validateNewCard(card)) {
-                    throw Exception("Invalid cart.")
+                    throw InvalidCodeTypeException()
                 }
                 val activationSecret =
                     card.activationSecretBase64?.let {
@@ -67,7 +70,7 @@ class CardMutationService {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig =
             context.backendConfiguration.projects.find { it.id == project }
-                ?: throw NullPointerException("Project not found")
+                ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
         val card = transaction { CardRepository.findByHash(project, cardHash) }

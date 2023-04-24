@@ -4,6 +4,10 @@ import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParam
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
@@ -35,9 +39,12 @@ class GraphQLHandler(
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
     private val regionIdentifierByPostalCode: Map<String, String> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
 ) {
+    val config: SchemaGeneratorConfig = graphQLParams.config
+        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
+        .plus(ExceptionSchemaConfig)
+
     val graphQLSchema = toSchema(
-        graphQLParams.config
-            .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema"))),
+        config,
         graphQLParams.queries,
         graphQLParams.mutations,
         graphQLParams.subscriptions
@@ -174,6 +181,10 @@ class GraphQLHandler(
             context.res().sendError(500)
         } catch (e: UnauthorizedException) {
             context.res().sendError(401)
+        } catch (e: ForbiddenException) {
+            context.res().sendError(403)
+        } catch (e: NotFoundException) {
+            context.res().sendError(404)
         } catch (e: ExecutionException) {
             e.printStackTrace()
             context.res().sendError(500)
