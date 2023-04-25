@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { ReactElement } from 'react'
 
-import { GraphQlExceptionCode } from '../generated/graphql'
 import defaultErrorMap from './DefaultErrorMap'
 
 type GraphQLErrorMessage = {
@@ -9,9 +8,7 @@ type GraphQLErrorMessage = {
   description?: string | ReactElement
 }
 
-export type OverwriteError = { [Code in GraphQlExceptionCode]?: GraphQLErrorMessage }
-
-const getMessageFromApolloError = (error: ApolloError, overwriteError: OverwriteError = {}): GraphQLErrorMessage => {
+const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
   const defaultMessage = 'Etwas ist schief gelaufen.'
 
   if (error.networkError) {
@@ -25,16 +22,7 @@ const getMessageFromApolloError = (error: ApolloError, overwriteError: Overwrite
     return { title: defaultMessage }
   }
 
-  const graphQLError = error.graphQLErrors[0]
-  if ('code' in graphQLError.extensions && (graphQLError.extensions['code'] as any) in defaultErrorMap) {
-    const code = graphQLError.extensions['code'] as GraphQlExceptionCode
-
-    if (code in overwriteError) {
-      return overwriteError[code] ?? { title: defaultMessage }
-    }
-    return defaultErrorMap[code]
-  }
-  return { title: defaultMessage }
+  return defaultErrorMap(error.graphQLErrors[0].extensions)
 }
 
 export default getMessageFromApolloError

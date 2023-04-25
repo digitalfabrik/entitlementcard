@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidPasswordResetLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -23,7 +23,7 @@ class ResetPasswordQueryService {
             val admin = AdministratorEntity
                 .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) and not(Administrators.deleted) }.singleOrNull()
             if (admin == null) {
-                throw InvalidLinkException()
+                throw InvalidPasswordResetLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw PasswordResetKeyExpiredException()
             }

@@ -1,9 +1,11 @@
 import { Button, Card, H3, TextArea } from '@blueprintjs/core'
+import { Tooltip2 } from '@blueprintjs/popover2'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
+import defaultErrorMap from '../../errors/DefaultErrorMap'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useUpdateDataPolicyMutation } from '../../generated/graphql'
+import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 
 const Content = styled.div`
@@ -50,39 +52,39 @@ type RegionOverviewProps = {
 }
 
 const MAX_CHARS = 20000
-const overwriteError = {
-  INVALID_FILE_SIZE: {
-    title: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`,
-  },
-}
 
 const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, overwriteError)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => appToaster?.show({ intent: 'success', message: 'Datenschutzerklärung erfolgreich geändert.' }),
   })
   const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 
-  const onSave = async () => {
-    if (maxCharsExceeded) {
-      appToaster?.show({
-        intent: 'danger',
-        message: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal ${MAX_CHARS} Zeichen erlaubt.`,
-      })
-    } else {
-      updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
-    }
-  }
+  const onSave = () => updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
+
+  const { title: errorMessage } = defaultErrorMap({
+    code: GraphQlExceptionCode.InvalidDataPolicySize,
+    maxSize: MAX_CHARS,
+  })
 
   return (
     <>
       <ButtonBar stickyTop={0}>
-        <Button icon='floppy-disk' text='Speichern' intent='success' onClick={onSave} loading={loading} />
+        <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
+          <Button
+            disabled={maxCharsExceeded}
+            icon='floppy-disk'
+            text='Speichern'
+            intent='success'
+            onClick={onSave}
+            loading={loading}
+          />
+        </Tooltip2>
       </ButtonBar>
       <Content>
         <Label>Datenschutzerklärung</Label>

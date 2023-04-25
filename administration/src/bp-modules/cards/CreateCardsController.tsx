@@ -66,7 +66,7 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
     } catch (e) {
       if (e instanceof PDFError)
         appToaster?.show({
-          message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+          message: 'Etwas ist schiefgegangen beim Erstellen der PDF.',
           intent: 'danger',
         })
       else if (e instanceof CreateCardsError) {

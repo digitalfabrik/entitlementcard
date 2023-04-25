@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import InvalidPasswordResetLink from '../../errors/templates/InvalidPasswordResetLink'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
@@ -11,13 +10,6 @@ import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
 import useQueryHandler from '../hooks/useQueryHandler'
 import validateNewPasswordInput from './validateNewPasswordInput'
-
-const overwriteErrors = {
-  INVALID_LINK: {
-    title: 'Ungültiger Link',
-    description: <InvalidPasswordResetLink />,
-  },
-}
 
 const ResetPasswordController = () => {
   const config = useContext(ProjectConfigContext)
@@ -62,7 +54,7 @@ const ResetPasswordController = () => {
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  const checkPasswordResetLinkQueryResult = useQueryHandler(checkPasswordResetLinkQuery, overwriteErrors)
+  const checkPasswordResetLinkQueryResult = useQueryHandler(checkPasswordResetLinkQuery)
 
   if (!checkPasswordResetLinkQueryResult.successful) return checkPasswordResetLinkQueryResult.component
 

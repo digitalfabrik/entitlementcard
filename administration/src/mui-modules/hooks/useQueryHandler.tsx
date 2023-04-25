@@ -2,7 +2,7 @@ import { OperationVariables, QueryResult } from '@apollo/client'
 import { CircularProgress } from '@mui/material'
 import { ReactElement } from 'react'
 
-import getMessageFromApolloError, { OverwriteError } from '../../errors/getMessageFromApolloError'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import ErrorHandler from '../ErrorHandler'
 
 type QueryHandlerResult<Data> =
@@ -16,14 +16,13 @@ type QueryHandlerResult<Data> =
     }
 
 const useQueryHandler = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>,
-  overwriteError?: OverwriteError
+  queryResult: QueryResult<Data, Variables>
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
 
   if (loading) return { successful: false, component: <CircularProgress style={{ margin: 'auto' }} /> }
   if (error) {
-    const { title, description } = getMessageFromApolloError(error, overwriteError)
+    const { title, description } = getMessageFromApolloError(error)
     return { successful: false, component: <ErrorHandler title={title} description={description} refetch={refetch} /> }
   }
   if (!data) return { successful: false, component: <ErrorHandler refetch={refetch} /> }
