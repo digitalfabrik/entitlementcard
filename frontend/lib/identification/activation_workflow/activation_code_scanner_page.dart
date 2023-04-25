@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
@@ -82,6 +83,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
+    final settings = Provider.of<SettingsModel>(context);
 
     final activationResult = await activateCode(
       client: client,
@@ -103,6 +105,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           totpSecret: totpSecret,
         );
         provider.setCode(userCode);
+        settings.setLastCardVerification(lastVerification: DateTime.now().toUtc().toString());
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

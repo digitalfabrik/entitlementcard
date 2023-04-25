@@ -31,7 +31,7 @@ Future<CardInfo?> verifyDynamicVerificationCode(
 ) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentDynamicVerificationCode(code);
-  if (!(await queryDynamicServerVerification(client, projectId, code))) {
+  if (!(await queryDynamicServerVerification(client, projectId, code)).valid) {
     return null;
   }
   return code.info;
@@ -44,7 +44,7 @@ Future<CardInfo?> verifyStaticVerificationCode(
 ) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentStaticVerificationCode(code);
-  if (!(await queryStaticServerVerification(client, projectId, code))) {
+  if (!(await queryStaticServerVerification(client, projectId, code)).valid) {
     return null;
   }
   return code.info;

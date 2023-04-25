@@ -32,6 +32,25 @@ class SettingsModel extends ChangeNotifier {
     return obj;
   }
 
+  String? _getString(String key) {
+    final obj = _preferences?.get(key);
+    if (obj == null) {
+      return null;
+    } else if (obj is! String) {
+      log("Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.",
+          level: 1000);
+      return null;
+    }
+    return obj;
+  }
+
+  String get lastCardVerification => _getString("lastCardVerification") ?? '1970-01-01T00:00:00.000000Z';
+
+  Future<void> setLastCardVerification({required String lastVerification}) async {
+    await _preferences?.setString("lastCardVerification", lastVerification);
+    notifyListeners();
+  }
+
   bool get firstStart => _getBool("firstStart") ?? true;
 
   Future<void> setFirstStart({required bool enabled}) async {
@@ -62,6 +81,6 @@ class SettingsModel extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging}';
+    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, lastCardVerification: $lastCardVerification}';
   }
 }

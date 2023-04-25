@@ -84,6 +84,10 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _showIntroSlides(context),
           ),
           ListTile(
+            title: const Text('Set expired last card verification'),
+            onTap: () => _setExpiredLastVerification(context),
+          ),
+          ListTile(
             title: const Text('Log sample exception'),
             onTap: () => log("Sample exception.", error: Exception("Sample exception...")),
           ),
@@ -233,5 +237,10 @@ class DevSettingsView extends StatelessWidget {
         builder: (context) => const IntroScreen(),
       ),
     );
+  }
+
+  void _setExpiredLastVerification(BuildContext context) {
+    final settings = Provider.of<SettingsModel>(context, listen: false);
+    settings.setLastCardVerification(lastVerification: DateTime.now().toUtc().subtract(Duration(days: 7)).toString());
   }
 }
