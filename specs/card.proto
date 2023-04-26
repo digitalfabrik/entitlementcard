@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+
 message RegionExtension {
   // Using int32 instead of uint32, even though we do not expect negative values.
   // The reason is that int32 are better supported in GraphQL and SQL.
@@ -58,6 +59,11 @@ message CardInfo {
   optional CardExtensions extensions = 3;
 }
 
+message CardVerification {
+  optional bool cardValid = 1;
+  optional uint32 verificationTimeStamp = 2;
+}
+
 message QrCode {
   oneof qr_code {
     DynamicActivationCode dynamic_activation_code = 1;
@@ -78,6 +84,8 @@ message DynamicUserCode {
   bytes pepper = 2;
   bytes totp_secret = 3;
   bytes ec_signature = 4;
+  CardVerification card_verification = 5;
+
 }
 
 message DynamicVerificationCode {

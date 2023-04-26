@@ -24,6 +24,8 @@ extension CanonicalJson on GeneratedMessage {
         map[field.tagNumber.toString()] = value;
       } else if (value is int) {
         map[field.tagNumber.toString()] = value.toString();
+      } else if (value is bool) {
+        map[field.tagNumber.toString()] = value.toString();
       } else if (value is ProtobufEnum) {
         map[field.tagNumber.toString()] = value.value.toString();
       } else if (value is GeneratedMessage) {

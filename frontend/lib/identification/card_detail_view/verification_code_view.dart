@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/animated_progressbar.dart';
 import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -34,6 +34,7 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
   void initState() {
     super.initState();
     _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
+    // On every app start when this widget will be initialized, we verify with the backend if the card is valid
     SchedulerBinding.instance.addPostFrameCallback((_) => verifyCard(_otpCode, widget.userCode, context));
   }
 
@@ -113,11 +114,17 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
       pepper: userCode.pepper,
       otp: otpCode.code,
     );
-    final settings = Provider.of<SettingsModel>(context, listen: false);
+
     final cardVerification = await queryDynamicServerVerification(client, projectId, qrCode);
-    settings.setCardValid(valid: cardVerification.valid);
-    if (cardVerification.valid) {
-      settings.setLastCardVerification(lastVerification: cardVerification.lastCheck);
-    }
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
+
+    provider.setCode(DynamicUserCode(
+        info: userCode.info,
+        ecSignature: userCode.ecSignature,
+        pepper: userCode.pepper,
+        totpSecret: userCode.totpSecret,
+        cardVerification: CardVerification(
+            cardValid: cardVerification.valid,
+            verificationTimeStamp: daysSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp).toUtc()))));
   }
 }

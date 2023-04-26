@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
@@ -16,6 +15,7 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -83,7 +83,6 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
-    final settings = Provider.of<SettingsModel>(context, listen: false);
 
     final activationResult = await activateCode(
       client: client,
@@ -99,14 +98,13 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        final userCode = DynamicUserCode(
-          info: activationCode.info,
-          pepper: activationCode.pepper,
-          totpSecret: totpSecret,
-        );
-        provider.setCode(userCode);
-        settings.setLastCardVerification(lastVerification: DateTime.now().toUtc().toString());
-        settings.setCardValid(valid: true);
+
+        provider.setCode(DynamicUserCode(
+            info: activationCode.info,
+            pepper: activationCode.pepper,
+            totpSecret: totpSecret,
+            cardVerification:
+                CardVerification(cardValid: true, verificationTimeStamp: daysSinceEpoch(DateTime.now().toUtc()))));
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

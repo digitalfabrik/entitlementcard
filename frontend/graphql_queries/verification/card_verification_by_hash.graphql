@@ -1,6 +1,6 @@
 query CardVerificationByHash($project: String!, $card: CardVerificationModelInput!) {
     verifyCardInProject(project: $project, card: $card){
         valid,
-        lastCheck
+        verificationTimeStamp
     }
 }

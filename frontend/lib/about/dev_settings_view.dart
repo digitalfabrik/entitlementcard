@@ -16,6 +16,7 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -240,7 +241,17 @@ class DevSettingsView extends StatelessWidget {
   }
 
   void _setExpiredLastVerification(BuildContext context) {
-    final settings = Provider.of<SettingsModel>(context, listen: false);
-    settings.setLastCardVerification(lastVerification: DateTime.now().toUtc().subtract(Duration(days: 7)).toString());
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final DynamicUserCode userCode = provider.userCode!;
+    final CardVerification cardVerification = CardVerification(
+        verificationTimeStamp:
+            daysSinceEpoch(DateTime.now().toUtc().subtract(Duration(hours: cardValidationExpireHours))),
+        cardValid: true);
+    provider.setCode(DynamicUserCode(
+        info: userCode.info,
+        ecSignature: userCode.ecSignature,
+        pepper: userCode.pepper,
+        totpSecret: userCode.totpSecret,
+        cardVerification: cardVerification));
   }
 }

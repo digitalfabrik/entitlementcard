@@ -77,8 +77,8 @@ type CardActivationResultModel {
 }
 
 type CardVerificationResultModel {
-  lastCheck: String!
   valid: Boolean!
+  verificationTimeStamp: String!
 }
 
 type Category {
