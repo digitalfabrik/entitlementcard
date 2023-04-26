@@ -4,7 +4,7 @@ import React, { useContext, useMemo } from 'react'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 
 const RegionSelect = Select.ofType<Region>()
 
@@ -39,7 +39,7 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = useQueryHandler(regionsQuery)
+  const regionsQueryResult = getQueryResult(regionsQuery)
 
   const regions = useMemo(
     () =>

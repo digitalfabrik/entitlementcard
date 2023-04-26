@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.auth.PasswordValidator
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
+import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -18,6 +19,7 @@ import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.security.SecureRandom
 import java.time.Instant
 import java.time.Period
@@ -111,4 +113,26 @@ object AdministratorsRepository {
         administrator.passwordResetKeyExpiry = Instant.now().plus(Period.ofDays(1))
         return key
     }
+
+    fun updateNotificationSettings(
+        administrator: AdministratorEntity,
+        notificationSettings: NotificationSettings
+    ) {
+        administrator.notificationOnApplication = notificationSettings.notificationOnApplication
+        administrator.notificationOnVerification = notificationSettings.notificationOnVerification
+    }
+
+    fun getNotificationRecipientsForApplication(project: String): List<AdministratorEntity> =
+        transaction {
+            (Administrators innerJoin Projects).select {
+                (Projects.project eq project) and (Administrators.notificationOnApplication eq true)
+            }.let { AdministratorEntity.wrapRows(it) }.toList()
+        }
+
+    fun getNotificationRecipientsForVerification(project: String): List<AdministratorEntity> =
+        transaction {
+            (Administrators innerJoin Projects).select {
+                (Projects.project eq project) and (Administrators.notificationOnVerification eq true)
+            }.let { AdministratorEntity.wrapRows(it) }.toList()
+        }
 }

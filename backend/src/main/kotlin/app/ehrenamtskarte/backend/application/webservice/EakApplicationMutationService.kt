@@ -1,10 +1,8 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.create.PersonalData
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -20,10 +18,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.simplejavamail.MailException
-import org.slf4j.LoggerFactory
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Suppress("unused")
 class EakApplicationMutationService {
@@ -35,7 +29,6 @@ class EakApplicationMutationService {
         project: String,
         dfe: DataFetchingEnvironment
     ): DataFetcherResult<Boolean> {
-        val logger = LoggerFactory.getLogger(Mailer::class.java)
         val context = dfe.getContext<GraphQLContext>()
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -61,75 +54,19 @@ class EakApplicationMutationService {
             )
         }
 
-        try {
-            Mailer.sendMail(
-                backendConfig,
-                projectConfig.smtp,
-                projectConfig.administrationName,
-                application.personalData.emailAddress.email,
-                "Antrag erfolgreich eingereicht",
-                generateApplicationApplicantMailMessage(projectConfig.administrationName, projectConfig.administrationBaseUrl, application.personalData, applicationEntity.accessKey)
-            )
-        } catch (exception: MailException) {
-            logger.error(exception.message)
-            throw MailNotSentException()
-        }
+        Mailer.sendApplicationApplicantMail(backendConfig, projectConfig, application.personalData, applicationEntity.accessKey)
+
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
         for (applicationVerification in verificationEntities) {
             try {
-                Mailer.sendMail(
-                    backendConfig,
-                    projectConfig.smtp,
-                    projectConfig.administrationName,
-                    applicationVerification.contactEmailAddress,
-                    "Antrag Verifizieren",
-                    generateApplicationVerificationMailMessage(projectConfig.administrationName, projectConfig.administrationBaseUrl, applicationVerification)
-                )
-            } catch (exception: MailException) {
-                logger.error(exception.message)
-                dataFetcherResultBuilder.error(MailNotSentException())
+                Mailer.sendApplicationVerificationMail(backendConfig, projectConfig, applicationVerification)
+            } catch (exception: MailNotSentException) {
+                dataFetcherResultBuilder.error(exception)
             }
         }
+        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig)
+
         return dataFetcherResultBuilder.data(true).build()
-    }
-
-    private fun generateApplicationVerificationMailMessage(
-        administrationName: String,
-        administrationBaseUrl: String,
-        applicationVerification: ApplicationVerificationEntity
-    ): String {
-        return """
-        Guten Tag ${applicationVerification.contactName},
-
-        Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
-        Antragssteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben. 
-        Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:
-        $administrationBaseUrl/antrag-verifizieren/${URLEncoder.encode(applicationVerification.accessKey, StandardCharsets.UTF_8)}
-
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
-
-        - $administrationName
-        """.trimIndent()
-    }
-
-    private fun generateApplicationApplicantMailMessage(
-        administrationName: String,
-        administrationBaseUrl: String,
-        personalData: PersonalData,
-        accessKey: String
-    ): String {
-        return """
-        Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
-
-        Ihr Antrag zur Bayrischen Ehrenamtskarte wurde erfolgreich eingereicht. 
-        
-        Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:
-        $administrationBaseUrl/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
-
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
-
-        - $administrationName
-        """.trimIndent()
     }
 
     @GraphQLDescription("Deletes the application with specified id")
@@ -165,12 +102,20 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Verifies or rejects an application verification")
     fun verifyOrRejectApplicationVerification(
+        project: String,
         accessKey: String,
-        verified: Boolean
+        verified: Boolean,
+        dfe: DataFetchingEnvironment
     ): Boolean {
         return transaction {
             if (verified) {
-                ApplicationRepository.verifyApplicationVerification(accessKey)
+                val context = dfe.getContext<GraphQLContext>()
+                val backendConfig = context.backendConfiguration
+                val projectConfig = backendConfig.projects.first { it.id == project }
+                val successful = ApplicationRepository.verifyApplicationVerification(accessKey)
+                Mailer.sendNotificationForVerificationMails(project, backendConfig, projectConfig)
+
+                successful
             } else {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }

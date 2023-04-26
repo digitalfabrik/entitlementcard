@@ -124,10 +124,17 @@ type Mutation {
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Updates the notification settings"
+  updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
   "Verifies or rejects an application verification"
-  verifyOrRejectApplicationVerification(accessKey: String!, verified: Boolean!): Boolean!
+  verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
   "Withdraws the application"
   withdrawApplication(accessKey: String!): Boolean!
+}
+
+type NotificationSettings {
+  notificationOnApplication: Boolean!
+  notificationOnVerification: Boolean!
 }
 
 type PhysicalStore {
@@ -152,6 +159,8 @@ type Query {
   getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Get the notification settings of the authenticated administrator"
+  getNotificationSettings(project: String!): NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
   getUsersInProject(project: String!): [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
@@ -394,6 +403,11 @@ input GoldenCardWorkAtOrganizationsEntitlementInput {
 
 input IdsParamsInput {
   ids: [Int!]!
+}
+
+input NotificationSettingsInput {
+  notificationOnApplication: Boolean!
+  notificationOnVerification: Boolean!
 }
 
 input OrganizationContactInput {

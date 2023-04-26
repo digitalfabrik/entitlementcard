@@ -15,7 +15,7 @@ type QueryHandlerResult<Data> =
       component: ReactElement
     }
 
-const useQueryHandler = <Data, Variables extends OperationVariables>(
+const getQueryResult = <Data, Variables extends OperationVariables>(
   queryResult: QueryResult<Data, Variables>
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
@@ -29,4 +29,4 @@ const useQueryHandler = <Data, Variables extends OperationVariables>(
   return { successful: true, data: data }
 }
 
-export default useQueryHandler
+export default getQueryResult

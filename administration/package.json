@@ -9,8 +9,6 @@
     "@blueprintjs/popover2": "^1.13.3",
     "@blueprintjs/select": "^4.9.3",
     "@bufbuild/protobuf": "^1.0.0",
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.10",

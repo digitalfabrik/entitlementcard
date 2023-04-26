@@ -1,0 +1,6 @@
+query getNotificationSettings($project: String!) {
+  notificationSettings: getNotificationSettings(project: $project) {
+    notificationOnApplication
+    notificationOnVerification
+  }
+}
