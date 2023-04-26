@@ -18,9 +18,9 @@ import 'package:qr_flutter/qr_flutter.dart' as qr show QrImage, QrCode, QrVersio
 class VerificationCodeView extends StatefulWidget {
   final DynamicUserCode userCode;
   final OTPGenerator _otpGenerator;
-  final bool isVerificationExpired;
+  final bool isCardVerificationExpired;
 
-  VerificationCodeView({super.key, required this.userCode, required this.isVerificationExpired})
+  VerificationCodeView({super.key, required this.userCode, required this.isCardVerificationExpired})
       : _otpGenerator = OTPGenerator(userCode.totpSecret);
 
   @override
@@ -47,7 +47,7 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
   Widget build(BuildContext context) {
     final otpCode = _otpCode;
     final userCode = widget.userCode;
-    final isVerificationExpired = widget.isVerificationExpired;
+    final isCardVerificationExpired = widget.isCardVerificationExpired;
 
     if (otpCode == null) {
       return const SmallButtonSpinner();
@@ -65,7 +65,7 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
             );
             qrCode.make();
 
-            return isVerificationExpired
+            return isCardVerificationExpired
                 ? IconButton(
                     icon: const Icon(Icons.refresh),
                     color: Theme.of(context).appBarTheme.backgroundColor,
@@ -104,7 +104,7 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
 
   Future<void> verifyCard(OTPCode? otpCode, DynamicUserCode userCode, BuildContext context) async {
     if (otpCode == null) {
-      return;
+      throw Exception("otp code is not available");
     }
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
@@ -113,21 +113,11 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
       pepper: userCode.pepper,
       otp: otpCode.code,
     );
-    final cardVerification = await queryDynamicServerVerification(client, projectId, qrCode);
-    if (cardVerification.valid) {
-      updateLastCardVerification(cardVerification.lastCheck);
-    } else {
-      removeInvalidCard();
-    }
-  }
-
-  void updateLastCardVerification(String lastCheck) {
     final settings = Provider.of<SettingsModel>(context, listen: false);
-    settings.setLastCardVerification(lastVerification: lastCheck);
-  }
-
-  void removeInvalidCard() {
-    final card = Provider.of<UserCodeModel>(context, listen: false);
-    card.removeCode();
+    final cardVerification = await queryDynamicServerVerification(client, projectId, qrCode);
+    settings.setCardValid(valid: cardVerification.valid);
+    if (cardVerification.valid) {
+      settings.setLastCardVerification(lastVerification: cardVerification.lastCheck);
+    }
   }
 }

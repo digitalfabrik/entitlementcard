@@ -27,6 +27,6 @@ bool isCardExpired(CardInfo cardInfo) {
       : DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)).isBefore(DateTime.now());
 }
 
-bool isVerificationCheckExpired(String lastCheck) {
-  return DateTime.now().toUtc().isAfter(DateTime.parse(lastCheck).add(Duration(days: 7)));
+bool isVerificationCheckExpired(String? lastCheck) {
+  return lastCheck == null ? true : DateTime.now().toUtc().isAfter(DateTime.parse(lastCheck).add(Duration(days: 7)));
 }

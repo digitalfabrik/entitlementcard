@@ -83,7 +83,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
-    final settings = Provider.of<SettingsModel>(context);
+    final settings = Provider.of<SettingsModel>(context, listen: false);
 
     final activationResult = await activateCode(
       client: client,
@@ -106,6 +106,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         );
         provider.setCode(userCode);
         settings.setLastCardVerification(lastVerification: DateTime.now().toUtc().toString());
+        settings.setCardValid(valid: true);
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

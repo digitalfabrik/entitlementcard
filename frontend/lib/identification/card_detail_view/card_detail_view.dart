@@ -120,7 +120,8 @@ class RichQrCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    final verificationExpired = isVerificationCheckExpired(settings.lastCardVerification);
+    final isCardVerificationExpired = isVerificationCheckExpired(settings.lastCardVerification);
+    final isCardInvalid = !settings.cardValid;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -131,19 +132,14 @@ class RichQrCode extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 4),
             constraints: const BoxConstraints(maxWidth: 300),
             child: Text(
-              isExpired
-                  ? "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen."
-                  : verificationExpired
-                      ? 'Ihre Karten konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen sie eine Verbindung mit dem Internet sicher.'
-                      : "Mit diesem QR-Code können Sie sich"
-                          " bei Akzeptanzstellen ausweisen:",
+              getCardInfoText(isCardVerificationExpired, isCardInvalid, context),
               textAlign: TextAlign.center,
             ),
           ),
           Flexible(
-              child: isExpired
+              child: (isExpired || isCardInvalid)
                   ? Container()
-                  : VerificationCodeView(userCode: userCode, isVerificationExpired: verificationExpired)),
+                  : VerificationCodeView(userCode: userCode, isCardVerificationExpired: isCardVerificationExpired)),
           Container(
             alignment: Alignment.center,
             child: TextButton(
@@ -157,5 +153,19 @@ class RichQrCode extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getCardInfoText(bool isCardVerificationExpired, bool isCardInvalid, BuildContext context) {
+    if (isExpired) {
+      return "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.";
+    }
+    if (isCardInvalid) {
+      return 'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.';
+    }
+    if (isCardVerificationExpired) {
+      return 'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden.Bitte stellen sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen sie erneut.';
+    }
+
+    return 'Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:';
   }
 }

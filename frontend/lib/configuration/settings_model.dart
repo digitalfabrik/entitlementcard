@@ -44,7 +44,14 @@ class SettingsModel extends ChangeNotifier {
     return obj;
   }
 
-  String get lastCardVerification => _getString("lastCardVerification") ?? '1970-01-01T00:00:00.000000Z';
+  bool get cardValid => _getBool("cardValid") ?? false;
+
+  Future<void> setCardValid({required bool valid}) async {
+    await _preferences?.setBool("cardValid", valid);
+    notifyListeners();
+  }
+
+  String? get lastCardVerification => _getString("lastCardVerification");
 
   Future<void> setLastCardVerification({required String lastVerification}) async {
     await _preferences?.setString("lastCardVerification", lastVerification);
@@ -81,6 +88,6 @@ class SettingsModel extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, lastCardVerification: $lastCardVerification}';
+    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, lastCardVerification: $lastCardVerification, cardValid: $cardValid}';
   }
 }
