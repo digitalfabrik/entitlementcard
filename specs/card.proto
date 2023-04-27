@@ -61,7 +61,7 @@ message CardInfo {
 
 message CardVerification {
   optional bool cardValid = 1;
-  optional uint32 verificationTimeStamp = 2;
+  optional uint64 verificationTimeStamp = 2;
 }
 
 message QrCode {

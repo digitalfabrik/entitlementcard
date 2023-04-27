@@ -38,5 +38,5 @@ bool cardWasVerifiedLately(CardVerification cardVerification) {
   return lastVerificationTimestamp == null
       ? false
       : DateTime.now().toUtc().isBefore(DateTime.fromMillisecondsSinceEpoch(0)
-          .add(Duration(days: lastVerificationTimestamp, hours: cardValidationExpireHours)));
+          .add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)));
 }

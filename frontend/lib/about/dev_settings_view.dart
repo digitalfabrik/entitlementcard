@@ -240,12 +240,13 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
+  // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
   void _setExpiredLastVerification(BuildContext context) {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final DynamicUserCode userCode = provider.userCode!;
     final CardVerification cardVerification = CardVerification(
         verificationTimeStamp:
-            daysSinceEpoch(DateTime.now().toUtc().subtract(Duration(hours: cardValidationExpireHours))),
+            secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600))),
         cardValid: true);
     provider.setCode(DynamicUserCode(
         info: userCode.info,

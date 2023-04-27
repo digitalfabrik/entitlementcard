@@ -69,7 +69,7 @@ Future<CardVerificationByHash$Query$CardVerificationResultModel> _queryServerVer
     }
 
     final parsedResult = byCardDetailsHash.parse(data);
-    return parsedResult.verifyCardInProject;
+    return parsedResult.verifyCardInProjectV2;
   } on Object catch (e) {
     throw ServerVerificationException(e);
   }

@@ -103,8 +103,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
             info: activationCode.info,
             pepper: activationCode.pepper,
             totpSecret: totpSecret,
-            cardVerification:
-                CardVerification(cardValid: true, verificationTimeStamp: daysSinceEpoch(DateTime.now().toUtc()))));
+            cardVerification: CardVerification(
+                cardValid: true,
+                verificationTimeStamp: secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)))));
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

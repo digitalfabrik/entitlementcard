@@ -67,12 +67,12 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
             qrCode.make();
 
             return isCardVerificationExpired
-                ? IconButton(
+                ? TextButton.icon(
                     icon: const Icon(Icons.refresh),
-                    color: Theme.of(context).appBarTheme.backgroundColor,
                     onPressed: () {
                       verifyCard(otpCode, userCode, context);
                     },
+                    label: Text("Erneut prüfen"),
                   )
                 : ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
@@ -125,6 +125,6 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
         totpSecret: userCode.totpSecret,
         cardVerification: CardVerification(
             cardValid: cardVerification.valid,
-            verificationTimeStamp: daysSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp).toUtc()))));
+            verificationTimeStamp: secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp)))));
   }
 }
