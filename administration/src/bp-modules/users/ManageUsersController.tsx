@@ -1,4 +1,4 @@
-import { Card, H3, NonIdealState, Spinner } from '@blueprintjs/core'
+import { Card, H3, NonIdealState } from '@blueprintjs/core'
 import { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -10,8 +10,8 @@ import {
   useGetUsersInRegionQuery,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import ErrorHandler from '../ErrorHandler'
 import StandaloneCenter from '../StandaloneCenter'
+import useQueryHandler from '../hooks/useQueryHandler'
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
@@ -30,16 +30,14 @@ const ManageProjectUsers = () => {
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
   const usersQuery = useGetUsersInProjectQuery({ variables: { project: projectId } })
 
-  if (regionsQuery.loading || usersQuery.loading) {
-    return <Spinner />
-  } else if (!regionsQuery.data || regionsQuery.error) {
-    return <ErrorHandler refetch={regionsQuery.refetch} />
-  } else if (!usersQuery.data || usersQuery.error) {
-    return <ErrorHandler refetch={usersQuery.refetch} />
-  }
+  const regionsQueryResult = useQueryHandler(regionsQuery)
+  const usersQueryResult = useQueryHandler(usersQuery)
 
-  const regions = regionsQuery.data!!.regions
-  const users = usersQuery.data!!.users
+  if (!regionsQueryResult.successful) return regionsQueryResult.component
+  if (!usersQueryResult.successful) return usersQueryResult.component
+
+  const regions = regionsQueryResult.data.regions
+  const users = usersQueryResult.data.users
 
   return (
     <UsersTableContainer title={`Alle Benutzer von '${projectName} - Verwaltung'`}>
@@ -53,16 +51,14 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
   const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region!!.id } })
 
-  if (regionsQuery.loading || usersQuery.loading) {
-    return <Spinner />
-  } else if (!regionsQuery.data || regionsQuery.error) {
-    return <ErrorHandler refetch={regionsQuery.refetch} />
-  } else if (!usersQuery.data || usersQuery.error) {
-    return <ErrorHandler refetch={usersQuery.refetch} />
-  }
+  const regionsQueryResult = useQueryHandler(regionsQuery)
+  const usersQueryResult = useQueryHandler(usersQuery)
 
-  const regions = regionsQuery.data!!.regions
-  const users = usersQuery.data!!.users
+  if (!regionsQueryResult.successful) return regionsQueryResult.component
+  if (!usersQueryResult.successful) return usersQueryResult.component
+
+  const regions = regionsQueryResult.data.regions
+  const users = usersQueryResult.data.users
 
   return (
     <UsersTableContainer title={`Alle Verwalter der Region '${region.prefix} ${region.name}'`}>

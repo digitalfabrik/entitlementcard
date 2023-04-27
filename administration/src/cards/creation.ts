@@ -1,5 +1,6 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, ApolloError } from '@apollo/client'
 
+import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import {
   AddCardsDocument,
@@ -13,6 +14,13 @@ import { uint8ArrayToBase64 } from '../util/base64'
 import hashCardInfo from './hashCardInfo'
 
 type Codes = (DynamicActivationCode | StaticVerificationCode)[]
+
+export class CreateCardsError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'CreateCardsError'
+  }
+}
 
 export async function createCards(client: ApolloClient<object>, activationCodes: Codes, region: Region) {
   const cards: CardGenerationModelInput[] = await Promise.all(
@@ -35,7 +43,12 @@ export async function createCards(client: ApolloClient<object>, activationCodes:
     mutation: AddCardsDocument,
     variables: { cards },
   })
+
+  if (result.errors) {
+    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
+    throw new CreateCardsError(title)
+  }
   if (!result.data?.success) {
-    throw Error(JSON.stringify(result))
+    throw new CreateCardsError('Beim erstellen der Karte(n) ist ein Fehler aufgetreten.')
   }
 }

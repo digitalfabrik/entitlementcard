@@ -71,7 +71,7 @@ object AdministratorsRepository {
         val passwordHash = password?.let {
             val passwordValidation = PasswordValidator.validatePassword(it)
             if (passwordValidation != PasswordValidationResult.VALID) {
-                throw InvalidPasswordException(passwordValidation)
+                throw InvalidPasswordException()
             }
             PasswordCrypto.hashPasswort(it)
         }
@@ -89,7 +89,7 @@ object AdministratorsRepository {
     fun changePassword(administrator: AdministratorEntity, newPassword: String) {
         val passwordValidationResult = PasswordValidator.validatePassword(newPassword)
         if (passwordValidationResult != PasswordValidationResult.VALID) {
-            throw InvalidPasswordException(passwordValidationResult)
+            throw InvalidPasswordException()
         }
 
         administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)

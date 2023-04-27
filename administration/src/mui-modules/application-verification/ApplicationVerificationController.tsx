@@ -1,5 +1,5 @@
 import { Check, Close } from '@mui/icons-material'
-import { Alert, AlertTitle, Button, Card, CircularProgress, Divider, Typography, styled } from '@mui/material'
+import { Alert, AlertTitle, Button, Card, Divider, Typography, styled } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -13,7 +13,7 @@ import {
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
-import ErrorHandler from '../ErrorHandler'
+import useQueryHandler from '../hooks/useQueryHandler'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -44,16 +44,15 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const [verificationFinised, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
-  const showErrorSnackbar = () => enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
   const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
     onError: error => {
-      console.error(error)
-      showErrorSnackbar()
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
       if (!result) {
         console.error('Verify operation returned false.')
-        showErrorSnackbar()
+        enqueueSnackbar('Etwas ist schief gelaufen.', { variant: 'error' })
       } else {
         setVerificationFinished(true)
       }
@@ -69,22 +68,22 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     })
   }
 
-  const { loading, error, data, refetch } = useGetApplicationByApplicationVerificationAccessKeyQuery({
+  const applicationQuery = useGetApplicationByApplicationVerificationAccessKeyQuery({
     variables: { applicationVerificationAccessKey },
   })
 
-  if (loading) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (error) {
-    const { title, description } = getMessageFromApolloError(error)
-    return <ErrorHandler title={title} description={description} refetch={refetch} />
-  } else if (!data) return <ErrorHandler refetch={refetch} />
-  if (data.verification.rejectedDate || data.verification.verifiedDate)
+  const applicationQueryHandler = useQueryHandler(applicationQuery)
+  if (!applicationQueryHandler.successful) return applicationQueryHandler.component
+
+  const { verification, application } = applicationQueryHandler.data
+
+  if (verification.rejectedDate || verification.verifiedDate)
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
-  if (data.application.withdrawalDate)
+  if (application.withdrawalDate)
     return (
       <CenteredMessage
         title={`Der Antrag wurde vom Antragssteller am ${formatDateWithTimezone(
-          data.application.withdrawalDate,
+          application.withdrawalDate,
           config.timezone
         )} zurückgezogen.`}
       />
@@ -97,7 +96,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
       </CenteredMessage>
     )
 
-  const { jsonValue, createdDate: createdDateString, id } = data.application
+  const { jsonValue, createdDate: createdDateString, id } = application
   const jsonField = JSON.parse(jsonValue)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   return (
@@ -107,14 +106,14 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
           {config.name}
         </Typography>
         <Typography my='8px' variant='body1'>
-          Guten Tag {data.verification.contactName},
+          Guten Tag {verification.contactName},
           <br />
           <br />
           Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
-          Antragssteller hat Sie als Kontaktperson der Organisation {data.verification.organizationName} angegeben. Im
+          Antragssteller hat Sie als Kontaktperson der Organisation {verification.organizationName} angegeben. Im
           Folgenden können Sie den zugehörigen Antrag einsehen. Wir bitten Sie, die enthaltenen Angaben, welche die
-          Organisation {data.verification.organizationName} betreffen, zu bestätigen. Falls Sie denken, die Angaben
-          wurden fälschlicherweise gemacht, bitten wir Sie, den Angaben zu widersprechen.
+          Organisation {verification.organizationName} betreffen, zu bestätigen. Falls Sie denken, die Angaben wurden
+          fälschlicherweise gemacht, bitten wir Sie, den Angaben zu widersprechen.
         </Typography>
         <Divider style={{ margin: '24px 0px' }} />
         <Typography variant='h6' mb='8px'>
@@ -123,8 +122,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
         <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} attachmentAccessible={false} />
         <Divider style={{ margin: '24px 0px' }} />
         <Typography mt='8px' variant='body1'>
-          Können Sie die Angaben, welche die Organisation <b>{data.verification.organizationName}</b> betreffen,
-          bestätigen?
+          Können Sie die Angaben, welche die Organisation <b>{verification.organizationName}</b> betreffen, bestätigen?
         </Typography>
         <StyledAlert severity='warning'>
           <b>Wichtig!</b> Die Eingabe kann nicht rückgängig gemacht werden.

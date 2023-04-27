@@ -2,6 +2,7 @@ import { Button, Card, H2, H3, H4 } from '@blueprintjs/core'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { setProjectConfigOverride } from '../../project-configs/getProjectConfig'
@@ -21,7 +22,10 @@ const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
   const [state, setState] = React.useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload),
-    onError: () => appToaster?.show({ intent: 'danger', message: 'Login fehlgeschlagen.' }),
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
   })
   const onSubmit = () =>
     signIn({

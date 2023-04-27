@@ -6,6 +6,7 @@ import { TokenPayload } from './AuthProvider'
 import { WhoAmIContext } from './WhoAmIProvider'
 import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
+import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
@@ -45,7 +46,10 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
       onSignIn(payload.signInPayload)
       setPassword('')
     },
-    onError: () => appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' }),
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
   })
   const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
 

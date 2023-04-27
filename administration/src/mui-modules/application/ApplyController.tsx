@@ -7,9 +7,10 @@ import { SnackbarProvider, useSnackbar } from 'notistack'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import ErrorHandler from '../ErrorHandler'
+import useQueryHandler from '../hooks/useQueryHandler'
 import ApplicationErrorBoundary from './ApplicationErrorBoundary'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationForm from './forms/ApplicationForm'
@@ -34,15 +35,13 @@ const ApplyController = (): React.ReactElement | null => {
   const { enqueueSnackbar } = useSnackbar()
   const [addBlueEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
-      console.error(error)
-      enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: result => {
+    onCompleted: ({ result }) => {
       if (result) {
         setState(() => ApplicationForm.initialState)
         setFormSubmitted(true)
-      } else {
-        enqueueSnackbar('Beim Absenden des Antrags ist ein Fehler aufgetreten.', { variant: 'error' })
       }
     },
   })
@@ -53,14 +52,10 @@ const ApplyController = (): React.ReactElement | null => {
   )
 
   const projectId = useContext(ProjectConfigContext).projectId
-  const {
-    loading: loadingRegions,
-    error: errorRegions,
-    data: regionsData,
-    refetch: refetchRegions,
-  } = useGetRegionsQuery({
+  const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
+  const regionsQueryResult = useQueryHandler(regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -71,18 +66,19 @@ const ApplyController = (): React.ReactElement | null => {
   const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
 
   if (status === 'loading' || !arrayBufferManagerInitialized) {
-    return null
+    return <CircularProgress style={{ margin: 'auto' }} />
   }
 
   const successText = `Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.
             Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
             Sie können das Fenster jetzt schließen.`
 
-  if (loadingRegions) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (errorRegions || !regionsData) return <ErrorHandler refetch={refetchRegions} />
+  if (!regionsQueryResult.successful) return regionsQueryResult.component
+
+  const regions = regionsQueryResult.data.regions
 
   const submit = () => {
-    const validationResult = ApplicationForm.validate(state, { regions: regionsData.regions })
+    const validationResult = ApplicationForm.validate(state, { regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar('Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.', {
         variant: 'error',
@@ -112,7 +108,7 @@ const ApplyController = (): React.ReactElement | null => {
             setState={setState}
             onSubmit={submit}
             loading={loadingSubmit}
-            options={{ regions: regionsData.regions }}
+            options={{ regions }}
           />
         )}
         <DialogActions>

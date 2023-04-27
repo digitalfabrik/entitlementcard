@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
@@ -18,35 +19,31 @@ const UserSettingsController = () => {
   const email = useContext(WhoAmIContext).me!.email
 
   const appToaster = useAppToaster()
-  const [changePassword, { loading }] = useChangePasswordMutation()
-
-  const submit = async () => {
-    try {
-      const result = await changePassword({
-        variables: {
-          newPassword,
-          currentPassword,
-          email,
-          project,
-        },
+  const [changePassword, { loading }] = useChangePasswordMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: () => {
+      appToaster?.show({
+        intent: 'success',
+        message: 'Passwort erfolgreich geändert.',
       })
-      if (result.errors) {
-        console.error(result.errors)
-        appToaster?.show({ intent: 'danger', message: 'Fehler beim Ändern des Passwortes.' })
-      } else {
-        appToaster?.show({
-          intent: 'success',
-          message: 'Passwort erfolgreich geändert.',
-        })
-        setCurrentPassword('')
-        setNewPassword('')
-        setRepeatNewPassword('')
-      }
-    } catch (e) {
-      console.error(e)
-      appToaster?.show({ intent: 'danger', message: 'Fehler beim Ändern des Passwortes.' })
-    }
-  }
+      setCurrentPassword('')
+      setNewPassword('')
+      setRepeatNewPassword('')
+    },
+  })
+
+  const submit = async () =>
+    changePassword({
+      variables: {
+        newPassword,
+        currentPassword,
+        email,
+        project,
+      },
+    })
 
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 

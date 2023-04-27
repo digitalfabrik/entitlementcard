@@ -5,6 +5,13 @@ import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import { drawQRCode } from '../util/qrcode'
 
+export class PDFError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'PDFError'
+  }
+}
+
 const dynamicQRCodeSize = 84 // mm
 const dynamicQRCodeX = 108 // mm
 const dynamicQRCodeY = 73 // mm
@@ -137,46 +144,51 @@ export async function generatePdf(
   region: Region,
   pdfConfig: PdfConfig
 ) {
-  const doc = await PDFDocument.create()
+  try {
+    const doc = await PDFDocument.create()
 
-  const templateDocument =
-    pdfConfig.templatePath != null
-      ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
-      : null
+    const templateDocument =
+      pdfConfig.templatePath != null
+        ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
+        : null
 
-  if (staticCodes.length !== 0 && dynamicCodes.length !== staticCodes.length) {
-    throw new Error('Activation codes count does not match static codes count.')
+    if (staticCodes.length !== 0 && dynamicCodes.length !== staticCodes.length) {
+      throw new PDFError('Activation codes count does not match static codes count.')
+    }
+
+    for (let k = 0; k < dynamicCodes.length; k++) {
+      const dynamicCode = dynamicCodes[k]
+      const staticCode = staticCodes?.at(k)
+
+      const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
+
+      const page = doc.addPage(templatePage ? templatePage : undefined)
+
+      await fillContentAreas(
+        doc,
+        page,
+        {
+          case: 'dynamicActivationCode',
+          value: dynamicCode,
+        },
+        staticCode
+          ? {
+              case: 'staticVerificationCode',
+              value: staticCode,
+            }
+          : null,
+        region,
+        pdfConfig
+      )
+    }
+
+    doc.setTitle(pdfConfig.title)
+    doc.setAuthor(pdfConfig.issuer)
+
+    const pdfBytes = await doc.save()
+    return new Blob([pdfBytes], { type: 'application/pdf' })
+  } catch (error) {
+    if (error instanceof Error) throw new PDFError(error.message)
+    throw error
   }
-
-  for (let k = 0; k < dynamicCodes.length; k++) {
-    const dynamicCode = dynamicCodes[k]
-    const staticCode = staticCodes?.at(k)
-
-    const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
-
-    const page = doc.addPage(templatePage ? templatePage : undefined)
-
-    await fillContentAreas(
-      doc,
-      page,
-      {
-        case: 'dynamicActivationCode',
-        value: dynamicCode,
-      },
-      staticCode
-        ? {
-            case: 'staticVerificationCode',
-            value: staticCode,
-          }
-        : null,
-      region,
-      pdfConfig
-    )
-  }
-
-  doc.setTitle(pdfConfig.title)
-  doc.setAuthor(pdfConfig.issuer)
-
-  const pdfBytes = await doc.save()
-  return new Blob([pdfBytes], { type: 'application/pdf' })
 }

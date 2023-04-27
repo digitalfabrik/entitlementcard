@@ -1,9 +1,9 @@
-import { Button, CircularProgress } from '@mui/material'
+import { Button } from '@mui/material'
 import { useContext, useState } from 'react'
 
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import ErrorHandler from '../../ErrorHandler'
+import useQueryHandler from '../../hooks/useQueryHandler'
 import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -66,12 +66,9 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       </span>
     )
 
-    if (policyQuery.loading) return <CircularProgress />
-    if (policyQuery.error || !policyQuery.data)
-      return (
-        <ErrorHandler title='Die Datenschutzerklärung konnte nicht geladen werden.' refetch={policyQuery.refetch} />
-      )
-
+    const policyQueryHandler = useQueryHandler(policyQuery)
+    if (!policyQueryHandler.successful) return policyQueryHandler.component
+    const dataPrivacyPolicy = policyQueryHandler.data.dataPolicy.dataPrivacyPolicy
     return (
       <>
         <SubForms.hasAcceptedDataPrivacy.Component
@@ -94,7 +91,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           content={
             <>
               <config.dataPrivacyContent />
-              <div>{policyQuery.data.dataPolicy.dataPrivacyPolicy}</div>
+              <div>{dataPrivacyPolicy}</div>
             </>
           }
         />

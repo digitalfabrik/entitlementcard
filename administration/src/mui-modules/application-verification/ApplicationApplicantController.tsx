@@ -1,12 +1,11 @@
-import { Alert, CircularProgress } from '@mui/material'
+import { Alert } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import ErrorHandler from '../ErrorHandler'
+import useQueryHandler from '../hooks/useQueryHandler'
 import ApplicationApplicantView from './ApplicationApplicantView'
 
 const CenteredMessage = styled(Alert)`
@@ -15,21 +14,19 @@ const CenteredMessage = styled(Alert)`
 
 const ApplicationApplicantController = (props: { providedKey: string }) => {
   const [withdrawed, setWithdrawed] = useState<boolean>(false)
-  const { loading, error, data, refetch } = useGetApplicationByApplicantQuery({
+  const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
   })
+  const applicationQueryHandler = useQueryHandler(applicationQuery)
+  if (!applicationQueryHandler.successful) return applicationQueryHandler.component
+  const application = applicationQueryHandler.data.application
 
-  if (loading) return <CircularProgress style={{ margin: 'auto' }} />
-  else if (error) {
-    const { title, description } = getMessageFromApolloError(error)
-    return <ErrorHandler title={title} description={description} refetch={refetch} />
-  } else if (!data) return <ErrorHandler refetch={refetch} />
-  if (data.application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
+  if (application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
   if (withdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
   else {
     return (
       <ApplicationApplicantView
-        application={data.application}
+        application={application}
         gotWithdrawed={() => setWithdrawed(true)}
         providedKey={props.providedKey}
       />
