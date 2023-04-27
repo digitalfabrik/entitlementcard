@@ -34,7 +34,10 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
   void initState() {
     super.initState();
     _otpCode = widget._otpGenerator.generateOTP(_resetQrCode);
-    // On every app start when this widget will be initialized, we verify with the backend if the card is valid
+    // On every app start when this widget will be initialized, we verify with the backend if the card is valid, in order to detect if one of the following events happened:
+    // - the card was activated on another device
+    // - the card was revoked
+    // - the card expired (on backend's system time)
     SchedulerBinding.instance.addPostFrameCallback((_) => verifyCard(_otpCode, widget.userCode, context));
   }
 
