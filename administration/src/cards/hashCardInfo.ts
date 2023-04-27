@@ -65,6 +65,8 @@ export function messageToJsonObject(message: AnyMessage): { [key in string]: any
             throw Error(`Field ${field.localName} is not a safe integer.`)
           }
           result[field.no.toString()] = value.toString()
+        } else if (typeof value === 'bigint') {
+          result[field.no.toString()] = value.toString()
         } else {
           throw Error(`Field ${field.localName} has an unsupported value of ${value}.`)
         }

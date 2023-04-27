@@ -20,6 +20,10 @@ message NuernbergPassNumberExtension {
   optional uint32 pass_number = 1;
 }
 
+message NuernbergIdExtension {
+  optional uint64 pass_id = 1;
+}
+
 enum BavariaCardType {
   STANDARD = 0;
   GOLD = 1;
@@ -34,6 +38,7 @@ message CardExtensions {
   optional BirthdayExtension extension_birthday = 2;
   optional NuernbergPassNumberExtension extension_nuernberg_pass_number = 3;
   optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
+  optional NuernbergIdExtension extension_nuernberg_pass_id = 5;
 }
 
 // For our hashing approach, we require that all fields (and subfields, recursively) of CardInfo are marked 'optional'.
