@@ -160,7 +160,7 @@ class RichQrCode extends StatelessWidget {
       return 'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.';
     }
     if (!wasCardVerifiedLately) {
-      return 'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden.Bitte stellen sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen sie erneut.';
+      return 'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut.';
     }
 
     return 'Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:';
