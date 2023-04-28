@@ -12,7 +12,7 @@ import java.util.Base64
 
 @Suppress("unused")
 class CardQueryService {
-    @Deprecated("Deprecated in favor of CardVerificationResultModel that return a current timestamp", ReplaceWith("verifyCardInProjectV2"))
+    @Deprecated("Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp", ReplaceWith("verifyCardInProjectV2"))
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check")
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
