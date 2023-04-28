@@ -10,7 +10,7 @@ import ApplicationLinkCard from './ApplicationLinkCard'
 import ChangePasswordForm from './ChangePasswordForm'
 
 const UserSettingsController = () => {
-  const { applicationFeatureEnabled, activityLog } = useContext(ProjectConfigContext)
+  const { applicationFeatureEnabled, activityLogConfig } = useContext(ProjectConfigContext)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -69,7 +69,7 @@ const UserSettingsController = () => {
         loading={loading}
         submit={submit}
       />
-      {activityLog && <ActivityLogCard />}
+      {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
       {/* TODO #897: [Application] Remove Redirect for bayern */}
       {applicationFeatureEnabled && <ApplicationLinkCard />}
     </>

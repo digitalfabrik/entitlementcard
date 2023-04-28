@@ -1,23 +1,18 @@
 import { format } from 'date-fns'
 
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 
 const STORAGE_KEY = 'activity-log'
 
 export class ActivityLog {
-  passId: string
-  birthday: string
+  card: CardBlueprint
   timestamp: string
-  fullName: string
-  expirationDate: string
 
-  constructor(fullName: string, birthday: number, passId: number, expirationDate: Date) {
-    this.fullName = fullName
-    this.birthday = format(daysSinceEpochToDate(birthday), 'dd.MM.yyyy')
-    this.passId = passId.toString()
-    this.expirationDate = format(expirationDate, 'dd.MM.yyyy')
+  constructor(cardBlueprint: CardBlueprint) {
+    this.card = cardBlueprint
     this.timestamp = format(Date.now(), 'dd.MM.yyyy kk:mm:ss')
   }
+
   saveToSessionStorage = () => {
     const logEntries = loadActivityLog()
     logEntries.push(this)

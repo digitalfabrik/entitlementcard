@@ -10,6 +10,7 @@ import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import { ActivityLog } from '../user-settings/ActivityLog'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsForm from './CreateCardsForm'
 
@@ -37,7 +38,7 @@ const CreateCardsController = () => {
 
 const InnerCreateCardsController = ({ region }: { region: Region }) => {
   const projectConfig = useContext(ProjectConfigContext)
-  const activityLog = projectConfig.activityLog
+  const activityLogConfig = projectConfig.activityLogConfig
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
@@ -49,8 +50,8 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
       setState(CardActivationState.loading)
 
       const dynamicCodes = cardBlueprints.map(cardBlueprint => {
-        if (activityLog) {
-          activityLog.createActivityLog(cardBlueprint)
+        if (activityLogConfig) {
+          new ActivityLog(cardBlueprint).saveToSessionStorage()
         }
         return cardBlueprint.generateActivationCode()
       })

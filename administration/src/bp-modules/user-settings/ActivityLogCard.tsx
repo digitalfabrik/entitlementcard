@@ -1,10 +1,9 @@
 import { Button, Card, Dialog, DialogBody, H2 } from '@blueprintjs/core'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
 import { loadActivityLog } from './ActivityLog'
-import ActivityLogEntry from './ActivityLogEntry'
 
 const ActivityDialog = styled(Dialog)`
   max-height: 800px;
@@ -51,8 +50,7 @@ const StyledTable = styled.table`
     border-bottom: 1px solid lightgray;
   }
 `
-const ActivityLogCard = (): ReactElement => {
-  const { activityLog } = useContext(ProjectConfigContext)
+const ActivityLogCard = ({ activityLogConfig }: { activityLogConfig: ActivityLogConfig }): ReactElement => {
   const [openLog, setOpenLog] = useState<boolean>(false)
   const activityLogSorted = loadActivityLog().sort((a, b) => (new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1))
 
@@ -69,21 +67,21 @@ const ActivityLogCard = (): ReactElement => {
       </div>
       <ActivityDialog
         isOpen={openLog}
-        title={'Ihr Aktivitätsprotokoll'}
+        title='Aktivitätsprotokoll'
         onClose={() => setOpenLog(false)}
         isCloseButtonShown={true}>
         <ActivityDialogBody>
           <StyledTable>
             <StickyTableHeader>
               <tr>
-                {activityLog?.fields.map(field => (
-                  <th>{field}</th>
+                {activityLogConfig.columnNames.map(columnName => (
+                  <th>{columnName}</th>
                 ))}
               </tr>
             </StickyTableHeader>
             <tbody>
               {activityLogSorted.length > 0 ? (
-                activityLogSorted.map(logEntry => <ActivityLogEntry entry={logEntry} />)
+                activityLogSorted.map(logEntry => activityLogConfig.renderLogEntry(logEntry))
               ) : (
                 <EmptyLog>Keine Einträge vorhanden</EmptyLog>
               )}
