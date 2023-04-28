@@ -22,7 +22,7 @@ const localization: LocalizationType = {
             positiveVerificationDialogTitle: "Pass ist gültig",
         },
         moreActions: {
-            applyForAnotherCardTitle: "Weiteren Nürnberg-Pass beantragen",
+            applyForAnotherCardTitle: "Nürnberg-Pass beantragen oder verlängern",
             applyForAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten.",
             activateAnotherCardTitle: "Anderen Aktivierungscode einscannen",
             activateAnotherCardDescription: "Dadurch wird der hinterlegte Pass vom Gerät gelöscht.",

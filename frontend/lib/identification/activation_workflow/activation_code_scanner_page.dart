@@ -15,6 +15,7 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -97,12 +98,14 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        final userCode = DynamicUserCode(
-          info: activationCode.info,
-          pepper: activationCode.pepper,
-          totpSecret: totpSecret,
-        );
-        provider.setCode(userCode);
+
+        provider.setCode(DynamicUserCode(
+            info: activationCode.info,
+            pepper: activationCode.pepper,
+            totpSecret: totpSecret,
+            cardVerification: CardVerification(
+                cardValid: true,
+                verificationTimeStamp: secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)))));
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

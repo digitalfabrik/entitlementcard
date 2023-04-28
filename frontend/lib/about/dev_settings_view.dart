@@ -16,6 +16,7 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +83,10 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
             title: const Text('Show Intro Slides'),
             onTap: () => _showIntroSlides(context),
+          ),
+          ListTile(
+            title: const Text('Set expired last card verification'),
+            onTap: () => _setExpiredLastVerification(context),
           ),
           ListTile(
             title: const Text('Log sample exception'),
@@ -233,5 +238,21 @@ class DevSettingsView extends StatelessWidget {
         builder: (context) => const IntroScreen(),
       ),
     );
+  }
+
+  // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
+  void _setExpiredLastVerification(BuildContext context) {
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final DynamicUserCode userCode = provider.userCode!;
+    final CardVerification cardVerification = CardVerification(
+        verificationTimeStamp:
+            secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600))),
+        cardValid: true);
+    provider.setCode(DynamicUserCode(
+        info: userCode.info,
+        ecSignature: userCode.ecSignature,
+        pepper: userCode.pepper,
+        totpSecret: userCode.totpSecret,
+        cardVerification: cardVerification));
   }
 }

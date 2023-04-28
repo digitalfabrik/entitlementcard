@@ -73,7 +73,13 @@ type ApplicationView {
 
 type CardActivationResultModel {
   activationState: ActivationState!
+  activationTimeStamp: String!
   totpSecret: String
+}
+
+type CardVerificationResultModel {
+  valid: Boolean!
+  verificationTimeStamp: String!
 }
 
 type Category {
@@ -174,8 +180,10 @@ type Query {
   searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
-  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid"
-  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
+  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean! @deprecated(reason : "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2")
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
+  verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
   whoAmI(project: String!): Administrator!
 }

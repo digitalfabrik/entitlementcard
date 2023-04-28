@@ -140,9 +140,6 @@ class VerificationQrScannerPage extends StatelessWidget {
 
   Future<void> _onSuccess(BuildContext context, CardInfo cardInfo, bool isStaticVerificationCode) async {
     await PositiveVerificationResultDialog.show(
-      context: context,
-      cardInfo: cardInfo,
-      isStaticVerificationCode: isStaticVerificationCode,
-    );
+        context: context, cardInfo: cardInfo, isStaticVerificationCode: isStaticVerificationCode);
   }
 }

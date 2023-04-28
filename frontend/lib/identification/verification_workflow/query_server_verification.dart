@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-Future<bool> queryDynamicServerVerification(
+Future<CardVerificationByHash$Query$CardVerificationResultModel> queryDynamicServerVerification(
   GraphQLClient client,
   String projectId,
   DynamicVerificationCode verificationCode,
@@ -18,7 +18,7 @@ Future<bool> queryDynamicServerVerification(
   );
 }
 
-Future<bool> queryStaticServerVerification(
+Future<CardVerificationByHash$Query$CardVerificationResultModel> queryStaticServerVerification(
   GraphQLClient client,
   String projectId,
   StaticVerificationCode verificationCode,
@@ -33,7 +33,7 @@ Future<bool> queryStaticServerVerification(
   );
 }
 
-Future<bool> _queryServerVerification(
+Future<CardVerificationByHash$Query$CardVerificationResultModel> _queryServerVerification(
   GraphQLClient client,
   String projectId,
   String verificationHash,
@@ -65,11 +65,11 @@ Future<bool> _queryServerVerification(
     final data = queryResult.data;
 
     if (data == null) {
-      return false;
+      return CardVerificationByHash$Query$CardVerificationResultModel();
     }
 
     final parsedResult = byCardDetailsHash.parse(data);
-    return parsedResult.cardValid;
+    return parsedResult.verifyCardInProjectV2;
   } on Object catch (e) {
     throw ServerVerificationException(e);
   }
