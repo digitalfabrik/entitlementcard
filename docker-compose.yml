@@ -21,7 +21,7 @@ services:
     networks:
       - network
   adminer:
-    image: "adminer:4.7.7-standalone"
+    image: "adminer:4.8.1-standalone"
     ports:
       - 127.0.0.1:5001:8080
     networks:
