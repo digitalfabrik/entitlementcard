@@ -71,7 +71,8 @@ const CreateCardsForm = (props: Props) => {
   }
 
   const addForm = () => {
-    setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
+    const cardBlueprint = new CardBlueprint('', region, projectConfig.card)
+    setCardBlueprints([...cardBlueprints, cardBlueprint])
     setModified(true)
     scrollToBottom()
   }

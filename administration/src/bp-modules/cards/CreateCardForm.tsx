@@ -6,7 +6,7 @@ import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
-import { ExtensionHolder } from '../../cards/extensions'
+import { ExtensionInstance } from '../../cards/extensions/extensions'
 
 const CardHeader = styled.div`
   margin: -20px -20px 20px -20px;
@@ -16,28 +16,29 @@ const CardHeader = styled.div`
   justify-content: right;
 `
 
-interface Props {
+interface ExtensionFormProps {
+  extension: ExtensionInstance
+  onUpdate: () => void
+}
+
+interface CreateCardsFormProps {
   cardBlueprint: CardBlueprint
   onUpdate: () => void
   onRemove: () => void
 }
 
-const ExtensionForm = <T, R>(props: { holder: ExtensionHolder<T, R>; onUpdate: () => void }) => {
-  const holder = props.holder
-
-  return holder.extension.createForm(holder.state, state => {
-    holder.state = state
-    props.onUpdate()
+const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
+  return extension.createForm(() => {
+    onUpdate()
   })
 }
 
-const CreateCardForm = (props: Props) => {
-  const cardBlueprint = props.cardBlueprint
+const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
   return (
     <div>
       <Card>
         <CardHeader>
-          <Button minimal icon='cross' onClick={() => props.onRemove()} />
+          <Button minimal icon='cross' onClick={() => onRemove()} />
         </CardHeader>
         <FormGroup label='Name'>
           <InputGroup
@@ -48,7 +49,7 @@ const CreateCardForm = (props: Props) => {
             value={cardBlueprint.fullName}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               cardBlueprint.fullName = event.target.value
-              props.onUpdate()
+              onUpdate()
             }}
           />
         </FormGroup>
@@ -60,7 +61,7 @@ const CreateCardForm = (props: Props) => {
             parseDate={str => new Date(str)}
             onChange={value => {
               cardBlueprint.expirationDate = value
-              props.onUpdate()
+              onUpdate()
             }}
             formatDate={date => date.toLocaleDateString()}
             maxDate={add(Date.now(), { years: 99 })}
@@ -68,8 +69,8 @@ const CreateCardForm = (props: Props) => {
             fill={true}
           />
         </FormGroup>
-        {cardBlueprint.extensionHolders.map((holder, i) => (
-          <ExtensionForm key={i} holder={holder} onUpdate={props.onUpdate} />
+        {cardBlueprint.extensions.map((ext, i) => (
+          <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} />
         ))}
       </Card>
     </div>

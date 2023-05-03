@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react'
 
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
-import { CardBlueprint } from '../cards/CardBlueprint'
+import { ExtensionClass } from '../cards/extensions/extensions'
 import { CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import bayernConfig from './bayern/config'
@@ -20,12 +20,17 @@ export interface ActivityLogConfig {
   renderLogEntry: (logEntry: ActivityLog) => ReactNode
 }
 
+export interface CardConfig {
+  defaultValidity: Duration
+  extensions: ExtensionClass[]
+}
+
 export interface ProjectConfig {
   name: string
   projectId: string
   applicationFeatureEnabled: boolean
   staticQrCodesEnabled: boolean
-  createEmptyCard: (region: Region) => CardBlueprint
+  card: CardConfig
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
   pdf: PdfConfig

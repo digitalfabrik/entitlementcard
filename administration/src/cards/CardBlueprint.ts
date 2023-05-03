@@ -1,8 +1,12 @@
 import { PartialMessage } from '@bufbuild/protobuf'
+import { add } from 'date-fns'
 
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
+import { Region } from '../generated/graphql'
+import { CardConfig } from '../project-configs/getProjectConfig'
 import { isContentLengthValid } from '../util/qrcode'
-import { ExtensionHolder } from './extensions'
+import { RegionExtension } from './extensions/RegionExtension'
+import { ExtensionInstance } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 
@@ -16,18 +20,22 @@ export class CardBlueprint {
   id: number
   fullName: string
   expirationDate: Date | null
-  extensionHolders: ExtensionHolder<any, any>[]
+  extensions: ExtensionInstance[]
 
-  constructor(fullName: string, expirationDate: Date | null, extension_states: ExtensionHolder<any, any>[]) {
+  constructor(fullName: string, region: Region, cardConfig: CardConfig) {
     this.fullName = fullName
-    this.expirationDate = expirationDate
-    this.extensionHolders = extension_states
+    this.expirationDate = cardConfig.defaultValidity ? add(new Date(), cardConfig.defaultValidity) : null
+    this.extensions = cardConfig.extensions.map(Ext => new Ext())
+    this.extensions.forEach(ext => {
+      if (ext instanceof RegionExtension) ext.setInitialState(region)
+      else ext.setInitialState()
+    })
 
     this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
   }
 
   hasInfiniteLifetime(): boolean {
-    return !!this.extensionHolders.find(state => state.extension.causesInfiniteLifetime(state.state))
+    return !!this.extensions.find(ext => ext.causesInfiniteLifetime())
   }
 
   isFullNameValid(): boolean {
@@ -44,7 +52,7 @@ export class CardBlueprint {
       // Name valid
       this.isFullNameValid() &&
       // Extensions valid
-      this.extensionHolders.every(state => state.extension.isValid(state.state)) &&
+      this.extensions.every(ext => ext.isValid()) &&
       // Expiration date valid
       (this.isExpirationDateValid() || this.hasInfiniteLifetime()) &&
       // Number of bytes is valid
@@ -69,13 +77,13 @@ export class CardBlueprint {
   generateCardInfo = (): CardInfo => {
     const extensionsMessage: PartialMessage<CardExtensions> = {}
 
-    for (const holder of this.extensionHolders) {
-      if (holder.state === null) {
+    this.extensions.forEach(extension => {
+      if (extension.state === null) {
         // We allow to skip invalid extensions to enable computing the protobuf size.
-        continue
+        return
       }
-      holder.extension.setProtobufData(holder.state, extensionsMessage)
-    }
+      extension.setProtobufData(extensionsMessage)
+    })
 
     const expirationDate = this.expirationDate
 
