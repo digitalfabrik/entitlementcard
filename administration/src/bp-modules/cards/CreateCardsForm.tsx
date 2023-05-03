@@ -1,5 +1,5 @@
-import { Button, Card, Tooltip } from '@blueprintjs/core'
-import React, { useContext, useState } from 'react'
+import { Button, Icon, Tooltip } from '@blueprintjs/core'
+import { useContext, useRef, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled from 'styled-components'
 
@@ -7,34 +7,44 @@ import { CardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import useBlockNavigation from '../../util/useBlockNavigation'
-import AddEakButton from './AddEakButton'
+import ButtonBar from '../ButtonBar'
 import CreateCardForm from './CreateCardForm'
 
-const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
-  width: 100%;
-  padding: 15px;
-  background: #fafafa;
-  position: sticky;
-  z-index: 1;
-  top: ${props => props.stickyTop}px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-
-  & button {
-    margin: 5px;
-  }
-`
-
 const FormsWrapper = styled(FlipMove)`
-  padding: 10px;
-  width: 100%;
-  z-index: 0;
+  flex-wrap: wrap;
   flex-grow: 1;
+  flex-direction: row;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
+`
+
+const AddButton = styled(Button)`
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s background;
+  background: white;
+
+  :hover {
+    background: #f0f0f0;
+  }
+`
+
+const Scrollable = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  flex-basis: 0;
+  padding: 10px;
+  width: 100%;
+  overflow: auto;
 `
 
 const FormColumn = styled.div`
@@ -52,12 +62,18 @@ interface Props {
 
 const CreateCardsForm = (props: Props) => {
   const { cardBlueprints, setCardBlueprints, region } = props
+  const bottomRef = useRef<HTMLDivElement>(null)
   const projectConfig = useContext(ProjectConfigContext)
   const [isModified, setModified] = useState(false)
+
+  const scrollToBottom = () => {
+    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const addForm = () => {
     setCardBlueprints([...cardBlueprints, projectConfig.createEmptyCard(region)])
     setModified(true)
+    scrollToBottom()
   }
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
@@ -74,7 +90,28 @@ const CreateCardsForm = (props: Props) => {
 
   return (
     <>
-      <ButtonBar stickyTop={0}>
+      <Scrollable>
+        <FormsWrapper onFinish={scrollToBottom}>
+          {cardBlueprints.map(blueprint => (
+            <FormColumn key={blueprint.id}>
+              <CreateCardForm
+                cardBlueprint={blueprint}
+                onRemove={() => removeCardBlueprint(blueprint)}
+                onUpdate={() => {
+                  notifyUpdate()
+                }}
+              />
+            </FormColumn>
+          ))}
+          <FormColumn key='AddButton'>
+            <AddButton icon={<Icon style={{ margin: 10 }} icon={'add'} iconSize={20} />} onClick={addForm}>
+              Karte hinzufügen
+            </AddButton>
+          </FormColumn>
+        </FormsWrapper>
+        <div ref={bottomRef} />
+      </Scrollable>
+      <ButtonBar>
         <Tooltip>
           <Button
             icon='export'
@@ -87,23 +124,6 @@ const CreateCardsForm = (props: Props) => {
           {cardBlueprints.length === 0 && 'Legen Sie zunächst eine Karte an.'}
         </Tooltip>
       </ButtonBar>
-      {/* @ts-ignore */}
-      <FormsWrapper>
-        {cardBlueprints.map(blueprint => (
-          <FormColumn key={blueprint.id}>
-            <CreateCardForm
-              cardBlueprint={blueprint}
-              onRemove={() => removeCardBlueprint(blueprint)}
-              onUpdate={() => {
-                notifyUpdate()
-              }}
-            />
-          </FormColumn>
-        ))}
-        <FormColumn key='AddButton'>
-          <AddEakButton onClick={addForm} />
-        </FormColumn>
-      </FormsWrapper>
     </>
   )
 }

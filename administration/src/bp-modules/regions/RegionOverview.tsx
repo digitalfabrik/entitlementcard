@@ -1,4 +1,4 @@
-import { Button, Card, H3, TextArea } from '@blueprintjs/core'
+import { Button, H3, TextArea } from '@blueprintjs/core'
 import { Tooltip2 } from '@blueprintjs/popover2'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
@@ -7,6 +7,7 @@ import defaultErrorMap from '../../errors/DefaultErrorMap'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
+import ButtonBar from '../ButtonBar'
 
 const Content = styled.div`
   padding: 0 6rem;
@@ -22,21 +23,6 @@ const Content = styled.div`
 const Label = styled(H3)`
   text-align: center;
   margin: 15px;
-`
-const ButtonBar = styled(({ stickyTop: number, ...rest }) => <Card {...rest} />)<{ stickyTop: number }>`
-  width: 100%;
-  padding: 15px;
-  background: #fafafa;
-  position: sticky;
-  z-index: 1;
-  top: ${props => props.stickyTop}px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-
-  & button {
-    margin: 5px;
-  }
 `
 
 const CharCounter = styled.span<{ $hasError: boolean }>`
@@ -74,18 +60,6 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
 
   return (
     <>
-      <ButtonBar stickyTop={0}>
-        <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
-          <Button
-            disabled={maxCharsExceeded}
-            icon='floppy-disk'
-            text='Speichern'
-            intent='success'
-            onClick={onSave}
-            loading={loading}
-          />
-        </Tooltip2>
-      </ButtonBar>
       <Content>
         <Label>Datenschutzerklärung</Label>
         <TextArea
@@ -100,6 +74,18 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
           {dataPrivacyText.length}/{MAX_CHARS}
         </CharCounter>
       </Content>
+      <ButtonBar>
+        <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
+          <Button
+            disabled={maxCharsExceeded}
+            icon='floppy-disk'
+            text='Speichern'
+            intent='success'
+            onClick={onSave}
+            loading={loading}
+          />
+        </Tooltip2>
+      </ButtonBar>
     </>
   )
 }
