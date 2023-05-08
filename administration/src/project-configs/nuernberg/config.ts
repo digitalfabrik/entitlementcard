@@ -16,7 +16,7 @@ const config: ProjectConfig = {
   applicationFeatureEnabled: false,
   staticQrCodesEnabled: true,
   card: {
-    defaultValidity: { years: 3 },
+    defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,

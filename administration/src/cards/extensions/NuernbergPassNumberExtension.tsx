@@ -35,6 +35,7 @@ export class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberS
             this.state = {
               passNumber: parsedNumber,
             }
+            onUpdate()
           }}
         />
       </FormGroup>
