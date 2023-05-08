@@ -6,11 +6,12 @@ import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
+import ActivityLogCard from './ActivityLogCard'
 import ApplicationLinkCard from './ApplicationLinkCard'
 import ChangePasswordForm from './ChangePasswordForm'
 
 const UserSettingsController = () => {
-  const { applicationFeatureEnabled } = useContext(ProjectConfigContext)
+  const { applicationFeatureEnabled, activityLogConfig } = useContext(ProjectConfigContext)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -65,6 +66,7 @@ const UserSettingsController = () => {
         loading={loading}
         submit={submit}
       />
+      {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
       {/* TODO #897: [Application] Remove Redirect for bayern */}
       {applicationFeatureEnabled && <ApplicationLinkCard />}
     </>

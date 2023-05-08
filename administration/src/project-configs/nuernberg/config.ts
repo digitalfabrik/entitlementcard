@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { createEmptyNuernbergCard } from '../../cards/cardBlueprints'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { ProjectConfig } from '../getProjectConfig'
+import { ActivityLogEntry } from './ActivityLogEntry'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
@@ -16,6 +17,10 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
+  activityLogConfig: {
+    columnNames: ['Erstellt', 'Name', 'Passnummer', 'Geburtstag', 'Gültig bis'],
+    renderLogEntry: ActivityLogEntry,
+  },
   pdf: {
     title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,

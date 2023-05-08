@@ -1,5 +1,6 @@
-import { ReactElement } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
+import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { CardBlueprint } from '../cards/CardBlueprint'
 import { CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
@@ -14,6 +15,11 @@ export interface PdfConfig {
   infoToDetails: (info: CardInfo, region: Region, shorten: boolean) => string
 }
 
+export interface ActivityLogConfig {
+  columnNames: string[]
+  renderLogEntry: (logEntry: ActivityLog) => ReactNode
+}
+
 export interface ProjectConfig {
   name: string
   projectId: string
@@ -24,6 +30,7 @@ export interface ProjectConfig {
   dataPrivacyContent: () => ReactElement
   pdf: PdfConfig
   timezone: string
+  activityLogConfig?: ActivityLogConfig
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
