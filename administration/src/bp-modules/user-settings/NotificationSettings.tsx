@@ -69,7 +69,7 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps) => {
         <Checkbox
           checked={receiveEmailForVerification}
           onChange={e => setReceiveEmailForVerification(e.currentTarget.checked)}
-          label='Antragverifizierungen'
+          label='Antragsverifizierungen'
         />
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
           <Button text={'Speichern'} intent={'primary'} type='submit' loading={loading} />

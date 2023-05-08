@@ -17,8 +17,9 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 object Mailer {
+    val DO_NOT_ANSWER_MESSAGE = "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
 
-    fun sendMail(
+    private fun sendMail(
         backendConfig: BackendConfiguration,
         smtpConfig: SmtpConfig,
         fromName: String,
@@ -40,7 +41,7 @@ object Mailer {
                 """.trimIndent() + message
             )
 
-            if (!JMail.isValid(fromName)) {
+            if (!JMail.isValid(smtpConfig.username)) {
                 return
             }
         }
@@ -72,13 +73,13 @@ object Mailer {
         val message = """
         Guten Tag,
 
-        Ein neuer Antrag liegt in ${projectConfig.administrationName} vor.
+        ein neuer Antrag liegt in ${projectConfig.administrationName} vor.
         Sie können neue Anträge direkt unter ${projectConfig.administrationBaseUrl}/applications einsehen und bearbeiten.
 
-        Falls Sie keine weiteren Benachrichtigungen zu neuen Anträgen erhalten möchten können Sie dies unter ${projectConfig.administrationBaseUrl}/user-settings deaktivieren.
+        Falls Sie keine weiteren Benachrichtigungen zu neuen Anträgen erhalten möchten, können Sie dies unter ${projectConfig.administrationBaseUrl}/user-settings deaktivieren.
 
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
-        
+        $DO_NOT_ANSWER_MESSAGE
+
         - ${projectConfig.administrationName}
         """.trimIndent()
         for (recipient: AdministratorEntity in recipients) {
@@ -104,12 +105,12 @@ object Mailer {
         val message = """
         Guten Tag,
 
-        Ein ein Antrag ist Verifiziert worden. 
+        ein Antrag ist verifiziert worden. 
         Sie können Anträge direkt unter ${projectConfig.administrationBaseUrl}/applications einsehen und bearbeiten.
 
         Falls Sie keine weiteren Benachrichtigungen zu neuen Anträgen erhalten möchten können Sie dies unter ${projectConfig.administrationBaseUrl}/user-settings deaktivieren.
 
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
+        $DO_NOT_ANSWER_MESSAGE
         
         - ${projectConfig.administrationName}
         """.trimIndent()
@@ -120,7 +121,7 @@ object Mailer {
                     projectConfig.smtp,
                     projectConfig.administrationName,
                     recipient.email,
-                    "Ein neuer Antrag ist eingegangen",
+                    "Ein Antrag ist verifiziert worden",
                     message
                 )
             } catch (_: MailException) {}
@@ -136,7 +137,7 @@ object Mailer {
         Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:
         ${projectConfig.administrationBaseUrl}/antrag-verifizieren/${URLEncoder.encode(applicationVerification.accessKey, StandardCharsets.UTF_8)}
 
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
+        $DO_NOT_ANSWER_MESSAGE
 
         - ${projectConfig.administrationName}
         """.trimIndent()
@@ -145,7 +146,7 @@ object Mailer {
             projectConfig.smtp,
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
-            "Antrag Verifizieren",
+            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte",
             message
         )
     }
@@ -164,7 +165,7 @@ object Mailer {
         Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:
         ${projectConfig.administrationBaseUrl}/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
 
-        Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
+        $DO_NOT_ANSWER_MESSAGE
 
         - ${projectConfig.administrationName}
         """.trimIndent()
@@ -176,5 +177,56 @@ object Mailer {
             "Antrag erfolgreich eingereicht",
             message
         )
+    }
+
+    fun sendResetPasswodMail(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        passwortResetKey: String,
+        recipient: String
+    ) {
+        val message = """
+        Guten Tag,
+        
+        Sie haben angefragt, Ihr Passwort für ${projectConfig.administrationName} zurückzusetzen.
+        Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
+        ${projectConfig.administrationBaseUrl}/reset-password?email=${URLEncoder.encode(recipient, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(passwortResetKey, StandardCharsets.UTF_8)}
+        
+        Dieser Link ist 24 Stunden gültig.
+        
+        $DO_NOT_ANSWER_MESSAGE
+        
+        - ${projectConfig.administrationName}
+        """.trimIndent()
+        sendMail(
+            backendConfig,
+            projectConfig.smtp,
+            projectConfig.administrationName,
+            recipient,
+            "Passwort Zurücksetzen",
+            message
+        )
+    }
+
+    fun sendWelcomeMail(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        passwordResetKey: String,
+        recipient: String
+    ) {
+        val message = """
+        Guten Tag,
+        
+        für Sie wurde ein Account für ${projectConfig.administrationName} erstellt.
+        Sie können Ihr Passwort unter dem folgenden Link setzen:
+        ${projectConfig.administrationBaseUrl}/reset-password?email=${URLEncoder.encode(recipient, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(passwordResetKey, StandardCharsets.UTF_8)}
+        
+        Dieser Link ist 24 Stunden gültig.
+        
+        $DO_NOT_ANSWER_MESSAGE
+        
+        - ${projectConfig.administrationName}
+        """.trimIndent()
+        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipient, "Kontoerstellung", message)
     }
 }

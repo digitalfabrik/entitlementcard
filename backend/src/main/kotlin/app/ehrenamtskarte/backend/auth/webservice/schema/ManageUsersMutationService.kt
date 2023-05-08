@@ -17,8 +17,6 @@ import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Suppress("unused")
 class ManageUsersMutationService {
@@ -34,7 +32,8 @@ class ManageUsersMutationService {
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val projectConfig = context.backendConfiguration.projects.first { it.id == project }
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
 
         transaction {
             val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
@@ -54,18 +53,11 @@ class ManageUsersMutationService {
 
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
-                Mailer.sendMail(
-                    context.backendConfiguration,
-                    projectConfig.smtp,
-                    projectConfig.administrationName,
-                    email,
-                    "Kontoerstellung",
-                    generateWelcomeMailMessage(
-                        key,
-                        projectConfig.administrationName,
-                        projectConfig.administrationBaseUrl,
-                        email
-                    )
+                Mailer.sendWelcomeMail(
+                    backendConfig,
+                    projectConfig,
+                    key,
+                    email
                 )
             }
         }
@@ -133,26 +125,5 @@ class ManageUsersMutationService {
             AdministratorsRepository.deleteAdministrator(existingAdmin)
         }
         return true
-    }
-
-    private fun generateWelcomeMailMessage(
-        key: String,
-        administrationName: String,
-        administrationBaseUrl: String,
-        email: String
-    ): String {
-        return """
-            Guten Tag,
-            
-            für Sie wurde ein Account für $administrationName erstellt.
-            Sie können Ihr Passwort unter dem folgenden Link setzen:
-            $administrationBaseUrl/reset-password?email=${URLEncoder.encode(email, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(key, StandardCharsets.UTF_8)}
-            
-            Dieser Link ist 24 Stunden gültig.
-            
-            Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
-            
-            - $administrationName
-        """.trimIndent()
     }
 }
