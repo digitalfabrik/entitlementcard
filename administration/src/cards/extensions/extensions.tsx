@@ -1,4 +1,5 @@
 import { PartialMessage } from '@bufbuild/protobuf'
+import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import { BavariaCardTypeExtension } from './BavariaCardTypeExtension'
@@ -10,7 +11,7 @@ export abstract class Extension<T, R> {
   public state: T | null = null
   abstract setInitialState(args: R): void
   abstract isValid(): boolean
-  abstract createForm(onChange: () => void): React.ReactElement | null
+  abstract createForm(onChange: () => void): ReactElement | null
   abstract causesInfiniteLifetime(): boolean
   abstract setProtobufData(message: PartialMessage<CardExtensions>): void
 }
