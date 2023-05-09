@@ -1,7 +1,7 @@
 # Setup of production
 
-> The deployment to production is done by the [Digitalfabrik](https://github.com/digitalfabrik/) and is not public.
-> Reach out to [@maxammann](https://github.com/maxammann/) or [@sarahsporck](https://github.com/sarahsporck/) for more information and insights.
+> The deployment to production is done by the [Digitalfabrik](https://github.com/digitalfabrik/) and restricted by permissions.
+> Reach out to [@maxammann](https://github.com/maxammann/) or [@sarahsporck](https://github.com/sarahsporck/) or [@f1sh1918](https://github.com/f1sh1918/) for more information and insights.
 
 ## Certificates and Signing
 
