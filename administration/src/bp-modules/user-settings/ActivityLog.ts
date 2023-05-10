@@ -1,11 +1,11 @@
 import { format } from 'date-fns'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint, JSONCardBlueprint } from '../../cards/CardBlueprint'
 
 const STORAGE_KEY = 'activity-log'
 
 export class ActivityLog {
-  card: CardBlueprint
+  card: JSONCardBlueprint
   timestamp: string
 
   constructor(cardBlueprint: CardBlueprint) {

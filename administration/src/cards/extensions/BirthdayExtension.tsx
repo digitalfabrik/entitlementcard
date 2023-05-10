@@ -11,7 +11,9 @@ type BirthdayState = { birthday: number }
 
 const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
 
-export class BirthdayExtension extends Extension<BirthdayState, null> {
+class BirthdayExtension extends Extension<BirthdayState, null> {
+  public readonly name: string = BirthdayExtension.name
+
   setInitialState() {
     this.state = { birthday: initialBirthdayDate }
   }
@@ -55,3 +57,5 @@ export class BirthdayExtension extends Extension<BirthdayState, null> {
     return this.state !== null
   }
 }
+
+export default BirthdayExtension

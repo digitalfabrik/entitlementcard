@@ -6,7 +6,9 @@ import { Extension } from './extensions'
 
 type RegionState = { regionId: number }
 
-export class RegionExtension extends Extension<RegionState, Region> {
+class RegionExtension extends Extension<RegionState, Region> {
+  public readonly name: string = RegionExtension.name
+
   setInitialState(region: Region) {
     this.state = { regionId: region.id }
   }
@@ -25,3 +27,5 @@ export class RegionExtension extends Extension<RegionState, Region> {
     return this.state !== null
   }
 }
+
+export default RegionExtension

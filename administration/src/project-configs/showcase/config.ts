@@ -1,5 +1,5 @@
-import { BavariaCardTypeExtension } from '../../cards/extensions/BavariaCardTypeExtension'
-import { RegionExtension } from '../../cards/extensions/RegionExtension'
+import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
 import bayern from '../bayern/config'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
 import { ProjectConfig } from '../getProjectConfig'

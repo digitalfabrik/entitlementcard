@@ -5,18 +5,25 @@ import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerifica
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import { isContentLengthValid } from '../util/qrcode'
-import { RegionExtension } from './extensions/RegionExtension'
-import { ExtensionInstance } from './extensions/extensions'
+import RegionExtension from './extensions/RegionExtension'
+import { Extension, ExtensionInstance, JSONExtension } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
 import { dateToDaysSinceEpoch } from './validityPeriod'
 
 const MAX_NAME_LENGTH = 50
 const ACTIVATION_SECRET_LENGTH = 20
 
+export interface JSONCardBlueprint<E = ExtensionInstance> {
+  id: number
+  fullName: string
+  expirationDate: Date | null
+  extensions: (E extends Extension<infer T, any> ? JSONExtension<T> : never)[]
+}
+
 /**
  * Blueprint for a new card. This object contains data about a future card, which will be created.
  */
-export class CardBlueprint {
+export class CardBlueprint implements JSONCardBlueprint {
   id: number
   fullName: string
   expirationDate: Date | null
@@ -127,3 +134,5 @@ export class CardBlueprint {
     })
   }
 }
+
+export default CardBlueprint

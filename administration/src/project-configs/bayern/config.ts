@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 
-import { BavariaCardTypeExtension } from '../../cards/extensions/BavariaCardTypeExtension'
-import { RegionExtension } from '../../cards/extensions/RegionExtension'
+import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { BavariaCardType } from '../../generated/card_pb'
 import { ProjectConfig } from '../getProjectConfig'

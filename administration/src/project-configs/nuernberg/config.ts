@@ -1,11 +1,11 @@
 import { format } from 'date-fns'
 
-import { BirthdayExtension } from '../../cards/extensions/BirthdayExtension'
-import { NuernbergPassNumberExtension } from '../../cards/extensions/NuernbergPassNumberExtension'
-import { RegionExtension } from '../../cards/extensions/RegionExtension'
+import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
+import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { ProjectConfig } from '../getProjectConfig'
-import { ActivityLogEntry } from './ActivityLogEntry'
+import ActivityLogEntry from './ActivityLogEntry'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'

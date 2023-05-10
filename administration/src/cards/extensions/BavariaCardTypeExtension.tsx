@@ -7,7 +7,9 @@ import { Extension } from './extensions'
 
 type BavariaCardTypeState = 'Standard' | 'Goldkarte'
 
-export class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
+class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
+  public readonly name: string = BavariaCardTypeExtension.name
+
   setInitialState() {
     this.state = 'Standard'
   }
@@ -61,3 +63,5 @@ export class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, nu
     return this.state !== null
   }
 }
+
+export default BavariaCardTypeExtension
