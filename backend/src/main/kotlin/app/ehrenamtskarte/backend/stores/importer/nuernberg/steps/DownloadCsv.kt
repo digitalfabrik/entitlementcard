@@ -6,9 +6,9 @@ import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingSt
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.slf4j.Logger
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.URL
-import java.net.URLConnection
 
 /**
  * Downloads the CSV File.
@@ -20,10 +20,8 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
 
     override fun execute(input: Unit): List<CSVAcceptingStore> {
         try {
-            val url = URL(config.findProject().importUrl)
-            val urlConn: URLConnection = url.openConnection()
             val inputCSV = InputStreamReader(
-                urlConn.getInputStream(),
+                getCSVInputStream(),
                 Charsets.UTF_8
             )
             val records: Iterable<CSVRecord> = CSVFormat.RFC4180.parse(inputCSV)
@@ -61,5 +59,17 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
             }
         }
         return stores
+    }
+
+/**
+     * This function decides if a local csv file will be used or a file from entitlementcard server depending if csvWriter is enabled.
+     * csvWriter is used to create a local csv output file with coordinates of the stores which will be uploaded to the server.
+     */
+    private fun getCSVInputStream(): InputStream {
+        if (config.backendConfig.csvWriter.enabled) {
+            return ClassLoader.getSystemResourceAsStream("import/Akzeptanzpartner-daten.csv")!!
+        }
+        val url = URL(config.findProject().importUrl)
+        return url.openConnection().getInputStream()
     }
 }
