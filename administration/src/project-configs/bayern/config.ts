@@ -37,7 +37,7 @@ Gültig bis: ${expirationDate}
 ${
   shorten
     ? `Aussteller: ${region.prefix} ${region.name}`
-    : `Ausgestellt am ${format(new Date(), 'dd.MM.yyyy')} von ${region.prefix} ${region.name}`
+    : `Ausgestellt am ${format(new Date(), 'dd.MM.yyyy')} \nvon ${region.prefix} ${region.name}`
 }`
     },
   },
