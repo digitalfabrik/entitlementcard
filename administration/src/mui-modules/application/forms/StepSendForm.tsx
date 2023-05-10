@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import useQueryHandler from '../../hooks/useQueryHandler'
+import getQueryResult from '../../util/getQueryResult'
 import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -66,7 +66,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       </span>
     )
 
-    const policyQueryHandler = useQueryHandler(policyQuery)
+    const policyQueryHandler = getQueryResult(policyQuery)
     if (!policyQueryHandler.successful) return policyQueryHandler.component
     const dataPrivacyPolicy = policyQueryHandler.data.dataPolicy.dataPrivacyPolicy
     return (

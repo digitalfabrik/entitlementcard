@@ -11,7 +11,7 @@ import {
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => {
@@ -30,8 +30,8 @@ const ManageProjectUsers = () => {
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
   const usersQuery = useGetUsersInProjectQuery({ variables: { project: projectId } })
 
-  const regionsQueryResult = useQueryHandler(regionsQuery)
-  const usersQueryResult = useQueryHandler(usersQuery)
+  const regionsQueryResult = getQueryResult(regionsQuery)
+  const usersQueryResult = getQueryResult(usersQuery)
 
   if (!regionsQueryResult.successful) return regionsQueryResult.component
   if (!usersQueryResult.successful) return usersQueryResult.component
@@ -51,8 +51,8 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
   const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region!!.id } })
 
-  const regionsQueryResult = useQueryHandler(regionsQuery)
-  const usersQueryResult = useQueryHandler(usersQuery)
+  const regionsQueryResult = getQueryResult(regionsQuery)
+  const usersQueryResult = getQueryResult(usersQuery)
 
   if (!regionsQueryResult.successful) return regionsQueryResult.component
   if (!usersQueryResult.successful) return usersQueryResult.component

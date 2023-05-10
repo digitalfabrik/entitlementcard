@@ -3,6 +3,8 @@ package app.ehrenamtskarte.backend.auth.webservice
 import app.ehrenamtskarte.backend.auth.webservice.dataloader.administratorLoader
 import app.ehrenamtskarte.backend.auth.webservice.schema.ChangePasswordMutationService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ManageUsersMutationService
+import app.ehrenamtskarte.backend.auth.webservice.schema.NotificationSettingsMutationService
+import app.ehrenamtskarte.backend.auth.webservice.schema.NotificationSettingsQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordMutationService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.SignInMutationService
@@ -19,10 +21,12 @@ val authGraphQlParams = GraphQLParams(
         TopLevelObject(SignInMutationService()),
         TopLevelObject(ChangePasswordMutationService()),
         TopLevelObject(ResetPasswordMutationService()),
-        TopLevelObject(ManageUsersMutationService())
+        TopLevelObject(ManageUsersMutationService()),
+        TopLevelObject(NotificationSettingsMutationService())
     ),
     queries = listOf(
         TopLevelObject(ViewAdministratorsQueryService()),
-        TopLevelObject(ResetPasswordQueryService())
+        TopLevelObject(ResetPasswordQueryService()),
+        TopLevelObject(NotificationSettingsQueryService())
     )
 )

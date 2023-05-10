@@ -1,0 +1,3 @@
+mutation updateNotificationSettings($project: String!, $notificationSettings: NotificationSettingsInput!) {
+  updateNotificationSettings(project: $project, notificationSettings: $notificationSettings)
+}

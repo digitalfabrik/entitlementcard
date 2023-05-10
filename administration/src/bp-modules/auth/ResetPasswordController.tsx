@@ -8,7 +8,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = () => {
@@ -54,7 +54,7 @@ const ResetPasswordController = () => {
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  const checkPasswordResetLinkQueryResult = useQueryHandler(checkPasswordResetLinkQuery)
+  const checkPasswordResetLinkQueryResult = getQueryResult(checkPasswordResetLinkQuery)
 
   if (!checkPasswordResetLinkQueryResult.successful) return checkPasswordResetLinkQueryResult.component
 

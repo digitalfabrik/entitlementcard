@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 import ApplicationErrorBoundary from './ApplicationErrorBoundary'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationForm from './forms/ApplicationForm'
@@ -55,7 +55,7 @@ const ApplyController = (): React.ReactElement | null => {
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = useQueryHandler(regionsQuery)
+  const regionsQueryResult = getQueryResult(regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),

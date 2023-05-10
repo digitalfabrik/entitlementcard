@@ -3,7 +3,7 @@ import React, { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 import RegionOverview from './RegionOverview'
 
 const RegionController = ({ regionId }: { regionId: number }) => {
@@ -11,7 +11,7 @@ const RegionController = ({ regionId }: { regionId: number }) => {
     variables: { regionId: regionId },
     onError: error => console.error(error),
   })
-  const dataPolicyQueryResult = useQueryHandler(dataPolicyQuery)
+  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
   if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
 
   const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''

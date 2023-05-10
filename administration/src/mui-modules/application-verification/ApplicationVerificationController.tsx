@@ -13,7 +13,7 @@ import {
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -62,6 +62,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const submitApplicationVerification = (verified: boolean) => {
     verifyOrRejectApplicationVerification({
       variables: {
+        project: config.projectId,
         accessKey: applicationVerificationAccessKey,
         verified,
       },
@@ -72,7 +73,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     variables: { applicationVerificationAccessKey },
   })
 
-  const applicationQueryHandler = useQueryHandler(applicationQuery)
+  const applicationQueryHandler = getQueryResult(applicationQuery)
   if (!applicationQueryHandler.successful) return applicationQueryHandler.component
 
   const { verification, application } = applicationQueryHandler.data

@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import useQueryHandler from '../hooks/useQueryHandler'
+import getQueryResult from '../util/getQueryResult'
 import ApplicationApplicantView from './ApplicationApplicantView'
 
 const CenteredMessage = styled(Alert)`
@@ -17,7 +17,7 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
   const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
   })
-  const applicationQueryHandler = useQueryHandler(applicationQuery)
+  const applicationQueryHandler = getQueryResult(applicationQuery)
   if (!applicationQueryHandler.successful) return applicationQueryHandler.component
   const application = applicationQueryHandler.data.application
 

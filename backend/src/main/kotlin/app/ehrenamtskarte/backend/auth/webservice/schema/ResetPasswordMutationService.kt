@@ -15,8 +15,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.time.Instant
 
 @Suppress("unused")
@@ -31,37 +29,9 @@ class ResetPasswordMutationService {
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             val key = AdministratorsRepository.setNewPasswordResetKey(user)
-            Mailer.sendMail(
-                backendConfig,
-                projectConfig.smtp,
-                projectConfig.administrationName,
-                email,
-                "Passwort Zurücksetzen",
-                generateResetMailMessage(key, projectConfig.administrationName, projectConfig.administrationBaseUrl, email)
-            )
+            Mailer.sendResetPasswodMail(backendConfig, projectConfig, key, email)
         }
         return true
-    }
-
-    private fun generateResetMailMessage(
-        key: String,
-        administrationName: String,
-        administrationBaseUrl: String,
-        email: String
-    ): String {
-        return """
-            Guten Tag,
-            
-            Sie haben angefragt, Ihr Passwort für $administrationName zurückzusetzen.
-            Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
-            $administrationBaseUrl/reset-password?email=${URLEncoder.encode(email, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(key, StandardCharsets.UTF_8)}
-            
-            Dieser Link ist 24 Stunden gültig.
-            
-            Dies ist eine automatisierte Nachricht. Antworten Sie nicht auf diese Email.
-            
-            - $administrationName
-        """.trimIndent()
     }
 
     @GraphQLDescription("Reset the administrator's password")

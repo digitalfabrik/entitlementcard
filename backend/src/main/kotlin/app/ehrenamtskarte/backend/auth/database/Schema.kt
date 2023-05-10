@@ -20,6 +20,8 @@ object Administrators : IntIdTable() {
     val passwordHash = binary("passwordHash").nullable()
     val passwordResetKey = varchar("passwordResetKey", 100).nullable()
     val passwordResetKeyExpiry = timestamp("passwordResetKeyExpiry").nullable()
+    val notificationOnApplication = bool("notificationOnApplication").default(false)
+    val notificationOnVerification = bool("notificationOnVerification").default(false)
     val deleted = bool("deleted")
 
     init {
@@ -46,5 +48,7 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var passwordHash by Administrators.passwordHash
     var passwordResetKey by Administrators.passwordResetKey
     var passwordResetKeyExpiry by Administrators.passwordResetKeyExpiry
+    var notificationOnApplication by Administrators.notificationOnApplication
+    var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
 }

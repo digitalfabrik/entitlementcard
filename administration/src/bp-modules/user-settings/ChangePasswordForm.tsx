@@ -1,52 +1,77 @@
-import { Button, Callout, Card, H2 } from '@blueprintjs/core'
+import { Button, Callout, H2 } from '@blueprintjs/core'
+import { useContext, useState } from 'react'
 
+import { WhoAmIContext } from '../../WhoAmIProvider'
+import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { useChangePasswordMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
+import validatePasswordInput from '../auth/validateNewPasswordInput'
+import SettingsCard from './SettingsCard'
 
-const ChangePasswordForm = (props: {
-  currentPassword: string
-  setCurrentPassword: (value: string) => void
-  newPassword: string
-  setNewPassword: (value: string) => void
-  repeatNewPassword: string
-  setRepeatNewPassword: (value: string) => void
-  submitDisabled: boolean
-  warnMessage: string | null
-  loading: boolean
-  submit: () => void
-}) => {
+const ChangePasswordForm = () => {
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState('')
+
+  const appToaster = useAppToaster()
+  const [changePassword, { loading }] = useChangePasswordMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: () => {
+      appToaster?.show({
+        intent: 'success',
+        message: 'Passwort erfolgreich geändert.',
+      })
+      setCurrentPassword('')
+      setNewPassword('')
+      setRepeatNewPassword('')
+    },
+  })
+
+  const project = useContext(ProjectConfigContext).projectId
+  const email = useContext(WhoAmIContext).me!.email
+
+  const isDirty = newPassword !== '' || repeatNewPassword !== ''
+
+  const warnMessage = isDirty ? validatePasswordInput(newPassword, repeatNewPassword) : null
+
+  const valid = warnMessage === null
+
+  const submit = async () =>
+    changePassword({
+      variables: {
+        newPassword,
+        currentPassword,
+        email,
+        project,
+      },
+    })
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Card style={{ maxWidth: '500px' }}>
-        <H2>Passwort ändern</H2>
-        <p>
-          Ein gültiges Passwort ist mindestens zwölf Zeichen lang, enthält mindestens einen Klein- und einen
-          Großbuchstaben sowie mindestens ein Sonderzeichen.
-        </p>
-        <form
-          onSubmit={event => {
-            event.preventDefault()
-            props.submit()
-          }}>
-          <PasswordInput label='Aktuelles Passwort' value={props.currentPassword} setValue={props.setCurrentPassword} />
-          <PasswordInput label='Neues Passwort' value={props.newPassword} setValue={props.setNewPassword} />
-          <PasswordInput
-            label='Neues Passwort bestätigen'
-            value={props.repeatNewPassword}
-            setValue={props.setRepeatNewPassword}
-          />
-          {props.warnMessage === null ? null : <Callout intent='danger'>{props.warnMessage}</Callout>}
-          <div style={{ textAlign: 'right', padding: '10px 0' }}>
-            <Button
-              text={'Passwort ändern'}
-              intent='primary'
-              type='submit'
-              disabled={props.submitDisabled}
-              loading={props.loading}
-            />
-          </div>
-        </form>
-      </Card>
-    </div>
+    <SettingsCard>
+      <H2>Passwort ändern</H2>
+      <p>
+        Ein gültiges Passwort ist mindestens zwölf Zeichen lang, enthält mindestens einen Klein- und einen
+        Großbuchstaben sowie mindestens ein Sonderzeichen.
+      </p>
+      <form
+        onSubmit={event => {
+          event.preventDefault()
+          submit()
+        }}>
+        <PasswordInput label='Aktuelles Passwort' value={currentPassword} setValue={setCurrentPassword} />
+        <PasswordInput label='Neues Passwort' value={newPassword} setValue={setNewPassword} />
+        <PasswordInput label='Neues Passwort bestätigen' value={repeatNewPassword} setValue={setRepeatNewPassword} />
+        {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+        <div style={{ textAlign: 'right', padding: '10px 0' }}>
+          <Button text={'Passwort ändern'} intent='primary' type='submit' disabled={!valid} loading={loading} />
+        </div>
+      </form>
+    </SettingsCard>
   )
 }
 
