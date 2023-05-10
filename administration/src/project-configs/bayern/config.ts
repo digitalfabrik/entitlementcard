@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 
-import { createEmptyBavariaCard } from '../../cards/cardBlueprints'
+import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { BavariaCardType } from '../../generated/card_pb'
 import { ProjectConfig } from '../getProjectConfig'
@@ -13,7 +14,10 @@ const config: ProjectConfig = {
   projectId: 'bayern.ehrenamtskarte.app',
   applicationFeatureEnabled: true,
   staticQrCodesEnabled: false,
-  createEmptyCard: createEmptyBavariaCard,
+  card: {
+    defaultValidity: { years: 3 },
+    extensions: [BavariaCardTypeExtension, RegionExtension],
+  },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',

@@ -1,9 +1,11 @@
 import { format } from 'date-fns'
 
-import { createEmptyNuernbergCard } from '../../cards/cardBlueprints'
+import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
+import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { ProjectConfig } from '../getProjectConfig'
-import { ActivityLogEntry } from './ActivityLogEntry'
+import ActivityLogEntry from './ActivityLogEntry'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
@@ -13,7 +15,10 @@ const config: ProjectConfig = {
   projectId: 'nuernberg.sozialpass.app',
   applicationFeatureEnabled: false,
   staticQrCodesEnabled: true,
-  createEmptyCard: createEmptyNuernbergCard,
+  card: {
+    defaultValidity: { years: 1 },
+    extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
+  },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',

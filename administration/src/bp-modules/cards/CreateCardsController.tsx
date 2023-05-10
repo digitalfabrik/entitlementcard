@@ -42,7 +42,9 @@ const InnerCreateCardsController = ({ region }: { region: Region }) => {
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
-  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([projectConfig.createEmptyCard(region)])
+  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([
+    new CardBlueprint('', region, projectConfig.card),
+  ])
   const [state, setState] = useState(CardActivationState.input)
 
   const confirm = async () => {
