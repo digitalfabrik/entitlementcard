@@ -444,6 +444,9 @@ jobs:
             sudo apt update
             sudo apt install curl -y
       - run:
+          name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129
+          command: sudo apt install ca-certificates-java
+      - run:
           name: Install openjdk-17-jre-headless
           command: sudo apt install openjdk-17-jre-headless -y
       - run:
