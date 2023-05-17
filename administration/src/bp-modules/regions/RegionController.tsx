@@ -15,16 +15,7 @@ const RegionSettingsContainer = styled.div`
   flex-direction: column;
 `
 
-const RegionController = ({ regionId }: { regionId: number }) => {
-  return (
-    <RegionSettingsContainer>
-      <DataPrivacyCard />
-      <ActivatedForApplicationCard regionId={regionId} />
-    </RegionSettingsContainer>
-  )
-}
-
-const ControllerWithRegion = (): ReactElement => {
+const RegionController = (): ReactElement => {
   const { region, role } = useContext(WhoAmIContext).me!
   if (!region || role !== Role.RegionAdmin) {
     return (
@@ -35,8 +26,13 @@ const ControllerWithRegion = (): ReactElement => {
       />
     )
   } else {
-    return <RegionController regionId={region.id} />
+    return (
+      <RegionSettingsContainer>
+        <DataPrivacyCard />
+        <ActivatedForApplicationCard regionId={region.id} />
+      </RegionSettingsContainer>
+    )
   }
 }
 
-export default ControllerWithRegion
+export default RegionController
