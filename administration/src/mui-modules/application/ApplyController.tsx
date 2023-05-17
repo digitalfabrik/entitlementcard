@@ -75,7 +75,7 @@ const ApplyController = (): React.ReactElement | null => {
 
   if (!regionsQueryResult.successful) return regionsQueryResult.component
 
-  const regions = regionsQueryResult.data.regions
+  const regions = regionsQueryResult.data.regions.filter(region => region.activatedForApplication)
 
   const submit = () => {
     const validationResult = ApplicationForm.validate(state, { regions })

@@ -3,11 +3,11 @@ import { Tooltip2 } from '@blueprintjs/popover2'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
-import defaultErrorMap from '../../errors/DefaultErrorMap'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
-import ButtonBar from '../ButtonBar'
+import defaultErrorMap from '../../../errors/DefaultErrorMap'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
+import { useAppToaster } from '../../AppToaster'
+import ButtonBar from '../../ButtonBar'
 
 const Content = styled.div`
   padding: 0 6rem;
@@ -39,7 +39,7 @@ type RegionOverviewProps = {
 
 const MAX_CHARS = 20000
 
-const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
@@ -89,4 +89,4 @@ const RegionOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): R
     </>
   )
 }
-export default RegionOverview
+export default DataPrivacyOverview

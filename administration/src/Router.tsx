@@ -12,8 +12,9 @@ import Login from './bp-modules/auth/Login'
 import ResetPasswordController from './bp-modules/auth/ResetPasswordController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
 import HomeController from './bp-modules/home/HomeController'
-import DataPrivacyPolicy from './bp-modules/regions/DataPrivacyPolicy'
 import RegionsController from './bp-modules/regions/RegionController'
+import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
+import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
@@ -68,6 +69,7 @@ const Router = () => {
           ...(projectConfig.applicationFeatureEnabled
             ? [
                 { path: 'applications', element: <ApplicationsController /> },
+                { path: 'region/data-privacy-policy', element: <DataPrivacyController /> },
                 // Currently, '/region' only allows to set the data privacy text for the application form
                 { path: 'region', element: <RegionsController /> },
               ]

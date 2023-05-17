@@ -4,5 +4,6 @@ query getRegions($project: String!) {
     prefix
     name
     regionIdentifier
+    activatedForApplication
   }
 }

@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 
 const Container = styled.div`
   max-width: 750px;

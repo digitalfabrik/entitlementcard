@@ -45,12 +45,16 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
+    fun updateActivatedForApplication(region: RegionEntity, activated: Boolean) {
+        region.activatedForApplication = activated
+    }
+
     fun findRegionByRegionIdentifier(
         regionIdentifier: String,
         projectId: EntityID<Int>
     ): RegionEntity {
         val regionId = RegionEntity
-            .find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) }
+            .find { Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) and Regions.activatedForApplication }
             .single().id
         return RegionEntity[regionId]
     }

@@ -1,21 +1,27 @@
 import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
-import getQueryResult from '../util/getQueryResult'
-import RegionOverview from './RegionOverview'
+import { Role } from '../../generated/graphql'
+import ActivatedForApplicationCard from './ActivatedForApplicationCard'
+import DataPrivacyCard from './DataPrivacyCard'
+
+const RegionSettingsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
 
 const RegionController = ({ regionId }: { regionId: number }) => {
-  const dataPolicyQuery = useGetDataPolicyQuery({
-    variables: { regionId: regionId },
-    onError: error => console.error(error),
-  })
-  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
-  if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
-
-  const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''
-  return <RegionOverview dataPrivacyPolicy={dataPrivacyPolicy} regionId={regionId} />
+  return (
+    <RegionSettingsContainer>
+      <DataPrivacyCard />
+      <ActivatedForApplicationCard regionId={regionId} />
+    </RegionSettingsContainer>
+  )
 }
 
 const ControllerWithRegion = (): ReactElement => {

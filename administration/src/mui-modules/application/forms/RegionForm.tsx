@@ -83,7 +83,15 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           </a>
           {` einsehen.`}
           <br />
-          Eine Liste der teilnehmenden Landkreise und kreisfreien Städte finden Sie im Auswahlfeld unten.
+          {`Eine Liste der teilnehmenden Landkreise und kreisfreien Städte für den zentralen Beantragungsprozess finden Sie im Auswahlfeld unten.
+          Alle anderen Regionen können Sie `}
+          <a
+            href='https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/voraussetzungen/index.php'
+            target='_blank'
+            rel='noreferrer'>
+            hier
+          </a>
+          {` direkt kontaktieren, um Ihre Ehrenamtskarte zu erhalten.`}
         </Typography>
         {renderAlert(state, postalCode, regionQuery)}
         <SubForms.region.Component

@@ -5,5 +5,6 @@ data class Region(
     val prefix: String,
     val name: String,
     val regionIdentifier: String?,
-    val dataPrivacyPolicy: String?
+    val dataPrivacyPolicy: String?,
+    val activatedForApplication: Boolean
 )
