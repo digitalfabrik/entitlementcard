@@ -26,8 +26,6 @@ export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 export const ENTRY_LIMIT = 100
 
-const reader = new FileReader()
-
 type ImportCardsInputProps = {
   headers: string[]
   setCardBlueprints: (cardBlueprints: CSVCard[]) => void
@@ -48,26 +46,8 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     },
     [appToaster]
   )
-  const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
-    if (!event.currentTarget?.files) {
-      return
-    }
 
-    const file = event.currentTarget.files[0]
-    if (!(file.type in defaultExtensionsByMIMEType)) {
-      showInputError('Die gewählte Datei hat einen unzulässigen Dateityp.')
-      return
-    }
-
-    if (file.size > FILE_SIZE_LIMIT_BYTES) {
-      showInputError('Die ausgewählete Datei ist zu groß.')
-      return
-    }
-    setInputState('loading')
-    reader.readAsText(file)
-  }
-
-  reader.onloadend = useCallback(
+  const onLoadend = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
       const lines = content
@@ -92,18 +72,40 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
         return
       }
 
+      if (lines.length > ENTRY_LIMIT + 1) {
+        showInputError(`Die Datei hat mehr als ${ENTRY_LIMIT} Einträge.`)
+        return
+      }
+
       const csvHeader = lines.shift() ?? []
       const blueprints = lines.map(line => lineToBlueprint(line, csvHeader))
 
-      if (blueprints.length > ENTRY_LIMIT) {
-        showInputError('Die Datei hat mehr als 100 Einträge.')
-        return
-      }
       setCardBlueprints(blueprints)
       setInputState('idle')
     },
     [lineToBlueprint, setCardBlueprints, showInputError]
   )
+
+  const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
+    if (!event.currentTarget?.files) {
+      return
+    }
+    const reader = new FileReader()
+    reader.onloadend = onLoadend
+
+    const file = event.currentTarget.files[0]
+    if (!(file.type in defaultExtensionsByMIMEType)) {
+      showInputError('Die gewählte Datei hat einen unzulässigen Dateityp.')
+      return
+    }
+
+    if (file.size > FILE_SIZE_LIMIT_BYTES) {
+      showInputError('Die ausgewählete Datei ist zu groß.')
+      return
+    }
+    setInputState('loading')
+    reader.readAsText(file)
+  }
 
   const StateIcon =
     inputState === 'error' ? (
@@ -121,7 +123,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       description={<ImportCardsRequirementsText header={headers} />}
       action={
         <CardImportInputContainer>
-          <input ref={fileInput} accept='.csv' type='file' onInput={onInputChange} />
+          <input data-testid='file-upload' ref={fileInput} accept='.csv' type='file' onInput={onInputChange} />
         </CardImportInputContainer>
       }
     />

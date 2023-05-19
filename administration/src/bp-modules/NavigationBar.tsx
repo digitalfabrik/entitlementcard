@@ -1,5 +1,4 @@
-import { Button, Navbar } from '@blueprintjs/core'
-import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment'
+import { Alignment, Button, Navbar } from '@blueprintjs/core'
 import React, { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'

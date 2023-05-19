@@ -120,7 +120,7 @@ describe('hashCardInfo', () => {
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
 
-    expect(uint8ArrayToBase64(hash)).toEqual('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
+    expect(uint8ArrayToBase64(hash)).toBe('rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=')
   })
 
   it('should be stable for a Bavarian Golden EAK', async () => {
@@ -138,7 +138,7 @@ describe('hashCardInfo', () => {
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
 
-    expect(uint8ArrayToBase64(hash)).toEqual('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
+    expect(uint8ArrayToBase64(hash)).toBe('ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=')
   })
 
   it('should be stable for a Nuernberg Pass', async () => {
@@ -160,6 +160,6 @@ describe('hashCardInfo', () => {
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
 
-    expect(uint8ArrayToBase64(hash)).toEqual('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
+    expect(uint8ArrayToBase64(hash)).toBe('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
   })
 })

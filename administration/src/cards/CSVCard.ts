@@ -55,15 +55,15 @@ class CSVCard extends CardBlueprint {
   }
 
   setValue = (header: string, value: string) => {
-    this.headerMap[header].setValue(value)
+    this.headerMap[header]?.setValue(value)
   }
 
   getValue = (header: string) => {
-    if (header) return this.headerMap[header].getValue()
+    return this.headerMap[header]?.getValue() ?? null
   }
 
   isValueValid = (header: string): boolean => {
-    return this.headerMap[header].isValid()
+    return this.headerMap[header]?.isValid() ?? false
   }
 }
 
