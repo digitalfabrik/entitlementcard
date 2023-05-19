@@ -8,7 +8,7 @@ import { Extension } from './extensions'
 type BavariaCardTypeState = 'Standard' | 'Goldkarte'
 
 class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
-  public readonly name: string = BavariaCardTypeExtension.name
+  public readonly name = BavariaCardTypeExtension.name
 
   setInitialState() {
     this.state = 'Standard'
@@ -61,6 +61,13 @@ class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
 
   isValid() {
     return this.state !== null
+  }
+
+  fromString(state: string) {
+    this.state = state === 'Goldkarte' || state === 'Standard' ? state : null
+  }
+  toString() {
+    return this.state ?? ''
   }
 }
 

@@ -47,7 +47,7 @@ const Navigation = (props: Props) => {
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
             ) : null}
-            <NavLink to={'/create-cards'}>
+            <NavLink to={'/cards'}>
               <Button minimal icon='id-number' text='Karten erstellen' />
             </NavLink>
           </>

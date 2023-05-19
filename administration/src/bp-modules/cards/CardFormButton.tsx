@@ -1,8 +1,10 @@
-import { Button, Icon } from '@blueprintjs/core'
+import { Button, Icon, IconName } from '@blueprintjs/core'
 import React from 'react'
 import styled from 'styled-components'
 
 interface Props {
+  text: string
+  icon: IconName
   onClick: () => void
 }
 
@@ -23,10 +25,10 @@ const StyledButton = styled(Button)`
   }
 `
 
-const AddEakButton = (props: Props) => (
-  <StyledButton icon={<Icon style={{ margin: 10 }} icon={'add'} iconSize={20} />} onClick={props.onClick}>
-    Karte hinzufügen
+const CardFormButton = ({ text, icon, onClick }: Props) => (
+  <StyledButton icon={<Icon style={{ margin: 10 }} icon={icon} iconSize={20} />} onClick={onClick}>
+    {text}
   </StyledButton>
 )
 
-export default AddEakButton
+export default CardFormButton

@@ -1,28 +1,19 @@
-import { useApolloClient } from '@apollo/client'
-import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { ButtonGroup, NonIdealState } from '@blueprintjs/core'
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { CardBlueprint } from '../../cards/CardBlueprint'
-import { PDFError, generatePdf } from '../../cards/PdfFactory'
-import { CreateCardsError, createCards } from '../../cards/creation'
-import { Region } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import downloadDataUri from '../../util/downloadDataUri'
-import { useAppToaster } from '../AppToaster'
-import { ActivityLog } from '../user-settings/ActivityLog'
-import GenerationFinished from './CardsCreatedMessage'
-import CreateCardsForm from './CreateCardsForm'
+import StandaloneCenter from '../StandaloneCenter'
+import CardFormButton from './CardFormButton'
 
-enum CardActivationState {
-  input,
-  loading,
-  finished,
-}
+const Buttons = styled(ButtonGroup)`
+  width: 400px;
+`
 
 const CreateCardsController = () => {
   const { region } = useContext(WhoAmIContext).me!
-
+  const navigate = useNavigate()
   if (!region) {
     return (
       <NonIdealState
@@ -33,79 +24,14 @@ const CreateCardsController = () => {
     )
   }
 
-  return <InnerCreateCardsController region={region} />
-}
-
-const InnerCreateCardsController = ({ region }: { region: Region }) => {
-  const projectConfig = useContext(ProjectConfigContext)
-  const activityLogConfig = projectConfig.activityLogConfig
-  const client = useApolloClient()
-  const appToaster = useAppToaster()
-
-  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([
-    new CardBlueprint('', region, projectConfig.card),
-  ])
-  const [state, setState] = useState(CardActivationState.input)
-
-  const confirm = async () => {
-    try {
-      setState(CardActivationState.loading)
-
-      const dynamicCodes = cardBlueprints.map(cardBlueprint => {
-        if (activityLogConfig) {
-          new ActivityLog(cardBlueprint).saveToSessionStorage()
-        }
-        return cardBlueprint.generateActivationCode()
-      })
-      const staticCodes = projectConfig.staticQrCodesEnabled
-        ? cardBlueprints.map(cardBlueprints => {
-            return cardBlueprints.generateStaticVerificationCode()
-          })
-        : []
-
-      const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)
-
-      const codes = [...dynamicCodes, ...staticCodes]
-      await createCards(client, codes, region)
-
-      downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
-      setState(CardActivationState.finished)
-    } catch (e) {
-      if (e instanceof PDFError)
-        appToaster?.show({
-          message: 'Etwas ist schiefgegangen beim Erstellen der PDF.',
-          intent: 'danger',
-        })
-      else if (e instanceof CreateCardsError) {
-        appToaster?.show({ intent: 'danger', message: e.message })
-      } else {
-        console.error(e)
-        appToaster?.show({ intent: 'danger', message: 'Etwas ist schiefgegangen.' })
-      }
-      setState(CardActivationState.input)
-    }
-  }
-  if (state === CardActivationState.input) {
-    return (
-      <CreateCardsForm
-        region={region}
-        cardBlueprints={cardBlueprints}
-        setCardBlueprints={setCardBlueprints}
-        confirm={confirm}
-      />
-    )
-  } else if (state === CardActivationState.loading) {
-    return <Spinner />
-  } else {
-    return (
-      <GenerationFinished
-        reset={() => {
-          setCardBlueprints([])
-          setState(CardActivationState.input)
-        }}
-      />
-    )
-  }
+  return (
+    <StandaloneCenter>
+      <Buttons vertical>
+        <CardFormButton text='Einzelne Karten erstellen' icon='add' onClick={() => navigate('./add')} />
+        <CardFormButton text='Mehrere Karten importieren' icon='upload' onClick={() => navigate('./import')} />
+      </Buttons>
+    </StandaloneCenter>
+  )
 }
 
 export default CreateCardsController

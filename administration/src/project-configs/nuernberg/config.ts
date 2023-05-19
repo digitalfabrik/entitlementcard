@@ -16,6 +16,9 @@ const config: ProjectConfig = {
   applicationFeatureEnabled: false,
   staticQrCodesEnabled: true,
   card: {
+    nameColumnName: 'Name',
+    expiryColumnName: 'Ablaufdatum',
+    extensionColumnNames: ['Geburtsdatum', 'Passnummer', null],
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
   },
