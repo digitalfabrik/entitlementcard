@@ -8,7 +8,7 @@ const DataPrivacyCard = (): ReactElement => {
   const navigate = useNavigate()
   return (
     <SettingsCard>
-      <H2>Regionale Datenschutzerklärung</H2>
+      <H2>Erweiterung der Datenschutzerklärung</H2>
       <p>
         Hier können sie die allgemeine Datenschutzerklärung um Inhalte, die speziell für ihre Region relevant sind,
         erweitern.
