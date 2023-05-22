@@ -10,7 +10,7 @@ const DataPrivacyCard = (): ReactElement => {
     <SettingsCard>
       <H2>Erweiterung der Datenschutzerklärung</H2>
       <p>
-        Hier können sie die allgemeine Datenschutzerklärung um Inhalte, die speziell für ihre Region relevant sind,
+        Hier können Sie die allgemeine Datenschutzerklärung um Inhalte, die speziell für Ihre Region relevant sind,
         erweitern.
       </p>
       <div style={{ textAlign: 'right', padding: '10px 0' }}>
