@@ -37,7 +37,7 @@ const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): Reac
   return (
     <SettingsCard>
       <H2>Aktivierung Beantragungsprozess</H2>
-      <p>Hier können sie festlegen, ob ihre Region für den neuen Antragsprozess freigeschaltet ist.</p>
+      <p>Hier können Sie festlegen, ob Ihre Region für den neuen Antragsprozess freigeschaltet ist.</p>
       <Checkbox
         checked={activatedForApplication}
         onChange={e => setActivatedForApplication(e.currentTarget.checked)}
