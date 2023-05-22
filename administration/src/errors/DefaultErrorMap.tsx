@@ -82,6 +82,11 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: 'Diese Region existiert nicht.',
       }
+    case GraphQlExceptionCode.RegionNotActivatedForApplication:
+      return {
+        title:
+          'Für diese Region kann der zentrale Beantragungsprozess noch nicht genutzt werden, kontaktieren Sie bitte Ihre zuständige Behörde direkt.',
+      }
   }
 }
 

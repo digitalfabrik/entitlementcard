@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
@@ -33,7 +34,10 @@ class EakApplicationMutationService {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
-        transaction { RegionsRepository.findByIdInProject(project, regionId) } ?: throw RegionNotFoundException()
+        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) } ?: throw RegionNotFoundException()
+        if (!region.activatedForApplication) {
+            throw RegionNotActivatedForApplicationException()
+        }
         // Validate that all files are png, jpeg or pdf files and at most 5MB.
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
         val maxFileSizeBytes = 5 * 1000 * 1000
