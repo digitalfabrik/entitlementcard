@@ -20,7 +20,7 @@ const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): Reac
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Einstellungen wurde erfolgreich geändert.' })
+      appToaster?.show({ intent: 'success', message: 'Einstellungen wurden erfolgreich geändert.' })
     },
   })
   useEffect(() => {
