@@ -2,8 +2,8 @@ import { ReactElement, ReactNode } from 'react'
 
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
-import { CardInfo } from '../generated/card_pb'
-import { Region } from '../generated/graphql'
+import { PdfDetailElementRenderer } from '../cards/pdf/PdfDetailElement'
+import { PdfQrCodeElementRenderer } from '../cards/pdf/PdfQrCodeElement'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
@@ -12,7 +12,11 @@ export interface PdfConfig {
   title: string
   templatePath: string | null
   issuer: string
-  infoToDetails: (info: CardInfo, region: Region, shorten: boolean) => string
+  elements?: {
+    staticQrCodes?: PdfQrCodeElementRenderer[]
+    dynamicQrCodes: PdfQrCodeElementRenderer[]
+    details: PdfDetailElementRenderer[]
+  }
 }
 
 export interface ActivityLogConfig {

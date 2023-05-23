@@ -8,6 +8,13 @@ import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from './NuernbergPassNumberExtension'
 import RegionExtension from './RegionExtension'
 
+export const findExtension = <E extends ExtensionClass>(
+  array: ExtensionInstance[],
+  extension: E
+): InstanceType<E> | undefined => {
+  return array.find(e => e instanceof extension) as InstanceType<E> | undefined
+}
+
 export interface JSONExtension<T> {
   name: string
   state: T | null
@@ -20,7 +27,7 @@ export abstract class Extension<T, R> implements JSONExtension<T> {
   abstract isValid(): boolean
   abstract createForm(onChange: () => void): ReactElement | null
   abstract causesInfiniteLifetime(): boolean
-  abstract setProtobufData(message: PartialMessage<CardExtensions>): void
+  setProtobufData?(message: PartialMessage<CardExtensions>): void
   abstract fromString(state: string): void
   abstract toString(): string
 }
