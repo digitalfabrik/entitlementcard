@@ -13,7 +13,7 @@ const ButtonContainer = styled.div`
   padding: 10px 0;
 `
 
-const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): ReactElement => {
+const ActivatedForApplicationCard = ({ regionId }: { regionId: number }): ReactElement => {
   const [activatedForApplication, setActivatedForApplication] = useState<boolean>(false)
   const appToaster = useAppToaster()
   const activatedForApplicationQuery = useGetActivatedForApplicationQuery({
@@ -68,4 +68,4 @@ const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): Reac
   )
 }
 
-export default ApplicationForApplicationCard
+export default ActivatedForApplicationCard
