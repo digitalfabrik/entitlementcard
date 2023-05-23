@@ -18,9 +18,9 @@ const config: ProjectConfig = {
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Passnummer', null],
+    extensionColumnNames: ['Geburtsdatum', 'Passnummer', 'Pass-ID', null],
     defaultValidity: { years: 1 },
-    extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
+    extensions: [BirthdayExtension, NuernbergPassNumberExtension, NuernbergPassIdExtension, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,

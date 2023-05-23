@@ -4,6 +4,7 @@ import { ReactElement } from 'react'
 import { CardExtensions } from '../../generated/card_pb'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
+import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from './NuernbergPassNumberExtension'
 import RegionExtension from './RegionExtension'
 
@@ -28,5 +29,6 @@ export type ExtensionClass =
   | typeof BavariaCardTypeExtension
   | typeof BirthdayExtension
   | typeof NuernbergPassNumberExtension
+  | typeof NuernbergPassIdExtension
   | typeof RegionExtension
 export type ExtensionInstance = InstanceType<ExtensionClass>
