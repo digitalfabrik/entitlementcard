@@ -7,7 +7,7 @@ import { useAppToaster } from '../AppToaster'
 import SettingsCard from '../user-settings/SettingsCard'
 import getQueryResult from '../util/getQueryResult'
 
-const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): ReactElement => {
+const ActivatedForApplicationCard = ({ regionId }: { regionId: number }): ReactElement => {
   const [activatedForApplication, setActivatedForApplication] = useState<boolean>(false)
   const appToaster = useAppToaster()
   const activatedForApplicationQuery = useGetActivatedForApplicationQuery({
