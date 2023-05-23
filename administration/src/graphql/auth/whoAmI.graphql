@@ -7,6 +7,7 @@ query whoAmI($project: String!) {
       id
       name
       prefix
+      activatedForApplication
     }
   }
 }

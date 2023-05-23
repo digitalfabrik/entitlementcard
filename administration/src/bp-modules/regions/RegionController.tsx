@@ -1,24 +1,21 @@
 import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Role, useGetDataPolicyQuery } from '../../generated/graphql'
-import getQueryResult from '../util/getQueryResult'
-import RegionOverview from './RegionOverview'
+import { Role } from '../../generated/graphql'
+import ActivatedForApplicationCard from './ActivatedForApplicationCard'
+import DataPrivacyCard from './DataPrivacyCard'
 
-const RegionController = ({ regionId }: { regionId: number }) => {
-  const dataPolicyQuery = useGetDataPolicyQuery({
-    variables: { regionId: regionId },
-    onError: error => console.error(error),
-  })
-  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
-  if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
+const RegionSettingsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
 
-  const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''
-  return <RegionOverview dataPrivacyPolicy={dataPrivacyPolicy} regionId={regionId} />
-}
-
-const ControllerWithRegion = (): ReactElement => {
+const RegionController = (): ReactElement => {
   const { region, role } = useContext(WhoAmIContext).me!
   if (!region || role !== Role.RegionAdmin) {
     return (
@@ -29,8 +26,13 @@ const ControllerWithRegion = (): ReactElement => {
       />
     )
   } else {
-    return <RegionController regionId={region.id} />
+    return (
+      <RegionSettingsContainer>
+        <DataPrivacyCard />
+        <ActivatedForApplicationCard regionId={region.id} />
+      </RegionSettingsContainer>
+    )
   }
 }
 
-export default ControllerWithRegion
+export default RegionController

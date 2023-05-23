@@ -122,6 +122,8 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates the activation state of a region for the application process"
+  updateActivatedForApplication(activated: Boolean!, regionId: Int!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
@@ -198,6 +200,7 @@ type Query {
 }
 
 type Region {
+  activatedForApplication: Boolean!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -259,6 +262,7 @@ enum GraphQLExceptionCode {
   INVALID_ROLE
   MAIL_NOT_SENT
   PASSWORD_RESET_KEY_EXPIRED
+  REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
 }
 

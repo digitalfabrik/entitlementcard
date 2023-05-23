@@ -23,11 +23,25 @@ class RegionsMutationService {
             if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
                 throw InvalidDataPolicySizeException(PRIVACY_POLICY_MAX_CHARS)
             }
-            if (!Authorizer.mayUpdatePrivacyPolicyInRegion(user, regionId)) {
+            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)
             RegionsRepository.updateDataPolicy(region, dataPrivacyText)
+        }
+        return true
+    }
+
+    @GraphQLDescription("Updates the activation state of a region for the application process")
+    fun updateActivatedForApplication(dfe: DataFetchingEnvironment, regionId: Int, activated: Boolean): Boolean {
+        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
+        transaction {
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
+                throw ForbiddenException()
+            }
+            val region = RegionsRepository.findRegionById(regionId)
+            RegionsRepository.updateActivatedForApplication(region, activated)
         }
         return true
     }

@@ -27,7 +27,7 @@ object Authorizer {
         )
     }
 
-    fun mayUpdatePrivacyPolicyInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+    fun mayUpdateSettingsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
         return user.regionId?.value == regionId && user.role == Role.REGION_ADMIN.db_value
     }
 

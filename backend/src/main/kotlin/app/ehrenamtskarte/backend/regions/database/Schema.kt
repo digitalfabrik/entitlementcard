@@ -15,6 +15,7 @@ object Regions : IntIdTable() {
     val name = varchar("name", 100)
     val prefix = varchar("prefix", 30) // Usually "Stadt" or "Landkreis"
     val dataPrivacyPolicy = varchar("dataPrivacyPolicy", PRIVACY_POLICY_MAX_CHARS).nullable()
+    val activatedForApplication = bool("activatedForApplication").default(true)
 }
 
 class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -26,4 +27,5 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
     var name by Regions.name
     var prefix by Regions.prefix
     var dataPrivacyPolicy by Regions.dataPrivacyPolicy
+    var activatedForApplication by Regions.activatedForApplication
 }
