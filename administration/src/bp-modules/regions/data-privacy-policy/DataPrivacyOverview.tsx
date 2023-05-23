@@ -77,7 +77,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         </CharCounter>
       </Content>
       <ButtonBar>
-        <Button icon='arrow-left' text='Zurück' intent='danger' onClick={() => navigate(-1)} />
+        <Button icon='arrow-left' text='Zurück' onClick={() => navigate(-1)} />
         <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
           <Button
             disabled={maxCharsExceeded}
