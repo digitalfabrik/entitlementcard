@@ -1,6 +1,8 @@
 import { useContext } from 'react'
 import styled from 'styled-components'
 
+import { WhoAmIContext } from '../../WhoAmIProvider'
+import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivityLogCard from './ActivityLogCard'
 import ApplicationLinkCard from './ApplicationLinkCard'
@@ -17,10 +19,10 @@ const UserSettingsContainer = styled.div`
 
 const UserSettingsController = () => {
   const { applicationFeatureEnabled, activityLogConfig, projectId } = useContext(ProjectConfigContext)
-
+  const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
-      {applicationFeatureEnabled && <NotificationSettings projectId={projectId} />}
+      {applicationFeatureEnabled && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
       <ChangePasswordForm />
       {/* TODO #897: [Application] Remove Redirect for bayern */}
       {applicationFeatureEnabled && <ApplicationLinkCard />}
