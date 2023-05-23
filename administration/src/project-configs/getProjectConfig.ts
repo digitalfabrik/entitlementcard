@@ -2,8 +2,8 @@ import { ReactElement, ReactNode } from 'react'
 
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
-import { PdfDetailElementRenderer } from '../cards/pdf/PdfDetailElement'
-import { PdfQrCodeElementRenderer } from '../cards/pdf/PdfQrCodeElement'
+import { PdfQrCodeElementProps } from '../cards/pdf/pdfQrCodeElement'
+import { PdfTextElementProps } from '../cards/pdf/pdfTextElement'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
@@ -13,9 +13,9 @@ export interface PdfConfig {
   templatePath: string | null
   issuer: string
   elements?: {
-    staticQrCodes?: PdfQrCodeElementRenderer[]
-    dynamicQrCodes: PdfQrCodeElementRenderer[]
-    details: PdfDetailElementRenderer[]
+    staticVerificationQrCodes?: PdfQrCodeElementProps[]
+    dynamicActivationQrCodes: PdfQrCodeElementProps[]
+    text: PdfTextElementProps[]
   }
 }
 

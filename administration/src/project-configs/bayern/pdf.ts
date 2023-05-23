@@ -1,7 +1,6 @@
 import { format } from 'date-fns'
 
-import PdfDetailElement, { InfoParams } from '../../cards/pdf/PdfDetailElement'
-import PdfQrCodeElement from '../../cards/pdf/PdfQrCodeElement'
+import { InfoParams } from '../../cards/pdf/pdfTextElement'
 import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { BavariaCardType } from '../../generated/card_pb'
 import { PdfConfig } from '../getProjectConfig'
@@ -25,8 +24,8 @@ const pdfConfiguration: PdfConfig = {
   templatePath: pdfTemplate,
   issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
   elements: {
-    dynamicQrCodes: [PdfQrCodeElement({ x: 108, y: 73, size: 84 })],
-    details: [PdfDetailElement({ x: 108, y: 170, width: 84, fontSize: 10, infoToDetails: renderPdfInfo })],
+    dynamicActivationQrCodes: [{ x: 108, y: 73, size: 84 }],
+    text: [{ x: 108, y: 170, width: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo }],
   },
 }
 

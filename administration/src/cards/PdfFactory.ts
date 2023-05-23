@@ -4,6 +4,8 @@ import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../genera
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import CardBlueprint from './CardBlueprint'
+import pdfQrCodeElement from './pdf/pdfQrCodeElement'
+import pdfTextElement from './pdf/pdfTextElement'
 
 export class PDFError extends Error {
   constructor(message: string) {
@@ -23,18 +25,18 @@ async function fillContentAreas(
 ) {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
-  pdfConfig.elements?.dynamicQrCodes.forEach(pdfQrCodeElementRenderer =>
-    pdfQrCodeElementRenderer({ page: templatePage, qrCode: dynamicCode })
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
   if (staticCode) {
-    pdfConfig.elements?.staticQrCodes?.forEach(pdfQrCodeElementRenderer =>
-      pdfQrCodeElementRenderer({ page: templatePage, qrCode: staticCode })
+    pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
+      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode })
     )
   }
 
-  pdfConfig.elements?.details.forEach(pdfDetailElementRenderer =>
-    pdfDetailElementRenderer({
+  pdfConfig.elements?.text.forEach(configOptions =>
+    pdfTextElement(configOptions, {
       page: templatePage,
       font: helveticaFont,
       info: dynamicCode.value.info!,
