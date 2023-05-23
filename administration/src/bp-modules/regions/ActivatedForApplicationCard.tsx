@@ -1,11 +1,17 @@
 import { Button, Checkbox, H2 } from '@blueprintjs/core'
 import React, { ReactElement, useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetActivatedForApplicationQuery, useUpdateActivatedForApplicationMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import SettingsCard from '../user-settings/SettingsCard'
 import getQueryResult from '../util/getQueryResult'
+
+const ButtonContainer = styled.div`
+  text-align: right;
+  padding: 10px 0;
+`
 
 const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): ReactElement => {
   const [activatedForApplication, setActivatedForApplication] = useState<boolean>(false)
@@ -43,7 +49,7 @@ const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): Reac
         onChange={e => setActivatedForApplication(e.currentTarget.checked)}
         label='Region ist aktiviert'
       />
-      <div style={{ textAlign: 'right', padding: '10px 0' }}>
+      <ButtonContainer>
         <Button
           text={'Speichern'}
           intent={'primary'}
@@ -57,7 +63,7 @@ const ApplicationForApplicationCard = ({ regionId }: { regionId: number }): Reac
           }
           loading={loading}
         />
-      </div>
+      </ButtonContainer>
     </SettingsCard>
   )
 }

@@ -1,6 +1,7 @@
 import { Button, H3, TextArea } from '@blueprintjs/core'
 import { Tooltip2 } from '@blueprintjs/popover2'
 import React, { ReactElement, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import defaultErrorMap from '../../../errors/DefaultErrorMap'
@@ -40,6 +41,7 @@ type RegionOverviewProps = {
 const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+  const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
@@ -75,6 +77,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         </CharCounter>
       </Content>
       <ButtonBar>
+        <Button icon='arrow-left' text='Zurück' intent='danger' onClick={() => navigate(-1)} />
         <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
           <Button
             disabled={maxCharsExceeded}
