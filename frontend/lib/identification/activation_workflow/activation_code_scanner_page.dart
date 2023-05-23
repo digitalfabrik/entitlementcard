@@ -7,6 +7,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
@@ -77,6 +78,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   Future<void> _activateCode(
     BuildContext context,
     DynamicActivationCode activationCode,
+    [bool overwriteExisting = false,]
   ) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
@@ -89,7 +91,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       projectId: projectId,
       activationSecretBase64: activationSecretBase64,
       cardInfoHashBase64: cardInfoBase64,
-      overwriteExisting: true,
+      overwriteExisting: overwriteExisting,
     );
 
     switch (activationResult.activationState) {
@@ -114,8 +116,11 @@ class ActivationCodeScannerPage extends StatelessWidget {
         );
         break;
       case ActivationState.didNotOverwriteExisting:
-        // TODO: ask user to overwrite code
-        throw const ActivationDidNotOverwriteExisting();
+        if (overwriteExisting) {
+          throw const ActivationDidNotOverwriteExisting();
+        }
+        await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context, () { _activateCode(context, activationCode, true); });
+        break;
       default:
         throw const ServerCardActivationException(
           "Die Aktivierung befindet sich in einem ungültigen Zustand.",
