@@ -1,4 +1,4 @@
-import { PDFFont, PDFPage, RotationTypes } from 'pdf-lib'
+import { Color, ColorTypes, PDFFont, PDFPage, RotationTypes } from 'pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
@@ -16,6 +16,7 @@ export type PdfTextElementProps = {
   fontSize: number
   spacing?: number
   angle?: number
+  color?: Color
   infoToText: (info: InfoParams) => string
 } & Coordinates
 
@@ -28,7 +29,7 @@ type PdfTextElementRendererProps = {
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
-  { width, x, y, fontSize, infoToText, spacing = 1, angle = 0 },
+  { width, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined },
   { page, font, info, region, cardBlueprint }
 ) => {
   const text = infoToText({ info, region, cardBlueprint })
@@ -42,6 +43,7 @@ const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProp
     maxWidth: mmToPt(width),
     wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
+    color,
     rotate: { angle: angle, type: RotationTypes.Degrees },
     size: fontSize,
   })

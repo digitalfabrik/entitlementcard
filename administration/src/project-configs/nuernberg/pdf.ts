@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { rgb } from 'pdf-lib'
 
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
@@ -51,7 +52,7 @@ const pdfConfiguration: PdfConfig = {
     text: [
       { x: 108, y: 243, width: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
       { x: 25, y: 61, width: 73, fontSize: 12, spacing: 3, infoToText: renderAdressDetails },
-      { x: 129, y: 79, width: 44, fontSize: 12, infoToText: renderPassId },
+      { x: 129.5, y: 79, width: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
       { x: 27, y: 265, width: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
     ],
   },
