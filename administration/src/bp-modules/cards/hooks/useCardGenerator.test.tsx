@@ -42,7 +42,7 @@ describe('useCardGenerator', () => {
     id: 0,
     name: 'augsburg',
     prefix: 'a',
-    activatedForApplication: true
+    activatedForApplication: true,
   }
 
   const cards = [
