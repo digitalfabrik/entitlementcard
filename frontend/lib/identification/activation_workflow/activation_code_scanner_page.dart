@@ -77,9 +77,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   Future<void> _activateCode(
     BuildContext context,
-    DynamicActivationCode activationCode,
-    [bool overwriteExisting = false,]
-  ) async {
+    DynamicActivationCode activationCode, [
+    bool overwriteExisting = false,
+  ]) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
     final provider = Provider.of<UserCodeModel>(context, listen: false);
@@ -119,7 +119,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
         if (overwriteExisting) {
           throw const ActivationDidNotOverwriteExisting();
         }
-        await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context, () { _activateCode(context, activationCode, true); });
+        await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context, () {
+          _activateCode(context, activationCode, true);
+        });
         break;
       default:
         throw const ServerCardActivationException(

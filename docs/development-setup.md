@@ -52,7 +52,7 @@ adb reverse tcp:8000 tcp:8000
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 8. Run the backend migration: `run --args "migrate"`
 9. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
-10. Create an admin account using `./gradlew run --args="create-admin <email> <password>"`
+10. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
 11. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 12. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
 13. Take a look at the backend: [http://localhost:8000](http://localhost:8000) (The public version is available at

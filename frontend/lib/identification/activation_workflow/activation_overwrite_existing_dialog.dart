@@ -13,7 +13,7 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
         child: ListBody(
           children: const <Widget>[
             Text(
-              "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wollen Sie Ihre Karte auf diesem Gerät aktivieren? Dadurch wird die Karte auf Ihrem anderen Gerät deaktiviert.",
+              "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",
             ),
           ],
         ),
@@ -36,7 +36,8 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> showActivationOverwriteExistingDialog(BuildContext context, VoidCallback overrideExistingCard) async {
+  static Future<void> showActivationOverwriteExistingDialog(
+      BuildContext context, VoidCallback overrideExistingCard) async {
     return showDialog<void>(
       context: context,
       builder: (context) => ActivationOverwriteExistingDialog(overrideExistingCard: overrideExistingCard),
