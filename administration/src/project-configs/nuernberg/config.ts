@@ -1,14 +1,11 @@
-import { format } from 'date-fns'
-
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
+import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { ProjectConfig } from '../getProjectConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
-// @ts-ignore
-import pdfTemplate from './pdf-template.pdf'
+import pdfConfig from './pdf'
 
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
@@ -18,9 +15,9 @@ const config: ProjectConfig = {
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Passnummer', null],
+    extensionColumnNames: ['Geburtsdatum', 'Passnummer', 'Pass-ID', null],
     defaultValidity: { years: 1 },
-    extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
+    extensions: [BirthdayExtension, NuernbergPassNumberExtension, NuernbergPassIdExtension, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
@@ -29,24 +26,7 @@ const config: ProjectConfig = {
     columnNames: ['Erstellt', 'Name', 'Passnummer', 'Geburtstag', 'Gültig bis'],
     renderLogEntry: ActivityLogEntry,
   },
-  pdf: {
-    title: 'Nürnberg-Pässe',
-    templatePath: pdfTemplate,
-    issuer: 'Stadt Nürnberg',
-    infoToDetails: (info, _region, shorten) => {
-      const expirationDay = info.expirationDay
-      if (!expirationDay) {
-        throw new Error('expirationDay must be defined for Nürnberg')
-      }
-
-      const expirationDate = format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy')
-      return `${info.fullName}
-Passnummer: ${info.extensions?.extensionNuernbergPassNumber?.passNumber}
-Geburtsdatum: ${format(daysSinceEpochToDate(info.extensions?.extensionBirthday?.birthday ?? 0), 'dd.MM.yyyy')}
-Gültig bis: ${expirationDate}
-${shorten ? '' : `Ausgestellt am: ${format(new Date(), 'dd.MM.yyyy')}`}`
-    },
-  },
+  pdf: pdfConfig,
 }
 
 export default config

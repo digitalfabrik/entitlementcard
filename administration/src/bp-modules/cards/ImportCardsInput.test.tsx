@@ -23,6 +23,7 @@ describe('ImportCardsInput', () => {
     id: 0,
     name: 'augsburg',
     prefix: 'a',
+    activatedForApplication: true,
   }
 
   const renderAndSubmitCardsInput = async (

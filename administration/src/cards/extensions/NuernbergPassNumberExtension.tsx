@@ -13,9 +13,12 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
   setInitialState() {}
   createForm(onUpdate: () => void) {
     return (
-      <FormGroup label='Passnummer' labelFor='nuernberg-pass-input' intent={this.isValid() ? undefined : Intent.DANGER}>
+      <FormGroup
+        label='Nürnberg-Pass-Nummer'
+        labelFor='nuernberg-pass-number-input'
+        intent={this.isValid() ? undefined : Intent.DANGER}>
         <InputGroup
-          id='nuernberg-pass-input'
+          id='nuernberg-pass-number-input'
           placeholder='12345678'
           intent={this.isValid() ? undefined : Intent.DANGER}
           value={this.state?.passNumber.toString() ?? ''}
