@@ -40,7 +40,7 @@ const useCardGenerator = (region: Region) => {
           })
         : []
 
-      const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, region, projectConfig.pdf)
+      const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, cardBlueprints, region, projectConfig.pdf)
 
       const codes = [...dynamicCodes, ...staticCodes]
       await createCards(client, codes, region)

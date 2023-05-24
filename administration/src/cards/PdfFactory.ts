@@ -1,9 +1,11 @@
-import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
+import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
 
-import { CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
+import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
-import { drawQRCode } from '../util/qrcode'
+import CardBlueprint from './CardBlueprint'
+import pdfQrCodeElement from './pdf/PdfQrCodeElement'
+import pdfTextElement from './pdf/pdfTextElement'
 
 export class PDFError extends Error {
   constructor(message: string) {
@@ -12,135 +14,42 @@ export class PDFError extends Error {
   }
 }
 
-const dynamicQRCodeSize = 84 // mm
-const dynamicQRCodeX = 108 // mm
-const dynamicQRCodeY = 73 // mm
-
-const dynamicDetailWidth = 84 // mm
-const dynamicDetailX = 108 // mm
-const dynamicDetailY = 170 // mm
-const dynamicDetailFontSize = 10
-
-const staticBackQRCodeSize = 48 // mm
-const staticBackQRCodeX = 51 // mm
-const staticBackQRCodeY = 228 // mm
-
-const staticFrontQRCodeSize = 23 // mm
-const staticFrontQRCodeX = 156 // mm
-const staticFrontQRCodeY = 249 // mm
-
-const staticDetailWidth = 46 // mm
-const staticDetailX = 107 // mm
-const staticDetailY = 248 // mm
-const staticDetailFontSize = 8
-
-function mmToPt(mm: number) {
-  return (mm / 25.4) * 72
-}
-
-type DynamicPdfQrCode = {
-  value: DynamicActivationCode
-  case: 'dynamicActivationCode'
-}
-
-type StaticPdfQrCode = {
-  value: StaticVerificationCode
-  case: 'staticVerificationCode'
-}
-
-type PdfQrCode = DynamicPdfQrCode | StaticPdfQrCode
-
 async function fillContentAreas(
   doc: PDFDocument,
   templatePage: PDFPage,
-  dynamicCode: DynamicPdfQrCode,
-  staticCode: StaticPdfQrCode | null,
+  dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
+  staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
   region: Region,
+  cardBlueprint: CardBlueprint,
   pdfConfig: PdfConfig
 ) {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
 
-  // Dynamic QR code
-  fillCodeArea(dynamicCode, dynamicQRCodeX, dynamicQRCodeY, dynamicQRCodeSize, templatePage)
-  fillDetailsArea(
-    dynamicCode.value.info!,
-    region,
-    dynamicDetailX,
-    dynamicDetailY,
-    dynamicDetailWidth,
-    helveticaFont,
-    dynamicDetailFontSize,
-    templatePage,
-    false,
-    pdfConfig
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
-  // Static QR code
   if (staticCode) {
-    // Back
-    fillCodeArea(staticCode, staticBackQRCodeX, staticBackQRCodeY, staticBackQRCodeSize, templatePage)
-
-    // Front
-    fillCodeArea(staticCode, staticFrontQRCodeX, staticFrontQRCodeY, staticFrontQRCodeSize, templatePage)
-    fillDetailsArea(
-      staticCode.value.info!,
-      region,
-      staticDetailX,
-      staticDetailY,
-      staticDetailWidth,
-      helveticaFont,
-      staticDetailFontSize,
-      templatePage,
-      true,
-      pdfConfig
+    pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
+      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode })
     )
   }
-}
 
-function fillDetailsArea(
-  info: CardInfo,
-  region: Region,
-  x: number,
-  y: number,
-  width: number,
-  font: PDFFont,
-  fontSize: number,
-  page: PDFPage,
-  shorten: boolean,
-  pdfConfig: PdfConfig
-) {
-  const detailXPdf = mmToPt(x)
-  const detailYPdf = page.getSize().height - mmToPt(y)
-
-  const lineHeight = mmToPt(5)
-
-  const text = pdfConfig.infoToDetails(info, region, shorten)
-  page.drawText(text, {
-    font,
-    x: detailXPdf,
-    y: detailYPdf - lineHeight,
-    maxWidth: mmToPt(width),
-    wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
-    lineHeight,
-    size: fontSize,
-  })
-}
-
-function fillCodeArea(qrCode: PdfQrCode, x: number, y: number, size: number, page: PDFPage) {
-  const qrCodeSizePdf = mmToPt(size)
-  const qrCodeXPdf = mmToPt(x)
-  const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
-
-  const qrCodeContent = new QrCode({
-    qrCode: qrCode,
-  }).toBinary()
-
-  drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
+  pdfConfig.elements?.text.forEach(configOptions =>
+    pdfTextElement(configOptions, {
+      page: templatePage,
+      font: helveticaFont,
+      info: dynamicCode.value.info!,
+      region: region,
+      cardBlueprint,
+    })
+  )
 }
 
 export async function generatePdf(
   dynamicCodes: DynamicActivationCode[],
   staticCodes: StaticVerificationCode[],
+  cardBlueprints: CardBlueprint[],
   region: Region,
   pdfConfig: PdfConfig
 ) {
@@ -159,6 +68,7 @@ export async function generatePdf(
     for (let k = 0; k < dynamicCodes.length; k++) {
       const dynamicCode = dynamicCodes[k]
       const staticCode = staticCodes?.at(k)
+      const cardBlueprint = cardBlueprints[k]
 
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
@@ -178,6 +88,7 @@ export async function generatePdf(
             }
           : null,
         region,
+        cardBlueprint,
         pdfConfig
       )
     }

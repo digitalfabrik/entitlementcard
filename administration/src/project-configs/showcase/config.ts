@@ -23,7 +23,7 @@ const config: ProjectConfig = {
     title: 'Karten',
     templatePath: null,
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
-    infoToDetails: bayern.pdf.infoToDetails,
+    elements: bayern.pdf.elements,
   },
 }
 
