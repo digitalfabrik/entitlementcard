@@ -325,12 +325,11 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:19.1.0-browsers
+      - image: cimg/node:19.1.0
     working_directory: ~/project/administration
     steps:
       - checkout:
           path: ~/project
-      - browser-tools/install-chrome
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
