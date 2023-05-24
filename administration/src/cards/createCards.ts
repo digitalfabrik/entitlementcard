@@ -22,7 +22,7 @@ export class CreateCardsError extends Error {
   }
 }
 
-export async function createCards(client: ApolloClient<object>, activationCodes: Codes, region: Region) {
+async function createCards(client: ApolloClient<object>, activationCodes: Codes, region: Region) {
   const cards: CardGenerationModelInput[] = await Promise.all(
     activationCodes.map(async code => {
       const codeType = code instanceof DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
@@ -52,3 +52,5 @@ export async function createCards(client: ApolloClient<object>, activationCodes:
     throw new CreateCardsError('Beim erstellen der Karte(n) ist ein Fehler aufgetreten.')
   }
 }
+
+export default createCards

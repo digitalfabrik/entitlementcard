@@ -17,5 +17,5 @@
     "isolatedModules": false,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/graphql/customScalarTypes.d.ts"]
+  "include": ["jest.config.ts", "jest.setup.ts", "src", "src/graphql/customScalarTypes.d.ts"]
 }

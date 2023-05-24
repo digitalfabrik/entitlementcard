@@ -6,6 +6,7 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import CSVCard from '../../cards/CSVCard'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -28,17 +29,16 @@ const ImportCardsController = (): ReactElement => {
   return <InnerImportCardsController region={region} />
 }
 
+export const getHeaders = (projectConfig: ProjectConfig) => [
+  projectConfig.card.nameColumnName,
+  projectConfig.card.expiryColumnName,
+  ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
+]
+
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
   const { state, setState, generateCards, setCardBlueprints, cardBlueprints } = useCardGenerator(region)
   const projectConfig = useContext(ProjectConfigContext)
-  const headers = useMemo(
-    () => [
-      projectConfig.card.nameColumnName,
-      projectConfig.card.expiryColumnName,
-      ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
-    ],
-    [projectConfig.card]
-  )
+  const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
 
   useBlockNavigation({

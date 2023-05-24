@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from 'react'
 
 import { CardBlueprint } from '../../../cards/CardBlueprint'
 import { generatePdf } from '../../../cards/PdfFactory'
-import { createCards } from '../../../cards/creation'
+import createCards, { CreateCardsError } from '../../../cards/createCards'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
@@ -48,11 +48,17 @@ const useCardGenerator = (region: Region) => {
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
     } catch (e) {
-      console.error(e)
-      appToaster?.show({
-        message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
-        intent: 'danger',
-      })
+      if (e instanceof CreateCardsError) {
+        appToaster?.show({
+          message: e.message,
+          intent: 'danger',
+        })
+      } else {
+        appToaster?.show({
+          message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+          intent: 'danger',
+        })
+      }
       setState(CardActivationState.input)
     } finally {
       setCardBlueprints([])

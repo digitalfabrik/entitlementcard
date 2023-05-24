@@ -8,10 +8,10 @@ import {
   QRCodeMatrixUtil,
   QRCodeMode,
   QRCodeVersion,
-} from '@zxing/library'
-import ECBlocks from '@zxing/library/esm/core/qrcode/decoder/ECBlocks'
-import MaskUtil from '@zxing/library/esm/core/qrcode/encoder/MaskUtil'
-import MatrixUtil from '@zxing/library/esm/core/qrcode/encoder/MatrixUtil'
+} from '@zxing/library/cjs'
+import ECBlocks from '@zxing/library/cjs/core/qrcode/decoder/ECBlocks'
+import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
+import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
 import { PDFPage, rgb } from 'pdf-lib'
 
 const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
