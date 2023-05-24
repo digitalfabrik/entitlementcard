@@ -90,7 +90,7 @@ export class CardBlueprint implements JSONCardBlueprint {
     const extensionsMessage: PartialMessage<CardExtensions> = {}
 
     this.extensions.forEach(extension => {
-      if (extension.state === null) {
+      if (extension.state === null || !extension.setProtobufData) {
         // We allow to skip invalid extensions to enable computing the protobuf size.
         return
       }

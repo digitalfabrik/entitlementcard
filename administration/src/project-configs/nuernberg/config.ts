@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 
+import AdressExtensions from '../../cards/extensions/AdressFieldExtensons'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
@@ -18,9 +19,9 @@ const config: ProjectConfig = {
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Passnummer', null],
+    extensionColumnNames: ['Geburtsdatum', 'Passnummer', 'Adresszeile 1', 'Adresszeile 2', 'PLZ', 'Ort', null],
     defaultValidity: { years: 1 },
-    extensions: [BirthdayExtension, NuernbergPassNumberExtension, RegionExtension],
+    extensions: [BirthdayExtension, NuernbergPassNumberExtension, ...AdressExtensions, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
