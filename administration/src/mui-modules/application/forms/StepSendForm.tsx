@@ -23,25 +23,32 @@ const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheck
   required: true,
   notCheckedErrorMessage: 'Diese Erklärung ist erforderlich.',
 }
+const hasAcceptedEmailUsageOptions: { required: false } = {
+    required: false,
+}
 
 const SubForms = {
   hasAcceptedDataPrivacy: CheckboxForm,
   givenInformationIsCorrectAndComplete: CheckboxForm,
+  hasAcceptedEmailUsage: CheckboxForm,
 }
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = {
   hasAcceptedDataPrivacy: boolean
   givenInformationIsCorrectAndComplete: boolean
+  hasAcceptedEmailUsage: boolean
 }
 type Options = {}
 type AdditionalProps = { regionId: number }
+
 const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
     hasAcceptedDataPrivacy: hasAcceptedDatePrivacyOptions,
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
+    hasAcceptedEmailUsage: hasAcceptedEmailUsageOptions,
   }),
   Component: ({ state, setState, regionId }) => {
     const setHasAcceptedDataPrivacyState = useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')
@@ -49,6 +56,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       setState,
       'givenInformationIsCorrectAndComplete'
     )
+    const setHasAcceptedEmailUsage = useUpdateStateCallback(setState, 'hasAcceptedEmailUsage')
     const policyQuery = useGetDataPolicyQuery({ variables: { regionId: regionId } })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
@@ -82,6 +90,12 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           state={state.givenInformationIsCorrectAndComplete}
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
+        />
+        <SubForms.hasAcceptedEmailUsage.Component
+          label='Meine E-Mailadresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden.'
+          state={state.hasAcceptedEmailUsage}
+          setState={setHasAcceptedEmailUsage}
+          options={hasAcceptedEmailUsageOptions}
         />
         <BasicDialog
           open={openPrivacyPolicy}

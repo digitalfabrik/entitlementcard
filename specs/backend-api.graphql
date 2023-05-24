@@ -300,6 +300,7 @@ input ApplicationInput {
   givenInformationIsCorrectAndComplete: Boolean!
   goldenCardEntitlement: GoldenCardEntitlementInput
   hasAcceptedPrivacyPolicy: Boolean!
+  hasAcceptedEmailUsage: Boolean!
   personalData: PersonalDataInput!
   wantsDigitalCard: Boolean!
   wantsPhysicalCard: Boolean!
