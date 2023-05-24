@@ -2,9 +2,6 @@ import { type Config } from '@jest/types'
 
 const swcConfig = {
   jsc: {
-    experimental: {
-      plugins: [['jest_workaround', {}]],
-    },
     transform: {
       react: {
         runtime: 'automatic',
