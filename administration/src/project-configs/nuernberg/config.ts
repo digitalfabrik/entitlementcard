@@ -1,4 +1,4 @@
-import AdressExtensions from '../../cards/extensions/AdressFieldExtensons'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
@@ -31,7 +31,7 @@ const config: ProjectConfig = {
       BirthdayExtension,
       NuernbergPassNumberExtension,
       NuernbergPassIdExtension,
-      ...AdressExtensions,
+      ...AddressExtensions,
       RegionExtension,
     ],
   },
