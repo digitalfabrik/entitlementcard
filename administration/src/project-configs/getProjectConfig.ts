@@ -2,7 +2,7 @@ import { ReactElement, ReactNode } from 'react'
 
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
-import { PdfQrCodeElementProps } from '../cards/pdf/pdfQrCodeElement'
+import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/pdfTextElement'
 import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'

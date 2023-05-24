@@ -4,7 +4,7 @@ import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../genera
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import CardBlueprint from './CardBlueprint'
-import pdfQrCodeElement from './pdf/pdfQrCodeElement'
+import pdfQrCodeElement from './pdf/PdfQrCodeElement'
 import pdfTextElement from './pdf/pdfTextElement'
 
 export class PDFError extends Error {
