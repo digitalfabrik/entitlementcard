@@ -2,8 +2,6 @@ import CSVCard from './CSVCard'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
 
-jest.useFakeTimers()
-
 describe('CSVCard', () => {
   const region = {
     id: 0,
