@@ -26,6 +26,16 @@ describe('ImportCardsInput', () => {
     activatedForApplication: true,
   }
 
+  var readAsTextSpy: jasmine.Spy
+
+  beforeEach(() => {
+    readAsTextSpy = jasmine.createSpy()
+    const fileReaderMock = {
+      readAsText: readAsTextSpy,
+    } as unknown as FileReader
+    spyOn(global, 'FileReader').and.returnValue(fileReaderMock)
+  })
+
   const renderAndSubmitCardsInput = async (
     projectConfig: ProjectConfig,
     csv: string,
@@ -33,10 +43,10 @@ describe('ImportCardsInput', () => {
     setCardBlueprints: () => void
   ) => {
     const file = new File([csv], projectConfig.name + '.csv', { type: 'text/csv' })
-    const fileReaderSpy = jest.spyOn(global, 'FileReader').mockImplementation(function (this: FileReader) {
-      this.readAsText = jest.fn(() => this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>))
-      return this
+    readAsTextSpy.and.callFake(function (this: FileReader, _: Blob) {
+      this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
     })
+
     localStorage.setItem('project-override', projectConfig.projectId)
 
     const { getByTestId } = render(
@@ -53,11 +63,11 @@ describe('ImportCardsInput', () => {
 
     await act(async () => {
       fireEvent.input(fileInput)
-      await waitFor(() => expect(fileReaderSpy.mock.instances[0].readAsText).toHaveBeenCalled())
+      await waitFor(() => expect(readAsTextSpy).toHaveBeenCalledTimes(1))
     })
   }
 
-  it.each([
+  ;[
     {
       projectConfig: bayernConfig,
       csv: `
@@ -74,19 +84,20 @@ Thea Test,03.04.2024,10.10.2000,12345678
 Tilo Traber,03.04.2025,12.01.1984,98765432
 `,
     },
-  ])(`Correctly import CSV Card for project $projectConfig.name`, async ({ projectConfig, csv }) => {
-    const toasterSpy = jest.spyOn(Toaster.prototype, 'show')
-    const lineToBlueprintMock = jest.fn(() => new CSVCard(projectConfig.card, region))
-    const setCardBlueprintsMock = jest.fn()
+  ].forEach(({ projectConfig, csv }) => {
+    it(`Correctly import CSV Card for project ${projectConfig.name}`, async () => {
+      const toasterSpy = spyOn(Toaster.prototype, 'show')
+      const lineToBlueprintSpy = jasmine.createSpy().and.callFake(() => new CSVCard(projectConfig.card, region))
+      const setCardBlueprintsSpy = jasmine.createSpy()
 
-    await renderAndSubmitCardsInput(projectConfig, csv, lineToBlueprintMock, setCardBlueprintsMock)
+      await renderAndSubmitCardsInput(projectConfig, csv, lineToBlueprintSpy, setCardBlueprintsSpy)
 
-    expect(toasterSpy).not.toHaveBeenCalled()
-    expect(setCardBlueprintsMock).toHaveBeenCalled()
-    expect(lineToBlueprintMock).toHaveBeenCalledTimes(2)
+      expect(toasterSpy).not.toHaveBeenCalled()
+      expect(setCardBlueprintsSpy).toHaveBeenCalledTimes(1)
+      expect(lineToBlueprintSpy).toHaveBeenCalledTimes(2)
+    })
   })
-
-  it.each([
+  ;[
     {
       csv: '',
       error: 'Die gewählte Datei ist leer.',
@@ -110,15 +121,17 @@ ${'Thea Test,03.04.2024,10.10.2000,12345678\n'.repeat(ENTRY_LIMIT + 1)}
 `,
       error: `Die Datei hat mehr als ${ENTRY_LIMIT} Einträge.`,
     },
-  ])(`Import CSV Card should fail with error '$error'`, async ({ csv, error }) => {
-    const toasterSpy = jest.spyOn(Toaster.prototype, 'show')
-    const lineToBlueprintMock = jest.fn(() => new CSVCard(bayernConfig.card, region))
-    const setCardBlueprintsMock = jest.fn()
+  ].forEach(({ csv, error }) => {
+    it(`Import CSV Card should fail with error '$error'`, async () => {
+      const toasterSpy = spyOn(Toaster.prototype, 'show')
+      const lineToBlueprintSpy = jasmine.createSpy().and.callFake(() => new CSVCard(bayernConfig.card, region))
+      const setCardBlueprintsSpy = jasmine.createSpy()
 
-    await renderAndSubmitCardsInput(bayernConfig, csv, lineToBlueprintMock, setCardBlueprintsMock)
+      await renderAndSubmitCardsInput(bayernConfig, csv, lineToBlueprintSpy, setCardBlueprintsSpy)
 
-    expect(toasterSpy).toHaveBeenCalledWith({ intent: 'danger', message: error })
-    expect(setCardBlueprintsMock).not.toHaveBeenCalled()
-    expect(lineToBlueprintMock).not.toHaveBeenCalled()
+      expect(toasterSpy).toHaveBeenCalledWith({ intent: 'danger', message: error })
+      expect(setCardBlueprintsSpy).not.toHaveBeenCalled()
+      expect(lineToBlueprintSpy).not.toHaveBeenCalled()
+    })
   })
 })

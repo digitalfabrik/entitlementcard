@@ -56,7 +56,7 @@ class ViewAdministratorsQueryService {
             if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw ForbiddenException()
             }
-            val administrators = (Administrators innerJoin Regions)
+            val administrators = (Administrators leftJoin Regions)
                 .slice(Administrators.columns)
                 .select { Administrators.projectId eq projectId and not(Administrators.deleted) }
                 .orderBy(Regions.name to SortOrder.ASC, Administrators.email to SortOrder.ASC)
