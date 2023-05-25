@@ -42,7 +42,7 @@ const renderPassId = ({ cardBlueprint }: InfoParams) => {
 
 const renderPassNumber = ({ info }: InfoParams) => {
   const passNumber = info.extensions?.extensionNuernbergPassNumber?.passNumber
-  return passNumber ? `Nürnberg-Pass Nr.: ${passNumber?.toString()}` : ''
+  return passNumber ? `Nürnberg-Pass-Nr.: ${passNumber?.toString()}` : ''
 }
 
 const pdfConfiguration: PdfConfig = {
