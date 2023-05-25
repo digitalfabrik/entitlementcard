@@ -65,7 +65,7 @@ const ChangePasswordForm = () => {
         }}>
         <PasswordInput label='Aktuelles Passwort' value={currentPassword} setValue={setCurrentPassword} />
         <PasswordInput label='Neues Passwort' value={newPassword} setValue={setNewPassword} />
-        <PasswordInput label='Neues Passwort bestätigen' value={repeatNewPassword} setValue={setRepeatNewPassword} />
+        <PasswordInput label='Neues Passwort bestätigen' onPaste={e => e.preventDefault()} value={repeatNewPassword} setValue={setRepeatNewPassword} />
         {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
           <Button text={'Passwort ändern'} intent='primary' type='submit' disabled={!valid} loading={loading} />
