@@ -18,25 +18,25 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 3.0.5+106
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: 3.7.6
+  sdk: 3.0.2
+  flutter: 3.10.2
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.0
   maplibre_gl:
     git:
       url: https://github.com/maplibre/flutter-maplibre-gl.git
-      ref: f35709343e03439746857a9fbbd23dbb9bbafafc
+      ref: a32f8d939b580b853ab34a8fb0cc61c66b71d36b
   provider: ^6.0.3
   graphql_flutter: ^5.1.2
   url_launcher: ^6.1.6
   flutter_svg: ^2.0.2
   permission_handler: ^10.2.0
-  package_info_plus: ^3.0.3 # for about dialog
+  package_info_plus: ^4.0.1 # for about dialog
   mobile_scanner: 3.1.1 # Pinning this version because of https://github.com/juliansteenbakker/mobile_scanner/issues/582
   fixnum: ^1.1.0
   flutter_secure_storage: ^8.0.0
