@@ -84,7 +84,7 @@ workflows:
           filters:
             branches:
               only:
-                - release\/.*/
+                - /release.*/
 
 commands:
   setup-npm-global:
