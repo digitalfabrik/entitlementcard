@@ -92,7 +92,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           options={givenInformationIsCorrectAndCompleteOptions}
         />
         <SubForms.hasAcceptedEmailUsage.Component
-          label='Meine E-Mailadresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden.'
+          label='Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden.'
           state={state.hasAcceptedEmailUsage}
           setState={setHasAcceptedEmailUsage}
           options={hasAcceptedEmailUsageOptions}

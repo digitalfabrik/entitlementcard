@@ -111,7 +111,7 @@ data class Application(
                 ),
                 JsonField(
                     "hasAcceptedEmailUsage",
-                    mapOf("de" to "Meine E-Mailadresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden."),
+                    mapOf("de" to "Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden."),
                     Type.Boolean,
                     hasAcceptedEmailUsage
                 ),
