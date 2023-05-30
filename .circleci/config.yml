@@ -83,8 +83,8 @@ workflows:
             - meta-pack
           filters:
             branches:
-              ignore:
-                - /.*/
+              only:
+                - release\/.*/
             tags:
               only: /.*/
 
