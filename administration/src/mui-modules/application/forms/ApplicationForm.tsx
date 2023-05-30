@@ -1,7 +1,7 @@
 import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
+import { Form, ValidationResult } from '../util/FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -27,7 +27,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     activeStep: 0,
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: (state, options) => {
+  validate: (state, options): ValidationResult<ValidatedInput> => {
     const stepPersonalData = PersonalDataForm.validate(state.stepPersonalData, options)
     const stepCardType = StepCardTypeForm.validate(state.stepCardType)
     if (stepPersonalData.type === 'error' || stepCardType.type === 'error') return { type: 'error' }
@@ -56,6 +56,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
             stepRequirements.value.type === BavariaCardType.Golden ? stepRequirements.value.value : null,
           hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
           givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
+          hasAcceptedEmailUsage: stepSend.value.hasAcceptedEmailUsage,
         },
       ],
     }

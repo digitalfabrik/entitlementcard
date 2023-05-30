@@ -32,6 +32,7 @@ data class Application(
     val blueCardEntitlement: BlueCardEntitlement?,
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
+    val hasAcceptedEmailUsage: Boolean,
     val givenInformationIsCorrectAndComplete: Boolean
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     private val entitlementByCardType: Map<BavariaCardType, JsonFieldSerializable?> = mapOf(
@@ -107,6 +108,12 @@ data class Application(
                     mapOf("de" to "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind"),
                     Type.Boolean,
                     givenInformationIsCorrectAndComplete
+                ),
+                JsonField(
+                    "hasAcceptedEmailUsage",
+                    mapOf("de" to "Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden."),
+                    Type.Boolean,
+                    hasAcceptedEmailUsage
                 )
             )
         )

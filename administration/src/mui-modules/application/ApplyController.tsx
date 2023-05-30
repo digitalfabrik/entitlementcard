@@ -33,7 +33,7 @@ const SuccessContent = styled.div`
 const ApplyController = (): React.ReactElement | null => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
-  const [addBlueEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
+  const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
@@ -87,7 +87,7 @@ const ApplyController = (): React.ReactElement | null => {
     }
     const [regionId, application] = validationResult.value
 
-    addBlueEakApplication({
+    addEakApplication({
       variables: { regionId, application, project: projectId },
     })
   }
