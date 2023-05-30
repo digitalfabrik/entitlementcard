@@ -78,8 +78,9 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
 
   void switchBackendUrl(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context, listen: false);
+    final updatedEnableStaging = !settings.enableStaging;
     clearData();
-    settings.setEnableStaging(enabled: !settings.enableStaging);
+    settings.setEnableStaging(enabled: updatedEnableStaging);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
