@@ -1,7 +1,7 @@
 import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import {Form, ValidationResult} from '../util/FormType'
+import { Form, ValidationResult } from '../util/FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'

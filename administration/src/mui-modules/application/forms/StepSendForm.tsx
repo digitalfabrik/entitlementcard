@@ -24,7 +24,7 @@ const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheck
   notCheckedErrorMessage: 'Diese Erklärung ist erforderlich.',
 }
 const hasAcceptedEmailUsageOptions: { required: false } = {
-    required: false,
+  required: false,
 }
 
 const SubForms = {

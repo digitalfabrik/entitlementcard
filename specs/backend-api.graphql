@@ -299,8 +299,8 @@ input ApplicationInput {
   cardType: BavariaCardType!
   givenInformationIsCorrectAndComplete: Boolean!
   goldenCardEntitlement: GoldenCardEntitlementInput
-  hasAcceptedPrivacyPolicy: Boolean!
   hasAcceptedEmailUsage: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
   personalData: PersonalDataInput!
   wantsDigitalCard: Boolean!
   wantsPhysicalCard: Boolean!
