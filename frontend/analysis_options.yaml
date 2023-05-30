@@ -1,8 +1,6 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: false
   exclude:
     - build/**
     - lib/graphql/graphql_api*.dart
@@ -152,6 +150,8 @@ analyzer:
     use_test_throws_matchers: error
     valid_regexps: error
     void_checks: error
+  language:
+    strict-casts: true
 
 linter:
   rules:
