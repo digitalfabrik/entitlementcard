@@ -49,7 +49,7 @@ class GraphQLHandler(
         graphQLParams.mutations,
         graphQLParams.subscriptions
     )
-    private val graphQL = GraphQL.newGraphQL(graphQLSchema).build()!!
+    private val graphQL = GraphQL.newGraphQL(graphQLSchema).defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
 
     private val mapper = jacksonObjectMapper()
 
