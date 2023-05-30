@@ -2,6 +2,7 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
+import AddressExtensions from './AddressFieldExtensons'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
@@ -38,4 +39,5 @@ export type ExtensionClass =
   | typeof NuernbergPassNumberExtension
   | typeof NuernbergPassIdExtension
   | typeof RegionExtension
+  | (typeof AddressExtensions)[number]
 export type ExtensionInstance = InstanceType<ExtensionClass>

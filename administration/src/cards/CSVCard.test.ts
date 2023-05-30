@@ -1,9 +1,10 @@
+import { Region } from '../generated/graphql'
 import CSVCard from './CSVCard'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
 
 describe('CSVCard', () => {
-  const region = {
+  const region: Region = {
     id: 0,
     name: 'augsburg',
     prefix: 'a',

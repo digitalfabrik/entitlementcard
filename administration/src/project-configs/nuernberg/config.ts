@@ -1,3 +1,4 @@
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
@@ -15,9 +16,24 @@ const config: ProjectConfig = {
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Passnummer', 'Pass-ID', null],
+    extensionColumnNames: [
+      'Geburtsdatum',
+      'Passnummer',
+      'Pass-ID',
+      'Adresszeile 1',
+      'Adresszeile 2',
+      'PLZ',
+      'Ort',
+      null,
+    ],
     defaultValidity: { years: 1 },
-    extensions: [BirthdayExtension, NuernbergPassNumberExtension, NuernbergPassIdExtension, RegionExtension],
+    extensions: [
+      BirthdayExtension,
+      NuernbergPassNumberExtension,
+      NuernbergPassIdExtension,
+      ...AddressExtensions,
+      RegionExtension,
+    ],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
