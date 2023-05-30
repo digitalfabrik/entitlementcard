@@ -34,6 +34,7 @@ In `frontend/iOS`  run `bundle exec fastlane match appstore` .
 - Set a new tag with `<version>`
 - Generate release notes and update CHANGELOG.md
 - Update version in `/administration/package.json` and `frontend/pubspec.yaml`
+- Create PR to main branch
 
 ### Frontend
 
@@ -70,7 +71,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 ### Backend and Administration
 *Note:* On staging the new bundles will be triggered after merging on main and be installed every friday via `auto-update`
 
-- setting the git tag, triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
+- creating release branch triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
 - connect via ssh `ssh <username>@entitlementcard.app`
 - switch to root user `sudo -i`
 - (optional) check installed version of administration: `apt-cache policy eak-administration`
@@ -78,8 +79,8 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 - stop backend service : `systemctl stop eak-backend.service`
 - update and upgrade apt: `apt update` && `apt upgrade`
 - run database migrations if needed: `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate`
-  - check current version of migration: `sudo -u backend psql entitlementcard` && `SELECT * from migrations;`
-- restart backend service: `systemctl restart eak-backend.service`
+- check current version of migration: `sudo -u backend psql entitlementcard` && `SELECT * from migrations;`
+- restart backend service: `systemctl start eak-backend.service` maybe  `systemctl daemon-reload` is needed
 - check backend health log: `journalctl -u eak-backend.service --since "1h ago"`
 
 ## Snapshots
