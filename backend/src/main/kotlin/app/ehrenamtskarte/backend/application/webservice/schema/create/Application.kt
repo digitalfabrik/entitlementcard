@@ -114,7 +114,7 @@ data class Application(
                     mapOf("de" to "Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden."),
                     Type.Boolean,
                     hasAcceptedEmailUsage
-                ),
+                )
             )
         )
     }
