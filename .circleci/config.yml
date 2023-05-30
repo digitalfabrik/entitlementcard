@@ -83,10 +83,8 @@ workflows:
             - meta-pack
           filters:
             branches:
-              ignore:
-                - /.*/
-            tags:
-              only: /.*/
+              only:
+                - release\/.*/
 
 commands:
   setup-npm-global:
