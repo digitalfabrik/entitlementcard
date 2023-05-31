@@ -70,6 +70,7 @@ workflows:
             branches:
               only:
                 - main
+                - /release.*/
       - deploy:
           name: deploy-production
           server: entitlementcard.tuerantuer.org
@@ -83,10 +84,8 @@ workflows:
             - meta-pack
           filters:
             branches:
-              ignore:
-                - /.*/
-            tags:
-              only: /.*/
+              only:
+                - /release.*/
 
 commands:
   setup-npm-global:
