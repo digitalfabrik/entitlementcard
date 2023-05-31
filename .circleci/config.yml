@@ -70,6 +70,7 @@ workflows:
             branches:
               only:
                 - main
+                - /release.*/
       - deploy:
           name: deploy-production
           server: entitlementcard.tuerantuer.org
