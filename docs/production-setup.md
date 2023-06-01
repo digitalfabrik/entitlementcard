@@ -54,7 +54,7 @@ For Nürnberg replace:
 2. Select the correct build version
 
 ```bash
-fvm flutter pub run build_runner build —define “df_build_config=name=bayern”
+fvm flutter pub run build_runner build --define df_build_config=name=bayern
 ```
 
 3. Create bundles
