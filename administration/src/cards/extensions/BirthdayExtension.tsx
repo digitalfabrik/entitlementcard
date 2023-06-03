@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
-import { DateInput } from '@blueprintjs/datetime'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { format, isValid, parse, sub } from 'date-fns'
+import { TextField } from '@mui/material'
+import { format, isAfter, isBefore, isValid, parse } from 'date-fns'
 
 import { CardExtensions } from '../../generated/card_pb'
 import { dateToDaysSinceEpoch, daysSinceEpochToDate } from '../validityPeriod'
@@ -10,34 +10,49 @@ import { Extension } from './extensions'
 type BirthdayState = { birthday: number }
 
 const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
-
+const dateFormat = 'yyyy-MM-dd'
+const minBirthday = '1900-01-01'
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
   setInitialState() {
     this.state = { birthday: initialBirthdayDate }
   }
+  hasValidBirthdayDate(birthday?: number): boolean {
+    if (!birthday) {
+      return true
+    }
+    return (
+      isBefore(daysSinceEpochToDate(birthday), new Date(minBirthday)) ||
+      isAfter(daysSinceEpochToDate(birthday), new Date())
+    )
+  }
 
   createForm(onUpdate: () => void) {
     return (
       <FormGroup label='Geburtsdatum'>
-        <DateInput
-          placeholder='Geburtsdatum'
-          value={daysSinceEpochToDate(this.state?.birthday ?? initialBirthdayDate)}
-          parseDate={value => {
-            const millis = Date.parse(value)
-            return isNaN(millis) ? false : new Date(millis)
+        <TextField
+          fullWidth
+          type='date'
+          required
+          size='small'
+          error={!this.isValid()}
+          value={format(daysSinceEpochToDate(this.state?.birthday ?? initialBirthdayDate), dateFormat)}
+          sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
+          inputProps={{
+            max: format(new Date(), dateFormat),
+            min: minBirthday,
+            style: { fontSize: 14, padding: '6px 10px' },
           }}
-          onChange={value => {
-            if (value !== null) {
-              this.state = { birthday: dateToDaysSinceEpoch(value) }
-              onUpdate()
+          onChange={e => {
+            if (e.target.value !== null) {
+              const millis = Date.parse(e.target.value)
+              if (!isNaN(millis)) {
+                this.state = { birthday: dateToDaysSinceEpoch(new Date(e.target.value)) }
+                onUpdate()
+              }
             }
           }}
-          formatDate={date => date.toLocaleDateString()}
-          minDate={sub(Date.now(), { years: 150 })}
-          maxDate={new Date()}
-          fill={true}
         />
       </FormGroup>
     )
@@ -54,7 +69,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   isValid() {
-    return this.state !== null
+    return this.state !== null && !this.hasValidBirthdayDate(this.state.birthday)
   }
 
   fromString(value: string) {

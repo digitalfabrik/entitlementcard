@@ -1,7 +1,6 @@
 import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
-import { DateInput } from '@blueprintjs/datetime'
-import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
-import { add } from 'date-fns'
+import { TextField } from '@mui/material'
+import { add, format, isAfter, isBefore } from 'date-fns'
 import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
@@ -33,6 +32,10 @@ const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   })
 }
 
+const maxCardValidity = 99
+const hasCardExpirationError = (expirationDate: Date): boolean =>
+  isBefore(expirationDate, Date.now()) || isAfter(expirationDate, add(Date.now(), { years: maxCardValidity }))
+
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
   return (
     <Card>
@@ -53,19 +56,29 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
         />
       </FormGroup>
       <FormGroup label='Ablaufdatum'>
-        <DateInput
-          placeholder='Ablaufdatum'
+        <TextField
+          fullWidth
           disabled={cardBlueprint.hasInfiniteLifetime()}
-          value={cardBlueprint.expirationDate}
-          parseDate={str => new Date(str)}
-          onChange={value => {
-            cardBlueprint.expirationDate = value
-            onUpdate()
+          type='date'
+          required
+          size='small'
+          error={cardBlueprint.expirationDate ? hasCardExpirationError(cardBlueprint.expirationDate) : true}
+          value={cardBlueprint.expirationDate ? format(cardBlueprint.expirationDate, 'yyyy-MM-dd') : null}
+          sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
+          inputProps={{
+            style: { fontSize: 14, padding: '6px 10px' },
+            min: format(new Date(), 'yyyy-MM-dd'),
+            max: format(add(Date.now(), { years: maxCardValidity }), 'yyyy-MM-dd'),
           }}
-          formatDate={date => date.toLocaleDateString()}
-          maxDate={add(Date.now(), { years: 99 })}
-          minDate={new Date()}
-          fill={true}
+          onChange={e => {
+            if (e.target.value !== null) {
+              const millis = Date.parse(e.target.value)
+              if (!isNaN(millis)) {
+                cardBlueprint.expirationDate = new Date(millis)
+                onUpdate()
+              }
+            }
+          }}
         />
       </FormGroup>
       {cardBlueprint.extensions.map((ext, i) => (

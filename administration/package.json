@@ -5,7 +5,6 @@
   "dependencies": {
     "@apollo/client": "^3.7.9",
     "@blueprintjs/core": "^4.16.3",
-    "@blueprintjs/datetime": "^4.3.12",
     "@blueprintjs/popover2": "^1.13.3",
     "@blueprintjs/select": "^4.9.3",
     "@blueprintjs/table": "^4.9.3",
