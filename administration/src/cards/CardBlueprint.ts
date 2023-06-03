@@ -102,7 +102,7 @@ export class CardBlueprint implements JSONCardBlueprint {
     return new CardInfo({
       fullName: this.fullName,
       expirationDay:
-        expirationDate !== null && Date.parse(expirationDate.toISOString()) > 0 && !this.hasInfiniteLifetime()
+        expirationDate !== null && expirationDate.getTime() > 0 && !this.hasInfiniteLifetime()
           ? dateToDaysSinceEpoch(expirationDate)
           : undefined,
       extensions: new CardExtensions(extensionsMessage),
