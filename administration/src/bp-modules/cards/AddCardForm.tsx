@@ -62,7 +62,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           required
           size='small'
           error={cardBlueprint.expirationDate ? hasCardExpirationError(cardBlueprint.expirationDate) : true}
-          value={cardBlueprint.expirationDate ? format(cardBlueprint.expirationDate, 'yyyy-MM-dd'): null}
+          value={cardBlueprint.expirationDate ? format(cardBlueprint.expirationDate, 'yyyy-MM-dd') : null}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
             style: { fontSize: 14, padding: '6px 10px' },
