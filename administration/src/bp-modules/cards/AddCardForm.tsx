@@ -32,8 +32,9 @@ const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   })
 }
 
+const maxCardValidity = 99
 const hasCardExpirationError = (expirationDate: Date): boolean =>
-  isBefore(expirationDate, Date.now()) || isAfter(expirationDate, add(Date.now(), { years: 99 }))
+  isBefore(expirationDate, Date.now()) || isAfter(expirationDate, add(Date.now(), { years: maxCardValidity }))
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
   return (
@@ -67,7 +68,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           inputProps={{
             style: { fontSize: 14, padding: '6px 10px' },
             min: format(new Date(), 'yyyy-MM-dd'),
-            max: format(add(Date.now(), { years: 99 }), 'yyyy-MM-dd'),
+            max: format(add(Date.now(), { years: maxCardValidity }), 'yyyy-MM-dd'),
           }}
           onChange={e => {
             if (e.target.value !== null) {

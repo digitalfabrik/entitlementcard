@@ -18,7 +18,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   setInitialState() {
     this.state = { birthday: initialBirthdayDate }
   }
-  hasError(birthday?: number): boolean {
+  hasValidBirthdayDate(birthday?: number): boolean {
     if (!birthday) {
       return true
     }
@@ -36,7 +36,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
           type='date'
           required
           size='small'
-          error={this.hasError(this.state?.birthday)}
+          error={!this.isValid()}
           value={format(daysSinceEpochToDate(this.state?.birthday ?? initialBirthdayDate), dateFormat)}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
@@ -69,7 +69,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   isValid() {
-    return this.state !== null
+    return this.state !== null && !this.hasValidBirthdayDate(this.state.birthday)
   }
 
   fromString(value: string) {
