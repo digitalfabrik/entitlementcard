@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+## [3.1.1] 2023-06-03
+
+### Fixed
+- set initial state for address extensions by @sarahsporck in #1000
+- 1003: Datepicker shows wrong date by @f1sh1918 in #1004
+
 ## [3.1.0] - 106 - 2023-05-30
 ### Fixed
 - Fix display of licenses by @maxammann in https://github.com/digitalfabrik/entitlementcard/pull/464
