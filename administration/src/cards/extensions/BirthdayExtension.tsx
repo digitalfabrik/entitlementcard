@@ -48,7 +48,6 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
             if (e.target.value !== null) {
               const millis = Date.parse(e.target.value)
               if (!isNaN(millis)) {
-                console.log(new Date(e.target.value))
                 this.state = { birthday: dateToDaysSinceEpoch(new Date(e.target.value)) }
                 onUpdate()
               }
