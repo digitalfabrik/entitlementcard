@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - set initial state for address extensions by @sarahsporck in #1000
 - 1003: Datepicker shows wrong date by @f1sh1918 in #1004
+- fix wrong birthday in csv import
 
 ## [3.1.0] - 106 - 2023-05-30
 ### Fixed
