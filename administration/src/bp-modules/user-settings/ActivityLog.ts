@@ -9,7 +9,10 @@ export class ActivityLog {
   timestamp: string
 
   constructor(cardBlueprint: CardBlueprint) {
-    this.card = cardBlueprint
+    this.card = {
+      ...cardBlueprint,
+      expirationDate: cardBlueprint.expirationDate?.toString() ?? null,
+    }
     this.timestamp = format(Date.now(), 'dd.MM.yyyy kk:mm:ss')
   }
 

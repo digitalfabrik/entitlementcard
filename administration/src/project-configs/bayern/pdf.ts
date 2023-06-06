@@ -1,21 +1,20 @@
-import { format } from 'date-fns'
-
 import { InfoParams } from '../../cards/pdf/pdfTextElement'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
 import { BavariaCardType } from '../../generated/card_pb'
+import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams) => {
   const expirationDay = info.expirationDay ?? 0
-  const expirationDate = expirationDay > 0 ? format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy') : 'unbegrenzt'
+  const expirationDate =
+    expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format('dd.MM.yyyy') : 'unbegrenzt'
 
   const cardType = info.extensions?.extensionBavariaCardType?.cardType
   return `${info.fullName}
 Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
 Gültig bis: ${expirationDate}
-Ausgestellt am ${format(new Date(), 'dd.MM.yyyy')} 
+Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format('dd.MM.yyyy')} 
 von ${region.prefix} ${region.name}`
 }
 

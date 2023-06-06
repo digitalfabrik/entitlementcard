@@ -1,11 +1,11 @@
 import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { TextField } from '@mui/material'
-import { add, format, isAfter, isBefore } from 'date-fns'
 import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { ExtensionInstance } from '../../cards/extensions/extensions'
+import PlainDate from '../../util/PlainDate'
 
 const CardHeader = styled.div`
   margin: -20px -20px 20px -20px;
@@ -32,11 +32,15 @@ const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   })
 }
 
-const maxCardValidity = 99
-const hasCardExpirationError = (expirationDate: Date): boolean =>
-  isBefore(expirationDate, Date.now()) || isAfter(expirationDate, add(Date.now(), { years: maxCardValidity }))
+const maxCardValidity = { years: 99 }
+const hasCardExpirationError = (expirationDate: PlainDate): boolean => {
+  const today = PlainDate.fromLocalDate(new Date())
+
+  return expirationDate.isBefore(today) || expirationDate.isAfter(today.add(maxCardValidity))
+}
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
+  const today = PlainDate.fromLocalDate(new Date())
   return (
     <Card>
       <CardHeader>
@@ -63,19 +67,20 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           required
           size='small'
           error={cardBlueprint.expirationDate ? hasCardExpirationError(cardBlueprint.expirationDate) : true}
-          value={cardBlueprint.expirationDate ? format(cardBlueprint.expirationDate, 'yyyy-MM-dd') : null}
+          value={cardBlueprint.expirationDate ? cardBlueprint.expirationDate.toString() : null}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
             style: { fontSize: 14, padding: '6px 10px' },
-            min: format(new Date(), 'yyyy-MM-dd'),
-            max: format(add(Date.now(), { years: maxCardValidity }), 'yyyy-MM-dd'),
+            min: today.toString(),
+            max: today.add(maxCardValidity).toString(),
           }}
           onChange={e => {
             if (e.target.value !== null) {
-              const millis = Date.parse(e.target.value)
-              if (!isNaN(millis)) {
-                cardBlueprint.expirationDate = new Date(millis)
+              try {
+                cardBlueprint.expirationDate = PlainDate.from(e.target.value)
                 onUpdate()
+              } catch (error) {
+                console.error("Could not parse date from string '" + e.target.value + "'.", error)
               }
             }
           }}

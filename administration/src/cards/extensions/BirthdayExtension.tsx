@@ -1,34 +1,36 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import { addHours, format, isAfter, isBefore, isValid, parse } from 'date-fns'
 
 import { CardExtensions } from '../../generated/card_pb'
-import { dateToDaysSinceEpoch, daysSinceEpochToDate } from '../validityPeriod'
+import PlainDate from '../../util/PlainDate'
 import { Extension } from './extensions'
 
 type BirthdayState = { birthday: number }
 
-const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
-const dateFormat = 'yyyy-MM-dd'
-const minBirthday = '1900-01-01'
+const initialBirthdayDate = new PlainDate(1980, 1, 1)
+const minBirthday = new PlainDate(1900, 1, 1)
+
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
   setInitialState() {
-    this.state = { birthday: initialBirthdayDate }
+    this.state = { birthday: initialBirthdayDate.toDaysSinceEpoch() }
   }
+
   hasValidBirthdayDate(birthday?: number): boolean {
-    if (!birthday) {
-      return true
+    if (birthday === undefined) {
+      return false
     }
-    return (
-      isBefore(daysSinceEpochToDate(birthday), new Date(minBirthday)) ||
-      isAfter(daysSinceEpochToDate(birthday), new Date())
-    )
+    const date = PlainDate.fromDaysSinceEpoch(birthday)
+    const today = PlainDate.fromLocalDate(new Date())
+    return !date.isBefore(minBirthday) && !date.isAfter(today)
   }
 
   createForm(onUpdate: () => void) {
+    const birthdayDate =
+      this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : initialBirthdayDate
+
     return (
       <FormGroup label='Geburtsdatum'>
         <TextField
@@ -37,19 +39,21 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
           required
           size='small'
           error={!this.isValid()}
-          value={format(daysSinceEpochToDate(this.state?.birthday ?? initialBirthdayDate), dateFormat)}
+          value={birthdayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
-            max: format(new Date(), dateFormat),
-            min: minBirthday,
+            max: PlainDate.fromLocalDate(new Date()).toString(),
+            min: minBirthday.toString(),
             style: { fontSize: 14, padding: '6px 10px' },
           }}
           onChange={e => {
             if (e.target.value !== null) {
-              const millis = Date.parse(e.target.value)
-              if (!isNaN(millis)) {
-                this.state = { birthday: dateToDaysSinceEpoch(new Date(e.target.value)) }
+              try {
+                const date = PlainDate.from(e.target.value)
+                this.state = { birthday: date.toDaysSinceEpoch() }
                 onUpdate()
+              } catch (error) {
+                console.error("Could not parse date from string '" + e.target.value + "'.", error)
               }
             }
           }}
@@ -69,17 +73,25 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   isValid() {
-    return this.state !== null && !this.hasValidBirthdayDate(this.state.birthday)
+    return this.state !== null && this.hasValidBirthdayDate(this.state.birthday)
   }
 
+  /**
+   * fromString is only used for the CSV import.
+   * The expected format is dd.MM.yyyy
+   * @param value The date formatted using dd.MM.yyyy
+   */
   fromString(value: string) {
-    // Workaround add 5 hours to GTM Date to ensure convertedUTC is current day
-    // TODO #1006: Ensure correct UTC Date for CSV Import
-    const birthday = addHours(parse(value, 'dd.MM.yyyy', new Date()), 5)
-    this.state = isValid(birthday) ? { birthday: dateToDaysSinceEpoch(birthday) } : null
+    try {
+      const birthday = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+      this.state = { birthday: birthday.toDaysSinceEpoch() }
+    } catch (e) {
+      this.state = null
+    }
   }
+
   toString() {
-    return this.state ? format(daysSinceEpochToDate(this.state.birthday), 'dd.MM.yyyy') : ''
+    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.birthday).format('dd.MM.yyyy') : ''
   }
 }
 

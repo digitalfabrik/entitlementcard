@@ -1,4 +1,5 @@
 import { Region } from '../generated/graphql'
+import PlainDate from '../util/PlainDate'
 import CSVCard from './CSVCard'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
@@ -36,8 +37,7 @@ describe('CSVCard', () => {
     card.setValue('Kartentyp', 'Goldkarte')
 
     expect(card.fullName).toBe('Thea Test')
-    // TODO #1006: Ensure correct UTC Date for CSV Import, also remove the hours here
-    expect(card.expirationDate).toEqual(new Date(2022, 3, 3, 5))
+    expect(card.expirationDate).toEqual(new PlainDate(2022, 4, 3))
     expect(card.extensions[0].state).toBe('Goldkarte')
 
     expect(card.isValueValid('Name')).toBeTruthy()
