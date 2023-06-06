@@ -58,7 +58,8 @@ export class CardBlueprint {
   }
 
   isExpirationDateValid(): boolean {
-    return this.expirationDate !== null && this.expirationDate > PlainDate.fromLocalDate(new Date())
+    const today = PlainDate.fromLocalDate(new Date())
+    return this.expirationDate !== null && this.expirationDate.isAfter(today)
   }
 
   isValid(): boolean {
@@ -100,11 +101,14 @@ export class CardBlueprint {
     })
 
     const expirationDate = this.expirationDate
+    const expirationDay =
+      expirationDate !== null && !this.hasInfiniteLifetime()
+        ? Math.max(expirationDate.toDaysSinceEpoch(), 0)
+        : undefined
 
     return new CardInfo({
       fullName: this.fullName,
-      expirationDay:
-        expirationDate !== null && !this.hasInfiniteLifetime() ? expirationDate.toDaysSinceEpoch() : undefined,
+      expirationDay,
       extensions: new CardExtensions(extensionsMessage),
     })
   }
