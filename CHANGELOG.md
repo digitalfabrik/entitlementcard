@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+## [3.1.2] 2023-06-06
+
+### Added
+- Add sample csvs for importing cards by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1009
+- Introduce PlainDate by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1008
+
 ## [3.1.1] 2023-06-03
 
 ### Fixed
