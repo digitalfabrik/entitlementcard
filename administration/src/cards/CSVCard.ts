@@ -1,4 +1,4 @@
-import { format, isValid as isDateValid, parse } from 'date-fns'
+import { addHours, format, isValid as isDateValid, parse } from 'date-fns'
 
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
@@ -48,7 +48,9 @@ class CSVCard extends CardBlueprint {
 
   setExpirationDate = (value: string) => {
     if (value.length === 0) return null
-    this.expirationDate = parse(value, 'dd.MM.yyyy', new Date())
+    // Workaround add 5 hours to GTM Date to ensure convertedUTC is current day
+    // TODO #1006: Ensure correct UTC Date for CSV Import
+    this.expirationDate = addHours(parse(value, 'dd.MM.yyyy', new Date()), 5)
     if (!isDateValid(this.expirationDate)) {
       this.expirationDate = null
     }

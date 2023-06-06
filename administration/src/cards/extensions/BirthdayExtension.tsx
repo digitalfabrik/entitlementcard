@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import { format, isAfter, isBefore, isValid, parse } from 'date-fns'
+import { addHours, format, isAfter, isBefore, isValid, parse } from 'date-fns'
 
 import { CardExtensions } from '../../generated/card_pb'
 import { dateToDaysSinceEpoch, daysSinceEpochToDate } from '../validityPeriod'
@@ -73,7 +73,9 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   fromString(value: string) {
-    const birthday = parse(value, 'dd.MM.yyyy', new Date())
+    // Workaround add 5 hours to GTM Date to ensure convertedUTC is current day
+    // TODO #1006: Ensure correct UTC Date for CSV Import
+    const birthday = addHours(parse(value, 'dd.MM.yyyy', new Date()), 5)
     this.state = isValid(birthday) ? { birthday: dateToDaysSinceEpoch(birthday) } : null
   }
   toString() {
