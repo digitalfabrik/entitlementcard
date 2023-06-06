@@ -28,6 +28,8 @@ class PlainDate {
     {
       // Check if parameters are valid, otherwise throw RangeError
       const date = new Date(Date.UTC(isoYear, isoMonth - 1, day))
+      // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
+      date.setUTCFullYear(isoYear)
       if (!isValid(date)) {
         throw RangeError('Parameters do not form a valid PlainDate.')
       }
@@ -64,7 +66,10 @@ class PlainDate {
    * @example new PlainDate(1900, 1, 1).toUTCDate().toISOString() == "1900-01-01T00:00:00.000Z"
    */
   toUTCDate(): Date {
-    return new Date(Date.UTC(this.isoYear, this.isoMonth - 1, this.day))
+    const date = new Date(Date.UTC(this.isoYear, this.isoMonth - 1, this.day))
+    // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
+    date.setUTCFullYear(this.isoYear)
+    return date
   }
 
   static fromUTCDate(date: Date): PlainDate {
@@ -77,7 +82,10 @@ class PlainDate {
    *          new PlainDate(1900, 1, 1).toLocalDate().toISOString() // "1899-12-31T23:00:00.000Z"
    */
   toLocalDate(): Date {
-    return new Date(this.isoYear, this.isoMonth - 1, this.day)
+    const date = new Date(this.isoYear, this.isoMonth - 1, this.day)
+    // We need to setFullYear, as the Date constructor adds 1900 years if year is between 0 and 99 inclusive.
+    date.setFullYear(this.isoYear)
+    return date
   }
 
   static fromLocalDate(date: Date): PlainDate {
