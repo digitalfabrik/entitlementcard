@@ -1,3 +1,4 @@
+import PlainDate from '../util/PlainDate'
 import CardBlueprint from './CardBlueprint'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
@@ -28,7 +29,7 @@ describe('CardBlueprint', () => {
     const card = new CardBlueprint('Thea Test', cardConfig, [region])
 
     expect(card.fullName).toBe('Thea Test')
-    expect(card.expirationDate).toEqual(new Date('2023-01-01'))
+    expect(card.expirationDate).toEqual(PlainDate.from('2023-01-01'))
     expect(card.extensions[0].state).toBe('Standard')
     expect(card.extensions[1].state).toEqual({ regionId: 0 })
   })

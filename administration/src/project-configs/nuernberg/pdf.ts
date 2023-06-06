@@ -1,11 +1,10 @@
-import { format } from 'date-fns'
 import { rgb } from 'pdf-lib'
 
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
 import { InfoParams } from '../../cards/pdf/pdfTextElement'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
@@ -16,11 +15,12 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
   const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.nuernbergPassId
-  const expirationDate = format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy')
+  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
+  const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
-Geburtsdatum: ${format(daysSinceEpochToDate(info.extensions?.extensionBirthday?.birthday ?? 0), 'dd.MM.yyyy')}
-Gültig bis: ${expirationDate}`
+Geburtsdatum: ${birthdayDate.format('dd.MM.yyyy')}
+Gültig bis: ${expirationDate.format('dd.MM.yyyy')}`
 }
 
 const renderAddressDetails = ({ info, cardBlueprint }: InfoParams) => {
