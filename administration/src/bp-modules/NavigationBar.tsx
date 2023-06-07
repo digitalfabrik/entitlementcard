@@ -33,7 +33,7 @@ const Navigation = (props: Props) => {
             <div style={{ flexDirection: 'column' }}>{config.name} Verwaltung</div>
             {!region ? null : (
               <span>
-                {region.prefix} {region.name}
+                {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
               </span>
             )}
           </NavLink>
