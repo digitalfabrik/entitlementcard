@@ -4,8 +4,9 @@ import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../genera
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import CardBlueprint from './CardBlueprint'
+import pdfFormElement from './pdf/PdfFormElement'
 import pdfQrCodeElement from './pdf/PdfQrCodeElement'
-import pdfTextElement from './pdf/pdfTextElement'
+import pdfTextElement from './pdf/PdfTextElement'
 
 export class PDFError extends Error {
   constructor(message: string) {
@@ -34,6 +35,18 @@ async function fillContentAreas(
       pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode })
     )
   }
+
+  const form = doc.getForm()
+  pdfConfig.elements?.form?.forEach(configOptions =>
+    pdfFormElement(configOptions, {
+      page: templatePage,
+      form,
+      font: helveticaFont,
+      info: dynamicCode.value.info!,
+      region: region,
+      cardBlueprint,
+    })
+  )
 
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
