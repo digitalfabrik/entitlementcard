@@ -163,10 +163,14 @@ class CardContent extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.topLeft,
+                              child:Text(
                               cardInfo.fullName,
                               style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                               textAlign: TextAlign.start,
+                            ),
                             ),
                             if (formattedBirthday != null)
                               Text(
