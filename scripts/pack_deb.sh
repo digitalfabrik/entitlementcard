@@ -84,7 +84,7 @@ postinstfile="${debworkdir}/DEBIAN/postinst"
 echo "Creating postinst file in $postinstfile ..."
 touch "$postinstfile"
 chmod 0755 "$postinstfile"
-echo "sudo useradd -r backend" >> "$postinstfile"
+echo "useradd -r backend" >> "$postinstfile"
 echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
 
 # build the deb
