@@ -9,7 +9,7 @@ import RegionExtension from './extensions/RegionExtension'
 import { Extension, ExtensionInstance, JSONExtension } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
 
-const MAX_NAME_LENGTH = 50
+const MAX_NAME_LENGTH = 30
 const ACTIVATION_SECRET_LENGTH = 20
 
 export interface JSONCardBlueprint<E = ExtensionInstance> {
@@ -54,7 +54,7 @@ export class CardBlueprint {
 
   isFullNameValid(): boolean {
     const encodedName = new TextEncoder().encode(this.fullName)
-    return this.fullName.length > 0 && encodedName.length < MAX_NAME_LENGTH
+    return this.fullName.length > 0 && encodedName.length <= MAX_NAME_LENGTH
   }
 
   isExpirationDateValid(): boolean {
