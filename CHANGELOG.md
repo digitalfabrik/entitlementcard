@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+## [3.1.3] 2023-06-13
+- 1012: Add version info by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1013
+- 903: Add support for pdf form field by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1017
+- 996: Migrate db postinst by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1016
+- 1014: Limit fullname length by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1015
+- 945: add migrations documentation by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1018
+
 ## [3.1.2] 2023-06-06
 
 ### Added
