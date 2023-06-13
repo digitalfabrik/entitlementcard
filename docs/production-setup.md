@@ -87,19 +87,16 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 
 
 ### Backend and Administration
-*Note:* On staging the new bundles will be triggered after merging on main and be installed every friday via `auto-update`
-
 - creating release branch triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
 - connect via ssh `ssh <username>@entitlementcard.app`
 - switch to root user `sudo -i`
-- (optional) check installed version of administration: `apt-cache policy eak-administration`
-- (optional) check available versions: `ll -trh /srv/local-apt-repository`
-- stop backend service : `systemctl stop eak-backend.service`
-- update and upgrade apt: `apt update` && `apt upgrade`
-- run database migrations if needed: `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate`
-- (optional) check current version of migration: `sudo -u backend psql entitlementcard` && `SELECT * from migrations;`
-- start backend service: `systemctl start eak-backend.service` maybe  `systemctl daemon-reload` is needed
+- run `sh /var/cache/salt/minion/files/base/entitlementcard/files/eak-autoupdate`
 - check backend health log: `journalctl -u eak-backend.service --since "1h ago"`
+
+#### Additional Commands
+- check installed version of administration: `apt-cache policy eak-administration`
+- check available versions: `ll -trh /srv/local-apt-repository`
+- check current version of migration: `sudo -u backend psql entitlementcard` && `SELECT * from migrations;`
 
 ## Snapshots
 
