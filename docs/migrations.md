@@ -1,6 +1,7 @@
 # Migrations
 
 Our database relies on the [jetbrains exposed](https://github.com/JetBrains/Exposed) framework. As the framework did not already provide a proper migration routine/setup, we decided to implement migrations ourselves. The implementation can be found in the [migration package in the backend directory](../backend/src/main/kotlin/app/ehrenamtskarte/backend/migration). The migration scripts themselves reside in a [subfolder](../backend/src/main/kotlin/app/ehrenamtskarte/backend/migration/migrations/) of this package.
+In the CI the migration script is run automatically in the postinstall process of the debian package installation (apt upgrade).
 
 ## How to use it?
 
