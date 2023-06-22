@@ -10,9 +10,9 @@ import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
+import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.postgis.Point
 import org.slf4j.Logger
 
 class Store(config: ImportConfig, private val logger: Logger) :
