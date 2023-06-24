@@ -14,7 +14,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^8.0.1",
     "@zxing/library": "^0.20.0",
     "apollo-upload-client": "^17.0.0",
     "babel-jest": "^27.4.2",
@@ -73,6 +73,7 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@bufbuild/protoc-gen-es": "^1.2.1",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^4.0.1",
@@ -82,11 +83,15 @@
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/apollo-upload-client": "^17.0.2",
     "@types/blob-stream": "^0.1.30",
+    "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
+    "@types/fs-extra": "^11.0.1",
     "@types/jasmine": "^4.3.4",
     "@types/node": "^20.3.1",
+    "@types/react-dev-utils": "^9.0.11",
     "@types/react-dom": "^18.2.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
+    "@types/webpack-dev-server": "^4.7.2",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "apollo": "^2.34.0",
@@ -104,8 +109,8 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);node scripts/start.js",
-    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);node scripts/build.js",
+    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); ts-node scripts/start.ts",
+    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); ts-node scripts/build.ts",
     "test": "karma start --single-run",
     "test:watch": "karma start --autowatch",
     "lint": "eslint . && prettier . --check",
@@ -135,64 +140,13 @@
   "browserslist": {
     "production": [
       ">0.2%",
-      "not op_mini all",
-      "ie >= 11"
+      "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version",
-      "ie >= 11"
+      "last 1 safari version"
     ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "transform": {
-      "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ],
-    "resetMocks": true
   },
   "babel": {
     "presets": [
