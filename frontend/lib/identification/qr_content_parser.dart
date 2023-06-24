@@ -37,11 +37,10 @@ Uint8List createDynamicVerificationQrCodeData(
   DynamicUserCode userCode,
   int otpCode,
 ) {
-  return QrCode(
-    dynamicVerificationCode: DynamicVerificationCode(
-      info: userCode.info,
-      pepper: userCode.pepper,
-      otp: otpCode,
-    ),
-  ).writeToBuffer();
+  return (QrCode()
+        ..dynamicVerificationCode = (DynamicVerificationCode()
+          ..info = userCode.info
+          ..pepper = userCode.pepper
+          ..otp = otpCode))
+      .writeToBuffer();
 }
