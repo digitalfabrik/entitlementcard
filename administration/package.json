@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.16",
+    "@babel/core": "^7.16.0",
     "@blueprintjs/core": "^5.0.0",
     "@blueprintjs/popover2": "^2.0.0",
     "@blueprintjs/select": "^5.0.0",
@@ -12,19 +13,64 @@
     "@fontsource/roboto": "^5.0.3",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
+    "@svgr/webpack": "^5.5.0",
     "@zxing/library": "^0.20.0",
     "apollo-upload-client": "^17.0.0",
+    "babel-jest": "^27.4.2",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-named-asset-import": "^0.3.8",
+    "babel-preset-react-app": "^10.0.1",
+    "bfj": "^7.0.2",
+    "browserslist": "^4.18.1",
+    "camelcase": "^6.2.1",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^3.2.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^5.1.0",
+    "eslint": "^8.3.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-webpack-plugin": "^3.1.1",
+    "file-loader": "^6.2.0",
+    "fs-extra": "^10.0.0",
     "graphql": "^16.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.3",
+    "jest-resolve": "^27.4.2",
+    "jest-watch-typeahead": "^1.0.0",
     "localforage": "^1.10.0",
+    "mini-css-extract-plugin": "^2.4.5",
     "notistack": "^3.0.1",
     "pdf-lib": "^1.17.1",
+    "postcss": "^8.4.4",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-loader": "^6.2.1",
+    "postcss-normalize": "^10.0.1",
+    "postcss-preset-env": "^7.0.1",
+    "prompts": "^2.4.2",
     "react": "^18.2.0",
+    "react-app-polyfill": "^3.0.0",
+    "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
     "react-flip-move": "^3.0.5",
+    "react-refresh": "^0.11.0",
     "react-router-dom": "^6.14.0",
-    "react-scripts": "^5.0.1",
-    "styled-components": "^5.3.11"
+    "resolve": "^1.20.0",
+    "resolve-url-loader": "^4.0.0",
+    "sass-loader": "^12.3.0",
+    "semver": "^7.3.5",
+    "source-map-loader": "^3.0.0",
+    "style-loader": "^3.3.1",
+    "styled-components": "^5.3.11",
+    "tailwindcss": "^3.0.2",
+    "terser-webpack-plugin": "^5.2.5",
+    "webpack": "^5.64.4",
+    "webpack-dev-server": "^4.6.0",
+    "webpack-manifest-plugin": "^4.0.2",
+    "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "^1.2.1",
@@ -58,11 +104,10 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);react-scripts start",
-    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);react-scripts build",
+    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);node scripts/start.js",
+    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh);node scripts/build.js",
     "test": "karma start --single-run",
     "test:watch": "karma start --autowatch",
-    "eject": "react-scripts eject",
     "lint": "eslint . && prettier . --check",
     "format": "eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
@@ -98,6 +143,60 @@
       "last 1 firefox version",
       "last 1 safari version",
       "ie >= 11"
+    ]
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
+    "resetMocks": true
+  },
+  "babel": {
+    "presets": [
+      "react-app"
     ]
   }
 }
