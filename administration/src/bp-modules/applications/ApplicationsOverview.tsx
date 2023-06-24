@@ -1,4 +1,4 @@
-import { Alert, Button, Callout, Card, Divider, H4, IResizeEntry, NonIdealState, ResizeSensor } from '@blueprintjs/core'
+import { Alert, Button, Callout, Card, Divider, H4, NonIdealState, ResizeSensor } from '@blueprintjs/core'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled, { css } from 'styled-components'
@@ -94,7 +94,7 @@ const ApplicationView: FunctionComponent<{
     },
   })
 
-  const handleResize = (entries: IResizeEntry[]) => {
+  const handleResize = (entries: ResizeObserverEntry[]) => {
     setHeight(entries[0].contentRect.height)
     if (height === 0 && entries[0].contentRect.height > COLLAPSED_HEIGHT) setCollapsed(true)
   }

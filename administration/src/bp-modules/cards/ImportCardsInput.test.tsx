@@ -1,4 +1,4 @@
-import { Toaster } from '@blueprintjs/core'
+import { OverlayToaster, Toaster } from '@blueprintjs/core'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { ReactElement } from 'react'
 
@@ -86,7 +86,7 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
     },
   ].forEach(({ projectConfig, csv }) => {
     it(`Correctly import CSV Card for project ${projectConfig.name}`, async () => {
-      const toasterSpy = spyOn(Toaster.prototype, 'show')
+      const toasterSpy = spyOn(OverlayToaster.prototype, 'show')
       const lineToBlueprintSpy = jasmine.createSpy().and.callFake(() => new CSVCard(projectConfig.card, region))
       const setCardBlueprintsSpy = jasmine.createSpy()
 
@@ -123,7 +123,7 @@ ${'Thea Test,03.04.2024,10.10.2000,12345678\n'.repeat(ENTRY_LIMIT + 1)}
     },
   ].forEach(({ csv, error }) => {
     it(`Import CSV Card should fail with error '$error'`, async () => {
-      const toasterSpy = spyOn(Toaster.prototype, 'show')
+      const toasterSpy = spyOn(OverlayToaster.prototype, 'show')
       const lineToBlueprintSpy = jasmine.createSpy().and.callFake(() => new CSVCard(bayernConfig.card, region))
       const setCardBlueprintsSpy = jasmine.createSpy()
 

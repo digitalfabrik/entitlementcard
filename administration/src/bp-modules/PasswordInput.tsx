@@ -8,7 +8,7 @@ const ShowPasswordButton = (props: { hidden: boolean; onClick: () => void }) => 
       content={props.hidden ? 'Passwort anzeigen' : 'Passwort verstecken'}
       renderTarget={({ isOpen, ref, ...tooltipProps }) => (
         <Button
-          elementRef={ref}
+          ref={ref}
           {...tooltipProps}
           minimal
           icon={props.hidden ? 'eye-open' : 'eye-off'}

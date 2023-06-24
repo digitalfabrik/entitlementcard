@@ -1,5 +1,5 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
-import { Toaster } from '@blueprintjs/core'
+import { OverlayToaster, Toaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { ReactElement } from 'react'
 
@@ -37,7 +37,7 @@ describe('useCardGenerator', () => {
 
   it('should successfully create multiple cards', async () => {
     const createCardsSpy = spyOn(createCards, 'default')
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
+    const toasterSpy = spyOn(OverlayToaster.prototype, 'show')
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
@@ -55,7 +55,7 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message for failed card generation', async () => {
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
+    const toasterSpy = spyOn(OverlayToaster.prototype, 'show')
     spyOn(createCards, 'default').and.throwError(new createCards.CreateCardsError('error'))
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
@@ -74,7 +74,7 @@ describe('useCardGenerator', () => {
 
   it('should show error message for failed pdf generation', async () => {
     spyOn(PdfFactory, 'generatePdf').and.throwError(new PdfFactory.PDFError('error'))
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
+    const toasterSpy = spyOn(OverlayToaster.prototype, 'show')
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
 

@@ -35,7 +35,7 @@ class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
         <MenuItem
           active={modifiers.active}
           disabled={modifiers.disabled}
-          label={cardType}
+          text={cardType}
           key={cardType}
           onClick={handleClick}
         />
