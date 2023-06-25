@@ -1,4 +1,4 @@
-import { OverlayToaster, Toaster } from '@blueprintjs/core'
+import { OverlayToaster } from '@blueprintjs/core'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { ReactElement } from 'react'
 

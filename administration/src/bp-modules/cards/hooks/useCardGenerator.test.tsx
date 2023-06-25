@@ -1,5 +1,5 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
-import { OverlayToaster, Toaster } from '@blueprintjs/core'
+import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { ReactElement } from 'react'
 
