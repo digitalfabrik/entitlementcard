@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'

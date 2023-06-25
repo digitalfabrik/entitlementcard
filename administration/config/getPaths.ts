@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 import fs from 'fs'
 import path from 'path'
 import getPublicUrlOrPath from 'react-dev-utils/getPublicUrlOrPath'

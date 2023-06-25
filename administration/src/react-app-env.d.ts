@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />

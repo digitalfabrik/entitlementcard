@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 import chalk from 'chalk'
 import path from 'path'
 import typescript from 'typescript'

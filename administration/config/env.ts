@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 import dotenv from 'dotenv'
 import { expand } from 'dotenv-expand'
 import fs from 'fs'

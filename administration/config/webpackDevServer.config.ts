@@ -1,3 +1,4 @@
+// This file originally stems from a CRA-eject.
 import ignoredFiles from 'react-dev-utils/ignoredFiles'
 import { Configuration } from 'webpack-dev-server'
 
