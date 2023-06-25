@@ -85,6 +85,7 @@
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
     "typescript": "~5.0.4",
     "webpack": "^5.88.0",
     "webpack-dev-server": "^4.15.1",
@@ -121,8 +122,7 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not op_mini all"
+      ">0.2% in DE and not dead"
     ],
     "development": [
       "last 1 chrome version",
