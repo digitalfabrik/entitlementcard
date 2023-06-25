@@ -9,6 +9,7 @@ import InlineChunkHtmlPlugin from 'react-dev-utils/InlineChunkHtmlPlugin'
 import InterpolateHtmlPlugin from 'react-dev-utils/InterpolateHtmlPlugin'
 import ModuleScopePlugin from 'react-dev-utils/ModuleScopePlugin'
 import getCSSModuleLocalIdent from 'react-dev-utils/getCSSModuleLocalIdent'
+import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
@@ -147,6 +148,14 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
     optimization: {
       minimize: isEnvProduction,
       minimizer: [
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+          },
+        }),
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
@@ -446,15 +455,6 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
             entrypoints: entrypointFiles,
           }
         },
-      }),
-      // Moment.js is an extremely popular library that bundles large locale files
-      // by default due to how webpack interprets its code. This is a practical
-      // solution that requires the user to opt into importing specific locales.
-      // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
-      // You can remove this if you don't use Moment.js:
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^\.\/locale$/,
-        contextRegExp: /moment$/,
       }),
       // TypeScript type checking
       new ForkTsCheckerWebpackPlugin({
