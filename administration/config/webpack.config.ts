@@ -1,5 +1,3 @@
-'use strict'
-
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
@@ -15,11 +13,10 @@ import getCSSModuleLocalIdent from 'react-dev-utils/getCSSModuleLocalIdent'
 import resolve from 'resolve'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
-import WorkboxWebpackPlugin from 'workbox-webpack-plugin'
 
 import getClientEnvironment from './env'
+import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
-import paths from './paths'
 import createEnvironmentHash from './webpack/persistentCache/createEnvironmentHash'
 
 // No types exists:
@@ -52,31 +49,17 @@ const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true'
 
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000')
 
-// Get the path to the uncompiled service worker (if it exists).
-const swSrc = paths.swSrc
-
 // style files regexes
 const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
-
-const hasJsxRuntime = (() => {
-  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
-    return false
-  }
-
-  try {
-    require.resolve('react/jsx-runtime')
-    return true
-  } catch (e) {
-    return false
-  }
-})()
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 export default function (webpackEnv: 'development' | 'production'): webpack.Configuration {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
+
+  const paths = getPaths()
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -185,7 +168,7 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
       // https://github.com/facebook/create-react-app/issues/290
       // `web` extension prefixes have been added for better support
       // for React Native Web.
-      extensions: paths.moduleFileExtensions.map(ext => `.${ext}`),
+      extensions: moduleFileExtensions.map((ext: any) => `.${ext}`),
       alias: {
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile
@@ -290,7 +273,7 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
                   [
                     require.resolve('babel-preset-react-app'),
                     {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
+                      runtime: 'automatic',
                     },
                   ],
                 ],
@@ -478,19 +461,6 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
       }),
-      // Generate a service worker script that will precache, and keep up to date,
-      // the HTML & assets that are part of the webpack build.
-      isEnvProduction &&
-        fs.existsSync(swSrc) &&
-        new WorkboxWebpackPlugin.InjectManifest({
-          swSrc,
-          dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
-          exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
-          // Bump up the default maximum size (2mb) that's precached,
-          // to make lazy-loading failure scenarios less likely.
-          // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
-          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-        }),
       // TypeScript type checking
       new ForkTsCheckerWebpackPlugin({
         async: isEnvDevelopment,
@@ -548,11 +518,6 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
           resolvePluginsRelativeTo: __dirname,
           baseConfig: {
             extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error',
-              }),
-            },
           },
         }),
     ].filter(Boolean),

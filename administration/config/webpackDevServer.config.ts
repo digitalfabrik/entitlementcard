@@ -1,19 +1,16 @@
-'use strict'
-
+import ignoredFiles from 'react-dev-utils/ignoredFiles'
 import { Configuration } from 'webpack-dev-server'
 
-const fs = require('fs')
-const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware')
-const ignoredFiles = require('react-dev-utils/ignoredFiles')
-const redirectServedPath = require('react-dev-utils/redirectServedPathMiddleware')
-const paths = require('./paths')
+import getPaths from './getPaths'
 
-const host = process.env.HOST || '0.0.0.0'
-const sockHost = process.env.WDS_SOCKET_HOST
-const sockPath = process.env.WDS_SOCKET_PATH // default: '/ws'
-const sockPort = process.env.WDS_SOCKET_PORT
+export default function (proxy: Configuration['proxy'], allowedHost: string | undefined): Configuration {
+  const host = process.env.HOST || '0.0.0.0'
+  const sockHost = process.env.WDS_SOCKET_HOST
+  const sockPath = process.env.WDS_SOCKET_PATH // default: '/ws'
+  const sockPort = process.env.WDS_SOCKET_PORT
 
-module.exports = function (proxy: Configuration['proxy'], allowedHost: string): Configuration {
+  const paths = getPaths()
+
   const disableFirewall = !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true'
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
@@ -34,7 +31,7 @@ module.exports = function (proxy: Configuration['proxy'], allowedHost: string): 
     // really know what you're doing with a special environment variable.
     // Note: ["localhost", ".localhost"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
-    allowedHosts: disableFirewall ? 'all' : [allowedHost],
+    allowedHosts: disableFirewall ? 'all' : allowedHost ? [allowedHost] : undefined,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',

@@ -9,8 +9,9 @@ import openBrowser from 'react-dev-utils/openBrowser'
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 
-import paths from '../config/paths'
+import getPaths from '../config/getPaths'
 import configFactory from '../config/webpack.config'
+import createDevServerConfig from '../config/webpackDevServer.config'
 
 // Do this as the first thing so that any code reading it knows the right env.
 // @ts-ignore
@@ -25,13 +26,9 @@ process.on('unhandledRejection', err => {
   throw err
 })
 
-// Ensure environment variables are read.
-require('../config/env')
-
-const createDevServerConfig = require('../config/webpackDevServer.config')
-
-const useYarn = fs.existsSync(paths.yarnLockFile)
 const isInteractive = process.stdout.isTTY
+
+const paths = getPaths()
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -79,8 +76,8 @@ checkBrowsers(paths.appPath, isInteractive)
       appName,
       config,
       urls,
-      useYarn,
-      useTypeScript,
+      useYarn: false,
+      useTypeScript: true,
       webpack,
     })
     // Load proxy config

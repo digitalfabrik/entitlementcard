@@ -1,13 +1,12 @@
-'use strict'
+import dotenv from 'dotenv'
+import { expand } from 'dotenv-expand'
+import fs from 'fs'
+import path from 'path'
 
-const fs = require('fs')
-const path = require('path')
-const paths = require('./paths')
+import getPaths from './getPaths'
 
-// Make sure that including paths.js after env.js will read .env variables.
-delete require.cache[require.resolve('./paths')]
-
-function getClientEnvironment(publicUrl) {
+function getClientEnvironment(publicUrl: string) {
+  const paths = getPaths()
   const NODE_ENV = process.env.NODE_ENV
   if (!NODE_ENV) {
     throw new Error('The NODE_ENV environment variable is required but was not specified.')
@@ -31,8 +30,8 @@ function getClientEnvironment(publicUrl) {
   // https://github.com/motdotla/dotenv-expand
   dotenvFiles.forEach(dotenvFile => {
     if (fs.existsSync(dotenvFile)) {
-      require('dotenv-expand')(
-        require('dotenv').config({
+      expand(
+        dotenv.config({
           path: dotenvFile,
         })
       )
@@ -61,7 +60,7 @@ function getClientEnvironment(publicUrl) {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
     .reduce(
-      (env, key) => {
+      (env: any, key: keyof typeof process.env) => {
         env[key] = process.env[key]
         return env
       },
@@ -89,7 +88,7 @@ function getClientEnvironment(publicUrl) {
     )
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {
-    'process.env': Object.keys(raw).reduce((env, key) => {
+    'process.env': Object.keys(raw).reduce((env: any, key) => {
       env[key] = JSON.stringify(raw[key])
       return env
     }, {}),
@@ -98,4 +97,4 @@ function getClientEnvironment(publicUrl) {
   return { raw, stringified }
 }
 
-module.exports = getClientEnvironment
+export default getClientEnvironment

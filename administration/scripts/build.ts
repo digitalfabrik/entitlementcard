@@ -10,7 +10,7 @@ import printBuildError from 'react-dev-utils/printBuildError'
 import printHostingInstructions from 'react-dev-utils/printHostingInstructions'
 import webpack from 'webpack'
 
-import paths from '../config/paths'
+import getPaths from '../config/getPaths'
 import configFactory from '../config/webpack.config'
 
 const bfj = require('bfj')
@@ -28,12 +28,11 @@ process.on('unhandledRejection', err => {
   throw err
 })
 
-// Ensure environment variables are read.
-require('../config/env')
+const paths = getPaths()
 
 const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild
-const useYarn = fs.existsSync(paths.yarnLockFile)
+const useYarn = false
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024
@@ -147,20 +146,8 @@ function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
           return reject(err)
         }
 
-        let errMessage = err.message
-
-        // Add additional information for postcss errors
-        if ('postcssNode' in err) {
-          const postcssNodeErr = err['postcssNode']
-          const selector =
-            typeof postcssNodeErr === 'object' && !!postcssNodeErr && 'selector' in postcssNodeErr
-              ? postcssNodeErr['selector']
-              : postcssNodeErr
-          errMessage += '\nCompileError: Begins at CSS selector ' + selector
-        }
-
         messages = formatWebpackMessages({
-          errors: [errMessage],
+          errors: [err.message],
           warnings: [],
         })
       } else if (!stats) {
