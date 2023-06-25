@@ -1,7 +1,6 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
-import ESLintPlugin from 'eslint-webpack-plugin'
 import fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
@@ -10,7 +9,6 @@ import InlineChunkHtmlPlugin from 'react-dev-utils/InlineChunkHtmlPlugin'
 import InterpolateHtmlPlugin from 'react-dev-utils/InterpolateHtmlPlugin'
 import ModuleScopePlugin from 'react-dev-utils/ModuleScopePlugin'
 import getCSSModuleLocalIdent from 'react-dev-utils/getCSSModuleLocalIdent'
-import resolve from 'resolve'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
@@ -44,9 +42,6 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false'
 
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true'
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true'
-
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000')
 
 // style files regexes
@@ -55,7 +50,7 @@ const cssModuleRegex = /\.module\.css$/
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-export default function (webpackEnv: 'development' | 'production'): webpack.Configuration {
+function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.Configuration {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
@@ -465,9 +460,6 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
       new ForkTsCheckerWebpackPlugin({
         async: isEnvDevelopment,
         typescript: {
-          typescriptPath: resolve.sync('typescript', {
-            basedir: paths.appNodeModules,
-          }),
           configOverwrite: {
             compilerOptions: {
               sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
@@ -503,26 +495,11 @@ export default function (webpackEnv: 'development' | 'production'): webpack.Conf
           infrastructure: 'silent',
         },
       }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
-          formatter: require.resolve('react-dev-utils/eslintFormatter'),
-          eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          cacheLocation: path.resolve(paths.appNodeModules, '.cache/.eslintcache'),
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-          },
-        }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
   }
 }
+
+export default createWebpackConfig

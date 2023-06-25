@@ -1,7 +1,5 @@
-'use strict'
-
 import chalk from 'chalk'
-import fs from 'fs-extra'
+import fs from 'fs'
 import path from 'path'
 import FileSizeReporter from 'react-dev-utils/FileSizeReporter'
 import checkRequiredFiles from 'react-dev-utils/checkRequiredFiles'
@@ -63,7 +61,13 @@ checkBrowsers(paths.appPath, isInteractive)
   .then((previousFileSizes: FileSizeReporter.OpaqueFileSizes) => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
-    fs.emptyDirSync(paths.appBuild)
+    if (fs.existsSync(paths.appBuild)) {
+      fs.readdirSync(paths.appBuild).forEach(item =>
+        fs.rmSync(path.join(paths.appBuild, item), { force: true, recursive: true })
+      )
+    } else {
+      fs.mkdirSync(paths.appBuild)
+    }
     // Merge with the public folder
     copyPublicFolder()
     // Start the webpack build
@@ -204,8 +208,9 @@ function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
 }
 
 function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
+  fs.cpSync(paths.appPublic, paths.appBuild, {
     dereference: true,
-    filter: file => file !== paths.appHtml,
+    recursive: true,
+    filter: srcFile => srcFile !== paths.appHtml,
   })
 }

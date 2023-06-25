@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import path from 'path'
-import resolve from 'resolve'
+import typescript from 'typescript'
 
 import getPaths from './getPaths'
 
@@ -67,11 +67,8 @@ function getWebpackAliases(paths: ReturnType<typeof getPaths>, options: { baseUr
 function getModules() {
   const paths = getPaths()
   // Set up the config based on tsconfig.json
-  const ts = require(resolve.sync('typescript', {
-    basedir: paths.appNodeModules,
-  }))
-  console.log(paths.appTsConfig)
-  const config = ts.readConfigFile(paths.appTsConfig, ts.sys.readFile).config
+
+  const config = typescript.readConfigFile(paths.appTsConfig, typescript.sys.readFile).config
 
   const options = config.compilerOptions || {}
 

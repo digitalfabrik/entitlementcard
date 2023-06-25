@@ -3,7 +3,7 @@ import { Configuration } from 'webpack-dev-server'
 
 import getPaths from './getPaths'
 
-export default function (proxy: Configuration['proxy'], allowedHost: string | undefined): Configuration {
+function createWebpackDevServerConfig(proxy: Configuration['proxy'], allowedHost: string | undefined): Configuration {
   const host = process.env.HOST || '0.0.0.0'
   const sockHost = process.env.WDS_SOCKET_HOST
   const sockPath = process.env.WDS_SOCKET_PATH // default: '/ws'
@@ -97,3 +97,5 @@ export default function (proxy: Configuration['proxy'], allowedHost: string | un
     proxy,
   }
 }
+
+export default createWebpackDevServerConfig

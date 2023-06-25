@@ -1,7 +1,4 @@
-'use strict'
-
 import chalk from 'chalk'
-import fs from 'fs'
 import { choosePort, createCompiler, prepareProxy, prepareUrls } from 'react-dev-utils/WebpackDevServerUtils'
 import checkRequiredFiles from 'react-dev-utils/checkRequiredFiles'
 import clearConsole from 'react-dev-utils/clearConsole'
@@ -67,7 +64,6 @@ checkBrowsers(paths.appPath, isInteractive)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
     const appName = require(paths.appPackageJson).name
 
-    const useTypeScript = fs.existsSync(paths.appTsConfig)
     // @ts-ignore
     const urls = prepareUrls(protocol, HOST, port, paths.publicUrlOrPath.slice(0, -1))
     // Create a webpack compiler that is configured with custom messages.
