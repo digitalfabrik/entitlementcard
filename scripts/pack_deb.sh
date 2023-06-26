@@ -72,6 +72,14 @@ if [[ -n "$adminfolder" ]]; then
     echo "Copying $adminfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
     cp -r "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
+
+    # create postinst for db migration
+    postinstfile="${debworkdir}/DEBIAN/postinst"
+    echo "Creating postinst file in $postinstfile ..."
+    touch "$postinstfile"
+    chmod 0755 "$postinstfile"
+    echo "useradd -r backend" >> "$postinstfile"
+    echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
 fi
 if [[ -n "$martinfolder" ]]; then
     echo "Copying $martinfolder …"
@@ -79,13 +87,6 @@ if [[ -n "$martinfolder" ]]; then
     cp -r "$martinfolder/"* "${debworkdir}/opt/ehrenamtskarte/martin"
 fi
 
-# create postinst for db migration
-postinstfile="${debworkdir}/DEBIAN/postinst"
-echo "Creating postinst file in $postinstfile ..."
-touch "$postinstfile"
-chmod 0755 "$postinstfile"
-echo "useradd -r backend" >> "$postinstfile"
-echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
 
 # build the deb
 dpkg-deb --build --root-owner-group "$debworkdir" "$debfile"

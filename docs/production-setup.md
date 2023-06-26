@@ -90,7 +90,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 - creating release branch triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
 - connect via ssh `ssh <username>@entitlementcard.app`
 - switch to root user `sudo -i`
-- run `sh /var/cache/salt/minion/files/base/entitlementcard/files/eak-autoupdate`
+- run `sh /var/cache/salt/minion/files/base/entitlementcard/files/eak-update`
 - check backend health log: `journalctl -u eak-backend.service --since "1h ago"`
 
 #### Additional Commands

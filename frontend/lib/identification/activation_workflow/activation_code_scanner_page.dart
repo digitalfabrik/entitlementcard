@@ -101,13 +101,13 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
 
-        provider.setCode(DynamicUserCode(
-            info: activationCode.info,
-            pepper: activationCode.pepper,
-            totpSecret: totpSecret,
-            cardVerification: CardVerification(
-                cardValid: true,
-                verificationTimeStamp: secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)))));
+        provider.setCode(DynamicUserCode()
+          ..info = activationCode.info
+          ..pepper = activationCode.pepper
+          ..totpSecret = totpSecret
+          ..cardVerification = (CardVerification()
+            ..cardValid = true
+            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp))));
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

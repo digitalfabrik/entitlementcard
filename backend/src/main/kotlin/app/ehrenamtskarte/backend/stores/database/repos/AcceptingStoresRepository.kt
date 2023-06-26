@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
+import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.ComparisonOp
 import org.jetbrains.exposed.sql.CustomFunction
 import org.jetbrains.exposed.sql.DoubleColumnType
@@ -19,7 +20,6 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.doubleParam
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.stringParam
-import org.postgis.Point
 
 object AcceptingStoresRepository {
 
