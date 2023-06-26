@@ -53,13 +53,11 @@ class VerificationQrScannerPage extends StatelessWidget {
               final provider = Provider.of<UserCodeModel>(context, listen: false);
               final userCode = provider.userCode!;
               final otp = OTPGenerator(userCode.totpSecret).generateOTP().code;
-              final verificationQrCode = QrCode(
-                dynamicVerificationCode: DynamicVerificationCode(
-                  info: userCode.info,
-                  pepper: userCode.pepper,
-                  otp: otp,
-                ),
-              );
+              final verificationQrCode = QrCode()
+                ..dynamicVerificationCode = (DynamicVerificationCode()
+                  ..info = userCode.info
+                  ..pepper = userCode.pepper
+                  ..otp = otp);
               final verificationCode = verificationQrCode.writeToBuffer();
               _handleQrCode(context, verificationCode);
             },
