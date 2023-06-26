@@ -1,7 +1,6 @@
-import { format, isValid as isDateValid, parse } from 'date-fns'
-
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
+import PlainDate from '../util/PlainDate'
 import { CardBlueprint } from './CardBlueprint'
 
 type HeaderMap = {
@@ -13,7 +12,7 @@ type HeaderMap = {
 }
 
 class CSVCard extends CardBlueprint {
-  private headerMap: HeaderMap
+  private readonly headerMap: HeaderMap
 
   constructor(cardConfig: CardConfig, region: Region) {
     super('', cardConfig)
@@ -25,7 +24,7 @@ class CSVCard extends CardBlueprint {
         isValid: () => this.isFullNameValid(),
       },
       [cardConfig.expiryColumnName]: {
-        getValue: () => (this.expirationDate ? format(this.expirationDate, 'dd.MM.yyyy') : null),
+        getValue: () => (this.expirationDate ? this.expirationDate.format('dd.MM.yyyy') : null),
         setValue: value => this.setExpirationDate(value),
         isValid: () => this.isExpirationDateValid() || this.hasInfiniteLifetime(),
       },
@@ -48,9 +47,11 @@ class CSVCard extends CardBlueprint {
 
   setExpirationDate = (value: string) => {
     if (value.length === 0) return null
-    this.expirationDate = parse(value, 'dd.MM.yyyy', new Date())
-    if (!isDateValid(this.expirationDate)) {
+    try {
+      this.expirationDate = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+    } catch (error) {
       this.expirationDate = null
+      console.error("Could not parse date from string '" + value + "' with format dd.MM.yyyy.", error)
     }
   }
 

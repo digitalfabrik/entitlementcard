@@ -70,6 +70,7 @@ workflows:
             branches:
               only:
                 - main
+                - /release.*/
       - deploy:
           name: deploy-production
           server: entitlementcard.tuerantuer.org
@@ -83,10 +84,8 @@ workflows:
             - meta-pack
           filters:
             branches:
-              ignore:
-                - /.*/
-            tags:
-              only: /.*/
+              only:
+                - /release.*/
 
 commands:
   setup-npm-global:
@@ -108,7 +107,7 @@ commands:
       - run:
           name: Install Dart
           command: |
-            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/2.18.5/linux_packages/dart_2.18.5-1_amd64.deb
+            curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/3.0.5/linux_packages/dart_3.0.5-1_amd64.deb
             sudo dpkg -i dart.deb
   install-dart-mac:
     steps:
@@ -532,16 +531,16 @@ jobs:
     docker:
       - image: cimg/base:2022.09
     parameters:
-        server:
-            enum:
-              - entitlementcard.tuerantuer.org
-              - entitlementcard-test.tuerantuer.org
-            type: enum
-        ssh-host-fingerprint:
-            enum:
-                - '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-                - '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
-            type: enum
+      server:
+        enum:
+          - entitlementcard.tuerantuer.org
+          - entitlementcard-test.tuerantuer.org
+        type: enum
+      ssh-host-fingerprint:
+        enum:
+          - '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+          - '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+        type: enum
     steps:
       - attach_workspace:
           at: /tmp/workspace

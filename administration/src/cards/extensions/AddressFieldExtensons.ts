@@ -1,7 +1,9 @@
 import { Extension } from './extensions'
 
 abstract class BaseAddressExtension extends Extension<string, null> {
-  setInitialState() {}
+  setInitialState() {
+    this.state = ''
+  }
   causesInfiniteLifetime() {
     return false
   }

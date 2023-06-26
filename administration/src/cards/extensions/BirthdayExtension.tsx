@@ -1,43 +1,62 @@
 import { FormGroup } from '@blueprintjs/core'
-import { DateInput } from '@blueprintjs/datetime'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { format, isValid, parse, sub } from 'date-fns'
+import { TextField } from '@mui/material'
 
 import { CardExtensions } from '../../generated/card_pb'
-import { dateToDaysSinceEpoch, daysSinceEpochToDate } from '../validityPeriod'
+import PlainDate from '../../util/PlainDate'
 import { Extension } from './extensions'
 
 type BirthdayState = { birthday: number }
 
-const initialBirthdayDate = dateToDaysSinceEpoch(new Date('1980-01-01T00:00+00:00'))
+const initialBirthdayDate = new PlainDate(1980, 1, 1)
+const minBirthday = new PlainDate(1900, 1, 1)
 
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
   setInitialState() {
-    this.state = { birthday: initialBirthdayDate }
+    this.state = { birthday: initialBirthdayDate.toDaysSinceEpoch() }
+  }
+
+  hasValidBirthdayDate(birthday?: number): boolean {
+    if (birthday === undefined) {
+      return false
+    }
+    const date = PlainDate.fromDaysSinceEpoch(birthday)
+    const today = PlainDate.fromLocalDate(new Date())
+    return !date.isBefore(minBirthday) && !date.isAfter(today)
   }
 
   createForm(onUpdate: () => void) {
+    const birthdayDate =
+      this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : initialBirthdayDate
+
     return (
       <FormGroup label='Geburtsdatum'>
-        <DateInput
-          placeholder='Geburtsdatum'
-          value={daysSinceEpochToDate(this.state?.birthday ?? initialBirthdayDate)}
-          parseDate={value => {
-            const millis = Date.parse(value)
-            return isNaN(millis) ? false : new Date(millis)
+        <TextField
+          fullWidth
+          type='date'
+          required
+          size='small'
+          error={!this.isValid()}
+          value={birthdayDate.toString()}
+          sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
+          inputProps={{
+            max: PlainDate.fromLocalDate(new Date()).toString(),
+            min: minBirthday.toString(),
+            style: { fontSize: 14, padding: '6px 10px' },
           }}
-          onChange={value => {
-            if (value !== null) {
-              this.state = { birthday: dateToDaysSinceEpoch(value) }
-              onUpdate()
+          onChange={e => {
+            if (e.target.value !== null) {
+              try {
+                const date = PlainDate.from(e.target.value)
+                this.state = { birthday: date.toDaysSinceEpoch() }
+                onUpdate()
+              } catch (error) {
+                console.error("Could not parse date from string '" + e.target.value + "'.", error)
+              }
             }
           }}
-          formatDate={date => date.toLocaleDateString()}
-          minDate={sub(Date.now(), { years: 150 })}
-          maxDate={new Date()}
-          fill={true}
         />
       </FormGroup>
     )
@@ -54,15 +73,25 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   isValid() {
-    return this.state !== null
+    return this.state !== null && this.hasValidBirthdayDate(this.state.birthday)
   }
 
+  /**
+   * fromString is only used for the CSV import.
+   * The expected format is dd.MM.yyyy
+   * @param value The date formatted using dd.MM.yyyy
+   */
   fromString(value: string) {
-    const birthday = parse(value, 'dd.MM.yyyy', new Date())
-    this.state = isValid(birthday) ? { birthday: dateToDaysSinceEpoch(birthday) } : null
+    try {
+      const birthday = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+      this.state = { birthday: birthday.toDaysSinceEpoch() }
+    } catch (e) {
+      this.state = null
+    }
   }
+
   toString() {
-    return this.state ? format(daysSinceEpochToDate(this.state.birthday), 'dd.MM.yyyy') : ''
+    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.birthday).format('dd.MM.yyyy') : ''
   }
 }
 

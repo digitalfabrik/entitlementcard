@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { ReactNode } from 'react'
 
 import { ActivityLog } from '../../bp-modules/user-settings/ActivityLog'
@@ -6,7 +5,7 @@ import { JSONCardBlueprint } from '../../cards/CardBlueprint'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
 import { ExtensionClass } from '../../cards/extensions/extensions'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import PlainDate from '../../util/PlainDate'
 
 const findByExtensionClass = <T extends ExtensionClass>(
   card: JSONCardBlueprint,
@@ -26,9 +25,9 @@ const ActivityLogEntry = (logEntry: ActivityLog): ReactNode => {
       <td>{card.fullName}</td>
       {passNumberExtension && <td>{passNumberExtension.state?.passNumber}</td>}
       {birthdayExtension && (
-        <td>{format(daysSinceEpochToDate(birthdayExtension.state?.birthday ?? 0), 'dd.MM.yyyy')}</td>
+        <td>{PlainDate.fromDaysSinceEpoch(birthdayExtension.state?.birthday ?? 0).format('dd.MM.yyyy')}</td>
       )}
-      {card.expirationDate && <td>{format(new Date(card.expirationDate), 'dd.MM.yyyy')}</td>}
+      {card.expirationDate && <td>{PlainDate.from(card.expirationDate).format('dd.MM.yyyy')}</td>}
     </tr>
   )
 }

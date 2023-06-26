@@ -24,7 +24,7 @@ const defaultExtensionsByMIMEType = {
 
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
-export const ENTRY_LIMIT = 100
+export const ENTRY_LIMIT = 300
 
 type ImportCardsInputProps = {
   headers: string[]

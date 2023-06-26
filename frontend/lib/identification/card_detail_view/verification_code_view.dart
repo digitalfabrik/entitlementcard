@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart' as qr show QrImage, QrCode, QrVersions, QrErrorCorrectLevel;
+import 'package:qr_flutter/qr_flutter.dart' as qr;
 
 class VerificationCodeView extends StatefulWidget {
   final DynamicUserCode userCode;
@@ -67,7 +67,6 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
               data: createDynamicVerificationQrCodeData(userCode, otpCode.code),
               errorCorrectLevel: qr.QrErrorCorrectLevel.L,
             );
-            qrCode.make();
 
             return isCardVerificationExpired
                 ? TextButton.icon(
@@ -86,11 +85,15 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(padding),
-                            child: qr.QrImage.withQr(
+                            child: qr.QrImageView.withQr(
                               qr: qrCode,
                               version: qr.QrVersions.auto,
-                              foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
                               gapless: false,
+                              dataModuleStyle: qr.QrDataModuleStyle(
+                                  dataModuleShape: qr.QrDataModuleShape.square,
+                                  color: Theme.of(context).textTheme.bodyMedium?.color),
+                              eyeStyle: qr.QrEyeStyle(
+                                  eyeShape: qr.QrEyeShape.square, color: Theme.of(context).textTheme.bodyMedium?.color),
                             ),
                           ),
                           Positioned.fill(
@@ -112,22 +115,21 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
     }
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    final DynamicVerificationCode qrCode = DynamicVerificationCode(
-      info: userCode.info,
-      pepper: userCode.pepper,
-      otp: otpCode.code,
-    );
+    final DynamicVerificationCode qrCode = DynamicVerificationCode()
+      ..info = userCode.info
+      ..pepper = userCode.pepper
+      ..otp = otpCode.code;
 
     final cardVerification = await queryDynamicServerVerification(client, projectId, qrCode);
     final provider = Provider.of<UserCodeModel>(context, listen: false);
 
-    provider.setCode(DynamicUserCode(
-        info: userCode.info,
-        ecSignature: userCode.ecSignature,
-        pepper: userCode.pepper,
-        totpSecret: userCode.totpSecret,
-        cardVerification: CardVerification(
-            cardValid: cardVerification.valid,
-            verificationTimeStamp: secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp)))));
+    provider.setCode(DynamicUserCode()
+      ..info = userCode.info
+      ..ecSignature = userCode.ecSignature
+      ..pepper = userCode.pepper
+      ..totpSecret = userCode.totpSecret
+      ..cardVerification = (CardVerification()
+        ..cardValid = cardVerification.valid
+        ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp))));
   }
 }

@@ -1,11 +1,10 @@
-import { format } from 'date-fns'
-import { rgb } from 'pdf-lib'
+import { PDFForm, rgb } from 'pdf-lib'
 
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
-import { InfoParams } from '../../cards/pdf/pdfTextElement'
-import { daysSinceEpochToDate } from '../../cards/validityPeriod'
+import { InfoParams } from '../../cards/pdf/PdfTextElement'
+import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 // @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
@@ -16,23 +15,37 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
   const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.nuernbergPassId
-  const expirationDate = format(daysSinceEpochToDate(expirationDay), 'dd.MM.yyyy')
+  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
+  const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
-Geburtsdatum: ${format(daysSinceEpochToDate(info.extensions?.extensionBirthday?.birthday ?? 0), 'dd.MM.yyyy')}
-Gültig bis: ${expirationDate}`
+Geburtsdatum: ${birthdayDate.format('dd.MM.yyyy')}
+Gültig bis: ${expirationDate.format('dd.MM.yyyy')}`
 }
 
-const renderAddressDetails = ({ info, cardBlueprint }: InfoParams) => {
+const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlueprint }: InfoParams) => {
   const [addressLine1, addressLine2, plz, location] = AddressExtensions.map(
     ext => findExtension(cardBlueprint.extensions, ext)?.state
   )
-  if ((!addressLine1 && !addressLine2) || !plz || !location) {
+
+  const nameField = form.createTextField(`${pageIdx}.address.name`)
+  const addressLine1Field = form.createTextField(`${pageIdx}.address.line.1`)
+  const addressLine2Field = form.createTextField(`${pageIdx}.address.line.2`)
+  const plzAndLocationField = form.createTextField(`${pageIdx}.address.location`)
+
+  if (addressLine1 || addressLine2 || plz || location) {
     // avoid only printing the name
-    return ''
+    nameField.setText(info.fullName)
   }
-  const addressElements = [info.fullName, addressLine1, addressLine2, `${plz} ${location}`]
-  return addressElements.join('\n')
+  if (addressLine1) addressLine1Field.setText(addressLine1)
+  if (addressLine2) {
+    addressLine2Field.setText(addressLine2)
+  }
+  if (plz && location) {
+    if (!addressLine2) addressLine2Field.setText(`${plz} ${location}`)
+    else plzAndLocationField.setText(`${plz} ${location}`)
+  }
+  return [nameField, addressLine1Field, addressLine2Field, plzAndLocationField]
 }
 
 const renderPassId = ({ cardBlueprint }: InfoParams) => {
@@ -57,10 +70,10 @@ const pdfConfiguration: PdfConfig = {
     dynamicActivationQrCodes: [{ x: 122, y: 110, size: 63 }],
     text: [
       { x: 108, y: 243, width: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
-      { x: 25, y: 61, width: 73, fontSize: 12, spacing: 3, infoToText: renderAddressDetails },
       { x: 129.5, y: 79, width: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
       { x: 27, y: 265, width: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
     ],
+    form: [{ infoToFormFields: createAddressFormFields, x: 25, y: 66, width: 65, fontSize: 10 }],
   },
 }
 

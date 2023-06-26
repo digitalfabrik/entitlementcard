@@ -1,37 +1,39 @@
 import { PartialMessage } from '@bufbuild/protobuf'
-import { add } from 'date-fns'
 
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
+import PlainDate from '../util/PlainDate'
 import { isContentLengthValid } from '../util/qrcode'
 import RegionExtension from './extensions/RegionExtension'
 import { Extension, ExtensionInstance, JSONExtension } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
-import { dateToDaysSinceEpoch } from './validityPeriod'
 
-const MAX_NAME_LENGTH = 50
+const MAX_NAME_LENGTH = 30
 const ACTIVATION_SECRET_LENGTH = 20
 
 export interface JSONCardBlueprint<E = ExtensionInstance> {
   id: number
   fullName: string
-  expirationDate: Date | null
+  expirationDate: string | null
   extensions: (E extends Extension<infer T, any> ? JSONExtension<T> : never)[]
 }
 
 /**
  * Blueprint for a new card. This object contains data about a future card, which will be created.
  */
-export class CardBlueprint implements JSONCardBlueprint {
+export class CardBlueprint {
   id: number
   fullName: string
-  expirationDate: Date | null
+  expirationDate: PlainDate | null
   extensions: ExtensionInstance[]
 
   constructor(fullName: string, cardConfig: CardConfig, initParams?: Parameters<CardBlueprint['initialize']>) {
     this.fullName = fullName
-    this.expirationDate = cardConfig.defaultValidity && initParams ? add(new Date(), cardConfig.defaultValidity) : null
+    this.expirationDate =
+      cardConfig.defaultValidity && initParams
+        ? PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
+        : null
     this.extensions = cardConfig.extensions.map(Extension => new Extension())
     this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
     if (initParams) {
@@ -52,11 +54,12 @@ export class CardBlueprint implements JSONCardBlueprint {
 
   isFullNameValid(): boolean {
     const encodedName = new TextEncoder().encode(this.fullName)
-    return this.fullName.length > 0 && encodedName.length < MAX_NAME_LENGTH
+    return this.fullName.length > 0 && encodedName.length <= MAX_NAME_LENGTH
   }
 
   isExpirationDateValid(): boolean {
-    return this.expirationDate !== null && this.expirationDate > new Date()
+    const today = PlainDate.fromLocalDate(new Date())
+    return this.expirationDate !== null && this.expirationDate.isAfter(today)
   }
 
   isValid(): boolean {
@@ -98,11 +101,14 @@ export class CardBlueprint implements JSONCardBlueprint {
     })
 
     const expirationDate = this.expirationDate
+    const expirationDay =
+      expirationDate !== null && !this.hasInfiniteLifetime()
+        ? Math.max(expirationDate.toDaysSinceEpoch(), 0)
+        : undefined
 
     return new CardInfo({
       fullName: this.fullName,
-      expirationDay:
-        expirationDate !== null && !this.hasInfiniteLifetime() ? dateToDaysSinceEpoch(expirationDate) : undefined,
+      expirationDay,
       extensions: new CardExtensions(extensionsMessage),
     })
   }
