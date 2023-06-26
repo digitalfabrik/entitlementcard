@@ -81,7 +81,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 #### iOS:
 - `open ./build/ios/archive/Runner.xcarchive`
 - use manual signing and choose match appstore certificate
-- navigate the dialog and finally distribute the app. This will create a release on Testflight. 
+- Navigate the dialog and finally distribute the app. This will create a release on Testflight. It may take a while until the new build will be listed.
 - Once apple has approved the Testflight release, the app can be “promoted”. 
 - For that change the build and version number in app store connect and let the app be checked a second time. Finally the app can be released.
 
