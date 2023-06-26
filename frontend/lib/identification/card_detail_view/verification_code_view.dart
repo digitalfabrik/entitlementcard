@@ -115,22 +115,21 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
     }
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    final DynamicVerificationCode qrCode = DynamicVerificationCode(
-      info: userCode.info,
-      pepper: userCode.pepper,
-      otp: otpCode.code,
-    );
+    final DynamicVerificationCode qrCode = DynamicVerificationCode()
+      ..info = userCode.info
+      ..pepper = userCode.pepper
+      ..otp = otpCode.code;
 
     final cardVerification = await queryDynamicServerVerification(client, projectId, qrCode);
     final provider = Provider.of<UserCodeModel>(context, listen: false);
 
-    provider.setCode(DynamicUserCode(
-        info: userCode.info,
-        ecSignature: userCode.ecSignature,
-        pepper: userCode.pepper,
-        totpSecret: userCode.totpSecret,
-        cardVerification: CardVerification(
-            cardValid: cardVerification.valid,
-            verificationTimeStamp: secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp)))));
+    provider.setCode(DynamicUserCode()
+      ..info = userCode.info
+      ..ecSignature = userCode.ecSignature
+      ..pepper = userCode.pepper
+      ..totpSecret = userCode.totpSecret
+      ..cardVerification = (CardVerification()
+        ..cardValid = cardVerification.valid
+        ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp))));
   }
 }
