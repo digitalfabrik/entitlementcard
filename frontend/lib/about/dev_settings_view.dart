@@ -23,40 +23,26 @@ import 'package:provider/provider.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
-final sampleActivationCodeBavaria = DynamicUserCode(
-  info: CardInfo(
-    fullName: "Erika Mustermann",
-    expirationDay: 19746,
-    extensions: CardExtensions(
-      extensionBavariaCardType: BavariaCardTypeExtension(
-        cardType: BavariaCardType.STANDARD,
-      ),
-      extensionRegion: RegionExtension(regionId: 42),
-    ),
-  ),
-  pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
-  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
-);
+final sampleActivationCodeBavaria = DynamicUserCode()
+  ..info = (CardInfo()
+    ..fullName = "Erika Mustermann"
+    ..expirationDay = 19746
+    ..extensions = (CardExtensions()
+      ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD)
+      ..extensionRegion = (RegionExtension()..regionId = 42)))
+  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
+  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
-final sampleActivationCodeNuernberg = DynamicUserCode(
-  info: CardInfo(
-    fullName: "Erika Mustermann",
-    expirationDay: 19746,
-    extensions: CardExtensions(
-      extensionBirthday: BirthdayExtension(
-        birthday: 19746,
-      ),
-      extensionNuernbergPassNumber: NuernbergPassNumberExtension(
-        passNumber: 12323123,
-      ),
-      extensionRegion: RegionExtension(
-        regionId: 93,
-      ),
-    ),
-  ),
-  pepper: const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q="),
-  totpSecret: base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX"),
-);
+final sampleActivationCodeNuernberg = DynamicUserCode()
+  ..info = (CardInfo()
+    ..fullName = "Erika Mustermann"
+    ..expirationDay = 19746
+    ..extensions = (CardExtensions()
+      ..extensionBirthday = (BirthdayExtension()..birthday = 19746)
+      ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 12323123)
+      ..extensionRegion = (RegionExtension()..regionId = 93)))
+  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
+  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({super.key});
@@ -195,11 +181,10 @@ class DevSettingsView extends StatelessWidget {
             throw const ActivationInvalidTotpSecretException();
           }
           final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-          final userCode = DynamicUserCode(
-            info: activationCode.info,
-            pepper: activationCode.pepper,
-            totpSecret: totpSecret,
-          );
+          final userCode = DynamicUserCode()
+            ..info = activationCode.info
+            ..pepper = activationCode.pepper
+            ..totpSecret = totpSecret;
           provider.setCode(userCode);
           break;
         case ActivationState.failed:
@@ -240,19 +225,19 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
+// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
   void _setExpiredLastVerification(BuildContext context) {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final DynamicUserCode userCode = provider.userCode!;
-    final CardVerification cardVerification = CardVerification(
-        verificationTimeStamp:
-            secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600))),
-        cardValid: true);
-    provider.setCode(DynamicUserCode(
-        info: userCode.info,
-        ecSignature: userCode.ecSignature,
-        pepper: userCode.pepper,
-        totpSecret: userCode.totpSecret,
-        cardVerification: cardVerification));
+    final CardVerification cardVerification = CardVerification()
+      ..verificationTimeStamp =
+          secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
+      ..cardValid = true;
+    provider.setCode(DynamicUserCode()
+      ..info = userCode.info
+      ..ecSignature = userCode.ecSignature
+      ..pepper = userCode.pepper
+      ..totpSecret = userCode.totpSecret
+      ..cardVerification = cardVerification);
   }
 }

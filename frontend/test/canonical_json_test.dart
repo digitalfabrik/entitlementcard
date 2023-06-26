@@ -13,18 +13,12 @@ void main() {
     });
 
     test("should map a cardInfo for a Bavarian Blue EAK correctly", () {
-      final cardInfo = CardInfo(
-        fullName: 'Max Mustermann',
-        expirationDay: 365 * 40, // Equals 14.600
-        extensions: CardExtensions(
-          extensionRegion: RegionExtension(
-            regionId: 16,
-          ),
-          extensionBavariaCardType: BavariaCardTypeExtension(
-            cardType: BavariaCardType.STANDARD,
-          ),
-        ),
-      );
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 16)
+          ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD));
       expect(cardInfo.toCanonicalJsonObject(), {
         '1': 'Max Mustermann',
         '2': '14600',
@@ -36,17 +30,11 @@ void main() {
     });
 
     test("should map a cardInfo for a Bavarian Golden EAK correctly", () {
-      final cardInfo = CardInfo(
-        fullName: 'Max Mustermann',
-        extensions: CardExtensions(
-          extensionRegion: RegionExtension(
-            regionId: 16,
-          ),
-          extensionBavariaCardType: BavariaCardTypeExtension(
-            cardType: BavariaCardType.GOLD,
-          ),
-        ),
-      );
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 16)
+          ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.GOLD));
       expect(cardInfo.toCanonicalJsonObject(), {
         '1': 'Max Mustermann',
         '3': {
@@ -57,21 +45,13 @@ void main() {
     });
 
     test("should map a cardInfo for a Nuernberg Pass correctly", () {
-      final cardInfo = CardInfo(
-        fullName: 'Max Mustermann',
-        expirationDay: 365 * 40, // Equals 14.600
-        extensions: CardExtensions(
-          extensionRegion: RegionExtension(
-            regionId: 93,
-          ),
-          extensionBirthday: BirthdayExtension(
-            birthday: -365 * 10,
-          ),
-          extensionNuernbergPassNumber: NuernbergPassNumberExtension(
-            passNumber: 99999999,
-          ),
-        ),
-      );
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999));
       expect(cardInfo.toCanonicalJsonObject(), {
         '1': 'Max Mustermann',
         '2': '14600',
