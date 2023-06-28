@@ -449,11 +449,16 @@ export const DataPrivacyBaseText = () => (
       Informationen, die Sie unverschlüsselt per E-Mail an uns senden können, möglicherweise auf dem Übertragungsweg von
       Dritten gelesen werden.{' '}
     </p>
-    <p style={{ marginTop: '0pt', marginBottom: '8pt' }}>
+    <div>
       <span>
         <b>Weitergabe der Daten an externe Dritte</b>
       </span>
-    </p>
-    <p style={{ marginTop: '0pt', marginBottom: '8pt' }} />
+    </div>
+  </div>
+)
+
+export const DataPrivacyAdditionalBaseText = () => (
+  <div>
+    <span>Es erfolgt keine Weitergabe der Daten an Dritte.</span>
   </div>
 )
