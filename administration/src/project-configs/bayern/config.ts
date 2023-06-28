@@ -1,7 +1,7 @@
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { ProjectConfig } from '../getProjectConfig'
-import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
+import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
 const config: ProjectConfig = {
@@ -18,6 +18,7 @@ const config: ProjectConfig = {
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
+  dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
 }
