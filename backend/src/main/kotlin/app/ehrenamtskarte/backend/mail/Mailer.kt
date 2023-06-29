@@ -67,9 +67,10 @@ object Mailer {
     fun sendNotificationForApplicationMails(
         project: String,
         backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig
+        projectConfig: ProjectConfig,
+        regionId: Int
     ) {
-        val recipients = AdministratorsRepository.getNotificationRecipientsForApplication(project)
+        val recipients = AdministratorsRepository.getNotificationRecipientsForApplication(project, regionId)
         val message = """
         Guten Tag,
 
@@ -99,9 +100,10 @@ object Mailer {
     fun sendNotificationForVerificationMails(
         project: String,
         backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig
+        projectConfig: ProjectConfig,
+        regionId: Int
     ) {
-        val recipients = AdministratorsRepository.getNotificationRecipientsForVerification(project)
+        val recipients = AdministratorsRepository.getNotificationRecipientsForVerification(project, regionId)
         val message = """
         Guten Tag,
 

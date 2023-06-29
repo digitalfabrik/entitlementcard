@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository.getApplicationByApplicationVerificationAccessKey
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
@@ -68,7 +69,7 @@ class EakApplicationMutationService {
                 dataFetcherResultBuilder.error(exception)
             }
         }
-        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig)
+        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
 
         return dataFetcherResultBuilder.data(true).build()
     }
@@ -111,13 +112,14 @@ class EakApplicationMutationService {
         verified: Boolean,
         dfe: DataFetchingEnvironment
     ): Boolean {
+        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey) }
         return transaction {
             if (verified) {
                 val context = dfe.getContext<GraphQLContext>()
                 val backendConfig = context.backendConfiguration
                 val projectConfig = backendConfig.projects.first { it.id == project }
                 val successful = ApplicationRepository.verifyApplicationVerification(accessKey)
-                Mailer.sendNotificationForVerificationMails(project, backendConfig, projectConfig)
+                Mailer.sendNotificationForVerificationMails(project, backendConfig, projectConfig, application.regionId)
 
                 successful
             } else {
