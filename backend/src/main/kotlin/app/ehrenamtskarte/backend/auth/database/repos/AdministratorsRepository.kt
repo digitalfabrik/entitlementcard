@@ -125,14 +125,14 @@ object AdministratorsRepository {
     fun getNotificationRecipientsForApplication(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and (Administrators.regionId eq regionId)
+                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 
     fun getNotificationRecipientsForVerification(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and (Administrators.regionId eq regionId)
+                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 }
