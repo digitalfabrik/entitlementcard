@@ -5,7 +5,6 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivityLogCard from './ActivityLogCard'
-import ApplicationLinkCard from './ApplicationLinkCard'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
 
@@ -24,8 +23,6 @@ const UserSettingsController = () => {
     <UserSettingsContainer>
       {applicationFeatureEnabled && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
       <ChangePasswordForm />
-      {/* TODO #897: [Application] Remove Redirect for bayern */}
-      {applicationFeatureEnabled && <ApplicationLinkCard />}
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>
   )
