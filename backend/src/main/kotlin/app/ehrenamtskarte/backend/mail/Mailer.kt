@@ -162,7 +162,7 @@ object Mailer {
         val message = """
         Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
 
-        Ihr Antrag zur Bayrischen Ehrenamtskarte wurde erfolgreich eingereicht. 
+        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde erfolgreich eingereicht. 
         
         Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:
         ${projectConfig.administrationBaseUrl}/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
