@@ -26,9 +26,9 @@ set "revoked" = true
 where "cardInfoHash" = decode('b7c9af18c9c855a5fcf84d776c43593be783b8f94286589e14849f97368b2fb0', 'hex')
 ```
 
-7. (only wit static card) If the corresponding project also uses static cards, the corresponding static card also needs to be revoked. 
-8. (only wit static card) For that verify the static QRCode.
-9. (only wit static card) Then repeat steps 2-6
+7. (only with static card) If the corresponding project also uses static cards, the corresponding static card also needs to be revoked. 
+8. (only with static card) For that verify the static QRCode.
+9. (only with static card) Then repeat steps 2-6
 
 ## revoke without pdf
 
