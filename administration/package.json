@@ -50,7 +50,6 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/resolve": "^1.20.2",
     "@types/styled-components": "^5.1.26",
-    "@types/webpack-dev-server": "^4.7.2",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "babel-loader": "^9.1.2",
