@@ -50,6 +50,12 @@ data class Application(
         if (!wantsPhysicalCard && !wantsDigitalCard) {
             throw InvalidJsonException("Does not apply for a physical nor for a digital card.")
         }
+        if (!hasAcceptedPrivacyPolicy) {
+            throw InvalidJsonException("Has not accepted privacy policy.")
+        }
+        if (!givenInformationIsCorrectAndComplete) {
+            throw InvalidJsonException("Has not confirmed that information is correct and complete.")
+        }
     }
 
     override fun extractApplicationVerifications() = listOfNotNull(
