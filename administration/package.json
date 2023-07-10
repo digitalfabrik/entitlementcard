@@ -1,6 +1,6 @@
 {
   "name": "administration",
-  "version": "3.1.2",
+  "version": "3.1.5",
   "private": true,
   "dependenciesComments": {
     "typescript": "Keeping on 5.0.x because of current incompatibility of 5.1.x with @typescript-eslint"

@@ -19,6 +19,11 @@ const TableContainer = styled.div`
   flex-grow: 1;
 `
 
+const StyledCell = styled(Cell)`
+  font-size: 0.85rem;
+  white-space: break-spaces;
+`
+
 const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps) => {
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
@@ -27,13 +32,15 @@ const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps) => {
       const valid = cardBlueprint.isValueValid(header)
       const value = cardBlueprint.getValue(header)
       return (
-        <Cell
+        <StyledCell
+          wrapText
           key={rowIndex + '-' + columnIndex}
-          style={{ fontSize: '0.85rem' }}
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
-          <TruncatedFormat2 detectTruncation={true}>{!!value ? value : '-'}</TruncatedFormat2>
-        </Cell>
+          <TruncatedFormat2 detectTruncation preformatted>
+            {!!value ? value : '-'}
+          </TruncatedFormat2>
+        </StyledCell>
       )
     },
     [cardBlueprints, headers]

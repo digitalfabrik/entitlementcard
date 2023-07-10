@@ -81,7 +81,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 #### iOS:
 - `open ./build/ios/archive/Runner.xcarchive`
 - use manual signing and choose match appstore certificate
-- navigate the dialog and finally distribute the app. This will create a release on Testflight. 
+- Navigate the dialog and finally distribute the app. This will create a release on Testflight. It may take a while until the new build will be listed.
 - Once apple has approved the Testflight release, the app can be “promoted”. 
 - For that change the build and version number in app store connect and let the app be checked a second time. Finally the app can be released.
 
@@ -90,7 +90,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 - creating release branch triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
 - connect via ssh `ssh <username>@entitlementcard.app`
 - switch to root user `sudo -i`
-- run `sh /var/cache/salt/minion/files/base/entitlementcard/files/eak-autoupdate`
+- run `sh /var/cache/salt/minion/files/base/entitlementcard/files/eak-update`
 - check backend health log: `journalctl -u eak-backend.service --since "1h ago"`
 
 #### Additional Commands

@@ -86,7 +86,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           {`Eine Liste der teilnehmenden Landkreise und kreisfreien Städte für den zentralen Beantragungsprozess finden Sie im Auswahlfeld unten.
           Alle anderen Regionen können Sie `}
           <a
-            href='https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/voraussetzungen/index.php'
+            href='https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/antraege/index.php'
             target='_blank'
             rel='noreferrer'>
             hier

@@ -11,6 +11,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+# [3.1.5] 2023-06-30
+* 1034: Remove application link card by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1037
+* 1035: Fix notification sent to all users by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1036
+
+## [3.1.4] 2023-06-29
+* 996: Migrate db post install fix by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1020
+* Fix CI: Migrate constructor syntax due to protoc_plugin 21 by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1025
+* Fix CircleCI badge by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1027
+* Upgrade backend dependencies by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1024
+* 659: do not log graphql errors to console by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/993
+* 1030: Incomplete data privacy by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1031
+* 1022: Name length special chars by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1023
+* Fix application form link by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1032
+
+## [3.1.3] 2023-06-13
+- 1012: Add version info by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1013
+- 903: Add support for pdf form field by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1017
+- 996: Migrate db postinst by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1016
+- 1014: Limit fullname length by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1015
+- 945: add migrations documentation by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1018
+
 ## [3.1.2] 2023-06-06
 
 ### Added

@@ -42,6 +42,7 @@ export interface ProjectConfig {
   card: CardConfig
   dataPrivacyHeadline: string
   dataPrivacyContent: () => ReactElement
+  dataPrivacyAdditionalBaseContent?: () => ReactElement
   pdf: PdfConfig
   timezone: string
   activityLogConfig?: ActivityLogConfig
