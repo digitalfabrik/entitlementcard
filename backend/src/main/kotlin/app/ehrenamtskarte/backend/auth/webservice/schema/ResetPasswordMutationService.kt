@@ -26,10 +26,12 @@ class ResetPasswordMutationService {
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
-                .single().let { AdministratorEntity.wrapRow(it) }
-
-            val key = AdministratorsRepository.setNewPasswordResetKey(user)
-            Mailer.sendResetPasswodMail(backendConfig, projectConfig, key, email)
+                .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
+            // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
+            if (user != null) {
+                val key = AdministratorsRepository.setNewPasswordResetKey(user)
+                Mailer.sendResetPasswodMail(backendConfig, projectConfig, key, email)
+            }
         }
         return true
     }
