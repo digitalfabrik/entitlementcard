@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.primitive
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
 import app.ehrenamtskarte.backend.application.webservice.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 
 data class OrganizationContact(
     val name: ShortTextInput,
@@ -12,6 +13,13 @@ data class OrganizationContact(
     val email: EmailInput,
     val hasGivenPermission: Boolean
 ) : JsonFieldSerializable {
+
+    init {
+        if (!hasGivenPermission) {
+            throw InvalidJsonException("Contact person did not accept data transmission.")
+        }
+    }
+
     override fun toJsonField(): JsonField {
         return JsonField(
             "organizationContact",

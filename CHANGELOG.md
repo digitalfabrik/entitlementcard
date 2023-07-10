@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+# [3.1.5] 2023-06-30
+* 1034: Remove application link card by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1037
+* 1035: Fix notification sent to all users by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1036
+
 ## [3.1.4] 2023-06-29
 * 996: Migrate db post install fix by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1020
 * Fix CI: Migrate constructor syntax due to protoc_plugin 21 by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1025
