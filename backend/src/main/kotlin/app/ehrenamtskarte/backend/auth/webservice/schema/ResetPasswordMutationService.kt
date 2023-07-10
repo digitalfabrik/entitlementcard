@@ -25,7 +25,7 @@ class ResetPasswordMutationService {
         val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
+                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase())and (Administrators.deleted eq false))
                 .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
@@ -40,7 +40,7 @@ class ResetPasswordMutationService {
     fun resetPassword(project: String, email: String, passwordResetKey: String, newPassword: String): Boolean {
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
+                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
                 .single().let { AdministratorEntity.wrapRow(it) }
 
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
