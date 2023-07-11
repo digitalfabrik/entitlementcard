@@ -42,8 +42,8 @@ const ForgotPasswordController = () => {
         {finished ? (
           <>
             <p>
-              Wir haben eine E-Mail an {email} gesendet. Darin finden Sie einen Link, mit dem Sie Ihr Passwort
-              zurücksetzen können.
+              Falls die angegebene E-Mail-Adresse {email} in unserem System existiert, wird eine E-Mail an sie gesendet.
+              Darin finden Sie einen Link, mit dem Sie Ihr Passwort zurücksetzen können.
             </p>
             <p>Bitte prüfen Sie Ihren Spam-Ordner.</p>
             <p>
