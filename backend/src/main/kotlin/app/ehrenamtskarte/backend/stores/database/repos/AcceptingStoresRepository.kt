@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses
+import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import net.postgis.jdbc.geometry.Point
@@ -16,7 +17,9 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.OrOp
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.stringParam
@@ -71,6 +74,39 @@ object AcceptingStoresRepository {
             .orderBy(sortExpression)
             .let { AcceptingStoreEntity.wrapRows(it) }
             .limit(limit, offset)
+    }
+
+    fun deleteStores(acceptingStoreIds: Iterable<Int>) {
+        val contactsDelete =
+            (AcceptingStores innerJoin Contacts).slice(Contacts.id)
+                .select { AcceptingStores.id inList acceptingStoreIds }
+                .map { it[Contacts.id] }
+
+        val physicalStoresDelete =
+            (PhysicalStores innerJoin AcceptingStores).slice(PhysicalStores.id)
+                .select { AcceptingStores.id inList acceptingStoreIds }
+                .map { it[PhysicalStores.id] }
+
+        val addressesDelete =
+            ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores).slice(Addresses.id)
+                .select { AcceptingStores.id inList acceptingStoreIds }
+                .map { it[Addresses.id] }
+
+        PhysicalStores.deleteWhere {
+            id inList physicalStoresDelete
+        }
+
+        Addresses.deleteWhere {
+            id inList addressesDelete
+        }
+
+        AcceptingStores.deleteWhere {
+            id inList acceptingStoreIds
+        }
+
+        Contacts.deleteWhere {
+            id inList contactsDelete
+        }
     }
 
     fun findByIds(ids: List<Int>) =

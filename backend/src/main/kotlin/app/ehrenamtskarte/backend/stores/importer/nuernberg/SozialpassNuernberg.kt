@@ -5,17 +5,25 @@ import app.ehrenamtskarte.backend.stores.importer.addStep
 import app.ehrenamtskarte.backend.stores.importer.common.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeAddress
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeGeocode
+import app.ehrenamtskarte.backend.stores.importer.common.steps.Store
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.DownloadCsv
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterData
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterGeoData
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.MapFromCsv
-import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.Store
 import app.ehrenamtskarte.backend.stores.importer.pipelines.Pipeline
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestRetry
 import org.slf4j.Logger
 
 object SozialpassNuernberg : Pipeline {
-    private val httpClient = HttpClient()
+    private val httpClient = HttpClient() {
+        install(HttpRequestRetry) {
+            retryOnServerErrors(maxRetries = 5)
+            retryOnException(maxRetries = 5, retryOnTimeout = true)
+            exponentialDelay()
+        }
+    }
+
     override fun import(config: ImportConfig, logger: Logger) {
         Unit.addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
             .addStep(FilterData(config, logger), logger) { logger.info(" ==Filter Data ==") }
