@@ -42,7 +42,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
 
                 for (acceptingStore in input) {
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
-                    // remove the id from `storeIdsToRemove`.
+                    // remove the id from `acceptingStoreIdsToRemove`.
                     val idInDb: Int? =
                         AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
                             .slice(AcceptingStores.id).select {
