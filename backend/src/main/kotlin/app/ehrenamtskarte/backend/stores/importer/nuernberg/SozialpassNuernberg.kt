@@ -26,7 +26,7 @@ object SozialpassNuernberg : Pipeline {
 
     override fun import(config: ImportConfig, logger: Logger) {
         Unit.addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
-            .addStep(FilterData(config, logger), logger) { logger.info(" ==Filter Data ==") }
+            .addStep(FilterData(config, logger), logger) { logger.info("== Filter Data ==") }
             .addStep(MapFromCsv(config, logger), logger) { logger.info("== Map CSV Data ==") }
             .addStep(SanitizeAddress(config, logger), logger) { logger.info("== Sanitize Address ==") }
             .addStep(SanitizeGeocode(config, logger, httpClient), logger) { logger.info("== Get Geoinformation ==") }
