@@ -6,6 +6,8 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
+import org.jetbrains.exposed.sql.javatime.timestamp
 
 object Categories : IntIdTable() {
     val name = varchar("name", 50)
@@ -38,6 +40,7 @@ object AcceptingStores : IntIdTable() {
     val categoryId = reference("categoryId", Categories)
     val projectId = reference("projectId", Projects)
     val regionId = reference("regionId", Regions).nullable()
+    val createdAt = timestamp("createdDate").defaultExpression(CurrentTimestamp())
 }
 
 class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -49,6 +52,7 @@ class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {
     var categoryId by AcceptingStores.categoryId
     var projectId by AcceptingStores.projectId
     var regionId by AcceptingStores.regionId
+    var createdDate by AcceptingStores.createdAt
 }
 
 object PhysicalStores : IntIdTable() {

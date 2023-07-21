@@ -6,6 +6,7 @@ object MigrationsRegistry {
         V0002_DropCaseSensitiveEmailConstraint(),
         V0003_AddFirstActivationDate(),
         V0004_AddNotificationSettings(),
-        V0005_AddRegionApplicationActivation()
+        V0005_AddRegionApplicationActivation(),
+        V0006_AddStoreCreatedDate()
     )
 }

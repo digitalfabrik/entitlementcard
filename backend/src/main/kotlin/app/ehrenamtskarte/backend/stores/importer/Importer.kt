@@ -8,19 +8,20 @@ import org.slf4j.LoggerFactory
 object Importer {
     fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(Importer::class.java)
+        val project = config.findProject()
 
         return try {
-            val project = config.findProject()
+            logger.info("== Pipeline ${project.pipelineName} started ==")
             when (project.pipelineName) {
                 "EhrenamtskarteBayern" -> EhrenamtskarteBayern.import(config, logger)
                 "SozialpassNuernberg" -> SozialpassNuernberg.import(config, logger)
                 "BerechtigungskarteShowcase" -> BerechtigungskarteShowcase.import(config, logger)
                 else -> throw Error("Invalid pipeline name '${project.pipelineName}'!")
             }
-            logger.info("== Pipeline successfully finished ==")
+            logger.info("== Pipeline ${project.pipelineName} successfully finished ==")
             true
         } catch (e: Exception) {
-            logger.info("== Pipeline was aborted without altering the database ==", e)
+            logger.info("== Pipeline ${project.pipelineName} was aborted without altering the database ==", e)
             false
         }
     }
