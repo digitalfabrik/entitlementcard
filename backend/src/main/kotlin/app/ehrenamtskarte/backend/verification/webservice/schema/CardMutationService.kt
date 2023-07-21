@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
@@ -36,8 +37,12 @@ class CardMutationService {
                 if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
                     throw ForbiddenException()
                 }
-                if (!validateNewCard(card)) {
+                if (!validateCodeType(card)) {
                     throw InvalidCodeTypeException()
+                }
+                val decodedCardInfoHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
+                if (validateCardHash(decodedCardInfoHash)) {
+                    throw InvalidCardHashException()
                 }
                 val activationSecret =
                     card.activationSecretBase64?.let {
@@ -46,7 +51,7 @@ class CardMutationService {
                     }
 
                 CardRepository.insert(
-                    Base64.getDecoder().decode(card.cardInfoHashBase64),
+                    decodedCardInfoHash,
                     activationSecret,
                     card.cardExpirationDay,
                     card.regionId,
@@ -99,8 +104,12 @@ class CardMutationService {
         return CardActivationResultModel(ActivationState.success, encodedTotpSecret)
     }
 
-    private fun validateNewCard(card: CardGenerationModel): Boolean {
+    private fun validateCodeType(card: CardGenerationModel): Boolean {
         return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
             (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
+    }
+
+    private fun validateCardHash(cardHash: ByteArray): Boolean {
+        return cardHash.size != 32
     }
 }
