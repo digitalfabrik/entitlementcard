@@ -183,7 +183,7 @@ jobs:
       - install-protobuf-linux
       - run:
           name: Install Flutter Packages
-          command: fvm flutter pub get
+          command: fvm flutter pub get --enforce-lockfile
       - run:
           name: Check Formatting
           command: fvm dart format -l 120 -o none --set-exit-if-changed .
@@ -229,7 +229,7 @@ jobs:
       - run:
           name: Install Flutter Packages
           command: |
-            fvm flutter pub get
+            fvm flutter pub get --enforce-lockfile
             fvm flutter precache --android
       - run:
           name: Build Runner
@@ -263,7 +263,7 @@ jobs:
       - run:
           name: Install Flutter Packages
           command: |
-            fvm flutter pub get
+            fvm flutter pub get --enforce-lockfile
             fvm flutter precache --ios
       - run:
           name: Update Pods
