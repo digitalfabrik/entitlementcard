@@ -33,7 +33,7 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.InvalidCardHash:
       return {
-        title: 'Die Karte hat ein ungültiges Format.'
+        title: 'Die Karte hat ein ungültiges Format.',
       }
     case GraphQlExceptionCode.InvalidCodeType:
       return {
