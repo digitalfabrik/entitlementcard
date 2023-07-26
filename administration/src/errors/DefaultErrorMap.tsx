@@ -31,6 +31,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: 'Ihr Link ist ungültig',
         description: <InvalidLink />,
       }
+    case GraphQlExceptionCode.InvalidCardHash:
+      return {
+        title: 'Die Karte hat ein ungültiges Format.',
+      }
     case GraphQlExceptionCode.InvalidCodeType:
       return {
         title: 'Diese Kombination aus Karte und Kartentyp (statisch/dynamisch) existiert nicht.',
