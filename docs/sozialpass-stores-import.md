@@ -6,10 +6,12 @@ This source file contains addresses which have to be converted to coordinates be
 The output file will be uploaded to the entitlement server.
 
 1. Enable `geocoding` and `csvWriter` in `/backend/src/resources/config`
-2. Save the recent Akzeptanzpartner excel file in csv format and put it into `/backend/src/resources/import`
+2. Save the recent Akzeptanzpartner excel file in csv format and put it into `/backend/src/resources/import` (Akzeptanzpartner-daten.csv)
 3. Start `import data` job. This may take a while.
 4. Check the log if entries were filtered out and try to fix them. Check if `acceptingstores` were updated in the database
 5. Update repo [sozialpass-nuernberg-data](https://github.com/digitalfabrik/sozialpass-nuernberg-data) with content of csv file of  `src/main/resources/import/nuernberg-akzeptanzstellen_geoinfo.csv`
 6. Save this file as xlsx and upload it to nextcloud
 7. Connect to `ssh <username>@entitlementcard.app`
-8. Pull repo `cd /var/www/data && git pull`
+8. Switch to root user `sudo -i`
+9. Pull repo `cd /var/www/data && git pull`
+10. Store data will be updated with the next scheduled import job
