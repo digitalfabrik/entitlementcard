@@ -99,7 +99,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
       <SubForms.payment.Component
         state={state.payment}
         setState={useUpdateStateCallback(setState, 'payment')}
-        label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht. (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale)'
+        label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale).'
         options={paymentOptions}
       />
       <h4>Tätigkeitsnachweis</h4>
