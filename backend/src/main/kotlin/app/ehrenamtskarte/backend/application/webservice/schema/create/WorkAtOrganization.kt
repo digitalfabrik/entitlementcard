@@ -27,7 +27,7 @@ data class WorkAtOrganization(
                 workSinceDate.toJsonField("workSinceDate", mapOf("de" to "Tätig seit")),
                 JsonField(
                     "payment",
-                    mapOf("de" to "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt:"),
+                    mapOf("de" to "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht. (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale):"),
                     Type.Boolean,
                     payment
                 ),
