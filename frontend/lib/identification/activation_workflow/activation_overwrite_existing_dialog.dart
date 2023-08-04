@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ActivationOverwriteExistingDialog extends StatelessWidget {
-  final VoidCallback overrideExistingCard;
-
-  const ActivationOverwriteExistingDialog({super.key, required this.overrideExistingCard});
+  const ActivationOverwriteExistingDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +20,25 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
         TextButton(
           child: const Text('Abbrechen'),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
         ),
         TextButton(
           child: const Text('Aktivieren'),
           onPressed: () {
-            overrideExistingCard();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           },
         ),
       ],
     );
   }
 
-  static Future<void> showActivationOverwriteExistingDialog(
-      BuildContext context, VoidCallback overrideExistingCard) async {
-    return showDialog<void>(
-      context: context,
-      builder: (context) => ActivationOverwriteExistingDialog(overrideExistingCard: overrideExistingCard),
-    );
+  /// Returns true, if the user wants to override the existing device
+  static Future<bool> showActivationOverwriteExistingDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => ActivationOverwriteExistingDialog(),
+        ) ??
+        false;
   }
 }
