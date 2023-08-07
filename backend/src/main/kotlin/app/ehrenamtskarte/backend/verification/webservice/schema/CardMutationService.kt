@@ -86,7 +86,7 @@ class CardMutationService {
         }
 
         if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-            logger.info("${context.remoteIp} failed to activate entitlement card")
+            logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite")
             return CardActivationResultModel(ActivationState.failed)
         }
 
@@ -95,12 +95,14 @@ class CardMutationService {
         }
 
         if (!overwrite && card.totpSecret != null) {
+            logger.info("Card with id:${card.id} did not overwrite card from ${context.remoteIp}")
             return CardActivationResultModel(ActivationState.did_not_overwrite_existing)
         }
 
         val totpSecret = CardActivator.generateTotpSecret()
         val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
         transaction { CardRepository.activate(card, totpSecret) }
+        logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
         return CardActivationResultModel(ActivationState.success, encodedTotpSecret)
     }
 
