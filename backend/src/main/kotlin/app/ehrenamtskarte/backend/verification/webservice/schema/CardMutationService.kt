@@ -86,7 +86,7 @@ class CardMutationService {
         }
 
         if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-            logger.info("Card with id:${card.id} from ${context.remoteIp} failed to activate entitlement card")
+            logger.info("${context.remoteIp} failed to activate card with id:${card.id}")
             return CardActivationResultModel(ActivationState.failed)
         }
 
