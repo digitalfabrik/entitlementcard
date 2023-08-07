@@ -59,13 +59,13 @@ Future<CardVerificationByHash$Query$CardVerificationResultModel> _queryServerVer
   try {
     final queryResult = await client.query(queryOptions);
     final exception = queryResult.exception;
-    if (exception != null && queryResult.hasException) {
+    if (exception != null) {
       throw exception;
     }
     final data = queryResult.data;
 
     if (data == null) {
-      return CardVerificationByHash$Query$CardVerificationResultModel();
+      throw ServerVerificationException("Returned data is null.");
     }
 
     final parsedResult = byCardDetailsHash.parse(data);
