@@ -1,14 +1,18 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
-import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
 
-class CardDetailView extends StatelessWidget {
+import '../user_code_model.dart';
+import 'verification_code_view.dart';
+
+class CardDetailView extends StatefulWidget {
   final DynamicUserCode userCode;
   final VoidCallback startActivation;
   final VoidCallback startVerification;
@@ -23,12 +27,41 @@ class CardDetailView extends StatelessWidget {
   });
 
   @override
+  State<CardDetailView> createState() => _CardDetailViewState();
+}
+
+class _CardDetailViewState extends State<CardDetailView> {
+  bool initiatedSelfVerification = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!initiatedSelfVerification) {
+      // On every app start when this widget is first rendered, we verify the card with the backend
+      // in order to detect if one of the following events happened:
+      // - the card was activated on another device
+      // - the card was revoked
+      // - the card expired (on backend's system time)
+      _selfVerifyCard();
+      initiatedSelfVerification = true;
+    }
+  }
+
+  Future<void> _selfVerifyCard() async {
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    final projectId = Configuration.of(context).projectId;
+    final client = GraphQLProvider.of(context).value;
+    selfVerifyCard(userCodeModel, projectId, client);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(
         project: projectId,
-        ids: [userCode.info.extensions.extensionRegion.regionId],
+        ids: [widget.userCode.info.extensions.extensionRegion.regionId],
       ),
     );
 
@@ -46,14 +79,15 @@ class CardDetailView extends StatelessWidget {
         final paddedCard = Padding(
           padding: const EdgeInsets.all(8),
           child: IdCard(
-              cardInfo: userCode.info,
+              cardInfo: widget.userCode.info,
               region: region != null ? Region(region.prefix, region.name) : null,
-              isExpired: isCardExpired(userCode.info)),
+              isExpired: isCardExpired(widget.userCode.info)),
         );
-        final richQrCode = RichQrCode(
-            userCode: userCode,
-            onMoreActionsPressed: () => _onMoreActionsPressed(context),
-            isExpired: isCardExpired(userCode.info));
+        final qrCodeAndStatus = QrCodeAndStatus(
+          userCode: widget.userCode,
+          onMoreActionsPressed: () => _onMoreActionsPressed(context),
+          onSelfVerifyPressed: _selfVerifyCard,
+        );
 
         return orientation == Orientation.landscape
             ? SafeArea(
@@ -67,11 +101,11 @@ class CardDetailView extends StatelessWidget {
                       children: [
                         Flexible(child: paddedCard),
                         if (constraints.maxWidth > qrCodeMinWidth * 2)
-                          Flexible(child: richQrCode)
+                          Flexible(child: qrCodeAndStatus)
                         else
                           ConstrainedBox(
                             constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
-                            child: richQrCode,
+                            child: qrCodeAndStatus,
                           )
                       ],
                     );
@@ -82,7 +116,7 @@ class CardDetailView extends StatelessWidget {
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Column(children: [paddedCard, const SizedBox(height: 16), richQrCode]),
+                    child: Column(children: [paddedCard, const SizedBox(height: 16), qrCodeAndStatus]),
                   ),
                 ),
               );
@@ -94,49 +128,79 @@ class CardDetailView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => MoreActionsDialog(
-        startActivation: startActivation,
-        startApplication: startApplication,
-        startVerification: startVerification,
+        startActivation: widget.startActivation,
+        startApplication: widget.startApplication,
+        startVerification: widget.startVerification,
       ),
     );
   }
 }
 
-class RichQrCode extends StatelessWidget {
-  final VoidCallback onMoreActionsPressed;
-  final DynamicUserCode userCode;
-  final bool compact;
-  final bool isExpired;
+enum CardStatus {
+  // The card expired according to the clock of the local device.
+  expired,
+  // The card was not verified lately by the server.
+  notVerifiedLately,
+  // The card was verified lately by the server and it responded that the card is invalid.
+  invalid,
+  // In any other case, we assume the card is valid and show the dynamic QR code
+  valid;
 
-  const RichQrCode(
-      {super.key,
-      required this.onMoreActionsPressed,
-      required this.userCode,
-      this.compact = false,
-      required this.isExpired});
+  factory CardStatus.from(DynamicUserCode code) {
+    if (isCardExpired(code.info)) {
+      return CardStatus.expired;
+    } else if (!cardWasVerifiedLately(code.cardVerification)) {
+      return CardStatus.notVerifiedLately;
+    } else if (!code.cardVerification.cardValid) {
+      return CardStatus.invalid;
+    } else {
+      return CardStatus.valid;
+    }
+  }
+}
+
+class QrCodeAndStatus extends StatelessWidget {
+  final VoidCallback onMoreActionsPressed;
+  final VoidCallback onSelfVerifyPressed;
+  final DynamicUserCode userCode;
+
+  const QrCodeAndStatus(
+      {super.key, required this.onMoreActionsPressed, required this.onSelfVerifyPressed, required this.userCode});
 
   @override
   Widget build(BuildContext context) {
-    final wasCardVerifiedLately = cardWasVerifiedLately(userCode.cardVerification);
-    final isCardInvalid = !userCode.cardVerification.cardValid;
+    final CardStatus status = CardStatus.from(userCode);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.only(bottom: 4),
-            constraints: const BoxConstraints(maxWidth: 300),
-            child: Text(
-              getCardInfoText(wasCardVerifiedLately, isCardInvalid, context),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Flexible(
-              child: (isExpired || isCardInvalid)
-                  ? Container()
-                  : VerificationCodeView(userCode: userCode, isCardVerificationExpired: !wasCardVerifiedLately)),
+          ...switch (status) {
+            CardStatus.expired => [
+                _PaddedText(
+                    "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.")
+              ],
+            CardStatus.notVerifiedLately => [
+                _PaddedText(
+                    'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut.'),
+                Flexible(
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: onSelfVerifyPressed,
+                    label: Text("Erneut prüfen"),
+                  ),
+                ),
+              ],
+            CardStatus.invalid => [
+                _PaddedText(
+                    'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.')
+              ],
+            CardStatus.valid => [
+                _PaddedText('Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:'),
+                Flexible(child: VerificationCodeView(userCode: userCode))
+              ]
+          },
           Container(
             alignment: Alignment.center,
             child: TextButton(
@@ -146,23 +210,24 @@ class RichQrCode extends StatelessWidget {
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
+}
 
-  String getCardInfoText(bool wasCardVerifiedLately, bool isCardInvalid, BuildContext context) {
-    if (isExpired) {
-      return "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.";
-    }
-    if (isCardInvalid) {
-      return 'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.';
-    }
-    if (!wasCardVerifiedLately) {
-      return 'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut.';
-    }
+class _PaddedText extends StatelessWidget {
+  final String text;
 
-    return 'Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:';
+  const _PaddedText(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 4),
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: Text(text, textAlign: TextAlign.center),
+    );
   }
 }
