@@ -19,6 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.util.Base64
 
 @Suppress("unused")
@@ -78,32 +79,35 @@ class CardMutationService {
                 ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
-        val card = transaction { CardRepository.findByHash(project, cardHash) }
-        val activationSecretHash = card?.activationSecretHash
+        // Avoid race conditions when activating a card.
+        return transaction(TRANSACTION_REPEATABLE_READ, repetitionAttempts = 0) t@{
+            val card = CardRepository.findByHash(project, cardHash)
+            val activationSecretHash = card?.activationSecretHash
 
-        if (card == null || activationSecretHash == null) {
-            return CardActivationResultModel(ActivationState.failed)
+            if (card == null || activationSecretHash == null) {
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
+                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite")
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone) || card.revoked) {
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (!overwrite && card.totpSecret != null) {
+                logger.info("Card with id:${card.id} did not overwrite card from ${context.remoteIp}")
+                return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
+            }
+
+            val totpSecret = CardActivator.generateTotpSecret()
+            val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
+            CardRepository.activate(card, totpSecret)
+            logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
+            return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
-
-        if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-            logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite")
-            return CardActivationResultModel(ActivationState.failed)
-        }
-
-        if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone) || card.revoked) {
-            return CardActivationResultModel(ActivationState.failed)
-        }
-
-        if (!overwrite && card.totpSecret != null) {
-            logger.info("Card with id:${card.id} did not overwrite card from ${context.remoteIp}")
-            return CardActivationResultModel(ActivationState.did_not_overwrite_existing)
-        }
-
-        val totpSecret = CardActivator.generateTotpSecret()
-        val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
-        transaction { CardRepository.activate(card, totpSecret) }
-        logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
-        return CardActivationResultModel(ActivationState.success, encodedTotpSecret)
     }
 
     private fun isCodeTypeValid(card: CardGenerationModel): Boolean {
