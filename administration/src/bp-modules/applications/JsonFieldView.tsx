@@ -125,7 +125,7 @@ const JsonFieldView = (props: {
       const downloadUrl = `${props.baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
         const loadingToastKey = appToaster?.show({
-          message: `Lade Anhang ${attachment.fileIndex}...`,
+          message: `Lade Anhang ${attachment.fileIndex + 1}...`,
           intent: 'primary',
           isCloseButtonShown: false,
         })
@@ -137,7 +137,7 @@ const JsonFieldView = (props: {
           } else if (contentType === null || !extensionByContentType.has(contentType)) {
             throw Error('Invalid Content Type')
           }
-          const filename = `anhang${attachment.fileIndex}.${extensionByContentType.get(contentType)}`
+          const filename = `anhang${attachment.fileIndex + 1}.${extensionByContentType.get(contentType)}`
           const arrayBuffer = await result.arrayBuffer()
           const file = new File([arrayBuffer], filename, { type: contentType })
           downloadDataUri(file, filename)
@@ -153,10 +153,10 @@ const JsonFieldView = (props: {
           {props.jsonField.translations.de}:&nbsp;
           {props.attachmentAccessible ? (
             <>
-              <PrintAwareButton
-                icon='download'
-                onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex}`}</PrintAwareButton>
-              <PrintOnlySpan>{`(siehe Anhang ${props.jsonField.value.fileIndex})`}</PrintOnlySpan>
+              <PrintAwareButton icon='download' onClick={onClick}>{`Anhang ${
+                props.jsonField.value.fileIndex + 1
+              }`}</PrintAwareButton>
+              <PrintOnlySpan>{`(siehe Anhang ${props.jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
             </>
           ) : (
             <span>eingereicht, nicht sichtbar</span>
