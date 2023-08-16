@@ -86,6 +86,8 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
+    debugPrint("Card Activation: Sending request with overwriteExisting=$overwriteExisting.");
+
     final activationResult = await activateCode(
       client: client,
       projectId: projectId,
@@ -100,6 +102,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
+        debugPrint("Card Activation: Successfully activated.");
 
         provider.setCode(DynamicUserCode()
           ..info = activationCode.info
@@ -119,9 +122,11 @@ class ActivationCodeScannerPage extends StatelessWidget {
         if (overwriteExisting) {
           throw const ActivationDidNotOverwriteExisting();
         }
-        await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context, () {
-          _activateCode(context, activationCode, true);
-        });
+        debugPrint(
+            "Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.");
+        if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context)) {
+          await _activateCode(context, activationCode, overwriteExisting = true);
+        }
         break;
       default:
         throw const ServerCardActivationException(
