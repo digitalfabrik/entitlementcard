@@ -136,7 +136,7 @@ const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof 
     const regions = query.data.regions
     return (
       <StyledAlert severity='warning'>
-        Ihre Postleitzahl ist nicht eindeutig zuzuordnen. Bitte wählen Ihre zustände Behörde aus der Auswahlliste:
+        Ihre Postleitzahl ist nicht eindeutig zuzuordnen. Bitte wählen Sie Ihre zuständige Behörde aus der Auswahlliste:
         <StyledRegionsList>
           {regions.map(region => (
             <li>{`${region.name} (${region.prefix})`}</li>
