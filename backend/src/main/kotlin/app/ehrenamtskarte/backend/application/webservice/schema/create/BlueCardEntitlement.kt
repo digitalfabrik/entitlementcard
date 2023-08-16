@@ -59,16 +59,18 @@ data class BlueCardWorkAtOrganizationsEntitlement(
 data class BlueCardJuleicaEntitlement(
     val juleicaNumber: ShortTextInput,
     val juleicaExpirationDate: DateInput,
-    val copyOfJuleica: Attachment
+    val copyOfJuleicaFront: Attachment,
+    val copyOfJuleicaBack: Attachment?
 ) : JsonFieldSerializable {
     override fun toJsonField() = JsonField(
         name = "blueCardJuleicaEntitlement",
         type = Type.Array,
         translations = mapOf("de" to "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)"),
-        value = listOf(
+        value = listOfNotNull(
             juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
             juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
-            copyOfJuleica.toJsonField("copyOfJuleica", mapOf("de" to "Kopie der Karte"))
+            copyOfJuleicaFront.toJsonField("copyOfJuleicaFront", mapOf("de" to "Kopie der Karte (1)")),
+            copyOfJuleicaBack?.toJsonField("copyOfJuleicaBack", mapOf("de" to "Kopie der Karte (2)"))
         )
     )
 }

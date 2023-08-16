@@ -327,7 +327,8 @@ input BlueCardEntitlementInput {
 }
 
 input BlueCardJuleicaEntitlementInput {
-  copyOfJuleica: AttachmentInput!
+  copyOfJuleicaBack: AttachmentInput
+  copyOfJuleicaFront: AttachmentInput!
   juleicaExpirationDate: DateInput!
   juleicaNumber: ShortTextInput!
 }
