@@ -15,7 +15,8 @@ object PostalCodesLoader {
                     postalCodes.add(record[1] to '0' + record[0].substring(0, 4))
                 }
             }
-            return postalCodes
+            // Since we shorten region codes we have to remove duplicate pairs
+            return postalCodes.toSet().toList()
         } catch (e: Exception) {
             throw Exception("Couldn't read CSV", e)
         }
