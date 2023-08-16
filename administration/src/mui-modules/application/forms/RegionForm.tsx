@@ -139,7 +139,7 @@ const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof 
         Ihre Postleitzahl ist nicht eindeutig zuzuordnen. Bitte wählen Ihre zustände Behörde aus der Auswahlliste:
         <StyledRegionsList>
           {regions.map(region => (
-            <li>{`${region.prefix} ${region.name}`}</li>
+            <li>{`${region.name} (${region.prefix})`}</li>
           ))}
         </StyledRegionsList>
       </StyledAlert>
