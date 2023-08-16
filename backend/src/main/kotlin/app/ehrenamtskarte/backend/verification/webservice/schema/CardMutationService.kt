@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
+import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
@@ -25,9 +26,11 @@ import java.util.Base64
 @Suppress("unused")
 class CardMutationService {
     @GraphQLDescription("Stores a batch of new digital entitlementcards")
-    fun addCards(dfe: DataFetchingEnvironment, cards: List<CardGenerationModel>): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
-
+    fun addCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardGenerationModel>): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user =
                 AdministratorEntity.findById(jwtPayload.adminId)
@@ -61,6 +64,7 @@ class CardMutationService {
                 )
             }
         }
+        Matomo.trackCreateCards(projectConfig, cards)
         return true
     }
 

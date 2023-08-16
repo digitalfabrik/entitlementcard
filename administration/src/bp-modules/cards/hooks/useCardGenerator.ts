@@ -43,7 +43,7 @@ const useCardGenerator = (region: Region) => {
       const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, cardBlueprints, region, projectConfig.pdf)
 
       const codes = [...dynamicCodes, ...staticCodes]
-      await createCards(client, codes, region)
+      await createCards(client, projectConfig.projectId, codes, region)
 
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
