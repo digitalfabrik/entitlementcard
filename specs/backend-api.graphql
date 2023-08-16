@@ -183,7 +183,7 @@ type Query {
   regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
-  "Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
   regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!

@@ -114,7 +114,6 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
 }
 
 const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionsByPostalCodeQuery>) => {
-  console.log(query)
   if (state.region.manuallySelected) return null
   else if (postalCode.length !== 5) {
     return (

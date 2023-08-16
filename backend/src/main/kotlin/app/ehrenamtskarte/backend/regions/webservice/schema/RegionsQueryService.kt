@@ -47,7 +47,7 @@ class RegionsQueryService {
         )
     }
 
-    @GraphQLDescription("Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
+    @GraphQLDescription("Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
     fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> = transaction {
         val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode.filter { pair -> pair.first.equals(postalCode) }
         if (regions.isEmpty()) {
