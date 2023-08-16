@@ -148,7 +148,7 @@ object Mailer {
             projectConfig.smtp,
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
-            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte",
+            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [${applicationVerification.contactName}]",
             message
         )
     }
