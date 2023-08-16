@@ -13,7 +13,7 @@ data class GraphQLContext(
     val files: List<Part>,
     val remoteIp: String,
     val backendConfiguration: BackendConfiguration,
-    val regionIdentifierByPostalCode: Map<String, String>
+    val regionIdentifierByPostalCode: List<Pair<String, String>>
 ) : GraphQLContext {
 
     fun enforceSignedIn(): JwtPayload {

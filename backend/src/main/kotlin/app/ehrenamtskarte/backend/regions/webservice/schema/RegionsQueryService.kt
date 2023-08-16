@@ -48,20 +48,30 @@ class RegionsQueryService {
     }
 
     @GraphQLDescription("Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
-    fun regionByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): Region = transaction {
-        val regionIdentifier = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode[postalCode]
-            ?: throw RegionNotFoundException()
+    fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> = transaction {
+        val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode.filter { pair -> pair.first.equals(postalCode) }
+        if (regions.isEmpty()) {
+            throw RegionNotFoundException()
+        }
+
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw ProjectNotFoundException(project)
-        val regionEntity = RegionsRepository.findRegionByRegionIdentifier(regionIdentifier, projectEntity.id)
-        Region(
-            regionEntity.id.value,
-            regionEntity.prefix,
-            regionEntity.name,
-            regionEntity.regionIdentifier,
-            regionEntity.dataPrivacyPolicy,
-            regionEntity.activatedForApplication
-        )
+
+        val regionEntities = regions.map {
+                region ->
+            RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
+        }
+
+        regionEntities.map {
+            Region(
+                it.id.value,
+                it.prefix,
+                it.name,
+                it.regionIdentifier,
+                it.dataPrivacyPolicy,
+                it.activatedForApplication
+            )
+        }
     }
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))

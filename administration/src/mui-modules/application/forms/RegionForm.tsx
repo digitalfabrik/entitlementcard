@@ -2,7 +2,7 @@ import { Alert, CircularProgress, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { useContext, useEffect } from 'react'
 
-import { Region, useGetRegionByPostalCodeQuery } from '../../../generated/graphql'
+import { Region, useGetRegionsByPostalCodeQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
@@ -12,6 +12,11 @@ import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialS
 const StyledAlert = styled(Alert)`
   margin: 16px 0;
   transition: background-color 0.2s, color 0.2s;
+`
+
+const StyledRegionsList = styled('ul')`
+  margin-block-start: 4px;
+  margin-block-end: 4px;
 `
 
 const SubForms = {
@@ -43,15 +48,18 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState, options, postalCode }) => {
     const setRegionState = useUpdateStateCallback(setState, 'region')
     const project = useContext(ProjectConfigContext).projectId
-    const regionQuery = useGetRegionByPostalCodeQuery({
+    const regionQuery = useGetRegionsByPostalCodeQuery({
       onCompleted: result => {
-        setState(prevState => {
-          if (prevState.region.manuallySelected) return prevState
-          return {
-            region: { selectedValue: result.region.id.toString(), manuallySelected: false },
-            postalCodeUsedForAutoSelect: postalCode,
-          }
-        })
+        if (result.regions.length === 1) {
+          const region = result.regions[0]
+          setState(prevState => {
+            if (prevState.region.manuallySelected) return prevState
+            return {
+              region: { selectedValue: region.id.toString(), manuallySelected: false },
+              postalCodeUsedForAutoSelect: postalCode,
+            }
+          })
+        }
       },
       variables: { postalCode, project },
       skip: postalCode.length !== 5 || state.region.manuallySelected,
@@ -105,7 +113,8 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   },
 }
 
-const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionByPostalCodeQuery>) => {
+const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionsByPostalCodeQuery>) => {
+  console.log(query)
   if (state.region.manuallySelected) return null
   else if (postalCode.length !== 5) {
     return (
@@ -121,6 +130,18 @@ const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof 
       <StyledAlert severity='warning'>
         Leider konnte die zuständige Behörde nicht automatisch anhand Ihrer Postleitzahl ermittelt werden. <br />
         Bitte nutzen Sie das folgende Auswahlfeld, um Ihre zuständige Behörde auszuwählen.
+      </StyledAlert>
+    )
+  } else if (query.data && query.data.regions?.length > 1) {
+    const regions = query.data.regions
+    return (
+      <StyledAlert severity='warning'>
+        Ihre Postleitzahl ist nicht eindeutig zuzuordnen. Bitte wählen Ihre zustände Behörde aus der Auswahlliste:
+        <StyledRegionsList>
+          {regions.map(region => (
+            <li>{`${region.prefix} ${region.name}`}</li>
+          ))}
+        </StyledRegionsList>
       </StyledAlert>
     )
   } else if (query.data) {
