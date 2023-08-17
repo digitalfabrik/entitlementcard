@@ -1,8 +1,10 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
+import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -56,6 +58,10 @@ class RegionsQueryService {
 
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw ProjectNotFoundException(project)
+
+        if (projectEntity.project != EAK_BAYERN_PROJECT) {
+            throw NotEakProjectException()
+        }
 
         val regionEntities = regions.map {
                 region ->
