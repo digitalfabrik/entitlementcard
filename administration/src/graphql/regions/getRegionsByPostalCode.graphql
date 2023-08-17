@@ -1,0 +1,8 @@
+query getRegionsByPostalCode($postalCode: String!, $project: String!) {
+  regions: regionsByPostalCode(postalCode: $postalCode, project: $project) {
+    id
+    name
+    prefix
+    activatedForApplication
+  }
+}
