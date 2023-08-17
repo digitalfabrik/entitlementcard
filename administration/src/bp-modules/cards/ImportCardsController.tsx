@@ -60,9 +60,9 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       headers.forEach(header => {
         const idx = csvHeader.indexOf(header)
         if (idx === -1) {
+          // column is missing in csv
           return
         }
-        // column is missing in csv
         cardBlueprint.setValue(header, line[idx])
       })
       return cardBlueprint
