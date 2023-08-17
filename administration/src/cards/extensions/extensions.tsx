@@ -8,6 +8,7 @@ import BirthdayExtension from './BirthdayExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from './NuernbergPassNumberExtension'
 import RegionExtension from './RegionExtension'
+import StartDayExtension from './StartDayExtension'
 
 export const findExtension = <E extends ExtensionClass>(
   array: ExtensionInstance[],
@@ -39,5 +40,6 @@ export type ExtensionClass =
   | typeof NuernbergPassNumberExtension
   | typeof NuernbergPassIdExtension
   | typeof RegionExtension
+  | typeof StartDayExtension
   | (typeof AddressExtensions)[number]
 export type ExtensionInstance = InstanceType<ExtensionClass>
