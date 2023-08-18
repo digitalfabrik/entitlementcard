@@ -44,7 +44,6 @@ type CreateCardsFormProps = {
 
 const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCardsFormProps) => {
   const projectConfig = useContext(ProjectConfigContext)
-  // http://localhost:3000/cards/add?name=Thea+Test&
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {

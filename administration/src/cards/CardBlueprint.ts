@@ -88,8 +88,8 @@ export class CardBlueprint {
     return this.expirationDate !== null && this.expirationDate.isAfter(today)
   }
 
-  setExpirationDate = (value: string) => {
-    if (value.length === 0) return null
+  setExpirationDate(value: string) {
+    if (value.length === 0) return
     try {
       this.expirationDate = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
     } catch (error) {
