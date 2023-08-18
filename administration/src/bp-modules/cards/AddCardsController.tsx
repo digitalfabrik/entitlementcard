@@ -1,6 +1,6 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useContext, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'

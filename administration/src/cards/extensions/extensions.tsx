@@ -2,7 +2,7 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
-import AddressExtensions from './AddressFieldExtensons'
+import AddressExtensions from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'

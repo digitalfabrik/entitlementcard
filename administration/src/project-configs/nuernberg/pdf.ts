@@ -1,6 +1,6 @@
 import { PDFForm, rgb } from 'pdf-lib'
 
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'

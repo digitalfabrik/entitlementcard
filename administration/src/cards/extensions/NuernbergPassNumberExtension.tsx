@@ -61,7 +61,8 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
   }
 
   fromString(state: string) {
-    this.state = { passNumber: parseInt(state, 10) }
+    const passNumber = parseInt(state, 10)
+    this.state = !isNaN(passNumber) ? { passNumber } : null
   }
 
   toString() {
