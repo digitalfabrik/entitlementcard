@@ -1,5 +1,16 @@
-import { Alert, Button, Callout, Card, Divider, H4, NonIdealState, ResizeSensor } from '@blueprintjs/core'
-import React, { FunctionComponent, useContext, useState } from 'react'
+import {
+  Alert,
+  AnchorButton,
+  Button,
+  ButtonGroup,
+  Callout,
+  Card,
+  Divider,
+  H4,
+  NonIdealState,
+  ResizeSensor,
+} from '@blueprintjs/core'
+import React, { FunctionComponent, useContext, useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled, { css } from 'styled-components'
 
@@ -9,7 +20,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
-import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
+import JsonFieldView, { JsonField } from './JsonFieldView'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 import usePrintApplication from './hooks/usePrintApplication'
 
@@ -66,6 +77,12 @@ const PrintAwareButton = styled(Button)`
   }
 `
 
+const PrintAwareAnchorButton = styled(AnchorButton)`
+   @media print {
+    display: none;
+  } 
+`
+
 const ApplicationView: FunctionComponent<{
   application: Application
   gotDeleted: () => void
@@ -73,7 +90,7 @@ const ApplicationView: FunctionComponent<{
   isSelectedForPrint: boolean
 }> = ({ application, gotDeleted, printApplicationById, isSelectedForPrint }) => {
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
-  const jsonField: GeneralJsonField = JSON.parse(jsonValue)
+  const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const [collapsed, setCollapsed] = useState(false)
@@ -93,6 +110,11 @@ const ApplicationView: FunctionComponent<{
       }
     },
   })
+
+  const createCardQuery = useMemo(
+    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField) ?? '',
+    [config.applicationFeature, jsonField]
+  )
 
   const handleResize = (entries: ResizeObserverEntry[]) => {
     setHeight(entries[0].contentRect.height)
@@ -137,17 +159,22 @@ const ApplicationView: FunctionComponent<{
               justifyContent: 'space-between',
               marginTop: '20px',
             }}>
-            {height > COLLAPSED_HEIGHT ? (
-              <PrintAwareButton onClick={() => setCollapsed(true)} icon='caret-up'>
-                Weniger anzeigen
+            <ButtonGroup fill alignText='left'>
+              {height > COLLAPSED_HEIGHT ? (
+                <PrintAwareButton onClick={() => setCollapsed(true)} icon='caret-up'>
+                  Weniger anzeigen
+                </PrintAwareButton>
+              ) : null}
+              <PrintAwareButton onClick={() => printApplicationById(id)} intent='primary' icon='print'>
+                PDF exportieren
               </PrintAwareButton>
-            ) : null}
-            <PrintAwareButton onClick={() => printApplicationById(id)} intent='primary' icon='print'>
-              PDF exportieren
-            </PrintAwareButton>
-            <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
-              Antrag löschen
-            </PrintAwareButton>
+              <PrintAwareAnchorButton href={'./cards/add' + createCardQuery} icon='id-number' intent='primary'>
+                Karte erstellen
+              </PrintAwareAnchorButton>
+              <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
+                Antrag löschen
+              </PrintAwareButton>
+            </ButtonGroup>
             <Alert
               cancelButtonText='Abbrechen'
               confirmButtonText='Antrag löschen'

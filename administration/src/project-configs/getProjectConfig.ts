@@ -1,5 +1,6 @@
 import { ReactElement, ReactNode } from 'react'
 
+import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
@@ -34,10 +35,14 @@ export interface CardConfig {
   extensions: ExtensionClass[]
 }
 
+export interface ApplicationFeature {
+  applicationJsonToCardQuery: (json: JsonField<'Array'>) => string
+}
+
 export interface ProjectConfig {
   name: string
   projectId: string
-  applicationFeatureEnabled: boolean
+  applicationFeature?: ApplicationFeature
   staticQrCodesEnabled: boolean
   card: CardConfig
   dataPrivacyHeadline: string

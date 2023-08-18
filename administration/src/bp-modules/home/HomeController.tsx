@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const HomeController = () => {
-  const { applicationFeatureEnabled } = useContext(ProjectConfigContext)
+  const { applicationFeature } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -26,7 +26,7 @@ const HomeController = () => {
       <H3>Wählen Sie eine Aktion aus:</H3>
       {role === Role.RegionAdmin || role === Role.RegionManager ? (
         <>
-          {applicationFeatureEnabled ? (
+          {applicationFeature ? (
             <NavLink to={'/applications'}>
               <StyledButton icon='form' text='Eingehende Anträge' />
             </NavLink>
@@ -43,7 +43,7 @@ const HomeController = () => {
           </NavLink>
         </>
       ) : null}
-      {role === Role.RegionAdmin && applicationFeatureEnabled ? (
+      {role === Role.RegionAdmin && applicationFeature ? (
         <NavLink to={'/region'}>
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>

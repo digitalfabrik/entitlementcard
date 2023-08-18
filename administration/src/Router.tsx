@@ -43,7 +43,7 @@ const Router = () => {
       { path: '/forgot-password', element: <ForgotPasswordController /> },
       { path: '/reset-password/', element: <ResetPasswordController /> },
       { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
-      ...(projectConfig.applicationFeatureEnabled
+      ...(projectConfig.applicationFeature
         ? [
             { path: '/beantragen', element: <ApplyController /> },
             {
@@ -68,7 +68,7 @@ const Router = () => {
           </WhoAmIProvider>
         ),
         children: [
-          ...(projectConfig.applicationFeatureEnabled
+          ...(projectConfig.applicationFeature
             ? [
                 { path: 'applications', element: <ApplicationsController /> },
                 { path: 'region/data-privacy-policy', element: <DataPrivacyController /> },
@@ -86,7 +86,7 @@ const Router = () => {
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [authData, projectConfig.applicationFeatureEnabled, signIn, signOut])
+  }, [authData, projectConfig.applicationFeature, signIn, signOut])
 
   return <RouterProvider router={router} />
 }

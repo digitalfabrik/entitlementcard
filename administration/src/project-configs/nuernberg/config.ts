@@ -12,7 +12,6 @@ import pdfConfig from './pdf'
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
   projectId: 'nuernberg.sozialpass.app',
-  applicationFeatureEnabled: false,
   staticQrCodesEnabled: true,
   card: {
     nameColumnName: 'Name',
