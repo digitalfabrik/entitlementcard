@@ -12,7 +12,8 @@ class StartDayExtension extends Extension<StartDayState, null> {
   public readonly name = StartDayExtension.name
 
   setInitialState() {
-    this.state = { startDay: initialMinStartDayDate.toDaysSinceEpoch() }
+    const today = PlainDate.fromLocalDate(new Date())
+    this.state = { startDay: today.toDaysSinceEpoch() }
   }
 
   hasValidStartDayDate(startDay?: number): boolean {
