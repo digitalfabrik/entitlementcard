@@ -35,6 +35,9 @@ object Cards : IntIdTable() {
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
     val codeType = enumeration("codeType", CodeType::class)
     val firstActivationDate = timestamp("firstActivationDate").nullable()
+    // startDay describes the first day on which the card is valid.
+    // If this field is null, the card is valid until `expirationDay` without explicitly stating when the validity period started.
+    // Days since 1970-01-01. For more information refer to the card.proto,
     val startDay = long("startDay").nullable()
 
     init {
