@@ -86,7 +86,7 @@ class CardMutationService {
             val activationSecretHash = card?.activationSecretHash
 
             if (card == null || activationSecretHash == null) {
-                logger.info("${context.remoteIp} failed to activate card, card not found with cardHash:$cardHash")
+                logger.info("${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64")
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
