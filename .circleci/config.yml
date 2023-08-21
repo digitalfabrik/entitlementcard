@@ -346,7 +346,7 @@ jobs:
           command: npm run lint
       - run:
           name: Test
-          command: npm run test --maxWorkers 2
+          command: npm run test -- --maxWorkers=2
       - run:
           name: Build
           command: npm run build
