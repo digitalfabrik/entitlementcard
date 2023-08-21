@@ -193,4 +193,27 @@ describe('hashCardInfo', () => {
 
     expect(uint8ArrayToBase64(hash)).toBe('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
   })
+
+  it('should be stable for a Nuernberg Pass with startDay', async () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
+          passNumber: 99999999,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
+    const hash = await hashCardInfo(cardInfo, pepper)
+
+    expect(uint8ArrayToBase64(hash)).toBe('1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=')
+  })
 })

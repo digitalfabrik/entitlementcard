@@ -55,4 +55,41 @@ void main() {
       expect(cardInfo.hash(pepper), '1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=');
     });
   });
+
+  group("isCardNotYetValid", () {
+    test("should return true if startDay is in the future", () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 70));
+      expect(isCardNotYetValid(cardInfo), true);
+    });
+
+    test("should return false if startDay is in the past", () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 30));
+      expect(isCardNotYetValid(cardInfo), false);
+    });
+
+    test("should be return false if no startDay was set", () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999));
+      expect(isCardNotYetValid(cardInfo), false);
+    });
+  });
 }

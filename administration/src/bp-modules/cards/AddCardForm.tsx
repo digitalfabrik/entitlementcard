@@ -4,6 +4,7 @@ import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
+import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ExtensionInstance } from '../../cards/extensions/extensions'
 import PlainDate from '../../util/PlainDate'
 
@@ -18,6 +19,7 @@ const CardHeader = styled.div`
 interface ExtensionFormProps {
   extension: ExtensionInstance
   onUpdate: () => void
+  hasFormDependencyError?: boolean
 }
 
 interface CreateCardsFormProps {
@@ -26,17 +28,25 @@ interface CreateCardsFormProps {
   onRemove: () => void
 }
 
-const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
+const ExtensionForm = ({ extension, onUpdate, hasFormDependencyError }: ExtensionFormProps) => {
   return extension.createForm(() => {
     onUpdate()
-  })
+  }, hasFormDependencyError)
 }
 
 const maxCardValidity = { years: 99 }
 const hasCardExpirationError = (expirationDate: PlainDate): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
-
   return expirationDate.isBefore(today) || expirationDate.isAfter(today.add(maxCardValidity))
+}
+
+const hasStartAfterExpiryDateError = (expirationDate: PlainDate, extensions: ExtensionInstance[]): boolean => {
+  const startDayExtension = extensions.find(el => el.name === 'StartDayExtension') as StartDayExtension | undefined
+  if (startDayExtension?.state?.startDay) {
+    const startDay = PlainDate.fromDaysSinceEpoch(startDayExtension.state.startDay)
+    return startDay.isAfter(expirationDate)
+  }
+  return false
 }
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
@@ -87,7 +97,12 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
         />
       </FormGroup>
       {cardBlueprint.extensions.map((ext, i) => (
-        <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} />
+        <ExtensionForm
+          key={i}
+          extension={ext}
+          onUpdate={onUpdate}
+          hasFormDependencyError={hasStartAfterExpiryDateError(cardBlueprint.expirationDate!, cardBlueprint.extensions)}
+        />
       ))}
     </Card>
   )

@@ -18,13 +18,13 @@ object CardVerifier {
     public fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
-        !card.revoked
+            !card.revoked
     }
 
     public fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
-        !card.revoked &&
+            !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
 

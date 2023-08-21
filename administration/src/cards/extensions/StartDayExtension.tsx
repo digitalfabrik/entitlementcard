@@ -16,18 +16,11 @@ class StartDayExtension extends Extension<StartDayState, null> {
     this.state = { startDay: today.toDaysSinceEpoch() }
   }
 
-  hasValidStartDayDate(startDay?: number): boolean {
-    if (startDay === undefined) {
-      return false
-    }
-    const date = PlainDate.fromDaysSinceEpoch(startDay)
-    const today = PlainDate.fromLocalDate(new Date())
-    return !date.isBefore(today)
-  }
-
-  createForm(onUpdate: () => void) {
+  createForm(onUpdate: () => void, hasFormDependencyError?: boolean) {
     const startDayDate =
-      this.state?.startDay !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.startDay) : PlainDate.fromLocalDate(new Date())
+      this.state?.startDay !== undefined
+        ? PlainDate.fromDaysSinceEpoch(this.state.startDay)
+        : PlainDate.fromLocalDate(new Date())
 
     return (
       <FormGroup label='Startdatum'>
@@ -36,7 +29,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
           type='date'
           required
           size='small'
-          error={!this.isValid()}
+          error={!this.isValid() || hasFormDependencyError}
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
@@ -69,7 +62,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
   }
 
   isValid() {
-    return this.state !== null && this.hasValidStartDayDate(this.state.startDay)
+    return this.state?.startDay !== undefined
   }
 
   /**
