@@ -324,13 +324,12 @@ jobs:
 
   administration-build:
     docker:
-      - image: cimg/node:19.1.0-browsers
+      - image: cimg/node:19.1.0
     environment: 
     working_directory: ~/project/administration
     steps:
       - checkout:
           path: ~/project
-      - browser-tools/install-chrome
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
@@ -347,7 +346,7 @@ jobs:
           command: npm run lint
       - run:
           name: Test
-          command: npm run test --runInBand
+          command: npm run test --maxWorkers 2
       - run:
           name: Build
           command: npm run build
