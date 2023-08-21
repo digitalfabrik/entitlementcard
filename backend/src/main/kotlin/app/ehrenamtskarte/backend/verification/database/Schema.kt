@@ -27,6 +27,7 @@ object Cards : IntIdTable() {
 
     // Days since 1970-01-01. For more information refer to the card.proto,
     // Using long because unsigned ints are not available, but we want to be able to represent them.
+    // If this field is null, the card is valid forever.
     val expirationDay = long("expirationDay").nullable()
     val issueDate = timestamp("issueDate").defaultExpression(CurrentTimestamp())
     val revoked = bool("revoked")

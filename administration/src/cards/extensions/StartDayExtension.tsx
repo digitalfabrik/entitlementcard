@@ -21,12 +21,13 @@ class StartDayExtension extends Extension<StartDayState, null> {
       return false
     }
     const date = PlainDate.fromDaysSinceEpoch(startDay)
-    return !date.isBefore(initialMinStartDayDate)
+    const today = PlainDate.fromLocalDate(new Date())
+    return !date.isBefore(today)
   }
 
   createForm(onUpdate: () => void) {
     const startDayDate =
-      this.state?.startDay !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.startDay) : initialMinStartDayDate
+      this.state?.startDay !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.startDay) : PlainDate.fromLocalDate(new Date())
 
     return (
       <FormGroup label='Startdatum'>
@@ -39,7 +40,6 @@ class StartDayExtension extends Extension<StartDayState, null> {
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
-            min: initialMinStartDayDate.toString(),
             style: { fontSize: 14, padding: '6px 10px' },
           }}
           onChange={e => {

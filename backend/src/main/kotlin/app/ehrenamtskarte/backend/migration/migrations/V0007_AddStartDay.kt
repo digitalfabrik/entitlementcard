@@ -4,8 +4,7 @@ import app.ehrenamtskarte.backend.migration.Migration
 import app.ehrenamtskarte.backend.migration.Statement
 
 /**
- * Add firstActivationDate column to cards.
- * Set current_timestamp for firstActivationDate for existing active cards since we have no firstActivationDate for them.
+ * Add startDay column to cards. startDay can be null.
  */
 @Suppress("ClassName")
 internal class V0007_AddStartDay() : Migration() {
