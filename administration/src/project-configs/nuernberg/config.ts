@@ -1,4 +1,4 @@
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'

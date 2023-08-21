@@ -30,8 +30,10 @@ export class CardBlueprint {
   fullName: string
   expirationDate: PlainDate | null
   extensions: ExtensionInstance[]
+  cardConfig: CardConfig
 
   constructor(fullName: string, cardConfig: CardConfig, initParams?: Parameters<CardBlueprint['initialize']>) {
+    this.cardConfig = cardConfig
     this.fullName = fullName
     this.expirationDate =
       cardConfig.defaultValidity && initParams
@@ -41,6 +43,23 @@ export class CardBlueprint {
     this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
     if (initParams) {
       this.initialize(...initParams)
+    }
+  }
+
+  setValue(key: string, value: string): void {
+    switch (key) {
+      case this.cardConfig.nameColumnName:
+        this.fullName = value
+        break
+      case this.cardConfig.expiryColumnName:
+        this.setExpirationDate(value)
+        break
+      default:
+        const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
+        if (extensionIdx === -1) {
+          return
+        }
+        this.extensions[extensionIdx].fromString(value)
     }
   }
 
@@ -67,6 +86,15 @@ export class CardBlueprint {
   isExpirationDateValid(): boolean {
     const today = PlainDate.fromLocalDate(new Date())
     return this.expirationDate !== null && this.expirationDate.isAfter(today)
+  }
+
+  setExpirationDate(value: string) {
+    if (value.length === 0) return
+    try {
+      this.expirationDate = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+    } catch (error) {
+      console.error("Could not parse date from string '" + value + "' with format dd.MM.yyyy.", error)
+    }
   }
 
   isValid(): boolean {

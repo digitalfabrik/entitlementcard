@@ -15,7 +15,8 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "isolatedModules": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["node", "jest"]
   },
   "include": [
     "src",

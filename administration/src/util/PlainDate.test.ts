@@ -25,7 +25,7 @@ describe('PlainDate.toDaysSinceEpoch', () => {
 
 describe('PlainDate.fromDaysSinceEpoch', () => {
   it('should return epoch for 0', () => {
-    expect(PlainDate.fromDaysSinceEpoch(0).toString()).toEqual('1970-01-01')
+    expect(PlainDate.fromDaysSinceEpoch(0).toString()).toBe('1970-01-01')
   })
 
   it('should not have an off-by-one error', () => {
@@ -34,11 +34,11 @@ describe('PlainDate.fromDaysSinceEpoch', () => {
   })
 
   it('should return the day after epoch for 1', () => {
-    expect(PlainDate.fromDaysSinceEpoch(1).toString()).toEqual('1970-01-02')
+    expect(PlainDate.fromDaysSinceEpoch(1).toString()).toBe('1970-01-02')
   })
 
   it('should return the day before epoch for -1', () => {
-    expect(PlainDate.fromDaysSinceEpoch(-1).toString()).toEqual('1969-12-31')
+    expect(PlainDate.fromDaysSinceEpoch(-1).toString()).toBe('1969-12-31')
   })
 
   it('should return the epoch day in the correct custom format for 0', () => {

@@ -80,10 +80,9 @@ const Component = <I,>({
       return
     }
     const fileType = file.type as keyof typeof defaultExtensionsByMIMEType
-    const name = 'file' + defaultExtensionsByMIMEType[fileType]
     const arrayBuffer = await file.arrayBuffer()
     const key = globalArrayBuffersManager.addArrayBuffer(arrayBuffer)
-    setState(() => ({ MIMEType: fileType, filename: name, arrayBufferKey: key }))
+    setState(() => ({ MIMEType: fileType, filename: file.name, arrayBufferKey: key }))
   }
 
   useEffect(() => {
@@ -113,7 +112,7 @@ const Component = <I,>({
 
   return (
     <Chip
-      label={`Datei angehängt`}
+      label={state.filename}
       icon={<Attachment />}
       onDelete={disableAllInputs ? undefined : () => setState(() => null)}
     />
