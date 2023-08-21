@@ -57,7 +57,8 @@ class CardMutationService {
                     card.cardExpirationDay,
                     card.regionId,
                     user.id.value,
-                    card.codeType
+                    card.codeType,
+                    card.cardStartDay
                 )
             }
         }

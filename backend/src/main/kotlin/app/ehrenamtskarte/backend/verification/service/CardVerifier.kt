@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.service
 
 import app.ehrenamtskarte.backend.verification.ValidityPeriodUtil.Companion.daysSinceEpochToDate
+import app.ehrenamtskarte.backend.verification.ValidityPeriodUtil.Companion.isOnOrAfterToday
 import app.ehrenamtskarte.backend.verification.ValidityPeriodUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
@@ -16,19 +17,23 @@ const val TOTP_LENGTH = 6
 object CardVerifier {
     public fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
-        return !isExpired(card.expirationDay, timezone) &&
-            !card.revoked
+        return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
+        !card.revoked
     }
 
     public fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
-        return !isExpired(card.expirationDay, timezone) &&
-            !card.revoked &&
+        return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
+        !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
 
     public fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
         return expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
+    }
+
+    public fun isYetValid(startDay: Long?, timezone: ZoneId): Boolean {
+        return startDay === null || isOnOrAfterToday(daysSinceEpochToDate(startDay), timezone)
     }
 
     private fun isTotpValid(totp: Int, secret: ByteArray?): Boolean {

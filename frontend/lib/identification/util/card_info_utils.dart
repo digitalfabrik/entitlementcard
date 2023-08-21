@@ -40,7 +40,7 @@ bool cardWasVerifiedLately(CardVerification cardVerification) {
           .add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)));
 }
 
-bool isCardStillInvalid(CardInfo cardInfo) {
+bool isCardNotYetValid(CardInfo cardInfo) {
   final startingDay =
       cardInfo.extensions.hasExtensionStartDay() ? cardInfo.extensions.extensionStartDay.startDay : null;
   return startingDay == null

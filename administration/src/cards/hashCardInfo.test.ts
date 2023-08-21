@@ -6,6 +6,7 @@ import {
   CardInfo,
   NuernbergPassNumberExtension,
   RegionExtension,
+  StartDayExtension,
 } from '../generated/card_pb'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 import hashCardInfo, { messageToJsonObject } from './hashCardInfo'
@@ -96,6 +97,36 @@ describe('messageToJsonObject', () => {
         '1': { '1': '93' }, // extensionRegion
         '2': { '1': '-3650' }, // extensionBirthday
         '3': { '1': '99999999' }, // extensionNuernbergPassNumber
+      },
+    })
+  })
+
+  it('should map a cardInfo for a Nuernberg Pass with startDay correctly', () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
+          passNumber: 99999999,
+        }),
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+
+    expect(messageToJsonObject(cardInfo)).toEqual({
+      '1': 'Max Mustermann',
+      '2': '14600',
+      '3': {
+        '1': { '1': '93' }, // extensionRegion
+        '2': { '1': '-3650' }, // extensionBirthday
+        '3': { '1': '99999999' }, // extensionNuernbergPassNumber
+        '5': { '1': '730' }, // extensionStartDay
       },
     })
   })

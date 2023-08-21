@@ -8,5 +8,6 @@ data class CardGenerationModel constructor(
     // Using Long because UInt is not supported, and a protobuf uint32 is not representable by a Kotlin Int
     val cardExpirationDay: Long?,
     val regionId: Int,
-    val codeType: CodeType
+    val codeType: CodeType,
+    val cardStartDay: Long?
 )

@@ -28,6 +28,7 @@ async function createCards(client: ApolloClient<object>, activationCodes: Codes,
       const codeType = code instanceof DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
       const cardInfoHash = await hashCardInfo(code.info!, code.pepper)
       const expirationDay = code.info!.expirationDay
+      const startDay = code.info!.extensions?.extensionStartDay?.startDay
       const activationSecretBase64 =
         code instanceof DynamicActivationCode ? uint8ArrayToBase64(code.activationSecret) : null
       return {
@@ -36,6 +37,7 @@ async function createCards(client: ApolloClient<object>, activationCodes: Codes,
         activationSecretBase64: activationSecretBase64,
         regionId: region.id,
         codeType,
+        cardStartDay: startDay,
       }
     })
   )

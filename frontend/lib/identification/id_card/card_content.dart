@@ -41,10 +41,10 @@ class CardContent extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
   final bool isExpired;
-  final bool isStillInvalid;
+  final bool isNotYetValid;
 
   const CardContent(
-      {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isStillInvalid});
+      {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isNotYetValid});
 
   String get _formattedExpirationDate {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
@@ -187,7 +187,7 @@ class CardContent extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.only(top: 3.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -207,13 +207,13 @@ class CardContent extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.only(top: 3.0),
                               child: Text(
                                 _getCardValidityDate(startDate, _formattedExpirationDate),
                                 style: TextStyle(
                                     fontSize: 14 * scaleFactor,
                                     color:
-                                        isExpired || isStillInvalid ? Theme.of(context).colorScheme.error : textColor),
+                                        isExpired || isNotYetValid ? Theme.of(context).colorScheme.error : textColor),
                                 textAlign: TextAlign.start,
                               ),
                             ),
