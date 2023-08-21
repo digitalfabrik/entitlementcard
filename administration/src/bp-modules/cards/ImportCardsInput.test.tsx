@@ -54,10 +54,11 @@ describe('ImportCardsInput', () => {
     const fileInput = getByTestId('file-upload') as HTMLInputElement
     fireEvent.change(fileInput, { target: { files: [file] } })
 
-    await act(async () => {
+    act(() => {
       fireEvent.input(fileInput)
-      await waitFor(() => expect(fileReaderMock.readAsText).toHaveBeenCalledTimes(1))
     })
+
+    await waitFor(() => expect(fileReaderMock.readAsText).toHaveBeenCalledTimes(1))
   }
 
   it.each([
