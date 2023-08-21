@@ -8,9 +8,6 @@ import { Extension } from './extensions'
 
 type StartDayState = { startDay: number }
 
-const today = PlainDate.fromLocalDate(new Date())
-const initialMinStartDayDate = new PlainDate(today.isoYear, today.isoMonth, today.day)
-
 class StartDayExtension extends Extension<StartDayState, null> {
   public readonly name = StartDayExtension.name
 
