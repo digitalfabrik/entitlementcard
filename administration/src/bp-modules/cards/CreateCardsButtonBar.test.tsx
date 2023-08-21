@@ -6,7 +6,7 @@ import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 describe('CreateCardsButtonBar', () => {
   it('Should goBack when clicking back', () => {
-    const goBack = jasmine.createSpy()
+    const goBack = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar goBack={goBack} cardBlueprints={[]} generateCards={() => Promise.resolve()} />
     )
@@ -20,7 +20,7 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should disable generate button for no cards', () => {
-    const generateCards = jasmine.createSpy()
+    const generateCards = jest.fn()
     const { getByText, findByText } = render(
       <CreateCardsButtonBar goBack={() => {}} cardBlueprints={[]} generateCards={generateCards} />
     )
@@ -37,7 +37,7 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should disable generate button for invalid cards', () => {
-    const generateCards = jasmine.createSpy()
+    const generateCards = jest.fn()
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
     const { getByText, findByText } = render(
       <CreateCardsButtonBar goBack={() => {}} cardBlueprints={cards} generateCards={generateCards} />
@@ -55,7 +55,7 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should generate valid cards', () => {
-    const generateCards = jasmine.createSpy()
+    const generateCards = jest.fn()
     const region = {
       id: 0,
       name: 'augsburg',

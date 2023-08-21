@@ -4,13 +4,9 @@ import CardBlueprint from './CardBlueprint'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
 
-describe('CardBlueprint', () => {
-  beforeEach(() => {
-    jasmine.clock().install()
-    jasmine.clock().mockDate(new Date('2020-01-01'))
-  })
+jest.useFakeTimers({ now: new Date('2020-01-01') })
 
-  afterEach(() => jasmine.clock().uninstall())
+describe('CardBlueprint', () => {
   const region = {
     id: 0,
     name: 'augsburg',
