@@ -148,7 +148,7 @@ enum CardStatus {
   invalid,
   // In any other case, we assume the card is valid and show the dynamic QR code
   valid,
-  // The validity period didn't start yet
+  // The validity period didn't start yet according to the clock of the local device
   notYetValid;
 
   factory CardStatus.from(DynamicUserCode code) {
