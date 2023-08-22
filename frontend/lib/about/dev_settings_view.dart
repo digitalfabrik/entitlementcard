@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -51,6 +52,8 @@ class DevSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
+    final client = GraphQLProvider.of(context).value;
+    final userCodeModel = Provider.of<UserCodeModel>(context);
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -74,6 +77,10 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
             title: const Text('Set expired last card verification'),
             onTap: () => _setExpiredLastVerification(context),
+          ),
+          ListTile(
+            title: const Text('Trigger self-verification'),
+            onTap: () => selfVerifyCard(userCodeModel, Configuration.of(context).projectId, client),
           ),
           ListTile(
             title: const Text('Log sample exception'),

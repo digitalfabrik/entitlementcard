@@ -41,6 +41,7 @@ object CardVerifier {
         if (generateTotp(secret) == totp) return true
 
         // current TOTP is invalid, but we are also happy with the previous/next one
+        // This means, we tolerate that the device time is shifted by 30s from the server time.
         val previousValidTotp = generateTotp(secret, Instant.now().minus(TIME_STEP))
         if (previousValidTotp == totp) return true
         val nextValidTotp = generateTotp(secret, Instant.now().plus(TIME_STEP))

@@ -142,6 +142,8 @@ enum CardStatus {
   expired,
   // The card was not verified lately by the server.
   notVerifiedLately,
+  // The time of the device was out of sync with the server.
+  timeOutOfSync,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
   // In any other case, we assume the card is valid and show the dynamic QR code
@@ -154,6 +156,8 @@ enum CardStatus {
       return CardStatus.expired;
     } else if (!cardWasVerifiedLately(code.cardVerification)) {
       return CardStatus.notVerifiedLately;
+    } else if (code.cardVerification.outOfSync) {
+      return CardStatus.timeOutOfSync;
     } else if (!code.cardVerification.cardValid) {
       return CardStatus.invalid;
     } else if (isCardNotYetValid(code.info)) {
@@ -196,6 +200,16 @@ class QrCodeAndStatus extends StatelessWidget {
                     label: Text("Erneut prüfen"),
                   ),
                 ),
+              ],
+            CardStatus.timeOutOfSync => [
+                _PaddedText(
+                    'Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen.'),
+                Flexible(
+                    child: TextButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: onSelfVerifyPressed,
+                  label: Text("Erneut prüfen"),
+                ))
               ],
             CardStatus.invalid => [
                 _PaddedText(
