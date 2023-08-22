@@ -20,11 +20,14 @@ Future<({bool outOfSync, CardVerificationByHash$Query$CardVerificationResultMode
     CodeType.kw$DYNAMIC,
   );
   stopWatch.stop();
+  // We assume that the server captured the verificationTimeStamp in the middle of the request:
   final estimatedTimeOfVerification = timeBeforeRequest.add(Duration(milliseconds: stopWatch.elapsedMilliseconds ~/ 2));
   final actualTimeOfVerification = DateTime.parse(result.verificationTimeStamp);
   final timeOffset =
       (estimatedTimeOfVerification.millisecondsSinceEpoch - actualTimeOfVerification.millisecondsSinceEpoch).abs() /
           1000;
+  // The server tolerates a time offset of 30 seconds
+  // (see backend/src/main/kotlin/app/ehrenamtskarte/backend/verification/service/CardVerifier.kt)
   final outOfSync = timeOffset >= 30;
   return (outOfSync: outOfSync, result: result);
 }
