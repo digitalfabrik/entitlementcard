@@ -62,8 +62,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
   }
 
   isValid() {
-    // TODO add validation for hasFormDependencyError
-    return this.state?.startDay !== undefined
+    return this.state !== null
   }
 
   /**
