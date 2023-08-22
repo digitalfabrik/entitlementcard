@@ -31,7 +31,13 @@ Future<CardInfo?> verifyDynamicVerificationCode(
 ) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentDynamicVerificationCode(code);
-  if (!(await queryDynamicServerVerification(client, projectId, code)).valid) {
+  final (outOfSync: outOfSync, result: result) = await queryDynamicServerVerification(client, projectId, code);
+  if (outOfSync) {
+    debugPrint("Verification: This device's time is out of sync with the server."
+        "Ignoring, as only the time of the device that generates the QR code is relevant for the verification process.");
+  }
+
+  if (!result.valid) {
     return null;
   }
   return code.info;

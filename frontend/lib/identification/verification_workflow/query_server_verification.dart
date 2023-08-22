@@ -3,19 +3,30 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-Future<CardVerificationByHash$Query$CardVerificationResultModel> queryDynamicServerVerification(
+Future<({bool outOfSync, CardVerificationByHash$Query$CardVerificationResultModel result})>
+    queryDynamicServerVerification(
   GraphQLClient client,
   String projectId,
   DynamicVerificationCode verificationCode,
 ) async {
   final hash = verificationCode.info.hash(verificationCode.pepper);
-  return _queryServerVerification(
+  final timeBeforeRequest = DateTime.now();
+  final stopWatch = Stopwatch()..start();
+  final result = await _queryServerVerification(
     client,
     projectId,
     hash,
     verificationCode.otp,
     CodeType.kw$DYNAMIC,
   );
+  stopWatch.stop();
+  final estimatedTimeOfVerification = timeBeforeRequest.add(Duration(milliseconds: stopWatch.elapsedMilliseconds ~/ 2));
+  final actualTimeOfVerification = DateTime.parse(result.verificationTimeStamp);
+  final timeOffset =
+      (estimatedTimeOfVerification.millisecondsSinceEpoch - actualTimeOfVerification.millisecondsSinceEpoch).abs() /
+          1000;
+  final outOfSync = timeOffset >= 30;
+  return (outOfSync: outOfSync, result: result);
 }
 
 Future<CardVerificationByHash$Query$CardVerificationResultModel> queryStaticServerVerification(

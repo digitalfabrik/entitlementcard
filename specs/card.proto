@@ -62,11 +62,14 @@ message CardInfo {
 message CardVerification {
   optional bool cardValid = 1;
 
-  // Verification timestamp in seconds (calculated from 1970-01-01 UTC).
+  // Verification timestamp in seconds (calculated from 1970-01-01 UTC) as reported by the server.
   // Using uint64 should be good for 584,942,417,355 years after 1970.
   // This timestamp is used to invalidate the card after a certain time period not verified with the backend (in this case 7 days).
   // This timestamp will be updated after card activation and card validation on app start.
   optional uint64 verificationTimeStamp = 2;
+
+  // If the verificationTimeStamp was out of sync with the local date time (at time of request) by at least 30 seconds.
+  optional bool outOfSync = 3;
 }
 
 message QrCode {
