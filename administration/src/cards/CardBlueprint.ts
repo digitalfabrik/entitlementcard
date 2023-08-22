@@ -6,6 +6,7 @@ import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
 import { isContentLengthValid } from '../util/qrcode'
 import RegionExtension from './extensions/RegionExtension'
+import StartDayExtension from './extensions/StartDayExtension'
 import { Extension, ExtensionInstance, JSONExtension } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
 
@@ -83,9 +84,20 @@ export class CardBlueprint {
     )
   }
 
+  isStartDayBeforeExpirationDay = (expirationDate: PlainDate): boolean => {
+    const startDayExtension = this.extensions.find(ext => ext.name === 'StartDayExtension') as StartDayExtension
+    return startDayExtension?.state?.startDay
+      ? PlainDate.fromDaysSinceEpoch(startDayExtension.state.startDay).isBefore(expirationDate)
+      : true
+  }
+
   isExpirationDateValid(): boolean {
     const today = PlainDate.fromLocalDate(new Date())
-    return this.expirationDate !== null && this.expirationDate.isAfter(today)
+    return (
+      this.expirationDate !== null &&
+      this.expirationDate.isAfter(today) &&
+      this.isStartDayBeforeExpirationDay(this.expirationDate)
+    )
   }
 
   setExpirationDate(value: string) {

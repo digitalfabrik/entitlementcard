@@ -16,7 +16,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     this.state = { startDay: today.toDaysSinceEpoch() }
   }
 
-  createForm(onUpdate: () => void, hasFormDependencyError?: boolean) {
+  createForm(onUpdate: () => void) {
     const startDayDate =
       this.state?.startDay !== undefined
         ? PlainDate.fromDaysSinceEpoch(this.state.startDay)
@@ -29,7 +29,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
           type='date'
           required
           size='small'
-          error={!this.isValid() || hasFormDependencyError}
+          error={!this.isValid() }
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
