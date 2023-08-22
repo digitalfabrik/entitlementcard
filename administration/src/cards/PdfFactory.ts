@@ -3,7 +3,9 @@ import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
 import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
+import { uint8ArrayToBase64 } from '../util/base64'
 import CardBlueprint from './CardBlueprint'
+import hashCardInfo from './hashCardInfo'
 import pdfFormElement from './pdf/PdfFormElement'
 import pdfQrCodeElement from './pdf/PdfQrCodeElement'
 import pdfTextElement from './pdf/PdfTextElement'
@@ -36,6 +38,8 @@ async function fillContentAreas(
     )
   }
 
+  const cardInfoHash = await hashCardInfo(dynamicCode.value.info!, dynamicCode.value.pepper!)
+
   const form = doc.getForm()
   pdfConfig.elements?.form?.forEach(configOptions =>
     pdfFormElement(configOptions, {
@@ -45,6 +49,7 @@ async function fillContentAreas(
       info: dynamicCode.value.info!,
       region: region,
       cardBlueprint,
+      cardInfoHash: uint8ArrayToBase64(cardInfoHash),
     })
   )
 
@@ -55,6 +60,7 @@ async function fillContentAreas(
       info: dynamicCode.value.info!,
       region: region,
       cardBlueprint,
+      cardInfoHash: uint8ArrayToBase64(cardInfoHash),
     })
   )
 }

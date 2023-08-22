@@ -9,6 +9,7 @@ export type InfoParams = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 export type PdfTextElementProps = {
@@ -26,13 +27,14 @@ type PdfTextElementRendererProps = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
   { width, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined },
-  { page, font, info, region, cardBlueprint }
+  { page, font, info, region, cardBlueprint, cardInfoHash }
 ) => {
-  const text = infoToText({ info, region, cardBlueprint })
+  const text = infoToText({ info, region, cardBlueprint, cardInfoHash })
 
   const lineHeight = font.heightAtSize(fontSize) + spacing
 

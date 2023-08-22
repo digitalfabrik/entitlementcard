@@ -58,6 +58,10 @@ const renderPassNumber = ({ info }: InfoParams) => {
   return passNumber ? `Nürnberg-Pass-Nr.: ${passNumber?.toString()}` : ''
 }
 
+const renderCardHash = ({ cardInfoHash }: InfoParams) => {
+  return cardInfoHash
+}
+
 const pdfConfiguration: PdfConfig = {
   title: 'Nürnberg-Pässe',
   templatePath: pdfTemplate,
@@ -72,6 +76,7 @@ const pdfConfiguration: PdfConfig = {
       { x: 108, y: 243, width: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
       { x: 129.5, y: 79, width: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
       { x: 27, y: 265, width: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
+      { x: 134, y: 178, width: 46, fontSize: 4, angle: 0, infoToText: renderCardHash },
     ],
     form: [{ infoToFormFields: createAddressFormFields, x: 25, y: 66, width: 65, fontSize: 10 }],
   },
