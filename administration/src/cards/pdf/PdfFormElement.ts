@@ -9,6 +9,7 @@ export type InfoParams = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 export type PdfFormElementProps = {
@@ -24,14 +25,15 @@ type PdfFormElementRendererProps = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 const pdfFormElements: PdfElement<PdfFormElementProps, PdfFormElementRendererProps> = (
   { infoToFormFields, fontSize, width, x, y },
-  { page, form, font, info, region, cardBlueprint }
+  { page, form, font, info, region, cardBlueprint, cardInfoHash }
 ) => {
   const pageIdx = page.doc.getPageCount()
-  const formFields = infoToFormFields(form, pageIdx, { info, region, cardBlueprint })
+  const formFields = infoToFormFields(form, pageIdx, { info, region, cardBlueprint, cardInfoHash })
   const lineHeight = font.heightAtSize(fontSize) + 6
 
   formFields.forEach((formField, index) => {
