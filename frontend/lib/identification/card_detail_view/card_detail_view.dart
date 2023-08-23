@@ -144,12 +144,12 @@ enum CardStatus {
   notVerifiedLately,
   // The time of the device was out of sync with the server.
   timeOutOfSync,
+  // The validity period didn't start yet according to the clock of the local device
+  notYetValid,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
   // In any other case, we assume the card is valid and show the dynamic QR code
-  valid,
-  // The validity period didn't start yet according to the clock of the local device
-  notYetValid;
+  valid;
 
   factory CardStatus.from(DynamicUserCode code) {
     if (isCardExpired(code.info)) {
