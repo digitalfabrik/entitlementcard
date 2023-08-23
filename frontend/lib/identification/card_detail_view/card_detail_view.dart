@@ -81,7 +81,8 @@ class _CardDetailViewState extends State<CardDetailView> {
           child: IdCard(
               cardInfo: widget.userCode.info,
               region: region != null ? Region(region.prefix, region.name) : null,
-              isExpired: isCardExpired(widget.userCode.info)),
+              isExpired: isCardExpired(widget.userCode.info),
+              isNotYetValid: isCardNotYetValid(widget.userCode.info)),
         );
         final qrCodeAndStatus = QrCodeAndStatus(
           userCode: widget.userCode,
@@ -143,6 +144,8 @@ enum CardStatus {
   notVerifiedLately,
   // The time of the device was out of sync with the server.
   timeOutOfSync,
+  // The validity period didn't start yet according to the clock of the local device
+  notYetValid,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
   // In any other case, we assume the card is valid and show the dynamic QR code
@@ -155,6 +158,8 @@ enum CardStatus {
       return CardStatus.notVerifiedLately;
     } else if (code.cardVerification.outOfSync) {
       return CardStatus.timeOutOfSync;
+    } else if (isCardNotYetValid(code.info)) {
+      return CardStatus.notYetValid;
     } else if (!code.cardVerification.cardValid) {
       return CardStatus.invalid;
     } else {
@@ -213,6 +218,9 @@ class QrCodeAndStatus extends StatelessWidget {
             CardStatus.valid => [
                 _PaddedText('Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:'),
                 Flexible(child: VerificationCodeView(userCode: userCode))
+              ],
+            CardStatus.notYetValid => [
+                _PaddedText('Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen.'),
               ]
           },
           Container(

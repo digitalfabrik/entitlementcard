@@ -356,6 +356,7 @@ input CardGenerationModelInput {
   activationSecretBase64: String
   cardExpirationDay: Long
   cardInfoHashBase64: String!
+  cardStartDay: Long
   codeType: CodeType!
   regionId: Int!
 }

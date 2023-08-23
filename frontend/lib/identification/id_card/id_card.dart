@@ -21,8 +21,10 @@ class IdCard extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
   final bool isExpired;
+  final bool isNotYetValid;
 
-  const IdCard({super.key, required this.cardInfo, required this.region, required this.isExpired});
+  const IdCard(
+      {super.key, required this.cardInfo, required this.region, required this.isExpired, required this.isNotYetValid});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class IdCard extends StatelessWidget {
           child: MediaQuery(
             // Ignore text scale factor to enforce the same layout on all devices.
             data: mediaQueryData.copyWith(textScaleFactor: 1),
-            child: CardContent(cardInfo: cardInfo, region: region, isExpired: isExpired),
+            child: CardContent(cardInfo: cardInfo, region: region, isExpired: isExpired, isNotYetValid: isNotYetValid),
           ),
         ),
       ),

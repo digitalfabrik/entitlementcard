@@ -57,7 +57,8 @@ class CardMutationService {
                     card.cardExpirationDay,
                     card.regionId,
                     user.id.value,
-                    card.codeType
+                    card.codeType,
+                    card.cardStartDay
                 )
             }
         }
@@ -85,6 +86,7 @@ class CardMutationService {
             val activationSecretHash = card?.activationSecretHash
 
             if (card == null || activationSecretHash == null) {
+                logger.info("${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64")
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
@@ -94,6 +96,7 @@ class CardMutationService {
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone) || card.revoked) {
+                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card isExpired or revoked")
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 

@@ -1,12 +1,14 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 
+import { maxCardValidity } from '../bp-modules/cards/AddCardForm'
 import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
 import { isContentLengthValid } from '../util/qrcode'
 import RegionExtension from './extensions/RegionExtension'
-import { Extension, ExtensionInstance, JSONExtension } from './extensions/extensions'
+import StartDayExtension from './extensions/StartDayExtension'
+import { Extension, ExtensionInstance, JSONExtension, findExtension } from './extensions/extensions'
 import { PEPPER_LENGTH } from './hashCardInfo'
 
 // Due to limited space on the cards
@@ -83,9 +85,21 @@ export class CardBlueprint {
     )
   }
 
+  isStartDayBeforeExpirationDay = (expirationDate: PlainDate): boolean => {
+    const startDayExtension = findExtension(this.extensions, StartDayExtension)
+    return startDayExtension?.state?.startDay
+      ? PlainDate.fromDaysSinceEpoch(startDayExtension.state.startDay).isBefore(expirationDate)
+      : true
+  }
+
   isExpirationDateValid(): boolean {
     const today = PlainDate.fromLocalDate(new Date())
-    return this.expirationDate !== null && this.expirationDate.isAfter(today)
+    return (
+      this.expirationDate !== null &&
+      this.expirationDate.isAfter(today) &&
+      !this.expirationDate.isAfter(today.add(maxCardValidity)) &&
+      this.isStartDayBeforeExpirationDay(this.expirationDate)
+    )
   }
 
   setExpirationDate(value: string) {

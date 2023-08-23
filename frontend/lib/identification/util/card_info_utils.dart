@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:crypto/crypto.dart';
 import 'package:ehrenamtskarte/identification/util/canonical_json.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -39,4 +38,14 @@ bool cardWasVerifiedLately(CardVerification cardVerification) {
       ? false
       : DateTime.now().toUtc().isBefore(DateTime.fromMillisecondsSinceEpoch(0)
           .add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)));
+}
+
+bool isCardNotYetValid(CardInfo cardInfo) {
+  final startingDay =
+      cardInfo.extensions.hasExtensionStartDay() ? cardInfo.extensions.extensionStartDay.startDay : null;
+  return startingDay == null
+      ? false
+      : DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
+          .add(Duration(days: startingDay))
+          .isAfter(DateTime.now().toUtc());
 }

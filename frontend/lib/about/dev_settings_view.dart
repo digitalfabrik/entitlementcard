@@ -41,7 +41,8 @@ final sampleActivationCodeNuernberg = DynamicUserCode()
     ..extensions = (CardExtensions()
       ..extensionBirthday = (BirthdayExtension()..birthday = 19746)
       ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 12323123)
-      ..extensionRegion = (RegionExtension()..regionId = 93)))
+      ..extensionRegion = (RegionExtension()..regionId = 93)
+      ..extensionStartDay = (StartDayExtension()..startDay = 19592)))
   ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
   ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
 

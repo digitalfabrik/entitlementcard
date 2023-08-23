@@ -31,7 +31,8 @@ object CardRepository {
         expirationDay: Long?,
         regionId: Int,
         issuerId: Int,
-        codeType: CodeType
+        codeType: CodeType,
+        startDay: Long?
     ) =
         CardEntity.new {
             this.cardInfoHash = cardInfoHash
@@ -43,6 +44,7 @@ object CardRepository {
             this.issuerId = EntityID(issuerId, Administrators)
             this.revoked = false
             this.codeType = codeType
+            this.startDay = startDay
         }
 
     fun activate(card: CardEntity, totpSecret: ByteArray) {
