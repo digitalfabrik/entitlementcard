@@ -158,10 +158,10 @@ enum CardStatus {
       return CardStatus.notVerifiedLately;
     } else if (code.cardVerification.outOfSync) {
       return CardStatus.timeOutOfSync;
-    } else if (!code.cardVerification.cardValid) {
-      return CardStatus.invalid;
     } else if (isCardNotYetValid(code.info)) {
       return CardStatus.notYetValid;
+    } else if (!code.cardVerification.cardValid) {
+      return CardStatus.invalid;
     } else {
       return CardStatus.valid;
     }

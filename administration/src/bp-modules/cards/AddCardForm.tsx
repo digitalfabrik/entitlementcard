@@ -26,24 +26,11 @@ interface CreateCardsFormProps {
   onRemove: () => void
 }
 
+export const maxCardValidity = { years: 99 }
 const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   return extension.createForm(() => {
     onUpdate()
   })
-}
-
-const maxCardValidity = { years: 99 }
-const hasCardExpirationError = (cardBlueprint: CardBlueprint): boolean => {
-  const expirationDate = cardBlueprint.expirationDate
-  if (!expirationDate) {
-    return false
-  }
-  const today = PlainDate.fromLocalDate(new Date())
-  return (
-    expirationDate.isBefore(today) ||
-    expirationDate.isAfter(today.add(maxCardValidity)) ||
-    !cardBlueprint.isExpirationDateValid()
-  )
 }
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
@@ -73,7 +60,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           type='date'
           required
           size='small'
-          error={hasCardExpirationError(cardBlueprint)}
+          error={!cardBlueprint.isExpirationDateValid()}
           value={cardBlueprint.expirationDate ? cardBlueprint.expirationDate.toString() : null}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{

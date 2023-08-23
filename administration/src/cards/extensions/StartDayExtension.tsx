@@ -29,7 +29,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
           type='date'
           required
           size='small'
-          error={!this.isValid() }
+          error={!this.isValid()}
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
