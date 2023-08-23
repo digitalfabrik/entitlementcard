@@ -36,7 +36,7 @@ export interface CardConfig {
 }
 
 export interface ApplicationFeature {
-  applicationJsonToCardQuery: (json: JsonField<'Array'>) => string
+  applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
 
 export interface ProjectConfig {

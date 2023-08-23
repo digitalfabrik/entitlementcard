@@ -1,5 +1,5 @@
 import { Button, Icon } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
@@ -15,13 +15,25 @@ export type JsonField<T extends keyof JsonFieldValueByType> = {
 
 export type GeneralJsonField = { [K in keyof JsonFieldValueByType]: JsonField<K> }[keyof JsonFieldValueByType]
 
-type JsonFieldValueByType = {
+export type JsonFieldValueByType = {
   Array: GeneralJsonField[]
   String: string
   Number: number
   Boolean: boolean
   Attachment: { fileIndex: number }
   Date: string
+}
+
+export const findValue = <T extends keyof JsonFieldValueByType>(
+  object: JsonField<'Array'>,
+  key: string,
+  type: T
+): JsonField<T> | undefined => {
+  const entry = object.value.find(entry => entry.name === key)
+  if (entry?.type === type) {
+    return entry as JsonField<typeof type>
+  }
+  return undefined
 }
 
 const extensionByContentType = new Map([

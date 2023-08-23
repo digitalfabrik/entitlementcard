@@ -9,6 +9,7 @@ import {
   H4,
   NonIdealState,
   ResizeSensor,
+  Tooltip,
 } from '@blueprintjs/core'
 import React, { FunctionComponent, useContext, useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
@@ -78,9 +79,9 @@ const PrintAwareButton = styled(Button)`
 `
 
 const PrintAwareAnchorButton = styled(AnchorButton)`
-   @media print {
+  @media print {
     display: none;
-  } 
+  }
 `
 
 const ApplicationView: FunctionComponent<{
@@ -112,7 +113,7 @@ const ApplicationView: FunctionComponent<{
   })
 
   const createCardQuery = useMemo(
-    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField) ?? '',
+    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField),
     [config.applicationFeature, jsonField]
   )
 
@@ -168,9 +169,17 @@ const ApplicationView: FunctionComponent<{
               <PrintAwareButton onClick={() => printApplicationById(id)} intent='primary' icon='print'>
                 PDF exportieren
               </PrintAwareButton>
-              <PrintAwareAnchorButton href={'./cards/add' + createCardQuery} icon='id-number' intent='primary'>
-                Karte erstellen
-              </PrintAwareAnchorButton>
+              <Tooltip
+                disabled={!!createCardQuery}
+                content={'Für diesen Antrag kann die Karte nicht automatisch erstellt werden.'}>
+                <PrintAwareAnchorButton
+                  disabled={!createCardQuery}
+                  href={createCardQuery ? './cards/add' + createCardQuery : undefined}
+                  icon='id-number'
+                  intent='primary'>
+                  Karte erstellen
+                </PrintAwareAnchorButton>
+              </Tooltip>
               <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
                 Antrag löschen
               </PrintAwareButton>

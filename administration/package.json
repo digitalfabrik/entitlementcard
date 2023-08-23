@@ -106,6 +106,9 @@
       "plugin:jest/recommended",
       "plugin:jest/style"
     ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "error"
+    },
     "ignorePatterns": [
       "src/generated/**",
       "build/**"
