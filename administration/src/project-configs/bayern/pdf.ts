@@ -29,8 +29,8 @@ const pdfConfiguration: PdfConfig = {
   elements: {
     dynamicActivationQrCodes: [{ x: 108, y: 73, size: 84 }],
     text: [
-      { x: 108, y: 170, width: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
-      { x: 134, y: 162, width: 46, fontSize: 4, angle: 0, infoToText: renderCardHash },
+      { x: 108, y: 170, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
+      { x: 149.75, y: 162, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
   },
 }
