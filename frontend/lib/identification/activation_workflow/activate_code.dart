@@ -49,6 +49,6 @@ class ServerCardActivationException implements Exception {
 
   @override
   String toString() {
-    return 'ServerCardActivationException{cause: $cause}';
+    return "ServerCardActivationException{cause: $cause}";
   }
 }

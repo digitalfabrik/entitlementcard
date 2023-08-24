@@ -18,7 +18,7 @@ class VerificationInfoDialog extends StatelessWidget {
             _EnumeratedListItem(
               index: 0,
               child: Text(
-                'Scannen Sie den QR-Code, der auf dem "Ausweisen"-Tab Ihres Gegenübers angezeigt wird.',
+                "Scannen Sie den QR-Code, der auf dem \"Ausweisen\"-Tab Ihres Gegenübers angezeigt wird.",
               ),
             ),
             _EnumeratedListItem(index: 1, child: Text('Der QR-Code wird durch eine Server-Anfrage geprüft.')),

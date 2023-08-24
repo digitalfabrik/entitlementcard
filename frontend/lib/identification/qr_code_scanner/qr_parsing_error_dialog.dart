@@ -8,7 +8,7 @@ class QrParsingErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Fehler beim Lesen des Codes'),
+      title: const Text("Fehler beim Lesen des Codes"),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -18,7 +18,7 @@ class QrParsingErrorDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Ok'),
+          child: const Text("Ok"),
           onPressed: () {
             Navigator.of(context).pop();
           },

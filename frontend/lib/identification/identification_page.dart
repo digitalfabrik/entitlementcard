@@ -13,9 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatelessWidget {
-  final String title;
-
-  const IdentificationPage({super.key, required this.title});
+  const IdentificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {

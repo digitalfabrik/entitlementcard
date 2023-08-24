@@ -23,7 +23,7 @@ class DetailAppBarHeaderImage extends StatelessWidget {
         return SvgPicture.asset(
           currentDetailIcon,
           width: double.infinity,
-          semanticsLabel: 'Header',
+          semanticsLabel: "Header",
           alignment: Alignment.bottomRight,
         );
       }

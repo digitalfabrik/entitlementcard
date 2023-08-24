@@ -11,6 +11,8 @@ import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../util/i18n.dart';
+
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
@@ -37,23 +39,23 @@ class HomePageState extends State<HomePage> {
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
         ),
         Icons.map_outlined,
-        'Karte',
+        t(context, 'card'),
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
         const SearchPage(),
         Icons.search_outlined,
-        'Suche',
+        t(context, 'search'),
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
-          const IdentificationPage(title: 'Ausweisen'),
+          IdentificationPage(),
           Icons.remove_red_eye_outlined,
-          'Ausweisen',
+          t(context, 'identification'),
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, 'Über', GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), Icons.info_outline, t(context, 'about'), GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 

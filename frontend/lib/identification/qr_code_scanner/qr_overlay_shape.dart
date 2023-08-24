@@ -25,7 +25,7 @@ class QrScannerOverlayShape extends ShapeBorder {
     assert(
       (cutOutWidth == null && cutOutHeight == null) ||
           (cutOutSize == null && cutOutWidth != null && cutOutHeight != null),
-      'Use only cutOutWidth and cutOutHeight or only cutOutSize',
+      "Use only cutOutWidth and cutOutHeight or only cutOutSize",
     );
   }
 

@@ -119,11 +119,11 @@ class DetailContent extends StatelessWidget {
 
   Future<void> _launchMap(String query) async {
     if (Platform.isAndroid) {
-      await launchUrl(Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query}));
+      await launchUrl(Uri(scheme: "geo", host: "0,0", queryParameters: {"q": query}));
     } else if (Platform.isIOS) {
-      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}));
+      await launchUrl(Uri.https("maps.apple.com", "/", {"q": query}));
     } else {
-      await launchUrl(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': query}));
+      await launchUrl(Uri.https("www.google.com", "/maps/search/", {"api": "1", "query": query}));
     }
   }
 

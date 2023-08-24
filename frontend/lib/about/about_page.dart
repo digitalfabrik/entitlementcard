@@ -7,8 +7,11 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../util/i18n.dart';
 
 class AboutPage extends StatefulWidget {
   final countToEnableSwitch = 10;
@@ -67,18 +70,20 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text('Herausgeber', style: Theme.of(context).textTheme.titleSmall),
+                      child: I18nText('publisher', child: Text('', style: Theme.of(context).textTheme.titleSmall)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
                       child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
                     ),
-                    Text(
-                      'Mehr Informationen',
+                    I18nText(
+                      'moreInformation',
+                      child: Text('',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
                           ?.merge(TextStyle(color: Theme.of(context).colorScheme.secondary)),
+                    ),
                     ),
                   ],
                 ),
@@ -87,7 +92,7 @@ class AboutPageState extends State<AboutPage> {
                 Navigator.push(
                   context,
                   AppRoute(
-                    builder: (context) => ContentPage(title: 'Herausgeber', children: getPublisherText(context)),
+                    builder: (context) => ContentPage(title: t(context, 'publisher'), children: getPublisherText(context)),
                   ),
                 );
               },
@@ -97,20 +102,20 @@ class AboutPageState extends State<AboutPage> {
               thickness: 1,
             ),
             const SizedBox(height: 20),
-            ContentTile(icon: Icons.copyright, title: 'Lizenz', children: getCopyrightText(context)),
+            ContentTile(icon: Icons.copyright, title: t(context, 'license'), children: getCopyrightText(context)),
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
-              title: const Text('Datenschutzerklärung'),
+              title: I18nText('privacyDeclaration'),
               onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
             ),
             ContentTile(
               icon: Icons.info_outline,
-              title: 'Haftung, Haftungsausschluss und Impressum',
+              title: t(context, 'disclaimer'),
               children: getDisclaimerText(context),
             ),
             ListTile(
               leading: const Icon(Icons.book_outlined),
-              title: const Text('Software-Bibliotheken'),
+              title: I18nText('dependencies'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -122,7 +127,7 @@ class AboutPageState extends State<AboutPage> {
             ),
             ListTile(
               leading: const Icon(Icons.code_outlined),
-              title: const Text('Quellcode der App'),
+              title: I18nText('sourceCode'),
               onTap: () {
                 launchUrlString(
                   'https://github.com/digitalfabrik/entitlementcard',
@@ -133,11 +138,11 @@ class AboutPageState extends State<AboutPage> {
             if (config.showDevSettings)
               ListTile(
                 leading: const Icon(Icons.build),
-                title: const Text('Entwickleroptionen'),
+                title: I18nText('developmentOptions'),
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) =>
-                      const SimpleDialog(title: Text('Entwickleroptionen'), children: [DevSettingsView()]),
+                      SimpleDialog(title: I18nText('developmentOptions'), children: [DevSettingsView()]),
                 ),
               )
           ];

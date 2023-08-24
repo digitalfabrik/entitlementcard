@@ -96,6 +96,6 @@ class ServerVerificationException implements Exception {
 
   @override
   String toString() {
-    return 'ServerVerificationException{cause: $cause}';
+    return "ServerVerificationException{cause: $cause}";
   }
 }

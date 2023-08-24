@@ -18,13 +18,13 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Abbrechen'),
+          child: const Text("Abbrechen"),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: const Text('Aktivieren'),
+          child: const Text("Aktivieren"),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

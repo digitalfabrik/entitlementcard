@@ -96,7 +96,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             color: mapboxColor,
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
-            tooltip: 'Zeige Infos über das Urheberrecht der Kartendaten',
+            tooltip: "Zeige Infos über das Urheberrecht der Kartendaten",
             onPressed: () {
               showDialog(
                 context: context,

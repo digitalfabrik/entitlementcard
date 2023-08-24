@@ -24,7 +24,7 @@ class _QRViewState extends State<QrCodeScanner> {
     formats: [BarcodeFormat.qrCode],
     returnImage: false,
   );
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrKey = GlobalKey(debugLabel: "QR");
 
   // Determines whether a code is currently processed by the onCodeScanned callback
   // During this time, we do not re-trigger the callback.
@@ -75,7 +75,7 @@ class _QRViewState extends State<QrCodeScanner> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(8),
-                      child: const Text('Halten Sie die Kamera auf den QR Code.'),
+                      child: const Text("Halten Sie die Kamera auf den QR Code."),
                     ),
                     QrCodeScannerControls(controller: controller)
                   ],

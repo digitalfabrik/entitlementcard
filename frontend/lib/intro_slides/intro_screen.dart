@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intro_slider/intro_slider.dart';
 
 typedef OnFinishedCallback = void Function();
@@ -21,9 +22,9 @@ class IntroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),
-      renderDoneBtn: const Text('Fertig'),
-      renderNextBtn: const Text('Weiter'),
-      renderPrevBtn: const Text('Zurück'),
+      renderDoneBtn: I18nText('done'),
+      renderNextBtn: I18nText('next'),
+      renderPrevBtn: I18nText('previous'),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       indicatorConfig: IndicatorConfig(
         colorActiveIndicator: theme.colorScheme.primary,

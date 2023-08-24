@@ -75,7 +75,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: CheckboxListTile(
-                      title: const Text('Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen.'),
+                      title: const Text("Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen."),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: isChecked,
                       onChanged: (bool? value) {

@@ -42,7 +42,7 @@ class _CardDetailViewState extends State<CardDetailView> {
       // in order to detect if one of the following events happened:
       // - the card was activated on another device
       // - the card was revoked
-      // - the card expired (on backend's system time)
+      // - the card expired (on backend"s system time)
       _selfVerifyCard();
       initiatedSelfVerification = true;
     }
@@ -144,7 +144,7 @@ enum CardStatus {
   notVerifiedLately,
   // The time of the device was out of sync with the server.
   timeOutOfSync,
-  // The validity period didn't start yet according to the clock of the local device
+  // The validity period didn"t start yet according to the clock of the local device
   notYetValid,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
@@ -192,7 +192,7 @@ class QrCodeAndStatus extends StatelessWidget {
               ],
             CardStatus.notVerifiedLately => [
                 _PaddedText(
-                    'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut.'),
+                    "Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut."),
                 Flexible(
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
@@ -203,7 +203,7 @@ class QrCodeAndStatus extends StatelessWidget {
               ],
             CardStatus.timeOutOfSync => [
                 _PaddedText(
-                    'Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen.'),
+                    "Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen."),
                 Flexible(
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
@@ -213,14 +213,14 @@ class QrCodeAndStatus extends StatelessWidget {
               ],
             CardStatus.invalid => [
                 _PaddedText(
-                    'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.')
+                    "Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.")
               ],
             CardStatus.valid => [
-                _PaddedText('Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:'),
+                _PaddedText("Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:"),
                 Flexible(child: VerificationCodeView(userCode: userCode))
               ],
             CardStatus.notYetValid => [
-                _PaddedText('Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen.'),
+                _PaddedText("Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen."),
               ]
           },
           Container(

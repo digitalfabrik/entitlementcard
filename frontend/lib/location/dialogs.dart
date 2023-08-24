@@ -28,7 +28,7 @@ class RationaleDialog extends StatelessWidget {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[Text(_rationale), const Text('Soll nocheinmal nach der Berechtigung gefragt werden?')],
+        children: <Widget>[Text(_rationale), const Text("Soll nocheinmal nach der Berechtigung gefragt werden?")],
       ),
       actions: [
         TextButton(child: const Text('Berechtigung erteilen'), onPressed: () => Navigator.of(context).pop(true)),
