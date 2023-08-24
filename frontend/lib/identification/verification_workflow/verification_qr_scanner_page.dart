@@ -61,7 +61,7 @@ class VerificationQrScannerPage extends StatelessWidget {
               final verificationCode = verificationQrCode.writeToBuffer();
               _handleQrCode(context, verificationCode);
             },
-            child: const Text("Verify activated Card"),
+            child: const Text('Verify activated Card'),
           )
       ],
     );
@@ -75,7 +75,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (cardInfo == null) {
         await _onError(
           context,
-          "Der eingescannte Code konnte vom Server nicht verifiziert werden!",
+          'Der eingescannte Code konnte vom Server nicht verifiziert werden!',
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
@@ -83,37 +83,37 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        "Der eingescannte Code konnte nicht verifiziert "
-        "werden, da die Kommunikation mit dem Server fehlschlug. "
-        "Bitte prüfen Sie Ihre Internetverbindung.",
+        'Der eingescannte Code konnte nicht verifiziert '
+        'werden, da die Kommunikation mit dem Server fehlschlug. '
+        'Bitte prüfen Sie Ihre Internetverbindung.',
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        "Der eingescannte Code ist nicht gültig, "
-        "da erforderliche Daten fehlen.",
+        'Der eingescannte Code ist nicht gültig, '
+        'da erforderliche Daten fehlen.',
         e,
       );
     } on CardExpiredException catch (e) {
-      final dateFormat = DateFormat("dd.MM.yyyy");
+      final dateFormat = DateFormat('dd.MM.yyyy');
       await _onError(
         context,
-        "Der eingescannte Code ist bereits am ${dateFormat.format(e.expiry)} abgelaufen.",
+        'Der eingescannte Code ist bereits am ${dateFormat.format(e.expiry)} abgelaufen.',
         e,
       );
     } on QrCodeParseException catch (e) {
       await _onError(
         context,
-        "Der Inhalt des eingescannten Codes kann nicht verstanden "
-        "werden. Vermutlich handelt es sich um einen QR-Code, der nicht für "
-        "diese App generiert wurde.",
+        'Der Inhalt des eingescannten Codes kann nicht verstanden '
+        'werden. Vermutlich handelt es sich um einen QR-Code, der nicht für '
+        'diese App generiert wurde.',
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        "Beim Einlesen des QR-Codes ist ein unbekannter Fehler aufgetreten.",
+        'Beim Einlesen des QR-Codes ist ein unbekannter Fehler aufgetreten.',
         e,
       );
     } finally {
@@ -124,14 +124,14 @@ class VerificationQrScannerPage extends StatelessWidget {
 
   Future<void> _onError(BuildContext context, String message, [Exception? exception]) async {
     if (exception != null) {
-      debugPrint("Verification failed: $exception");
+      debugPrint('Verification failed: $exception');
     }
     await NegativeVerificationResultDialog.show(context, message);
   }
 
   Future<void> _onConnectionError(BuildContext context, String message, [Exception? exception]) async {
     if (exception != null) {
-      debugPrint("Connection failed: $exception");
+      debugPrint('Connection failed: $exception');
     }
     await ConnectionFailedDialog.show(context, message);
   }

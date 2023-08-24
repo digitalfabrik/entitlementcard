@@ -6,11 +6,11 @@ import 'package:ehrenamtskarte/identification/verification_workflow/verification
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 
 class QRCodeInvalidTotpSecretException extends QrCodeParseException {
-  QRCodeInvalidTotpSecretException() : super("invalid totp secret");
+  QRCodeInvalidTotpSecretException() : super('invalid totp secret');
 }
 
 class QRCodeMissingExpiryException extends QrCodeFieldMissingException {
-  QRCodeMissingExpiryException() : super("expirationDate");
+  QRCodeMissingExpiryException() : super('expirationDate');
 }
 
 class ActivationCodeParser {
@@ -33,10 +33,10 @@ class ActivationCodeParser {
 
   void _assertConsistentDynamicActivationCode(DynamicActivationCode code) {
     if (!code.hasPepper()) {
-      throw QrCodeFieldMissingException("pepper");
+      throw QrCodeFieldMissingException('pepper');
     }
     if (!code.hasActivationSecret()) {
-      throw QrCodeFieldMissingException("activationSecret");
+      throw QrCodeFieldMissingException('activationSecret');
     }
   }
 }

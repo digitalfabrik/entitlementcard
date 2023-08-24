@@ -3,13 +3,13 @@ import 'package:protobuf/protobuf.dart';
 
 extension CanonicalJson on GeneratedMessage {
   Map<String, dynamic> toCanonicalJsonObject() {
-    if (unknownFields.isNotEmpty) throw ArgumentError("Unknown field");
+    if (unknownFields.isNotEmpty) throw ArgumentError('Unknown field');
     final map = HashMap<String, dynamic>();
     for (final field in info_.fieldInfo.values) {
       if (field.isRepeated) {
-        throw ArgumentError("Repeated fields are currently not supported.");
+        throw ArgumentError('Repeated fields are currently not supported.');
       } else if (field.isMapField) {
-        throw ArgumentError("Map fields are currently not supported.");
+        throw ArgumentError('Map fields are currently not supported.');
       }
 
       // Ideally, we would check that we do not access fields without explicit presence (and throw in this case).
@@ -29,7 +29,7 @@ extension CanonicalJson on GeneratedMessage {
       } else if (value is GeneratedMessage) {
         map[field.tagNumber.toString()] = value.toCanonicalJsonObject();
       } else {
-        throw ArgumentError("Could not detect type of field.");
+        throw ArgumentError('Could not detect type of field.');
       }
     }
     return map;

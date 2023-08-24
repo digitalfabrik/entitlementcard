@@ -39,7 +39,7 @@ class _LocationButtonState extends State<LocationButton> {
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
         child: FloatingActionButton.extended(
-          heroTag: "fab_search_view",
+          heroTag: 'fab_search_view',
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           elevation: 1,
           onPressed:
@@ -55,7 +55,7 @@ class _LocationButtonState extends State<LocationButton> {
                   ),
           ),
           label: Text(
-            "In meiner Nähe suchen",
+            'In meiner Nähe suchen',
             style: TextStyle(color: Theme.of(context).hintColor),
           ),
         ),

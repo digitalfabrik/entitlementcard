@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const userCodeBase64Key = "userCodeBase64";
+const userCodeBase64Key = 'userCodeBase64';
 
 class UserCodeStore {
   const UserCodeStore();
 
-  static const _userCodeBase64Key = "userCodeBase64";
+  static const _userCodeBase64Key = 'userCodeBase64';
 
   Future<void> store(DynamicUserCode userCode) async {
     const storage = FlutterSecureStorage();

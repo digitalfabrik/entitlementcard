@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  debugPrint("Environment: $appEnvironment");
+  debugPrint('Environment: $appEnvironment');
 
   runApp(SettingsProvider(child: const App()));
 }

@@ -9,7 +9,7 @@ class ConnectionFailedDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfoDialog(
-      title: "Keine Verbindung möglich",
+      title: 'Keine Verbindung möglich',
       icon: Icons.signal_cellular_connected_no_internet_4_bar,
       iconColor: Theme.of(context).colorScheme.onBackground,
       child: Text(reason),
