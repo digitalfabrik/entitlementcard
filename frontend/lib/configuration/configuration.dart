@@ -25,7 +25,7 @@ class Configuration extends InheritedWidget {
   static Configuration of(BuildContext context) {
     final configuration = context.dependOnInheritedWidgetOfExactType<Configuration>();
     if (configuration == null) {
-      throw Exception("Config was not found in component tree!");
+      throw Exception('Config was not found in component tree!');
     }
     return configuration;
   }

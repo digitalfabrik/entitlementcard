@@ -23,7 +23,7 @@ class UserCodeModel extends ChangeNotifier {
     try {
       _userCode = await const UserCodeStore().load();
     } on Exception catch (e) {
-      log("Failed to initialize activation code from secure storage.", error: e);
+      log('Failed to initialize activation code from secure storage.', error: e);
     } finally {
       _isInitialized = true;
       notifyListeners();

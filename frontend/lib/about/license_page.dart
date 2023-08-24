@@ -51,7 +51,7 @@ class CustomLicensePage extends StatelessWidget {
 
           return CustomScrollView(
             slivers: <Widget>[
-              const CustomSliverAppBar(title: "Lizenzen"),
+              const CustomSliverAppBar(title: 'Lizenzen'),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
@@ -59,7 +59,7 @@ class CustomLicensePage extends StatelessWidget {
                     final paragraphs = license.licenseParagraphs;
                     return ListTile(
                       title: Text(license.packageName),
-                      subtitle: Text("${paragraphs.length} Lizenzen"),
+                      subtitle: Text('${paragraphs.length} Lizenzen'),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -100,7 +100,7 @@ class SingleLicensePage extends StatelessWidget {
               (BuildContext context, int index) {
                 final paragraph = paragraphs.toList()[index];
 
-                return Text("\t" * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
+                return Text('\t' * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
               },
               childCount: paragraphs.length,
             ),

@@ -32,7 +32,7 @@ Future<ActivateCard$Mutation$CardActivationResultModel> activateCode({
     final data = mutationResult.data;
 
     if (data == null) {
-      throw const ServerCardActivationException("Server returned null.");
+      throw const ServerCardActivationException('Server returned null.');
     }
 
     final parsedResult = activateCard.parse(data);

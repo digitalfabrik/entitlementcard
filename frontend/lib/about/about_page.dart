@@ -67,14 +67,14 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text("Herausgeber", style: Theme.of(context).textTheme.titleSmall),
+                      child: Text('Herausgeber', style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
                       child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
                     ),
                     Text(
-                      "Mehr Informationen",
+                      'Mehr Informationen',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -87,7 +87,7 @@ class AboutPageState extends State<AboutPage> {
                 Navigator.push(
                   context,
                   AppRoute(
-                    builder: (context) => ContentPage(title: "Herausgeber", children: getPublisherText(context)),
+                    builder: (context) => ContentPage(title: 'Herausgeber', children: getPublisherText(context)),
                   ),
                 );
               },
@@ -97,20 +97,20 @@ class AboutPageState extends State<AboutPage> {
               thickness: 1,
             ),
             const SizedBox(height: 20),
-            ContentTile(icon: Icons.copyright, title: "Lizenz", children: getCopyrightText(context)),
+            ContentTile(icon: Icons.copyright, title: 'Lizenz', children: getCopyrightText(context)),
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
-              title: const Text("Datenschutzerklärung"),
+              title: const Text('Datenschutzerklärung'),
               onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
             ),
             ContentTile(
               icon: Icons.info_outline,
-              title: "Haftung, Haftungsausschluss und Impressum",
+              title: 'Haftung, Haftungsausschluss und Impressum',
               children: getDisclaimerText(context),
             ),
             ListTile(
               leading: const Icon(Icons.book_outlined),
-              title: const Text("Software-Bibliotheken"),
+              title: const Text('Software-Bibliotheken'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -122,10 +122,10 @@ class AboutPageState extends State<AboutPage> {
             ),
             ListTile(
               leading: const Icon(Icons.code_outlined),
-              title: const Text("Quellcode der App"),
+              title: const Text('Quellcode der App'),
               onTap: () {
                 launchUrlString(
-                  "https://github.com/digitalfabrik/entitlementcard",
+                  'https://github.com/digitalfabrik/entitlementcard',
                   mode: LaunchMode.externalApplication,
                 );
               },
@@ -133,11 +133,11 @@ class AboutPageState extends State<AboutPage> {
             if (config.showDevSettings)
               ListTile(
                 leading: const Icon(Icons.build),
-                title: const Text("Entwickleroptionen"),
+                title: const Text('Entwickleroptionen'),
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) =>
-                      const SimpleDialog(title: Text("Entwickleroptionen"), children: [DevSettingsView()]),
+                      const SimpleDialog(title: Text('Entwickleroptionen'), children: [DevSettingsView()]),
                 ),
               )
           ];

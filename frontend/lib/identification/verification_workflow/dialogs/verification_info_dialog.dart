@@ -21,14 +21,14 @@ class VerificationInfoDialog extends StatelessWidget {
                 'Scannen Sie den QR-Code, der auf dem "Ausweisen"-Tab Ihres Gegenübers angezeigt wird.',
               ),
             ),
-            _EnumeratedListItem(index: 1, child: Text("Der QR-Code wird durch eine Server-Anfrage geprüft.")),
+            _EnumeratedListItem(index: 1, child: Text('Der QR-Code wird durch eine Server-Anfrage geprüft.')),
             _EnumeratedListItem(
               index: 2,
-              child: Text("Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab."),
+              child: Text('Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab.'),
             ),
             SizedBox(height: 12),
             Text(
-              "Eine Internetverbindung wird benötigt.",
+              'Eine Internetverbindung wird benötigt.',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -36,14 +36,14 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: const Text("Nicht mehr anzeigen"),
+          child: const Text('Nicht mehr anzeigen'),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
             _onDone(context);
           },
         ),
         TextButton(
-          child: const Text("Weiter"),
+          child: const Text('Weiter'),
           onPressed: () => _onDone(context),
         )
       ],
@@ -78,7 +78,7 @@ class _EnumeratedListItem extends StatelessWidget {
           CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: Text(
-              "${index + 1}",
+              '${index + 1}',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.background,
                 fontWeight: FontWeight.bold,

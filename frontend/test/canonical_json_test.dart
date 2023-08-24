@@ -3,8 +3,8 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("toCanonicalJsonObject", () {
-    test("should map an empty cardInfo correctly", () {
+  group('toCanonicalJsonObject', () {
+    test('should map an empty cardInfo correctly', () {
       final cardInfo = CardInfo();
       expect(
         cardInfo.toCanonicalJsonObject(),
@@ -12,7 +12,7 @@ void main() {
       );
     });
 
-    test("should map a cardInfo for a Bavarian Blue EAK correctly", () {
+    test('should map a cardInfo for a Bavarian Blue EAK correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -29,7 +29,7 @@ void main() {
       });
     });
 
-    test("should map a cardInfo for a Bavarian Golden EAK correctly", () {
+    test('should map a cardInfo for a Bavarian Golden EAK correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..extensions = (CardExtensions()
@@ -44,7 +44,7 @@ void main() {
       });
     });
 
-    test("should map a cardInfo for a Nuernberg Pass correctly", () {
+    test('should map a cardInfo for a Nuernberg Pass correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -63,7 +63,7 @@ void main() {
       });
     });
 
-    test("should map a cardInfo for a Nuernberg Pass wit startDay correctly", () {
+    test('should map a cardInfo for a Nuernberg Pass wit startDay correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600

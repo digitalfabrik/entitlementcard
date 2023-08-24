@@ -25,38 +25,38 @@ class SettingsModel extends ChangeNotifier {
     if (obj == null) {
       return null;
     } else if (obj is! bool) {
-      log("Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.",
+      log('Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.',
           level: 1000);
       return null;
     }
     return obj;
   }
 
-  bool get firstStart => _getBool("firstStart") ?? true;
+  bool get firstStart => _getBool('firstStart') ?? true;
 
   Future<void> setFirstStart({required bool enabled}) async {
-    await _preferences?.setBool("firstStart", enabled);
+    await _preferences?.setBool('firstStart', enabled);
     notifyListeners();
   }
 
-  bool get enableStaging => _getBool("enableStaging") ?? false;
+  bool get enableStaging => _getBool('enableStaging') ?? false;
 
   Future<void> setEnableStaging({required bool enabled}) async {
-    await _preferences?.setBool("enableStaging", enabled);
+    await _preferences?.setBool('enableStaging', enabled);
     notifyListeners();
   }
 
-  bool get hideVerificationInfo => _getBool("hideVerificationInfo") ?? true;
+  bool get hideVerificationInfo => _getBool('hideVerificationInfo') ?? true;
 
   Future<void> setHideVerificationInfo({required bool enabled}) async {
-    await _preferences?.setBool("hideVerificationInfo", enabled);
+    await _preferences?.setBool('hideVerificationInfo', enabled);
     notifyListeners();
   }
 
-  bool get locationFeatureEnabled => _getBool("location") ?? false;
+  bool get locationFeatureEnabled => _getBool('location') ?? false;
 
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {
-    await _preferences?.setBool("location", enabled);
+    await _preferences?.setBool('location', enabled);
     notifyListeners();
   }
 
