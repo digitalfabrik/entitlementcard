@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_single_quotes
 import 'dart:convert';
 
 import 'package:df_build_config/builder.dart';
