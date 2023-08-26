@@ -6,9 +6,11 @@ import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../util/i18n.dart';
 import '../user_code_model.dart';
 import 'verification_code_view.dart';
 
@@ -42,7 +44,7 @@ class _CardDetailViewState extends State<CardDetailView> {
       // in order to detect if one of the following events happened:
       // - the card was activated on another device
       // - the card was revoked
-      // - the card expired (on backend"s system time)
+      // - the card expired (on backend's system time)
       _selfVerifyCard();
       initiatedSelfVerification = true;
     }
@@ -144,7 +146,7 @@ enum CardStatus {
   notVerifiedLately,
   // The time of the device was out of sync with the server.
   timeOutOfSync,
-  // The validity period didn"t start yet according to the clock of the local device
+  // The validity period didn't start yet according to the clock of the local device
   notYetValid,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
@@ -187,40 +189,36 @@ class QrCodeAndStatus extends StatelessWidget {
         children: [
           ...switch (status) {
             CardStatus.expired => [
-                _PaddedText(
-                    'Ihre Karte ist abgelaufen.\nUnter "Weitere Aktionen" können Sie einen Antrag auf Verlängerung stellen.')
+                _PaddedText(t(context, 'cardExpired'))
               ],
             CardStatus.notVerifiedLately => [
-                _PaddedText(
-                    "Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut."),
+                _PaddedText(t(context, 'checkFailed')),
                 Flexible(
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text('Erneut prüfen'),
+                    label: I18nText('checkAgain'),
                   ),
                 ),
               ],
             CardStatus.timeOutOfSync => [
-                _PaddedText(
-                    "Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen."),
+                _PaddedText(t(context, 'timeIncorrect')),
                 Flexible(
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
-                  label: Text('Erneut prüfen'),
+                  label: I18nText('checkAgain'),
                 ))
               ],
             CardStatus.invalid => [
-                _PaddedText(
-                    "Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.")
+                _PaddedText(t(context, 'cardInvalid'))
               ],
             CardStatus.valid => [
-                _PaddedText("Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:"),
+                _PaddedText(t(context, 'authenticationPossible')),
                 Flexible(child: VerificationCodeView(userCode: userCode))
               ],
             CardStatus.notYetValid => [
-                _PaddedText("Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen."),
+                _PaddedText(t(context, 'cardNotYetValid')),
               ]
           },
           Container(
@@ -228,7 +226,7 @@ class QrCodeAndStatus extends StatelessWidget {
             child: TextButton(
               onPressed: onMoreActionsPressed,
               child: Text(
-                'Weitere Aktionen',
+                t(context, 'moreActions'),
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/widgets/I18nText.dart';
 import 'package:provider/provider.dart';
 
 class LocationRequestButton extends StatefulWidget {
@@ -49,9 +50,9 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     final settings = Provider.of<SettingsModel>(context);
     final status = _locationPermissionStatus;
     if (status == null) {
-      return const ElevatedButton(
+      return ElevatedButton(
         onPressed: null,
-        child: Text('Prüfe Einstellungen...'),
+        child: I18nText('checkSettings'),
       );
     }
     switch (status) {
@@ -59,18 +60,18 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.notSupported:
         return ElevatedButton(
           onPressed: () => _onLocationButtonClicked(settings),
-          child: const Text('Ich möchte meinen Standort freigeben.'),
+          child: I18nText('grantLocation'),
         );
       case LocationStatus.whileInUse:
       case LocationStatus.always:
-        return const ElevatedButton(
+        return ElevatedButton(
           onPressed: null,
-          child: Text('Standort ist freigegeben.'),
+          child: I18nText('locationGranted'),
         );
       case LocationStatus.deniedForever:
-        return const ElevatedButton(
+        return ElevatedButton(
           onPressed: null,
-          child: Text('Standortfreigabe ist deaktiviert.'),
+          child: I18nText('locationDeactivated'),
         );
     }
   }

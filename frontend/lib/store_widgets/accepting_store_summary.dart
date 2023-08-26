@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import '../util/i18n.dart';
+
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
   final CoordinatesInput? coordinates;
@@ -37,7 +39,7 @@ class AcceptingStoreSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemCategoryAsset = store.categoryId < categoryAssets.length ? categoryAssets[store.categoryId] : null;
-    final categoryName = itemCategoryAsset?.name ?? 'Unbekannte Kategorie';
+    final categoryName = itemCategoryAsset?.name ?? t(context, 'unknownCategory');
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
@@ -152,14 +154,14 @@ class StoreTextOverview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            store.name ?? 'Akzeptanzstelle',
+            store.name ?? t(context, 'acceptingStore'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
-            store.description ?? 'Keine Beschreibung verfügbar',
+            store.description ?? t(context, 'noDescriptionAvailable'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium,
@@ -180,9 +182,9 @@ class DistanceText extends StatelessWidget {
     if (d < 1) {
       return '${(d * 100).round() * 10} m';
     } else if (d < 10) {
-      return "${NumberFormat("##.0", "de").format(d)} km";
+      return '${NumberFormat('##.0', 'de').format(d)} km';
     } else {
-      return "${NumberFormat("###,###", "de").format(d)} km";
+      return '${NumberFormat('###,###', 'de').format(d)} km';
     }
   }
 

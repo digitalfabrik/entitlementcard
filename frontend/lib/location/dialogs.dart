@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/widgets/I18nText.dart';
 
 class LocationServiceDialog extends StatelessWidget {
   const LocationServiceDialog({super.key});
@@ -6,11 +7,11 @@ class LocationServiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Standortermittlung aktivieren'),
-      content: const Text('Aktivieren Sie die Standortermittlung in den Einstellungen.'),
+      title: I18nText('activateLocationAccess'),
+      content: I18nText('activateLocationAccessSettings'),
       actions: [
-        TextButton(child: const Text('Abbrechen'), onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(child: const Text('Einstellungen öffnen'), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: I18nText('cancel'), onPressed: () => Navigator.of(context).pop(false)),
+        TextButton(child: I18nText('openSettings'), onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }
@@ -24,15 +25,15 @@ class RationaleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Standortberechtigung'),
+      title: I18nText('locationPermission'),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[Text(_rationale), const Text("Soll nocheinmal nach der Berechtigung gefragt werden?")],
+        children: <Widget>[Text(_rationale), I18nText('askPermissionsAgain')],
       ),
       actions: [
-        TextButton(child: const Text('Berechtigung erteilen'), onPressed: () => Navigator.of(context).pop(true)),
-        TextButton(child: const Text('Abbrechen'), onPressed: () => Navigator.of(context).pop(false))
+        TextButton(child: I18nText('grantPermission'), onPressed: () => Navigator.of(context).pop(true)),
+        TextButton(child: I18nText('cancel'), onPressed: () => Navigator.of(context).pop(false))
       ],
     );
   }

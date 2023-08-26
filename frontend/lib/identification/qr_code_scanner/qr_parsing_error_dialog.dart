@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/widgets/I18nText.dart';
 
 class QrParsingErrorDialog extends StatelessWidget {
   final String message;
@@ -8,7 +9,7 @@ class QrParsingErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Fehler beim Lesen des Codes"),
+      title: I18nText('scanningFailed'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -18,7 +19,7 @@ class QrParsingErrorDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text("Ok"),
+          child: I18nText('ok'),
           onPressed: () {
             Navigator.of(context).pop();
           },

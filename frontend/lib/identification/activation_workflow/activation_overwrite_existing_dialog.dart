@@ -6,12 +6,12 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Karte auf diesem Gerät aktivieren?', style: TextStyle(fontSize: 18)),
+      title: const Text("Karte auf diesem Gerät aktivieren?", style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
           children: const <Widget>[
             Text(
-              'Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.',
+              "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",
             ),
           ],
         ),

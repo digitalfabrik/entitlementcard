@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/widgets/I18nText.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -74,7 +75,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
       if (widget != oldWidget) {
         // Params are outdated.
-        // If we"re still at the first key, we must manually retrigger fetching.
+        // If we're still at the first key, we must manually retrigger fetching.
         if (pageKey == _pagingController.firstPageKey) {
           return await _fetchPage(pageKey);
         }
@@ -96,7 +97,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
     } on Exception catch (error) {
       if (widget != oldWidget) {
         // Params are outdated.
-        // If we"re still at the first key, we must manually retrigger fetching.
+        // If we're still at the first key, we must manually retrigger fetching.
         if (pageKey == _pagingController.firstPageKey) {
           return _fetchPage(pageKey);
         }
@@ -146,10 +147,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.warning, size: 60, color: Colors.orange),
-            const Text('Bitte Internetverbindung prüfen.'),
+            I18nText('checkConnection'),
             OutlinedButton(
               onPressed: _pagingController.retryLastFailedRequest,
-              child: const Text('Erneut versuchen'),
+              child: I18nText('tryAgain'),
             )
           ],
         ),
@@ -160,7 +161,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            const Text('Auf diese Suche trifft keine Akzeptanzstelle zu.'),
+            I18nText('noAcceptingStoresFound'),
           ],
         ),
       );

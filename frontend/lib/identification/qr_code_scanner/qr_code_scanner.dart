@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
@@ -24,7 +25,7 @@ class _QRViewState extends State<QrCodeScanner> {
     formats: [BarcodeFormat.qrCode],
     returnImage: false,
   );
-  final GlobalKey qrKey = GlobalKey(debugLabel: "QR");
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   // Determines whether a code is currently processed by the onCodeScanned callback
   // During this time, we do not re-trigger the callback.
@@ -75,7 +76,7 @@ class _QRViewState extends State<QrCodeScanner> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(8),
-                      child: const Text("Halten Sie die Kamera auf den QR Code."),
+                      child: I18nText('scanQRCode'),
                     ),
                     QrCodeScannerControls(controller: controller)
                   ],

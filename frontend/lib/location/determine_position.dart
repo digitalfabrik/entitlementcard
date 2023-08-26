@@ -11,16 +11,16 @@ enum LocationStatus {
   /// request for permission another time.
   denied,
 
-  /// Permission to access the device"s location is permenantly denied. When
+  /// Permission to access the device's location is permenantly denied. When
   /// requestiong permissions the permission dialog will not been shown until
   /// the user updates the permission in the App settings.
   deniedForever,
 
-  /// Permission to access the device"s location is allowed only while
+  /// Permission to access the device's location is allowed only while
   /// the App is in use.
   whileInUse,
 
-  /// Permission to access the device"s location is allowed even when the
+  /// Permission to access the device's location is allowed even when the
   /// App is running in the background.
   always,
 
@@ -102,7 +102,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   BuildContext context, {
   bool requestIfNotGranted = true,
   String rationale =
-      'Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.',
+      "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
@@ -140,7 +140,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
       if (requestResult == LocationPermission.denied) {
         // Permissions are denied, next time you could try
         // requesting permissions again (this is also where
-        // Android"s shouldShowRequestPermissionRationale
+        // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 

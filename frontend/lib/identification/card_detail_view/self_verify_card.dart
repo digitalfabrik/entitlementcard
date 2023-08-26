@@ -30,7 +30,7 @@ Future<void> selfVerifyCard(UserCodeModel userCodeModel, String projectId, Graph
     return;
   }
 
-  debugPrint("Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? "valid." : "INVALID."}");
+  debugPrint('Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? 'valid.' : 'INVALID.'}');
 
   userCodeModel.setCode(DynamicUserCode()
     ..info = userCode.info

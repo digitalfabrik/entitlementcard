@@ -12,6 +12,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../util/i18n.dart';
+
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
 typedef OnMapCreatedCallback = void Function(MapController controller);
@@ -96,7 +98,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             color: mapboxColor,
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
-            tooltip: "Zeige Infos über das Urheberrecht der Kartendaten",
+            tooltip: t(context, 'showMapCopyright'),
             onPressed: () {
               showDialog(
                 context: context,

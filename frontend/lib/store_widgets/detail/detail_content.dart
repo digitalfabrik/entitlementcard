@@ -7,9 +7,12 @@ import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../../util/i18n.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
@@ -30,8 +33,8 @@ class DetailContent extends StatelessWidget {
     final address = acceptingStore.address;
     final street = address.street;
     final location = '${address.postalCode} ${address.location}';
-    final addressString = "${street != null ? "$street\n" : ""}$location";
-    final mapQueryString = "${street != null ? "$street, " : ""}$location";
+    final addressString = '${street != null ? '$street\n' : ''}$location';
+    final mapQueryString = '${street != null ? '$street, ' : ''}$location';
 
     final contact = acceptingStore.store.contact;
     final currentAccentColor = accentColor;
@@ -59,7 +62,7 @@ class DetailContent extends StatelessWidget {
                 ContactInfoRow(
                   Icons.location_on,
                   addressString,
-                  'Adresse',
+                  t(context, 'address'),
                   onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
@@ -68,7 +71,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
-                    'Website',
+                    t(context, 'website'),
                     onTap: () =>
                         launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -78,7 +81,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.phone,
                     telephone,
-                    'Telefon',
+                    t(context, 'phone'),
                     onTap: () =>
                         launchUrlString('tel:${sanitizePhoneNumber(telephone)}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -88,7 +91,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.alternate_email,
                     email,
-                    'E-Mail',
+                    t(context, 'email'),
                     onTap: () => launchUrlString('mailto:${email.trim()}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
@@ -105,7 +108,7 @@ class DetailContent extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    child: const Text('Auf Karte zeigen'),
+                    child: I18nText('showOnMap'),
                     onPressed: () => _showOnMap(context),
                   ),
                 ],
@@ -119,11 +122,11 @@ class DetailContent extends StatelessWidget {
 
   Future<void> _launchMap(String query) async {
     if (Platform.isAndroid) {
-      await launchUrl(Uri(scheme: "geo", host: "0,0", queryParameters: {"q": query}));
+      await launchUrl(Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query}));
     } else if (Platform.isIOS) {
-      await launchUrl(Uri.https("maps.apple.com", "/", {"q": query}));
+      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}));
     } else {
-      await launchUrl(Uri.https("www.google.com", "/maps/search/", {"api": "1", "query": query}));
+      await launchUrl(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': query}));
     }
   }
 

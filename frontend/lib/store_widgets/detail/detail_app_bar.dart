@@ -6,6 +6,8 @@ import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../util/i18n.dart';
+
 const double bottomSize = 100;
 
 class DetailAppBarHeaderImage extends StatelessWidget {
@@ -23,7 +25,7 @@ class DetailAppBarHeaderImage extends StatelessWidget {
         return SvgPicture.asset(
           currentDetailIcon,
           width: double.infinity,
-          semanticsLabel: "Header",
+          semanticsLabel: 'Header',
           alignment: Alignment.bottomRight,
         );
       }
@@ -87,7 +89,7 @@ class DetailAppBar extends StatelessWidget {
 
     final accentColor = getDarkenedColorForCategory(categoryId);
     final categoryName = matchingStore.store.category.name;
-    final title = matchingStore.store.name ?? 'Akzeptanzstelle';
+    final title = matchingStore.store.name ?? t(context, 'acceptingStore');
 
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);

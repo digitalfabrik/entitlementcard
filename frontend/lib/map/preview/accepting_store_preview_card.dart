@@ -4,6 +4,8 @@ import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 
+import '../../util/i18n.dart';
+
 class AcceptingStorePreviewError extends StatelessWidget {
   final void Function()? refetch;
 
@@ -16,7 +18,7 @@ class AcceptingStorePreviewError extends StatelessWidget {
       child: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: const ErrorMessage('Fehler beim Laden der Infos.'),
+        child: const ErrorMessage(t(context, 'loadingInformationFailed')),
       ),
     );
   }

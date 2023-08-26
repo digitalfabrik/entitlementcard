@@ -6,6 +6,8 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../util/i18n.dart';
+
 Color standardCardColor = getColorFromHex(buildConfig.cardBranding.colorStandard);
 Color premiumCardColor = getColorFromHex(buildConfig.cardBranding.colorPremium);
 Color textColor = getColorFromHex(buildConfig.cardBranding.bodyTextColor);
@@ -49,14 +51,14 @@ class CardContent extends StatelessWidget {
   String get _formattedExpirationDate {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
-        ? DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : "unbegrenzt";
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
+        : t(context, 'unlimited');
   }
 
   String? get _formattedBirthday {
     final birthday = cardInfo.extensions.hasExtensionBirthday() ? cardInfo.extensions.extensionBirthday.birthday : null;
     return birthday != null
-        ? DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: birthday)))
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: birthday)))
         : null;
   }
 
@@ -69,12 +71,14 @@ class CardContent extends StatelessWidget {
   String? get _formattedStartDate {
     final startDay = cardInfo.extensions.hasExtensionStartDay() ? cardInfo.extensions.extensionStartDay.startDay : null;
     return startDay != null
-        ? DateFormat("dd.MM.yyyy").format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: startDay)))
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: startDay)))
         : null;
   }
 
   String _getCardValidityDate(String? startDate, String expirationDate) {
-    return startDate != null ? "Gültig: $startDate bis $expirationDate" : "Gültig bis: $expirationDate";
+    return startDate != null
+        ? t(context, 'validFromUntil', translationParams: {'startDate': startDate, 'expirationDate': expirationDate})
+        : t(context, 'validUntil', translationParams: { 'expirationDate': expirationDate });
   }
 
   @override
@@ -90,7 +94,7 @@ class CardContent extends StatelessWidget {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
         final headerLeftTitle = buildConfig.cardBranding.headerTitleLeft.isEmpty && currentRegion != null
-            ? "${currentRegion.prefix} ${currentRegion.name}"
+            ? '${currentRegion.prefix} ${currentRegion.name}'
             : buildConfig.cardBranding.headerTitleLeft;
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -163,7 +167,7 @@ class CardContent extends StatelessWidget {
                       AspectRatio(
                         aspectRatio: 6 / 1.5,
                         child: Align(
-                          alignment: buildConfig.cardBranding.bodyLogoPosition == "center"
+                          alignment: buildConfig.cardBranding.bodyLogoPosition == 'center'
                               ? Alignment.center
                               : Alignment.centerRight,
                           child: Image(
