@@ -48,7 +48,7 @@ class CardContent extends StatelessWidget {
   const CardContent(
       {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isNotYetValid});
 
-  String get _formattedExpirationDate {
+  String _getFormattedExpirationDate(BuildContext context) {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
@@ -75,7 +75,7 @@ class CardContent extends StatelessWidget {
         : null;
   }
 
-  String _getCardValidityDate(String? startDate, String expirationDate) {
+  String _getCardValidityDate(BuildContext context, String? startDate, String expirationDate) {
     return startDate != null
         ? t(context, 'validFromUntil', translationParams: {'startDate': startDate, 'expirationDate': expirationDate})
         : t(context, 'validUntil', translationParams: { 'expirationDate': expirationDate });
@@ -213,7 +213,7 @@ class CardContent extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 3.0),
                               child: Text(
-                                _getCardValidityDate(startDate, _formattedExpirationDate),
+                                _getCardValidityDate(context, startDate, _getFormattedExpirationDate(context)),
                                 style: TextStyle(
                                     fontSize: 14 * scaleFactor,
                                     color:

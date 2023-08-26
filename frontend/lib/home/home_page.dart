@@ -52,7 +52,7 @@ class HomePageState extends State<HomePage> {
         AppFlow(
           IdentificationPage(),
           Icons.remove_red_eye_outlined,
-          t(context, 'identification'),
+          t(context, 'authentication'),
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
       AppFlow(const AboutPage(), Icons.info_outline, t(context, 'about'), GlobalKey<NavigatorState>(debugLabel: 'About tab key')),

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
+import '../util/i18n.dart';
+
 enum LocationStatus {
   /// This is the initial state on both Android and iOS, but on Android the
   /// user can still choose to deny permissions, meaning the App can still
@@ -101,8 +103,7 @@ Future<RequestedPosition> determinePosition(
 Future<LocationStatus> checkAndRequestLocationPermission(
   BuildContext context, {
   bool requestIfNotGranted = true,
-  String rationale =
-      "Erlauben Sie der App Ihren Standort zu benutzen, um Akzeptanzstellen in Ihrer Umgebung anzuzeigen.",
+  String? rationale,
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
@@ -144,7 +145,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale));
+        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? t(context, 'activateLocationAccessRationale')));
 
         if (result == true) {
           return checkAndRequestLocationPermission(

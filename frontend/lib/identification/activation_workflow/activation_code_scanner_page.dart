@@ -24,6 +24,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../util/i18n.dart';
+
 class ActivationCodeScannerPage extends StatelessWidget {
   const ActivationCodeScannerPage({super.key});
 
@@ -50,32 +52,26 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
-    } on ActivationDidNotOverwriteExisting catch (e) {
-      await showError(e.toString(), null);
+    } on ActivationDidNotOverwriteExisting catch (_) {
+      await showError(t(context, 'cardAlreadyActivated'), null);
     } on QrCodeFieldMissingException catch (e) {
-      await showError(
-          "Der Inhalt des eingescannten Codes ist unvollständig. "
-          "(Fehlercode: ${e.missingFieldName}Missing)",
-          null);
+      await showError(t(context, 'codeInvalidMissing', translationParams: { 'missing': e.missingFieldName }));
     } on QrCodeWrongTypeException catch (_) {
-      await showError("Der eingescannte Code kann nicht in der App gespeichert werden.");
+      await showError(t(context, 'codeSavingFailed'));
     } on CardExpiredException catch (e) {
-      final dateFormat = DateFormat("dd.MM.yyyy");
-      await showError("Der eingescannte Code ist bereits am "
-          "${dateFormat.format(e.expiry)} abgelaufen.");
+      final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
+      await showError(t(context, 'codeExpired', translationParams: { 'expirationDate': expirationDate }));
     } on ServerCardActivationException catch (e, stackTrace) {
       String errorMessage = 'Der eingescannte Code konnte nicht aktiviert '
           'werden, da die Kommunikation mit dem Server fehlschlug. '
           'Bitte prüfen Sie Ihre Internetverbindung.';
       await ConnectionFailedDialog.show(
         context,
-        "Der eingescannte Code konnte nicht aktiviert "
-        "werden, da die Kommunikation mit dem Server fehlschlug. "
-        "Bitte prüfen Sie Ihre Internetverbindung.",
+        t(context, 'codeVerificationFailedConnection')
       );
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      await showError("Ein unerwarteter Fehler ist aufgetreten.");
+      await showError(t(context, 'codeUnknownError'));
     }
   }
 
@@ -90,7 +86,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
-    debugPrint("Card Activation: Sending request with overwriteExisting=$overwriteExisting.");
+    debugPrint('Card Activation: Sending request with overwriteExisting=$overwriteExisting.');
 
     final activationResult = await activateCode(
       client: client,
@@ -107,7 +103,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        debugPrint("Card Activation: Successfully activated.");
+        debugPrint('Card Activation: Successfully activated.');
 
         provider.setCode(DynamicUserCode()
           ..info = activationCode.info
@@ -120,7 +116,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
           context,
-          "Der eingescannte Code ist ungültig.",
+          t(context, 'codeInvalid'),
         );
         break;
       case ActivationState.didNotOverwriteExisting:
@@ -128,15 +124,13 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationDidNotOverwriteExisting();
         }
         debugPrint(
-            "Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.");
+            'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
         if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context)) {
           await _activateCode(context, activationCode, overwriteExisting = true);
         }
         break;
       default:
-        throw const ServerCardActivationException(
-          "Die Aktivierung befindet sich in einem ungültigen Zustand.",
-        );
+        throw ServerCardActivationException(t(context, 'activationInvalidState'));
     }
   }
 }

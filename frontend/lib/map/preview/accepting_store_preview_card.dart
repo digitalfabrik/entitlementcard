@@ -18,7 +18,7 @@ class AcceptingStorePreviewError extends StatelessWidget {
       child: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: const ErrorMessage(t(context, 'loadingInformationFailed')),
+        child: ErrorMessage(t(context, 'loadingInformationFailed')),
       ),
     );
   }

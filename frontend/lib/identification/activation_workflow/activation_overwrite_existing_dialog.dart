@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+
+import '../../util/i18n.dart';
 
 class ActivationOverwriteExistingDialog extends StatelessWidget {
   const ActivationOverwriteExistingDialog({super.key});
@@ -6,25 +9,23 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Karte auf diesem Gerät aktivieren?", style: TextStyle(fontSize: 18)),
+      title: Text(t(context, 'activateCardCurrentDevice'), style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
-          children: const <Widget>[
-            Text(
-              "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",
-            ),
+          children: <Widget>[
+            I18nText('activateCardCurrentDeviceRationale'),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text("Abbrechen"),
+          child: I18nText('cancel'),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: const Text("Aktivieren"),
+          child: I18nText('activate'),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

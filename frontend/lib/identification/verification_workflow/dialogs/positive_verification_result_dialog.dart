@@ -5,7 +5,10 @@ import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+import '../../../util/i18n.dart';
 
 class PositiveVerificationResultDialog extends StatefulWidget {
   final CardInfo cardInfo;
@@ -55,7 +58,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
         return InfoDialog(
-          title: isUncheckedStaticQrCode ? "Prüfung nötig" : localization.positiveVerificationDialogTitle,
+          title: isUncheckedStaticQrCode ? t(context, 'checkRequired') : localization.positiveVerificationDialogTitle,
           icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
@@ -75,7 +78,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: CheckboxListTile(
-                      title: const Text("Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen."),
+                      title: I18nText('comparedWithID'),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: isChecked,
                       onChanged: (bool? value) {

@@ -19,31 +19,31 @@ class AttributionDialog extends StatelessWidget {
           color: color,
           text: t(context, 'osmContributors'),
           onPressed: () {
-            launchUrlString("https://www.openstreetmap.org/copyright", mode: LaunchMode.externalApplication);
+            launchUrlString('https://www.openstreetmap.org/copyright', mode: LaunchMode.externalApplication);
           },
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
           color: color,
-          text: "OpenMapTiles",
+          text: 'OpenMapTiles',
           onPressed: () {
-            launchUrlString("https://openmaptiles.org/", mode: LaunchMode.externalApplication);
+            launchUrlString('https://openmaptiles.org/', mode: LaunchMode.externalApplication);
           },
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
           color: color,
-          text: "Natural Earth",
+          text: 'Natural Earth',
           onPressed: () {
-            launchUrlString("https://naturalearthdata.com/", mode: LaunchMode.externalApplication);
+            launchUrlString('https://naturalearthdata.com/', mode: LaunchMode.externalApplication);
           },
         ),
         AttributionDialogItem(
           icon: Icons.copyright,
           color: color,
-          text: "LBE Bayern",
+          text: 'LBE Bayern',
           onPressed: () {
-            launchUrlString("https://www.lbe.bayern.de/", mode: LaunchMode.externalApplication);
+            launchUrlString('https://www.lbe.bayern.de/', mode: LaunchMode.externalApplication);
           },
         )
       ],

@@ -79,7 +79,7 @@ Future<CardVerificationByHash$Query$CardVerificationResultModel> _queryServerVer
     final data = queryResult.data;
 
     if (data == null) {
-      throw ServerVerificationException("Returned data is null.");
+      throw ServerVerificationException('Returned data is null.');
     }
 
     final parsedResult = byCardDetailsHash.parse(data);
@@ -96,6 +96,6 @@ class ServerVerificationException implements Exception {
 
   @override
   String toString() {
-    return "ServerVerificationException{cause: $cause}";
+    return 'ServerVerificationException{cause: $cause}';
   }
 }

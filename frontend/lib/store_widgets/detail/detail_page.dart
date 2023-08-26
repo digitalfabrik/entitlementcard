@@ -37,7 +37,7 @@ class DetailPage extends StatelessWidget {
           }
           final matchingStore = matchingStores.first;
           if (matchingStore == null) {
-            return const DetailErrorMessage(message: t(context, 'acceptingStoreNotFound'));
+            return DetailErrorMessage(message: t(context, 'acceptingStoreNotFound'));
           }
           final categoryId = matchingStore.store.category.id;
           final accentColor = getDarkenedColorForCategory(categoryId);
