@@ -13,7 +13,7 @@ import 'package:path/path.dart' as path;
 ///
 /// NOTE: Do NOT use path.join, since package:build is expecting a forward slash
 /// regardless of the platform, but path.join will return a backslash on Windows.
-String join(String a, String b) => a.endsWith("/") ? "$a$b" : "$a/$b";
+String join(String a, String b) => a.endsWith('/') ? '$a$b' : '$a/$b';
 
 /// Runs [Process#run] but throws a [ProcessError] if the [Process] exits with
 /// a non-zero status code.
@@ -54,7 +54,7 @@ class ProcessError extends Error {
     return '''
 A process finished with exit code ${result.exitCode}:
 Call:
-"$executable", ${json.encode(arguments)}
+'$executable', ${json.encode(arguments)}
 Standard error output:
 ${result.stderr}
     ''';
@@ -76,7 +76,7 @@ class ProtobufBuilder extends Builder {
 
     await Directory(outputDirectory).create(recursive: true);
     await runSafely(
-      "protoc",
+      'protoc',
       [
         '--plugin=protoc-gen-dart=${Platform.environment['HOME']}/.pub-cache/bin/protoc-gen-dart',
         '--dart_out=$outputDirectory',
@@ -102,7 +102,7 @@ class ProtobufBuilder extends Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => {
-        "{{}}.proto": [
+        '{{}}.proto': [
           '$outputDirectory/{{}}.pb.dart',
           '$outputDirectory/{{}}.pbenum.dart',
           '$outputDirectory/{{}}.pbjson.dart',
