@@ -29,7 +29,7 @@ class DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final address = acceptingStore.address;
     final street = address.street;
-    final location = "${address.postalCode} ${address.location}";
+    final location = '${address.postalCode} ${address.location}';
     final addressString = "${street != null ? "$street\n" : ""}$location";
     final mapQueryString = "${street != null ? "$street, " : ""}$location";
 
@@ -59,7 +59,7 @@ class DetailContent extends StatelessWidget {
                 ContactInfoRow(
                   Icons.location_on,
                   addressString,
-                  "Adresse",
+                  'Adresse',
                   onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
@@ -68,7 +68,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
-                    "Website",
+                    'Website',
                     onTap: () =>
                         launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -78,9 +78,9 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.phone,
                     telephone,
-                    "Telefon",
+                    'Telefon',
                     onTap: () =>
-                        launchUrlString("tel:${sanitizePhoneNumber(telephone)}", mode: LaunchMode.externalApplication),
+                        launchUrlString('tel:${sanitizePhoneNumber(telephone)}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -88,8 +88,8 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.alternate_email,
                     email,
-                    "E-Mail",
-                    onTap: () => launchUrlString("mailto:${email.trim()}", mode: LaunchMode.externalApplication),
+                    'E-Mail',
+                    onTap: () => launchUrlString('mailto:${email.trim()}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
                   ),
@@ -105,7 +105,7 @@ class DetailContent extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    child: const Text("Auf Karte zeigen"),
+                    child: const Text('Auf Karte zeigen'),
                     onPressed: () => _showOnMap(context),
                   ),
                 ],

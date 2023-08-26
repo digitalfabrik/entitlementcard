@@ -37,11 +37,11 @@ class AcceptingStorePreview extends StatelessWidget {
 
           final stores = query.parse(fetchedData).physicalStoresByIdInProject;
           if (stores.length != 1) {
-            throw Exception("Server unexpectedly returned an array of the wrong size.");
+            throw Exception('Server unexpectedly returned an array of the wrong size.');
           }
           final store = stores[0];
           if (store == null) {
-            throw Exception("ID not found.");
+            throw Exception('ID not found.');
           }
           return AcceptingStorePreviewCard(
             isLoading: false,

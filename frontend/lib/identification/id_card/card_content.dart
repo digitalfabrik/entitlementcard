@@ -50,7 +50,7 @@ class CardContent extends StatelessWidget {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : "unbegrenzt";
+        : 'unbegrenzt';
   }
 
   String? get _formattedBirthday {
@@ -90,7 +90,7 @@ class CardContent extends StatelessWidget {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
         final headerLeftTitle = buildConfig.cardBranding.headerTitleLeft.isEmpty && currentRegion != null
-            ? "${currentRegion.prefix} ${currentRegion.name}"
+            ? '${currentRegion.prefix} ${currentRegion.name}'
             : buildConfig.cardBranding.headerTitleLeft;
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,

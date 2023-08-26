@@ -43,7 +43,7 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
       messengerState.showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text("GraphQL Error: $message"),
+          content: Text('GraphQL Error: $message'),
         ),
       );
     }

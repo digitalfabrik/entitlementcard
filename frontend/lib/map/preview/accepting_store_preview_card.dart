@@ -16,7 +16,7 @@ class AcceptingStorePreviewError extends StatelessWidget {
       child: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: const ErrorMessage("Fehler beim Laden der Infos."),
+        child: const ErrorMessage('Fehler beim Laden der Infos.'),
       ),
     );
   }

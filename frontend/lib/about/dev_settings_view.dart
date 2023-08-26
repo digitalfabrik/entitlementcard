@@ -26,25 +26,25 @@ import 'package:provider/provider.dart';
 // for testing, so this is intended
 final sampleActivationCodeBavaria = DynamicUserCode()
   ..info = (CardInfo()
-    ..fullName = "Erika Mustermann"
+    ..fullName = 'Erika Mustermann'
     ..expirationDay = 19746
     ..extensions = (CardExtensions()
       ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD)
       ..extensionRegion = (RegionExtension()..regionId = 42)))
-  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
-  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+  ..pepper = const Base64Decoder().convert('aGVsbG8gdGhpcyBpcyBhIHRlc3Q=')
+  ..totpSecret = base32.decode('MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX');
 
 final sampleActivationCodeNuernberg = DynamicUserCode()
   ..info = (CardInfo()
-    ..fullName = "Erika Mustermann"
+    ..fullName = 'Erika Mustermann'
     ..expirationDay = 19746
     ..extensions = (CardExtensions()
       ..extensionBirthday = (BirthdayExtension()..birthday = 19746)
       ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 12323123)
       ..extensionRegion = (RegionExtension()..regionId = 93)
       ..extensionStartDay = (StartDayExtension()..startDay = 19592)))
-  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
-  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+  ..pepper = const Base64Decoder().convert('aGVsbG8gdGhpcyBpcyBhIHRlc3Q=')
+  ..totpSecret = base32.decode('MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX');
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({super.key});
@@ -84,7 +84,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Log sample exception'),
-            onTap: () => log("Sample exception.", error: Exception("Sample exception...")),
+            onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
           ),
           ListTile(
             title: const Text('Inspect settings'),
@@ -92,7 +92,7 @@ class DevSettingsView extends StatelessWidget {
               showDialog<bool>(
                 context: context,
                 builder: (context) =>
-                    SimpleDialog(title: const Text("Settings"), children: [Text(settings.toString())]),
+                    SimpleDialog(title: const Text('Settings'), children: [Text(settings.toString())]),
               );
             },
           ),
@@ -140,7 +140,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    "Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -",
+                    'Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -',
                   ),
                   TextFormField(
                     controller: base64Controller,
@@ -155,7 +155,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: const Text("Activate Card"),
+              child: const Text('Activate Card'),
               onPressed: () {
                 _activateCard(context, base64Controller.text);
               },
@@ -198,20 +198,20 @@ class DevSettingsView extends StatelessWidget {
         case ActivationState.failed:
           await QrParsingErrorDialog.showErrorDialog(
             context,
-            "Der eingescannte Code ist ungültig.",
+            'Der eingescannte Code ist ungültig.',
           );
           break;
         case ActivationState.didNotOverwriteExisting:
           throw const ActivationDidNotOverwriteExisting();
         default:
           throw const ServerCardActivationException(
-            "Die Aktivierung befindet sich in einem ungültigen Zustand.",
+            'Die Aktivierung befindet sich in einem ungültigen Zustand.',
           );
       }
 
       messengerState.showSnackBar(
         const SnackBar(
-          content: Text("Aktivierung erfolgreich."),
+          content: Text('Aktivierung erfolgreich.'),
         ),
       );
       Navigator.pop(context);

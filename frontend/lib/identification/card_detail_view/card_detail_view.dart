@@ -188,7 +188,7 @@ class QrCodeAndStatus extends StatelessWidget {
           ...switch (status) {
             CardStatus.expired => [
                 _PaddedText(
-                    "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.")
+                    'Ihre Karte ist abgelaufen.\nUnter "Weitere Aktionen" können Sie einen Antrag auf Verlängerung stellen.')
               ],
             CardStatus.notVerifiedLately => [
                 _PaddedText(
@@ -197,7 +197,7 @@ class QrCodeAndStatus extends StatelessWidget {
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text("Erneut prüfen"),
+                    label: Text('Erneut prüfen'),
                   ),
                 ),
               ],
@@ -208,7 +208,7 @@ class QrCodeAndStatus extends StatelessWidget {
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
-                  label: Text("Erneut prüfen"),
+                  label: Text('Erneut prüfen'),
                 ))
               ],
             CardStatus.invalid => [
@@ -228,7 +228,7 @@ class QrCodeAndStatus extends StatelessWidget {
             child: TextButton(
               onPressed: onMoreActionsPressed,
               child: Text(
-                "Weitere Aktionen",
+                'Weitere Aktionen',
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),

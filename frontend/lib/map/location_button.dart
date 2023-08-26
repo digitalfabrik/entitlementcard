@@ -31,7 +31,7 @@ class _LocationButtonState extends State<LocationButton> {
       //screen edge
       padding: const EdgeInsets.only(right: 16),
       child: FloatingActionButton(
-        heroTag: "fab_map_view",
+        heroTag: 'fab_map_view',
         elevation: 1,
         backgroundColor: theme.colorScheme.surfaceVariant,
         onPressed: _status == LocationPermissionStatus.requestFinished ? () => _determinePosition(settings) : null,
@@ -54,7 +54,7 @@ class _LocationButtonState extends State<LocationButton> {
         behavior: SnackBarBehavior.floating,
         content: const Text('Die Standortfreigabe ist deaktiviert.'),
         action: SnackBarAction(
-          label: "Einstellungen",
+          label: 'Einstellungen',
           onPressed: () async {
             await openSettingsToGrantPermissions(context);
           },

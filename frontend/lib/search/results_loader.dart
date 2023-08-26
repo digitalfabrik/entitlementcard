@@ -63,7 +63,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
       final client = _client;
       if (client == null) {
-        throw Exception("GraqhQL client is not yet initialized!");
+        throw Exception('GraqhQL client is not yet initialized!');
       }
 
       final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
@@ -82,7 +82,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
       final newData = result.data;
 
       if (newData == null) {
-        throw Exception("Fetched data is null.");
+        throw Exception('Fetched data is null.');
       }
 
       final newItems = query.parse(newData).searchAcceptingStoresInProject;
@@ -146,10 +146,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.warning, size: 60, color: Colors.orange),
-            const Text("Bitte Internetverbindung prüfen."),
+            const Text('Bitte Internetverbindung prüfen.'),
             OutlinedButton(
               onPressed: _pagingController.retryLastFailedRequest,
-              child: const Text("Erneut versuchen"),
+              child: const Text('Erneut versuchen'),
             )
           ],
         ),
@@ -160,7 +160,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            const Text("Auf diese Suche trifft keine Akzeptanzstelle zu."),
+            const Text('Auf diese Suche trifft keine Akzeptanzstelle zu.'),
           ],
         ),
       );
