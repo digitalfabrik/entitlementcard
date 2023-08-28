@@ -21,12 +21,12 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
     return null
   }
 
-  query.set(config.card.nameColumnName, forenames.value + ' ' + surname.value)
+  query.set(config.card.nameColumnName, `${forenames.value} ${surname.value}`)
   const cardTypeExtensionIdx = config.card.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
   query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
 
-  return '?' + query.toString()
+  return `?${query.toString()}`
 }
 
 const config: ProjectConfig = {
