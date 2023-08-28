@@ -171,7 +171,7 @@ const ApplicationView: FunctionComponent<{
               </PrintAwareButton>
               <Tooltip
                 disabled={!!createCardQuery}
-                content={'Für diesen Antrag kann die Karte nicht automatisch erstellt werden.'}>
+                content={'Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'}>
                 <PrintAwareAnchorButton
                   disabled={!createCardQuery}
                   href={createCardQuery ? './cards/add' + createCardQuery : undefined}
