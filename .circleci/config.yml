@@ -69,8 +69,8 @@ workflows:
           filters:
             branches:
               only:
-                - main
                 - /release.*/
+                - /1108.*/
       - deploy:
           name: deploy-production
           server: entitlementcard.tuerantuer.org
