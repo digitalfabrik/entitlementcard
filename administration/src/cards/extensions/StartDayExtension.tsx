@@ -8,12 +8,22 @@ import { Extension } from './extensions'
 
 type StartDayState = { startDay: number }
 
+const minStartDay = new PlainDate(2020, 1, 1)
+
 class StartDayExtension extends Extension<StartDayState, null> {
   public readonly name = StartDayExtension.name
 
   setInitialState() {
     const today = PlainDate.fromLocalDate(new Date())
     this.state = { startDay: today.toDaysSinceEpoch() }
+  }
+
+  hasValidStartDayDate(startDay?: number): boolean {
+    if (startDay === undefined) {
+      return false
+    }
+    const date = PlainDate.fromDaysSinceEpoch(startDay)
+    return !date.isBefore(minStartDay)
   }
 
   createForm(onUpdate: () => void) {
@@ -33,6 +43,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
+            min: minStartDay.toString(),
             style: { fontSize: 14, padding: '6px 10px' },
           }}
           onChange={e => {
@@ -55,14 +66,22 @@ class StartDayExtension extends Extension<StartDayState, null> {
     return false
   }
 
+  // Set a startDay placeholder for checking protobuf size and avoid negative value
+  setValidProtobufStartDay() {
+    if (this.state?.startDay && this.state.startDay < 0) {
+      return minStartDay.toDaysSinceEpoch()
+    }
+    return this.state?.startDay
+  }
+
   setProtobufData(message: PartialMessage<CardExtensions>) {
     message.extensionStartDay = {
-      startDay: this.state?.startDay,
+      startDay: this.setValidProtobufStartDay(),
     }
   }
 
   isValid() {
-    return this.state !== null
+    return this.state !== null && this.hasValidStartDayDate(this.state.startDay)
   }
 
   /**
