@@ -1,5 +1,4 @@
-import { Button } from '@blueprintjs/core'
-import { Tooltip2 } from '@blueprintjs/popover2'
+import { Button, Tooltip } from '@blueprintjs/core'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import ButtonBar from '../ButtonBar'
@@ -16,7 +15,7 @@ const CreateCardsButtonBar = ({ cardBlueprints, generateCards, goBack }: CreateC
   return (
     <ButtonBar>
       <Button icon='arrow-left' text='Zurück zur Auswahl' onClick={goBack} />
-      <Tooltip2
+      <Tooltip
         placement='top'
         content={
           cardBlueprints.length === 0
@@ -31,7 +30,7 @@ const CreateCardsButtonBar = ({ cardBlueprints, generateCards, goBack }: CreateC
           onClick={generateCards}
           disabled={!allCardsValid || cardBlueprints.length === 0}
         />
-      </Tooltip2>
+      </Tooltip>
     </ButtonBar>
   )
 }

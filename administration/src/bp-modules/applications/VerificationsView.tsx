@@ -101,9 +101,9 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
         {verifications.map((verification, index) => {
           const status = getStatus(verification)
           const text = verification.verifiedDate
-            ? 'Bestätigt am ' + new Date(verification.verifiedDate).toLocaleString('de')
+            ? `Bestätigt am ${new Date(verification.verifiedDate).toLocaleString('de')}`
             : verification.rejectedDate
-            ? 'Widersprochen am ' + new Date(verification.rejectedDate).toLocaleString('de')
+            ? `Widersprochen am ${new Date(verification.rejectedDate).toLocaleString('de')}`
             : 'Ausstehend'
           return (
             <VerificationListItem
