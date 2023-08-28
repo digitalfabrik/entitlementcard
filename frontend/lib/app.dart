@@ -69,7 +69,7 @@ class App extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             localizationsDelegates: [
               FlutterI18nDelegate(
-                translationLoader: FileTranslationLoader(useCountryCode: false, fallbackFile: 'en', basePath: 'assets/bayern/translations'),
+                translationLoader: FileTranslationLoader(useCountryCode: false, fallbackFile: 'de', basePath: 'assets/bayern/translations'),
                 missingTranslationHandler: (key, locale) =>
                     print('--- Missing Key: $key, languageCode: ${locale?.languageCode}'),
               ),
@@ -77,7 +77,7 @@ class App extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [Locale('de'), Locale('en')],
+            supportedLocales: const [Locale('de')],
             initialRoute: initialRoute,
             routes: routes,
           ),
