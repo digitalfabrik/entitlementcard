@@ -23,7 +23,7 @@ data class MapConfig(val baseUrl: String)
 data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class CsvWriterConfig(val enabled: Boolean)
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
-data class MatomoConfig(val siteId: Int, val url: String)
+data class MatomoConfig(val siteId: Int, val url: String, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,

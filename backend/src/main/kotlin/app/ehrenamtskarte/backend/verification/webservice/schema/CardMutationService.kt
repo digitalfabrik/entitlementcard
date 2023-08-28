@@ -37,8 +37,7 @@ class CardMutationService {
                     ?: throw UnauthorizedException()
 
             for (card in cards) {
-                val targetedRegionId = card.regionId
-                if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
+                if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
                     throw ForbiddenException()
                 }
                 if (!isCodeTypeValid(card)) {
@@ -64,7 +63,8 @@ class CardMutationService {
                 )
             }
         }
-        Matomo.trackCreateCards(projectConfig, cards)
+
+        Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, cards)
         return true
     }
 
@@ -83,8 +83,9 @@ class CardMutationService {
                 ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
+
         // Avoid race conditions when activating a card.
-        return transaction(TRANSACTION_REPEATABLE_READ, repetitionAttempts = 0) t@{
+        val activationResult = transaction(TRANSACTION_REPEATABLE_READ, repetitionAttempts = 0) t@{
             val card = CardRepository.findByHash(project, cardHash)
             val activationSecretHash = card?.activationSecretHash
 
@@ -112,6 +113,8 @@ class CardMutationService {
             logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
+        Matomo.trackActivation(projectConfig, context.request, dfe.field.name, cardHash, activationResult.activationState != ActivationState.failed)
+        return activationResult
     }
 
     private fun isCodeTypeValid(card: CardGenerationModel): Boolean {

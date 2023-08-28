@@ -49,7 +49,8 @@ class GraphQLHandler(
         graphQLParams.mutations,
         graphQLParams.subscriptions
     )
-    private val graphQL = GraphQL.newGraphQL(graphQLSchema).defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
+    private val graphQL = GraphQL.newGraphQL(graphQLSchema)
+        .defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
 
     private val mapper = jacksonObjectMapper()
 
@@ -134,7 +135,8 @@ class GraphQLHandler(
                 files,
                 remoteIp,
                 backendConfiguration,
-                regionIdentifierByPostalCode
+                regionIdentifierByPostalCode,
+                context.req()
             )
         } catch (e: Exception) {
             when (e) {
@@ -146,7 +148,8 @@ class GraphQLHandler(
                     files,
                     remoteIp,
                     backendConfiguration,
-                    regionIdentifierByPostalCode
+                    regionIdentifierByPostalCode,
+                    context.req()
                 )
 
                 else -> throw e

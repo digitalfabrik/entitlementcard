@@ -1,12 +1,55 @@
+import 'dart:io';
+
 import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class ConfiguredGraphQlProvider extends StatelessWidget {
+class ConfiguredGraphQlProvider extends StatefulWidget {
   final Widget child;
 
   const ConfiguredGraphQlProvider({super.key, required this.child});
+
+  @override
+  State<StatefulWidget> createState() => ConfiguredGraphQlProviderState();
+}
+
+class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
+  String _platformVersion = 'Unknown';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await FkUserAgent.init();
+      initPlatformState();
+    });
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = FkUserAgent.userAgent!;
+      print(platformVersion);
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +67,14 @@ class ConfiguredGraphQlProvider extends StatelessWidget {
               return null;
             },
           ),
-          HttpLink(Configuration.of(context).graphqlUrl)
+          HttpLink(Configuration.of(context).graphqlUrl, defaultHeaders: { HttpHeaders.userAgentHeader: _platformVersion })
         ]),
       ),
     );
     return GraphQLProvider(
       client: client,
       child: CacheProvider(
-        child: child,
+        child: widget.child,
       ),
     );
   }
