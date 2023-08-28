@@ -81,7 +81,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
 
   setProtobufData(message: PartialMessage<CardExtensions>) {
     message.extensionStartDay = {
-      startDay: this.setValidProtobufStartDay(),
+      startDay: this.getValidProtobufStartDay(),
     }
   }
 
