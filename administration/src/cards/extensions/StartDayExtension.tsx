@@ -70,12 +70,13 @@ class StartDayExtension extends Extension<StartDayState, null> {
     return false
   }
 
-  // Set a startDay placeholder for checking protobuf size and avoid negative value
-  setValidProtobufStartDay() {
-    if (this.state?.startDay && this.state.startDay < 0) {
+  // Returns startDay of the state if it is valid, otherwise minStartDay as placeholder.
+  getValidProtobufStartDay(): number {
+    const startDay = this.state?.startDay
+    if (startDay === undefined || !this.hasValidStartDayDate(startDay)) {
       return minStartDay.toDaysSinceEpoch()
     }
-    return this.state?.startDay
+    return startDay
   }
 
   setProtobufData(message: PartialMessage<CardExtensions>) {
