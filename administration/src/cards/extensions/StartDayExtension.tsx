@@ -18,6 +18,10 @@ class StartDayExtension extends Extension<StartDayState, null> {
     this.state = { startDay: today.toDaysSinceEpoch() }
   }
 
+  /*
+    Returns true, if the start day is not before the minimum start day.
+    Some minimum start day after 1970 is necessary, as we use an uint32 in the protobuf.
+  */
   hasValidStartDayDate(startDay?: number): boolean {
     if (startDay === undefined) {
       return false
