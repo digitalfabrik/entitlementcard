@@ -168,9 +168,9 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
     final features = jsonFeatures.map((e) => e as Map<String, dynamic>).where((x) {
-      if (x["properties"] == null) return false;
-      final properties = x["properties"] as Map<String, dynamic>;
-      if (properties["categoryId"] == null) return false;
+      if (x['properties'] == null) return false;
+      final properties = x['properties'] as Map<String, dynamic>;
+      if (properties['categoryId'] == null) return false;
       return true;
     }).toList();
 
@@ -185,8 +185,8 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   dynamic _getClosestFeature(List<dynamic> features, LatLng target) {
     LatLng extractLatLngFromFeature(dynamic rawFeature) {
       final feature = rawFeature as Map<String, dynamic>;
-      final geometry = feature["geometry"] as Map<String, dynamic>;
-      final coordinates = geometry["coordinates"] as List<dynamic>;
+      final geometry = feature['geometry'] as Map<String, dynamic>;
+      final coordinates = geometry['coordinates'] as List<dynamic>;
       final latitude = coordinates[1] as double;
       final longitude = coordinates[0] as double;
       return LatLng(latitude, longitude);

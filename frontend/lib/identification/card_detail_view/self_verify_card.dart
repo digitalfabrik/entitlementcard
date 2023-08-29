@@ -19,14 +19,14 @@ Future<void> selfVerifyCard(UserCodeModel userCodeModel, String projectId, Graph
     ..pepper = userCode.pepper
     ..otp = otpCode.code;
 
-  debugPrint("Card Self-Verification: Requesting server");
+  debugPrint('Card Self-Verification: Requesting server');
 
   final (outOfSync: outOfSync, result: cardVerification) =
       await queryDynamicServerVerification(client, projectId, qrCode);
 
   // If the user code has changed during the server request, we abort.
   if (userCodeModel.userCode != userCode) {
-    debugPrint("Card Self-Verification: The user code has been changed during server request for the old user code.");
+    debugPrint('Card Self-Verification: The user code has been changed during server request for the old user code.');
     return;
   }
 

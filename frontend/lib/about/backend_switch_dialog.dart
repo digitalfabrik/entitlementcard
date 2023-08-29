@@ -27,7 +27,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Switch Endpoint", style: Theme.of(context).textTheme.headlineMedium),
+              Text('Switch Endpoint', style: Theme.of(context).textTheme.headlineMedium),
               IconButton(
                 icon: const Icon(Icons.close),
                 color: Theme.of(context).appBarTheme.backgroundColor,
@@ -44,7 +44,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           child: Column(
             children: [
               Text(
-                "Current Endpoint: \n${Configuration.of(context).graphqlUrl}",
+                'Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
                 style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor),
               ),
               Padding(
@@ -65,7 +65,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      child: const Text("Switch API"),
+                      child: const Text('Switch API'),
                       onPressed: () => switchBackendUrl(context),
                     )
                   : Container(),

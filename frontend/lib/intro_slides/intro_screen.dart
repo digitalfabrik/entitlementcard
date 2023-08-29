@@ -21,9 +21,9 @@ class IntroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),
-      renderDoneBtn: const Text("Fertig"),
-      renderNextBtn: const Text("Weiter"),
-      renderPrevBtn: const Text("Zurück"),
+      renderDoneBtn: const Text('Fertig'),
+      renderNextBtn: const Text('Weiter'),
+      renderPrevBtn: const Text('Zurück'),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       indicatorConfig: IndicatorConfig(
         colorActiveIndicator: theme.colorScheme.primary,
