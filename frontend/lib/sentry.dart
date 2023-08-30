@@ -11,5 +11,7 @@ Future<void> runAppWithSentry() async {
 }
 
 Future<void> reportError(dynamic exception, dynamic stackTrace) async {
-  await Sentry.captureException(exception, stackTrace: stackTrace);
+  if (Sentry.isEnabled) {
+    await Sentry.captureException(exception, stackTrace: stackTrace);
+  }
 }
