@@ -77,8 +77,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       await reportError(errorMessage + e.toString(), stackTrace);
     } on Exception catch (e, stackTrace) {
       debugPrintStack(stackTrace: stackTrace, label: e.toString());
-      String errorMessage = 'Ein unerwarteter Fehler ist aufgetreten.';
-      await showError(errorMessage + e.toString(), stackTrace);
+      await showError('Ein unerwarteter Fehler ist aufgetreten.', stackTrace);
     }
   }
 
