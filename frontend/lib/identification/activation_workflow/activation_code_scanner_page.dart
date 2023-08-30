@@ -16,6 +16,7 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/widgets.dart';
@@ -42,36 +43,42 @@ class ActivationCodeScannerPage extends StatelessWidget {
   }
 
   Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
-    Future<void> showError(String msg) async => QrParsingErrorDialog.showErrorDialog(context, msg);
+    Future<void> showError(String msg, dynamic stackTrace) async =>
+        {QrParsingErrorDialog.showErrorDialog(context, msg), await reportError(msg, stackTrace)};
 
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
     } on ActivationDidNotOverwriteExisting catch (e) {
-      await showError(e.toString());
+      await showError(e.toString(), null);
     } on QrCodeFieldMissingException catch (e) {
       await showError(
-        'Der Inhalt des eingescannten Codes ist unvollständig. '
-        '(Fehlercode: ${e.missingFieldName}Missing)',
-      );
+          'Der Inhalt des eingescannten Codes ist unvollständig. '
+          '(Fehlercode: ${e.missingFieldName}Missing)',
+          null);
     } on QrCodeWrongTypeException catch (_) {
-      await showError('Der eingescannte Code kann nicht in der App gespeichert werden.');
+      await showError('Der eingescannte Code kann nicht in der App gespeichert werden.', null);
     } on CardExpiredException catch (e) {
       final dateFormat = DateFormat('dd.MM.yyyy');
-      await showError('Der eingescannte Code ist bereits am '
-          '${dateFormat.format(e.expiry)} abgelaufen.');
+      await showError(
+          'Der eingescannte Code ist bereits am '
+          '${dateFormat.format(e.expiry)} abgelaufen.',
+          null);
     } on ServerCardActivationException catch (e, stackTrace) {
       debugPrintStack(stackTrace: stackTrace, label: e.toString());
+      String errorMessage = 'Der eingescannte Code konnte nicht aktiviert '
+          'werden, da die Kommunikation mit dem Server fehlschlug. '
+          'Bitte prüfen Sie Ihre Internetverbindung.';
       await ConnectionFailedDialog.show(
         context,
-        'Der eingescannte Code konnte nicht aktiviert '
-        'werden, da die Kommunikation mit dem Server fehlschlug. '
-        'Bitte prüfen Sie Ihre Internetverbindung.',
+        errorMessage,
       );
-    } on Exception catch (e, stacktrace) {
-      debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      await showError('Ein unerwarteter Fehler ist aufgetreten.');
+      await reportError(errorMessage + e.toString(), stackTrace);
+    } on Exception catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace, label: e.toString());
+      String errorMessage = 'Ein unerwarteter Fehler ist aufgetreten.';
+      await showError(errorMessage + e.toString(), stackTrace);
     }
   }
 
@@ -99,6 +106,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     switch (activationResult.activationState) {
       case ActivationState.success:
         if (activationResult.totpSecret == null) {
+          await reportError('TotpSecret is null during activation', null);
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
