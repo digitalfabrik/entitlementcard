@@ -1,3 +1,7 @@
+import '@types/node'
+import '@types/react'
+import '@types/react-dom'
+
 // This file originally stems from a CRA-eject.
 /// <reference types="node" />
 /// <reference types="react" />

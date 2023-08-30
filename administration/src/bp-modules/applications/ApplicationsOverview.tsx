@@ -183,7 +183,6 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
 
   return (
-    // @ts-ignore
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
       {updatedApplications.map(application => (
         <ApplicationViewComponent

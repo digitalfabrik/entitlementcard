@@ -12,9 +12,7 @@ import configFactory from '../config/webpack.config'
 import createDevServerConfig from '../config/webpackDevServer.config'
 
 // Do this as the first thing so that any code reading it knows the right env.
-// @ts-ignore
 process.env.BABEL_ENV = 'development'
-// @ts-ignore
 process.env.NODE_ENV = 'development'
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -65,10 +63,10 @@ checkBrowsers(paths.appPath, isInteractive)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
     const appName = require(paths.appPackageJson).name
 
-    // @ts-ignore
+    // @ts-expect-error prepareUrls typed incorrectly
     const urls = prepareUrls(protocol, HOST, port, paths.publicUrlOrPath.slice(0, -1))
     // Create a webpack compiler that is configured with custom messages.
-    // @ts-ignore
+    // @ts-expect-error devSocket actually not required
     const compiler = createCompiler({
       appName,
       config,

@@ -21,7 +21,7 @@ export interface JSONCardBlueprint<E = ExtensionInstance> {
   id: number
   fullName: string
   expirationDate: string | null
-  extensions: (E extends Extension<infer T, any> ? JSONExtension<T> : never)[]
+  extensions: (E extends Extension<infer T, unknown> ? JSONExtension<T> : never)[]
 }
 
 /**

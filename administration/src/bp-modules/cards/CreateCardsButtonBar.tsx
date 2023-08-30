@@ -1,4 +1,5 @@
 import { Button, Tooltip } from '@blueprintjs/core'
+import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import ButtonBar from '../ButtonBar'
