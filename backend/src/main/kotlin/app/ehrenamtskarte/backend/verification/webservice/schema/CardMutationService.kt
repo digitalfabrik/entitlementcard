@@ -81,7 +81,8 @@ class CardMutationService {
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
         // Avoid race conditions when activating a card.
-        return transaction(TRANSACTION_REPEATABLE_READ, repetitionAttempts = 0) t@{
+        return transaction(TRANSACTION_REPEATABLE_READ) t@{
+            repetitionAttempts = 0
             val card = CardRepository.findByHash(project, cardHash)
             val activationSecretHash = card?.activationSecretHash
 
