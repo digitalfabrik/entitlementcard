@@ -1,5 +1,4 @@
-import { Colors, Icon } from '@blueprintjs/core'
-import { Tooltip2 } from '@blueprintjs/popover2'
+import { Colors, Icon, Tooltip } from '@blueprintjs/core'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
@@ -60,7 +59,7 @@ const getStatus = (verification: Application['verifications'][number]) => {
 export const VerificationsQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
   const verificationStati = verifications.map(getStatus)
   return (
-    <Tooltip2
+    <Tooltip
       content={
         <div>
           <b>Bestätigung(en) durch Organisationen:</b>
@@ -82,7 +81,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
           text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
         />
       </div>
-    </Tooltip2>
+    </Tooltip>
   )
 }
 
