@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.migration
 
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.migration.migrations.MigrationsRegistry
-import org.jetbrains.exposed.sql.ColumnDiff
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -53,7 +52,7 @@ fun assertDatabaseIsInSync() {
         }
     }
 
-    val statements = statementsRequiredToActualizeScheme(*allTables) + dropExcessiveColumns(*allTables)
+    val statements = SchemaUtils.statementsRequiredToActualizeScheme(*allTables) + dropExcessiveColumns(*allTables)
     if (statements.isNotEmpty() || outOfSyncComment != null) {
         throw DatabaseOutOfSyncException(statements, comment = outOfSyncComment)
     }
@@ -79,28 +78,4 @@ private fun dropExcessiveColumns(vararg tables: Table): List<String> {
     }
 
     return statements
-}
-
-/**
- * Workaround for https://github.com/JetBrains/Exposed/issues/1486
- */
-internal fun statementsRequiredToActualizeScheme(vararg tables: Table): List<String> {
-    val statements = SchemaUtils.statementsRequiredToActualizeScheme(*tables)
-    val existingColumnsByTable = currentDialect.tableColumns(*tables)
-    val allColumns = tables.map { table -> table.columns }.flatten()
-    val problematicColumns = allColumns.filter { column ->
-        val hasDefaultInCode = column.descriptionDdl().contains("DEFAULT (CURRENT_TIMESTAMP)")
-        val existingColumn = existingColumnsByTable[column.table]?.singleOrNull {
-            column.name.equals(it.name, true)
-        }
-        val hasDefaultInDb = existingColumn?.defaultDbValue == "CURRENT_TIMESTAMP"
-        hasDefaultInCode && hasDefaultInDb
-    }
-    val problematicStatements = problematicColumns.map {
-        currentDialect.modifyColumn(
-            it,
-            ColumnDiff(defaults = true, nullability = false, autoInc = false, caseSensitiveName = false)
-        ).single()
-    }
-    return statements.filter { it !in problematicStatements }
 }
