@@ -1,5 +1,5 @@
 import { OverlayToaster } from '@blueprintjs/core'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { ReactElement } from 'react'
 
 import CSVCard from '../../cards/CSVCard'
@@ -38,7 +38,7 @@ describe('ImportCardsInput', () => {
       }),
     } as unknown as FileReader
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
-    const file = new File([csv], projectConfig.name + '.csv', { type: 'text/csv' })
+    const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
 
     localStorage.setItem('project-override', projectConfig.projectId)
 
@@ -54,9 +54,7 @@ describe('ImportCardsInput', () => {
     const fileInput = getByTestId('file-upload') as HTMLInputElement
     fireEvent.change(fileInput, { target: { files: [file] } })
 
-    act(() => {
-      fireEvent.input(fileInput)
-    })
+    fireEvent.input(fileInput)
 
     await waitFor(() => expect(fileReaderMock.readAsText).toHaveBeenCalledTimes(1))
   }

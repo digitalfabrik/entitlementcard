@@ -4,7 +4,7 @@ function mapValues<VPre extends { [k in keyof VPre]: unknown }, VPost extends { 
   object: { [k in keyof VPre]: VPre[k] },
   map: <k extends keyof VPre>(value: VPre[k], key: k) => VPost[k]
 ): { [k in keyof VPre]: VPost[k] } {
-  let result: Partial<VPost> = {}
+  const result: Partial<VPost> = {}
   for (const [key, value] of Object.entries(object)) {
     // We assume that `key` is in VPre. We would need a typescript feature (exact types) to remove this assumption.
     // The lodash mapValues types suffer from the same problems.

@@ -1,5 +1,5 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
-import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { TokenPayload } from './AuthProvider'

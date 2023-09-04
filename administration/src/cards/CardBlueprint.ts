@@ -21,7 +21,7 @@ export interface JSONCardBlueprint<E = ExtensionInstance> {
   id: number
   fullName: string
   expirationDate: string | null
-  extensions: (E extends Extension<infer T, any> ? JSONExtension<T> : never)[]
+  extensions: (E extends Extension<infer T, unknown> ? JSONExtension<T> : never)[]
 }
 
 /**
@@ -107,7 +107,7 @@ export class CardBlueprint {
     try {
       this.expirationDate = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
     } catch (error) {
-      console.error("Could not parse date from string '" + value + "' with format dd.MM.yyyy.", error)
+      console.error(`Could not parse date from string '${value}' with format dd.MM.yyyy.`, error)
     }
   }
 
