@@ -66,7 +66,6 @@ class ActivationCodeScannerPage extends StatelessWidget {
           '${dateFormat.format(e.expiry)} abgelaufen.',
           null);
     } on ServerCardActivationException catch (e, stackTrace) {
-      debugPrintStack(stackTrace: stackTrace, label: e.toString());
       String errorMessage = 'Der eingescannte Code konnte nicht aktiviert '
           'werden, da die Kommunikation mit dem Server fehlschlug. '
           'Bitte prüfen Sie Ihre Internetverbindung.';
@@ -76,7 +75,6 @@ class ActivationCodeScannerPage extends StatelessWidget {
       );
       await reportError(errorMessage + e.toString(), stackTrace);
     } on Exception catch (e, stackTrace) {
-      debugPrintStack(stackTrace: stackTrace, label: e.toString());
       await showError('Ein unerwarteter Fehler ist aufgetreten.', stackTrace);
     }
   }
@@ -136,9 +134,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        throw const ServerCardActivationException(
-          'Die Aktivierung befindet sich in einem ungültigen Zustand.',
-        );
+        String errorMessage = 'Die Aktivierung befindet sich in einem ungültigen Zustand.';
+        reportError(errorMessage, null);
+        throw ServerCardActivationException(errorMessage);
     }
   }
 }
