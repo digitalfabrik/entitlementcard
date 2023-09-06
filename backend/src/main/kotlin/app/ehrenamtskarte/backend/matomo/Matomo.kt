@@ -29,7 +29,6 @@ object Matomo {
         val tracker = MatomoTracker(url)
 
         val matomoRequest = requestBuilder
-            .actionName(ACTION_NAME)
             .siteId(siteId)
             .authToken(matomoConfig.accessToken)
             .build()
@@ -146,12 +145,11 @@ object Matomo {
 
     fun trackSearch(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, params: SearchParams, numResults: Int) {
         if (projectConfig.matomo === null) return
-        if (params.categoryIds != null) return
         this.sendTrackingRequest(
             projectConfig.matomo,
             MatomoRequest.builder()
-                .actionName(query)
-                .searchQuery(params.searchText ?: "")
+                .actionName(query )
+                .searchQuery((params.searchText ?: "") + "?categories=" + (params.categoryIds?.joinToString(",") ?: ""))
                 .searchResultsCount(numResults.toLong())
                 .also { attachRequestInformation(it, request) }
         )
