@@ -62,7 +62,7 @@ function chooseMaskPattern(
   // We try all mask patterns to choose the best one.
   for (let maskPattern = 0; maskPattern < QRCode.NUM_MASK_PATTERNS; maskPattern++) {
     MatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix)
-    let penalty = calculateMaskPenalty(matrix)
+    const penalty = calculateMaskPenalty(matrix)
     if (penalty < minPenalty) {
       minPenalty = penalty
       bestMaskPattern = maskPattern
@@ -95,7 +95,7 @@ function createHeader(mode: QRCodeMode) {
 }
 
 export function isContentLengthValid(content: Uint8Array): boolean {
-  let mode = QRCodeMode.BYTE
+  const mode = QRCodeMode.BYTE
   return willFit(mode, createHeader(mode).getSize(), content.length * 8, DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
 }
 
@@ -178,7 +178,7 @@ const createQRCode = (
   size: number
 ) => {
   const code: QRCode = encodeQRCode(content)
-  let quietZone = DEFAULT_QUIET_ZONE_SIZE
+  const quietZone = DEFAULT_QUIET_ZONE_SIZE
 
   const input = code.getMatrix()
 
@@ -219,7 +219,7 @@ export const drawQRCode = (
   y: number,
   size: number,
   pdfDocument: PDFPage,
-  border: boolean = true
+  border = true
 ) => {
   createQRCode(
     content,

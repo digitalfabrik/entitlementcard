@@ -53,7 +53,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
                 this.state = { birthday: date.toDaysSinceEpoch() }
                 onUpdate()
               } catch (error) {
-                console.error("Could not parse date from string '" + e.target.value + "'.", error)
+                console.error(`Could not parse date from string '${e.target.value}'.`, error)
               }
             }
           }}

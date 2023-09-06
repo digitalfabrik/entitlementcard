@@ -8,7 +8,6 @@
   "dependencies": {
     "@apollo/client": "^3.7.16",
     "@blueprintjs/core": "^5.0.0",
-    "@blueprintjs/popover2": "^2.0.0",
     "@blueprintjs/select": "^5.0.0",
     "@blueprintjs/table": "^5.0.0",
     "@bufbuild/protobuf": "^1.2.1",
@@ -62,10 +61,9 @@
     "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
-    "eslint": "^8.43.0",
+    "eslint": "^8.48.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-jest": "^27.2.3",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
     "jest": "^29.6.2",
@@ -95,21 +93,6 @@
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
     "generate-protobuf": "protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=./node_modules/.bin/protoc-gen-es ../specs/card.proto",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql"
-  },
-  "eslintConfig": {
-    "plugins": [
-      "jest"
-    ],
-    "extends": [
-      "eslint-config-prettier",
-      "react-app",
-      "plugin:jest/recommended",
-      "plugin:jest/style"
-    ],
-    "ignorePatterns": [
-      "src/generated/**",
-      "build/**"
-    ]
   },
   "browserslist": {
     "production": [

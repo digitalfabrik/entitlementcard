@@ -15,9 +15,7 @@ import configFactory from '../config/webpack.config'
 const bfj = require('bfj')
 
 // Do this as the first thing so that any code reading it knows the right env.
-// @ts-ignore
 process.env.BABEL_ENV = 'production'
-// @ts-ignore
 process.env.NODE_ENV = 'production'
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -87,10 +85,8 @@ checkBrowsers(paths.appPath, isInteractive)
       if (warnings.length) {
         console.log(chalk.yellow('Compiled with warnings.\n'))
         console.log(warnings.join('\n\n'))
-        console.log(
-          '\nSearch for the ' + chalk.underline(chalk.yellow('keywords')) + ' to learn more about each warning.'
-        )
-        console.log('To ignore, add ' + chalk.cyan('// eslint-disable-next-line') + ' to the line before.\n')
+        console.log(`\nSearch for the ${chalk.underline(chalk.yellow('keywords'))} to learn more about each warning.`)
+        console.log(`To ignore, add ${chalk.cyan('// eslint-disable-next-line')} to the line before.\n`)
       } else {
         console.log(chalk.green('Compiled successfully.\n'))
       }
@@ -198,7 +194,7 @@ function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
 
       if (writeStatsJson) {
         return bfj
-          .write(paths.appBuild + '/bundle-stats.json', stats.toJson())
+          .write(`${paths.appBuild}/bundle-stats.json`, stats.toJson())
           .then(() => resolve(resolveArgs))
           .catch((error: any) => reject(new Error(error)))
       }

@@ -6,7 +6,6 @@ import { findExtension } from '../../cards/extensions/extensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'
 import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
-// @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {

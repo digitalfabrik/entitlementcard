@@ -34,7 +34,7 @@ const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps) => {
       return (
         <StyledCell
           wrapText
-          key={rowIndex + '-' + columnIndex}
+          key={`${rowIndex}-${columnIndex}`}
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
           <TruncatedFormat2 detectTruncation preformatted>
