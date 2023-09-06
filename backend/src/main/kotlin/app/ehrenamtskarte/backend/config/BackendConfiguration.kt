@@ -47,6 +47,14 @@ data class BackendConfiguration(
     val csvWriter: CsvWriterConfig
 ) {
 
+    fun sanityCheckMatomoConfig(): BackendConfiguration {
+        val matomoConfig = projects.mapNotNull { it.matomo }
+        if (matomoConfig.size != matomoConfig.distinctBy { Pair(it.siteId, it.url) }.count()) {
+            throw Error("There are at least two matomo configs with the same siteId and url. This seems to be a copy/paste error.")
+        }
+        return this
+    }
+
     fun toImportConfig(projectId: String): ImportConfig {
         return ImportConfig(this.copy(), projectId)
     }
@@ -74,7 +82,7 @@ data class BackendConfiguration(
 
             logger.info("Loading backend configuration from $url.")
 
-            return from(url)
+            return from(url).sanityCheckMatomoConfig()
         }
 
         private fun from(url: URL): BackendConfiguration =
