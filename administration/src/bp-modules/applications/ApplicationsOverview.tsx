@@ -178,13 +178,8 @@ export class ApplicationViewComponent extends React.Component<{
   }
 }
 
-const sortByStatus = (a: number, b: number): number => {
-  return a - b
-}
-
-const sortByDate = (a: Date, b: Date): number => {
-  return b.getTime() - a.getTime()
-}
+const sortByStatus = (a: number, b: number): number => a - b
+const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
 
 const getVerificationStatus = (status: number[]): VerificationStatus => {
   if (status.every(val => val === VerificationStatus.Verified)) return VerificationStatus.Verified
@@ -192,11 +187,11 @@ const getVerificationStatus = (status: number[]): VerificationStatus => {
   return VerificationStatus.Awaiting
 }
 
-// Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date
+// Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date asc
 const sortApplications = (applications: Application[]): Application[] =>
   applications
     .map(application => ({ ...application, status: getVerificationStatus(application.verifications.map(getStatus)) }))
-    .sort((a, b) => sortByStatus(a.status, b.status) || sortByDate(new Date(a.createdDate), new Date(b.createdDate)))
+    .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
