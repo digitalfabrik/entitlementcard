@@ -11,7 +11,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
-# [3.1.5] 2023-06-30
+# [3.2.0] 2023-08-23
+
+### Added
+* add revoke documentation by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1048
+* Add missing backend checks for required checkboxes by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1041
+* 1043: Allow legacy blau and gold as card types by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1047
+* Validate cardInfoHash length by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1060
+* Migrate away from CRA by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1026
+* 1062: Payment clarification by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1064
+* 1066: Log card activation by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1068
+* Fail CI when pubspec.lock changes by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1061
+* 1074: add applicant name to verification Mail by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1079
+* 1082: Prefill card form from query params by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1089
+* 1073: add second attachment by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1083
+* Show time out of sync error by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1094
+* 1063: print cardInfoHash on pdf by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1095
+* 1080: Add start day by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1090
+
+### Fixed
+* 1042: Fix typo by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1046
+* 1051: No feedback pw reset by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1052
+* Do not delete&recreate all stores when importing by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1055
+* Untangle card status in app by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1071
+* Avoid DB race condition when activating by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1072
+* Harden queryServerVerification by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1069
+* Show error if activation with override fails by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1070
+* 1076: Note non unique postal code by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1088
+* 1063: Center align card hash by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1097
+
+### Changed
+* build(deps): bump tough-cookie from 4.1.2 to 4.1.3 in /administration by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1050
+* build(deps): bump word-wrap from 1.2.3 to 1.2.4 in /administration by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1058
+* build(deps): bump semver from 5.7.1 to 5.7.2 in /administration by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1053
+* Migrate to Jest tests in administration by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1093
+
+## [3.1.5] 2023-06-30
 * 1034: Remove application link card by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1037
 * 1035: Fix notification sent to all users by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1036
 

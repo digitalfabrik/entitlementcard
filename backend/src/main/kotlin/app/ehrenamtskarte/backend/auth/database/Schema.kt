@@ -10,6 +10,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 
 object Administrators : IntIdTable() {
@@ -35,6 +36,7 @@ object Administrators : IntIdTable() {
             (deleted eq Op.TRUE and (role eq Role.NO_RIGHTS.db_value)) or
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
+        uniqueIndex(customIndexName = "email_lower_idx", functions = listOf(email.lowerCase()))
     }
 }
 
