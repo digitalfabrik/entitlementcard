@@ -10,7 +10,7 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import JsonFieldView, { GeneralJsonField } from './JsonFieldView'
-import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import VerificationsView, { VerificationStatus, VerificationsQuickIndicator, getStatus } from './VerificationsView'
 import usePrintApplication from './hooks/usePrintApplication'
 
 export type Application = GetApplicationsQuery['applications'][number]
@@ -178,13 +178,33 @@ export class ApplicationViewComponent extends React.Component<{
   }
 }
 
+const sortByStatus = (a: number, b: number): number => {
+  return a - b
+}
+
+const sortByDate = (a: Date, b: Date): number => {
+  return b.getTime() - a.getTime()
+}
+
+const getVerificationStatus = (status: number[]): VerificationStatus => {
+  if (status.every(val => val === VerificationStatus.Verified)) return VerificationStatus.Verified
+  if (status.every(val => val === VerificationStatus.Rejected)) return VerificationStatus.Rejected
+  return VerificationStatus.Awaiting
+}
+
+// Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date
+const sortApplications = (applications: Application[]): Application[] =>
+  applications
+    .map(application => ({ ...application, status: getVerificationStatus(application.verifications.map(getStatus)) }))
+    .sort((a, b) => sortByStatus(a.status, b.status) || sortByDate(new Date(a.createdDate), new Date(b.createdDate)))
+
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
 
   return (
     <FlipMove style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-      {updatedApplications.map(application => (
+      {sortApplications(updatedApplications).map(application => (
         <ApplicationViewComponent
           isSelectedForPrint={application.id === applicationIdForPrint}
           printApplicationById={printApplicationById}
