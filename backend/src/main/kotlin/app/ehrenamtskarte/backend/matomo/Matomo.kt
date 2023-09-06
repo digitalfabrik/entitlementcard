@@ -97,69 +97,69 @@ object Matomo {
     fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cards: List<CardGenerationModel>) {
         if (projectConfig.matomo == null) return
 
-            val staticCards = cards.filter { it.codeType === CodeType.STATIC }
-            val dynamicCards = cards.filter { it.codeType === CodeType.DYNAMIC }
-            if (staticCards.isNotEmpty() && dynamicCards.isNotEmpty()) {
-                sendBulkTrackingRequest(
-                    projectConfig.matomo,
-                    listOf(
-                        buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.STATIC, staticCards.count()),
-                        buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.DYNAMIC, dynamicCards.count())
-                    )
+        val staticCards = cards.filter { it.codeType === CodeType.STATIC }
+        val dynamicCards = cards.filter { it.codeType === CodeType.DYNAMIC }
+        if (staticCards.isNotEmpty() && dynamicCards.isNotEmpty()) {
+            sendBulkTrackingRequest(
+                projectConfig.matomo,
+                listOf(
+                    buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.STATIC, staticCards.count()),
+                    buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.DYNAMIC, dynamicCards.count())
                 )
-            } else if (staticCards.isNotEmpty()) {
-                sendTrackingRequest(projectConfig.matomo, buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.STATIC, staticCards.count()))
-            } else if (dynamicCards.isNotEmpty()) {
-                sendTrackingRequest(
-                    projectConfig.matomo,
-                    buildCardsTrackingRequest(
-                        request,
-                        dynamicCards.first().regionId,
-                        query,
-                        CodeType.DYNAMIC,
-                        dynamicCards.count()
-                    )
+            )
+        } else if (staticCards.isNotEmpty()) {
+            sendTrackingRequest(projectConfig.matomo, buildCardsTrackingRequest(request, staticCards.first().regionId, query, CodeType.STATIC, staticCards.count()))
+        } else if (dynamicCards.isNotEmpty()) {
+            sendTrackingRequest(
+                projectConfig.matomo,
+                buildCardsTrackingRequest(
+                    request,
+                    dynamicCards.first().regionId,
+                    query,
+                    CodeType.DYNAMIC,
+                    dynamicCards.count()
                 )
-            }
+            )
+        }
     }
 
     fun trackVerification(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, codeType: CodeType, successful: Boolean) {
         if (projectConfig.matomo === null) return
-            val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
-            sendTrackingRequest(
-                projectConfig.matomo,
-                MatomoRequest.builder()
-                    .eventAction(query)
-                    .eventCategory(codeType.toString())
-                    .eventName(if (successful) "verification successful" else "verification failed")
-                    .customTrackingParameters(if (card != null) mapOf("dimension1" to card.regionId) else emptyMap())
-                    .also { attachRequestInformation(it, request) }
-            )
+        val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
+        sendTrackingRequest(
+            projectConfig.matomo,
+            MatomoRequest.builder()
+                .eventAction(query)
+                .eventCategory(codeType.toString())
+                .eventName(if (successful) "verification successful" else "verification failed")
+                .customTrackingParameters(if (card != null) mapOf("dimension1" to card.regionId) else emptyMap())
+                .also { attachRequestInformation(it, request) }
+        )
     }
 
     fun trackActivation(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, successful: Boolean) {
         if (projectConfig.matomo === null) return
-            val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
-            sendTrackingRequest(
-                projectConfig.matomo,
-                MatomoRequest.builder()
-                    .eventAction(query)
-                    .eventValue(if (successful) 1 else 0)
-                    .customTrackingParameters(if (card != null) mapOf("dimension1" to card.regionId) else emptyMap())
-                    .also { attachRequestInformation(it, request) }
-            )
+        val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
+        sendTrackingRequest(
+            projectConfig.matomo,
+            MatomoRequest.builder()
+                .eventAction(query)
+                .eventValue(if (successful) 1 else 0)
+                .customTrackingParameters(if (card != null) mapOf("dimension1" to card.regionId) else emptyMap())
+                .also { attachRequestInformation(it, request) }
+        )
     }
 
     fun trackSearch(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, params: SearchParams, numResults: Int) {
         if (projectConfig.matomo === null) return
         if (params.searchText === null && params.categoryIds === null) return
-            sendTrackingRequest(
-                projectConfig.matomo,
-                MatomoRequest.builder()
-                    .actionName(query)
-                    .searchQuery((params.searchText ?: "") + "?categories=" + (params.categoryIds?.joinToString(",") ?: ""))
-                    .searchResultsCount(numResults.toLong())
-                    .also { attachRequestInformation(it, request) }
-            )
+        sendTrackingRequest(
+            projectConfig.matomo,
+            MatomoRequest.builder()
+                .actionName(query)
+                .searchQuery((params.searchText ?: "") + "?categories=" + (params.categoryIds?.joinToString(",") ?: ""))
+                .searchResultsCount(numResults.toLong())
+                .also { attachRequestInformation(it, request) }
+        )
     }
 }
