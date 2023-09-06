@@ -57,6 +57,14 @@ adb reverse tcp:8000 tcp:8000
 12. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
 13. Take a look at the backend: [http://localhost:8000](http://localhost:8000) (The public version is available at
     api.entitlementcard.app)
+14. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
+15. (optional) Add your matomo config to the backend config
+```yaml
+matomo:
+  siteId: 1
+  url: http://localhost:5003
+  accessToken: <matomo-access-token>
+```
 
 ## Dumping and restoring the database through docker
 
