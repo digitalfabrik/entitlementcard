@@ -36,7 +36,7 @@ object Administrators : IntIdTable() {
             (deleted eq Op.TRUE and (role eq Role.NO_RIGHTS.db_value)) or
                 (deleted eq Op.FALSE and (role neq Role.NO_RIGHTS.db_value))
         }
-        uniqueIndex(functions = listOf(email.lowerCase()))
+        uniqueIndex(customIndexName = "email_lower_idx", functions = listOf(email.lowerCase()))
     }
 }
 
