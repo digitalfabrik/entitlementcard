@@ -15,6 +15,12 @@ import usePrintApplication from './hooks/usePrintApplication'
 
 export type Application = GetApplicationsQuery['applications'][number]
 
+enum ApplicationStatus {
+  fullyVerified,
+  fullyRejected,
+  ambiguous,
+}
+
 export const CARD_PADDING = 20
 const COLLAPSED_HEIGHT = 250
 
@@ -181,16 +187,16 @@ export class ApplicationViewComponent extends React.Component<{
 const sortByStatus = (a: number, b: number): number => a - b
 const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
 
-const getVerificationStatus = (status: number[]): VerificationStatus => {
-  if (status.every(val => val === VerificationStatus.Verified)) return VerificationStatus.Verified
-  if (status.every(val => val === VerificationStatus.Rejected)) return VerificationStatus.Rejected
-  return VerificationStatus.Awaiting
+const getApplicationStatus = (status: number[]): ApplicationStatus => {
+  if (status.every(val => val === VerificationStatus.Verified)) return ApplicationStatus.fullyVerified
+  if (status.every(val => val === VerificationStatus.Rejected)) return ApplicationStatus.fullyRejected
+  return ApplicationStatus.ambiguous
 }
 
 // Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date asc
 const sortApplications = (applications: Application[]): Application[] =>
   applications
-    .map(application => ({ ...application, status: getVerificationStatus(application.verifications.map(getStatus)) }))
+    .map(application => ({ ...application, status: getApplicationStatus(application.verifications.map(getStatus)) }))
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
