@@ -10,10 +10,10 @@ const verifiedIcon = 'tick-circle'
 const rejectedIcon = 'cross-circle'
 const awaitingIcon = 'help'
 
-enum VerificationStatus {
+export enum VerificationStatus {
   Verified,
-  Awaiting,
   Rejected,
+  Awaiting,
 }
 
 const getIconByStatus = (status: VerificationStatus) => {
@@ -46,7 +46,7 @@ const Indicator = ({ status, text }: { status: VerificationStatus; text: ReactNo
   )
 }
 
-const getStatus = (verification: Application['verifications'][number]) => {
+export const getStatus = (verification: Application['verifications'][number]) => {
   if (!!verification.verifiedDate) {
     return VerificationStatus.Verified
   } else if (!!verification.rejectedDate) {
