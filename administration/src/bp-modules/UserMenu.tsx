@@ -28,9 +28,13 @@ const MenuContent = styled(Menu)`
   justify-content: flex-start;
 `
 
-const UserMenuButton = styled(Button)`
+const MenuItem = styled(Button)`
   display: inline-block;
   width: 100%;
+`
+
+const UserMenuButton = styled(Button)`
+  min-width: 220px;
 `
 
 const UserMenu = ({ isOpen, setIsOpen, onSignOut }: UserMenuProps): ReactElement => {
@@ -44,15 +48,21 @@ const UserMenu = ({ isOpen, setIsOpen, onSignOut }: UserMenuProps): ReactElement
     <MenuContent onClick={() => setIsOpen(false)}>
       <span className='bp5-tag bp5-large'>{`Rolle: ${roleToText(role)}`}</span>
       <NavLink to={'/user-settings'}>
-        <UserMenuButton minimal icon='settings' text='Benutzereinstellungen' />
+        <MenuItem minimal icon='settings' text='Benutzereinstellungen' />
       </NavLink>
-      <UserMenuButton minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />
+      <MenuItem minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />
     </MenuContent>
   )
   return (
     <>
       <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <Button minimal alignText='left' icon='user' rightIcon={isOpen ? 'caret-up' : 'caret-down'} text={email} />
+        <UserMenuButton
+          minimal
+          alignText='left'
+          icon='user'
+          rightIcon={isOpen ? 'caret-up' : 'caret-down'}
+          text={email}
+        />
       </Popover>
       <Backdrop onClick={() => setIsOpen(false)} isOpen={isOpen} />
     </>
