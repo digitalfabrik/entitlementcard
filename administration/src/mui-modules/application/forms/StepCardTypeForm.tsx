@@ -56,7 +56,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
   initialState: {
     ...createCompoundInitialState(SubForms),
     wantsDigitalCard: { checked: true },
-    wantsPhysicalCard: { checked: true },
+    wantsPhysicalCard: { checked: false },
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
