@@ -52,7 +52,7 @@ const UserMenu = ({ isOpen, setIsOpen, onSignOut }: UserMenuProps): ReactElement
   return (
     <>
       <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <Button minimal alignText='left' icon='user' rightIcon='caret-down' text={email} />
+        <Button minimal alignText='left' icon='user' rightIcon={isOpen ? 'caret-up' : 'caret-down'} text={email} />
       </Popover>
       <Backdrop onClick={() => setIsOpen(false)} isOpen={isOpen} />
     </>
