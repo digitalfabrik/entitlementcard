@@ -1,12 +1,11 @@
 import { PDFForm, rgb } from 'pdf-lib'
 
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'
 import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
-// @ts-ignore
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
@@ -17,10 +16,11 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
   const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.nuernbergPassId
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
   const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
+  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
 Geburtsdatum: ${birthdayDate.format('dd.MM.yyyy')}
-Gültig bis: ${expirationDate.format('dd.MM.yyyy')}`
+Gültig: ${startDate.format('dd.MM.yyyy')} bis ${expirationDate.format('dd.MM.yyyy')}`
 }
 
 const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlueprint }: InfoParams) => {
@@ -58,6 +58,10 @@ const renderPassNumber = ({ info }: InfoParams) => {
   return passNumber ? `Nürnberg-Pass-Nr.: ${passNumber?.toString()}` : ''
 }
 
+const renderCardHash = ({ cardInfoHash }: InfoParams) => {
+  return cardInfoHash
+}
+
 const pdfConfiguration: PdfConfig = {
   title: 'Nürnberg-Pässe',
   templatePath: pdfTemplate,
@@ -69,9 +73,10 @@ const pdfConfiguration: PdfConfig = {
     ],
     dynamicActivationQrCodes: [{ x: 122, y: 110, size: 63 }],
     text: [
-      { x: 108, y: 243, width: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
-      { x: 129.5, y: 79, width: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
-      { x: 27, y: 265, width: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
+      { x: 108, y: 243, maxWidth: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
+      { x: 129.5, y: 79, maxWidth: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
+      { x: 27, y: 265, maxWidth: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
+      { x: 153.892, y: 178, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
     form: [{ infoToFormFields: createAddressFormFields, x: 25, y: 66, width: 65, fontSize: 10 }],
   },

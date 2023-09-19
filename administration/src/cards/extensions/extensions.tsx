@@ -2,12 +2,13 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
-import AddressExtensions from './AddressFieldExtensons'
+import AddressExtensions from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from './NuernbergPassNumberExtension'
 import RegionExtension from './RegionExtension'
+import StartDayExtension from './StartDayExtension'
 
 export const findExtension = <E extends ExtensionClass>(
   array: ExtensionInstance[],
@@ -39,5 +40,6 @@ export type ExtensionClass =
   | typeof NuernbergPassNumberExtension
   | typeof NuernbergPassIdExtension
   | typeof RegionExtension
+  | typeof StartDayExtension
   | (typeof AddressExtensions)[number]
 export type ExtensionInstance = InstanceType<ExtensionClass>

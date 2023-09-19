@@ -23,7 +23,7 @@ class InfoDialog extends StatelessWidget {
         title: Text(title, style: theme.textTheme.headlineSmall),
       ),
       content: child,
-      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK"))],
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
     );
   }
 }

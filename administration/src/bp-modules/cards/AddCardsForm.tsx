@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef } from 'react'
 import FlipMove from 'react-flip-move'
+import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
@@ -7,6 +8,7 @@ import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CreateCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
+import { getHeaders } from './ImportCardsController'
 
 const FormsWrapper = styled(FlipMove)`
   flex-wrap: wrap;
@@ -42,6 +44,23 @@ type CreateCardsFormProps = {
 
 const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCardsFormProps) => {
   const projectConfig = useContext(ProjectConfigContext)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    if (cardBlueprints.length === 0) {
+      const headers = getHeaders(projectConfig)
+      const cardBlueprint = new CardBlueprint('', projectConfig.card, [region])
+      headers.forEach(header => {
+        const value = searchParams.get(header)
+        if (!value) {
+          return
+        }
+        cardBlueprint.setValue(header, value)
+      })
+      setCardBlueprints([cardBlueprint])
+      setSearchParams()
+    }
+  }, [cardBlueprints.length, projectConfig, region, searchParams, setCardBlueprints, setSearchParams])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -53,11 +72,6 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
     setCardBlueprints([...cardBlueprints, cardBlueprint])
     scrollToBottom()
   }, [cardBlueprints, projectConfig.card, region, setCardBlueprints])
-
-  useEffect(() => {
-    // create a form on mount
-    setCardBlueprints([new CardBlueprint('', projectConfig.card, [region])])
-  }, [projectConfig.card, region, setCardBlueprints])
 
   const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))

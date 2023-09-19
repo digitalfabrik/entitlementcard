@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -25,24 +26,25 @@ import 'package:provider/provider.dart';
 // for testing, so this is intended
 final sampleActivationCodeBavaria = DynamicUserCode()
   ..info = (CardInfo()
-    ..fullName = "Erika Mustermann"
+    ..fullName = 'Erika Mustermann'
     ..expirationDay = 19746
     ..extensions = (CardExtensions()
       ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD)
       ..extensionRegion = (RegionExtension()..regionId = 42)))
-  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
-  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+  ..pepper = const Base64Decoder().convert('aGVsbG8gdGhpcyBpcyBhIHRlc3Q=')
+  ..totpSecret = base32.decode('MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX');
 
 final sampleActivationCodeNuernberg = DynamicUserCode()
   ..info = (CardInfo()
-    ..fullName = "Erika Mustermann"
+    ..fullName = 'Erika Mustermann'
     ..expirationDay = 19746
     ..extensions = (CardExtensions()
       ..extensionBirthday = (BirthdayExtension()..birthday = 19746)
       ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 12323123)
-      ..extensionRegion = (RegionExtension()..regionId = 93)))
-  ..pepper = const Base64Decoder().convert("aGVsbG8gdGhpcyBpcyBhIHRlc3Q=")
-  ..totpSecret = base32.decode("MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX");
+      ..extensionRegion = (RegionExtension()..regionId = 93)
+      ..extensionStartDay = (StartDayExtension()..startDay = 19592)))
+  ..pepper = const Base64Decoder().convert('aGVsbG8gdGhpcyBpcyBhIHRlc3Q=')
+  ..totpSecret = base32.decode('MZLBSF6VHD56ROVG55J6OKJCZIPVDPCX');
 
 class DevSettingsView extends StatelessWidget {
   const DevSettingsView({super.key});
@@ -50,6 +52,8 @@ class DevSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
+    final client = GraphQLProvider.of(context).value;
+    final userCodeModel = Provider.of<UserCodeModel>(context);
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -75,8 +79,12 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _setExpiredLastVerification(context),
           ),
           ListTile(
+            title: const Text('Trigger self-verification'),
+            onTap: () => selfVerifyCard(userCodeModel, Configuration.of(context).projectId, client),
+          ),
+          ListTile(
             title: const Text('Log sample exception'),
-            onTap: () => log("Sample exception.", error: Exception("Sample exception...")),
+            onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
           ),
           ListTile(
             title: const Text('Inspect settings'),
@@ -84,7 +92,7 @@ class DevSettingsView extends StatelessWidget {
               showDialog<bool>(
                 context: context,
                 builder: (context) =>
-                    SimpleDialog(title: const Text("Settings"), children: [Text(settings.toString())]),
+                    SimpleDialog(title: const Text('Settings'), children: [Text(settings.toString())]),
               );
             },
           ),
@@ -132,7 +140,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    "Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -",
+                    'Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -',
                   ),
                   TextFormField(
                     controller: base64Controller,
@@ -147,7 +155,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: const Text("Activate Card"),
+              child: const Text('Activate Card'),
               onPressed: () {
                 _activateCard(context, base64Controller.text);
               },
@@ -190,20 +198,20 @@ class DevSettingsView extends StatelessWidget {
         case ActivationState.failed:
           await QrParsingErrorDialog.showErrorDialog(
             context,
-            "Der eingescannte Code ist ungültig.",
+            'Der eingescannte Code ist ungültig.',
           );
           break;
         case ActivationState.didNotOverwriteExisting:
           throw const ActivationDidNotOverwriteExisting();
         default:
           throw const ServerCardActivationException(
-            "Die Aktivierung befindet sich in einem ungültigen Zustand.",
+            'Die Aktivierung befindet sich in einem ungültigen Zustand.',
           );
       }
 
       messengerState.showSnackBar(
         const SnackBar(
-          content: Text("Aktivierung erfolgreich."),
+          content: Text('Aktivierung erfolgreich.'),
         ),
       );
       Navigator.pop(context);

@@ -42,7 +42,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
     return MapWithFutures(
       onFeatureClick: _onFeatureClick,
       onNoFeatureClick: stopShowingAcceptingStore,
-      onFeatureClickLayerFilter: const ["physical_stores"],
+      onFeatureClickLayerFilter: const ['physical_stores'],
       onMapCreated: (controller) {
         controller.setTelemetryEnabled(enabled: false);
         setState(() => _controller = controller);
@@ -92,13 +92,13 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   PhysicalStoreFeatureData _extractPhysicalStoreData(dynamic rawFeature) {
     final feature = rawFeature as Map<String, dynamic>;
-    final properties = feature["properties"] as Map<String, dynamic>;
-    final geometry = feature["geometry"] as Map<String, dynamic>;
+    final properties = feature['properties'] as Map<String, dynamic>;
+    final geometry = feature['geometry'] as Map<String, dynamic>;
 
     return PhysicalStoreFeatureData(
-      _getIntOrNull(properties["id"]),
-      _getLatLngOrNull(geometry["coordinates"]),
-      _getIntOrNull(properties["categoryId"]),
+      _getIntOrNull(properties['id']),
+      _getLatLngOrNull(geometry['coordinates']),
+      _getIntOrNull(properties['categoryId']),
     );
   }
 

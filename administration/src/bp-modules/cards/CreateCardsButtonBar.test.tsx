@@ -1,12 +1,14 @@
-import { fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
 import bayernConfig from '../../project-configs/bayern/config'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
+jest.useFakeTimers()
+
 describe('CreateCardsButtonBar', () => {
-  it('Should goBack when clicking back', () => {
-    const goBack = jasmine.createSpy()
+  it('Should goBack when clicking back', async () => {
+    const goBack = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar goBack={goBack} cardBlueprints={[]} generateCards={() => Promise.resolve()} />
     )
@@ -15,13 +17,14 @@ describe('CreateCardsButtonBar', () => {
     expect(backButton).toBeTruthy()
 
     fireEvent.click(backButton)
+    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(goBack).toHaveBeenCalled()
   })
 
-  it('Should disable generate button for no cards', () => {
-    const generateCards = jasmine.createSpy()
-    const { getByText, findByText } = render(
+  it('Should disable generate button for no cards', async () => {
+    const generateCards = jest.fn()
+    const { getByText } = render(
       <CreateCardsButtonBar goBack={() => {}} cardBlueprints={[]} generateCards={generateCards} />
     )
 
@@ -31,15 +34,18 @@ describe('CreateCardsButtonBar', () => {
 
     fireEvent.mouseOver(generateButton)
     fireEvent.click(generateButton)
+    await act(async () => {
+      jest.advanceTimersByTime(100)
+    })
 
-    expect(findByText('Legen Sie zunächst eine Karte an.')).toBeTruthy()
+    expect(getByText('Legen Sie zunächst eine Karte an.')).toBeTruthy()
     expect(generateCards).not.toHaveBeenCalled()
   })
 
-  it('Should disable generate button for invalid cards', () => {
-    const generateCards = jasmine.createSpy()
+  it('Should disable generate button for invalid cards', async () => {
+    const generateCards = jest.fn()
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
-    const { getByText, findByText } = render(
+    const { getByText } = render(
       <CreateCardsButtonBar goBack={() => {}} cardBlueprints={cards} generateCards={generateCards} />
     )
 
@@ -49,13 +55,17 @@ describe('CreateCardsButtonBar', () => {
     fireEvent.mouseOver(generateButton)
     fireEvent.click(generateButton)
 
+    await act(async () => {
+      jest.advanceTimersByTime(100)
+    })
+
     expect(generateButton.disabled).toBeTruthy()
-    expect(findByText('Mindestens eine Karte enthält ungültige Eingaben')).toBeTruthy()
+    expect(getByText('Mindestens eine Karte enthält ungültige Eingaben.')).toBeTruthy()
     expect(generateCards).not.toHaveBeenCalled()
   })
 
-  it('Should generate valid cards', () => {
-    const generateCards = jasmine.createSpy()
+  it('Should generate valid cards', async () => {
+    const generateCards = jest.fn()
     const region = {
       id: 0,
       name: 'augsburg',
@@ -71,6 +81,7 @@ describe('CreateCardsButtonBar', () => {
     expect(generateButton).toBeTruthy()
 
     fireEvent.click(generateButton)
+    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(generateCards).toHaveBeenCalled()
   })

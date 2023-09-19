@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:fk_user_agent/fk_user_agent.dart';
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,10 +61,12 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
           ErrorLink(
             onException: (Request request, NextLink forward, LinkException exception) {
               _printDebugMessage(context, exception.toString());
+              reportError(exception, null);
               return null;
             },
             onGraphQLError: (Request request, NextLink forward, Response response) {
               _printDebugMessage(context, response.errors.toString());
+              reportError(response.errors.toString(), null);
               return null;
             },
           ),
@@ -86,7 +89,7 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
       messengerState.showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text("GraphQL Error: $message"),
+          content: Text('GraphQL Error: $message'),
         ),
       );
     }

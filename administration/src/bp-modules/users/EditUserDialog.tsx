@@ -118,7 +118,7 @@ const EditUserDialog = ({
             {selectedUser?.id === me?.id ? (
               <>
                 Sie können Ihr eigenes Passwort in den{' '}
-                <a href={window.location.origin + '/user-settings'} target='_blank' rel='noreferrer'>
+                <a href={`${window.location.origin}/user-settings`} target='_blank' rel='noreferrer'>
                   Benutzereinstellungen
                 </a>{' '}
                 ändern.
@@ -126,8 +126,8 @@ const EditUserDialog = ({
             ) : (
               <>
                 Der Benutzer kann sein Passwort unter{' '}
-                <a href={window.location.origin + '/forgot-password'} target='_blank' rel='noreferrer'>
-                  {window.location.origin + '/forgot-password'}
+                <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
+                  {`${window.location.origin}/forgot-password`}
                 </a>{' '}
                 zurücksetzen.
               </>

@@ -18,7 +18,7 @@ class MoreActionsDialog extends StatelessWidget {
     final localization = buildConfig.localization.identification.moreActions;
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: const Text("Weitere Aktionen"),
+      title: const Text('Weitere Aktionen'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -53,7 +53,7 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Abbrechen"))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Abbrechen'))],
     );
   }
 }

@@ -91,7 +91,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         controller: textEditingController,
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
-          hintText: "Tippen, um zu suchen …",
+          hintText: 'Tippen, um zu suchen …',
           hintStyle: TextStyle(color: foregroundColor?.withOpacity(0.8)),
         ),
         cursorColor: foregroundColor,
@@ -127,7 +127,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
   }
 
   _onSearchFieldTextChanged(String text) {
-    widget.debouncer.run(() => widget.onChanged(text));
+    widget.debouncer.run(() => widget.onChanged(text.trim()));
   }
 
   _clearInput() {

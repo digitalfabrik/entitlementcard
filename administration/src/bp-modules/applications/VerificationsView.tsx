@@ -1,5 +1,4 @@
-import { Colors, Icon } from '@blueprintjs/core'
-import { Tooltip2 } from '@blueprintjs/popover2'
+import { Colors, Icon, Tooltip } from '@blueprintjs/core'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
@@ -11,10 +10,10 @@ const verifiedIcon = 'tick-circle'
 const rejectedIcon = 'cross-circle'
 const awaitingIcon = 'help'
 
-enum VerificationStatus {
+export enum VerificationStatus {
   Verified,
-  Awaiting,
   Rejected,
+  Awaiting,
 }
 
 const getIconByStatus = (status: VerificationStatus) => {
@@ -47,7 +46,7 @@ const Indicator = ({ status, text }: { status: VerificationStatus; text: ReactNo
   )
 }
 
-const getStatus = (verification: Application['verifications'][number]) => {
+export const getStatus = (verification: Application['verifications'][number]) => {
   if (!!verification.verifiedDate) {
     return VerificationStatus.Verified
   } else if (!!verification.rejectedDate) {
@@ -60,7 +59,7 @@ const getStatus = (verification: Application['verifications'][number]) => {
 export const VerificationsQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
   const verificationStati = verifications.map(getStatus)
   return (
-    <Tooltip2
+    <Tooltip
       content={
         <div>
           <b>Bestätigung(en) durch Organisationen:</b>
@@ -82,7 +81,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
           text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
         />
       </div>
-    </Tooltip2>
+    </Tooltip>
   )
 }
 
@@ -101,9 +100,9 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
         {verifications.map((verification, index) => {
           const status = getStatus(verification)
           const text = verification.verifiedDate
-            ? 'Bestätigt am ' + new Date(verification.verifiedDate).toLocaleString('de')
+            ? `Bestätigt am ${new Date(verification.verifiedDate).toLocaleString('de')}`
             : verification.rejectedDate
-            ? 'Widersprochen am ' + new Date(verification.rejectedDate).toLocaleString('de')
+            ? `Widersprochen am ${new Date(verification.rejectedDate).toLocaleString('de')}`
             : 'Ausstehend'
           return (
             <VerificationListItem

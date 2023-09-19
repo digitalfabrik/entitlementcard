@@ -3,8 +3,8 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("toCanonicalJsonObject", () {
-    test("should map an empty cardInfo correctly", () {
+  group('toCanonicalJsonObject', () {
+    test('should map an empty cardInfo correctly', () {
       final cardInfo = CardInfo();
       expect(
         cardInfo.toCanonicalJsonObject(),
@@ -12,7 +12,7 @@ void main() {
       );
     });
 
-    test("should map a cardInfo for a Bavarian Blue EAK correctly", () {
+    test('should map a cardInfo for a Bavarian Blue EAK correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -29,7 +29,7 @@ void main() {
       });
     });
 
-    test("should map a cardInfo for a Bavarian Golden EAK correctly", () {
+    test('should map a cardInfo for a Bavarian Golden EAK correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..extensions = (CardExtensions()
@@ -44,7 +44,7 @@ void main() {
       });
     });
 
-    test("should map a cardInfo for a Nuernberg Pass correctly", () {
+    test('should map a cardInfo for a Nuernberg Pass correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -59,6 +59,27 @@ void main() {
           '1': {'1': '93'}, // extensionRegion
           '2': {'1': '-3650'}, // extensionBirthday
           '3': {'1': '99999999'}, // extensionNuernbergPassNumber
+        },
+      });
+    });
+
+    test('should map a cardInfo for a Nuernberg Pass wit startDay correctly', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
+      expect(cardInfo.toCanonicalJsonObject(), {
+        '1': 'Max Mustermann',
+        '2': '14600',
+        '3': {
+          '1': {'1': '93'}, // extensionRegion
+          '2': {'1': '-3650'}, // extensionBirthday
+          '3': {'1': '99999999'}, // extensionNuernbergPassNumber
+          '5': {'1': '730'} // startDay extension
         },
       });
     });

@@ -7,6 +7,7 @@ object MigrationsRegistry {
         V0003_AddFirstActivationDate(),
         V0004_AddNotificationSettings(),
         V0005_AddRegionApplicationActivation(),
-        V0006_AddStoreCreatedDate()
+        V0006_AddStoreCreatedDate(),
+        V0007_AddStartDay()
     )
 }

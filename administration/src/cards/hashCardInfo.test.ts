@@ -6,6 +6,7 @@ import {
   CardInfo,
   NuernbergPassNumberExtension,
   RegionExtension,
+  StartDayExtension,
 } from '../generated/card_pb'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 import hashCardInfo, { messageToJsonObject } from './hashCardInfo'
@@ -99,6 +100,36 @@ describe('messageToJsonObject', () => {
       },
     })
   })
+
+  it('should map a cardInfo for a Nuernberg Pass with startDay correctly', () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
+          passNumber: 99999999,
+        }),
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+
+    expect(messageToJsonObject(cardInfo)).toEqual({
+      '1': 'Max Mustermann',
+      '2': '14600',
+      '3': {
+        '1': { '1': '93' }, // extensionRegion
+        '2': { '1': '-3650' }, // extensionBirthday
+        '3': { '1': '99999999' }, // extensionNuernbergPassNumber
+        '5': { '1': '730' }, // extensionStartDay
+      },
+    })
+  })
 })
 
 describe('hashCardInfo', () => {
@@ -161,5 +192,28 @@ describe('hashCardInfo', () => {
     const hash = await hashCardInfo(cardInfo, pepper)
 
     expect(uint8ArrayToBase64(hash)).toBe('zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=')
+  })
+
+  it('should be stable for a Nuernberg Pass with startDay', async () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
+          passNumber: 99999999,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
+    const hash = await hashCardInfo(cardInfo, pepper)
+
+    expect(uint8ArrayToBase64(hash)).toBe('1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=')
   })
 })

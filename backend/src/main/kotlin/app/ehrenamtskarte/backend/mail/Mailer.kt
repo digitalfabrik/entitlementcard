@@ -130,7 +130,7 @@ object Mailer {
         }
     }
 
-    fun sendApplicationVerificationMail(backendConfig: BackendConfiguration, projectConfig: ProjectConfig, applicationVerification: ApplicationVerificationEntity) {
+    fun sendApplicationVerificationMail(backendConfig: BackendConfiguration, applicantName: String, projectConfig: ProjectConfig, applicationVerification: ApplicationVerificationEntity) {
         val message = """
         Guten Tag ${applicationVerification.contactName},
 
@@ -143,12 +143,13 @@ object Mailer {
 
         - ${projectConfig.administrationName}
         """.trimIndent()
+
         sendMail(
             backendConfig,
             projectConfig.smtp,
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
-            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte",
+            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]",
             message
         )
     }

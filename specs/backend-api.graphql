@@ -175,8 +175,6 @@ type Query {
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
-  "Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
-  regionByPostalCode(postalCode: String!, project: String!): Region!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Return list of all regions in the eak bayern project."
@@ -185,6 +183,8 @@ type Query {
   regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores using searchText and categoryIds in the eak bayern project."
@@ -327,7 +327,8 @@ input BlueCardEntitlementInput {
 }
 
 input BlueCardJuleicaEntitlementInput {
-  copyOfJuleica: AttachmentInput!
+  copyOfJuleicaBack: AttachmentInput
+  copyOfJuleicaFront: AttachmentInput!
   juleicaExpirationDate: DateInput!
   juleicaNumber: ShortTextInput!
 }
@@ -355,6 +356,7 @@ input CardGenerationModelInput {
   activationSecretBase64: String
   cardExpirationDay: Long
   cardInfoHashBase64: String!
+  cardStartDay: Long
   codeType: CodeType!
   regionId: Int!
 }

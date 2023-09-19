@@ -55,7 +55,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
         return InfoDialog(
-          title: isUncheckedStaticQrCode ? "Prüfung nötig" : localization.positiveVerificationDialogTitle,
+          title: isUncheckedStaticQrCode ? 'Prüfung nötig' : localization.positiveVerificationDialogTitle,
           icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
@@ -63,10 +63,12 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
             children: <Widget>[
               Flexible(
                 child: IdCard(
-                    cardInfo: widget.cardInfo,
-                    region: region != null ? Region(region.prefix, region.name) : null,
-                    // We trust the backend to have checked for expiration.
-                    isExpired: false),
+                  cardInfo: widget.cardInfo,
+                  region: region != null ? Region(region.prefix, region.name) : null,
+                  // We trust the backend to have checked for expiration.
+                  isExpired: false,
+                  isNotYetValid: false,
+                ),
               ),
               if (widget.isStaticVerificationCode)
                 Flexible(

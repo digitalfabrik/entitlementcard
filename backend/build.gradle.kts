@@ -11,8 +11,8 @@ val exposedVersion: String by project
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.8.22"
-    id("org.jlleitschuh.gradle.ktlint") version "11.4.1"
+    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
 
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -24,11 +24,11 @@ repositories {
 
 dependencies {
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
-    implementation("io.javalin:javalin:5.6.0")
+    implementation("io.javalin:javalin:5.6.2")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
-    implementation("org.simplejavamail:simple-java-mail:8.1.1")
+    implementation("org.simplejavamail:simple-java-mail:8.1.3")
     implementation("org.piwik.java.tracking:matomo-java-tracker:2.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
@@ -38,8 +38,8 @@ dependencies {
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.ktor:ktor-client-core-jvm:2.3.1")
-    implementation("io.ktor:ktor-client-cio-jvm:2.3.1")
+    implementation("io.ktor:ktor-client-core-jvm:2.3.4")
+    implementation("io.ktor:ktor-client-cio-jvm:2.3.4")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -52,8 +52,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.postgresql:postgresql:42.6.0")
-    implementation("com.kohlschutter.junixsocket:junixsocket-core:2.6.2")
-    implementation("com.kohlschutter.junixsocket:junixsocket-common:2.6.2")
+    implementation("com.kohlschutter.junixsocket:junixsocket-core:2.7.0")
+    implementation("com.kohlschutter.junixsocket:junixsocket-common:2.7.0")
 
     implementation("net.postgis:postgis-jdbc:2021.1.0")
 

@@ -81,7 +81,8 @@ class _CardDetailViewState extends State<CardDetailView> {
           child: IdCard(
               cardInfo: widget.userCode.info,
               region: region != null ? Region(region.prefix, region.name) : null,
-              isExpired: isCardExpired(widget.userCode.info)),
+              isExpired: isCardExpired(widget.userCode.info),
+              isNotYetValid: isCardNotYetValid(widget.userCode.info)),
         );
         final qrCodeAndStatus = QrCodeAndStatus(
           userCode: widget.userCode,
@@ -141,6 +142,10 @@ enum CardStatus {
   expired,
   // The card was not verified lately by the server.
   notVerifiedLately,
+  // The time of the device was out of sync with the server.
+  timeOutOfSync,
+  // The validity period didn't start yet according to the clock of the local device
+  notYetValid,
   // The card was verified lately by the server and it responded that the card is invalid.
   invalid,
   // In any other case, we assume the card is valid and show the dynamic QR code
@@ -151,6 +156,10 @@ enum CardStatus {
       return CardStatus.expired;
     } else if (!cardWasVerifiedLately(code.cardVerification)) {
       return CardStatus.notVerifiedLately;
+    } else if (code.cardVerification.outOfSync) {
+      return CardStatus.timeOutOfSync;
+    } else if (isCardNotYetValid(code.info)) {
+      return CardStatus.notYetValid;
     } else if (!code.cardVerification.cardValid) {
       return CardStatus.invalid;
     } else {
@@ -179,7 +188,7 @@ class QrCodeAndStatus extends StatelessWidget {
           ...switch (status) {
             CardStatus.expired => [
                 _PaddedText(
-                    "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.")
+                    'Ihre Karte ist abgelaufen.\nUnter "Weitere Aktionen" können Sie einen Antrag auf Verlängerung stellen.')
               ],
             CardStatus.notVerifiedLately => [
                 _PaddedText(
@@ -188,9 +197,19 @@ class QrCodeAndStatus extends StatelessWidget {
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text("Erneut prüfen"),
+                    label: Text('Erneut prüfen'),
                   ),
                 ),
+              ],
+            CardStatus.timeOutOfSync => [
+                _PaddedText(
+                    'Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen.'),
+                Flexible(
+                    child: TextButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: onSelfVerifyPressed,
+                  label: Text('Erneut prüfen'),
+                ))
               ],
             CardStatus.invalid => [
                 _PaddedText(
@@ -199,6 +218,9 @@ class QrCodeAndStatus extends StatelessWidget {
             CardStatus.valid => [
                 _PaddedText('Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:'),
                 Flexible(child: VerificationCodeView(userCode: userCode))
+              ],
+            CardStatus.notYetValid => [
+                _PaddedText('Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen.'),
               ]
           },
           Container(
@@ -206,7 +228,7 @@ class QrCodeAndStatus extends StatelessWidget {
             child: TextButton(
               onPressed: onMoreActionsPressed,
               child: Text(
-                "Weitere Aktionen",
+                'Weitere Aktionen',
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
