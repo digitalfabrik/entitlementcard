@@ -43,10 +43,8 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              Text(
-                'Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
-                style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor),
-              ),
+              Text('Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
+                  style: Theme.of(context).textTheme.bodyMedium),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: TextField(

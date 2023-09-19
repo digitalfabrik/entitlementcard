@@ -8,12 +8,26 @@ import { Extension } from './extensions'
 
 type StartDayState = { startDay: number }
 
+const minStartDay = new PlainDate(2020, 1, 1)
+
 class StartDayExtension extends Extension<StartDayState, null> {
   public readonly name = StartDayExtension.name
 
   setInitialState() {
     const today = PlainDate.fromLocalDate(new Date())
     this.state = { startDay: today.toDaysSinceEpoch() }
+  }
+
+  /*
+    Returns true, if the start day is not before the minimum start day.
+    Some minimum start day after 1970 is necessary, as we use an uint32 in the protobuf.
+  */
+  hasValidStartDayDate(startDay?: number): boolean {
+    if (startDay === undefined) {
+      return false
+    }
+    const date = PlainDate.fromDaysSinceEpoch(startDay)
+    return !date.isBefore(minStartDay)
   }
 
   createForm(onUpdate: () => void) {
@@ -33,6 +47,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
           value={startDayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
+            min: minStartDay.toString(),
             style: { fontSize: 14, padding: '6px 10px' },
           }}
           onChange={e => {
@@ -42,7 +57,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
                 this.state = { startDay: date.toDaysSinceEpoch() }
                 onUpdate()
               } catch (error) {
-                console.error("Could not parse date from string '" + e.target.value + "'.", error)
+                console.error(`Could not parse date from string '${e.target.value}'.`, error)
               }
             }
           }}
@@ -55,14 +70,23 @@ class StartDayExtension extends Extension<StartDayState, null> {
     return false
   }
 
+  // Returns startDay of the state if it is valid, otherwise minStartDay as placeholder.
+  getValidProtobufStartDay(): number {
+    const startDay = this.state?.startDay
+    if (startDay === undefined || !this.hasValidStartDayDate(startDay)) {
+      return minStartDay.toDaysSinceEpoch()
+    }
+    return startDay
+  }
+
   setProtobufData(message: PartialMessage<CardExtensions>) {
     message.extensionStartDay = {
-      startDay: this.state?.startDay,
+      startDay: this.getValidProtobufStartDay(),
     }
   }
 
   isValid() {
-    return this.state !== null
+    return this.state !== null && this.hasValidStartDayDate(this.state.startDay)
   }
 
   /**

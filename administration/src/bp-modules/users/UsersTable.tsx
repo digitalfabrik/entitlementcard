@@ -114,7 +114,7 @@ const UsersTable = ({
   )
 }
 
-export const roleToText = (role: Role): String => {
+export const roleToText = (role: Role): string => {
   switch (role) {
     case Role.NoRights:
       return 'Keine'

@@ -49,7 +49,7 @@ const ManageProjectUsers = () => {
 const ManageRegionUsers = ({ region }: { region: Region }) => {
   const { projectId } = useContext(ProjectConfigContext)
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
-  const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region!!.id } })
+  const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region.id } })
 
   const regionsQueryResult = getQueryResult(regionsQuery)
   const usersQueryResult = getQueryResult(usersQuery)

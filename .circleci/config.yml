@@ -69,7 +69,6 @@ workflows:
           filters:
             branches:
               only:
-                - main
                 - /release.*/
       - deploy:
           name: deploy-production

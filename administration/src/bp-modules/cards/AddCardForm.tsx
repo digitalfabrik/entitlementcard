@@ -74,7 +74,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
                 cardBlueprint.expirationDate = PlainDate.from(e.target.value)
                 onUpdate()
               } catch (error) {
-                console.error("Could not parse date from string '" + e.target.value + "'.", error)
+                console.error(`Could not parse date from string '${e.target.value}'.`, error)
               }
             }
           }}
