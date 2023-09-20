@@ -109,7 +109,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
               {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
                 <config.dataPrivacyAdditionalBaseContent />
               ) : (
-                <div>{dataPrivacyPolicy}</div>
+                dataPrivacyPolicy
               )}
             </>
           }

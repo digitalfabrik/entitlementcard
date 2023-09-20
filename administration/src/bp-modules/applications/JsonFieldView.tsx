@@ -1,10 +1,11 @@
-import { Button, Icon } from '@blueprintjs/core'
+import { Colors, H5, H6, Icon, Tag } from '@blueprintjs/core'
 import { useContext } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import { printAwareCss } from './ApplicationCard'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string
@@ -45,6 +46,8 @@ const extensionByContentType = new Map([
 const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   border-color: #ddd;
   transition: 0.2s;
+  break-inside: avoid-column;
+
   &:hover {
     border-color: #999;
     background-color: ${props => (props.$hierarchyIndex % 2 === 1 ? 'rgba(0,0,0,5%)' : 'white')};
@@ -56,17 +59,12 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
     border-color: inherit;
   }
 `
-
-const PrintAwareButton = styled(Button)`
-  @media print {
-    display: none;
-  }
+const PrintAwareTag = styled(Tag)`
+  ${printAwareCss};
 `
 
 const PrintOnlySpan = styled.span`
-  @media not print {
-    display: none;
-  }
+  ${printAwareCss};
 `
 
 const JsonFieldView = (props: {
@@ -90,12 +88,10 @@ const JsonFieldView = (props: {
         />
       ))
       return props.jsonField.translations.de.length === 0 ? (
-        <>{children}</>
+          <>{children}</>
       ) : (
         <ParentOfBorder $hierarchyIndex={props.hierarchyIndex}>
-          <p>
-            <b>{props.jsonField.translations.de}</b>
-          </p>
+          <H6>{props.jsonField.translations.de}</H6>
           <div>{children}</div>
         </ParentOfBorder>
       )
@@ -123,11 +119,11 @@ const JsonFieldView = (props: {
           {props.jsonField.translations.de}:&nbsp;
           {props.jsonField.value ? (
             <>
-              <Icon icon='tick' /> Ja
+              <Icon icon='tick' intent='success' /> Ja
             </>
           ) : (
             <>
-              <Icon icon='cross' /> Nein
+              <Icon icon='cross' intent='danger' /> Nein
             </>
           )}
         </p>
@@ -165,9 +161,12 @@ const JsonFieldView = (props: {
           {props.jsonField.translations.de}:&nbsp;
           {props.attachmentAccessible ? (
             <>
-              <PrintAwareButton icon='download' onClick={onClick}>{`Anhang ${
-                props.jsonField.value.fileIndex + 1
-              }`}</PrintAwareButton>
+              <PrintAwareTag
+                round
+                rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
+                interactive
+                minimal
+                onClick={onClick}>{`Anhang ${props.jsonField.value.fileIndex + 1}`}</PrintAwareTag>
               <PrintOnlySpan>{`(siehe Anhang ${props.jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
             </>
           ) : (

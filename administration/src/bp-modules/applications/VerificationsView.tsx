@@ -1,8 +1,14 @@
-import { Colors, Icon, Tooltip } from '@blueprintjs/core'
+import { Classes, Colors, Icon, Tooltip } from '@blueprintjs/core'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+
+const UnFocusedDiv = styled.div`
+  :focus:active {
+    outline: none;
+  }
+`
 
 type Application = GetApplicationsQuery['applications'][number]
 
@@ -67,7 +73,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
           Bestätigt/Ausstehend/Widersprochen
         </div>
       }>
-      <div>
+      <UnFocusedDiv>
         <Indicator
           status={VerificationStatus.Verified}
           text={verificationStati.filter(v => v === VerificationStatus.Verified).length}
@@ -80,7 +86,7 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
           status={VerificationStatus.Rejected}
           text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
         />
-      </div>
+      </UnFocusedDiv>
     </Tooltip>
   )
 }

@@ -36,6 +36,7 @@ export interface CardConfig {
 }
 
 export interface ApplicationFeature {
+  applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
 
