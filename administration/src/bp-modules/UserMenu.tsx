@@ -1,5 +1,5 @@
-import { Button, Menu, Popover } from '@blueprintjs/core'
-import React, { ReactElement, useContext } from 'react'
+import { Button, Divider, Menu, Popover } from '@blueprintjs/core'
+import React, { ReactElement, useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -7,8 +7,6 @@ import { WhoAmIContext } from '../WhoAmIProvider'
 import { roleToText } from './users/UsersTable'
 
 type UserMenuProps = {
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
   onSignOut: () => void
 }
 
@@ -37,8 +35,13 @@ const UserMenuButton = styled(Button)`
   min-width: 220px;
 `
 
-const UserMenu = ({ isOpen, setIsOpen, onSignOut }: UserMenuProps): ReactElement => {
+const RoleInfo = styled.span`
+  padding: 5px 10px;
+`
+
+const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
   const { role, email } = useContext(WhoAmIContext).me!
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const navigate = useNavigate()
   const signOutAndRedirect = () => {
     onSignOut()
@@ -46,8 +49,9 @@ const UserMenu = ({ isOpen, setIsOpen, onSignOut }: UserMenuProps): ReactElement
   }
   const userMenuContent = (
     <MenuContent onClick={() => setIsOpen(false)}>
-      <span className='bp5-tag bp5-large'>{`Rolle: ${roleToText(role)}`}</span>
-      <NavLink to={'/user-settings'}>
+      <RoleInfo>Rolle: {roleToText(role)}</RoleInfo>
+      <Divider style={{ margin: '4px 0px' }} />
+      <NavLink to='/user-settings'>
         <MenuItem minimal icon='settings' text='Benutzereinstellungen' />
       </NavLink>
       <MenuItem minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />

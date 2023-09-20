@@ -1,5 +1,5 @@
 import { Alignment, Button, Navbar } from '@blueprintjs/core'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -21,7 +21,6 @@ interface Props {
 const Navigation = (props: Props) => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
-  const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false)
 
   return (
     <PrintAwareNavbar style={{ height: 'auto' }}>
@@ -61,7 +60,7 @@ const Navigation = (props: Props) => {
         ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
-        <UserMenu isOpen={userMenuOpen} setIsOpen={setUserMenuOpen} onSignOut={props.onSignOut} />
+        <UserMenu onSignOut={props.onSignOut} />
       </Navbar.Group>
     </PrintAwareNavbar>
   )
