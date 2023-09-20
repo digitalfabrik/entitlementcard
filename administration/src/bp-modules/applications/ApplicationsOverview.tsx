@@ -25,7 +25,11 @@ export type Application = GetApplicationsQuery['applications'][number]
 // Necessary for FlipMove, as it cannot handle functional components
 export class ApplicationViewComponent extends React.Component<React.ComponentProps<typeof ApplicationCard>> {
   render() {
-    return <ApplicationListCard key={this.props.application.id}><ApplicationCard {...this.props} /></ApplicationListCard>
+    return (
+      <ApplicationListCard key={this.props.application.id}>
+        <ApplicationCard {...this.props} />
+      </ApplicationListCard>
+    )
   }
 }
 
@@ -63,18 +67,15 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
         <>
           <ApplicationList>
             {sortedApplications.map(application => (
-                <ApplicationViewComponent
-                  isSelectedForPrint={application.id === applicationIdForPrint}
-                  printApplicationById={printApplicationById}
-                  key={application.id}
-                  application={application}
-                  gotDeleted={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
-                />
+              <ApplicationViewComponent
+                isSelectedForPrint={application.id === applicationIdForPrint}
+                printApplicationById={printApplicationById}
+                key={application.id}
+                application={application}
+                gotDeleted={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
+              />
             ))}
           </ApplicationList>
-          <Button onClick={() => setUpdatedApplications(sortedApplications.filter(a => a !== sortedApplications[0]))}>
-            Remove one
-          </Button>
         </>
       ) : (
         <StandaloneCenter>

@@ -1,4 +1,16 @@
-import { Alert, AnchorButton, Button, Callout, Colors, H4, H5, Section, SectionCard, Tooltip } from '@blueprintjs/core'
+import {
+  Alert,
+  AnchorButton,
+  Button,
+  Callout,
+  Colors,
+  H4,
+  H5,
+  Icon,
+  Section,
+  SectionCard,
+  Tooltip,
+} from '@blueprintjs/core'
 import { useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -13,13 +25,6 @@ import JsonFieldView, { JsonField } from './JsonFieldView'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 
 export const CARD_PADDING = 20
-
-const MulticolumnContent = styled.div`
-  @media not print {
-    column-count: 2;
-    column-width: 300px;
-  }
-`
 
 export const printAwareCss = css`
   @media print {
@@ -42,9 +47,25 @@ const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
 `
 
 const ButtonContainer = styled.div`
-  margin-top: 10px;
   display: flex;
-  width: 100%;
+  flex-grow: 1;
+  margin-top: 10px;
+`
+
+const CollapseIcon = styled(Icon)`
+  display: block;
+  margin-left: auto;
+  align-self: center;
+  padding: 2px;
+  border-width: 1px;
+  border-color: ${Colors.GRAY1};
+  box-shadow: 1;
+  border-radius: 1px;
+  ${printAwareCss};
+  :hover {
+    cursor: pointer;
+    color: ${Colors.GRAY1};
+  }
 `
 
 const WithdrawAlert = styled(Callout)`
@@ -124,7 +145,7 @@ const ApplicationCard = ({
       }
       rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
       elevation={1}
-      collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded) }}
+      collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
       collapsible
       $hideInPrintMode={!isSelectedForPrint}>
       <SectionCard>
@@ -135,10 +156,12 @@ const ApplicationCard = ({
             Bitte löschen Sie den Antrag zeitnah.
           </WithdrawAlert>
         )}
-        <MulticolumnContent>
-          <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
-        </MulticolumnContent>
+        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
+      </SectionCard>
+      <SectionCard>
         <VerificationsView verifications={application.verifications} />
+      </SectionCard>
+      <SectionCard>
         <ButtonContainer>
           <Tooltip
             disabled={!!createCardQuery}
@@ -156,13 +179,10 @@ const ApplicationCard = ({
           <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
             Antrag löschen
           </PrintAwareButton>
-          <PrintAwareButton
-            style={{ alignSelf: 'flex-end' }}
-            onClick={() => printApplicationById(id)}
-            intent='none'
-            icon='print'>
+          <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
             PDF exportieren
           </PrintAwareButton>
+          <CollapseIcon icon={'chevron-up'} onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
           cancelButtonText='Abbrechen'

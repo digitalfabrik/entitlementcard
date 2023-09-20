@@ -1,11 +1,11 @@
-import { Classes, Colors, Icon, Tooltip } from '@blueprintjs/core'
-import React, { ReactNode } from 'react'
+import { Colors, H5, Icon, Tooltip } from '@blueprintjs/core'
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
 
 const UnFocusedDiv = styled.div`
-  :focus:active {
+  :focus {
     outline: none;
   }
 `
@@ -91,18 +91,25 @@ export const VerificationsQuickIndicator = ({ verifications }: { verifications: 
   )
 }
 
-const VerificationListItem = styled.div<{ $color: string }>`
+const VerificationListItem = styled.li<{ $color: string }>`
   position: relative;
   padding-left: 10px;
-  margin: 8px 0;
   border-left: 2px solid ${props => props.$color};
+`
+
+const VerificationContainer = styled.ul`
+  list-style-type: none;
+  padding-left: 0px;
+  li:not(:last-child) {
+    margin-bottom: 15px;
+  }
 `
 
 const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }) => {
   return (
-    <div>
-      <div>
-        <h4>Bestätigung(en) durch Organisationen</h4>
+    <>
+      <H5>Bestätigung(en) durch Organisationen</H5>
+      <VerificationContainer>
         {verifications.map((verification, index) => {
           const status = getStatus(verification)
           const text = verification.verifiedDate
@@ -137,13 +144,9 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
             </VerificationListItem>
           )
         })}
-        {verifications.length === 0 ? (
-          <div>
-            <i>(keine)</i>
-          </div>
-        ) : null}
-      </div>
-    </div>
+      </VerificationContainer>
+      {verifications.length === 0 ? <i>(keine)</i> : null}
+    </>
   )
 }
 
