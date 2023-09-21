@@ -63,7 +63,7 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const sortedApplications = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
-  console.log(sortedApplications)
+
   return (
     <>
       {updatedApplications.length > 0 ? (
