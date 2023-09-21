@@ -1,38 +1,9 @@
-import { Button, Collapse, H6, Icon } from '@blueprintjs/core'
+import { Classes, Collapse, H6, Icon } from '@blueprintjs/core'
 import { memo, useState } from 'react'
 import styled from 'styled-components'
 
-import JsonFieldView from './JsonFieldView'
-
-export type JsonField<T extends keyof JsonFieldValueByType> = {
-  name: string
-  translations: { de: string }
-  type: T
-  value: JsonFieldValueByType[T]
-}
-
-export type GeneralJsonField = { [K in keyof JsonFieldValueByType]: JsonField<K> }[keyof JsonFieldValueByType]
-
-export type JsonFieldValueByType = {
-  Array: GeneralJsonField[]
-  String: string
-  Number: number
-  Boolean: boolean
-  Attachment: { fileIndex: number }
-  Date: string
-}
-
-export const findValue = <T extends keyof JsonFieldValueByType>(
-  object: JsonField<'Array'>,
-  key: string,
-  type: T
-): JsonField<T> | undefined => {
-  const entry = object.value.find(entry => entry.name === key)
-  if (entry?.type === type) {
-    return entry as JsonField<typeof type>
-  }
-  return undefined
-}
+import { printAwareCss } from './ApplicationCard'
+import JsonFieldView, { JsonField, JsonFieldViewProps } from './JsonFieldView'
 
 const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   border-color: #ddd;
@@ -58,20 +29,29 @@ const CollapsableHeader = styled(H6)`
   }
 `
 
-export type JsonFieldViewProps<JsonFieldType extends GeneralJsonField> = {
-  jsonField: JsonFieldType
-  hierarchyIndex: number
-  baseUrl: string
-  attachmentAccessible: boolean
-}
+const PrintableCaret = styled(Icon)`
+  ${printAwareCss};
+`
+
+const PrintableCollapse = styled(Collapse)`
+  @media print {
+    height: auto !important;
+    overflow-y: visible !important;
+
+    .${Classes.COLLAPSE_BODY} {
+      display: block !important;
+    }
+  }
+`
 
 const JsonFieldArray = ({
   jsonField,
   baseUrl,
   hierarchyIndex,
   attachmentAccessible,
+  expandedRoot,
 }: JsonFieldViewProps<JsonField<'Array'>>) => {
-  const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1)
+  const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1 || expandedRoot)
   const children = jsonField.value.map((jsonField, index: number) => (
     <JsonFieldView
       jsonField={jsonField}
@@ -79,6 +59,7 @@ const JsonFieldArray = ({
       key={index}
       hierarchyIndex={hierarchyIndex + 1}
       attachmentAccessible={attachmentAccessible}
+      expandedRoot={expandedRoot}
     />
   ))
   return jsonField.translations.de.length === 0 ? (
@@ -86,12 +67,12 @@ const JsonFieldArray = ({
   ) : (
     <ParentOfBorder $hierarchyIndex={hierarchyIndex}>
       <CollapsableHeader onClick={() => setIsExpanded(!isExpanded)}>
-        <Icon icon={isExpanded ? 'caret-up' : 'caret-down'} />
+        <PrintableCaret icon={isExpanded ? 'caret-up' : 'caret-down'} />
         {jsonField.translations.de}
       </CollapsableHeader>
-      <Collapse keepChildrenMounted isOpen={isExpanded}>
+      <PrintableCollapse keepChildrenMounted isOpen={isExpanded}>
         {children}
-      </Collapse>
+      </PrintableCollapse>
     </ParentOfBorder>
   )
 }

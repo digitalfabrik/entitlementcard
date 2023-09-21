@@ -1,4 +1,4 @@
-import { Button, NonIdealState } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
 import React, { useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled from 'styled-components'
@@ -10,6 +10,9 @@ import { VerificationStatus, getStatus } from './VerificationsView'
 import usePrintApplication from './hooks/usePrintApplication'
 
 const ApplicationListCard = styled.li`
+  display: flex;
+  width: 100%;
+  justify-content: center;
   list-style-type: none;
 `
 

@@ -1,5 +1,5 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
@@ -22,14 +22,67 @@ const PrintOnlySpan = styled.span`
   ${printAwareCss};
 `
 
+const JsonFieldAttachment = memo(
+  ({ jsonField, baseUrl, attachmentAccessible }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+    const appToaster = useAppToaster()
+    const token = useContext(AuthContext).data?.token
+
+    const attachment = jsonField.value
+    if (attachmentAccessible) {
+      const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
+      const onClick = async () => {
+        const loadingToastKey = appToaster?.show({
+          message: `Lade Anhang ${attachment.fileIndex + 1}...`,
+          intent: 'primary',
+          isCloseButtonShown: false,
+        })
+        try {
+          const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
+          const contentType = result.headers.get('content-type')
+          if (result.status !== 200) {
+            throw Error('Status Code is not OK')
+          } else if (contentType === null || !extensionByContentType.has(contentType)) {
+            throw Error('Invalid Content Type')
+          }
+          const filename = `anhang${attachment.fileIndex + 1}.${extensionByContentType.get(contentType)}`
+          const arrayBuffer = await result.arrayBuffer()
+          const file = new File([arrayBuffer], filename, { type: contentType })
+          downloadDataUri(file, filename)
+        } catch (e) {
+          console.error(e)
+          appToaster?.show({ message: 'Etwas ist schiefgelaufen.', intent: 'danger' })
+        } finally {
+          if (loadingToastKey !== undefined) appToaster?.dismiss(loadingToastKey)
+        }
+      }
+      return (
+        <p>
+          {jsonField.translations.de}:&nbsp;
+          <>
+            <PrintAwareTag
+              round
+              rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
+              interactive
+              minimal
+              onClick={onClick}>{`Anhang ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
+            <PrintOnlySpan>{`(siehe Anhang ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
+          </>
+        </p>
+      )
+    }
+    return (
+      <p>
+        {jsonField.translations.de}:&nbsp;
+        <span>eingereicht, nicht sichtbar</span>
+      </p>
+    )
+  }
+)
+
 const JsonFieldElemental = ({
   jsonField,
-  baseUrl,
-  attachmentAccessible,
+  ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
-  const appToaster = useAppToaster()
-  const token = useContext(AuthContext).data?.token
-
   switch (jsonField.type) {
     case 'String':
       return (
@@ -65,52 +118,8 @@ const JsonFieldElemental = ({
         </p>
       )
     case 'Attachment':
-      const attachment = jsonField.value
-      const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
-      const onClick = async () => {
-        const loadingToastKey = appToaster?.show({
-          message: `Lade Anhang ${attachment.fileIndex + 1}...`,
-          intent: 'primary',
-          isCloseButtonShown: false,
-        })
-        try {
-          const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
-          const contentType = result.headers.get('content-type')
-          if (result.status !== 200) {
-            throw Error('Status Code is not OK')
-          } else if (contentType === null || !extensionByContentType.has(contentType)) {
-            throw Error('Invalid Content Type')
-          }
-          const filename = `anhang${attachment.fileIndex + 1}.${extensionByContentType.get(contentType)}`
-          const arrayBuffer = await result.arrayBuffer()
-          const file = new File([arrayBuffer], filename, { type: contentType })
-          downloadDataUri(file, filename)
-        } catch (e) {
-          console.error(e)
-          appToaster?.show({ message: 'Etwas ist schiefgelaufen.', intent: 'danger' })
-        } finally {
-          if (loadingToastKey !== undefined) appToaster?.dismiss(loadingToastKey)
-        }
-      }
-      return (
-        <p>
-          {jsonField.translations.de}:&nbsp;
-          {attachmentAccessible ? (
-            <>
-              <PrintAwareTag
-                round
-                rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
-                interactive
-                minimal
-                onClick={onClick}>{`Anhang ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
-              <PrintOnlySpan>{`(siehe Anhang ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
-            </>
-          ) : (
-            <span>eingereicht, nicht sichtbar</span>
-          )}
-        </p>
-      )
+      return <JsonFieldAttachment jsonField={jsonField} {...rest} />
   }
 }
 
-export default JsonFieldElemental
+export default memo(JsonFieldElemental)

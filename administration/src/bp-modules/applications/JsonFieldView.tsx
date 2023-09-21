@@ -38,6 +38,7 @@ export type JsonFieldViewProps<JsonFieldType extends GeneralJsonField> = {
   hierarchyIndex: number
   baseUrl: string
   attachmentAccessible: boolean
+  expandedRoot: boolean
 }
 
 const JsonFieldView = (props: JsonFieldViewProps<GeneralJsonField>) => {

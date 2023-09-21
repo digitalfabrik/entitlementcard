@@ -5,13 +5,12 @@ import {
   Callout,
   Colors,
   H4,
-  H5,
   Icon,
   Section,
   SectionCard,
   Tooltip,
 } from '@blueprintjs/core'
-import { useContext, useMemo, useState } from 'react'
+import { memo, useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -24,8 +23,6 @@ import { Application } from './ApplicationsOverview'
 import JsonFieldView, { JsonField } from './JsonFieldView'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 
-export const CARD_PADDING = 20
-
 export const printAwareCss = css`
   @media print {
     display: none;
@@ -33,7 +30,7 @@ export const printAwareCss = css`
 `
 
 const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
-  width: 800px;
+  width: 1000px;
   max-width: 90%;
   overflow: hidden;
   margin: 10px;
@@ -52,15 +49,11 @@ const ButtonContainer = styled.div`
   margin-top: 10px;
 `
 
-const CollapseIcon = styled(Icon)`
+export const CollapseIcon = styled(Icon)`
   display: block;
   margin-left: auto;
   align-self: center;
   padding: 2px;
-  border-width: 1px;
-  border-color: ${Colors.GRAY1};
-  box-shadow: 1;
-  border-radius: 1px;
   ${printAwareCss};
   :hover {
     cursor: pointer;
@@ -82,7 +75,12 @@ const PrintAwareAnchorButton = styled(AnchorButton)`
   ${printAwareCss};
 `
 
-const CardContentHint = styled.span`
+const Title = styled(H4)`
+  margin: 0;
+  display: inline-block;
+`
+
+const CardContentHint = styled(Title)`
   color: ${Colors.GRAY1};
 `
 
@@ -134,17 +132,18 @@ const ApplicationCard = ({
   return (
     <ApplicationViewCard
       title={
-        <H4 style={{ margin: 0 }}>
-          Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;
+        <div>
+          <Title>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;</Title>{' '}
           {personalData && personalData.forenames && personalData.surname && (
             <CardContentHint>
               Name: {personalData.surname}, {personalData.forenames}
             </CardContentHint>
           )}
-        </H4>
+        </div>
       }
       rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
       elevation={1}
+      icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
       collapsible
       $hideInPrintMode={!isSelectedForPrint}>
@@ -156,7 +155,14 @@ const ApplicationCard = ({
             Bitte löschen Sie den Antrag zeitnah.
           </WithdrawAlert>
         )}
-        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} key={0} hierarchyIndex={0} attachmentAccessible />
+        <JsonFieldView
+          jsonField={jsonField}
+          baseUrl={baseUrl}
+          key={0}
+          hierarchyIndex={0}
+          attachmentAccessible
+          expandedRoot={false}
+        />
       </SectionCard>
       <SectionCard>
         <VerificationsView verifications={application.verifications} />
@@ -200,4 +206,4 @@ const ApplicationCard = ({
   )
 }
 
-export default ApplicationCard
+export default memo(ApplicationCard)
