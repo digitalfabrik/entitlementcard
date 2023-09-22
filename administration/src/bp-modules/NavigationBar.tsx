@@ -38,7 +38,7 @@ const Navigation = (props: Props) => {
         <Navbar.Divider />
         {role === Role.RegionAdmin || role === Role.RegionManager ? (
           <>
-            {config.applicationFeatureEnabled ? (
+            {config.applicationFeature ? (
               <NavLink to={'/applications'}>
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
@@ -53,7 +53,7 @@ const Navigation = (props: Props) => {
             <Button minimal icon='people' text='Benutzer verwalten' />
           </NavLink>
         ) : null}
-        {role === Role.RegionAdmin && config.applicationFeatureEnabled ? (
+        {role === Role.RegionAdmin && config.applicationFeature ? (
           <NavLink to={'/region'}>
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>

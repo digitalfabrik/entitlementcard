@@ -120,7 +120,13 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
         <Typography variant='h6' mb='8px'>
           Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
         </Typography>
-        <JsonFieldView jsonField={jsonField} baseUrl={baseUrl} hierarchyIndex={0} attachmentAccessible={false} />
+        <JsonFieldView
+          jsonField={jsonField}
+          baseUrl={baseUrl}
+          hierarchyIndex={0}
+          attachmentAccessible={false}
+          expandedRoot
+        />
         <Divider style={{ margin: '24px 0px' }} />
         <Typography mt='8px' variant='body1'>
           Können Sie die Angaben, welche die Organisation <b>{verification.organizationName}</b> betreffen, bestätigen?

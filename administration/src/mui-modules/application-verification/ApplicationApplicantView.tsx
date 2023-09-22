@@ -74,6 +74,7 @@ const ApplicationApplicantView = ({
           key={0}
           hierarchyIndex={0}
           attachmentAccessible={false}
+          expandedRoot={false}
         />
         <Divider style={{ margin: '24px 0px' }} />
         <VerificationsView verifications={application.verifications} />
