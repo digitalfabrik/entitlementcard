@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:ehrenamtskarte/sentry.dart';
+import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,8 +50,6 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final client = ValueNotifier(
@@ -70,7 +68,8 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
               return null;
             },
           ),
-          HttpLink(Configuration.of(context).graphqlUrl, defaultHeaders: { HttpHeaders.userAgentHeader: _platformVersion })
+          HttpLink(Configuration.of(context).graphqlUrl,
+              defaultHeaders: {HttpHeaders.userAgentHeader: _platformVersion})
         ]),
       ),
     );

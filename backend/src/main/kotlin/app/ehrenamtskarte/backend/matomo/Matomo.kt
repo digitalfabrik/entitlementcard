@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException
 
 object Matomo {
     val logger = LoggerFactory.getLogger(Matomo::class.java)
-    private const val ACTION_NAME = "Request"
 
     private fun sendTrackingRequest(matomoConfig: MatomoConfig, requestBuilder: MatomoRequestBuilder) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -55,7 +54,6 @@ object Matomo {
             val url = matomoConfig.url
             val tracker = MatomoTracker(url)
             val matomoRequests = requestBuilder.map {
-                it.actionName(ACTION_NAME)
                 it.siteId(siteId)
                 it.authToken(matomoConfig.accessToken)
                 it.build()
