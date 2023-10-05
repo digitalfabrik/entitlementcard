@@ -58,7 +58,7 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
         cardBlueprint.setValue(header, value)
       })
       setCardBlueprints([cardBlueprint])
-      setSearchParams()
+      setSearchParams(undefined, { replace: true })
     }
   }, [cardBlueprints.length, projectConfig, region, searchParams, setCardBlueprints, setSearchParams])
   const bottomRef = useRef<HTMLDivElement>(null)

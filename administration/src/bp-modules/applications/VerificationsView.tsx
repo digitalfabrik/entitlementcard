@@ -1,8 +1,20 @@
-import { Colors, Icon, Tooltip } from '@blueprintjs/core'
-import React, { ReactNode } from 'react'
+import { Colors, H5, Icon, Tooltip } from '@blueprintjs/core'
+import { ReactNode, memo } from 'react'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+
+const UnFocusedDiv = styled.div`
+  flex: 1;
+  :focus {
+    outline: none;
+  }
+`
+
+const StyledIndicator = styled.span`
+  display: inline-block;
+  padding: 4px;
+`
 
 type Application = GetApplicationsQuery['applications'][number]
 
@@ -40,9 +52,9 @@ const getIntentByStatus = (status: VerificationStatus) => {
 
 const Indicator = ({ status, text }: { status: VerificationStatus; text: ReactNode }) => {
   return (
-    <span style={{ padding: '4px' }}>
+    <StyledIndicator>
       <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />: {text}
-    </span>
+    </StyledIndicator>
   )
 }
 
@@ -56,47 +68,56 @@ export const getStatus = (verification: Application['verifications'][number]) =>
   }
 }
 
-export const VerificationsQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
-  const verificationStati = verifications.map(getStatus)
-  return (
-    <Tooltip
-      content={
-        <div>
-          <b>Bestätigung(en) durch Organisationen:</b>
-          <br />
-          Bestätigt/Ausstehend/Widersprochen
-        </div>
-      }>
-      <div>
-        <Indicator
-          status={VerificationStatus.Verified}
-          text={verificationStati.filter(v => v === VerificationStatus.Verified).length}
-        />
-        <Indicator
-          status={VerificationStatus.Awaiting}
-          text={verificationStati.filter(v => v === VerificationStatus.Awaiting).length}
-        />
-        <Indicator
-          status={VerificationStatus.Rejected}
-          text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
-        />
-      </div>
-    </Tooltip>
-  )
-}
+export const VerificationsQuickIndicator = memo(
+  ({ verifications }: { verifications: Application['verifications'] }) => {
+    const verificationStati = verifications.map(getStatus)
+    return (
+      <Tooltip
+        content={
+          <div>
+            <b>Bestätigung(en) durch Organisationen:</b>
+            <br />
+            Bestätigt/Ausstehend/Widersprochen
+          </div>
+        }>
+        <UnFocusedDiv>
+          <Indicator
+            status={VerificationStatus.Verified}
+            text={verificationStati.filter(v => v === VerificationStatus.Verified).length}
+          />
+          <Indicator
+            status={VerificationStatus.Awaiting}
+            text={verificationStati.filter(v => v === VerificationStatus.Awaiting).length}
+          />
+          <Indicator
+            status={VerificationStatus.Rejected}
+            text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
+          />
+        </UnFocusedDiv>
+      </Tooltip>
+    )
+  }
+)
 
-const VerificationListItem = styled.div<{ $color: string }>`
+const VerificationListItem = styled.li<{ $color: string }>`
   position: relative;
   padding-left: 10px;
-  margin: 8px 0;
   border-left: 2px solid ${props => props.$color};
+`
+
+const VerificationContainer = styled.ul`
+  list-style-type: none;
+  padding-left: 0px;
+  li:not(:last-child) {
+    margin-bottom: 15px;
+  }
 `
 
 const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }) => {
   return (
-    <div>
-      <div>
-        <h4>Bestätigung(en) durch Organisationen</h4>
+    <>
+      <H5>Bestätigung(en) durch Organisationen</H5>
+      <VerificationContainer>
         {verifications.map((verification, index) => {
           const status = getStatus(verification)
           const text = verification.verifiedDate
@@ -131,13 +152,9 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
             </VerificationListItem>
           )
         })}
-        {verifications.length === 0 ? (
-          <div>
-            <i>(keine)</i>
-          </div>
-        ) : null}
-      </div>
-    </div>
+      </VerificationContainer>
+      {verifications.length === 0 ? <i>(keine)</i> : null}
+    </>
   )
 }
 

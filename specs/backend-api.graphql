@@ -289,12 +289,7 @@ input AddressInput {
   street: ShortTextInput!
 }
 
-"""
-An application for the Bayerische Ehrenamtskarte.
-The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
-The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
-"""
-input ApplicationInput {
+input ApplicationDetailsInput {
   applicationType: ApplicationType
   blueCardEntitlement: BlueCardEntitlementInput
   cardType: BavariaCardType!
@@ -302,9 +297,18 @@ input ApplicationInput {
   goldenCardEntitlement: GoldenCardEntitlementInput
   hasAcceptedEmailUsage: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
   wantsDigitalCard: Boolean!
   wantsPhysicalCard: Boolean!
+}
+
+"""
+An application for the Bayerische Ehrenamtskarte.
+The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
+"""
+input ApplicationInput {
+  applicationDetails: ApplicationDetailsInput!
+  personalData: PersonalDataInput!
 }
 
 input AttachmentInput {

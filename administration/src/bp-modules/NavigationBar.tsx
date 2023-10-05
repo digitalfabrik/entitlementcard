@@ -1,17 +1,19 @@
 import { Alignment, Button, Navbar } from '@blueprintjs/core'
 import React, { useContext } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import UserMenu from './UserMenu'
 
 const PrintAwareNavbar = styled(Navbar)`
   @media print {
     display: none;
   }
 `
+
 interface Props {
   onSignOut: () => void
 }
@@ -19,11 +21,6 @@ interface Props {
 const Navigation = (props: Props) => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
-  const navigate = useNavigate()
-  const signOutAndRedirect = () => {
-    props.onSignOut()
-    navigate('/')
-  }
 
   return (
     <PrintAwareNavbar style={{ height: 'auto' }}>
@@ -41,7 +38,7 @@ const Navigation = (props: Props) => {
         <Navbar.Divider />
         {role === Role.RegionAdmin || role === Role.RegionManager ? (
           <>
-            {config.applicationFeatureEnabled ? (
+            {config.applicationFeature ? (
               <NavLink to={'/applications'}>
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
@@ -56,17 +53,14 @@ const Navigation = (props: Props) => {
             <Button minimal icon='people' text='Benutzer verwalten' />
           </NavLink>
         ) : null}
-        {role === Role.RegionAdmin && config.applicationFeatureEnabled ? (
+        {role === Role.RegionAdmin && config.applicationFeature ? (
           <NavLink to={'/region'}>
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
-        <NavLink to={'/user-settings'}>
-          <Button minimal icon='settings' text='Benutzereinstellungen' />
-        </NavLink>
-        <Button minimal icon='log-out' text='Logout' onClick={signOutAndRedirect} />
+        <UserMenu onSignOut={props.onSignOut} />
       </Navbar.Group>
     </PrintAwareNavbar>
   )

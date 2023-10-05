@@ -46,17 +46,19 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         region.regionId,
         {
           personalData: personalDataInput,
-          cardType: stepCardType.value.cardType,
-          applicationType: stepCardType.value.applicationType,
-          wantsDigitalCard: stepCardType.value.wantsDigitalCard,
-          wantsPhysicalCard: stepCardType.value.wantsPhysicalCard,
-          blueCardEntitlement:
-            stepRequirements.value.type === BavariaCardType.Blue ? stepRequirements.value.value : null,
-          goldenCardEntitlement:
-            stepRequirements.value.type === BavariaCardType.Golden ? stepRequirements.value.value : null,
-          hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
-          givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
-          hasAcceptedEmailUsage: stepSend.value.hasAcceptedEmailUsage,
+          applicationDetails: {
+            cardType: stepCardType.value.cardType,
+            applicationType: stepCardType.value.applicationType,
+            wantsDigitalCard: stepCardType.value.wantsDigitalCard,
+            wantsPhysicalCard: stepCardType.value.wantsPhysicalCard,
+            blueCardEntitlement:
+              stepRequirements.value.type === BavariaCardType.Blue ? stepRequirements.value.value : null,
+            goldenCardEntitlement:
+              stepRequirements.value.type === BavariaCardType.Golden ? stepRequirements.value.value : null,
+            hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
+            givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
+            hasAcceptedEmailUsage: stepSend.value.hasAcceptedEmailUsage,
+          },
         },
       ],
     }

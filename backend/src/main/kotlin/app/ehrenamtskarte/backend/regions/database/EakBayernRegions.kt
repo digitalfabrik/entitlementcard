@@ -248,6 +248,12 @@ val EAK_BAYERN_REGIONS = listOf(
         "http://www.landkreis.neu-ulm.de/de/bayerische-ehrenamtskarte/bayerische-ehrenamtskarte-im-landkreis-neu-ulm.html"
     ),
     listOf(
+        "Landkreis",
+        "Oberallgäu",
+        "09780",
+        "https://ehrenamtskarte.bayern.de"
+    ),
+    listOf(
         "Stadt",
         "Passau",
         "09262",
