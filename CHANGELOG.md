@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+# [3.2.1] 2023-10-05
+
+### Added
+* 1102: Add hint when application deleted by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1107
+* 1067 Implement sentry by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1111
+* 1114: Sort applications by status by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1117
+* 975: Show more user information  by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1120
+* 1123: Add oberallgaeu by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1124
+* 1075: Create card from application by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1091
+
+### fixed
+* 1108: Prevent auto install entitlementcard by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1109
+* 998: Improve color api switch by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1110
+* [fix]: add partial index for admin email by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1116
+* 1115: Trim search text by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1118
+
+### changed
+* 1100: Use single quotes by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1101
+* build(deps): bump activesupport from 6.1.7.3 to 6.1.7.6 in /frontend/ios by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1099
+* Extract linting rules into separate file by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1104
+* Upgrade backend dependencies by @michael-markl in https://github.com/digitalfabrik/entitlementcard/pull/1112
+* 1044: Only digital card default checked by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1119
+* build(deps): bump graphql from 16.7.1 to 16.8.1 in /administration by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1125
+
 # [3.2.0] 2023-08-23
 
 ### Added
