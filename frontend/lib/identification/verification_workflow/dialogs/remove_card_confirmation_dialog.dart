@@ -45,6 +45,9 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         final theme = Theme.of(context);
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         return AlertDialog(
+          titlePadding: EdgeInsets.all(4),
+          contentPadding: EdgeInsets.only(left: 24, right: 24),
+          actionsPadding: EdgeInsets.only(left: 24, right: 24, top: 12, bottom: 12),
           title: ListTile(
             leading: Icon(Icons.warning, color: theme.colorScheme.primaryContainer, size: 30),
             title: Text(localization.title, style: TextStyle(fontSize: 18)),
@@ -77,10 +80,8 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
               onPressed: () {
                 final provider = Provider.of<UserCodesModel>(context, listen: false);
                 if (provider.userCodes!.length == 1) {
-                  print("removeCodes");
                   provider.removeCodes();
                 } else {
-                  print("removeCode");
                   provider.removeCode(widget.userCode);
                 }
                 Navigator.of(context).pop(true);

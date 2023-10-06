@@ -5,16 +5,20 @@ class CardCarousel extends StatefulWidget {
   final List<Widget> userCards;
   final int cardIndex;
   final Function(int index) updateIndex;
+  final CarouselController carouselController;
 
-  const CardCarousel({super.key, required this.userCards, required this.cardIndex, required this.updateIndex});
+  const CardCarousel(
+      {super.key,
+      required this.userCards,
+      required this.cardIndex,
+      required this.updateIndex,
+      required this.carouselController});
 
   @override
   CardCarouselState createState() => CardCarouselState();
 }
 
 class CardCarouselState extends State<CardCarousel> {
-  final CarouselController _controller = CarouselController();
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -22,10 +26,10 @@ class CardCarouselState extends State<CardCarousel> {
       children: [
         CarouselSlider(
           items: widget.userCards,
-          carouselController: _controller,
+          carouselController: widget.carouselController,
           options: CarouselOptions(
               enableInfiniteScroll: false,
-              viewportFraction: 0.98,
+              viewportFraction: 0.96,
               aspectRatio: 9 / 16,
               onPageChanged: (index, reason) {
                 setState(() {
@@ -39,7 +43,7 @@ class CardCarouselState extends State<CardCarousel> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: widget.userCards.asMap().entries.map((entry) {
               return GestureDetector(
-                onTap: () => _controller.animateToPage(entry.key),
+                onTap: () => widget.carouselController.animateToPage(entry.key),
                 child: Container(
                   width: 12.0,
                   height: 12.0,

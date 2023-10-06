@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
@@ -22,6 +23,7 @@ class IdentificationPage extends StatefulWidget {
 }
 
 class IdentificationPageState extends State<IdentificationPage> {
+  CarouselController carouselController = CarouselController();
   int cardIndex = 0;
 
   @override
@@ -47,7 +49,11 @@ class IdentificationPageState extends State<IdentificationPage> {
           });
 
           return Column(children: [
-            CardCarousel(userCards: cards, cardIndex: cardIndex, updateIndex: _updateCardIndex),
+            CardCarousel(
+                userCards: cards,
+                cardIndex: cardIndex,
+                updateIndex: _updateCardIndex,
+                carouselController: carouselController),
           ]);
         }
 
@@ -72,10 +78,16 @@ class IdentificationPageState extends State<IdentificationPage> {
     handleDeniedCameraPermission(context);
   }
 
+  Future<void> _updateCardIndex(int index) async {
+    setState(() {
+      cardIndex = index;
+    });
+  }
+
   Future<void> _startActivation(BuildContext context) async {
     if (await Permission.camera.request().isGranted) {
-      // TODO update card index to last when card was activated
-      Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
+      Navigator.push(context,
+          AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
       return;
     }
     handleDeniedCameraPermission(context);
@@ -91,14 +103,11 @@ class IdentificationPageState extends State<IdentificationPage> {
   Future<void> _removeCard(BuildContext context) async {
     final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
     await RemoveCardConfirmationDialog.show(context: context, userCode: userCodesModel.userCodes![cardIndex]);
-    if (cardIndex > 0) {
-      _updateCardIndex(cardIndex - 1);
-    }
+    carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
   }
 
-  Future<void> _updateCardIndex(int index) async {
-    setState(() {
-      cardIndex = index;
-    });
+  void _moveCarouselToLastPosition() {
+    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
+    carouselController.jumpToPage(userCodesModel.userCodes!.length);
   }
 }

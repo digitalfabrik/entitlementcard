@@ -26,7 +26,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
-  const ActivationCodeScannerPage({super.key});
+  final VoidCallback moveToLastCard;
+  const ActivationCodeScannerPage({super.key, required this.moveToLastCard});
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +121,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
         provider.setCode(userCode);
+        moveToLastCard();
         debugPrint('Card Activation: Successfully activated.');
 
         break;
