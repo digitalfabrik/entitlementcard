@@ -116,7 +116,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           ..cardVerification = (CardVerification()
             ..cardValid = true
             ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
-        if (provider.userCodes != null && provider.isAlreadyInList(provider.userCodes!, userCode)) {
+        if (provider.userCodes != null && isAlreadyInList(provider.userCodes!, userCode)) {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
         provider.setCode(userCode);

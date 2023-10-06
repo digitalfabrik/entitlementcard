@@ -4,6 +4,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const userCodeBase64Key = 'userCodeBase64';
+
 // TODO remove when import is finished
 @Deprecated('is needed to load old card data to new structure')
 class UserCodeStore {

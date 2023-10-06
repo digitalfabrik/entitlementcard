@@ -10,18 +10,16 @@ import 'package:provider/provider.dart';
 
 class RemoveCardConfirmationDialog extends StatefulWidget {
   final DynamicUserCode userCode;
-  final bool isLastItem;
 
-  const RemoveCardConfirmationDialog({super.key, required this.userCode, required this.isLastItem});
+  const RemoveCardConfirmationDialog({super.key, required this.userCode});
 
   static Future<void> show({
     required BuildContext context,
     required DynamicUserCode userCode,
-    required bool isLastItem,
   }) =>
       showDialog(
         context: context,
-        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, isLastItem: isLastItem),
+        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode),
       );
 
   @override
@@ -78,12 +76,14 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
               child: const Text('Löschen'),
               onPressed: () {
                 final provider = Provider.of<UserCodesModel>(context, listen: false);
-                if (widget.isLastItem) {
+                if (provider.userCodes!.length == 1) {
+                  print("removeCodes");
                   provider.removeCodes();
                 } else {
+                  print("removeCode");
                   provider.removeCode(widget.userCode);
                 }
-                Navigator.of(context).pop(false);
+                Navigator.of(context).pop(true);
               },
             ),
           ],

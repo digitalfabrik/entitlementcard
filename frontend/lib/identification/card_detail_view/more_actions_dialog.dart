@@ -1,5 +1,7 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/identification/user_codes_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
@@ -18,6 +20,9 @@ class MoreActionsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = buildConfig.localization.identification.moreActions;
+    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
+    final String availableCards = (buildConfig.maxCardAmount - userCodesModel.userCodes!.length).toString();
+    final String maxCardAmount = buildConfig.maxCardAmount.toString();
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
       title: const Text('Weitere Aktionen'),
@@ -35,15 +40,6 @@ class MoreActionsDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text(localization.activateAnotherCardTitle),
-              subtitle: Text(localization.activateAnotherCardDescription),
-              leading: const Icon(Icons.add_card, size: 36),
-              onTap: () {
-                Navigator.pop(context);
-                startActivation();
-              },
-            ),
-            ListTile(
               title: Text(localization.verifyTitle),
               subtitle: Text(localization.verifyDescription),
               leading: const Icon(Icons.verified, size: 36),
@@ -52,6 +48,17 @@ class MoreActionsDialog extends StatelessWidget {
                 startVerification();
               },
             ),
+            if (!hasReachedCardLimit(userCodesModel.userCodes!))
+              ListTile(
+                title: Text(localization.activateAnotherCardTitle),
+                subtitle: Text(
+                    '${localization.activateAnotherCardDescription}\n(Noch $availableCards von $maxCardAmount frei)'),
+                leading: const Icon(Icons.add_card, size: 36),
+                onTap: () {
+                  Navigator.pop(context);
+                  startActivation();
+                },
+              ),
             ListTile(
               title: Text(localization.removeCardTitle),
               subtitle: Text(localization.removeCardDescription),

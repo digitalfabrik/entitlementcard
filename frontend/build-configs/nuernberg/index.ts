@@ -94,7 +94,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     publisherText,
     disclaimerText,
     localization,
-    maxCardAmount: 1
+    maxCardAmount: 5,
 }
 
 let nuernberg: BuildConfigType = {

@@ -74,6 +74,7 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   Future<void> _startActivation(BuildContext context) async {
     if (await Permission.camera.request().isGranted) {
+      // TODO update card index to last when card was activated
       Navigator.push(context, AppRoute(builder: (context) => const ActivationCodeScannerPage()));
       return;
     }
@@ -89,11 +90,10 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   Future<void> _removeCard(BuildContext context) async {
     final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
-
-    await RemoveCardConfirmationDialog.show(
-        context: context,
-        userCode: userCodesModel.userCodes![cardIndex],
-        isLastItem: userCodesModel.userCodes!.length == 1);
+    await RemoveCardConfirmationDialog.show(context: context, userCode: userCodesModel.userCodes![cardIndex]);
+    if (cardIndex > 0) {
+      _updateCardIndex(cardIndex - 1);
+    }
   }
 
   Future<void> _updateCardIndex(int index) async {

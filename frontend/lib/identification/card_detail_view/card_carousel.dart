@@ -24,7 +24,6 @@ class CardCarouselState extends State<CardCarousel> {
           items: widget.userCards,
           carouselController: _controller,
           options: CarouselOptions(
-              enlargeCenterPage: true,
               enableInfiniteScroll: false,
               viewportFraction: 0.98,
               aspectRatio: 9 / 16,
