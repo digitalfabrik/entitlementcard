@@ -4,7 +4,7 @@ syntax = "proto3";
 message RegionExtension {
   // Using int32 instead of uint32, even though we do not expect negative values.
   // The reason is that int32 are better supported in GraphQL and SQL.
-  optional int32 regionId = 1;
+  int32 regionId = 1;
 }
 
 message BirthdayExtension {
@@ -14,11 +14,11 @@ message BirthdayExtension {
   // BirthdayExtension message takes up to 4 bytes when encoded binary, whereas using int32 would require up to 11 bytes
   // for birthdays before 1970 and up to 4 bytes for birthdays between 1970 and 2050.
   // If you want to specify that the card does not have an associated birthdate, then do not set the BirthdayExtension.
-  optional sint32 birthday = 1;
+  sint32 birthday = 1;
 }
 
 message NuernbergPassNumberExtension {
-  optional uint32 pass_number = 1;
+  uint32 pass_number = 1;
 }
 
 enum BavariaCardType {
@@ -27,7 +27,7 @@ enum BavariaCardType {
 }
 
 message BavariaCardTypeExtension {
-  optional BavariaCardType card_type = 1;
+  BavariaCardType card_type = 1;
 }
 
 message StartDayExtension {
@@ -36,15 +36,15 @@ message StartDayExtension {
   // The calculated day is inclusive (e.g. if day == 1, then the card is valid on 1970-01-02, but not on 1970-01-03).
   // Because the data type is unsigned, there are no dates before 1970-01-01.
   // 2^32days = 11 759 230.8 years.
-  optional uint32 start_day = 1;
+  uint32 start_day = 1;
 }
 
 message CardExtensions {
-  optional RegionExtension extension_region = 1;
-  optional BirthdayExtension extension_birthday = 2;
-  optional NuernbergPassNumberExtension extension_nuernberg_pass_number = 3;
-  optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
-  optional StartDayExtension extension_start_day = 5;
+  RegionExtension extension_region = 1;
+  BirthdayExtension extension_birthday = 2;
+  NuernbergPassNumberExtension extension_nuernberg_pass_number = 3;
+  BavariaCardTypeExtension extension_bavaria_card_type = 4;
+  StartDayExtension extension_start_day = 5;
 }
 
 // For our hashing approach, we require that all fields (and subfields, recursively) of CardInfo are marked 'optional'.
@@ -55,7 +55,7 @@ message CardExtensions {
 // More notes on explicit presence: https://protobuf.dev/programming-guides/field_presence/#presence-in-proto3-apis
 message CardInfo {
   // The first and last name of the cardholder.
-  optional string full_name = 1;
+  string full_name = 1;
 
   // Expiration day (calculated from 1970-01-01).
   // Cards are always invalid on 1970-01-01 (because day = 0 is excluded).
@@ -63,23 +63,23 @@ message CardInfo {
   // Because the data type is unsigned, there are no dates before 1970-01-01.
   // 2^32days = 11 759 230.8 years.
   // Absent, if the card does not expire (in the case of a golden Bavarian EAK).
-  optional uint32 expiration_day = 2;
+  uint32 expiration_day = 2;
 
   // Extensions
-  optional CardExtensions extensions = 3;
+  CardExtensions extensions = 3;
 }
 
 message CardVerification {
-  optional bool cardValid = 1;
+  bool cardValid = 1;
 
   // Verification timestamp in seconds (calculated from 1970-01-01 UTC) as reported by the server.
   // Using uint64 should be good for 584,942,417,355 years after 1970.
   // This timestamp is used to invalidate the card after a certain time period not verified with the backend (in this case 7 days).
   // This timestamp will be updated after card activation and card validation on app start.
-  optional uint64 verificationTimeStamp = 2;
+  uint64 verificationTimeStamp = 2;
 
   // If the verificationTimeStamp was out of sync with the local date time (at time of request) by at least 30 seconds.
-  optional bool outOfSync = 3;
+  bool outOfSync = 3;
 }
 
 message QrCode {
