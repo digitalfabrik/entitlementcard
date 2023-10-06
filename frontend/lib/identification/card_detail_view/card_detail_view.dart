@@ -3,13 +3,13 @@ import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/identification/user_codes_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../user_code_model.dart';
 import 'verification_code_view.dart';
 
 class CardDetailView extends StatefulWidget {
@@ -17,14 +17,15 @@ class CardDetailView extends StatefulWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
+  final VoidCallback removeCard;
 
-  const CardDetailView({
-    super.key,
-    required this.userCode,
-    required this.startActivation,
-    required this.startVerification,
-    required this.startApplication,
-  });
+  const CardDetailView(
+      {super.key,
+      required this.userCode,
+      required this.startActivation,
+      required this.startVerification,
+      required this.startApplication,
+      required this.removeCard});
 
   @override
   State<CardDetailView> createState() => _CardDetailViewState();
@@ -49,10 +50,10 @@ class _CardDetailViewState extends State<CardDetailView> {
   }
 
   Future<void> _selfVerifyCard() async {
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    selfVerifyCard(userCodeModel, projectId, client);
+    userCodesModel.userCodes!.map((code) => selfVerifyCard(context, code, projectId, client));
   }
 
   @override
@@ -129,10 +130,10 @@ class _CardDetailViewState extends State<CardDetailView> {
     showDialog(
       context: context,
       builder: (context) => MoreActionsDialog(
-        startActivation: widget.startActivation,
-        startApplication: widget.startApplication,
-        startVerification: widget.startVerification,
-      ),
+          startActivation: widget.startActivation,
+          startApplication: widget.startApplication,
+          startVerification: widget.startVerification,
+          removeCard: widget.removeCard),
     );
   }
 }

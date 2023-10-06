@@ -1,14 +1,16 @@
+import 'package:ehrenamtskarte/identification/user_codes_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../proto/card.pb.dart';
 import '../../util/date_utils.dart';
 import '../otp_generator.dart';
-import '../user_code_model.dart';
 import '../verification_workflow/query_server_verification.dart';
 
-Future<void> selfVerifyCard(UserCodeModel userCodeModel, String projectId, GraphQLClient client) async {
-  final userCode = userCodeModel.userCode;
+Future<void> selfVerifyCard(
+    BuildContext context, DynamicUserCode? userCode, String projectId, GraphQLClient client) async {
+  final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
   if (userCode == null) {
     return;
   }
@@ -25,14 +27,14 @@ Future<void> selfVerifyCard(UserCodeModel userCodeModel, String projectId, Graph
       await queryDynamicServerVerification(client, projectId, qrCode);
 
   // If the user code has changed during the server request, we abort.
-  if (userCodeModel.userCode != userCode) {
-    debugPrint('Card Self-Verification: The user code has been changed during server request for the old user code.');
-    return;
-  }
+  // if (userCodeModel.userCode != userCode) {
+  //   debugPrint('Card Self-Verification: The user code has been changed during server request for the old user code.');
+  //   return;
+  // }
 
   debugPrint("Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? "valid." : "INVALID."}");
 
-  userCodeModel.setCode(DynamicUserCode()
+  userCodesModel.setCode(DynamicUserCode()
     ..info = userCode.info
     ..ecSignature = userCode.ecSignature
     ..pepper = userCode.pepper

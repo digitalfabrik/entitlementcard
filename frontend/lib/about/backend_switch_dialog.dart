@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/user_codes_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -84,8 +84,8 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
 
   void clearData() {
     final settings = Provider.of<SettingsModel>(context, listen: false);
-    final card = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodes = Provider.of<UserCodesModel>(context, listen: false);
     settings.clearSettings();
-    card.removeCode();
+    userCodes.removeCodes();
   }
 }

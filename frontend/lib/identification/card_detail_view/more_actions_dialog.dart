@@ -5,12 +5,14 @@ class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
+  final VoidCallback removeCard;
 
   const MoreActionsDialog({
     super.key,
     required this.startActivation,
     required this.startVerification,
     required this.startApplication,
+    required this.removeCard,
   });
 
   @override
@@ -48,6 +50,15 @@ class MoreActionsDialog extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 startVerification();
+              },
+            ),
+            ListTile(
+              title: Text(localization.removeCardTitle),
+              subtitle: Text(localization.removeCardDescription),
+              leading: const Icon(Icons.delete, size: 36),
+              onTap: () {
+                Navigator.pop(context);
+                removeCard();
               },
             ),
           ],

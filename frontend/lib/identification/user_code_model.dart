@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:ehrenamtskarte/identification/user_code_store.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/foundation.dart';
-
+// TODO remove
+@Deprecated('is needed to load old card data to new structure')
 class UserCodeModel extends ChangeNotifier {
   DynamicUserCode? _userCode;
   bool _isInitialized = false;

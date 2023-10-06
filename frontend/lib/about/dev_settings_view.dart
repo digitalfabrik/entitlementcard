@@ -9,10 +9,9 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
-import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
-import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/user_codes_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -21,6 +20,8 @@ import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../identification/card_detail_view/self_verify_card.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
@@ -53,14 +54,14 @@ class DevSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
     final client = GraphQLProvider.of(context).value;
-    final userCodeModel = Provider.of<UserCodeModel>(context);
+    final userCodesModel = Provider.of<UserCodesModel>(context);
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
           ListTile(
-            title: const Text('Reset card'),
-            onTap: () => _resetEakData(context),
+            title: const Text('Reset cards'),
+            onTap: () => _resetEakData(context, userCodesModel),
           ),
           ListTile(
             title: const Text('Set (invalid) sample card'),
@@ -79,9 +80,11 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _setExpiredLastVerification(context),
           ),
           ListTile(
-            title: const Text('Trigger self-verification'),
-            onTap: () => selfVerifyCard(userCodeModel, Configuration.of(context).projectId, client),
-          ),
+              title: const Text('Trigger self-verification'),
+              onTap: () => {
+                    userCodesModel.userCodes!
+                        .map((code) => selfVerifyCard(context, code, Configuration.of(context).projectId, client))
+                  }),
           ListTile(
             title: const Text('Log sample exception'),
             onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
@@ -101,8 +104,8 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  Future<void> _resetEakData(BuildContext context) async {
-    Provider.of<UserCodeModel>(context, listen: false).removeCode();
+  Future<void> _resetEakData(BuildContext context, UserCodesModel userCodes) async {
+    userCodes.removeCodes();
   }
 
   DynamicUserCode _determineUserCode(String projectId) {
@@ -123,7 +126,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _setSampleCard(BuildContext context) async {
-    Provider.of<UserCodeModel>(context, listen: false).setCode(_determineUserCode(buildConfig.projectId.local));
+    Provider.of<UserCodesModel>(context, listen: false).setCode(_determineUserCode(buildConfig.projectId.local));
   }
 
   Future<void> _showRawCardInput(BuildContext context) async {
@@ -168,7 +171,7 @@ class DevSettingsView extends StatelessWidget {
 
   Future<void> _activateCard(BuildContext context, String base64qrcode) async {
     final messengerState = ScaffoldMessenger.of(context);
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final provider = Provider.of<UserCodesModel>(context, listen: false);
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
     try {
@@ -235,8 +238,8 @@ class DevSettingsView extends StatelessWidget {
 
 // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
   void _setExpiredLastVerification(BuildContext context) {
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
-    final DynamicUserCode userCode = provider.userCode!;
+    final provider = Provider.of<UserCodesModel>(context, listen: false);
+    final DynamicUserCode userCode = provider.userCodes!.first;
     final CardVerification cardVerification = CardVerification()
       ..verificationTimeStamp =
           secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
