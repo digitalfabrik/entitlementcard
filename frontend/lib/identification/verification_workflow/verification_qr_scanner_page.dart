@@ -8,7 +8,7 @@ import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
-import 'package:ehrenamtskarte/identification/user_codes_model.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
@@ -50,9 +50,9 @@ class VerificationQrScannerPage extends StatelessWidget {
         if (config.showDevSettings)
           TextButton(
             onPressed: () async {
-              final provider = Provider.of<UserCodesModel>(context, listen: false);
+              final provider = Provider.of<UserCodeModel>(context, listen: false);
               // TODO use current card instead of first
-              final userCode = provider.userCodes!.first;
+              final userCode = provider.userCodes.first;
               final otp = OTPGenerator(userCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode()
                 ..dynamicVerificationCode = (DynamicVerificationCode()

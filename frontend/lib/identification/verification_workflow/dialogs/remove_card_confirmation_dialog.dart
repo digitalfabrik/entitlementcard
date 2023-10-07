@@ -2,7 +2,7 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
-import 'package:ehrenamtskarte/identification/user_codes_model.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -78,8 +78,8 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
             TextButton(
               child: const Text('Löschen'),
               onPressed: () {
-                final provider = Provider.of<UserCodesModel>(context, listen: false);
-                if (provider.userCodes!.length == 1) {
+                final provider = Provider.of<UserCodeModel>(context, listen: false);
+                if (provider.userCodes.length == 1) {
                   provider.removeCodes();
                 } else {
                   provider.removeCode(widget.userCode);

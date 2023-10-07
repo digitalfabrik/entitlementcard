@@ -13,7 +13,7 @@ import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
-import 'package:ehrenamtskarte/identification/user_codes_model.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -88,7 +88,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   ]) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
-    final provider = Provider.of<UserCodesModel>(context, listen: false);
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
@@ -117,7 +117,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           ..cardVerification = (CardVerification()
             ..cardValid = true
             ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
-        if (provider.userCodes != null && isAlreadyInList(provider.userCodes!, userCode)) {
+        if (isAlreadyInList(provider.userCodes, userCode)) {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
         provider.setCode(userCode);

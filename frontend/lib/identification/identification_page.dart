@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/identification/card_detail_view/card_carousel.dar
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
-import 'package:ehrenamtskarte/identification/user_codes_model.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
 import 'package:ehrenamtskarte/routing.dart';
@@ -30,23 +30,23 @@ class IdentificationPageState extends State<IdentificationPage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return Consumer<UserCodesModel>(
-      builder: (context, userCodesModel, child) {
-        if (!userCodesModel.isInitialized) {
+    return Consumer<UserCodeModel>(
+      builder: (context, userCodeModel, child) {
+        if (!userCodeModel.isInitialized) {
           return Container();
         }
 
-        if (userCodesModel.userCodes != null && userCodesModel.userCodes!.isNotEmpty) {
+        if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> cards = [];
-          userCodesModel.userCodes?.forEach((element) {
+          for (var code in userCodeModel.userCodes) {
             cards.add(CardDetailView(
-              userCode: element,
+              userCode: code,
               startVerification: () => _showVerificationDialog(context, settings),
               startActivation: () => _startActivation(context),
               startApplication: _startApplication,
               removeCard: () => _removeCard(context),
             ));
-          });
+          }
 
           return Column(children: [
             CardCarousel(
@@ -101,13 +101,13 @@ class IdentificationPageState extends State<IdentificationPage> {
   }
 
   Future<void> _removeCard(BuildContext context) async {
-    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
-    await RemoveCardConfirmationDialog.show(context: context, userCode: userCodesModel.userCodes![cardIndex]);
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    await RemoveCardConfirmationDialog.show(context: context, userCode: userCodeModel.userCodes[cardIndex]);
     carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
   }
 
   void _moveCarouselToLastPosition() {
-    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
-    carouselController.jumpToPage(userCodesModel.userCodes!.length);
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    carouselController.jumpToPage(userCodeModel.userCodes.length);
   }
 }

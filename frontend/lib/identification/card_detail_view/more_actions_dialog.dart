@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
-import 'package:ehrenamtskarte/identification/user_codes_model.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +20,8 @@ class MoreActionsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = buildConfig.localization.identification.moreActions;
-    final userCodesModel = Provider.of<UserCodesModel>(context, listen: false);
-    final String availableCards = (buildConfig.maxCardAmount - userCodesModel.userCodes!.length).toString();
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    final String availableCards = (buildConfig.maxCardAmount - userCodeModel.userCodes.length).toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
@@ -48,7 +48,7 @@ class MoreActionsDialog extends StatelessWidget {
                 startVerification();
               },
             ),
-            if (!hasReachedCardLimit(userCodesModel.userCodes!))
+            if (!hasReachedCardLimit(userCodeModel.userCodes))
               ListTile(
                 title: Text(localization.activateAnotherCardTitle),
                 subtitle: Text(

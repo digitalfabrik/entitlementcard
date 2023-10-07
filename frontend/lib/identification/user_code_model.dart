@@ -1,17 +1,16 @@
 import 'dart:developer';
 
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/identification/user_code_store.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/foundation.dart';
 
-// TODO remove this file
-@Deprecated('is needed to load old card data to new structure')
 class UserCodeModel extends ChangeNotifier {
-  DynamicUserCode? _userCode;
+  List<DynamicUserCode> _userCodes = [];
   bool _isInitialized = false;
 
-  DynamicUserCode? get userCode {
-    return _userCode;
+  List<DynamicUserCode> get userCodes {
+    return _userCodes;
   }
 
   bool get isInitialized {
@@ -23,9 +22,10 @@ class UserCodeModel extends ChangeNotifier {
       return;
     }
     try {
-      _userCode = await const UserCodeStore().load();
+      await UserCodeStore().importLegacyCard();
+      _userCodes = await const UserCodeStore().load();
     } on Exception catch (e) {
-      log('Failed to initialize activation code from secure storage.', error: e);
+      log('Failed to initialize activation code from secure storage of codes.', error: e);
     } finally {
       _isInitialized = true;
       notifyListeners();
@@ -33,14 +33,33 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void setCode(DynamicUserCode code) {
-    const UserCodeStore().store(code);
-    _userCode = code;
+    List<DynamicUserCode> userCodes = _userCodes;
+    if (isAlreadyInList(userCodes, code)) return;
+    userCodes.add(code);
+    const UserCodeStore().store(userCodes);
+    _userCodes = userCodes;
     notifyListeners();
   }
 
-  void removeCode() {
-    const UserCodeStore().remove();
-    _userCode = null;
+  void removeCode(DynamicUserCode code) {
+    List<DynamicUserCode> userCodes = _userCodes;
+    userCodes.remove(code);
+    const UserCodeStore().store(userCodes);
+    _userCodes = userCodes;
     notifyListeners();
   }
+
+  void removeCodes() {
+    const UserCodeStore().remove();
+    _userCodes = [];
+    notifyListeners();
+  }
+}
+
+bool isAlreadyInList(List<DynamicUserCode> userCodes, DynamicUserCode code) {
+  return userCodes.map((userCode) => userCode.info).contains(code.info);
+}
+
+bool hasReachedCardLimit(List<DynamicUserCode> userCodes) {
+  return userCodes.length >= buildConfig.maxCardAmount;
 }
