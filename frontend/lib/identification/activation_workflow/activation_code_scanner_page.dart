@@ -121,7 +121,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
         provider.setCode(userCode);
-        moveToLastCard();
+        if (provider.userCodes.length > 1) {
+          moveToLastCard();
+        }
         debugPrint('Card Activation: Successfully activated.');
 
         break;
