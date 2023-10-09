@@ -82,7 +82,7 @@ class DevSettingsView extends StatelessWidget {
               title: const Text('Trigger self-verification'),
               onTap: () => {
                     for (final userCode in userCodeModel.userCodes)
-                      {() => selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
+                      {selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
                   }),
           ListTile(
             title: const Text('Log sample exception'),
@@ -240,7 +240,7 @@ class DevSettingsView extends StatelessWidget {
     if (provider.userCodes.isNotEmpty) {
       List<DynamicUserCode> userCodes = provider.userCodes;
       for (final userCode in userCodes) {
-        userCodes.map((code) => _setExpiredLastVerification(context, userCode));
+        _setExpiredLastVerification(context, userCode);
       }
     }
   }
