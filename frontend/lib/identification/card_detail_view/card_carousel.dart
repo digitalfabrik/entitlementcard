@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class CardCarousel extends StatefulWidget {
-  final List<Widget> userCards;
+  final List<Widget> cards;
   final int cardIndex;
   final Function(int index) updateIndex;
   final CarouselController carouselController;
 
   const CardCarousel(
       {super.key,
-      required this.userCards,
+      required this.cards,
       required this.cardIndex,
       required this.updateIndex,
       required this.carouselController});
@@ -25,7 +25,7 @@ class CardCarouselState extends State<CardCarousel> {
         child: Column(
       children: [
         CarouselSlider(
-          items: widget.userCards,
+          items: widget.cards,
           carouselController: widget.carouselController,
           options: CarouselOptions(
               enableInfiniteScroll: false,
@@ -37,12 +37,12 @@ class CardCarouselState extends State<CardCarousel> {
                 });
               }),
         ),
-        if (widget.userCards.length > 1)
+        if (widget.cards.length > 1)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.userCards.asMap().entries.map((entry) {
+              children: widget.cards.asMap().entries.map((entry) {
                 return GestureDetector(
                   onTap: () => widget.carouselController.animateToPage(entry.key),
                   child: Container(

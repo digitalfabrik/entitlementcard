@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -20,8 +21,6 @@ import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-
-import '../identification/card_detail_view/self_verify_card.dart';
 
 // this data includes a Base32 encoded random key created with openssl
 // for testing, so this is intended
@@ -82,8 +81,8 @@ class DevSettingsView extends StatelessWidget {
           ListTile(
               title: const Text('Trigger self-verification'),
               onTap: () => {
-                    userCodeModel.userCodes
-                        .map((code) => selfVerifyCard(context, code, Configuration.of(context).projectId, client))
+                    for (final userCode in userCodeModel.userCodes)
+                      {() => selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
                   }),
           ListTile(
             title: const Text('Log sample exception'),
@@ -240,7 +239,9 @@ class DevSettingsView extends StatelessWidget {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     if (provider.userCodes.isNotEmpty) {
       List<DynamicUserCode> userCodes = provider.userCodes;
-      userCodes.map((code) => _setExpiredLastVerification(context, code));
+      for (final userCode in userCodes) {
+        userCodes.map((code) => _setExpiredLastVerification(context, userCode));
+      }
     }
   }
 

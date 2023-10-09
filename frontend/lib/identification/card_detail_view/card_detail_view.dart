@@ -17,7 +17,7 @@ class CardDetailView extends StatefulWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
-  final VoidCallback removeCard;
+  final VoidCallback openRemoveCardDialog;
 
   const CardDetailView(
       {super.key,
@@ -25,7 +25,7 @@ class CardDetailView extends StatefulWidget {
       required this.startActivation,
       required this.startVerification,
       required this.startApplication,
-      required this.removeCard});
+      required this.openRemoveCardDialog});
 
   @override
   State<CardDetailView> createState() => _CardDetailViewState();
@@ -44,16 +44,18 @@ class _CardDetailViewState extends State<CardDetailView> {
       // - the card was activated on another device
       // - the card was revoked
       // - the card expired (on backend's system time)
-      _selfVerifyCard();
+      _selfVerifyCards();
       initiatedSelfVerification = true;
     }
   }
 
-  Future<void> _selfVerifyCard() async {
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+  Future<void> _selfVerifyCards() async {
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false).userCodes;
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    userCodeModel.userCodes.map((code) => selfVerifyCard(context, code, projectId, client));
+    for (final userCode in userCodeModel) {
+      selfVerifyCard(context, userCode, projectId, client);
+    }
   }
 
   @override
@@ -88,7 +90,7 @@ class _CardDetailViewState extends State<CardDetailView> {
         final qrCodeAndStatus = QrCodeAndStatus(
           userCode: widget.userCode,
           onMoreActionsPressed: () => _onMoreActionsPressed(context),
-          onSelfVerifyPressed: _selfVerifyCard,
+          onSelfVerifyPressed: _selfVerifyCards,
         );
 
         return orientation == Orientation.landscape
@@ -133,7 +135,7 @@ class _CardDetailViewState extends State<CardDetailView> {
           startActivation: widget.startActivation,
           startApplication: widget.startApplication,
           startVerification: widget.startVerification,
-          removeCard: widget.removeCard),
+          openRemoveCardDialog: widget.openRemoveCardDialog),
     );
   }
 }

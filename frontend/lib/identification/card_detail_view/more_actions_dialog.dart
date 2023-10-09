@@ -7,14 +7,14 @@ class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
-  final VoidCallback removeCard;
+  final VoidCallback openRemoveCardDialog;
 
   const MoreActionsDialog({
     super.key,
     required this.startActivation,
     required this.startVerification,
     required this.startApplication,
-    required this.removeCard,
+    required this.openRemoveCardDialog,
   });
 
   @override
@@ -65,7 +65,7 @@ class MoreActionsDialog extends StatelessWidget {
               leading: const Icon(Icons.delete, size: 36),
               onTap: () {
                 Navigator.pop(context);
-                removeCard();
+                openRemoveCardDialog();
               },
             ),
           ],

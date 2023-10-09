@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
@@ -10,16 +11,17 @@ import 'package:provider/provider.dart';
 
 class RemoveCardConfirmationDialog extends StatefulWidget {
   final DynamicUserCode userCode;
+  final CarouselController carouselController;
 
-  const RemoveCardConfirmationDialog({super.key, required this.userCode});
+  const RemoveCardConfirmationDialog({super.key, required this.userCode, required this.carouselController});
 
-  static Future<void> show({
-    required BuildContext context,
-    required DynamicUserCode userCode,
-  }) =>
+  static Future<void> show(
+          {required BuildContext context,
+          required DynamicUserCode userCode,
+          required CarouselController carouselController}) =>
       showDialog(
         context: context,
-        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode),
+        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, carouselController: carouselController),
       );
 
   @override
@@ -57,7 +59,7 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(bottom: 20),
-                    child: Text(localization.description, style: TextStyle(fontSize: 12))),
+                    child: Text(localization.description, style: TextStyle(fontSize: 14))),
                 IdCard(
                   cardInfo: widget.userCode.info,
                   region: region != null ? Region(region.prefix, region.name) : null,
@@ -83,6 +85,7 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
                   provider.removeCodes();
                 } else {
                   provider.removeCode(widget.userCode);
+                  widget.carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
                 }
                 Navigator.of(context).pop(true);
               },

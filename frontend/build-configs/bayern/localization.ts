@@ -25,7 +25,7 @@ const localization: LocalizationType = {
             applyForAnotherCardTitle: "Ehrenamtskarte beantragen oder verlängern",
             applyForAnotherCardDescription: "Ihre hinterlegte Karte bleibt erhalten.",
             activateAnotherCardTitle: "Weitere Ehrenamtskarte hinzufügen",
-            activateAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten. Sie können diesen manuell entfernen.",
+            activateAnotherCardDescription: "Ihr hinterlegte Ehrenamtskarte bleibt erhalten. Sie können diesen manuell entfernen.",
             verifyTitle: "Eine digitale Ehrenamtskarte prüfen",
             verifyDescription: "Prüfen Sie die Gültigkeit einer digitalen Ehrenamtskarte.",
             removeCardTitle: "Diese Ehrenamtskarte löschen",

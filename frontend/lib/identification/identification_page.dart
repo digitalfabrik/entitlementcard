@@ -38,20 +38,20 @@ class IdentificationPageState extends State<IdentificationPage> {
         }
 
         if (userCodeModel.userCodes.isNotEmpty) {
-          final List<Widget> cards = [];
+          final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
-            cards.add(CardDetailView(
+            carouselCards.add(CardDetailView(
               userCode: code,
-              startVerification: () => _showVerificationDialog(context, settings),
+              startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
               startApplication: _startApplication,
-              removeCard: () => _removeCard(context),
+              openRemoveCardDialog: () => _openRemoveCardDialog(context),
             ));
           }
 
           return Column(children: [
             CardCarousel(
-                userCards: cards,
+                cards: carouselCards,
                 cardIndex: cardIndex,
                 updateIndex: _updateCardIndex,
                 carouselController: carouselController),
@@ -59,7 +59,7 @@ class IdentificationPageState extends State<IdentificationPage> {
         }
 
         return NoCardView(
-          startVerification: () => _showVerificationDialog(context, settings),
+          startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
           startActivation: () => _startActivation(context),
           startApplication: _startApplication,
         );
@@ -71,9 +71,9 @@ class IdentificationPageState extends State<IdentificationPage> {
     await QrCodeCameraPermissionDialog.showPermissionDialog(context);
   }
 
-  Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
+  Future<void> _showVerificationDialog(
+      BuildContext context, SettingsModel settings, UserCodeModel userCodeModel) async {
     if (await Permission.camera.request().isGranted) {
-      final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
       DynamicUserCode? userCode = userCodeModel.userCodes.isNotEmpty ? userCodeModel.userCodes[cardIndex] : null;
       await VerificationWorkflow.startWorkflow(context, settings, userCode);
       return;
@@ -103,10 +103,10 @@ class IdentificationPageState extends State<IdentificationPage> {
     );
   }
 
-  Future<void> _removeCard(BuildContext context) async {
+  Future<void> _openRemoveCardDialog(BuildContext context) async {
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-    await RemoveCardConfirmationDialog.show(context: context, userCode: userCodeModel.userCodes[cardIndex]);
-    carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+    await RemoveCardConfirmationDialog.show(
+        context: context, userCode: userCodeModel.userCodes[cardIndex], carouselController: carouselController);
   }
 
   void _moveCarouselToLastPosition() {

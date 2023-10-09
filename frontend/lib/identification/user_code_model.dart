@@ -25,7 +25,7 @@ class UserCodeModel extends ChangeNotifier {
       await UserCodeStore().importLegacyCard();
       _userCodes = await const UserCodeStore().load();
     } on Exception catch (e) {
-      log('Failed to initialize activation code from secure storage of codes.', error: e);
+      log('Failed to initialize activation code from secure storage.', error: e);
     } finally {
       _isInitialized = true;
       notifyListeners();
