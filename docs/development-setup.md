@@ -54,6 +54,20 @@ adb reverse tcp:8000 tcp:8000
 13. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
 14. Take a look at the backend: [http://localhost:8000](http://localhost:8000) (The public version is available at
     api.entitlementcard.app)
+14. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
+15. (optional) Add your matomo config for each project to the backend config
+```yaml
+projects:
+  - id: ...
+    # ...
+    matomo:
+      siteId: 1
+      url: http://localhost:5003/matomo.php
+      accessToken: <matomo-access-token>
+```
+You can find and generate an access token, when you visit `localhost:5003/settings` and search for token there.
+You might also need to update the matomo `/var/www/html/config/config.ini.php` (you'll only have to do this once) to add localhost:5003 to matomos trusted_hosts.
+To do that it is recommended to use the docker desktop client.
 
 # Administration
 

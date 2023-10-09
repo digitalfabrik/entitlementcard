@@ -22,7 +22,7 @@ export class CreateCardsError extends Error {
   }
 }
 
-async function createCards(client: ApolloClient<object>, activationCodes: Codes, region: Region) {
+async function createCards(client: ApolloClient<object>, project: string, activationCodes: Codes, region: Region) {
   const cards: CardGenerationModelInput[] = await Promise.all(
     activationCodes.map(async code => {
       const codeType = code instanceof DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
@@ -43,7 +43,7 @@ async function createCards(client: ApolloClient<object>, activationCodes: Codes,
   )
   const result = await client.mutate<AddCardsMutation, AddCardsMutationVariables>({
     mutation: AddCardsDocument,
-    variables: { cards },
+    variables: { cards, project },
   })
 
   if (result.errors) {

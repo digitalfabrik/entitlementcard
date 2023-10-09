@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
+import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
@@ -25,17 +26,18 @@ import java.util.Base64
 @Suppress("unused")
 class CardMutationService {
     @GraphQLDescription("Stores a batch of new digital entitlementcards")
-    fun addCards(dfe: DataFetchingEnvironment, cards: List<CardGenerationModel>): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
-
+    fun addCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardGenerationModel>): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user =
                 AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw UnauthorizedException()
 
             for (card in cards) {
-                val targetedRegionId = card.regionId
-                if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
+                if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
                     throw ForbiddenException()
                 }
                 if (!isCodeTypeValid(card)) {
@@ -62,6 +64,8 @@ class CardMutationService {
                 )
             }
         }
+
+        Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, cards)
         return true
     }
 
@@ -80,8 +84,9 @@ class CardMutationService {
                 ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
+
         // Avoid race conditions when activating a card.
-        return transaction(TRANSACTION_REPEATABLE_READ) t@{
+        val activationResult = transaction(TRANSACTION_REPEATABLE_READ) t@{
             repetitionAttempts = 0
             val card = CardRepository.findByHash(project, cardHash)
             val activationSecretHash = card?.activationSecretHash
@@ -112,6 +117,8 @@ class CardMutationService {
             logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
+        Matomo.trackActivation(projectConfig, context.request, dfe.field.name, cardHash, activationResult.activationState != ActivationState.failed)
+        return activationResult
     }
 
     private fun isCodeTypeValid(card: CardGenerationModel): Boolean {
