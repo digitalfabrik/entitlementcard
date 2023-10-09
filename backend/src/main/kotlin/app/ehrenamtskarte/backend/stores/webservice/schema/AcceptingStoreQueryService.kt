@@ -1,13 +1,17 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -42,17 +46,25 @@ class AcceptingStoreQueryService {
     }
 
     @GraphQLDescription("Search for accepting stores in the given project using searchText and categoryIds.")
-    fun searchAcceptingStoresInProject(project: String, params: SearchParams): List<AcceptingStore> = transaction {
-        AcceptingStoresRepository.findBySearch(
-            project,
-            params.searchText,
-            params.categoryIds,
-            params.coordinates,
-            params.limit ?: Int.MAX_VALUE,
-            params.offset ?: 0
-        ).map {
-            AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
+    fun searchAcceptingStoresInProject(project: String, params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> {
+        val context = dfe.getContext<GraphQLContext>()
+        val projectConfig =
+            context.backendConfiguration.projects.find { it.id == project }
+                ?: throw ProjectNotFoundException(project)
+        val filteredStores = transaction {
+            AcceptingStoresRepository.findBySearch(
+                project,
+                params.searchText,
+                params.categoryIds,
+                params.coordinates,
+                params.limit ?: Int.MAX_VALUE,
+                params.offset ?: 0
+            ).map {
+                AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
+            }
         }
+        Matomo.trackSearch(projectConfig, context.request, dfe.field.name, params, filteredStores.size)
+        return filteredStores
     }
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("physicalStoresInProject"))
@@ -65,7 +77,7 @@ class AcceptingStoreQueryService {
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("searchAcceptingStoresInProject"))
     @GraphQLDescription("Search for accepting stores using searchText and categoryIds in the eak bayern project.")
-    fun searchAcceptingStores(params: SearchParams): List<AcceptingStore> = searchAcceptingStoresInProject(DEFAULT_PROJECT, params)
+    fun searchAcceptingStores(params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> = searchAcceptingStoresInProject(DEFAULT_PROJECT, params, dfe)
 }
 
 data class SearchParams(
