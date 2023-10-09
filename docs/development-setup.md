@@ -56,8 +56,6 @@ adb reverse tcp:8000 tcp:8000
 11. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
 12. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 13. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
-14. Take a look at the backend: [http://localhost:8000](http://localhost:8000) (The public version is available at
-    api.entitlementcard.app)
 14. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
 15. (optional) Add your matomo config for each project to the backend config
 ```yaml
