@@ -24,22 +24,24 @@ class CardCarouselState extends State<CardCarousel> {
     return Expanded(
         child: Column(
       children: [
-        CarouselSlider(
-          items: widget.cards,
-          carouselController: widget.carouselController,
-          options: CarouselOptions(
-              enableInfiniteScroll: false,
-              viewportFraction: 0.96,
-              aspectRatio: 9 / 16,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  widget.updateIndex(index);
-                });
-              }),
+        Expanded(
+          child: CarouselSlider(
+            items: widget.cards,
+            carouselController: widget.carouselController,
+            options: CarouselOptions(
+                enableInfiniteScroll: false,
+                viewportFraction: 0.96,
+                aspectRatio: 9 / 16,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    widget.updateIndex(index);
+                  });
+                }),
+          ),
         ),
         if (widget.cards.length > 1)
           Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: widget.cards.asMap().entries.map((entry) {
