@@ -1,3 +1,7 @@
+# Prerequisite
+
+Make sure you have installed [protoc](https://github.com/protocolbuffers/protobuf) on a current version.
+
 # Frontend
 
 The Ehrenamtskarte app uses Flutter. You can have a look at [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it. Alternatively, you can take a look at [README.md](../frontend/README.md) for a simpler guide which uses Flutter Version Manager.
@@ -72,8 +76,7 @@ To do that it is recommended to use the docker desktop client.
 # Administration
 
 1. Run `npm install`
-2. Create folder `generated` inside `administration/src`
-3. Run `Start Administration` from Intellij run configurations
+2. Run `Start Administration` from Intellij run configurations
 
 ## Dumping and restoring the database through docker
 
