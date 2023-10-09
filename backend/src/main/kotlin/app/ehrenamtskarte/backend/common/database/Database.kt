@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
 import app.ehrenamtskarte.backend.stores.database.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.Database.Companion.connect
@@ -36,12 +37,12 @@ class Database {
             project: String,
             email: String,
             password: String,
-            roleDbValue: String,
-            projectId: Int? = null
+            roleDbValue: String
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
-                AdministratorsRepository.insert(project, email, password, role, projectId)
+                val testRegionId = if (role != Role.PROJECT_ADMIN) RegionsRepository.findAllInProject(project).first().id.value else null
+                AdministratorsRepository.insert(project, email, password, role, testRegionId)
             }
         }
 
