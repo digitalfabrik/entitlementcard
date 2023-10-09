@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_per
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
+import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -72,7 +73,9 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   Future<void> _showVerificationDialog(BuildContext context, SettingsModel settings) async {
     if (await Permission.camera.request().isGranted) {
-      await VerificationWorkflow.startWorkflow(context, settings);
+      final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+      DynamicUserCode? userCode = userCodeModel.userCodes.isNotEmpty ? userCodeModel.userCodes[cardIndex] : null;
+      await VerificationWorkflow.startWorkflow(context, settings, userCode);
       return;
     }
     handleDeniedCameraPermission(context);

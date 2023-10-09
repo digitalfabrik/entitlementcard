@@ -77,7 +77,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Set expired last card verification'),
-            onTap: () => _setExpiredLastVerification(context),
+            onTap: () => _setExpiredLastVerifications(context),
           ),
           ListTile(
               title: const Text('Trigger self-verification'),
@@ -236,11 +236,17 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
-  void _setExpiredLastVerification(BuildContext context) {
+  void _setExpiredLastVerifications(BuildContext context) {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
-// TODO remove the first and add proper implementation
-    final DynamicUserCode userCode = provider.userCodes.first;
+    if (provider.userCodes.isNotEmpty) {
+      List<DynamicUserCode> userCodes = provider.userCodes;
+      userCodes.map((code) => _setExpiredLastVerification(context, code));
+    }
+  }
+
+// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
+  void _setExpiredLastVerification(BuildContext context, DynamicUserCode userCode) {
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
     final CardVerification cardVerification = CardVerification()
       ..verificationTimeStamp =
           secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))

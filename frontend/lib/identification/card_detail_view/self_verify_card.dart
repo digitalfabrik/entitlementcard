@@ -10,35 +10,36 @@ import '../verification_workflow/query_server_verification.dart';
 
 Future<void> selfVerifyCard(
     BuildContext context, DynamicUserCode? userCode, String projectId, GraphQLClient client) async {
-  final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-  if (userCode == null) {
+  final initialUserCode = userCode;
+  if (initialUserCode == null) {
     return;
   }
 
-  final otpCode = OTPGenerator(userCode.totpSecret).generateOTP();
+  final otpCode = OTPGenerator(initialUserCode.totpSecret).generateOTP();
   final DynamicVerificationCode qrCode = DynamicVerificationCode()
-    ..info = userCode.info
-    ..pepper = userCode.pepper
+    ..info = initialUserCode.info
+    ..pepper = initialUserCode.pepper
     ..otp = otpCode.code;
 
   debugPrint('Card Self-Verification: Requesting server');
 
   final (outOfSync: outOfSync, result: cardVerification) =
       await queryDynamicServerVerification(client, projectId, qrCode);
-// TODO uncomment
+
   // If the user code has changed during the server request, we abort.
-  // if (userCodeModel.userCode != userCode) {
-  //   debugPrint('Card Self-Verification: The user code has been changed during server request for the old user code.');
-  //   return;
-  // }
+  if (userCode != initialUserCode) {
+    debugPrint('Card Self-Verification: The user code has been changed during server request for the old user code.');
+    return;
+  }
 
   debugPrint("Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? "valid." : "INVALID."}");
 
+  final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
   userCodeModel.setCode(DynamicUserCode()
-    ..info = userCode.info
-    ..ecSignature = userCode.ecSignature
-    ..pepper = userCode.pepper
-    ..totpSecret = userCode.totpSecret
+    ..info = initialUserCode.info
+    ..ecSignature = initialUserCode.ecSignature
+    ..pepper = initialUserCode.pepper
+    ..totpSecret = initialUserCode.totpSecret
     ..cardVerification = (CardVerification()
       ..cardValid = cardVerification.valid
       ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp))
