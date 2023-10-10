@@ -103,8 +103,8 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  Future<void> _resetEakData(BuildContext context, UserCodeModel userCodes) async {
-    userCodes.removeCodes();
+  Future<void> _resetEakData(BuildContext context, UserCodeModel userCodesModel) async {
+    userCodesModel.removeCodes();
   }
 
   DynamicUserCode _determineUserCode(String projectId) {
@@ -170,7 +170,7 @@ class DevSettingsView extends StatelessWidget {
 
   Future<void> _activateCard(BuildContext context, String base64qrcode) async {
     final messengerState = ScaffoldMessenger.of(context);
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
     try {
@@ -195,7 +195,7 @@ class DevSettingsView extends StatelessWidget {
             ..info = activationCode.info
             ..pepper = activationCode.pepper
             ..totpSecret = totpSecret;
-          provider.insertCode(userCode);
+          userCodesModel.insertCode(userCode);
           break;
         case ActivationState.failed:
           await QrParsingErrorDialog.showErrorDialog(
@@ -236,9 +236,9 @@ class DevSettingsView extends StatelessWidget {
   }
 
   void _setExpiredLastVerifications(BuildContext context) {
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
-    if (provider.userCodes.isNotEmpty) {
-      List<DynamicUserCode> userCodes = provider.userCodes;
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
+    if (userCodesModel.userCodes.isNotEmpty) {
+      List<DynamicUserCode> userCodes = userCodesModel.userCodes;
       for (final userCode in userCodes) {
         _setExpiredLastVerification(context, userCode);
       }
@@ -247,12 +247,12 @@ class DevSettingsView extends StatelessWidget {
 
 // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
   void _setExpiredLastVerification(BuildContext context, DynamicUserCode userCode) {
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final CardVerification cardVerification = CardVerification()
       ..verificationTimeStamp =
           secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
       ..cardValid = true;
-    provider.updateCode(DynamicUserCode()
+    userCodesModel.updateCode(DynamicUserCode()
       ..info = userCode.info
       ..ecSignature = userCode.ecSignature
       ..pepper = userCode.pepper

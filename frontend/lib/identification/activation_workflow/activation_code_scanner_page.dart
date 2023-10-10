@@ -88,7 +88,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   ]) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
@@ -117,11 +117,12 @@ class ActivationCodeScannerPage extends StatelessWidget {
           ..cardVerification = (CardVerification()
             ..cardValid = true
             ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
-        if (isAlreadyInList(provider.userCodes, userCode)) {
+        if (isAlreadyInList(userCodesModel.userCodes, userCode)) {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
+          break;
         }
-        provider.insertCode(userCode);
-        if (provider.userCodes.length > 1) {
+        userCodesModel.insertCode(userCode);
+        if (userCodesModel.userCodes.length > 1) {
           moveToLastCard();
         }
         debugPrint('Card Activation: Successfully activated.');
