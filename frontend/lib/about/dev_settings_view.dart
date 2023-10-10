@@ -174,6 +174,7 @@ class DevSettingsView extends StatelessWidget {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
+    print('code:$base64qrcode');
     try {
       final activationCode =
           const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
@@ -195,7 +196,10 @@ class DevSettingsView extends StatelessWidget {
           final userCode = DynamicUserCode()
             ..info = activationCode.info
             ..pepper = activationCode.pepper
-            ..totpSecret = totpSecret;
+            ..totpSecret = totpSecret
+            ..cardVerification = (CardVerification()
+              ..cardValid = true
+              ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
           provider.setCode(userCode);
           break;
         case ActivationState.failed:
