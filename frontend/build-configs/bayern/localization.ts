@@ -24,11 +24,17 @@ const localization: LocalizationType = {
         moreActions: {
             applyForAnotherCardTitle: "Ehrenamtskarte beantragen oder verlängern",
             applyForAnotherCardDescription: "Ihre hinterlegte Karte bleibt erhalten.",
-            activateAnotherCardTitle: "Anderen Aktivierungscode einscannen",
-            activateAnotherCardDescription: "Dadurch wird die hinterlegte Karte vom Gerät gelöscht.",
+            activateAnotherCardTitle: "Weitere Ehrenamtskarte hinzufügen",
+            activateAnotherCardDescription: "Ihr hinterlegte Ehrenamtskarte bleibt erhalten. Sie können diesen manuell entfernen.",
             verifyTitle: "Eine digitale Ehrenamtskarte prüfen",
             verifyDescription: "Prüfen Sie die Gültigkeit einer digitalen Ehrenamtskarte.",
+            removeCardTitle: "Diese Ehrenamtskarte löschen",
+            removeCardDescription: "Nach der Auswahl wird diese Ehrenamtskarte vom Gerät gelöscht.",
         },
+        removeCardDialog: {
+            title: "Diese Karte löschen?",
+            description: "Wenn diese Karte gelöscht wird, muss sie vor der Wiederverwendung neu aktiviert werden.",
+        }
     },
 }
 

@@ -7,6 +7,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
@@ -25,7 +26,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
-  const ActivationCodeScannerPage({super.key});
+  final VoidCallback moveToLastCard;
+  const ActivationCodeScannerPage({super.key, required this.moveToLastCard});
 
   @override
   Widget build(BuildContext context) {
@@ -107,15 +109,23 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        debugPrint('Card Activation: Successfully activated.');
 
-        provider.setCode(DynamicUserCode()
+        DynamicUserCode userCode = DynamicUserCode()
           ..info = activationCode.info
           ..pepper = activationCode.pepper
           ..totpSecret = totpSecret
           ..cardVerification = (CardVerification()
             ..cardValid = true
-            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp))));
+            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
+        if (isAlreadyInList(provider.userCodes, userCode)) {
+          await ActivationExistingCardDialog.showExistingCardDialog(context);
+        }
+        provider.setCode(userCode);
+        if (provider.userCodes.length > 1) {
+          moveToLastCard();
+        }
+        debugPrint('Card Activation: Successfully activated.');
+
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(

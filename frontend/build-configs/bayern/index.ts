@@ -92,6 +92,7 @@ export const bayernCommon: CommonBuildConfigType = {
     publisherText,
     disclaimerText,
     localization,
+    maxCardAmount: 1
 }
 
 let bayern: BuildConfigType = {

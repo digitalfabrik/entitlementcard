@@ -59,8 +59,8 @@ class DevSettingsView extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: const Text('Reset card'),
-            onTap: () => _resetEakData(context),
+            title: const Text('Reset cards'),
+            onTap: () => _resetEakData(context, userCodeModel),
           ),
           ListTile(
             title: const Text('Set (invalid) sample card'),
@@ -76,12 +76,14 @@ class DevSettingsView extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Set expired last card verification'),
-            onTap: () => _setExpiredLastVerification(context),
+            onTap: () => _setExpiredLastVerifications(context),
           ),
           ListTile(
-            title: const Text('Trigger self-verification'),
-            onTap: () => selfVerifyCard(userCodeModel, Configuration.of(context).projectId, client),
-          ),
+              title: const Text('Trigger self-verification'),
+              onTap: () => {
+                    for (final userCode in userCodeModel.userCodes)
+                      {selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
+                  }),
           ListTile(
             title: const Text('Log sample exception'),
             onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
@@ -101,8 +103,8 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-  Future<void> _resetEakData(BuildContext context) async {
-    Provider.of<UserCodeModel>(context, listen: false).removeCode();
+  Future<void> _resetEakData(BuildContext context, UserCodeModel userCodes) async {
+    userCodes.removeCodes();
   }
 
   DynamicUserCode _determineUserCode(String projectId) {
@@ -234,10 +236,19 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
-// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
-  void _setExpiredLastVerification(BuildContext context) {
+  void _setExpiredLastVerifications(BuildContext context) {
     final provider = Provider.of<UserCodeModel>(context, listen: false);
-    final DynamicUserCode userCode = provider.userCode!;
+    if (provider.userCodes.isNotEmpty) {
+      List<DynamicUserCode> userCodes = provider.userCodes;
+      for (final userCode in userCodes) {
+        _setExpiredLastVerification(context, userCode);
+      }
+    }
+  }
+
+// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
+  void _setExpiredLastVerification(BuildContext context, DynamicUserCode userCode) {
+    final provider = Provider.of<UserCodeModel>(context, listen: false);
     final CardVerification cardVerification = CardVerification()
       ..verificationTimeStamp =
           secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
