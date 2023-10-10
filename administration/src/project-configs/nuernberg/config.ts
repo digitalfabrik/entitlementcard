@@ -1,6 +1,5 @@
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
-import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
@@ -19,7 +18,6 @@ const config: ProjectConfig = {
     extensionColumnNames: [
       'Startdatum',
       'Geburtsdatum',
-      'Passnummer',
       'Pass-ID',
       'Adresszeile 1',
       'Adresszeile 2',
@@ -32,7 +30,6 @@ const config: ProjectConfig = {
       StartDayExtension,
       BirthdayExtension,
       NuernbergPassNumberExtension,
-      NuernbergPassIdExtension,
       ...AddressExtensions,
       RegionExtension,
     ],
