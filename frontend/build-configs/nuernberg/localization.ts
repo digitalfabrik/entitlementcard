@@ -26,6 +26,7 @@ const localization: LocalizationType = {
             applyForAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten.",
             activateAnotherCardTitle: "Weiteren Nürnberg-Pass hinzufügen",
             activateAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten. Sie können diesen manuell entfernen.",
+            activationLimitDescription: "Um einen weiteren Pass hinzuzufügen, müssen Sie zuerst einen der vorhandenen Pässe löschen.",
             verifyTitle: "Einen Nürnberg-Pass prüfen",
             verifyDescription: "Prüfen Sie die Gültigkeit eines Nürnberg-Passes.",
             removeCardTitle: "Diesen Nürnberg-Pass löschen",

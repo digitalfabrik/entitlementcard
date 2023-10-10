@@ -48,8 +48,8 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         return AlertDialog(
           titlePadding: EdgeInsets.all(4),
-          contentPadding: EdgeInsets.only(left: 24, right: 24),
-          actionsPadding: EdgeInsets.only(left: 24, right: 24, top: 12, bottom: 12),
+          contentPadding: EdgeInsets.only(left: 20, right: 20),
+          actionsPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           title: ListTile(
             leading: Icon(Icons.warning, color: theme.colorScheme.primaryContainer, size: 30),
             title: Text(localization.title, style: TextStyle(fontSize: 18)),

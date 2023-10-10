@@ -42,6 +42,7 @@ export type LocalizationType = {
             applyForAnotherCardDescription: string
             activateAnotherCardTitle: string
             activateAnotherCardDescription: string
+            activationLimitDescription: string
             verifyTitle: string
             verifyDescription: string
             removeCardTitle: string

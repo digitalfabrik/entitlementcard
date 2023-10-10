@@ -49,13 +49,11 @@ class IdentificationPageState extends State<IdentificationPage> {
             ));
           }
 
-          return Column(children: [
-            CardCarousel(
-                cards: carouselCards,
-                cardIndex: cardIndex,
-                updateIndex: _updateCardIndex,
-                carouselController: carouselController),
-          ]);
+          return CardCarousel(
+              cards: carouselCards,
+              cardIndex: cardIndex,
+              updateIndex: _updateCardIndex,
+              carouselController: carouselController);
         }
 
         return NoCardView(

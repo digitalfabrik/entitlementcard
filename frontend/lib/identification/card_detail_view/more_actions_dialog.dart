@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +21,10 @@ class MoreActionsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = buildConfig.localization.identification.moreActions;
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-    final String availableCards = (buildConfig.maxCardAmount - userCodeModel.userCodes.length).toString();
+    final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
+    final bool cardLimitIsReached = hasReachedCardLimit(userCodeModel.userCodes);
+
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
       title: const Text('Weitere Aktionen'),
@@ -48,17 +50,19 @@ class MoreActionsDialog extends StatelessWidget {
                 startVerification();
               },
             ),
-            if (!hasReachedCardLimit(userCodeModel.userCodes))
-              ListTile(
-                title: Text(localization.activateAnotherCardTitle),
-                subtitle: Text(
-                    '${localization.activateAnotherCardDescription}\n(Noch $availableCards von $maxCardAmount frei)'),
-                leading: const Icon(Icons.add_card, size: 36),
-                onTap: () {
-                  Navigator.pop(context);
-                  startActivation();
-                },
-              ),
+            ListTile(
+              enabled: !cardLimitIsReached,
+              title: Text('${localization.activateAnotherCardTitle} ($cardsInUse/$maxCardAmount)',
+                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+              subtitle: Text(cardLimitIsReached
+                  ? localization.activationLimitDescription
+                  : localization.activateAnotherCardDescription),
+              leading: Icon(Icons.add_card, size: 36),
+              onTap: () {
+                Navigator.pop(context);
+                startActivation();
+              },
+            ),
             ListTile(
               title: Text(localization.removeCardTitle),
               subtitle: Text(localization.removeCardDescription),

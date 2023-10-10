@@ -25,12 +25,13 @@ final double bottomNavigationBarHeight = 80;
 class CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
-    final double indicatorHeight = widget.cards.length > 1 ? 28 : 0;
+    final int cardAmount = widget.cards.length;
+    final double indicatorHeight = cardAmount > 1 ? 16 : 0;
 
-    return Expanded(
-      child: Column(
-        children: [
-          SingleChildScrollView(
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
             child: CarouselSlider(
               items: widget.cards,
               carouselController: widget.carouselController,
@@ -45,32 +46,32 @@ class CardCarouselState extends State<CardCarousel> {
                   }),
             ),
           ),
-          if (widget.cards.length > 1)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Container(
-                height: indicatorHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: widget.cards.asMap().entries.map((entry) {
-                    return GestureDetector(
-                      onTap: () => widget.carouselController.animateToPage(entry.key),
-                      child: Container(
-                        width: 12.0,
-                        height: 12,
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
-                                .withOpacity(widget.cardIndex == entry.key ? 0.9 : 0.4)),
-                      ),
-                    );
-                  }).toList(),
-                ),
+        ),
+        if (cardAmount > 1)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Container(
+              height: indicatorHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: widget.cards.asMap().entries.map((entry) {
+                  return GestureDetector(
+                    onTap: () => widget.carouselController.animateToPage(entry.key),
+                    child: Container(
+                      width: 8.0,
+                      height: 8.0,
+                      margin: EdgeInsets.symmetric(horizontal: 4.0),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
+                              .withOpacity(widget.cardIndex == entry.key ? 0.9 : 0.4)),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
