@@ -142,7 +142,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    'Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -',
+                    'Create a card in druckerei & copy/paste the base64 code from console',
                   ),
                   TextFormField(
                     controller: base64Controller,
@@ -168,6 +168,7 @@ class DevSettingsView extends StatelessWidget {
     );
   }
 
+// You can either copy/paste from clipboard on ios or type 'adb shell input text <text>' in terminal for android
   Future<void> _activateCard(BuildContext context, String base64qrcode) async {
     final messengerState = ScaffoldMessenger.of(context);
     final provider = Provider.of<UserCodeModel>(context, listen: false);
@@ -194,7 +195,10 @@ class DevSettingsView extends StatelessWidget {
           final userCode = DynamicUserCode()
             ..info = activationCode.info
             ..pepper = activationCode.pepper
-            ..totpSecret = totpSecret;
+            ..totpSecret = totpSecret
+            ..cardVerification = (CardVerification()
+              ..cardValid = true
+              ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
           provider.setCode(userCode);
           break;
         case ActivationState.failed:
