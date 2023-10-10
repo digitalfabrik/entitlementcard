@@ -120,7 +120,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         if (isAlreadyInList(provider.userCodes, userCode)) {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
-        provider.setCode(userCode);
+        provider.insertCode(userCode);
         if (provider.userCodes.length > 1) {
           moveToLastCard();
         }

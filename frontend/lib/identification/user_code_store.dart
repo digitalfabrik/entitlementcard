@@ -32,13 +32,13 @@ class UserCodeStore {
         .toList();
   }
 
-  // legacy import of existing to keep them in storage after update
+  // legacy import of existing card to keep them in storage after update
   Future<void> importLegacyCard() async {
     const storage = FlutterSecureStorage();
     final String? userCodeBase64 = await storage.read(key: _userCodeBase64Key);
     if (userCodeBase64 == null) return;
     DynamicUserCode importedLegacyCard = DynamicUserCode.fromBuffer(const Base64Decoder().convert(userCodeBase64));
-    UserCodeModel().setCode(importedLegacyCard);
+    UserCodeModel().insertCode(importedLegacyCard);
     await storage.delete(key: _userCodeBase64Key);
   }
 }

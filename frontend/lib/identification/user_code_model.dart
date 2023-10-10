@@ -32,13 +32,23 @@ class UserCodeModel extends ChangeNotifier {
     }
   }
 
-  void setCode(DynamicUserCode code) {
+  void insertCode(DynamicUserCode code) {
     List<DynamicUserCode> userCodes = _userCodes;
     if (isAlreadyInList(userCodes, code)) return;
     userCodes.add(code);
     const UserCodeStore().store(userCodes);
     _userCodes = userCodes;
     notifyListeners();
+  }
+
+  void updateCode(DynamicUserCode code) {
+    List<DynamicUserCode> userCodes = _userCodes;
+    if (isAlreadyInList(userCodes, code)) {
+      userCodes = updateUserCode(userCodes, code);
+      const UserCodeStore().store(userCodes);
+      _userCodes = userCodes;
+      notifyListeners();
+    }
   }
 
   void removeCode(DynamicUserCode code) {
@@ -53,6 +63,11 @@ class UserCodeModel extends ChangeNotifier {
     const UserCodeStore().remove();
     _userCodes = [];
     notifyListeners();
+  }
+
+  List<DynamicUserCode> updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) {
+    userCodes[userCodes.indexWhere((code) => code.info == userCode.info)] = userCode;
+    return userCodes;
   }
 }
 

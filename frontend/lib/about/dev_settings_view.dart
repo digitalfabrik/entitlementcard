@@ -125,7 +125,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _setSampleCard(BuildContext context) async {
-    Provider.of<UserCodeModel>(context, listen: false).setCode(_determineUserCode(buildConfig.projectId.local));
+    Provider.of<UserCodeModel>(context, listen: false).insertCode(_determineUserCode(buildConfig.projectId.local));
   }
 
   Future<void> _showRawCardInput(BuildContext context) async {
@@ -195,7 +195,7 @@ class DevSettingsView extends StatelessWidget {
             ..info = activationCode.info
             ..pepper = activationCode.pepper
             ..totpSecret = totpSecret;
-          provider.setCode(userCode);
+          provider.insertCode(userCode);
           break;
         case ActivationState.failed:
           await QrParsingErrorDialog.showErrorDialog(
@@ -252,7 +252,7 @@ class DevSettingsView extends StatelessWidget {
       ..verificationTimeStamp =
           secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
       ..cardValid = true;
-    provider.setCode(DynamicUserCode()
+    provider.updateCode(DynamicUserCode()
       ..info = userCode.info
       ..ecSignature = userCode.ecSignature
       ..pepper = userCode.pepper

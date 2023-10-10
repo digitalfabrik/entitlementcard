@@ -35,7 +35,7 @@ Future<void> selfVerifyCard(
   debugPrint("Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? "valid." : "INVALID."}");
 
   final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-  userCodeModel.setCode(DynamicUserCode()
+  userCodeModel.updateCode(DynamicUserCode()
     ..info = initialUserCode.info
     ..ecSignature = initialUserCode.ecSignature
     ..pepper = initialUserCode.pepper
