@@ -18,49 +18,58 @@ class CardCarousel extends StatefulWidget {
   CardCarouselState createState() => CardCarouselState();
 }
 
+// Default bottomNavigationBarHeight in flutter
+// https://api.flutter.dev/flutter/material/NavigationBar/height.html
+final double bottomNavigationBarHeight = 80;
+final double indicatorHeight = 28;
+
 class CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Column(
-      children: [
-        Expanded(
-          child: CarouselSlider(
-            items: widget.cards,
-            carouselController: widget.carouselController,
-            options: CarouselOptions(
-                enableInfiniteScroll: false,
-                viewportFraction: 0.96,
-                aspectRatio: 9 / 16,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    widget.updateIndex(index);
-                  });
-                }),
-          ),
-        ),
-        if (widget.cards.length > 1)
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.cards.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () => widget.carouselController.animateToPage(entry.key),
-                  child: Container(
-                    width: 12.0,
-                    height: 12.0,
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
-                            .withOpacity(widget.cardIndex == entry.key ? 0.9 : 0.4)),
-                  ),
-                );
-              }).toList(),
+      child: Column(
+        children: [
+          SingleChildScrollView(
+            child: CarouselSlider(
+              items: widget.cards,
+              carouselController: widget.carouselController,
+              options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  viewportFraction: 0.96,
+                  height: MediaQuery.of(context).size.height - bottomNavigationBarHeight - indicatorHeight,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      widget.updateIndex(index);
+                    });
+                  }),
             ),
           ),
-      ],
-    ));
+          if (widget.cards.length > 1)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Container(
+                height: indicatorHeight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widget.cards.asMap().entries.map((entry) {
+                    return GestureDetector(
+                      onTap: () => widget.carouselController.animateToPage(entry.key),
+                      child: Container(
+                        width: 12.0,
+                        height: 12,
+                        margin: EdgeInsets.symmetric(horizontal: 4.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
+                                .withOpacity(widget.cardIndex == entry.key ? 0.9 : 0.4)),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
