@@ -21,11 +21,12 @@ class CardCarousel extends StatefulWidget {
 // Default bottomNavigationBarHeight in flutter
 // https://api.flutter.dev/flutter/material/NavigationBar/height.html
 final double bottomNavigationBarHeight = 80;
-final double indicatorHeight = 28;
 
 class CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
+    final double indicatorHeight = widget.cards.length > 1 ? 28 : 0;
+
     return Expanded(
       child: Column(
         children: [
