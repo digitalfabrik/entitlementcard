@@ -3,12 +3,10 @@ import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
-import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:provider/provider.dart';
 
 import 'verification_code_view.dart';
 
@@ -44,18 +42,15 @@ class _CardDetailViewState extends State<CardDetailView> {
       // - the card was activated on another device
       // - the card was revoked
       // - the card expired (on backend's system time)
-      _selfVerifyCards();
+      _selfVerifyCard(widget.userCode);
       initiatedSelfVerification = true;
     }
   }
 
-  Future<void> _selfVerifyCards() async {
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false).userCodes;
+  Future<void> _selfVerifyCard(DynamicUserCode userCode) async {
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    for (final userCode in userCodeModel) {
-      selfVerifyCard(context, userCode, projectId, client);
-    }
+    selfVerifyCard(context, userCode, projectId, client);
   }
 
   @override
@@ -90,7 +85,7 @@ class _CardDetailViewState extends State<CardDetailView> {
         final qrCodeAndStatus = QrCodeAndStatus(
           userCode: widget.userCode,
           onMoreActionsPressed: () => _onMoreActionsPressed(context),
-          onSelfVerifyPressed: _selfVerifyCards,
+          onSelfVerifyPressed: () => _selfVerifyCard(widget.userCode),
         );
 
         return orientation == Orientation.landscape
