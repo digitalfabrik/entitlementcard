@@ -4,7 +4,7 @@ import {
   BirthdayExtension,
   CardExtensions,
   CardInfo,
-  NuernbergPassNumberExtension,
+  NuernbergPassIdExtension,
   RegionExtension,
   StartDayExtension,
 } from '../generated/card_pb'
@@ -81,8 +81,8 @@ describe('messageToJsonObject', () => {
         extensionBirthday: new BirthdayExtension({
           birthday: -365 * 10,
         }),
-        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
-          passNumber: 99999999,
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          passId: 99999999,
         }),
         extensionRegion: new RegionExtension({
           regionId: 93,
@@ -96,7 +96,7 @@ describe('messageToJsonObject', () => {
       '3': {
         '1': { '1': '93' }, // extensionRegion
         '2': { '1': '-3650' }, // extensionBirthday
-        '3': { '1': '99999999' }, // extensionNuernbergPassNumber
+        '3': { '1': '99999999' }, // extensionNuernbergPassId
       },
     })
   })
@@ -109,8 +109,8 @@ describe('messageToJsonObject', () => {
         extensionBirthday: new BirthdayExtension({
           birthday: -365 * 10,
         }),
-        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
-          passNumber: 99999999,
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          passId: 99999999,
         }),
         extensionRegion: new RegionExtension({
           regionId: 93,
@@ -125,7 +125,7 @@ describe('messageToJsonObject', () => {
       '3': {
         '1': { '1': '93' }, // extensionRegion
         '2': { '1': '-3650' }, // extensionBirthday
-        '3': { '1': '99999999' }, // extensionNuernbergPassNumber
+        '3': { '1': '99999999' }, // extensionNuernbergPassId
         '5': { '1': '730' }, // extensionStartDay
       },
     })
@@ -183,8 +183,8 @@ describe('hashCardInfo', () => {
         extensionBirthday: new BirthdayExtension({
           birthday: -365 * 10,
         }),
-        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
-          passNumber: 99999999,
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          passId: 99999999,
         }),
       }),
     })
@@ -205,8 +205,8 @@ describe('hashCardInfo', () => {
         extensionBirthday: new BirthdayExtension({
           birthday: -365 * 10,
         }),
-        extensionNuernbergPassNumber: new NuernbergPassNumberExtension({
-          passNumber: 99999999,
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          passId: 99999999,
         }),
         extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
       }),

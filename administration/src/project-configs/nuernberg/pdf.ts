@@ -12,7 +12,7 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
   if (!expirationDay) {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
-  const passId = info.extensions?.extensionNuernbergPassNumber?.passNumber
+  const passId = info.extensions?.extensionNuernbergPassId?.passId
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
   const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
@@ -48,8 +48,8 @@ const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlu
 }
 
 const renderPassId = ({ info }: InfoParams) => {
-  const passNumber = info.extensions?.extensionNuernbergPassNumber?.passNumber
-  return passNumber ? `${passNumber?.toString()}` : ''
+  const passId = info.extensions?.extensionNuernbergPassId?.passId
+  return passId ? `${passId?.toString()}` : ''
 }
 
 const renderCardHash = ({ cardInfoHash }: InfoParams) => {

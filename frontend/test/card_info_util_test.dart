@@ -37,7 +37,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999));
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
       final pepper = const Base64Decoder().convert('MvMjEqa0ulFDAgACElMjWA==');
       expect(cardInfo.hash(pepper), 'zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=');
     });
@@ -49,7 +49,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
       final pepper = const Base64Decoder().convert('MvMjEqa0ulFDAgACElMjWA==');
       expect(cardInfo.hash(pepper), '1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=');
@@ -64,7 +64,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 70));
       expect(isCardNotYetValid(cardInfo), true);
     });
@@ -76,7 +76,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 30));
       expect(isCardNotYetValid(cardInfo), false);
     });
@@ -88,7 +88,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999));
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
       expect(isCardNotYetValid(cardInfo), false);
     });
   });

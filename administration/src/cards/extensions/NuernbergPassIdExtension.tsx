@@ -4,11 +4,11 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { CardExtensions } from '../../generated/card_pb'
 import { Extension } from './extensions'
 
-type NuernbergPassNumberState = { passNumber: number }
+type NuernbergPassIdState = { passId: number }
 
-const nuernbergPassNumberLength = 8
-class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, null> {
-  public readonly name = NuernbergPassNumberExtension.name
+const nuernbergPassIdLength = 8
+class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
+  public readonly name = NuernbergPassIdExtension.name
 
   setInitialState() {}
   createForm(onUpdate: () => void) {
@@ -21,11 +21,11 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
           id='nuernberg-pass-number-input'
           placeholder='12345678'
           intent={this.isValid() ? undefined : Intent.DANGER}
-          value={this.state?.passNumber.toString() ?? ''}
-          maxLength={nuernbergPassNumberLength}
+          value={this.state?.passId.toString() ?? ''}
+          maxLength={nuernbergPassIdLength}
           onChange={event => {
             const value = event.target.value
-            if (value.length > nuernbergPassNumberLength) {
+            if (value.length > nuernbergPassIdLength) {
               return
             }
 
@@ -38,7 +38,7 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
             }
 
             this.state = {
-              passNumber: parsedNumber,
+              passId: parsedNumber,
             }
             onUpdate()
           }}
@@ -51,23 +51,23 @@ class NuernbergPassNumberExtension extends Extension<NuernbergPassNumberState, n
     return false
   }
   setProtobufData(message: PartialMessage<CardExtensions>) {
-    message.extensionNuernbergPassNumber = {
-      passNumber: this.state?.passNumber,
+    message.extensionNuernbergPassId = {
+      passId: this.state?.passId,
     }
   }
 
   isValid() {
-    return this.state?.passNumber.toString().length === nuernbergPassNumberLength
+    return this.state?.passId.toString().length === nuernbergPassIdLength
   }
 
   fromString(state: string) {
-    const passNumber = parseInt(state, 10)
-    this.state = !isNaN(passNumber) ? { passNumber } : null
+    const passId = parseInt(state, 10)
+    this.state = !isNaN(passId) ? { passId } : null
   }
 
   toString() {
-    return this.state ? `${this.state.passNumber}` : ''
+    return this.state ? `${this.state.passId}` : ''
   }
 }
 
-export default NuernbergPassNumberExtension
+export default NuernbergPassIdExtension

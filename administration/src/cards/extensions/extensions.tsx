@@ -5,7 +5,7 @@ import { CardExtensions } from '../../generated/card_pb'
 import AddressExtensions from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
-import NuernbergPassNumberExtension from './NuernbergPassNumberExtension'
+import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import RegionExtension from './RegionExtension'
 import StartDayExtension from './StartDayExtension'
 
@@ -36,7 +36,7 @@ export abstract class Extension<T, R> implements JSONExtension<T> {
 export type ExtensionClass =
   | typeof BavariaCardTypeExtension
   | typeof BirthdayExtension
-  | typeof NuernbergPassNumberExtension
+  | typeof NuernbergPassIdExtension
   | typeof RegionExtension
   | typeof StartDayExtension
   | (typeof AddressExtensions)[number]
