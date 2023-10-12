@@ -101,15 +101,14 @@ let nuernberg: BuildConfigType = {
     android: {
         ...nuernbergCommon,
         applicationId: "app.entitlementcard.nuernberg",
-        featureFlags: {
-            ...nuernbergCommon.featureFlags,
+        buildFeatures: {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
     },
     ios: {
         ...nuernbergCommon,
-        bundleIdentifier: "de.nrw.it.ehrensachebayern",
+        bundleIdentifier: "app.entitlementcard.nuernberg",
     },
 }
 
