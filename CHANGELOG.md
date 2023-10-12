@@ -21,13 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * 1123: Add oberallgaeu by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1124
 * 1075: Create card from application by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1091
 
-### fixed
+### Fixed
 * 1108: Prevent auto install entitlementcard by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1109
 * 998: Improve color api switch by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1110
 * [fix]: add partial index for admin email by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1116
 * 1115: Trim search text by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1118
 
-### changed
+### Changed
 * 1100: Use single quotes by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1101
 * build(deps): bump activesupport from 6.1.7.3 to 6.1.7.6 in /frontend/ios by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1099
 * Extract linting rules into separate file by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1104
