@@ -3,3 +3,14 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@2.2.0
   browser-tools: circleci/browser-tools@1.4.1
+
+parameters:
+  run_commit:
+    default: true
+    type: boolean
+  run_backend:
+    default: false
+    type: boolean
+  run_frontend:
+    default: false
+    type: boolean
