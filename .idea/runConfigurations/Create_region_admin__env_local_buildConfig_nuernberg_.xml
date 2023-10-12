@@ -16,7 +16,7 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;create-admin nuernberg.sozialpass.app REGION_ADMIN region-admin@nuernberg.sozialpass.app Administrator! 93&quot;" />
+          <option value="--args=&quot;create-admin nuernberg.sozialpass.app REGION_ADMIN region-admin@nuernberg.sozialpass.app Administrator!&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
