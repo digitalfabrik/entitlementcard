@@ -1,0 +1,37 @@
+macos:
+  xcode: 14.0.0
+parameters:
+  buildConfig:
+    description: "Name of the build config to use"
+    type: string
+  flutterFlavor:
+    description: "Flutter Flavor to use"
+    type: string
+working_directory: ~/project/frontend
+steps:
+  - checkout:
+      path: ~/project
+  - install-dart-mac
+  - install-fvm
+  - install-app-toolbelt
+  - install-protobuf-mac
+  - run:
+      name: Install Flutter Packages
+      command: |
+        fvm flutter pub get --enforce-lockfile
+        fvm flutter precache --ios
+  - run:
+      name: Update Pods
+      command: |
+        cd ios
+        pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
+        pod install
+  - run:
+      name: Build Runner
+      command: |
+        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+  - run:
+      name: Build
+      command: |
+        app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
+        fvm flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart

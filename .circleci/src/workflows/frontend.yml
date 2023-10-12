@@ -1,0 +1,32 @@
+jobs:
+  - check-frontend
+  - frontend-android-build:
+      name: frontend-android-build-bayern-floss
+      buildConfig: "bayern-floss"
+      flutterFlavor: "BayernFloss"
+      requires:
+        - check-frontend
+  - frontend-android-build:
+      name: frontend-android-build-bayern
+      buildConfig: "bayern"
+      flutterFlavor: "Bayern"
+      requires:
+        - check-frontend
+  - frontend-ios-build:
+      name: frontend-ios-build-bayern
+      buildConfig: "bayern"
+      flutterFlavor: "Bayern"
+      requires:
+        - check-frontend
+  - frontend-android-build:
+      name: frontend-android-build-nuernberg
+      buildConfig: "nuernberg"
+      flutterFlavor: "Nuernberg"
+      requires:
+        - check-frontend
+  - frontend-ios-build:
+      name: frontend-ios-build-nuernberg
+      buildConfig: "nuernberg"
+      flutterFlavor: "Nuernberg"
+      requires:
+        - check-frontend
