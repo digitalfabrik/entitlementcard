@@ -24,7 +24,7 @@ const removeToken = () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
 
 const extractTokenPayload = (token: string): TokenPayload => {
   const payload: { exp: number; adminId: number } = JSON.parse(atob(token.split('.')[1]))
-  const expiry = new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
+  const expiry = new Date(payload.exp * 3600) // exp is in seconds, not milliseconds.
   return { token, expiry, adminId: payload.adminId }
 }
 
