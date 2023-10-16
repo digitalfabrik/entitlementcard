@@ -1,0 +1,39 @@
+environment:
+  _JAVA_OPTIONS: "-Xmx3g"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+docker:
+  - image: cimg/openjdk:17.0.6-node
+working_directory: ~/project/backend
+steps:
+  - checkout:
+      path: ~/project
+  - run: git submodule sync
+  - run: git submodule update --init
+  - restore_cache:
+      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+  - restore_cache:
+      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+  - run:
+      name: Check that GraphQL scheme is stable
+      command: |
+        ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+        git diff --exit-code
+  - run:
+      name: Test
+      command: |
+        ./gradlew test
+  - run: ./gradlew build
+  - save_cache:
+      paths:
+        - .gradle/wrapper
+      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+  - save_cache:
+      paths:
+        - .gradle/caches
+      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+  - store_artifacts:
+      path: build/libs
+  - persist_to_workspace:
+      root: ~/project
+      paths:
+        - backend/build/distributions/*
