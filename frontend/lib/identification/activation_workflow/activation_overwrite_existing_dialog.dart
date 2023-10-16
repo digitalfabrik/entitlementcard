@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../../util/i18n.dart';
 
@@ -9,23 +8,23 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(t(context, 'activateCardCurrentDevice'), style: TextStyle(fontSize: 18)),
+      title: Text(t(context).identification_activateCardCurrentDevice, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            I18nText('activateCardCurrentDeviceRationale'),
+            Text(t(context).identification_activateCardCurrentDeviceRationale),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: I18nText('cancel'),
+          child: Text(t(context).common_cancel),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: I18nText('activate'),
+          child: Text(t(context).identification_activate),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

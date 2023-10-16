@@ -34,7 +34,6 @@ dependencies:
   provider: ^6.0.3
   graphql_flutter: ^5.1.2
   url_launcher: ^6.1.6
-  flutter_i18n: ^0.33.0
   flutter_svg: ^2.0.2
   permission_handler: ^10.2.0
   package_info_plus: ^4.0.1 # for about dialog
@@ -90,6 +89,9 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
+  # Used for localization (l10n)
+  generate: true
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -102,12 +104,10 @@ flutter:
     - assets/bayern/header-logo.png
     - assets/bayern/body-logo.png
     - assets/bayern/icon.png
-    - assets/bayern/translations/
     - assets/nuernberg/header-logo.png
     - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
     - assets/nuernberg/intro_slides/
-    - assets/nuernberg/translations/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -3,9 +3,10 @@ import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/widgets/I18nText.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import '../util/i18n.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
@@ -147,10 +148,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.warning, size: 60, color: Colors.orange),
-            I18nText('checkConnection'),
+            Text(t(context).common_checkConnection),
             OutlinedButton(
               onPressed: _pagingController.retryLastFailedRequest,
-              child: I18nText('tryAgain'),
+              child: Text(t(context).common_tryAgain),
             )
           ],
         ),
@@ -161,7 +162,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            I18nText('noAcceptingStoresFound'),
+            Text(t(context).search_noAcceptingStoresFound),
           ],
         ),
       );

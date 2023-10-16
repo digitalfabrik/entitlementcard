@@ -4,8 +4,9 @@ import 'dart:typed_data';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_controls.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
+import '../../util/i18n.dart';
 
 typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
 
@@ -76,7 +77,7 @@ class _QRViewState extends State<QrCodeScanner> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(8),
-                      child: I18nText('scanQRCode'),
+                      child: Text(t(context).identification_scanQRCode),
                     ),
                     QrCodeScannerControls(controller: controller)
                   ],

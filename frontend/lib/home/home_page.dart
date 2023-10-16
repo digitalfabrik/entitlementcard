@@ -39,23 +39,24 @@ class HomePageState extends State<HomePage> {
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
         ),
         Icons.map_outlined,
-        t(context, 'card'),
+        t(context).map_title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
         const SearchPage(),
         Icons.search_outlined,
-        t(context, 'search'),
+        t(context).search_title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
           IdentificationPage(),
           Icons.remove_red_eye_outlined,
-          t(context, 'authentication'),
+          t(context).identification_title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, t(context, 'about'), GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), Icons.info_outline, t(context).about_title,
+          GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 

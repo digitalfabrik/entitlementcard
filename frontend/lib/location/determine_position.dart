@@ -145,7 +145,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? t(context, 'activateLocationAccessRationale')));
+        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? t(context).location_activateLocationAccessRationale));
 
         if (result == true) {
           return checkAndRequestLocationPermission(

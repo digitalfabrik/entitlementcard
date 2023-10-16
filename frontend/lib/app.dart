@@ -8,9 +8,9 @@ import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/themes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home/home_page.dart';
 
@@ -68,11 +68,7 @@ class App extends StatelessWidget {
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: [
-              FlutterI18nDelegate(
-                translationLoader: FileTranslationLoader(useCountryCode: false, fallbackFile: 'de', basePath: 'assets/bayern/translations'),
-                missingTranslationHandler: (key, locale) =>
-                    print('--- Missing Key: $key, languageCode: ${locale?.languageCode}'),
-              ),
+              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

@@ -39,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     Text(
-                      t(context, 'searchResults').toUpperCase(),
+                      t(context).search_searchResults.toUpperCase(),
                       style: const TextStyle(color: Colors.grey),
                     ),
                     const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))

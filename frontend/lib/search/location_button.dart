@@ -2,9 +2,10 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
+import '../util/i18n.dart';
 
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
@@ -55,11 +56,10 @@ class _LocationButtonState extends State<LocationButton> {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
           ),
-          label: I18nText('findCloseBy',
-              child: Text(
-                '',
-                style: TextStyle(color: Theme.of(context).hintColor),
-              )),
+          label: Text(
+            t(context).search_findCloseBy,
+            style: TextStyle(color: Theme.of(context).hintColor),
+          ),
         ),
       );
     } else {

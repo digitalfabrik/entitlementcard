@@ -53,25 +53,19 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
       await _activateCode(context, activationCode);
     } on ActivationDidNotOverwriteExisting catch (_) {
-      await showError(t(context, 'cardAlreadyActivated'), null);
+      await showError(t(context).identification_cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
-      await showError(t(context, 'codeInvalidMissing', translationParams: { 'missing': e.missingFieldName }));
+      await showError(t(context).identification_codeInvalidMissing(e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
-      await showError(t(context, 'codeSavingFailed'));
+      await showError(t(context).identification_codeSavingFailed, null);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
-      await showError(t(context, 'codeExpired', translationParams: { 'expirationDate': expirationDate }));
-    } on ServerCardActivationException catch (e, stackTrace) {
-      String errorMessage = 'Der eingescannte Code konnte nicht aktiviert '
-          'werden, da die Kommunikation mit dem Server fehlschlug. '
-          'Bitte prüfen Sie Ihre Internetverbindung.';
-      await ConnectionFailedDialog.show(
-        context,
-        t(context, 'codeVerificationFailedConnection')
-      );
+      await showError(t(context).identification_codeExpired(expirationDate), null);
+    } on ServerCardActivationException catch (_) {
+      await ConnectionFailedDialog.show(context, t(context).identification_codeVerificationFailedConnection);
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      await showError(t(context, 'codeUnknownError'));
+      await showError(t(context).identification_codeUnknownError, null);
     }
   }
 
@@ -116,7 +110,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
           context,
-          t(context, 'codeInvalid'),
+          t(context).identification_codeInvalid,
         );
         break;
       case ActivationState.didNotOverwriteExisting:
@@ -130,7 +124,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        throw ServerCardActivationException(t(context, 'activationInvalidState'));
+        throw ServerCardActivationException(t(context).identification_activationInvalidState);
     }
   }
 }

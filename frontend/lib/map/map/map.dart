@@ -98,7 +98,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             color: mapboxColor,
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
-            tooltip: t(context, 'showMapCopyright'),
+            tooltip: t(context).map_showMapCopyright,
             onPressed: () {
               showDialog(
                 context: context,

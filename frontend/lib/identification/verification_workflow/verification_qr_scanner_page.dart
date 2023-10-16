@@ -77,7 +77,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (cardInfo == null) {
         await _onError(
           context,
-          t(context, 'codeVerificationFailed'),
+          t(context).identification_codeVerificationFailed,
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
@@ -85,32 +85,32 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        t(context, 'codeVerificationFailedConnection'),
+        t(context).identification_codeVerificationFailedConnection,
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        t(context, 'codeInvalidMissing'),
+        t(context).identification_codeInvalidMissing(e.missingFieldName),
         e,
       );
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await _onError(
         context,
-        t(context, 'codeExpired', translationParams: {'expirationDate': expirationDate}),
+        t(context).identification_codeExpired(expirationDate),
         e,
       );
     } on QrCodeParseException catch (e) {
       await _onError(
         context,
-        t(context, 'codeInvalid'),
+        t(context).identification_codeInvalid,
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        t(context, 'codeUnknownError'),
+        t(context).identification_codeUnknownError,
         e,
       );
     } finally {

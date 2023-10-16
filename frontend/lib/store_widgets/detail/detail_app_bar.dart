@@ -89,7 +89,7 @@ class DetailAppBar extends StatelessWidget {
 
     final accentColor = getDarkenedColorForCategory(categoryId);
     final categoryName = matchingStore.store.category.name;
-    final title = matchingStore.store.name ?? t(context, 'acceptingStore');
+    final title = matchingStore.store.name ?? t(context).store_acceptingStore;
 
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);

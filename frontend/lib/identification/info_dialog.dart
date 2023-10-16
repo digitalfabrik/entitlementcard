@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/widgets/I18nText.dart';
+
+import '../util/i18n.dart';
 
 class InfoDialog extends StatelessWidget {
   final Widget child;
@@ -24,7 +25,7 @@ class InfoDialog extends StatelessWidget {
         title: Text(title, style: theme.textTheme.headlineSmall),
       ),
       content: child,
-      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: I18nText('ok'))],
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(t(context).common_ok))],
     );
   }
 }

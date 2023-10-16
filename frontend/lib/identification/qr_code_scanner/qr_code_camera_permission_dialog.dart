@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../util/i18n.dart';
@@ -10,23 +9,23 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(t(context, 'cameraAccessRequired'), style: TextStyle(fontSize: 18)),
+      title: Text(t(context).identification_cameraAccessRequired, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            I18nText('cameraAccessRequiredSettings'),
+            Text(t(context).identification_cameraAccessRequired),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: I18nText('cancel'),
+          child: Text(t(context).common_cancel),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: I18nText('openSettings'),
+          child: Text(t(context).common_openSettings),
           onPressed: () {
             openAppSettings();
           },

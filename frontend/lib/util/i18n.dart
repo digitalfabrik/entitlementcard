@@ -1,4 +1,6 @@
-import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-final t = FlutterI18n.translate;
-final plural = FlutterI18n.plural;
+AppLocalizations t (BuildContext context) {
+  return AppLocalizations.of(context)!;
+}

@@ -2,7 +2,6 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 
 import '../util/i18n.dart';
@@ -55,9 +54,9 @@ class _LocationButtonState extends State<LocationButton> {
     messengerState.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        content: I18nText('locationAccessDeactivated'),
+        content: Text(t(context).location_locationAccessDeactivated),
         action: SnackBarAction(
-          label: t(context, 'settings'),
+          label: t(context).common_settings,
           onPressed: () async {
             await openSettingsToGrantPermissions(context);
           },

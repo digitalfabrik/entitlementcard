@@ -1,8 +1,9 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/widgets/I18nText.dart';
 import 'package:provider/provider.dart';
+
+import '../util/i18n.dart';
 
 class LocationRequestButton extends StatefulWidget {
   const LocationRequestButton({super.key});
@@ -52,7 +53,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     if (status == null) {
       return ElevatedButton(
         onPressed: null,
-        child: I18nText('checkSettings'),
+        child: Text(t(context).location_checkSettings),
       );
     }
     switch (status) {
@@ -60,18 +61,18 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.notSupported:
         return ElevatedButton(
           onPressed: () => _onLocationButtonClicked(settings),
-          child: I18nText('grantLocation'),
+          child: Text(t(context).location_grantLocation),
         );
       case LocationStatus.whileInUse:
       case LocationStatus.always:
         return ElevatedButton(
           onPressed: null,
-          child: I18nText('locationGranted'),
+          child: Text(t(context).location_locationGranted),
         );
       case LocationStatus.deniedForever:
         return ElevatedButton(
           onPressed: null,
-          child: I18nText('locationDeactivated'),
+          child: Text(t(context).location_locationDeactivated),
         );
     }
   }

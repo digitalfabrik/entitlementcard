@@ -21,7 +21,7 @@ class QrCodeScannerControls extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: controller.torchState,
               builder: (ctx, state, child) => Text(
-                t(context, state == TorchState.on ? 'flashOff' : 'flashOn'),
+                state == TorchState.on ? t(context).identification_flashOff : t(context).identification_flashOn,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -34,7 +34,7 @@ class QrCodeScannerControls extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: controller.cameraFacingState,
               builder: (ctx, state, child) => Text(
-                t(context, state == CameraFacing.back ? 'selfieCamera' : 'standardCamera'),
+                state == CameraFacing.back ? t(context).identification_selfieCamera : t(context).identification_standardCamera,
                 style: const TextStyle(fontSize: 16),
               ),
             ),

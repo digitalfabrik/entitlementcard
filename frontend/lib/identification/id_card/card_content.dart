@@ -52,7 +52,7 @@ class CardContent extends StatelessWidget {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : t(context, 'unlimited');
+        : t(context).identification_unlimited;
   }
 
   String? get _formattedBirthday {
@@ -77,8 +77,8 @@ class CardContent extends StatelessWidget {
 
   String _getCardValidityDate(BuildContext context, String? startDate, String expirationDate) {
     return startDate != null
-        ? t(context, 'validFromUntil', translationParams: {'startDate': startDate, 'expirationDate': expirationDate})
-        : t(context, 'validUntil', translationParams: { 'expirationDate': expirationDate });
+        ? t(context).identification_validFromUntil(expirationDate, startDate)
+        : t(context).identification_validUntil(expirationDate);
   }
 
   @override

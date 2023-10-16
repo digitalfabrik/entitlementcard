@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/widgets/I18nText.dart';
+
+import '../util/i18n.dart';
 
 class LocationServiceDialog extends StatelessWidget {
   const LocationServiceDialog({super.key});
@@ -7,11 +8,11 @@ class LocationServiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: I18nText('activateLocationAccess'),
-      content: I18nText('activateLocationAccessSettings'),
+      title: Text(t(context).location_activateLocationAccess),
+      content: Text(t(context).location_activateLocationAccessSettings),
       actions: [
-        TextButton(child: I18nText('cancel'), onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(child: I18nText('openSettings'), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: Text(t(context).common_cancel), onPressed: () => Navigator.of(context).pop(false)),
+        TextButton(child: Text(t(context).common_openSettings), onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }
@@ -25,15 +26,15 @@ class RationaleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: I18nText('locationPermission'),
+      title: Text(t(context).location_locationPermission),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[Text(_rationale), I18nText('askPermissionsAgain')],
+        children: <Widget>[Text(_rationale), Text(t(context).location_askPermissionsAgain)],
       ),
       actions: [
-        TextButton(child: I18nText('grantPermission'), onPressed: () => Navigator.of(context).pop(true)),
-        TextButton(child: I18nText('cancel'), onPressed: () => Navigator.of(context).pop(false))
+        TextButton(child: Text(t(context).location_grantPermission), onPressed: () => Navigator.of(context).pop(true)),
+        TextButton(child: Text(t(context).common_cancel), onPressed: () => Navigator.of(context).pop(false))
       ],
     );
   }

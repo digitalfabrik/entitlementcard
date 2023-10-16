@@ -1,7 +1,6 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 
 import '../../../util/i18n.dart';
@@ -20,16 +19,16 @@ class VerificationInfoDialog extends StatelessWidget {
           children: [
             _EnumeratedListItem(
               index: 0,
-              child: I18nText('scanCode'),
+              child: Text(t(context).identification_scanCode),
             ),
-            _EnumeratedListItem(index: 1, child: I18nText('checkingCode')),
+            _EnumeratedListItem(index: 1, child: Text(t(context).identification_checkingCode)),
             _EnumeratedListItem(
               index: 2,
-              child: I18nText('compareWithID'),
+              child: Text(t(context).identification_compareWithID),
             ),
             SizedBox(height: 12),
             Text(
-              t(context, 'internetRequired'),
+              t(context).identification_internetRequired,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -37,14 +36,14 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: I18nText('stopShowing'),
+          child: Text(t(context).identification_stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
             _onDone(context);
           },
         ),
         TextButton(
-          child: I18nText('next'),
+          child: Text(t(context).common_next),
           onPressed: () => _onDone(context),
         )
       ],

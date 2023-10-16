@@ -29,15 +29,15 @@ class DetailPage extends StatelessWidget {
         final data = result.data;
 
         if (result.hasException && exception != null) {
-          return DetailErrorMessage(message: t(context, 'loadingDataFailed'), refetch: refetch);
+          return DetailErrorMessage(message: t(context).store_loadingDataFailed, refetch: refetch);
         } else if (result.isNotLoading && data != null) {
           final matchingStores = byIdQuery.parse(data).physicalStoresByIdInProject;
           if (matchingStores.length != 1) {
-            return DetailErrorMessage(message: t(context, 'loadingDataFailed'), refetch: refetch);
+            return DetailErrorMessage(message: t(context).store_loadingDataFailed, refetch: refetch);
           }
           final matchingStore = matchingStores.first;
           if (matchingStore == null) {
-            return DetailErrorMessage(message: t(context, 'acceptingStoreNotFound'));
+            return DetailErrorMessage(message: t(context).store_acceptingStoreNotFound);
           }
           final categoryId = matchingStore.store.category.id;
           final accentColor = getDarkenedColorForCategory(categoryId);
