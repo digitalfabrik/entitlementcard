@@ -1,3 +1,7 @@
+# Prerequisite
+
+Make sure you have installed [protoc](https://github.com/protocolbuffers/protobuf) on a current version.
+
 # Frontend
 
 The Ehrenamtskarte app uses Flutter. You can have a look at [this guide](https://flutter.dev/docs/get-started/install) to install flutter and the tools needed to work with it. Alternatively, you can take a look at [README.md](../frontend/README.md) for a simpler guide which uses Flutter Version Manager.
@@ -6,24 +10,20 @@ This short guide focuses on setting up the project using IntelliJ instead of And
 1. Install [Dart SDK](https://dart.dev/get-dart)
    1.1. On Arch Linux you can just do: `pacman -S dart`
 2. Install [Flutter](https://flutter.dev/docs/get-started/install/linux)
-   2.1. You need write access to the flutter installation directory:
-        ```
-        chgrp -R flutterusers /opt/flutter
-        chmod g+w /opt/flutter
-        sudo usermod -a -G flutterusers $USER
-        ```
 3. Install Android SDK via [IntelliJ](https://www.jetbrains.com/help/idea/create-your-first-android-application.html#754fd) or Android Studio
 4. Open the root project in IntelliJ
    4.1. Install the Android extension in IntelliJ and set the SDK path in the settings of IntelliJ
    4.1. Install the Dart extension in IntelliJ and set the SDK path in the settings of IntelliJ
    4.2. Install the Flutter extension in IntelliJ and set the SDK path in the settings of IntelliJ
 5. Run `flutter pub get` in `frontend/`
-6. Execute the "Run Flutter" (upper right corner of IDE) configuration from within IntelliJ
+6. Execute the "Run (env:local+buildConfig:bayern)" run configuration from within IntelliJ
 7. Install app-toolbelt: `npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz`
 8. Set build config: `fvm flutter pub run build_runner build --define "df_build_config=name=bayern"`
 
 Note: If `8.` fails with message `app-toolbelt: command not found`, you might have to set the build config differently first,
 e.g. to `nuernberg` and only then set the desired build config.
+
+Note: Your Intellij needs access to environment variables to run these commands successfully.
 
 As there are several services running and interacting some ports need to be forwarded.
 This includes the backend port 8000 and the map tiles port at 5002.
@@ -50,13 +50,31 @@ adb reverse tcp:8000 tcp:8000
 6. Install at least JDK 17 LTS
 7. Open the IntelliJ "Project Structure" and setup the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
-8. Run the backend migration: `run --args "migrate"`
-9. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
-10. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
-11. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
-12. Take a look at the style by viewing the test map: [http://localhost:5002](http://localhost:5002)
-13. Take a look at the backend: [http://localhost:8000](http://localhost:8000) (The public version is available at
-    api.entitlementcard.app)
+8. Clone the submodule inside `backend/ehrenamtskarte-maplibre-style`
+9. Run the backend migration: `run --args "migrate"`
+10. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
+11. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
+12. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
+13. Take a look at the style by viewing the test map: [http://localhost:5002/map.html](http://localhost:5002)
+14. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
+15. (optional) Add your matomo config for each project to the backend config
+```yaml
+projects:
+  - id: ...
+    # ...
+    matomo:
+      siteId: 1
+      url: http://localhost:5003/matomo.php
+      accessToken: <matomo-access-token>
+```
+You can find and generate an access token, when you visit `localhost:5003/settings` and search for token there.
+You might also need to update the matomo `/var/www/html/config/config.ini.php` (you'll only have to do this once) to add localhost:5003 to matomos trusted_hosts.
+To do that it is recommended to use the docker desktop client.
+
+# Administration
+
+1. Run `npm install`
+2. Run `Start Administration` from Intellij run configurations
 
 ## Dumping and restoring the database through docker
 

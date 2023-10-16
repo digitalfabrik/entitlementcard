@@ -23,6 +23,7 @@ data class MapConfig(val baseUrl: String)
 data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class CsvWriterConfig(val enabled: Boolean)
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
+data class MatomoConfig(val siteId: Int, val url: String, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
@@ -30,7 +31,8 @@ data class ProjectConfig(
     val administrationBaseUrl: String,
     val administrationName: String,
     val timezone: ZoneId,
-    val smtp: SmtpConfig
+    val smtp: SmtpConfig,
+    val matomo: MatomoConfig?
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
@@ -44,6 +46,14 @@ data class BackendConfiguration(
     val projects: List<ProjectConfig>,
     val csvWriter: CsvWriterConfig
 ) {
+
+    fun sanityCheckMatomoConfig(): BackendConfiguration {
+        val matomoConfig = projects.mapNotNull { it.matomo }
+        if (matomoConfig.size != matomoConfig.distinctBy { Pair(it.siteId, it.url) }.count()) {
+            throw Error("There are at least two matomo configs with the same siteId and url. This seems to be a copy/paste error.")
+        }
+        return this
+    }
 
     fun toImportConfig(projectId: String): ImportConfig {
         return ImportConfig(this.copy(), projectId)
@@ -72,7 +82,7 @@ data class BackendConfiguration(
 
             logger.info("Loading backend configuration from $url.")
 
-            return from(url)
+            return from(url).sanityCheckMatomoConfig()
         }
 
         private fun from(url: URL): BackendConfiguration =

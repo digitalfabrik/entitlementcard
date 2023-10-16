@@ -1,0 +1,6 @@
+steps:
+  - run:
+      name: Install Dart
+      command: |
+        brew tap dart-lang/dart
+        brew install dart

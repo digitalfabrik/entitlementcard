@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
@@ -18,12 +19,14 @@ class CardQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
+        var verificationResult = false
 
         if (card.codeType == CodeType.STATIC) {
-            return card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+            verificationResult = card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
         } else if (card.codeType == CodeType.DYNAMIC) {
-            return card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
+            verificationResult = card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
+        Matomo.trackVerification(projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult)
         return false
     }
 
@@ -32,12 +35,14 @@ class CardQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
+        var verificationResult = CardVerificationResultModel(false)
 
         if (card.codeType == CodeType.STATIC) {
-            return CardVerificationResultModel(card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone))
+            verificationResult = CardVerificationResultModel(card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone))
         } else if (card.codeType == CodeType.DYNAMIC) {
-            return CardVerificationResultModel(card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone))
+            verificationResult = CardVerificationResultModel(card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone))
         }
-        return CardVerificationResultModel(false)
+        Matomo.trackVerification(projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult.valid)
+        return verificationResult
     }
 }
