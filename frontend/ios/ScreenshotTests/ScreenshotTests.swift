@@ -39,7 +39,7 @@ class ScreenshotTests: XCTestCase {
         
         let element = app.staticTexts["Suche\nTab 2 von 4"]
         self.waitForElementToAppear(element: element)
-        sleep(10)
+        sleep(20)
         
         snapshot("01Map")
     }
