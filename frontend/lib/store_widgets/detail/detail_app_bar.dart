@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 const double bottomSize = 100;
 
@@ -18,9 +18,10 @@ class DetailAppBarHeaderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentCategoryId = categoryId;
+    final categories = categoryAssets(context);
 
-    if (currentCategoryId != null && currentCategoryId <= categoryAssets.length) {
-      final currentDetailIcon = categoryAssets[currentCategoryId].detailIcon;
+    if (currentCategoryId != null && currentCategoryId <= categories.length) {
+      final currentDetailIcon = categories[currentCategoryId].detailIcon;
       if (currentDetailIcon != null) {
         return SvgPicture.asset(
           currentDetailIcon,
@@ -86,10 +87,10 @@ class DetailAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryId = matchingStore.store.category.id;
+    final category = categoryAssets(context)[categoryId];
 
-    final accentColor = getDarkenedColorForCategory(categoryId);
-    final categoryName = matchingStore.store.category.name;
-    final title = matchingStore.store.name ?? t(context).store_acceptingStore;
+    final accentColor = getDarkenedColorForCategory(context, categoryId);
+    final title = matchingStore.store.name ?? context.l10n.store_acceptingStore;
 
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
@@ -107,7 +108,7 @@ class DetailAppBar extends StatelessWidget {
           child: DetailAppBarBottom(
             title: title,
             categoryId: categoryId,
-            categoryName: categoryName,
+            categoryName: category.name,
             accentColor: accentColor,
             textColorGrey: textColorGrey,
             textColor: textColor,

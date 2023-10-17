@@ -24,7 +24,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
   const ActivationCodeScannerPage({super.key});
@@ -53,19 +53,19 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
       await _activateCode(context, activationCode);
     } on ActivationDidNotOverwriteExisting catch (_) {
-      await showError(t(context).identification_cardAlreadyActivated, null);
+      await showError(context.l10n.identification_cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
-      await showError(t(context).identification_codeInvalidMissing(e.missingFieldName), null);
+      await showError(context.l10n.identification_codeInvalidMissing(e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
-      await showError(t(context).identification_codeSavingFailed, null);
+      await showError(context.l10n.identification_codeSavingFailed, null);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
-      await showError(t(context).identification_codeExpired(expirationDate), null);
+      await showError(context.l10n.identification_codeExpired(expirationDate), null);
     } on ServerCardActivationException catch (_) {
-      await ConnectionFailedDialog.show(context, t(context).identification_codeVerificationFailedConnection);
+      await ConnectionFailedDialog.show(context, context.l10n.identification_codeVerificationFailedConnection);
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      await showError(t(context).identification_codeUnknownError, null);
+      await showError(context.l10n.identification_codeUnknownError, null);
     }
   }
 
@@ -110,7 +110,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
           context,
-          t(context).identification_codeInvalid,
+          context.l10n.identification_codeInvalid,
         );
         break;
       case ActivationState.didNotOverwriteExisting:
@@ -124,7 +124,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        throw ServerCardActivationException(t(context).identification_activationInvalidState);
+        throw ServerCardActivationException(context.l10n.identification_activationInvalidState);
     }
   }
 }

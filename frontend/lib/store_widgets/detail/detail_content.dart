@@ -11,7 +11,7 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
@@ -61,7 +61,7 @@ class DetailContent extends StatelessWidget {
                 ContactInfoRow(
                   Icons.location_on,
                   addressString,
-                  t(context).store_address,
+                  context.l10n.store_address,
                   onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
@@ -70,7 +70,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
-                    t(context).store_website,
+                    context.l10n.store_website,
                     onTap: () =>
                         launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -80,7 +80,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.phone,
                     telephone,
-                    t(context).store_phone,
+                    context.l10n.store_phone,
                     onTap: () =>
                         launchUrlString('tel:${sanitizePhoneNumber(telephone)}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -90,7 +90,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.alternate_email,
                     email,
-                    t(context).store_email,
+                    context.l10n.store_email,
                     onTap: () => launchUrlString('mailto:${email.trim()}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
@@ -107,7 +107,7 @@ class DetailContent extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    child: Text(t(context).store_showOnMap),
+                    child: Text(context.l10n.store_showOnMap),
                     onPressed: () => _showOnMap(context),
                   ),
                 ],

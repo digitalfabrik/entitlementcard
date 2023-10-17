@@ -5,7 +5,7 @@ library navigation_bars;
 import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
 
-import '../util/i18n.dart';
+import '../util/l10n.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -93,7 +93,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         controller: textEditingController,
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
-          hintText: t(context).search_searchHint,
+          hintText: context.l10n.search_searchHint,
           hintStyle: TextStyle(color: foregroundColor?.withOpacity(0.8)),
         ),
         cursorColor: foregroundColor,

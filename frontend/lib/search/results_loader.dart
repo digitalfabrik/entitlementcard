@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../util/i18n.dart';
+import '../util/l10n.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
@@ -148,10 +148,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.warning, size: 60, color: Colors.orange),
-            Text(t(context).common_checkConnection),
+            Text(context.l10n.common_checkConnection),
             OutlinedButton(
               onPressed: _pagingController.retryLastFailedRequest,
-              child: Text(t(context).common_tryAgain),
+              child: Text(context.l10n.common_tryAgain),
             )
           ],
         ),
@@ -162,7 +162,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            Text(t(context).search_noAcceptingStoresFound),
+            Text(context.l10n.search_noAcceptingStoresFound),
           ],
         ),
       );

@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 Color standardCardColor = getColorFromHex(buildConfig.cardBranding.colorStandard);
 Color premiumCardColor = getColorFromHex(buildConfig.cardBranding.colorPremium);
@@ -52,7 +52,7 @@ class CardContent extends StatelessWidget {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : t(context).identification_unlimited;
+        : context.l10n.identification_unlimited;
   }
 
   String? get _formattedBirthday {
@@ -77,8 +77,8 @@ class CardContent extends StatelessWidget {
 
   String _getCardValidityDate(BuildContext context, String? startDate, String expirationDate) {
     return startDate != null
-        ? t(context).identification_validFromUntil(expirationDate, startDate)
-        : t(context).identification_validUntil(expirationDate);
+        ? context.l10n.identification_validFromUntil(expirationDate, startDate)
+        : context.l10n.identification_validUntil(expirationDate);
   }
 
   @override

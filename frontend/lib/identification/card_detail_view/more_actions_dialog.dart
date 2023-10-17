@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
@@ -20,7 +20,7 @@ class MoreActionsDialog extends StatelessWidget {
     final localization = buildConfig.localization.identification.moreActions;
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: Text(t(context).common_moreActions),
+      title: Text(context.l10n.common_moreActions),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -55,7 +55,7 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(t(context).common_cancel))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.common_cancel))],
     );
   }
 }

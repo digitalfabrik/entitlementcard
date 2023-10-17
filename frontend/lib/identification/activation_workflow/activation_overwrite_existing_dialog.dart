@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class ActivationOverwriteExistingDialog extends StatelessWidget {
   const ActivationOverwriteExistingDialog({super.key});
@@ -8,23 +8,23 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(t(context).identification_activateCardCurrentDevice, style: TextStyle(fontSize: 18)),
+      title: Text(context.l10n.identification_activateCardCurrentDevice, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(t(context).identification_activateCardCurrentDeviceRationale),
+            Text(context.l10n.identification_activateCardCurrentDeviceRationale),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(t(context).common_cancel),
+          child: Text(context.l10n.common_cancel),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: Text(t(context).identification_activate),
+          child: Text(context.l10n.identification_activate),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

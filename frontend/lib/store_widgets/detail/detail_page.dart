@@ -9,7 +9,7 @@ import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;
@@ -29,18 +29,18 @@ class DetailPage extends StatelessWidget {
         final data = result.data;
 
         if (result.hasException && exception != null) {
-          return DetailErrorMessage(message: t(context).store_loadingDataFailed, refetch: refetch);
+          return DetailErrorMessage(message: context.l10n.store_loadingDataFailed, refetch: refetch);
         } else if (result.isNotLoading && data != null) {
           final matchingStores = byIdQuery.parse(data).physicalStoresByIdInProject;
           if (matchingStores.length != 1) {
-            return DetailErrorMessage(message: t(context).store_loadingDataFailed, refetch: refetch);
+            return DetailErrorMessage(message: context.l10n.store_loadingDataFailed, refetch: refetch);
           }
           final matchingStore = matchingStores.first;
           if (matchingStore == null) {
-            return DetailErrorMessage(message: t(context).store_acceptingStoreNotFound);
+            return DetailErrorMessage(message: context.l10n.store_acceptingStoreNotFound);
           }
           final categoryId = matchingStore.store.category.id;
-          final accentColor = getDarkenedColorForCategory(categoryId);
+          final accentColor = getDarkenedColorForCategory(context, categoryId);
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [

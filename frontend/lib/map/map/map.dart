@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();
@@ -98,7 +98,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             color: mapboxColor,
             iconSize: 20,
             icon: const Icon(Icons.info_outline),
-            tooltip: t(context).map_showMapCopyright,
+            tooltip: context.l10n.map_showMapCopyright,
             onPressed: () {
               showDialog(
                 context: context,

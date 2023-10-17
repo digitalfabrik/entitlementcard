@@ -7,7 +7,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../../util/i18n.dart';
+import '../../../util/l10n.dart';
 
 class PositiveVerificationResultDialog extends StatefulWidget {
   final CardInfo cardInfo;
@@ -57,7 +57,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
         return InfoDialog(
-          title: isUncheckedStaticQrCode ? t(context).identification_checkRequired : localization.positiveVerificationDialogTitle,
+          title: isUncheckedStaticQrCode ? context.l10n.identification_checkRequired : localization.positiveVerificationDialogTitle,
           icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(
@@ -77,7 +77,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: CheckboxListTile(
-                      title: Text(t(context).identification_comparedWithID),
+                      title: Text(context.l10n.identification_comparedWithID),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: isChecked,
                       onChanged: (bool? value) {

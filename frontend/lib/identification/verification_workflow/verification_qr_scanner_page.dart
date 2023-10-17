@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class VerificationQrScannerPage extends StatelessWidget {
   const VerificationQrScannerPage({super.key});
@@ -77,7 +77,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (cardInfo == null) {
         await _onError(
           context,
-          t(context).identification_codeVerificationFailed,
+          context.l10n.identification_codeVerificationFailed,
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
@@ -85,32 +85,32 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        t(context).identification_codeVerificationFailedConnection,
+        context.l10n.identification_codeVerificationFailedConnection,
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        t(context).identification_codeInvalidMissing(e.missingFieldName),
+        context.l10n.identification_codeInvalidMissing(e.missingFieldName),
         e,
       );
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await _onError(
         context,
-        t(context).identification_codeExpired(expirationDate),
+        context.l10n.identification_codeExpired(expirationDate),
         e,
       );
     } on QrCodeParseException catch (e) {
       await _onError(
         context,
-        t(context).identification_codeInvalid,
+        context.l10n.identification_codeInvalid,
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        t(context).identification_codeUnknownError,
+        context.l10n.identification_codeUnknownError,
         e,
       );
     } finally {

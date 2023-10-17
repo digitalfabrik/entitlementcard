@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
-import '../util/i18n.dart';
+import '../util/l10n.dart';
 
 enum LocationStatus {
   /// This is the initial state on both Android and iOS, but on Android the
@@ -145,7 +145,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? t(context).location_activateLocationAccessRationale));
+        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? context.l10n.location_activateLocationAccessRationale));
 
         if (result == true) {
           return checkAndRequestLocationPermission(

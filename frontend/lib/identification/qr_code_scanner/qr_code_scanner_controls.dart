@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../util/i18n.dart';
+import '../../util/l10n.dart';
 
 class QrCodeScannerControls extends StatelessWidget {
   final MobileScannerController controller;
@@ -21,7 +21,7 @@ class QrCodeScannerControls extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: controller.torchState,
               builder: (ctx, state, child) => Text(
-                state == TorchState.on ? t(context).identification_flashOff : t(context).identification_flashOn,
+                state == TorchState.on ? context.l10n.identification_flashOff : context.l10n.identification_flashOn,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -34,7 +34,7 @@ class QrCodeScannerControls extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: controller.cameraFacingState,
               builder: (ctx, state, child) => Text(
-                state == CameraFacing.back ? t(context).identification_selfieCamera : t(context).identification_standardCamera,
+                state == CameraFacing.back ? context.l10n.identification_selfieCamera : context.l10n.identification_standardCamera,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
