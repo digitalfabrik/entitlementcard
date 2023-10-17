@@ -34,7 +34,9 @@ class QrCodeScannerControls extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: controller.cameraFacingState,
               builder: (ctx, state, child) => Text(
-                state == CameraFacing.back ? context.l10n.identification_selfieCamera : context.l10n.identification_standardCamera,
+                state == CameraFacing.back
+                    ? context.l10n.identification_selfieCamera
+                    : context.l10n.identification_standardCamera,
                 style: const TextStyle(fontSize: 16),
               ),
             ),

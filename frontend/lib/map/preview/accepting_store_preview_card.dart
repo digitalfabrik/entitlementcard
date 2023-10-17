@@ -16,10 +16,9 @@ class AcceptingStorePreviewError extends StatelessWidget {
     return InkWell(
       onTap: refetch,
       child: Container(
-        height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ErrorMessage(context.l10n.store_loadingInformationFailed)
-      ),
+          height: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ErrorMessage(context.l10n.store_loadingInformationFailed)),
     );
   }
 }

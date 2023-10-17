@@ -25,7 +25,8 @@ class FilterBar extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
-                Text(context.l10n.search_filterByCategories.toUpperCase(), maxLines: 1, style: const TextStyle(color: Colors.grey)),
+                Text(context.l10n.search_filterByCategories.toUpperCase(),
+                    maxLines: 1, style: const TextStyle(color: Colors.grey)),
                 const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)))
               ],
             ),

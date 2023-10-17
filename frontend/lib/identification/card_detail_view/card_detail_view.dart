@@ -187,9 +187,7 @@ class QrCodeAndStatus extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ...switch (status) {
-            CardStatus.expired => [
-                _PaddedText(context.l10n.identification_cardExpired)
-              ],
+            CardStatus.expired => [_PaddedText(context.l10n.identification_cardExpired)],
             CardStatus.notVerifiedLately => [
                 _PaddedText(context.l10n.identification_checkFailed),
                 Flexible(
@@ -209,9 +207,7 @@ class QrCodeAndStatus extends StatelessWidget {
                   label: Text(context.l10n.identification_checkAgain),
                 ))
               ],
-            CardStatus.invalid => [
-                _PaddedText(context.l10n.identification_cardInvalid)
-              ],
+            CardStatus.invalid => [_PaddedText(context.l10n.identification_cardInvalid)],
             CardStatus.valid => [
                 _PaddedText(context.l10n.identification_authenticationPossible),
                 Flexible(child: VerificationCodeView(userCode: userCode))

@@ -33,7 +33,8 @@ class RationaleDialog extends StatelessWidget {
         children: <Widget>[Text(_rationale), Text(context.l10n.location_askPermissionsAgain)],
       ),
       actions: [
-        TextButton(child: Text(context.l10n.location_grantPermission), onPressed: () => Navigator.of(context).pop(true)),
+        TextButton(
+            child: Text(context.l10n.location_grantPermission), onPressed: () => Navigator.of(context).pop(true)),
         TextButton(child: Text(context.l10n.common_cancel), onPressed: () => Navigator.of(context).pop(false))
       ],
     );

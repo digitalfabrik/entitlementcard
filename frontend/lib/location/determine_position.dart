@@ -103,7 +103,6 @@ Future<RequestedPosition> determinePosition(
 Future<LocationStatus> checkAndRequestLocationPermission(
   BuildContext context, {
   bool requestIfNotGranted = true,
-  String? rationale,
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
@@ -145,13 +144,14 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
 
-        final result = await showDialog(context: context, builder: (context) => RationaleDialog(rationale: rationale ?? context.l10n.location_activateLocationAccessRationale));
+        final result = await showDialog(
+            context: context,
+            builder: (context) => RationaleDialog(rationale: context.l10n.location_activateLocationAccessRationale));
 
         if (result == true) {
           return checkAndRequestLocationPermission(
             context,
             requestIfNotGranted: requestIfNotGranted,
-            rationale: rationale,
           );
         }
 
