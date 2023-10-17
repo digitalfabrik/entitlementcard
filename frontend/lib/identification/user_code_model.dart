@@ -34,7 +34,7 @@ class UserCodeModel extends ChangeNotifier {
 
   void insertCode(DynamicUserCode code) {
     List<DynamicUserCode> userCodes = _userCodes;
-    if (isAlreadyInList(userCodes, code)) return;
+    if (isAlreadyInList(userCodes, code.info)) return;
     userCodes.add(code);
     const UserCodeStore().store(userCodes);
     _userCodes = userCodes;
@@ -43,7 +43,7 @@ class UserCodeModel extends ChangeNotifier {
 
   void updateCode(DynamicUserCode code) {
     List<DynamicUserCode> userCodes = _userCodes;
-    if (isAlreadyInList(userCodes, code)) {
+    if (isAlreadyInList(userCodes, code.info)) {
       userCodes = updateUserCode(userCodes, code);
       const UserCodeStore().store(userCodes);
       _userCodes = userCodes;
@@ -71,8 +71,8 @@ class UserCodeModel extends ChangeNotifier {
   }
 }
 
-bool isAlreadyInList(List<DynamicUserCode> userCodes, DynamicUserCode code) {
-  return userCodes.map((userCode) => userCode.info).contains(code.info);
+bool isAlreadyInList(List<DynamicUserCode> userCodes, CardInfo info) {
+  return userCodes.map((userCode) => userCode.info).contains(info);
 }
 
 bool hasReachedCardLimit(List<DynamicUserCode> userCodes) {

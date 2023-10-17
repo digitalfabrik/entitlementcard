@@ -67,7 +67,8 @@ class DevSettingsView extends StatelessWidget {
             onTap: () => _setSampleCard(context),
           ),
           ListTile(
-            title: const Text('Set base64 card'),
+            title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})'),
+            enabled: !hasReachedCardLimit(userCodeModel.userCodes),
             onTap: () => _showRawCardInput(context),
           ),
           ListTile(

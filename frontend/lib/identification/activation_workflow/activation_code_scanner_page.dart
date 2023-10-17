@@ -117,10 +117,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
           ..cardVerification = (CardVerification()
             ..cardValid = true
             ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
-        if (isAlreadyInList(userCodesModel.userCodes, userCode)) {
-          await ActivationExistingCardDialog.showExistingCardDialog(context);
-          break;
-        }
+
         userCodesModel.insertCode(userCode);
         if (userCodesModel.userCodes.length > 1) {
           moveToLastCard();
@@ -137,6 +134,10 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.didNotOverwriteExisting:
         if (overwriteExisting) {
           throw const ActivationDidNotOverwriteExisting();
+        }
+        if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
+          await ActivationExistingCardDialog.showExistingCardDialog(context);
+          break;
         }
         debugPrint(
             'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
