@@ -13,7 +13,7 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(context.l10n.identification_cameraAccessRequired),
+            Text(context.l10n.identification_cameraAccessRequiredSettings),
           ],
         ),
       ),
