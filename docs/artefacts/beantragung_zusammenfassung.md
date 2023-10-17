@@ -54,7 +54,7 @@ Auswahl aus
 #### Bestätigung der Organisation
 
 - Ort, Datum, Unterschrift/Stempel der Organistation
-- AntragsstellerIn (Organisation/AntragsstellerIn)
+- AntragstellerIn (Organisation/AntragstellerIn)
 - Organisation wird gefördert durch (Freitext, optional)
 
 ### 2. Juleica Inhaber (Jugendleiterkarte)
