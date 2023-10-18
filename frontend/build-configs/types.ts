@@ -78,6 +78,7 @@ export type CommonBuildConfigType = {
         production: string
         local: string
     }
+    appLocales: string[]
     cardBranding: {
         headerTextColor: string
         headerColor: string
