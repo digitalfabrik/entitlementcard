@@ -194,7 +194,7 @@ class QrCodeAndStatus extends StatelessWidget {
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text(context.l10n.identification_checkAgain),
+                    label: Text(context.l10n.common_tryAgain),
                   ),
                 ),
               ],
@@ -204,7 +204,7 @@ class QrCodeAndStatus extends StatelessWidget {
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
-                  label: Text(context.l10n.identification_checkAgain),
+                  label: Text(context.l10n.common_tryAgain),
                 ))
               ],
             CardStatus.invalid => [_PaddedText(context.l10n.identification_cardInvalid)],

@@ -18,7 +18,7 @@ class AcceptingStorePreviewError extends StatelessWidget {
       child: Container(
           height: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ErrorMessage(context.l10n.store_loadingInformationFailed)),
+          child: ErrorMessage(context.l10n.store_loadingDataFailed)),
     );
   }
 }

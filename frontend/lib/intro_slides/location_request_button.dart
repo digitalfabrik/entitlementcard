@@ -72,7 +72,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.deniedForever:
         return ElevatedButton(
           onPressed: null,
-          child: Text(context.l10n.location_locationDeactivated),
+          child: Text(context.l10n.location_locationAccessDeactivated),
         );
     }
   }
