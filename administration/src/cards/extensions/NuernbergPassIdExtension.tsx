@@ -6,7 +6,7 @@ import { Extension } from './extensions'
 
 type NuernbergPassIdState = { passId: number }
 
-const nuernbergPassIdLength = 8
+const nuernbergPassIdLength = 10
 class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   public readonly name = NuernbergPassIdExtension.name
 
@@ -14,11 +14,11 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   createForm(onUpdate: () => void) {
     return (
       <FormGroup
-        label='Nürnberg-Pass-Id'
-        labelFor='nuernberg-pass-number-input'
+        label='Nürnberg-Pass-ID'
+        labelFor='nuernberg-pass-id-input'
         intent={this.isValid() ? undefined : Intent.DANGER}>
         <InputGroup
-          id='nuernberg-pass-number-input'
+          id='nuernberg-pass-id-input'
           placeholder='12345678'
           intent={this.isValid() ? undefined : Intent.DANGER}
           value={this.state?.passId.toString() ?? ''}
@@ -57,7 +57,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   }
 
   isValid() {
-    return this.state?.passId.toString().length === nuernbergPassIdLength
+    return this.state !== null && this.state.passId > 0 && this.state.passId < 10 ** nuernbergPassIdLength
   }
 
   fromString(state: string) {
