@@ -22,12 +22,13 @@ export class CreateCardsError extends Error {
   }
 }
 
-async function createCards(client: ApolloClient<object>, activationCodes: Codes, region: Region) {
+async function createCards(client: ApolloClient<object>, project: string, activationCodes: Codes, region: Region) {
   const cards: CardGenerationModelInput[] = await Promise.all(
     activationCodes.map(async code => {
       const codeType = code instanceof DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
       const cardInfoHash = await hashCardInfo(code.info!, code.pepper)
       const expirationDay = code.info!.expirationDay
+      const startDay = code.info!.extensions?.extensionStartDay?.startDay
       const activationSecretBase64 =
         code instanceof DynamicActivationCode ? uint8ArrayToBase64(code.activationSecret) : null
       return {
@@ -36,12 +37,13 @@ async function createCards(client: ApolloClient<object>, activationCodes: Codes,
         activationSecretBase64: activationSecretBase64,
         regionId: region.id,
         codeType,
+        cardStartDay: startDay,
       }
     })
   )
   const result = await client.mutate<AddCardsMutation, AddCardsMutationVariables>({
     mutation: AddCardsDocument,
-    variables: { cards },
+    variables: { cards, project },
   })
 
   if (result.errors) {

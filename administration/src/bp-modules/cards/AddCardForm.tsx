@@ -26,17 +26,11 @@ interface CreateCardsFormProps {
   onRemove: () => void
 }
 
+export const maxCardValidity = { years: 99 }
 const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   return extension.createForm(() => {
     onUpdate()
   })
-}
-
-const maxCardValidity = { years: 99 }
-const hasCardExpirationError = (expirationDate: PlainDate): boolean => {
-  const today = PlainDate.fromLocalDate(new Date())
-
-  return expirationDate.isBefore(today) || expirationDate.isAfter(today.add(maxCardValidity))
 }
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
@@ -66,7 +60,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           type='date'
           required
           size='small'
-          error={cardBlueprint.expirationDate ? hasCardExpirationError(cardBlueprint.expirationDate) : true}
+          error={!cardBlueprint.isExpirationDateValid()}
           value={cardBlueprint.expirationDate ? cardBlueprint.expirationDate.toString() : null}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
@@ -80,7 +74,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
                 cardBlueprint.expirationDate = PlainDate.from(e.target.value)
                 onUpdate()
               } catch (error) {
-                console.error("Could not parse date from string '" + e.target.value + "'.", error)
+                console.error(`Could not parse date from string '${e.target.value}'.`, error)
               }
             }
           }}

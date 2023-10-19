@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:base32/base32.dart';
 import 'package:flutter/foundation.dart';
 import 'package:otp/otp.dart';
@@ -12,13 +10,10 @@ class OTPGenerator {
 
   OTPGenerator(List<int> totpSecret) : _totpSecretBase32 = base32.encode(Uint8List.fromList(totpSecret));
 
-  OTPCode generateOTP([VoidCallback? onTimeout]) {
+  OTPCode generateOTP() {
     final time = DateTime.now().millisecondsSinceEpoch;
     const intervalMilliSeconds = _otpIntervalSeconds * 1000;
     final validUntilMilliSeconds = (time ~/ intervalMilliSeconds + 1) * intervalMilliSeconds;
-    if (onTimeout != null) {
-      Timer(Duration(milliseconds: validUntilMilliSeconds - time), onTimeout);
-    }
     return OTPCode(
       int.parse(
         OTP.generateTOTPCodeString(

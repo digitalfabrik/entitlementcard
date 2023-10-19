@@ -1,0 +1,35 @@
+docker:
+  - image: cimg/android:2022.09.2-node
+parameters:
+  buildConfig:
+    description: "Name of the build config to use"
+    type: string
+  flutterFlavor:
+    description: "Flutter Flavor to use"
+    type: string
+environment:
+  GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+resource_class: large
+working_directory: ~/project/frontend
+steps:
+  - checkout:
+      path: ~/project
+  - install-dart-linux
+  - install-fvm
+  - install-app-toolbelt
+  - install-protobuf-linux
+  - run:
+      name: Install Flutter Packages
+      command: |
+        fvm flutter pub get --enforce-lockfile
+        fvm flutter precache --android
+  - run:
+      name: Build Runner
+      command: |
+        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+  - run:
+      name: Build
+      command: |
+        fvm flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
+  - store_artifacts:
+      path: build/app/outputs/flutter-apk/

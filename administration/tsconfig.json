@@ -15,7 +15,18 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "isolatedModules": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["node", "jest"]
   },
-  "include": ["jest.config.ts", "jest.setup.ts", "src", "src/graphql/customScalarTypes.d.ts"]
+  "include": [
+    "src",
+    "scripts",
+    "jest.config.ts",
+    "jest.setup.ts",
+    "src/**/*.d.ts",
+    "src/graphql/customScalarTypes.d.ts"
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

@@ -6,7 +6,9 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
+import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
@@ -18,26 +20,32 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
     @GraphQLDescription("Stores a batch of new digital entitlementcards")
-    fun addCards(dfe: DataFetchingEnvironment, cards: List<CardGenerationModel>): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
-
+    fun addCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardGenerationModel>): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
         transaction {
             val user =
                 AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw UnauthorizedException()
 
             for (card in cards) {
-                val targetedRegionId = card.regionId
-                if (!Authorizer.mayCreateCardInRegion(user, targetedRegionId)) {
+                if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
                     throw ForbiddenException()
                 }
-                if (!validateNewCard(card)) {
+                if (!isCodeTypeValid(card)) {
                     throw InvalidCodeTypeException()
+                }
+                val decodedCardInfoHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
+                if (!isCardHashValid(decodedCardInfoHash)) {
+                    throw InvalidCardHashException()
                 }
                 val activationSecret =
                     card.activationSecretBase64?.let {
@@ -46,15 +54,18 @@ class CardMutationService {
                     }
 
                 CardRepository.insert(
-                    Base64.getDecoder().decode(card.cardInfoHashBase64),
+                    decodedCardInfoHash,
                     activationSecret,
                     card.cardExpirationDay,
                     card.regionId,
                     user.id.value,
-                    card.codeType
+                    card.codeType,
+                    card.cardStartDay
                 )
             }
         }
+
+        Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, cards)
         return true
     }
 
@@ -73,34 +84,50 @@ class CardMutationService {
                 ?: throw ProjectNotFoundException(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
-        val card = transaction { CardRepository.findByHash(project, cardHash) }
-        val activationSecretHash = card?.activationSecretHash
 
-        if (card == null || activationSecretHash == null) {
-            return CardActivationResultModel(ActivationState.failed)
+        // Avoid race conditions when activating a card.
+        val activationResult = transaction(TRANSACTION_REPEATABLE_READ) t@{
+            repetitionAttempts = 0
+            val card = CardRepository.findByHash(project, cardHash)
+            val activationSecretHash = card?.activationSecretHash
+
+            if (card == null || activationSecretHash == null) {
+                logger.info("${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64")
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
+                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite")
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone) || card.revoked) {
+                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card isExpired or revoked")
+                return@t CardActivationResultModel(ActivationState.failed)
+            }
+
+            if (!overwrite && card.totpSecret != null) {
+                logger.info("Card with id:${card.id} did not overwrite card from ${context.remoteIp}")
+                return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
+            }
+
+            val totpSecret = CardActivator.generateTotpSecret()
+            val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
+            CardRepository.activate(card, totpSecret)
+            logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
+            return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
-
-        if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-            logger.info("${context.remoteIp} failed to activate entitlement card")
-            return CardActivationResultModel(ActivationState.failed)
-        }
-
-        if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone) || card.revoked) {
-            return CardActivationResultModel(ActivationState.failed)
-        }
-
-        if (!overwrite && card.totpSecret != null) {
-            return CardActivationResultModel(ActivationState.did_not_overwrite_existing)
-        }
-
-        val totpSecret = CardActivator.generateTotpSecret()
-        val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
-        transaction { CardRepository.activate(card, totpSecret) }
-        return CardActivationResultModel(ActivationState.success, encodedTotpSecret)
+        Matomo.trackActivation(projectConfig, context.request, dfe.field.name, cardHash, activationResult.activationState != ActivationState.failed)
+        return activationResult
     }
 
-    private fun validateNewCard(card: CardGenerationModel): Boolean {
+    private fun isCodeTypeValid(card: CardGenerationModel): Boolean {
         return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
             (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
+    }
+
+    private fun isCardHashValid(cardHash: ByteArray): Boolean {
+        // we expect a SHA-256 hash, thus the byte array should be of size 256/8=32
+        return cardHash.size == 32
     }
 }

@@ -103,7 +103,7 @@ type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
   "Stores a batch of new digital entitlementcards"
-  addCards(cards: [CardGenerationModelInput!]!): Boolean!
+  addCards(cards: [CardGenerationModelInput!]!, project: String!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Changes an administrator's password"
@@ -175,8 +175,6 @@ type Query {
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
-  "Returns region by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
-  regionByPostalCode(postalCode: String!, project: String!): Region!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Return list of all regions in the eak bayern project."
@@ -185,6 +183,8 @@ type Query {
   regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores using searchText and categoryIds in the eak bayern project."
@@ -250,6 +250,7 @@ enum GoldenCardEntitlementType {
 
 enum GraphQLExceptionCode {
   EMAIL_ALREADY_EXISTS
+  INVALID_CARD_HASH
   INVALID_CODE_TYPE
   INVALID_CREDENTIALS
   INVALID_DATA_POLICY_SIZE
@@ -288,12 +289,7 @@ input AddressInput {
   street: ShortTextInput!
 }
 
-"""
-An application for the Bayerische Ehrenamtskarte.
-The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
-The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
-"""
-input ApplicationInput {
+input ApplicationDetailsInput {
   applicationType: ApplicationType
   blueCardEntitlement: BlueCardEntitlementInput
   cardType: BavariaCardType!
@@ -301,9 +297,18 @@ input ApplicationInput {
   goldenCardEntitlement: GoldenCardEntitlementInput
   hasAcceptedEmailUsage: Boolean!
   hasAcceptedPrivacyPolicy: Boolean!
-  personalData: PersonalDataInput!
   wantsDigitalCard: Boolean!
   wantsPhysicalCard: Boolean!
+}
+
+"""
+An application for the Bayerische Ehrenamtskarte.
+The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
+"""
+input ApplicationInput {
+  applicationDetails: ApplicationDetailsInput!
+  personalData: PersonalDataInput!
 }
 
 input AttachmentInput {
@@ -326,7 +331,8 @@ input BlueCardEntitlementInput {
 }
 
 input BlueCardJuleicaEntitlementInput {
-  copyOfJuleica: AttachmentInput!
+  copyOfJuleicaBack: AttachmentInput
+  copyOfJuleicaFront: AttachmentInput!
   juleicaExpirationDate: DateInput!
   juleicaNumber: ShortTextInput!
 }
@@ -354,6 +360,7 @@ input CardGenerationModelInput {
   activationSecretBase64: String
   cardExpirationDay: Long
   cardInfoHashBase64: String!
+  cardStartDay: Long
   codeType: CodeType!
   regionId: Int!
 }

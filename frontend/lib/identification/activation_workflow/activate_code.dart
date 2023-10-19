@@ -25,14 +25,14 @@ Future<ActivateCard$Mutation$CardActivationResultModel> activateCode({
   try {
     final mutationResult = await client.mutate(mutationOptions);
     final exception = mutationResult.exception;
-    if (exception != null && mutationResult.hasException) {
+    if (exception != null) {
       throw exception;
     }
 
     final data = mutationResult.data;
 
     if (data == null) {
-      throw const ServerCardActivationException("No connection to the server");
+      throw const ServerCardActivationException('Server returned null.');
     }
 
     final parsedResult = activateCard.parse(data);

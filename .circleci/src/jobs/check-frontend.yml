@@ -1,0 +1,35 @@
+docker:
+  - image: cimg/node:19.1.0-browsers
+resource_class: small
+working_directory: ~/project/frontend
+steps:
+  - checkout:
+      path: ~/project
+  - browser-tools/install-chrome
+  - install-dart-linux
+  - install-fvm
+  - install-app-toolbelt
+  - install-protobuf-linux
+  - run:
+      name: Install Flutter Packages
+      command: fvm flutter pub get --enforce-lockfile
+  - run:
+      name: Check Formatting
+      command: fvm dart format -l 120 -o none --set-exit-if-changed .
+  - run:
+      name: Build Runner
+      command: |
+        # Statically use "bayern" build config for analyzing here
+        fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+  - run:
+      name: Check Analyzer and Linting
+      command: |
+        fvm flutter analyze --fatal-infos --fatal-warnings
+        fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
+        fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
+  - run:
+      name: Tests
+      command: |
+        fvm flutter test
+        fvm flutter test pubs/df_build_config
+        fvm flutter test pubs/df_protobuf

@@ -41,14 +41,16 @@ class CardContent extends StatelessWidget {
   final CardInfo cardInfo;
   final Region? region;
   final bool isExpired;
+  final bool isNotYetValid;
 
-  const CardContent({super.key, required this.cardInfo, this.region, required this.isExpired});
+  const CardContent(
+      {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isNotYetValid});
 
   String get _formattedExpirationDate {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : "unbegrenzt";
+        : 'unbegrenzt';
   }
 
   String? get _formattedBirthday {
@@ -64,6 +66,17 @@ class CardContent extends StatelessWidget {
         : null;
   }
 
+  String? get _formattedStartDate {
+    final startDay = cardInfo.extensions.hasExtensionStartDay() ? cardInfo.extensions.extensionStartDay.startDay : null;
+    return startDay != null
+        ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: startDay)))
+        : null;
+  }
+
+  String _getCardValidityDate(String? startDate, String expirationDate) {
+    return startDate != null ? 'Gültig: $startDate bis $expirationDate' : 'Gültig bis: $expirationDate';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardColor = cardInfo.extensions.extensionBavariaCardType.cardType == BavariaCardType.GOLD
@@ -71,12 +84,13 @@ class CardContent extends StatelessWidget {
         : standardCardColor;
     final formattedBirthday = _formattedBirthday;
     final passNumber = _passNumber;
+    final startDate = _formattedStartDate;
     return LayoutBuilder(
       builder: (context, constraints) {
         final scaleFactor = constraints.maxWidth / 300;
         final currentRegion = region;
         final headerLeftTitle = buildConfig.cardBranding.headerTitleLeft.isEmpty && currentRegion != null
-            ? "${currentRegion.prefix} ${currentRegion.name}"
+            ? '${currentRegion.prefix} ${currentRegion.name}'
             : buildConfig.cardBranding.headerTitleLeft;
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -172,34 +186,35 @@ class CardContent extends StatelessWidget {
                                 textAlign: TextAlign.start,
                               ),
                             ),
-                            if (formattedBirthday != null)
-                              Text(
-                                formattedBirthday,
-                                style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
-                                textAlign: TextAlign.start,
-                              ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.only(top: 3.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  RichText(
-                                    maxLines: 1,
-                                    text: TextSpan(
-                                      text: "Gültig bis: ",
-                                      style: TextStyle(
-                                          fontSize: 14 * scaleFactor,
-                                          color: isExpired ? Theme.of(context).colorScheme.error : textColor),
-                                      children: [TextSpan(text: _formattedExpirationDate)],
+                                  if (formattedBirthday != null)
+                                    Text(
+                                      formattedBirthday,
+                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      textAlign: TextAlign.start,
                                     ),
-                                  ),
                                   if (passNumber != null)
                                     Text(
                                       passNumber,
                                       style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
-                                      textAlign: TextAlign.start,
+                                      textAlign: TextAlign.end,
                                     ),
                                 ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3.0),
+                              child: Text(
+                                _getCardValidityDate(startDate, _formattedExpirationDate),
+                                style: TextStyle(
+                                    fontSize: 14 * scaleFactor,
+                                    color:
+                                        isExpired || isNotYetValid ? Theme.of(context).colorScheme.error : textColor),
+                                textAlign: TextAlign.start,
                               ),
                             ),
                           ],

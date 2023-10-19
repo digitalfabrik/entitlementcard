@@ -1,8 +1,9 @@
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensons'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ProjectConfig } from '../getProjectConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -11,12 +12,12 @@ import pdfConfig from './pdf'
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
   projectId: 'nuernberg.sozialpass.app',
-  applicationFeatureEnabled: false,
   staticQrCodesEnabled: true,
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
     extensionColumnNames: [
+      'Startdatum',
       'Geburtsdatum',
       'Passnummer',
       'Pass-ID',
@@ -28,6 +29,7 @@ const config: ProjectConfig = {
     ],
     defaultValidity: { years: 1 },
     extensions: [
+      StartDayExtension,
       BirthdayExtension,
       NuernbergPassNumberExtension,
       NuernbergPassIdExtension,

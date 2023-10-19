@@ -1,11 +1,12 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
-import { Toaster } from '@blueprintjs/core'
+import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
+import { mocked } from 'jest-mock'
 import { ReactElement } from 'react'
 
 import CardBlueprint from '../../../cards/CardBlueprint'
-import * as PdfFactory from '../../../cards/PdfFactory'
-import * as createCards from '../../../cards/createCards'
+import { PDFError, generatePdf } from '../../../cards/PdfFactory'
+import createCards, { CreateCardsError } from '../../../cards/createCards'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
@@ -22,6 +23,16 @@ const wrapper = ({ children }: { children: ReactElement }) => {
   )
 }
 
+jest.mock('../../../cards/PdfFactory', () => ({
+  ...jest.requireActual('../../../cards/PdfFactory'),
+  generatePdf: jest.fn(),
+}))
+jest.mock('../../../cards/createCards', () => ({
+  ...jest.requireActual('../../../cards/createCards'),
+  __esModule: true,
+  default: jest.fn(),
+}))
+
 describe('useCardGenerator', () => {
   const region: Region = {
     id: 0,
@@ -36,8 +47,7 @@ describe('useCardGenerator', () => {
   ]
 
   it('should successfully create multiple cards', async () => {
-    const createCardsSpy = spyOn(createCards, 'default')
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
+    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
@@ -49,14 +59,16 @@ describe('useCardGenerator', () => {
     })
 
     expect(toasterSpy).not.toHaveBeenCalled()
-    expect(createCardsSpy).toHaveBeenCalled()
+    expect(createCards).toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.finished)
     expect(result.current.cardBlueprints).toEqual([])
   })
 
   it('should show error message for failed card generation', async () => {
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
-    spyOn(createCards, 'default').and.throwError(new createCards.CreateCardsError('error'))
+    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
+    mocked(createCards).mockImplementationOnce(() => {
+      throw new CreateCardsError('error')
+    })
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
 
@@ -73,8 +85,10 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message for failed pdf generation', async () => {
-    spyOn(PdfFactory, 'generatePdf').and.throwError(new PdfFactory.PDFError('error'))
-    const toasterSpy = spyOn(Toaster.prototype, 'show')
+    mocked(generatePdf).mockImplementationOnce(() => {
+      throw new PDFError('error')
+    })
+    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
 
@@ -85,7 +99,7 @@ describe('useCardGenerator', () => {
       await result.current.generateCards()
     })
 
-    expect(toasterSpy).toHaveBeenCalledWith(jasmine.objectContaining({ intent: 'danger' }))
+    expect(toasterSpy).toHaveBeenCalledWith(expect.objectContaining({ intent: 'danger' }))
     expect(result.current.state).toBe(CardActivationState.input)
     expect(result.current.cardBlueprints).toEqual([])
   })

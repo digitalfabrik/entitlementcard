@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: "0c8368c9b3f0abbc193b9d6133649a614204b528982bebc7026372d61677ce3a"
+      sha256: "49b1fad315e57ab0bbc15bcbb874e83116a1d78f77ebd500a4af6c9407d6b28e"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.7"
+    version: "3.3.8"
   args:
     dependency: transitive
     description:
@@ -287,6 +287,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  fk_user_agent:
+    dependency: "direct main"
+    description:
+      name: fk_user_agent
+      sha256: fd6c94e120786985a292d12f61422a581f4e851148d5940af38b819357b8ad0d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1007,6 +1015,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  sentry:
+    dependency: transitive
+    description:
+      name: sentry
+      sha256: "39c23342fc96105da449914f7774139a17a0ca8a4e70d9ad5200171f7e47d6ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.9.0"
+  sentry_flutter:
+    dependency: "direct main"
+    description:
+      name: sentry_flutter
+      sha256: ff68ab31918690da004a42e20204242a3ad9ad57da7e2712da8487060ac9767f
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.9.0"
   shared_preferences:
     dependency: "direct main"
     description:

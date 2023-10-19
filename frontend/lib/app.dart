@@ -13,8 +13,8 @@ import 'package:provider/provider.dart';
 
 import 'home/home_page.dart';
 
-const introRouteName = "/intro";
-const homeRouteName = "/home";
+const introRouteName = '/intro';
+const homeRouteName = '/home';
 
 class App extends StatelessWidget {
   const App({super.key});

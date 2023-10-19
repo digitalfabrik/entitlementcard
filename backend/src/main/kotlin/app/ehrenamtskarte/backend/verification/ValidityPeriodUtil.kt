@@ -23,5 +23,18 @@ class ValidityPeriodUtil {
         fun daysSinceEpochToDate(days: Long): LocalDate {
             return LocalDate.of(1970, Month.JANUARY, 1).plusDays(days)
         }
+
+        fun isOnOrAfterToday(maxInclusiveDay: LocalDate, timezone: ZoneId): Boolean {
+            return isOnOrAfterToday(maxInclusiveDay, Clock.system(timezone))
+        }
+
+        fun isOnOrAfterToday(maxInclusiveDay: LocalDate, clock: Clock): Boolean {
+            // Cards issues for day == 0 are never valid!
+            if (maxInclusiveDay.isEqual(LocalDate.of(1970, Month.JANUARY, 1))) {
+                return false
+            }
+            // not before includes the current day
+            return !LocalDate.now(clock).isBefore(maxInclusiveDay)
+        }
     }
 }

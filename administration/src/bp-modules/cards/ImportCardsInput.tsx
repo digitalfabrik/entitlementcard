@@ -52,12 +52,12 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       const content = event.target?.result as string
       const lines = content
         .split('\n')
-        .filter(Boolean)
+        .filter(line => line.trim().length)
         .map(line => line.split(',').map(cell => cell.trim()))
 
-      const lineLength = lines[0]?.length
+      const numberOfColumns = lines[0]?.length
 
-      if (!lineLength) {
+      if (!numberOfColumns) {
         showInputError('Die gewählte Datei ist leer.')
         return
       }
@@ -67,7 +67,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
         return
       }
 
-      if (!lines.every(line => line.length === lineLength)) {
+      if (!lines.every(line => line.length === numberOfColumns)) {
         showInputError('Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Elemente.')
         return
       }

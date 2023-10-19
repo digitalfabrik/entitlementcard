@@ -37,7 +37,7 @@ class GraphQLHandler(
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch verificationGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
-    private val regionIdentifierByPostalCode: Map<String, String> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
+    private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
@@ -49,7 +49,8 @@ class GraphQLHandler(
         graphQLParams.mutations,
         graphQLParams.subscriptions
     )
-    private val graphQL = GraphQL.newGraphQL(graphQLSchema).defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
+    private val graphQL = GraphQL.newGraphQL(graphQLSchema)
+        .defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
 
     private val mapper = jacksonObjectMapper()
 
@@ -134,7 +135,8 @@ class GraphQLHandler(
                 files,
                 remoteIp,
                 backendConfiguration,
-                regionIdentifierByPostalCode
+                regionIdentifierByPostalCode,
+                context.req()
             )
         } catch (e: Exception) {
             when (e) {
@@ -146,7 +148,8 @@ class GraphQLHandler(
                     files,
                     remoteIp,
                     backendConfiguration,
-                    regionIdentifierByPostalCode
+                    regionIdentifierByPostalCode,
+                    context.req()
                 )
 
                 else -> throw e

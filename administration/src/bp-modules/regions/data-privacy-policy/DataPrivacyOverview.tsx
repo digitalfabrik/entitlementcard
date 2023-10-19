@@ -1,5 +1,4 @@
-import { Button, H3, TextArea } from '@blueprintjs/core'
-import { Tooltip2 } from '@blueprintjs/popover2'
+import { Button, H3, TextArea, Tooltip } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -78,7 +77,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
       </Content>
       <ButtonBar>
         <Button icon='arrow-left' text='Zurück' onClick={() => navigate(-1)} />
-        <Tooltip2 disabled={!maxCharsExceeded} content={errorMessage}>
+        <Tooltip disabled={!maxCharsExceeded} content={errorMessage}>
           <Button
             disabled={maxCharsExceeded}
             icon='floppy-disk'
@@ -87,7 +86,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
             onClick={onSave}
             loading={loading}
           />
-        </Tooltip2>
+        </Tooltip>
       </ButtonBar>
     </>
   )

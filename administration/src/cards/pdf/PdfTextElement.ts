@@ -9,13 +9,15 @@ export type InfoParams = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 export type PdfTextElementProps = {
-  width: number
+  maxWidth?: number | undefined
   fontSize: number
+  textAlign?: 'left' | 'right' | 'center'
   spacing?: number
-  angle?: number
+  angle?: number | undefined
   color?: Color
   infoToText: (info: InfoParams) => string
 } & Coordinates
@@ -26,21 +28,35 @@ type PdfTextElementRendererProps = {
   info: CardInfo
   region: Region
   cardBlueprint: CardBlueprint
+  cardInfoHash: string
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
-  { width, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined },
-  { page, font, info, region, cardBlueprint }
+  { maxWidth, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined, textAlign = 'left' },
+  { page, font, info, region, cardBlueprint, cardInfoHash }
 ) => {
-  const text = infoToText({ info, region, cardBlueprint })
+  const text = infoToText({ info, region, cardBlueprint, cardInfoHash })
+
+  let xPt: number
+  switch (textAlign) {
+    case 'left':
+      xPt = mmToPt(x)
+      break
+    case 'right':
+      xPt = mmToPt(x) - font.widthOfTextAtSize(text, fontSize)
+      break
+    case 'center':
+      xPt = mmToPt(x) - font.widthOfTextAtSize(text, fontSize) / 2
+      break
+  }
 
   const lineHeight = font.heightAtSize(fontSize) + spacing
 
   page.drawText(text, {
     font,
-    x: mmToPt(x),
+    x: xPt,
     y: page.getSize().height - mmToPt(y) - lineHeight,
-    maxWidth: mmToPt(width),
+    maxWidth: maxWidth !== undefined ? mmToPt(maxWidth) : undefined,
     wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
     color,

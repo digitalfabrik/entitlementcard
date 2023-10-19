@@ -1,12 +1,11 @@
-import { Button, H4 } from '@blueprintjs/core'
-import { Popover2 } from '@blueprintjs/popover2'
+import { Button, H4, Popover } from '@blueprintjs/core'
 
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
 
 const RoleHelpButton = () => {
   return (
-    <Popover2
+    <Popover
       content={
         <div style={{ padding: '10px' }}>
           <H4 style={{ textAlign: 'center' }}>Welche Rollen haben welche Berechtigungen?</H4>
@@ -41,7 +40,7 @@ const RoleHelpButton = () => {
         </div>
       }>
       <Button icon='help' minimal />
-    </Popover2>
+    </Popover>
   )
 }
 

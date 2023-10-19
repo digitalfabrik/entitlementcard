@@ -59,13 +59,13 @@ class DetailAppBarBottom extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            categoryName ?? "",
+            categoryName ?? '',
             style: Theme.of(context).textTheme.bodyMedium?.apply(color: textColorGrey),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            title ?? "",
+            title ?? '',
             style: Theme.of(context).textTheme.titleLarge?.apply(color: textColor),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -87,7 +87,7 @@ class DetailAppBar extends StatelessWidget {
 
     final accentColor = getDarkenedColorForCategory(categoryId);
     final categoryName = matchingStore.store.category.name;
-    final title = matchingStore.store.name ?? "Akzeptanzstelle";
+    final title = matchingStore.store.name ?? 'Akzeptanzstelle';
 
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);

@@ -69,7 +69,6 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
         <select
           style={{ height: '30px', opacity: 0, pointerEvents: 'none', position: 'absolute' }}
           value={activeItem?.id ?? ''}
-          onChange={() => {}}
           required
           tabIndex={-1}>
           <option value={activeItem?.id ?? ''} disabled>
@@ -77,7 +76,7 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
           </option>
         </select>
         <Button
-          className={Classes.SELECT}
+          className={Classes.SELECT_POPOVER}
           style={{ justifyContent: 'space-between', padding: '0 10px' }}
           fill
           rightIcon='double-caret-vertical'>

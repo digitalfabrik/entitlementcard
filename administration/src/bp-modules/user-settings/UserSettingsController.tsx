@@ -17,11 +17,11 @@ const UserSettingsContainer = styled.div`
 `
 
 const UserSettingsController = () => {
-  const { applicationFeatureEnabled, activityLogConfig, projectId } = useContext(ProjectConfigContext)
+  const { applicationFeature, activityLogConfig, projectId } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
-      {applicationFeatureEnabled && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
+      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>

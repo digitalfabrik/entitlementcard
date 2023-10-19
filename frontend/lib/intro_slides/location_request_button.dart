@@ -51,7 +51,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
     if (status == null) {
       return const ElevatedButton(
         onPressed: null,
-        child: Text("Prüfe Einstellungen..."),
+        child: Text('Prüfe Einstellungen...'),
       );
     }
     switch (status) {
@@ -59,18 +59,18 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.notSupported:
         return ElevatedButton(
           onPressed: () => _onLocationButtonClicked(settings),
-          child: const Text("Ich möchte meinen Standort freigeben."),
+          child: const Text('Ich möchte meinen Standort freigeben.'),
         );
       case LocationStatus.whileInUse:
       case LocationStatus.always:
         return const ElevatedButton(
           onPressed: null,
-          child: Text("Standort ist freigegeben."),
+          child: Text('Standort ist freigegeben.'),
         );
       case LocationStatus.deniedForever:
         return const ElevatedButton(
           onPressed: null,
-          child: Text("Standortfreigabe ist deaktiviert."),
+          child: Text('Standortfreigabe ist deaktiviert.'),
         );
     }
   }

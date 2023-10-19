@@ -31,7 +31,13 @@ Future<CardInfo?> verifyDynamicVerificationCode(
 ) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentDynamicVerificationCode(code);
-  if (!(await queryDynamicServerVerification(client, projectId, code)).valid) {
+  final (outOfSync: outOfSync, result: result) = await queryDynamicServerVerification(client, projectId, code);
+  if (outOfSync) {
+    debugPrint("Verification: This device's time is out of sync with the server."
+        'Ignoring, as only the time of the device that generates the QR code is relevant for the verification process.');
+  }
+
+  if (!result.valid) {
     return null;
   }
   return code.info;
@@ -52,7 +58,7 @@ Future<CardInfo?> verifyStaticVerificationCode(
 
 void assertConsistentCardInfo(CardInfo cardInfo) {
   if (!cardInfo.hasFullName()) {
-    throw QrCodeFieldMissingException("fullName");
+    throw QrCodeFieldMissingException('fullName');
   }
   if (!cardInfo.hasExpirationDay() && cardInfo.extensions.extensionBavariaCardType.cardType != BavariaCardType.GOLD) {
     throw QRCodeMissingExpiryException();
@@ -69,16 +75,16 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
 
 void _assertConsistentDynamicVerificationCode(DynamicVerificationCode verificationCode) {
   if (!verificationCode.hasPepper()) {
-    throw QrCodeFieldMissingException("pepper");
+    throw QrCodeFieldMissingException('pepper');
   }
   if (verificationCode.otp <= 0) {
-    throw QrCodeFieldMissingException("otp");
+    throw QrCodeFieldMissingException('otp');
   }
 }
 
 void _assertConsistentStaticVerificationCode(StaticVerificationCode verificationCode) {
   if (!verificationCode.hasPepper()) {
-    throw QrCodeFieldMissingException("pepper");
+    throw QrCodeFieldMissingException('pepper');
   }
 }
 
@@ -92,5 +98,5 @@ extension DateComparison on DateTime {
 class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
 
-  CardExpiredException(this.expiry) : super("card already expired");
+  CardExpiredException(this.expiry) : super('card already expired');
 }

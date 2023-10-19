@@ -1,14 +1,13 @@
-import { Button, InputGroup, InputGroupProps2, Label } from '@blueprintjs/core'
-import { Tooltip2 } from '@blueprintjs/popover2'
+import { Button, InputGroup, InputGroupProps2, Label, Tooltip } from '@blueprintjs/core'
 import { useState } from 'react'
 
 const ShowPasswordButton = (props: { hidden: boolean; onClick: () => void }) => {
   return (
-    <Tooltip2
+    <Tooltip
       content={props.hidden ? 'Passwort anzeigen' : 'Passwort verstecken'}
       renderTarget={({ isOpen, ref, ...tooltipProps }) => (
         <Button
-          elementRef={ref}
+          ref={ref}
           {...tooltipProps}
           minimal
           icon={props.hidden ? 'eye-open' : 'eye-off'}
