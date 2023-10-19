@@ -83,7 +83,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   if (application.withdrawalDate)
     return (
       <CenteredMessage
-        title={`Der Antrag wurde vom Antragssteller am ${formatDateWithTimezone(
+        title={`Der Antrag wurde vom Antragsteller am ${formatDateWithTimezone(
           application.withdrawalDate,
           config.timezone
         )} zurückgezogen.`}
@@ -110,8 +110,8 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
           Guten Tag {verification.contactName},
           <br />
           <br />
-          Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
-          Antragssteller hat Sie als Kontaktperson der Organisation {verification.organizationName} angegeben. Im
+          Sie wurden gebeten, die Angaben eines Antrags auf Ehrenamtskarte zu bestätigen. Die Antragstellerin oder der
+          Antragsteller hat Sie als Kontaktperson der Organisation {verification.organizationName} angegeben. Im
           Folgenden können Sie den zugehörigen Antrag einsehen. Wir bitten Sie, die enthaltenen Angaben, welche die
           Organisation {verification.organizationName} betreffen, zu bestätigen. Falls Sie denken, die Angaben wurden
           fälschlicherweise gemacht, bitten wir Sie, den Angaben zu widersprechen.

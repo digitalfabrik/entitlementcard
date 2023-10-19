@@ -1,0 +1,11 @@
+when: << pipeline.parameters.run_commit >>
+jobs:
+  - check
+  - backend-build
+  - backend-pack:
+      requires:
+        - backend-build
+  - backend-health-check:
+      requires:
+        - backend-pack
+  - check-frontend

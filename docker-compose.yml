@@ -31,7 +31,7 @@ services:
     ports:
       - 127.0.0.1:5002:80
     volumes:
-      - ./map-tiles/styles:/usr/share/nginx/html
+      - ./backend/ehrenamtskarte-maplibre-style:/usr/share/nginx/html
       - ./docker/nginx-development.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - martin
