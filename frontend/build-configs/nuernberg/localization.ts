@@ -24,11 +24,18 @@ const localization: LocalizationType = {
         moreActions: {
             applyForAnotherCardTitle: "Nürnberg-Pass beantragen oder verlängern",
             applyForAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten.",
-            activateAnotherCardTitle: "Anderen Aktivierungscode einscannen",
-            activateAnotherCardDescription: "Dadurch wird der hinterlegte Pass vom Gerät gelöscht.",
+            activateAnotherCardTitle: "Weiteren Nürnberg-Pass hinzufügen",
+            activateAnotherCardDescription: "Ihr hinterlegter Pass bleibt erhalten. Sie können diesen manuell entfernen.",
+            activationLimitDescription: "Um einen weiteren Pass hinzuzufügen, müssen Sie zuerst einen der vorhandenen Pässe löschen.",
             verifyTitle: "Einen Nürnberg-Pass prüfen",
             verifyDescription: "Prüfen Sie die Gültigkeit eines Nürnberg-Passes.",
+            removeCardTitle: "Diesen Nürnberg-Pass löschen",
+            removeCardDescription: "Nach der Auswahl wird der hinterlegte Pass vom Gerät gelöscht.",
         },
+        removeCardDialog: {
+            title: "Diesen Pass löschen?",
+            description: "Wenn dieser Pass gelöscht wird, muss dieser für eine erneute Verwendung neu hinzugefügt werden.",
+        }
     },
 }
 
