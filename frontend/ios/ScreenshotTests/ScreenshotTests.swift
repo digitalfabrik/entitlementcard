@@ -39,7 +39,7 @@ class ScreenshotTests: XCTestCase {
         
         let element = app.staticTexts["Suche\nTab 2 von 4"]
         self.waitForElementToAppear(element: element)
-        sleep(20)
+        sleep(60)
         
         snapshot("01Map")
     }
@@ -70,7 +70,7 @@ class ScreenshotTests: XCTestCase {
         sleep(5)
         
         tabItem.tap()
-        let search = app.textFields["Tippen, um zu suchen …"]
+        let search = app.textFields["Tippen, um zu suchen..."]
         self.waitForElementToAppear(element: search)
         search.tap()
     
@@ -79,23 +79,24 @@ class ScreenshotTests: XCTestCase {
         var category = "Essen/Trinken/Gastronomie"
         var expectedMatch = "Dolomiti"
         
-        if(app.launchArguments.contains("app.sozialpass.nuernberg")){
-            searchText = "Ahorn"
-            category = "Apotheken/Gesundheit"
-            expectedMatch = "Apotheke"
-        }
+       if(app.launchArguments.contains("app.sozialpass.nuernberg")){
+           searchText = "Ahorn"
+           category = "Apotheken/Gesundheit"
+           expectedMatch = "Ahorn Apotheke"
+       }
 
         search.typeText(searchText)
         search.typeText("\n") // Close keyboard for more space
+        sleep(10)
         
         app.images.matching(identifier: category).element(boundBy: 0).tap()
-
         // on ipads the list element is a "otherElements" element, on iphones it is a "staticTexts"
         var result = app.descendants(matching: .any).element(matching: NSPredicate(format: "label CONTAINS[c] %@", expectedMatch))
         
         if (!result.exists || !result.isHittable) {
             result = app.otherElements.element(matching: NSPredicate(format: "label CONTAINS[c] %@", expectedMatch))
         }
+        sleep(10)
         result.tap()
         
         sleep(2)

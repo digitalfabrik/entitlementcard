@@ -91,7 +91,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         controller: textEditingController,
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
-          hintText: 'Tippen, um zu suchen …',
+          hintText: 'Tippen, um zu suchen...',
           hintStyle: TextStyle(color: foregroundColor?.withOpacity(0.8)),
         ),
         cursorColor: foregroundColor,

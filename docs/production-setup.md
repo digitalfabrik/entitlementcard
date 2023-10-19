@@ -100,6 +100,11 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 
 ## Snapshots
 
-The Snapshots are created by executing a bunch of e2e tests locally. Check out `frontend/ios/ScreenshotTest` .
+The snapshots are created by executing a bunch of e2e tests locally. Check out `frontend/ios/ScreenshotTest` .
 
-iOS snapshots can be created via `bundle exec fastlane snapshot` in the `frontend/ios` directory. For that you’ll have to install a bunch of simulators in XCode (see `frontend/ios/fastlane/Snapfile`)
+- ensure local backend is running.
+- check for the required simulators in XCode (see `frontend/ios/fastlane/Snapfile`)
+- set the build config for the particular project.
+- switch to: `frontend/ios`
+- run: `bundle exec fastlane snapshot --launch-arguments "<app-identifier>" --scheme "ScreenshotTests" --app-identifier "<app-identifier>" --output-directory "./fastlane/screenshots-<project>" `
+- Example: `bundle exec fastlane snapshot --launch-arguments "app.sozialpass.nuernberg" --scheme "ScreenshotTests" --app-identifier "app.sozialpass.nuernberg" --output-directory "./fastlane/screenshots-nuernberg" ` 
