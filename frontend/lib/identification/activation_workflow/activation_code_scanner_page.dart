@@ -119,9 +119,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
             ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
 
         userCodesModel.insertCode(userCode);
-        if (userCodesModel.userCodes.length > 1) {
-          moveToLastCard();
-        }
+        moveToLastCard();
         debugPrint('Card Activation: Successfully activated.');
 
         break;

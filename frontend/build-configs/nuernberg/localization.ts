@@ -33,8 +33,8 @@ const localization: LocalizationType = {
             removeCardDescription: "Nach der Auswahl wird der hinterlegte Pass vom Gerät gelöscht.",
         },
         removeCardDialog: {
-            title: "Diese Karte löschen?",
-            description: "Wenn diese Karte gelöscht wird, muss sie vor der Wiederverwendung neu aktiviert werden.",
+            title: "Diesen Pass löschen?",
+            description: "Wenn dieser Pass gelöscht wird, muss dieser für eine erneute Verwendung neu hinzugefügt werden.",
         }
     },
 }

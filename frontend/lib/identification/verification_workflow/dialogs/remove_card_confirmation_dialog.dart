@@ -81,6 +81,7 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
               child: const Text('Löschen'),
               onPressed: () {
                 final provider = Provider.of<UserCodeModel>(context, listen: false);
+                // ensures that the store will be reset to empty list
                 if (provider.userCodes.length == 1) {
                   provider.removeCodes();
                 } else {

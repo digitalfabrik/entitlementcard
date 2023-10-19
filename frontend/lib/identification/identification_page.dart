@@ -109,6 +109,10 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   void _moveCarouselToLastPosition() {
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-    carouselController.jumpToPage(userCodeModel.userCodes.length);
+    final int cardAmount = userCodeModel.userCodes.length;
+    // the carousel controller causes an error if you try to move if there is only one item
+    if (cardAmount > 1) {
+      carouselController.jumpToPage(cardAmount);
+    }
   }
 }

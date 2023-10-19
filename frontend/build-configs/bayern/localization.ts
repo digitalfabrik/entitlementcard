@@ -34,7 +34,7 @@ const localization: LocalizationType = {
         },
         removeCardDialog: {
             title: "Diese Karte löschen?",
-            description: "Wenn diese Karte gelöscht wird, muss sie vor der Wiederverwendung neu aktiviert werden.",
+            description: "Wenn diese Karte gelöscht wird, muss diese für eine erneute Verwendung neu hinzugefügt werden.",
         }
     },
 }
