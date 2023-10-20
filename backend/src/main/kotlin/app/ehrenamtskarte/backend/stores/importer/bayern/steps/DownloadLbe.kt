@@ -34,7 +34,7 @@ class DownloadLbe(config: ImportConfig, private val logger: Logger, private val 
 
             return lbeData.acceptingStores
         } catch (e: Exception) {
-            logger.info("Unknown exception while downloading data from lbe", e)
+            logger.error("Unknown exception while downloading data from lbe", e)
             throw e
         }
     }

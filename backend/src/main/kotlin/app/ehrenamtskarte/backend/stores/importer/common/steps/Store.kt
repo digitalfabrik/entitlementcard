@@ -109,7 +109,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                     """.trimIndent()
                 )
             } catch (e: Exception) {
-                logger.info("Unknown exception while storing to db", e)
+                logger.error("Unknown exception while storing to db", e)
                 rollback()
                 throw e
             }

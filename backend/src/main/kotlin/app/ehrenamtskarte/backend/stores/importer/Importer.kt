@@ -21,7 +21,7 @@ object Importer {
             logger.info("== Pipeline ${project.pipelineName} successfully finished ==")
             true
         } catch (e: Exception) {
-            logger.info("== Pipeline ${project.pipelineName} was aborted without altering the database ==", e)
+            logger.error("== Pipeline ${project.pipelineName} was aborted without altering the database ==", e)
             false
         }
     }
