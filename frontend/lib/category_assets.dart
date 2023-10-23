@@ -129,7 +129,7 @@ List<CategoryAsset> categoryAssets(BuildContext context) {
     ),
     CategoryAsset(
       id: 12,
-      name: context.l10n.category_cultureLongAlternative,
+      name: context.l10n.category_cultureLongNuernberg,
       shortName: context.l10n.category_culture,
       icon: 'assets/category_icons/12.svg',
       detailIcon: 'assets/detail_headers/12_kultur.svg',
