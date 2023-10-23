@@ -42,8 +42,15 @@ export type LocalizationType = {
             applyForAnotherCardDescription: string
             activateAnotherCardTitle: string
             activateAnotherCardDescription: string
+            activationLimitDescription: string
             verifyTitle: string
             verifyDescription: string
+            removeCardTitle: string
+            removeCardDescription: string
+        }
+        removeCardDialog: {
+            title: string
+            description: string
         }
     }
 }
@@ -117,6 +124,7 @@ export type CommonBuildConfigType = {
     publisherText: string
     disclaimerText: string
     localization: LocalizationType
+    maxCardAmount: number
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

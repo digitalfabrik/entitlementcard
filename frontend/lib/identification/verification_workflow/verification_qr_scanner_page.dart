@@ -8,7 +8,6 @@ import 'package:ehrenamtskarte/identification/otp_generator.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/qr_content_parser.dart';
-import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/negative_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/positive_verification_result_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/verification_info_dialog.dart';
@@ -23,12 +22,14 @@ import 'package:provider/provider.dart';
 import 'package:ehrenamtskarte/util/l10n.dart';
 
 class VerificationQrScannerPage extends StatelessWidget {
-  const VerificationQrScannerPage({super.key});
+  final DynamicUserCode? userCode;
+  const VerificationQrScannerPage({super.key, this.userCode});
 
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
+    final currentUserCode = userCode;
     return Column(
       children: [
         CustomAppBar(
@@ -49,16 +50,14 @@ class VerificationQrScannerPage extends StatelessWidget {
             onCodeScanned: (code) => _handleQrCode(context, code),
           ),
         ),
-        if (config.showDevSettings)
+        if (config.showDevSettings && currentUserCode != null)
           TextButton(
             onPressed: () async {
-              final provider = Provider.of<UserCodeModel>(context, listen: false);
-              final userCode = provider.userCode!;
-              final otp = OTPGenerator(userCode.totpSecret).generateOTP().code;
+              final otp = OTPGenerator(currentUserCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode()
                 ..dynamicVerificationCode = (DynamicVerificationCode()
-                  ..info = userCode.info
-                  ..pepper = userCode.pepper
+                  ..info = currentUserCode.info
+                  ..pepper = currentUserCode.pepper
                   ..otp = otp);
               final verificationCode = verificationQrCode.writeToBuffer();
               _handleQrCode(context, verificationCode);

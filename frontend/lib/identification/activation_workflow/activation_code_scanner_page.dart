@@ -7,6 +7,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
@@ -27,7 +28,8 @@ import 'package:provider/provider.dart';
 import 'package:ehrenamtskarte/util/l10n.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
-  const ActivationCodeScannerPage({super.key});
+  final VoidCallback moveToLastCard;
+  const ActivationCodeScannerPage({super.key, required this.moveToLastCard});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   ]) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
@@ -97,15 +99,19 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        debugPrint('Card Activation: Successfully activated.');
 
-        provider.setCode(DynamicUserCode()
+        DynamicUserCode userCode = DynamicUserCode()
           ..info = activationCode.info
           ..pepper = activationCode.pepper
           ..totpSecret = totpSecret
           ..cardVerification = (CardVerification()
             ..cardValid = true
-            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp))));
+            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
+
+        userCodesModel.insertCode(userCode);
+        moveToLastCard();
+        debugPrint('Card Activation: Successfully activated.');
+
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
@@ -116,6 +122,10 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.didNotOverwriteExisting:
         if (overwriteExisting) {
           throw const ActivationDidNotOverwriteExisting();
+        }
+        if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
+          await ActivationExistingCardDialog.showExistingCardDialog(context);
+          break;
         }
         debugPrint(
             'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
