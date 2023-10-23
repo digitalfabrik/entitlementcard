@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class VerificationQrScannerPage extends StatelessWidget {
   const VerificationQrScannerPage({super.key});

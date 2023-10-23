@@ -4,7 +4,7 @@ import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class AcceptingStorePreviewError extends StatelessWidget {
   final void Function()? refetch;

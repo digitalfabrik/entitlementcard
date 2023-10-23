@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
   const VerificationInfoDialog({super.key});

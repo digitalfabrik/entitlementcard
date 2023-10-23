@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;

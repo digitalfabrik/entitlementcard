@@ -24,7 +24,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
   const ActivationCodeScannerPage({super.key});

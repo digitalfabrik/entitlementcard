@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 typedef OnFeatureClickCallback = void Function(dynamic feature);
 typedef OnNoFeatureClickCallback = void Function();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class ActivationOverwriteExistingDialog extends StatelessWidget {
   const ActivationOverwriteExistingDialog({super.key});

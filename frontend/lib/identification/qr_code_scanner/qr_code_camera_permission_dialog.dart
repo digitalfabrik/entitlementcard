@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class QrCodeCameraPermissionDialog extends StatelessWidget {
   const QrCodeCameraPermissionDialog();

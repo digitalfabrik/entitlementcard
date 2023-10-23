@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 const double bottomSize = 100;
 

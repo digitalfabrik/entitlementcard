@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:flutter/material.dart';
 
-import '../../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class NegativeVerificationResultDialog extends StatelessWidget {
   final String reason;

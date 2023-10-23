@@ -9,7 +9,7 @@ import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;
