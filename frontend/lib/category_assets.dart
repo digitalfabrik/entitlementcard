@@ -169,7 +169,7 @@ List<CategoryAsset> categoryAssets(BuildContext context) {
     ),
     CategoryAsset(
       id: 17,
-      name: context.l10n.category_sports,
+      name: context.l10n.category_sportsLong,
       shortName: context.l10n.category_sports,
       icon: 'assets/category_icons/17.svg',
       detailIcon: 'assets/detail_headers/17_sport.svg',

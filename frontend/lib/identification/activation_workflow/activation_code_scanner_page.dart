@@ -64,7 +64,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await showError(context.l10n.identification_codeExpired(expirationDate), null);
     } on ServerCardActivationException catch (_) {
-      await ConnectionFailedDialog.show(context, context.l10n.identification_codeVerificationFailedConnection);
+      await ConnectionFailedDialog.show(context, context.l10n.identification_codeActivationFailedConnection);
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
       await showError(context.l10n.identification_codeUnknownError, null);
@@ -134,7 +134,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        throw ServerCardActivationException(context.l10n.identification_activationInvalidState);
+        String errorMessage = context.l10n.identification_activationInvalidState;
+        reportError(errorMessage, null);
+        throw ServerCardActivationException(errorMessage);
     }
   }
 }

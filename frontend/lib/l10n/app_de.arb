@@ -75,6 +75,7 @@
   "identification_codeSavingFailed": "Der eingescannte Code kann nicht in der App gespeichert werden.",
   "identification_codeUnknownError": "Beim Einlesen des QR-Codes ist ein unbekannter Fehler aufgetreten.",
   "identification_codeVerificationFailed": "Der eingescannte Code konnte vom Server nicht verifiziert werden!",
+  "identification_codeActivationFailedConnection": "Der eingescannte Code konnte nicht aktiviert werden, da die Kommunikation mit dem Server fehlschlug. Bitte prüfen Sie Ihre Internetverbindung.",
   "identification_codeVerificationFailedConnection": "Der eingescannte Code konnte nicht verifiziert werden, da die Kommunikation mit dem Server fehlschlug. Bitte prüfen Sie Ihre Internetverbindung.",
   "identification_compareWithID": "Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab.",
   "identification_comparedWithID": "Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen.",
