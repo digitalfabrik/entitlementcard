@@ -73,7 +73,7 @@ class App extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [Locale('de'), Locale('en')],
+            supportedLocales: const [Locale('de')],
             initialRoute: initialRoute,
             routes: routes,
           ),
