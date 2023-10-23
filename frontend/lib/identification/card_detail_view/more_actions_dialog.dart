@@ -3,6 +3,8 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
+
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
@@ -27,7 +29,7 @@ class MoreActionsDialog extends StatelessWidget {
 
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: const Text('Weitere Aktionen'),
+      title: Text(context.l10n.common_moreActions),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -75,7 +77,7 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Abbrechen'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.common_cancel))],
     );
   }
 }

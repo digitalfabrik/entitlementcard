@@ -32,7 +32,7 @@ Future<void> selfVerifyCard(
     return;
   }
 
-  debugPrint("Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? "valid." : "INVALID."}");
+  debugPrint('Card Self-Verification: Persisting response. Card is ${cardVerification.valid ? 'valid.' : 'INVALID.'}');
 
   final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
   userCodeModel.updateCode(DynamicUserCode()

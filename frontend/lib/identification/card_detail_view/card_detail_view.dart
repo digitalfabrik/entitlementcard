@@ -8,6 +8,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
 import 'verification_code_view.dart';
 
 class CardDetailView extends StatefulWidget {
@@ -184,41 +185,33 @@ class QrCodeAndStatus extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ...switch (status) {
-            CardStatus.expired => [
-                _PaddedText(
-                    'Ihre Karte ist abgelaufen.\nUnter "Weitere Aktionen" können Sie einen Antrag auf Verlängerung stellen.')
-              ],
+            CardStatus.expired => [_PaddedText(context.l10n.identification_cardExpired)],
             CardStatus.notVerifiedLately => [
-                _PaddedText(
-                    'Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Verbindung mit dem Internet besteht und prüfen Sie erneut.'),
+                _PaddedText(context.l10n.identification_checkFailed),
                 Flexible(
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text('Erneut prüfen'),
+                    label: Text(context.l10n.identification_checkAgain),
                   ),
                 ),
               ],
             CardStatus.timeOutOfSync => [
-                _PaddedText(
-                    'Die Uhrzeit Ihres Geräts scheint nicht zu stimmen. Bitte synchronisieren Sie die Uhrzeit in den Systemeinstellungen.'),
+                _PaddedText(context.l10n.identification_timeIncorrect),
                 Flexible(
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
-                  label: Text('Erneut prüfen'),
+                  label: Text(context.l10n.identification_checkAgain),
                 ))
               ],
-            CardStatus.invalid => [
-                _PaddedText(
-                    'Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.')
-              ],
+            CardStatus.invalid => [_PaddedText(context.l10n.identification_cardInvalid)],
             CardStatus.valid => [
-                _PaddedText('Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:'),
+                _PaddedText(context.l10n.identification_authenticationPossible),
                 Flexible(child: VerificationCodeView(userCode: userCode))
               ],
             CardStatus.notYetValid => [
-                _PaddedText('Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen.'),
+                _PaddedText(context.l10n.identification_cardNotYetValid),
               ]
           },
           Container(
@@ -226,7 +219,7 @@ class QrCodeAndStatus extends StatelessWidget {
             child: TextButton(
               onPressed: onMoreActionsPressed,
               child: Text(
-                'Weitere Aktionen',
+                context.l10n.common_moreActions,
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),

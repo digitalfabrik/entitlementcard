@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../util/l10n.dart';
+
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
   final String? searchText;
@@ -146,10 +148,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.warning, size: 60, color: Colors.orange),
-            const Text('Bitte Internetverbindung prüfen.'),
+            Text(context.l10n.common_checkConnection),
             OutlinedButton(
               onPressed: _pagingController.retryLastFailedRequest,
-              child: const Text('Erneut versuchen'),
+              child: Text(context.l10n.common_tryAgain),
             )
           ],
         ),
@@ -160,7 +162,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            const Text('Auf diese Suche trifft keine Akzeptanzstelle zu.'),
+            Text(context.l10n.search_noAcceptingStoresFound),
           ],
         ),
       );

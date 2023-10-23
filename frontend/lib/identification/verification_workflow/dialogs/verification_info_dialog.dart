@@ -3,6 +3,8 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
+
 class VerificationInfoDialog extends StatelessWidget {
   const VerificationInfoDialog({super.key});
 
@@ -14,21 +16,19 @@ class VerificationInfoDialog extends StatelessWidget {
       title: Text(localization.infoDialogTitle),
       content: SingleChildScrollView(
         child: ListBody(
-          children: const [
+          children: [
             _EnumeratedListItem(
               index: 0,
-              child: Text(
-                'Scannen Sie den QR-Code, der auf dem "Ausweisen"-Tab Ihres Gegenübers angezeigt wird.',
-              ),
+              child: Text(context.l10n.identification_scanCode),
             ),
-            _EnumeratedListItem(index: 1, child: Text('Der QR-Code wird durch eine Server-Anfrage geprüft.')),
+            _EnumeratedListItem(index: 1, child: Text(context.l10n.identification_checkingCode)),
             _EnumeratedListItem(
               index: 2,
-              child: Text('Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab.'),
+              child: Text(context.l10n.identification_compareWithID),
             ),
             SizedBox(height: 12),
             Text(
-              'Eine Internetverbindung wird benötigt.',
+              context.l10n.identification_internetRequired,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -36,14 +36,14 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: const Text('Nicht mehr anzeigen'),
+          child: Text(context.l10n.identification_stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
             _onDone(context);
           },
         ),
         TextButton(
-          child: const Text('Weiter'),
+          child: Text(context.l10n.common_next),
           onPressed: () => _onDone(context),
         )
       ],

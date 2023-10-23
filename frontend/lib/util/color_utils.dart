@@ -10,8 +10,8 @@ Color getReadableOnColorSecondary(Color backgroundColor) {
   return backgroundColor.computeLuminance() > 0.5 ? Colors.black54 : Colors.white54;
 }
 
-Color? getDarkenedColorForCategory(int categoryId) {
-  final categoryColor = categoryAssets[categoryId].color;
+Color? getDarkenedColorForCategory(BuildContext context, int categoryId) {
+  final categoryColor = categoryAssets(context)[categoryId].color;
   Color? categoryColorDark;
   if (categoryColor != null) {
     categoryColorDark = TinyColor.fromColor(categoryColor).darken().color;

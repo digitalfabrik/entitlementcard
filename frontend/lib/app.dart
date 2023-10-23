@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home/home_page.dart';
 
@@ -66,13 +67,13 @@ class App extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
-            localizationsDelegates: const [
+            localizationsDelegates: [
+              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [Locale('de')],
-            locale: const Locale('de'),
             initialRoute: initialRoute,
             routes: routes,
           ),

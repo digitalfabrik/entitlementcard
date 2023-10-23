@@ -6,6 +6,8 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
+
 Color standardCardColor = getColorFromHex(buildConfig.cardBranding.colorStandard);
 Color premiumCardColor = getColorFromHex(buildConfig.cardBranding.colorPremium);
 Color textColor = getColorFromHex(buildConfig.cardBranding.bodyTextColor);
@@ -46,11 +48,11 @@ class CardContent extends StatelessWidget {
   const CardContent(
       {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isNotYetValid});
 
-  String get _formattedExpirationDate {
+  String _getFormattedExpirationDate(BuildContext context) {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
     return expirationDay != null
         ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: expirationDay)))
-        : 'unbegrenzt';
+        : context.l10n.identification_unlimited;
   }
 
   String? get _formattedBirthday {
@@ -73,8 +75,10 @@ class CardContent extends StatelessWidget {
         : null;
   }
 
-  String _getCardValidityDate(String? startDate, String expirationDate) {
-    return startDate != null ? 'Gültig: $startDate bis $expirationDate' : 'Gültig bis: $expirationDate';
+  String _getCardValidityDate(BuildContext context, String? startDate, String expirationDate) {
+    return startDate != null
+        ? context.l10n.identification_validFromUntil(expirationDate, startDate)
+        : context.l10n.identification_validUntil(expirationDate);
   }
 
   @override
@@ -209,7 +213,7 @@ class CardContent extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 3.0),
                               child: Text(
-                                _getCardValidityDate(startDate, _formattedExpirationDate),
+                                _getCardValidityDate(context, startDate, _getFormattedExpirationDate(context)),
                                 style: TextStyle(
                                     fontSize: 14 * scaleFactor,
                                     color:

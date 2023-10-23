@@ -1,15 +1,9 @@
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 
 class ActivationInvalidTotpSecretException extends ServerCardActivationException {
-  const ActivationInvalidTotpSecretException()
-      : super('Der Server konnte kein TotpSecret für den eingescannten QRCode generieren.');
+  const ActivationInvalidTotpSecretException() : super('Server failed to create totp secret for the scanned code.');
 }
 
 class ActivationDidNotOverwriteExisting implements Exception {
   const ActivationDidNotOverwriteExisting() : super();
-
-  @override
-  String toString() {
-    return 'Der eingescannte QRCode wurde bereits aktiviert.';
-  }
 }

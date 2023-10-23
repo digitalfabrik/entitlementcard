@@ -22,8 +22,7 @@ extension QRParsing on Uint8List {
       qrcode = QrCode.fromBuffer(this);
     } on Exception catch (e, stackTrace) {
       throw VerificationParseException(
-        internalMessage: 'Failed to parse QrCode from encoded data. '
-            'Message: ${e.toString()}',
+        internalMessage: 'Failed to parse QrCode from encoded data. Message: ${e.toString()}',
         cause: e,
         stackTrace: stackTrace,
       );

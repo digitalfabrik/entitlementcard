@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
+
 class VerificationQrScannerPage extends StatelessWidget {
   final DynamicUserCode? userCode;
   const VerificationQrScannerPage({super.key, this.userCode});
@@ -74,7 +76,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (cardInfo == null) {
         await _onError(
           context,
-          'Der eingescannte Code konnte vom Server nicht verifiziert werden!',
+          context.l10n.identification_codeVerificationFailed,
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
@@ -82,41 +84,36 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        'Der eingescannte Code konnte nicht verifiziert '
-        'werden, da die Kommunikation mit dem Server fehlschlug. '
-        'Bitte prüfen Sie Ihre Internetverbindung.',
+        context.l10n.identification_codeVerificationFailedConnection,
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        'Der eingescannte Code ist nicht gültig, '
-        'da erforderliche Daten fehlen.',
+        context.l10n.identification_codeInvalidMissing(e.missingFieldName),
         e,
       );
     } on CardExpiredException catch (e) {
-      final dateFormat = DateFormat('dd.MM.yyyy');
+      final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await _onError(
         context,
-        'Der eingescannte Code ist bereits am ${dateFormat.format(e.expiry)} abgelaufen.',
+        context.l10n.identification_codeExpired(expirationDate),
         e,
       );
     } on QrCodeParseException catch (e) {
       await _onError(
         context,
-        'Der Inhalt des eingescannten Codes kann nicht verstanden '
-        'werden. Vermutlich handelt es sich um einen QR-Code, der nicht für '
-        'diese App generiert wurde.',
+        context.l10n.identification_codeInvalid,
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        'Beim Einlesen des QR-Codes ist ein unbekannter Fehler aufgetreten.',
+        context.l10n.identification_codeUnknownError,
         e,
       );
     } finally {
-      // close current "Karte verifizieren" view
+      // close current 'Karte verifizieren' view
       await Navigator.of(context).maybePop();
     }
   }

@@ -17,8 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatefulWidget {
-  final String title;
-  const IdentificationPage({super.key, required this.title});
+  const IdentificationPage({super.key});
   @override
   IdentificationPageState createState() => IdentificationPageState();
 }
