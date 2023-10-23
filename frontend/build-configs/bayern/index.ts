@@ -31,6 +31,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
+    appLocales: ['de'],
     cardBranding: {
         headerTextColor: "#008dc9",
         headerColor: "#F5F5FFF5",
