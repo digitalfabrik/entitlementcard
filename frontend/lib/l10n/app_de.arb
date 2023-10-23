@@ -57,7 +57,6 @@
   "identification_activate": "Aktivieren",
   "identification_activateCardCurrentDevice": "Karte auf diesem Gerät aktivieren?",
   "identification_activateCardCurrentDeviceRationale": "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",
-  "identification_activationInvalidState": "Die Aktivierung befindet sich in einem ungültigen Zustand.",
   "identification_authenticationPossible": "Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:",
   "identification_cameraAccessRequired": "Zugriff auf Kamera erforderlich",
   "identification_cameraAccessRequiredSettings": "Um einen QR-Code einzuscannen, benötigt die App Zugriff auf die Kamera.\nIn den Einstellungen können Sie der App den Zugriff auf die Kamera erlauben.",
@@ -113,7 +112,7 @@
   "search_filterByCategories": "Nach Kategorien filtern",
   "search_findCloseBy": "In meiner Nähe suchen",
   "search_noAcceptingStoresFound": "Auf diese Suche trifft keine Akzeptanzstelle zu.",
-  "search_searchHint": "Tippen, um zu suchen...",
+  "search_searchHint": "Tippen, um zu suchen …",
   "search_searchResults": "Suchresultate",
   "search_title": "Suche",
 

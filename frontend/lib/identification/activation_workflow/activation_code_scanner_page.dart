@@ -134,7 +134,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        String errorMessage = context.l10n.identification_activationInvalidState;
+        const errorMessage = 'Die Aktivierung befindet sich in einem ungültigen Zustand.';
         reportError(errorMessage, null);
         throw ServerCardActivationException(errorMessage);
     }
