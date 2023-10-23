@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_overlay_shape.d
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
 

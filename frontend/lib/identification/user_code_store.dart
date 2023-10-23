@@ -1,32 +1,44 @@
 import 'dart:convert';
 
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-const userCodeBase64Key = 'userCodeBase64';
 
 class UserCodeStore {
   const UserCodeStore();
 
+  static const _userCodesBase64Key = 'userCodesBase64';
+  // legacy key for single card
   static const _userCodeBase64Key = 'userCodeBase64';
-
-  Future<void> store(DynamicUserCode userCode) async {
+  static const _storageDelimiter = ',';
+  Future<void> store(List<DynamicUserCode> userCodes) async {
     const storage = FlutterSecureStorage();
-    await storage.write(
-      key: _userCodeBase64Key,
-      value: const Base64Encoder().convert(userCode.writeToBuffer()),
-    );
+    Iterable<String> userCodeString = userCodes.map((code) => const Base64Encoder().convert(code.writeToBuffer()));
+    await storage.write(key: _userCodesBase64Key, value: userCodeString.join(_storageDelimiter));
   }
 
   Future<void> remove() async {
     const storage = FlutterSecureStorage();
-    await storage.delete(key: _userCodeBase64Key);
+    await storage.delete(key: _userCodesBase64Key);
   }
 
-  Future<DynamicUserCode?> load() async {
+  Future<List<DynamicUserCode>> load() async {
+    const storage = FlutterSecureStorage();
+    final String? userCodesBase64 = await storage.read(key: _userCodesBase64Key);
+    if (userCodesBase64 == null) return [];
+    return userCodesBase64
+        .split(_storageDelimiter)
+        .map((code) => DynamicUserCode.fromBuffer(const Base64Decoder().convert(code)))
+        .toList();
+  }
+
+  // legacy import of existing card to keep them in storage after update
+  Future<void> importLegacyCard() async {
     const storage = FlutterSecureStorage();
     final String? userCodeBase64 = await storage.read(key: _userCodeBase64Key);
-    if (userCodeBase64 == null) return null;
-    return DynamicUserCode.fromBuffer(const Base64Decoder().convert(userCodeBase64));
+    if (userCodeBase64 == null) return;
+    DynamicUserCode importedLegacyCard = DynamicUserCode.fromBuffer(const Base64Decoder().convert(userCodeBase64));
+    UserCodeModel().insertCode(importedLegacyCard);
+    await storage.delete(key: _userCodeBase64Key);
   }
 }

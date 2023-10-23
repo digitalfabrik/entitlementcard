@@ -7,10 +7,8 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:provider/provider.dart';
 
-import '../../util/l10n.dart';
-import '../user_code_model.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 import 'verification_code_view.dart';
 
 class CardDetailView extends StatefulWidget {
@@ -18,14 +16,15 @@ class CardDetailView extends StatefulWidget {
   final VoidCallback startActivation;
   final VoidCallback startVerification;
   final VoidCallback startApplication;
+  final VoidCallback openRemoveCardDialog;
 
-  const CardDetailView({
-    super.key,
-    required this.userCode,
-    required this.startActivation,
-    required this.startVerification,
-    required this.startApplication,
-  });
+  const CardDetailView(
+      {super.key,
+      required this.userCode,
+      required this.startActivation,
+      required this.startVerification,
+      required this.startApplication,
+      required this.openRemoveCardDialog});
 
   @override
   State<CardDetailView> createState() => _CardDetailViewState();
@@ -44,16 +43,15 @@ class _CardDetailViewState extends State<CardDetailView> {
       // - the card was activated on another device
       // - the card was revoked
       // - the card expired (on backend's system time)
-      _selfVerifyCard();
+      _selfVerifyCard(widget.userCode);
       initiatedSelfVerification = true;
     }
   }
 
-  Future<void> _selfVerifyCard() async {
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+  Future<void> _selfVerifyCard(DynamicUserCode userCode) async {
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    selfVerifyCard(userCodeModel, projectId, client);
+    selfVerifyCard(context, userCode, projectId, client);
   }
 
   @override
@@ -88,7 +86,7 @@ class _CardDetailViewState extends State<CardDetailView> {
         final qrCodeAndStatus = QrCodeAndStatus(
           userCode: widget.userCode,
           onMoreActionsPressed: () => _onMoreActionsPressed(context),
-          onSelfVerifyPressed: _selfVerifyCard,
+          onSelfVerifyPressed: () => _selfVerifyCard(widget.userCode),
         );
 
         return orientation == Orientation.landscape
@@ -130,10 +128,10 @@ class _CardDetailViewState extends State<CardDetailView> {
     showDialog(
       context: context,
       builder: (context) => MoreActionsDialog(
-        startActivation: widget.startActivation,
-        startApplication: widget.startApplication,
-        startVerification: widget.startVerification,
-      ),
+          startActivation: widget.startActivation,
+          startApplication: widget.startApplication,
+          startVerification: widget.startVerification,
+          openRemoveCardDialog: widget.openRemoveCardDialog),
     );
   }
 }

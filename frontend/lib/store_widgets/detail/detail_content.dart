@@ -11,7 +11,7 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;

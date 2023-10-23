@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 Color standardCardColor = getColorFromHex(buildConfig.cardBranding.colorStandard);
 Color premiumCardColor = getColorFromHex(buildConfig.cardBranding.colorPremium);

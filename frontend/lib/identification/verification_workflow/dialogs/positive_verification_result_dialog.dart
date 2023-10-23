@@ -7,7 +7,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class PositiveVerificationResultDialog extends StatefulWidget {
   final CardInfo cardInfo;

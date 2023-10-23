@@ -2,7 +2,7 @@ import 'package:ehrenamtskarte/map/map/attribution_dialog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class AttributionDialog extends StatelessWidget {
   const AttributionDialog({super.key});

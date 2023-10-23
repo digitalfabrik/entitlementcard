@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../util/l10n.dart';
+import 'package:ehrenamtskarte/util/l10n.dart';
 
 class QrParsingErrorDialog extends StatelessWidget {
   final String message;
