@@ -4,9 +4,9 @@
     "activateCurrentDeviceTitle": "Activate pass on this device?",
     "activateDescription": "You have already applied for the Nürnberg-Pass and received an activation code? Scan the code here.",
     "activateTitle": "Activate pass",
-    "applyDescription": "You don't have a Nürnberg-Pass yet? Here you can apply for your Nürnberg-Pass.",
-    "cardExpired": "Your pass has expired.\nYou can apply for renewal under \"More actions\"",
-    "cardInvalid": "Your pass is invalid.\nIt has either been revoked or activated on another device.",
+    "applyDescription": "You do not yet have a Nürnberg-Pass? Here you can apply for your Nürnberg-Pass.",
+    "cardExpired": "Your pass has expired. You can apply for renewal under \"More actions\"",
+    "cardInvalid": "Your pass is invalid. It has either been revoked or activated on another device.",
     "cardNotYetValid": "The validity period of your pass has not started yet.",
     "checkFailed": "Your pass could not be verified. Please make sure you have an internet connection and try again.",
     "moreActionsActivateDescription": "Your saved Nürnberg-Pass will be retained. You can remove it manually.",
@@ -25,9 +25,9 @@
     "verifyInfoTitle": "How to check the validity of a Nürnberg-Pass"
   },
   "intro": {
-    "applyDescription": "Provide your personal information in the form.\nThe application is then forwarded and processed by the responsible office.",
+    "applyDescription": "Provide your personal information in the form. The application is then forwarded and processed by the responsible office.",
     "applyTitle": "How can I apply for the Nürnberg-Pass?",
-    "usageDescription": "On the map of Nürnberg you can find all acceptance points.\nTap on a location to be able to see more information.",
+    "usageDescription": "On the map of Nürnberg you can find all acceptance points. Tap on a location to be able to see more information.",
     "usageTitle": "Where can I use my Nürnberg-Pass?",
     "welcomeDescription": "Thank you for downloading the app for the Nürnberg-Pass!"
   }

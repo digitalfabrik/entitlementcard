@@ -73,10 +73,10 @@
     "applyTitle": "Apply",
     "authenticationPossible": "You can use this QR code to identify yourself at acceptance points:",
     "cameraAccessRequired": "Access to camera required",
-    "cameraAccessRequiredSettings": "To scan a QR code, the app needs access to the camera.\nYou can allow the app to access the camera in the settings.",
+    "cameraAccessRequiredSettings": "To scan a QR code, the app needs access to the camera. You can allow the app to access the camera in the settings.",
     "cardAlreadyActivated": "The scanned QR code has already been activated.",
-    "cardExpired": "Your card has expired.\nYou can apply for renewal under \"More actions\"",
-    "cardInvalid": "Your card is invalid.\nIt has either been revoked or activated on another device.",
+    "cardExpired": "Your card has expired. You can apply for renewal under \"More actions\"",
+    "cardInvalid": "Your card is invalid. It has either been revoked or activated on another device.",
     "cardNotYetValid": "The validity period of your card has not started yet.",
     "checkFailed": "Your card could not be verified. Please make sure you have an internet connection and try again.",
     "checkRequired": "Verification necessary",
@@ -123,11 +123,11 @@
     "verifyTitle": "Check validity"
   },
   "intro": {
-    "applyDescription": "Provide information about yourself and your volunteer activity in the form.\nThe application is then forwarded and processed by the responsible office.",
+    "applyDescription": "Provide information about yourself and your volunteer activity in the form. The application is then forwarded and processed by the responsible office.",
     "applyTitle": "How can I apply for the Ehrenamtskarte?",
-    "locationDescription": "We can show your location on the map and display acceptance points in your area.\nIf you want to use these aids, we need your consent.\nYour location is not stored.",
+    "locationDescription": "We can show your location on the map and display acceptance points in your area. If you want to use these aids, we need your consent. Your location is not stored.",
     "locationTitle": "Find acceptance points in your area!",
-    "usageDescription": "On the map of Bavaria you can find all acceptance points.\nTap on a location to be able to see more information.",
+    "usageDescription": "On the map of Bavaria you can find all acceptance points. Tap on a location to be able to see more information.",
     "usageTitle": "Where can I use my Ehrenamtskarte?",
     "welcomeDescription": "Thank you for downloading the app for the Bayerische Ehrenamtskarte!",
     "welcomeTitle": "Welcome!"

@@ -73,10 +73,10 @@
     "applyTitle": "Beantragen",
     "authenticationPossible": "Mit diesem QR-Code können Sie sich bei Akzeptanzstellen ausweisen:",
     "cameraAccessRequired": "Zugriff auf Kamera erforderlich",
-    "cameraAccessRequiredSettings": "Um einen QR-Code einzuscannen, benötigt die App Zugriff auf die Kamera.\nIn den Einstellungen können Sie der App den Zugriff auf die Kamera erlauben.",
+    "cameraAccessRequiredSettings": "Um einen QR-Code einzuscannen, benötigt die App Zugriff auf die Kamera. In den Einstellungen können Sie der App den Zugriff auf die Kamera erlauben.",
     "cardAlreadyActivated": "Der eingescannte QRCode wurde bereits aktiviert.",
-    "cardExpired": "Ihre Karte ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.",
-    "cardInvalid": "Ihre Karte ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.",
+    "cardExpired": "Ihre Karte ist abgelaufen. Unter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.",
+    "cardInvalid": "Ihre Karte ist ungültig. Sie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.",
     "cardNotYetValid": "Der Gültigkeitszeitraum Ihrer Karte hat noch nicht begonnen.",
     "checkFailed": "Ihre Karte konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
     "checkRequired": "Prüfung nötig",
@@ -123,11 +123,11 @@
     "verifyTitle": "Gültigkeit prüfen"
   },
   "intro": {
-    "applyDescription": "Im Formular geben Sie Informationen über sich und Ihre ehrenamtliche Tätigkeit an.\nAnschließend wird der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
+    "applyDescription": "Im Formular geben Sie Informationen über sich und Ihre ehrenamtliche Tätigkeit an. Anschließend wird der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
     "applyTitle": "Wie kann ich die Ehrenamtskarte beantragen?",
-    "locationDescription": "Wir können Ihren Standort auf der Karte anzeigen und Akzeptanzstellen in Ihrer Umgebung anzeigen.\nWenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre Zustimmung.\nIhr Standort wird nicht gespeichert.",
+    "locationDescription": "Wir können Ihren Standort auf der Karte anzeigen und Akzeptanzstellen in Ihrer Umgebung anzeigen. Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre Zustimmung. Ihr Standort wird nicht gespeichert.",
     "locationTitle": "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-    "usageDescription": "Auf der Karte von Bayern können Sie alle Akzeptanzstellen finden.\nTippen Sie auf einen Standort, um mehr Informationen sehen zu können.",
+    "usageDescription": "Auf der Karte von Bayern können Sie alle Akzeptanzstellen finden. Tippen Sie auf einen Standort, um mehr Informationen sehen zu können.",
     "usageTitle": "Wo kann ich meine Ehrenamtskarte nutzen?",
     "welcomeDescription": "Vielen Dank, dass Sie sich die App zur Bayerischen Ehrenamtskarte heruntergeladen haben!",
     "welcomeTitle": "Willkommen!"
