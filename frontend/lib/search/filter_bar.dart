@@ -4,7 +4,7 @@ import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class FilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
@@ -25,7 +25,7 @@ class FilterBar extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
-                Text(context.l10n.search_filterByCategories.toUpperCase(),
+                Text(t.search.filterByCategories.toUpperCase(),
                     maxLines: 1, style: const TextStyle(color: Colors.grey)),
                 const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)))
               ],

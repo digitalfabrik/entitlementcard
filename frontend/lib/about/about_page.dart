@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class AboutPage extends StatefulWidget {
   final countToEnableSwitch = 10;
@@ -70,14 +70,14 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text(context.l10n.about_publisher, style: Theme.of(context).textTheme.titleSmall),
+                      child: Text(t.about.publisher, style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
                       child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
                     ),
                     Text(
-                      context.l10n.about_moreInformation,
+                      t.about.moreInformation,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -90,8 +90,7 @@ class AboutPageState extends State<AboutPage> {
                 Navigator.push(
                   context,
                   AppRoute(
-                    builder: (context) =>
-                        ContentPage(title: context.l10n.about_publisher, children: getPublisherText(context)),
+                    builder: (context) => ContentPage(title: t.about.publisher, children: getPublisherText(context)),
                   ),
                 );
               },
@@ -101,20 +100,20 @@ class AboutPageState extends State<AboutPage> {
               thickness: 1,
             ),
             const SizedBox(height: 20),
-            ContentTile(icon: Icons.copyright, title: context.l10n.about_license, children: getCopyrightText(context)),
+            ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(context.l10n.about_privacyDeclaration),
+              title: Text(t.about.privacyDeclaration),
               onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
             ),
             ContentTile(
               icon: Icons.info_outline,
-              title: context.l10n.about_disclaimer,
+              title: t.about.disclaimer,
               children: getDisclaimerText(context),
             ),
             ListTile(
               leading: const Icon(Icons.book_outlined),
-              title: Text(context.l10n.about_dependencies),
+              title: Text(t.about.dependencies),
               onTap: () {
                 Navigator.push(
                   context,
@@ -126,7 +125,7 @@ class AboutPageState extends State<AboutPage> {
             ),
             ListTile(
               leading: const Icon(Icons.code_outlined),
-              title: Text(context.l10n.about_sourceCode),
+              title: Text(t.about.sourceCode),
               onTap: () {
                 launchUrlString(
                   'https://github.com/digitalfabrik/entitlementcard',
@@ -137,11 +136,11 @@ class AboutPageState extends State<AboutPage> {
             if (config.showDevSettings)
               ListTile(
                 leading: const Icon(Icons.build),
-                title: Text(context.l10n.about_developmentOptions),
+                title: Text(t.about.developmentOptions),
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) =>
-                      SimpleDialog(title: Text(context.l10n.about_developmentOptions), children: [DevSettingsView()]),
+                      SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
                 ),
               )
           ];

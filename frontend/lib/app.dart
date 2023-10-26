@@ -5,12 +5,12 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/themes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home/home_page.dart';
 
@@ -68,12 +68,12 @@ class App extends StatelessWidget {
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: [
-              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
+            locale: TranslationProvider.of(context).flutterLocale,
             initialRoute: initialRoute,
             routes: routes,
           ),

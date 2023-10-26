@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
@@ -29,7 +29,7 @@ class MoreActionsDialog extends StatelessWidget {
 
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: Text(context.l10n.common_moreActions),
+      title: Text(t.common.moreActions),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -77,7 +77,7 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.common_cancel))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel))],
     );
   }
 }

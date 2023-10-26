@@ -25,7 +25,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class ActivationCodeScannerPage extends StatelessWidget {
   final VoidCallback moveToLastCard;
@@ -55,19 +55,19 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
       await _activateCode(context, activationCode);
     } on ActivationDidNotOverwriteExisting catch (_) {
-      await showError(context.l10n.identification_cardAlreadyActivated, null);
+      await showError(t.identification.cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
-      await showError(context.l10n.identification_codeInvalidMissing(e.missingFieldName), null);
+      await showError(t.identification.codeInvalidMissing(missing: e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
-      await showError(context.l10n.identification_codeSavingFailed, null);
+      await showError(t.identification.codeSavingFailed, null);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
-      await showError(context.l10n.identification_codeExpired(expirationDate), null);
+      await showError(t.identification.codeExpired(expirationDate: expirationDate), null);
     } on ServerCardActivationException catch (_) {
-      await ConnectionFailedDialog.show(context, context.l10n.identification_codeActivationFailedConnection);
+      await ConnectionFailedDialog.show(context, t.identification.codeActivationFailedConnection);
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
-      await showError(context.l10n.identification_codeUnknownError, null);
+      await showError(t.identification.codeUnknownError, null);
     }
   }
 
@@ -116,7 +116,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
           context,
-          context.l10n.identification_codeInvalid,
+          t.identification.codeInvalid,
         );
         break;
       case ActivationState.didNotOverwriteExisting:

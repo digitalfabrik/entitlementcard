@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class LocationServiceDialog extends StatelessWidget {
   const LocationServiceDialog({super.key});
@@ -8,11 +8,11 @@ class LocationServiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(context.l10n.location_activateLocationAccess),
-      content: Text(context.l10n.location_activateLocationAccessSettings),
+      title: Text(t.location.activateLocationAccess),
+      content: Text(t.location.activateLocationAccessSettings),
       actions: [
-        TextButton(child: Text(context.l10n.common_cancel), onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(child: Text(context.l10n.common_openSettings), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: Text(t.common.cancel), onPressed: () => Navigator.of(context).pop(false)),
+        TextButton(child: Text(t.common.openSettings), onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }
@@ -26,16 +26,15 @@ class RationaleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(context.l10n.location_locationPermission),
+      title: Text(t.location.locationPermission),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[Text(_rationale), Text(context.l10n.location_askPermissionsAgain)],
+        children: <Widget>[Text(_rationale), Text(t.location.askPermissionsAgain)],
       ),
       actions: [
-        TextButton(
-            child: Text(context.l10n.location_grantPermission), onPressed: () => Navigator.of(context).pop(true)),
-        TextButton(child: Text(context.l10n.common_cancel), onPressed: () => Navigator.of(context).pop(false))
+        TextButton(child: Text(t.location.grantPermission), onPressed: () => Navigator.of(context).pop(true)),
+        TextButton(child: Text(t.common.cancel), onPressed: () => Navigator.of(context).pop(false))
       ],
     );
   }

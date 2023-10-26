@@ -79,6 +79,7 @@ export type CommonBuildConfigType = {
         local: string
     }
     appLocales: string[]
+    localeOverwritePath: string | null
     cardBranding: {
         headerTextColor: string
         headerColor: string

@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 const double bottomSize = 100;
 
@@ -90,7 +90,7 @@ class DetailAppBar extends StatelessWidget {
     final category = categoryAssets(context)[categoryId];
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
-    final title = matchingStore.store.name ?? context.l10n.store_acceptingStore;
+    final title = matchingStore.store.name ?? t.store.acceptingStore;
 
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
