@@ -17,7 +17,25 @@ default_platform(:ios)
 
 platform :ios do
   desc "Generate new localized screenshots"
-  lane :screenshots do
-    capture_screenshots(workspace: "Runner.xcworkspace", scheme: "ScreenshotTests")
+  lane :snap_bayern do
+   sh "fvm flutter pub run build_runner build --define df_build_config=name=bayern"
+    capture_screenshots(
+      workspace: "Runner.xcworkspace", 
+      scheme: "ScreenshotTests",
+      app_identifier: "de.nrw.it.ehrensachebayern",
+      launch_arguments: ["de.nrw.it.ehrensachebayern"],
+      output_directory: "./fastlane/screenshots/bayern",
+    )
+  end
+
+  lane :snap_nuernberg do
+    sh "fvm flutter pub run build_runner build --define df_build_config=name=nuernberg"
+    capture_screenshots(
+      workspace: "Runner.xcworkspace", 
+      scheme: "ScreenshotTests", 
+      app_identifier: "app.sozialpass.nuernberg",
+      launch_arguments: ["app.sozialpass.nuernberg"],
+      output_directory: "./fastlane/screenshots/nuernberg",
+    )
   end
 end

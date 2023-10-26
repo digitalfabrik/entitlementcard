@@ -106,5 +106,4 @@ The snapshots are created by executing a bunch of e2e tests locally. Check out `
 - check for the required simulators in XCode (see `frontend/ios/fastlane/Snapfile`)
 - set the build config for the particular project.
 - switch to: `frontend/ios`
-- run: `bundle exec fastlane snapshot --launch-arguments "<app-identifier>" --scheme "ScreenshotTests" --app-identifier "<app-identifier>" --output-directory "./fastlane/screenshots-<project>" `
-- Example: `bundle exec fastlane snapshot --launch-arguments "app.sozialpass.nuernberg" --scheme "ScreenshotTests" --app-identifier "app.sozialpass.nuernberg" --output-directory "./fastlane/screenshots-nuernberg" ` 
+- run: `bundle exec fastlane ios <snapshot_lane>` where `snapshot_lane` is either `snap_bayern` or `snap_nuernberg`
