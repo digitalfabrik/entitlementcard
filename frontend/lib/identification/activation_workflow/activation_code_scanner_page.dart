@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
@@ -33,10 +32,9 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.identification.activationCodeScanner;
     return Column(
       children: [
-        CustomAppBar(title: localization.title),
+        CustomAppBar(title: t.identification.activateTitle),
         Expanded(
           child: QrCodeScannerPage(
             onCodeScanned: (code) async => _onCodeScanned(context, code),

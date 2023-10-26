@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +10,8 @@ class VerificationInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    final localization = buildConfig.localization.identification.verificationCodeScanner;
     return AlertDialog(
-      title: Text(localization.infoDialogTitle),
+      title: Text(t.identification.verifyInfoTitle),
       content: SingleChildScrollView(
         child: ListBody(
           children: [

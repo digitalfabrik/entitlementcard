@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -31,7 +31,6 @@ class RemoveCardConfirmationDialog extends StatefulWidget {
 class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.identification.removeCardDialog;
     final projectId = Configuration.of(context).projectId;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(
@@ -52,14 +51,14 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
           actionsPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           title: ListTile(
             leading: Icon(Icons.warning, color: theme.colorScheme.primaryContainer, size: 30),
-            title: Text(localization.title, style: TextStyle(fontSize: 18)),
+            title: Text(t.identification.removeTitle, style: TextStyle(fontSize: 18)),
           ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(bottom: 20),
-                    child: Text(localization.description, style: TextStyle(fontSize: 14))),
+                    child: Text(t.identification.removeDescription, style: TextStyle(fontSize: 14))),
                 IdCard(
                   cardInfo: widget.userCode.info,
                   region: region != null ? Region(region.prefix, region.name) : null,

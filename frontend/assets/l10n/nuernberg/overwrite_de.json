@@ -1,5 +1,34 @@
 {
-  "about": {
-    "title": "Nürnberg"
+  "identification": {
+    "activateCurrentDeviceDescription": "Ihr Pass ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihren Pass auf diesem Gerät aktivieren, wird er auf Ihrem anderen Gerät automatisch deaktiviert.",
+    "activateCurrentDeviceTitle": "Pass auf diesem Gerät aktivieren?",
+    "activateDescription": "Sie haben den Nürnberg-Pass bereits beantragt und einen Aktivierungscode erhalten? Scannen Sie den Code hier ein.",
+    "activateTitle": "Pass aktivieren",
+    "applyDescription": "Sie haben noch keinen Nürnberg-Pass? Hier können Sie Ihren Nürnberg-Pass beantragen.",
+    "cardExpired": "Ihr Pass ist abgelaufen.\nUnter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.",
+    "cardInvalid": "Ihr Pass ist ungültig.\nSie wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.",
+    "cardNotYetValid": "Der Gültigkeitszeitraum Ihres Passes hat noch nicht begonnen.",
+    "checkFailed": "Ihr Pass konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
+    "moreActionsActivateDescription": "Ihr hinterlegter Nürnberg-Pass bleibt erhalten. Sie können diesen manuell entfernen.",
+    "moreActionsActivateLimitDescription": "Um einen weiteren Nürnberg-Pass hinzuzufügen, müssen Sie zuerst einen vorhandenen Nürnberg-Pass löschen.",
+    "moreActionsActivateTitle": "Weiteren Nürnberg-Pass hinzufügen",
+    "moreActionsApplyDescription": "Ihr hinterlegter Pass bleibt erhalten.",
+    "moreActionsApplyTitle": "Nürnberg-Pass beantragen oder verlängern",
+    "moreActionsRemoveDescription": "Nach der Auswahl wird dieser Nürnberg-Pass vom Gerät gelöscht.",
+    "moreActionsRemoveTitle": "Diesen Nürnberg-Pass löschen",
+    "moreActionsVerifyDescription": "Prüfen Sie die Gültigkeit eines Nürnberg-Passes.",
+    "moreActionsVerifyTitle": "Einen Nürnberg-Pass prüfen",
+    "removeDescription": "Wenn dieser Pass gelöscht wird, muss dieser für eine erneute Verwendung neu hinzugefügt werden.",
+    "removeTitle": "Diesen Pass löschen?",
+    "verificationSuccessful": "Pass ist gültig",
+    "verifyDescription": "Sie möchten die Gültigkeit eines Nürnberg-Passes prüfen? Scannen Sie den Code hier ein.",
+    "verifyInfoTitle": "So prüfen Sie die Gültigkeit eines Nürnberg-Passes"
+  },
+  "intro": {
+    "applyDescription": "Im Formular geben Sie Ihre persönlichen Informationen an.\nAnschließend wird der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
+    "applyTitle": "Wie kann ich den Nürnberg-Pass beantragen?",
+    "usageDescription": "Auf der Karte von Nürnberg können Sie alle Akzeptanzstellen finden.\nTippen Sie auf einen Standort, um mehr Informationen sehen zu können.",
+    "usageTitle": "Wo kann ich den Nürnberg-Pass nutzen?",
+    "welcomeDescription": "Vielen Dank, dass Sie sich die App zum Nürnberg-Pass heruntergeladen haben!"
   }
 }

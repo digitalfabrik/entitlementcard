@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
@@ -33,7 +32,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Column(
       children: [
         CustomAppBar(
-          title: buildConfig.localization.identification.verificationCodeScanner.title,
+          title: t.identification.verifyTitle,
           actions: [
             IconButton(
               icon: const Icon(Icons.help),

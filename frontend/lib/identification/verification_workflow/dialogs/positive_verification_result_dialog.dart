@@ -1,4 +1,3 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
@@ -41,7 +40,6 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.identification.verificationCodeScanner;
     final projectId = Configuration.of(context).projectId;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(
@@ -57,8 +55,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
         final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
         final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
         return InfoDialog(
-          title:
-              isUncheckedStaticQrCode ? t.identification.checkRequired : localization.positiveVerificationDialogTitle,
+          title: isUncheckedStaticQrCode ? t.identification.checkRequired : t.identification.verificationSuccessful,
           icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
           iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
           child: Column(

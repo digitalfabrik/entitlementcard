@@ -8,6 +8,7 @@ import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:slang/builder/model/enums.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,8 +27,7 @@ Future<void> main() async {
     void override(AppLocale locale) async {
       final localeOverwritePath = '${buildConfig.localeOverwritePath}/overwrite_${locale.languageCode}.json';
       String overrideLocales = await rootBundle.loadString(localeOverwritePath);
-      // TODO uncomment in #1177
-      // LocaleSettings.overrideTranslations(locale: locale, fileType: FileType.json, content: overrideLocales);
+      LocaleSettings.overrideTranslations(locale: locale, fileType: FileType.json, content: overrideLocales);
     }
 
     AppLocale.values.forEach(override);
