@@ -55,12 +55,13 @@
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "app.sozialpass.nuernberg"
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "BUNDLE_IDENTIFIER"
+            value = "app.sozialpass.nuernberg"
             isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <Testables>
          <TestableReference
             skipped = "NO">

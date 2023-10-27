@@ -8,7 +8,6 @@
 import XCTest
 
 class ScreenshotTests: XCTestCase {
-
     override func setUpWithError() throws {
         continueAfterFailure = true
     }
@@ -17,7 +16,14 @@ class ScreenshotTests: XCTestCase {
     
     }
     
-    func waitForElementToAppear(element: XCUIElement, timeout: TimeInterval = 20, file: String = #file, line: UInt = #line) {
+    func getBundleId(from app: XCUIApplication) -> String {
+        guard let bundleID = app.launchEnvironment.first(where: { $0.key == "BUNDLE_IDENTIFIER" })?.value else {
+            return ProcessInfo().environment.first { $0.key == "BUNDLE_IDENTIFIER" }?.value ?? "";
+        }
+        return bundleID
+    }
+    
+    func waitForElementToAppear(element: XCUIElement, timeout: TimeInterval = 20) {
             let existsPredicate = NSPredicate(format: "exists == true")
 
         expectation(for: existsPredicate,
@@ -26,7 +32,8 @@ class ScreenshotTests: XCTestCase {
         waitForExpectations(timeout: timeout) { (error) -> Void in
             if (error != nil) {
                 let message = "Failed to find \(element) after \(timeout) seconds."
-                self.recordFailure(withDescription: message, inFile: file, atLine: Int(line), expected: true)
+                self.record(XCTIssue(type: XCTIssue.IssueType.assertionFailure, compactDescription: message)
+)
             }
         }
     }
@@ -78,8 +85,7 @@ class ScreenshotTests: XCTestCase {
         var searchText = "Eiscafe"
         var category = "Essen/Trinken/Gastronomie"
         var expectedMatch = "Dolomiti"
-        
-       if(app.launchArguments.contains("app.sozialpass.nuernberg")){
+        if (self.getBundleId(from: app) == "app.sozialpass.nuernberg"){
            searchText = "Ahorn"
            category = "Apotheken/Gesundheit"
            expectedMatch = "Ahorn Apotheke"
