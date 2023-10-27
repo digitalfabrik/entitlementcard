@@ -47,7 +47,7 @@ services:
       - MARIADB_AUTO_UPGRADE=1
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
     env_file:
-      - ./matomo.env
+      - ./docker/matomo.env
     networks:
       - network
   matomo:
@@ -57,7 +57,7 @@ services:
     volumes:
       - matomo:/var/www/html:z
     env_file:
-      - ./matomo.env
+      - ./docker/matomo.env
     ports:
       - 5003:80
     networks:
