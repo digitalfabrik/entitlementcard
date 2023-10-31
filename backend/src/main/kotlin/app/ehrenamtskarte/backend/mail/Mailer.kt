@@ -55,7 +55,7 @@ object Mailer {
                         .from(fromName, smtpConfig.username)
                         .withSubject(subject)
                         .withPlainText(message)
-                        .withHeader("Content-Type", "text/plain; charset=utf8")
+                        .withHeader("Content-Type", "text/plain; charset=UTF-8")
                         .buildEmail()
                 ).join()
         } catch (exception: MailException) {
@@ -160,6 +160,7 @@ object Mailer {
         personalData: PersonalData,
         accessKey: String
     ) {
+        println("MAIL SENT")
         val message = """
         Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
 
