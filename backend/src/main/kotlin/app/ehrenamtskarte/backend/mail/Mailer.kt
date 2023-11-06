@@ -160,7 +160,6 @@ object Mailer {
         personalData: PersonalData,
         accessKey: String
     ) {
-        println("MAIL SENT")
         val message = """
         Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
 
