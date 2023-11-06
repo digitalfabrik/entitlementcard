@@ -8,6 +8,7 @@ import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:slang/builder/model/enums.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,18 +17,19 @@ Future<void> main() async {
   final locale = Platform.localeName.split('_')[0];
   if (buildConfig.appLocales.contains(locale)) {
     LocaleSettings.useDeviceLocale();
+  } else if (buildConfig.appLocales.contains('en')) {
+    LocaleSettings.setLocale(AppLocale.en);
   } else {
     LocaleSettings.setLocale(AppLocale.de);
   }
 
   // Use override locales for whitelabels (e.g. nuernberg)
   // ignore: unnecessary_null_comparison
-  if (buildConfig.localeOverwritePath != null) {
+  if (buildConfig.localeOverridePath != null) {
     void override(AppLocale locale) async {
-      final localeOverwritePath = '${buildConfig.localeOverwritePath}/overwrite_${locale.languageCode}.json';
-      String overrideLocales = await rootBundle.loadString(localeOverwritePath);
-      // TODO uncomment in #1177
-      // LocaleSettings.overrideTranslations(locale: locale, fileType: FileType.json, content: overrideLocales);
+      final localeOverridePath = '${buildConfig.localeOverridePath}/override_${locale.languageCode}.json';
+      String overrideLocales = await rootBundle.loadString(localeOverridePath);
+      LocaleSettings.overrideTranslations(locale: locale, fileType: FileType.json, content: overrideLocales);
     }
 
     AppLocale.values.forEach(override);

@@ -13,48 +13,6 @@ export type ThemeType = {
     primaryDark: string
 }
 
-type SlideType = {
-    title: string
-    description: string
-    imagePath: string
-}
-
-export type LocalizationType = {
-    identification: {
-        noCardView: {
-            applyTitle: string
-            applyDescription: string
-            activateTitle: string
-            activateDescription: string
-            verifyTitle: string
-            verifyDescription: string
-        }
-        activationCodeScanner: {
-            title: string
-        }
-        verificationCodeScanner: {
-            title: string
-            infoDialogTitle: string
-            positiveVerificationDialogTitle: string
-        }
-        moreActions: {
-            applyForAnotherCardTitle: string
-            applyForAnotherCardDescription: string
-            activateAnotherCardTitle: string
-            activateAnotherCardDescription: string
-            activationLimitDescription: string
-            verifyTitle: string
-            verifyDescription: string
-            removeCardTitle: string
-            removeCardDescription: string
-        }
-        removeCardDialog: {
-            title: string
-            description: string
-        }
-    }
-}
-
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
@@ -79,7 +37,7 @@ export type CommonBuildConfigType = {
         local: string
     }
     appLocales: string[]
-    localeOverwritePath: string | null
+    localeOverridePath: string | null
     cardBranding: {
         headerTextColor: string
         headerColor: string
@@ -113,10 +71,7 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number
     }
     iconInAboutTab: string
-    introSlide1: SlideType,
-    introSlide2: SlideType,
-    introSlide3: SlideType,
-    introSlide4: SlideType
+    introSlidesImages: [string, string, string, string],
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
@@ -125,7 +80,6 @@ export type CommonBuildConfigType = {
     publisherAddress: string
     publisherText: string
     disclaimerText: string
-    localization: LocalizationType
     maxCardAmount: number
 }
 

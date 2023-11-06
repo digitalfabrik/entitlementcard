@@ -34,9 +34,9 @@ class IntroScreen extends StatelessWidget {
       isShowSkipBtn: false,
       listContentConfig: [
         ContentConfig(
-          title: buildConfig.introSlide1.title,
-          description: buildConfig.introSlide1.description,
-          pathImage: buildConfig.introSlide1.imagePath,
+          title: t.intro.welcomeTitle,
+          description: t.intro.welcomeDescription,
+          pathImage: buildConfig.introSlidesImages[0],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -44,9 +44,9 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide2.title,
-          description: buildConfig.introSlide2.description,
-          pathImage: buildConfig.introSlide2.imagePath,
+          title: t.intro.applyTitle,
+          description: t.intro.applyDescription,
+          pathImage: buildConfig.introSlidesImages[1],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -54,9 +54,9 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide3.title,
-          description: buildConfig.introSlide3.description,
-          pathImage: buildConfig.introSlide3.imagePath,
+          title: t.intro.usageTitle,
+          description: t.intro.usageDescription,
+          pathImage: buildConfig.introSlidesImages[2],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -64,17 +64,17 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide4.title,
+          title: t.intro.locationTitle,
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
-          pathImage: buildConfig.introSlide4.imagePath,
+          pathImage: buildConfig.introSlidesImages[3],
           widgetDescription: Center(
             child: Column(
               children: [
                 Text(
-                  buildConfig.introSlide4.description,
+                  t.intro.locationDescription,
                   style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
                   textAlign: TextAlign.center,
                   maxLines: 100,

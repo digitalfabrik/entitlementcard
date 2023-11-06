@@ -93,9 +93,6 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
-  # Used for localization (l10n)
-  generate: true
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -112,7 +109,7 @@ flutter:
     - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
     - assets/nuernberg/intro_slides/
-    - assets/l10n/nuernberg/
+    - assets/nuernberg/l10n/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.
