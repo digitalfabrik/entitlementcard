@@ -17,6 +17,8 @@ Future<void> main() async {
   final locale = Platform.localeName.split('_')[0];
   if (buildConfig.appLocales.contains(locale)) {
     LocaleSettings.useDeviceLocale();
+  } else if (buildConfig.appLocales.contains('en')) {
+    LocaleSettings.setLocale(AppLocale.en);
   } else {
     LocaleSettings.setLocale(AppLocale.de);
   }
