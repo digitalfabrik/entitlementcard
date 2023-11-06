@@ -9,6 +9,6 @@ Future<bool> isNonGoogleLocationServiceEnabled() async {
     final bool result = await platform.invokeMethod('isLocationServiceEnabled') as bool;
     return result;
   } on PlatformException catch (e) {
-    throw "Failed to get state of location services: '${e.message}'.";
+    throw 'Failed to get state of location services: "${e.message}".';
   }
 }

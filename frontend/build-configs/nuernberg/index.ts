@@ -31,6 +31,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
+    appLocales: ['de', 'en'],
     cardBranding: {
         headerTextColor: "#000000",
         headerTextFontSize: 9,
@@ -94,6 +95,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     publisherText,
     disclaimerText,
     localization,
+    maxCardAmount: 5,
 }
 
 let nuernberg: BuildConfigType = {

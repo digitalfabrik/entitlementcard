@@ -1,6 +1,8 @@
 import { PDFPage } from 'pdf-lib'
 
 import { QrCode } from '../../generated/card_pb'
+import { uint8ArrayToBase64 } from '../../util/base64'
+import { isDevMode } from '../../util/helper'
 import { drawQRCode } from '../../util/qrcode'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
@@ -26,6 +28,11 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
   const qrCodeContent = new QrCode({
     qrCode: qrCode,
   }).toBinary()
+
+  // Log base64 activationCode for development purposes
+  if (qrCode.case === 'dynamicActivationCode' && isDevMode()) {
+    console.log(uint8ArrayToBase64(qrCodeContent))
+  }
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
 }

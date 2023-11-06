@@ -54,6 +54,8 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
 
       if (element is int) {
         output.write('  List<int> get $k => $v;\n');
+      } else if (element is String) {
+        output.write('  List<String> get $k => [\'${v.join('\', \'')}\'];\n');
       } else {
         throw "invalid list ${v.runtimeType}";
       }

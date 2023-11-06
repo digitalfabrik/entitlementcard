@@ -11,6 +11,8 @@ import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../util/l10n.dart';
+
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
@@ -37,23 +39,24 @@ class HomePageState extends State<HomePage> {
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
         ),
         Icons.map_outlined,
-        'Karte',
+        (BuildContext context) => context.l10n.map_title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
         const SearchPage(),
         Icons.search_outlined,
-        'Suche',
+        (BuildContext context) => context.l10n.search_title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
-          const IdentificationPage(title: 'Ausweisen'),
+          IdentificationPage(),
           Icons.remove_red_eye_outlined,
-          'Ausweisen',
+          (BuildContext context) => context.l10n.identification_title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, 'Über', GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), Icons.info_outline, (BuildContext context) => context.l10n.about_title,
+          GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 
@@ -95,7 +98,7 @@ class HomePageState extends State<HomePage> {
       currentIndex: _currentTabIndex,
       backgroundColor: theme.colorScheme.surfaceVariant,
       items: appFlows
-          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.title))
+          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.getTitle(context)))
           .toList(),
       onTap: _onTabTapped,
       type: BottomNavigationBarType.fixed,

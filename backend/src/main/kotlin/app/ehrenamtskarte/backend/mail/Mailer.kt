@@ -134,8 +134,8 @@ object Mailer {
         val message = """
         Guten Tag ${applicationVerification.contactName},
 
-        Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. Die Antragsstellerin oder der
-        Antragssteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben. 
+        Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. Die Antragstellerin oder der
+        Antragsteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben. 
         Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:
         ${projectConfig.administrationBaseUrl}/antrag-verifizieren/${URLEncoder.encode(applicationVerification.accessKey, StandardCharsets.UTF_8)}
 

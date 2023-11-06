@@ -7,6 +7,7 @@ import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
@@ -24,8 +25,11 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/util/l10n.dart';
+
 class ActivationCodeScannerPage extends StatelessWidget {
-  const ActivationCodeScannerPage({super.key});
+  final VoidCallback moveToLastCard;
+  const ActivationCodeScannerPage({super.key, required this.moveToLastCard});
 
   @override
   Widget build(BuildContext context) {
@@ -50,32 +54,20 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
-    } on ActivationDidNotOverwriteExisting catch (e) {
-      await showError(e.toString(), null);
+    } on ActivationDidNotOverwriteExisting catch (_) {
+      await showError(context.l10n.identification_cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
-      await showError(
-          'Der Inhalt des eingescannten Codes ist unvollständig. '
-          '(Fehlercode: ${e.missingFieldName}Missing)',
-          null);
+      await showError(context.l10n.identification_codeInvalidMissing(e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
-      await showError('Der eingescannte Code kann nicht in der App gespeichert werden.', null);
+      await showError(context.l10n.identification_codeSavingFailed, null);
     } on CardExpiredException catch (e) {
-      final dateFormat = DateFormat('dd.MM.yyyy');
-      await showError(
-          'Der eingescannte Code ist bereits am '
-          '${dateFormat.format(e.expiry)} abgelaufen.',
-          null);
-    } on ServerCardActivationException catch (e, stackTrace) {
-      String errorMessage = 'Der eingescannte Code konnte nicht aktiviert '
-          'werden, da die Kommunikation mit dem Server fehlschlug. '
-          'Bitte prüfen Sie Ihre Internetverbindung.';
-      await ConnectionFailedDialog.show(
-        context,
-        errorMessage,
-      );
-      await reportError(errorMessage + e.toString(), stackTrace);
-    } on Exception catch (e, stackTrace) {
-      await showError('Ein unerwarteter Fehler ist aufgetreten.', stackTrace);
+      final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
+      await showError(context.l10n.identification_codeExpired(expirationDate), null);
+    } on ServerCardActivationException catch (_) {
+      await ConnectionFailedDialog.show(context, context.l10n.identification_codeActivationFailedConnection);
+    } on Exception catch (e, stacktrace) {
+      debugPrintStack(stackTrace: stacktrace, label: e.toString());
+      await showError(context.l10n.identification_codeUnknownError, null);
     }
   }
 
@@ -86,7 +78,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
   ]) async {
     final client = GraphQLProvider.of(context).value;
     final projectId = Configuration.of(context).projectId;
-    final provider = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
     final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
 
@@ -107,25 +99,33 @@ class ActivationCodeScannerPage extends StatelessWidget {
           throw const ActivationInvalidTotpSecretException();
         }
         final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-        debugPrint('Card Activation: Successfully activated.');
 
-        provider.setCode(DynamicUserCode()
+        DynamicUserCode userCode = DynamicUserCode()
           ..info = activationCode.info
           ..pepper = activationCode.pepper
           ..totpSecret = totpSecret
           ..cardVerification = (CardVerification()
             ..cardValid = true
-            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp))));
+            ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
+
+        userCodesModel.insertCode(userCode);
+        moveToLastCard();
+        debugPrint('Card Activation: Successfully activated.');
+
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
           context,
-          'Der eingescannte Code ist ungültig.',
+          context.l10n.identification_codeInvalid,
         );
         break;
       case ActivationState.didNotOverwriteExisting:
         if (overwriteExisting) {
           throw const ActivationDidNotOverwriteExisting();
+        }
+        if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
+          await ActivationExistingCardDialog.showExistingCardDialog(context);
+          break;
         }
         debugPrint(
             'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
@@ -134,7 +134,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         }
         break;
       default:
-        String errorMessage = 'Die Aktivierung befindet sich in einem ungültigen Zustand.';
+        String errorMessage = context.l10n.identification_activationInvalidState;
         reportError(errorMessage, null);
         throw ServerCardActivationException(errorMessage);
     }

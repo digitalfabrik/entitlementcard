@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.2.0+113
+version: 3.2.1+114
 
 environment:
   sdk: 3.0.2
@@ -53,6 +53,7 @@ dependencies:
   shared_preferences: ^2.0.18
   tinycolor2: ^3.0.1
   sentry_flutter: ^7.9.0
+  carousel_slider: ^4.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -88,6 +89,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+
+  # Used for localization (l10n)
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

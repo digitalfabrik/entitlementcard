@@ -49,7 +49,7 @@ class JsonCanonicalizer {
       }
       stringBuffer.write('}');
     } else {
-      throw ArgumentError("Could not serialize value '$jsonObject'!");
+      throw ArgumentError('Could not serialize value "$jsonObject"!');
     }
   }
 }

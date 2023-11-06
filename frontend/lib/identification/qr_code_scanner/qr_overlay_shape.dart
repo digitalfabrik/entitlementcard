@@ -19,7 +19,7 @@ class QrScannerOverlayShape extends ShapeBorder {
         cutOutHeight = cutOutHeight ?? cutOutSize ?? 250 {
     assert(
       borderLength <= min(this.cutOutWidth, this.cutOutHeight) / 2 + borderWidth * 2,
-      "Border can't be larger than ${min(this.cutOutWidth, this.cutOutHeight) / 2 + borderWidth * 2}",
+      'Border can\'t be larger than ${min(this.cutOutWidth, this.cutOutHeight) / 2 + borderWidth * 2}',
     );
     // ignore: prefer_asserts_in_initializer_lists
     assert(
