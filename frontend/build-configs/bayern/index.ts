@@ -31,7 +31,7 @@ export const bayernCommon: CommonBuildConfigType = {
         local: "http://localhost:8000",
     },
     appLocales: ['de'],
-    localeOverwritePath: null,
+    localeOverridePath: null,
     cardBranding: {
         headerTextColor: "#008dc9",
         headerColor: "#F5F5FFF5",

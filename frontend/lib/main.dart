@@ -23,10 +23,10 @@ Future<void> main() async {
 
   // Use override locales for whitelabels (e.g. nuernberg)
   // ignore: unnecessary_null_comparison
-  if (buildConfig.localeOverwritePath != null) {
+  if (buildConfig.localeOverridePath != null) {
     void override(AppLocale locale) async {
-      final localeOverwritePath = '${buildConfig.localeOverwritePath}/overwrite_${locale.languageCode}.json';
-      String overrideLocales = await rootBundle.loadString(localeOverwritePath);
+      final localeOverridePath = '${buildConfig.localeOverridePath}/override_${locale.languageCode}.json';
+      String overrideLocales = await rootBundle.loadString(localeOverridePath);
       LocaleSettings.overrideTranslations(locale: locale, fileType: FileType.json, content: overrideLocales);
     }
 

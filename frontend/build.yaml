@@ -8,7 +8,7 @@ targets:
       - schema.graphql
       - card.proto
       - lib/build_config/build_config.yaml
-      - assets/l10n/main/**
+      - assets/l10n/*
     builders:
       df_build_config:
         generate_for:
@@ -38,7 +38,7 @@ targets:
       slang_build_runner:
         options:
           base_locale: de
-          input_directory: assets/l10n/main
+          input_directory: assets/l10n
           input_file_pattern: .json
           output_file_name: translations.g.dart
           output_directory: lib/l10n
