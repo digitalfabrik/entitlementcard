@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
@@ -57,7 +57,7 @@ class _LocationButtonState extends State<LocationButton> {
                   ),
           ),
           label: Text(
-            context.l10n.search_findCloseBy,
+            t.search.findCloseBy,
             style: TextStyle(color: Theme.of(context).hintColor),
           ),
         ),

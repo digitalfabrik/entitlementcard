@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class MoreActionsDialog extends StatelessWidget {
   final VoidCallback startActivation;
@@ -21,7 +21,6 @@ class MoreActionsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.identification.moreActions;
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
@@ -29,14 +28,14 @@ class MoreActionsDialog extends StatelessWidget {
 
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: Text(context.l10n.common_moreActions),
+      title: Text(t.common.moreActions),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text(localization.applyForAnotherCardTitle),
-              subtitle: Text(localization.applyForAnotherCardDescription),
+              title: Text(t.identification.moreActionsApplyTitle),
+              subtitle: Text(t.identification.moreActionsApplyDescription),
               leading: const Icon(Icons.assignment, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -44,8 +43,8 @@ class MoreActionsDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text(localization.verifyTitle),
-              subtitle: Text(localization.verifyDescription),
+              title: Text(t.identification.moreActionsVerifyTitle),
+              subtitle: Text(t.identification.moreActionsVerifyDescription),
               leading: const Icon(Icons.verified, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -54,11 +53,11 @@ class MoreActionsDialog extends StatelessWidget {
             ),
             ListTile(
               enabled: !cardLimitIsReached,
-              title: Text('${localization.activateAnotherCardTitle} ($cardsInUse/$maxCardAmount)',
+              title: Text('${t.identification.moreActionsActivateTitle} ($cardsInUse/$maxCardAmount)',
                   style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
               subtitle: Text(cardLimitIsReached
-                  ? localization.activationLimitDescription
-                  : localization.activateAnotherCardDescription),
+                  ? t.identification.moreActionsActivateLimitDescription
+                  : t.identification.moreActionsActivateDescription),
               leading: Icon(Icons.add_card, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -66,8 +65,8 @@ class MoreActionsDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text(localization.removeCardTitle),
-              subtitle: Text(localization.removeCardDescription),
+              title: Text(t.identification.moreActionsRemoveTitle),
+              subtitle: Text(t.identification.moreActionsRemoveDescription),
               leading: const Icon(Icons.delete, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -77,7 +76,7 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.common_cancel))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel))],
     );
   }
 }

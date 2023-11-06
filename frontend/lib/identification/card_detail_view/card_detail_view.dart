@@ -8,7 +8,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'verification_code_view.dart';
 
 class CardDetailView extends StatefulWidget {
@@ -185,33 +185,33 @@ class QrCodeAndStatus extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ...switch (status) {
-            CardStatus.expired => [_PaddedText(context.l10n.identification_cardExpired)],
+            CardStatus.expired => [_PaddedText(t.identification.cardExpired)],
             CardStatus.notVerifiedLately => [
-                _PaddedText(context.l10n.identification_checkFailed),
+                _PaddedText(t.identification.checkFailed),
                 Flexible(
                   child: TextButton.icon(
                     icon: const Icon(Icons.refresh),
                     onPressed: onSelfVerifyPressed,
-                    label: Text(context.l10n.identification_checkAgain),
+                    label: Text(t.common.tryAgain),
                   ),
                 ),
               ],
             CardStatus.timeOutOfSync => [
-                _PaddedText(context.l10n.identification_timeIncorrect),
+                _PaddedText(t.identification.timeIncorrect),
                 Flexible(
                     child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
-                  label: Text(context.l10n.identification_checkAgain),
+                  label: Text(t.common.tryAgain),
                 ))
               ],
-            CardStatus.invalid => [_PaddedText(context.l10n.identification_cardInvalid)],
+            CardStatus.invalid => [_PaddedText(t.identification.cardInvalid)],
             CardStatus.valid => [
-                _PaddedText(context.l10n.identification_authenticationPossible),
+                _PaddedText(t.identification.authenticationPossible),
                 Flexible(child: VerificationCodeView(userCode: userCode))
               ],
             CardStatus.notYetValid => [
-                _PaddedText(context.l10n.identification_cardNotYetValid),
+                _PaddedText(t.identification.cardNotYetValid),
               ]
           },
           Container(
@@ -219,7 +219,7 @@ class QrCodeAndStatus extends StatelessWidget {
             child: TextButton(
               onPressed: onMoreActionsPressed,
               child: Text(
-                context.l10n.common_moreActions,
+                t.common.moreActions,
                 style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),

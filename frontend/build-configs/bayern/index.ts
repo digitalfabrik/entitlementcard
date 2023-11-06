@@ -1,7 +1,6 @@
 import BuildConfigType, {CommonBuildConfigType} from "../types"
 import publisherText from "./publisherText"
 import disclaimerText from "./disclaimerText"
-import localization from "./localization"
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
@@ -32,6 +31,7 @@ export const bayernCommon: CommonBuildConfigType = {
         local: "http://localhost:8000",
     },
     appLocales: ['de'],
+    localeOverridePath: null,
     cardBranding: {
         headerTextColor: "#008dc9",
         headerColor: "#F5F5FFF5",
@@ -55,34 +55,12 @@ export const bayernCommon: CommonBuildConfigType = {
         boxDecorationRadius: 1,
     },
     iconInAboutTab: "assets/bayern/icon.png",
-    introSlide1: {
-        title: "Willkommen!",
-        description: "Vielen Dank, dass Sie sich die App zur " +
-            "Bayerischen Ehrenamtskarte heruntergeladen haben!",
-        imagePath: "assets/bayern/icon.png"
-    },
-    introSlide2: {
-        title: "Wie kann ich die Ehrenamtskarte beantragen?",
-        description: "Im Formular geben Sie Informationen über sich und Ihre " +
-            "ehrenamtliche Tätigkeit an.\nAnschließend wird " +
-            "der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
-        imagePath: "assets/bayern/intro_slides/apply_for_eak.png"
-    },
-    introSlide3: {
-        title: "Wo kann ich meine Ehrenamtskarte nutzen?",
-        description: "Auf der Karte von Bayern können Sie alle Akzeptanzstellen" +
-            " finden.\nTippen Sie auf einen Standort, um mehr Informationen " +
-            "sehen zu können.",
-        imagePath: "assets/bayern/intro_slides/map_zoom.jpeg"
-    },
-    introSlide4: {
-        title: "Finden Sie Akzeptanzstellen in Ihrer Umgebung!",
-        description: "Wir können Ihren Standort auf der Karte anzeigen" +
-            " und Akzeptanzstellen in Ihrer Umgebung anzeigen.\n" +
-            "Wenn Sie diese Hilfen nutzen möchten, benötigen wir Ihre " +
-            "Zustimmung.\nIhr Standort wird nicht gespeichert.",
-        imagePath: "assets/bayern/intro_slides/search_with_location.png"
-    },
+    introSlidesImages: [
+        "assets/bayern/icon.png",
+        "assets/bayern/intro_slides/apply_for_eak.png",
+        "assets/bayern/intro_slides/map_zoom.jpeg",
+        "assets/bayern/intro_slides/search_with_location.png",
+    ],
     featureFlags: {
         verification: true
     },
@@ -92,7 +70,6 @@ export const bayernCommon: CommonBuildConfigType = {
         "Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München",
     publisherText,
     disclaimerText,
-    localization,
     maxCardAmount: 1
 }
 

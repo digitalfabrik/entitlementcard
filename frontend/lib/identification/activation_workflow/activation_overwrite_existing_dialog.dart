@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class ActivationOverwriteExistingDialog extends StatelessWidget {
   const ActivationOverwriteExistingDialog({super.key});
@@ -8,23 +8,23 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(context.l10n.identification_activateCardCurrentDevice, style: TextStyle(fontSize: 18)),
+      title: Text(t.identification.activateCurrentDeviceTitle, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(context.l10n.identification_activateCardCurrentDeviceRationale),
+            Text(t.identification.activateCurrentDeviceDescription),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(context.l10n.common_cancel),
+          child: Text(t.common.cancel),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: Text(context.l10n.identification_activate),
+          child: Text(t.identification.activate),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

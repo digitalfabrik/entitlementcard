@@ -8,10 +8,11 @@ targets:
       - schema.graphql
       - card.proto
       - lib/build_config/build_config.yaml
+      - assets/l10n/*
     builders:
       df_build_config:
         generate_for:
-          include: 
+          include:
             - "lib/build_config/build_config.yaml"
         enabled: True
       df_protobuf:
@@ -34,3 +35,12 @@ targets:
                 name: MultipartFile
                 imports:
                   - 'package:http/http.dart'
+      slang_build_runner:
+        options:
+          base_locale: de
+          input_directory: assets/l10n
+          input_file_pattern: .json
+          output_file_name: translations.g.dart
+          output_directory: lib/l10n
+          translation_overrides: true
+          string_interpolation: double_braces

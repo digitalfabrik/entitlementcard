@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:flutter/material.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class ConnectionFailedDialog extends StatelessWidget {
   final String reason;
@@ -11,7 +11,7 @@ class ConnectionFailedDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfoDialog(
-      title: context.l10n.common_connectionFailed,
+      title: t.common.connectionFailed,
       icon: Icons.signal_cellular_connected_no_internet_4_bar,
       iconColor: Theme.of(context).colorScheme.onBackground,
       child: Text(reason),

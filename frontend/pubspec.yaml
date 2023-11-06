@@ -54,6 +54,8 @@ dependencies:
   tinycolor2: ^3.0.1
   sentry_flutter: ^7.9.0
   carousel_slider: ^4.2.1
+  slang: ^3.25.0
+  slang_flutter: ^3.25.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -67,6 +69,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.3.3
+  slang_build_runner: ^3.25.0
   df_protobuf:
     path: ./pubs/df_protobuf
   df_build_config:
@@ -90,9 +93,6 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
-  # Used for localization (l10n)
-  generate: true
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -109,6 +109,7 @@ flutter:
     - assets/nuernberg/body-logo.png
     - assets/nuernberg/background.png
     - assets/nuernberg/intro_slides/
+    - assets/nuernberg/l10n/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,7 +4,7 @@ import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 typedef OnFinishedCallback = void Function();
 
@@ -23,9 +23,9 @@ class IntroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),
-      renderDoneBtn: Text(context.l10n.common_done),
-      renderNextBtn: Text(context.l10n.common_next),
-      renderPrevBtn: Text(context.l10n.common_previous),
+      renderDoneBtn: Text(t.common.done),
+      renderNextBtn: Text(t.common.next),
+      renderPrevBtn: Text(t.common.previous),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       indicatorConfig: IndicatorConfig(
         colorActiveIndicator: theme.colorScheme.primary,
@@ -34,9 +34,9 @@ class IntroScreen extends StatelessWidget {
       isShowSkipBtn: false,
       listContentConfig: [
         ContentConfig(
-          title: buildConfig.introSlide1.title,
-          description: buildConfig.introSlide1.description,
-          pathImage: buildConfig.introSlide1.imagePath,
+          title: t.intro.welcomeTitle,
+          description: t.intro.welcomeDescription,
+          pathImage: buildConfig.introSlidesImages[0],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -44,9 +44,9 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide2.title,
-          description: buildConfig.introSlide2.description,
-          pathImage: buildConfig.introSlide2.imagePath,
+          title: t.intro.applyTitle,
+          description: t.intro.applyDescription,
+          pathImage: buildConfig.introSlidesImages[1],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -54,9 +54,9 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide3.title,
-          description: buildConfig.introSlide3.description,
-          pathImage: buildConfig.introSlide3.imagePath,
+          title: t.intro.usageTitle,
+          description: t.intro.usageDescription,
+          pathImage: buildConfig.introSlidesImages[2],
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
@@ -64,17 +64,17 @@ class IntroScreen extends StatelessWidget {
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
-          title: buildConfig.introSlide4.title,
+          title: t.intro.locationTitle,
           backgroundColor:
               theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
-          pathImage: buildConfig.introSlide4.imagePath,
+          pathImage: buildConfig.introSlidesImages[3],
           widgetDescription: Center(
             child: Column(
               children: [
                 Text(
-                  buildConfig.introSlide4.description,
+                  t.intro.locationDescription,
                   style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
                   textAlign: TextAlign.center,
                   maxLines: 100,

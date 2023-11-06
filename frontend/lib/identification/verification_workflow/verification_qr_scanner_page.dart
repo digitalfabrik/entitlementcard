@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
@@ -19,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ehrenamtskarte/util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class VerificationQrScannerPage extends StatelessWidget {
   final DynamicUserCode? userCode;
@@ -33,7 +32,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     return Column(
       children: [
         CustomAppBar(
-          title: buildConfig.localization.identification.verificationCodeScanner.title,
+          title: t.identification.verifyTitle,
           actions: [
             IconButton(
               icon: const Icon(Icons.help),
@@ -76,7 +75,7 @@ class VerificationQrScannerPage extends StatelessWidget {
       if (cardInfo == null) {
         await _onError(
           context,
-          context.l10n.identification_codeVerificationFailed,
+          t.identification.codeVerificationFailed,
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
@@ -84,32 +83,32 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
         context,
-        context.l10n.identification_codeVerificationFailedConnection,
+        t.identification.codeVerificationFailedConnection,
         e,
       );
     } on QrCodeFieldMissingException catch (e) {
       await _onError(
         context,
-        context.l10n.identification_codeInvalidMissing(e.missingFieldName),
+        t.identification.codeInvalidMissing(missing: e.missingFieldName),
         e,
       );
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await _onError(
         context,
-        context.l10n.identification_codeExpired(expirationDate),
+        t.identification.codeExpired(expirationDate: expirationDate),
         e,
       );
     } on QrCodeParseException catch (e) {
       await _onError(
         context,
-        context.l10n.identification_codeInvalid,
+        t.identification.codeInvalid,
         e,
       );
     } on Exception catch (e) {
       await _onError(
         context,
-        context.l10n.identification_codeUnknownError,
+        t.identification.codeUnknownError,
         e,
       );
     } finally {
