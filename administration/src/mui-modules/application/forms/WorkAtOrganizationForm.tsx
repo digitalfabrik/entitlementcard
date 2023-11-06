@@ -67,11 +67,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
   Component: ({ state, setState, onDelete }) => (
     <>
       <ActivityDivider onDelete={onDelete} />
-      <SubForms.organization.Component
-        state={state.organization}
-        setState={useUpdateStateCallback(setState, 'organization')}
-      />
-      <h4>Angaben zur Tätigkeit</h4>
+      <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>
       <SubForms.responsibility.Component
         state={state.responsibility}
         setState={useUpdateStateCallback(setState, 'responsibility')}
@@ -96,6 +92,10 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
           />
         </div>
       </div>
+      <SubForms.organization.Component
+        state={state.organization}
+        setState={useUpdateStateCallback(setState, 'organization')}
+      />
       <SubForms.payment.Component
         state={state.payment}
         setState={useUpdateStateCallback(setState, 'payment')}
