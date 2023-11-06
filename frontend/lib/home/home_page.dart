@@ -11,7 +11,7 @@ import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 const mapTabIndex = 0;
 
@@ -39,23 +39,23 @@ class HomePageState extends State<HomePage> {
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
         ),
         Icons.map_outlined,
-        (BuildContext context) => context.l10n.map_title,
+        (BuildContext context) => t.map.title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
         const SearchPage(),
         Icons.search_outlined,
-        (BuildContext context) => context.l10n.search_title,
+        (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
           IdentificationPage(),
           Icons.remove_red_eye_outlined,
-          (BuildContext context) => context.l10n.identification_title,
+          (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, (BuildContext context) => context.l10n.about_title,
+      AppFlow(const AboutPage(), Icons.info_outline, (BuildContext context) => t.about.title,
           GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }

@@ -32,6 +32,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         local: "http://localhost:8000",
     },
     appLocales: ['de', 'en'],
+    localeOverwritePath: 'assets/l10n/nuernberg',
     cardBranding: {
         headerTextColor: "#000000",
         headerTextFontSize: 9,

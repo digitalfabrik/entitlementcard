@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class InfoDialog extends StatelessWidget {
   final Widget child;
@@ -25,7 +25,7 @@ class InfoDialog extends StatelessWidget {
         title: Text(title, style: theme.textTheme.headlineSmall),
       ),
       content: child,
-      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(context.l10n.common_ok))],
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(t.common.ok))],
     );
   }
 }

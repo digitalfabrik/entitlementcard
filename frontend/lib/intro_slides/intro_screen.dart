@@ -4,7 +4,7 @@ import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 typedef OnFinishedCallback = void Function();
 
@@ -23,9 +23,9 @@ class IntroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),
-      renderDoneBtn: Text(context.l10n.common_done),
-      renderNextBtn: Text(context.l10n.common_next),
-      renderPrevBtn: Text(context.l10n.common_previous),
+      renderDoneBtn: Text(t.common.done),
+      renderNextBtn: Text(t.common.next),
+      renderPrevBtn: Text(t.common.previous),
       doneButtonStyle: Theme.of(context).textButtonTheme.style,
       indicatorConfig: IndicatorConfig(
         colorActiveIndicator: theme.colorScheme.primary,

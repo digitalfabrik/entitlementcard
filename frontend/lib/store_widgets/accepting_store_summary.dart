@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import '../util/l10n.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
@@ -40,7 +40,7 @@ class AcceptingStoreSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = categoryAssets(context);
     final itemCategoryAsset = store.categoryId < categories.length ? categories[store.categoryId] : null;
-    final categoryName = itemCategoryAsset?.name ?? context.l10n.store_unknownCategory;
+    final categoryName = itemCategoryAsset?.name ?? t.store.unknownCategory;
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
@@ -155,14 +155,14 @@ class StoreTextOverview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            store.name ?? context.l10n.store_acceptingStore,
+            store.name ?? t.store.acceptingStore,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
-            store.description ?? context.l10n.store_noDescriptionAvailable,
+            store.description ?? t.store.noDescriptionAvailable,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium,
