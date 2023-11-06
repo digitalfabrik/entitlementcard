@@ -67,7 +67,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
   Component: ({ state, setState, onDelete }) => (
     <>
       <ActivityDivider onDelete={onDelete} />
-      <h4>Angaben zu ihrer ehrenamtlichen Tätigkeit</h4>
+      <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>
       <SubForms.responsibility.Component
         state={state.responsibility}
         setState={useUpdateStateCallback(setState, 'responsibility')}
