@@ -131,7 +131,7 @@ export type CommonBuildConfigType = {
 export type AndroidBuildConfigType = CommonBuildConfigType & {
     // Shows the app icon as splash screen on app start.
     applicationId: string
-    featureFlags: {
+    buildFeatures: {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
     }

@@ -12,8 +12,8 @@ let bayernFloss: BuildConfigType = {
         ...bayern.android,
         ...bayernFlossCommon,
         applicationId: "app.ehrenamtskarte.bayern.floss",
-        featureFlags: {
-            ...bayern.android.featureFlags,
+        buildFeatures: {
+            ...bayern.android.buildFeatures,
             excludeLocationPlayServices: true,
             excludeX86: true
         }
