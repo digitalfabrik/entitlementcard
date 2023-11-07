@@ -55,8 +55,8 @@ class HomePageState extends State<HomePage> {
           (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, (BuildContext context) => t.about.title,
-          GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), buildConfig.featureFlags.settings ? Icons.menu : Icons.info_outline,
+          (BuildContext context) => t.about.title, GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 

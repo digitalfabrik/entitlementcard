@@ -30,5 +30,8 @@
     "usageDescription": "On the map of Nürnberg you can find all acceptance points. Tap on a location to be able to see more information.",
     "usageTitle": "Where can I use my Nürnberg-Pass?",
     "welcomeDescription": "Thank you for downloading the app for the Nürnberg-Pass!"
+  },
+  "about": {
+    "title": "More"
   }
 }

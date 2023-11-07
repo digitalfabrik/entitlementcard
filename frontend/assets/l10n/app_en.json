@@ -15,6 +15,10 @@
     },
     "privacyDeclaration": "Privacy policy",
     "publisher": "Publisher",
+    "settings": {
+      "headline": "Settings",
+      "languageChange": "Change language"
+    },
     "sourceCode": "Source code",
     "title": "About"
   },

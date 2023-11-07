@@ -6,6 +6,7 @@ type BuildConfigType = {
 
 export type FeatureFlagsType = {
     verification: boolean
+    settings: boolean
 }
 
 export type ThemeType = {

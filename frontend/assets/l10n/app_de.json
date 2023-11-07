@@ -15,6 +15,10 @@
     },
     "privacyDeclaration": "Datenschutzerklärung",
     "publisher": "Herausgeber",
+    "settings": {
+      "headline": "Einstellungen",
+      "languageChange": "Sprache wechseln"
+    },
     "sourceCode": "Quellcode der App",
     "title": "Über"
   },
