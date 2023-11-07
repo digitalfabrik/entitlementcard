@@ -29,7 +29,8 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-
+    print('title:${t.about.settings.languageChange}');
+    print('locale:${LocaleSettings.currentLocale.languageCode}');
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {

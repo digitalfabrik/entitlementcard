@@ -17,7 +17,8 @@
     "publisher": "Publisher",
     "settings": {
       "headline": "Settings",
-      "languageChange": "Change language"
+      "languageChange": "Change language",
+      "languageNotification": "Your language was changed successfully!"
     },
     "sourceCode": "Source code",
     "title": "About"

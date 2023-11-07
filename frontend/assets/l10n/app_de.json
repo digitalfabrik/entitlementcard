@@ -17,7 +17,8 @@
     "publisher": "Herausgeber",
     "settings": {
       "headline": "Einstellungen",
-      "languageChange": "Sprache wechseln"
+      "languageChange": "Sprache wechseln",
+      "languageNotification": "Ihre Sprache wurde erfolgreich geändert!"
     },
     "sourceCode": "Quellcode der App",
     "title": "Über"

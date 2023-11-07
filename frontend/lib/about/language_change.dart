@@ -21,7 +21,20 @@ class LanguageChange extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onTap: () => LocaleSettings.setLocaleRaw(item))))
+              onTap: () => switchLanguage(context, item))))
     ]);
+  }
+
+  switchLanguage(BuildContext context, String language) {
+    final messengerState = ScaffoldMessenger.of(context);
+    LocaleSettings.setLocaleRaw(language);
+    messengerState.showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        content: Text(t.about.settings.languageNotification,
+            style: TextStyle(color: Theme.of(context).colorScheme.background)),
+      ),
+    );
+    Navigator.pop(context);
   }
 }
