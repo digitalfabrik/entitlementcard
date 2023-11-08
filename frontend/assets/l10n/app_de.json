@@ -1,16 +1,14 @@
 {
   "about": {
+    "dependencies": "Software-Bibliotheken",
     "developmentOptions": "Entwickleroptionen",
-    "info": {
-      "dependencies": "Software-Bibliotheken",
-      "disclaimer": "Haftung, Haftungsausschluss und Impressum",
-      "headline": "Info",
-      "licenses": {
-        "one": "Lizenz",
-        "other": "Lizenzen"
-      },
-      "privacyDeclaration": "Datenschutzerklärung",
-      "sourceCode": "Quellcode der App"
+    "disclaimer": "Haftung, Haftungsausschluss und Impressum",
+    "infoTitle": "Info",
+    "languageChange": "Sprache wechseln",
+    "languageChangeSuccessful": "Ihre Sprache wurde erfolgreich geändert!",
+    "licenses": {
+      "one": "Lizenz",
+      "other": "Lizenzen"
     },
     "moreInformation": "Mehr Informationen",
     "numberLicenses": {
@@ -18,12 +16,10 @@
       "other": "$n Lizenzen",
       "zero": "Keine Lizenzen"
     },
+    "privacyDeclaration": "Datenschutzerklärung",
     "publisher": "Herausgeber",
-    "settings": {
-      "headline": "Einstellungen",
-      "languageChange": "Sprache wechseln",
-      "languageChangeSuccessful": "Ihre Sprache wurde erfolgreich geändert!"
-    },
+    "settingsTitle": "Einstellungen",
+    "sourceCode": "Quellcode der App",
     "title": "Über"
   },
   "category": {

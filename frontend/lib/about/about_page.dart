@@ -103,10 +103,9 @@ class AboutPageState extends State<AboutPage> {
                   thickness: 1,
                 ),
                 Section(
-                  headline: t.about.settings.headline,
+                  headline: t.about.settingsTitle,
                   children: [
-                    ContentTile(
-                        icon: Icons.language, title: t.about.settings.languageChange, children: [LanguageChange()]),
+                    ContentTile(icon: Icons.language, title: t.about.languageChange, children: [LanguageChange()]),
                   ],
                 ),
               ]),
@@ -114,22 +113,21 @@ class AboutPageState extends State<AboutPage> {
               height: 1,
               thickness: 1,
             ),
-            Section(headline: t.about.info.headline, children: [
-              ContentTile(
-                  icon: Icons.copyright, title: t.about.info.licenses(n: 1), children: getCopyrightText(context)),
+            Section(headline: t.about.infoTitle, children: [
+              ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
                 leading: const Icon(Icons.privacy_tip_outlined),
-                title: Text(t.about.info.privacyDeclaration),
+                title: Text(t.about.privacyDeclaration),
                 onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ContentTile(
                 icon: Icons.info_outline,
-                title: t.about.info.disclaimer,
+                title: t.about.disclaimer,
                 children: getDisclaimerText(context),
               ),
               ListTile(
                 leading: const Icon(Icons.book_outlined),
-                title: Text(t.about.info.dependencies),
+                title: Text(t.about.dependencies),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -141,7 +139,7 @@ class AboutPageState extends State<AboutPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.code_outlined),
-                title: Text(t.about.info.sourceCode),
+                title: Text(t.about.sourceCode),
                 onTap: () {
                   launchUrlString(
                     'https://github.com/digitalfabrik/entitlementcard',
