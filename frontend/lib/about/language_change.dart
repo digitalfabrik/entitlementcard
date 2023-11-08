@@ -31,7 +31,7 @@ class LanguageChange extends StatelessWidget {
     messengerState.showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        content: Text(t.about.settings.languageNotification,
+        content: Text(t.about.settings.languageChangeSuccessful,
             style: TextStyle(color: Theme.of(context).colorScheme.background)),
       ),
     );

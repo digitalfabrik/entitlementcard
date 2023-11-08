@@ -53,7 +53,7 @@ class CustomLicensePage extends StatelessWidget {
 
           return CustomScrollView(
             slivers: <Widget>[
-              CustomSliverAppBar(title: t.about.licenses(n: licenses.length)),
+              CustomSliverAppBar(title: t.about.info.licenses(n: licenses.length)),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {

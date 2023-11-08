@@ -63,7 +63,6 @@ export const nuernbergCommon: CommonBuildConfigType = {
     ],
     featureFlags: {
         verification: true,
-        settings: true
     },
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:

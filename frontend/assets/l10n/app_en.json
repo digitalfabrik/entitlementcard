@@ -1,26 +1,29 @@
 {
   "about": {
-    "dependencies": "Libraries",
     "developmentOptions": "Developer options",
-    "disclaimer": "Liability, disclaimer and imprint",
-    "licenses": {
-      "one": "License",
-      "other": "Licenses"
+    "info": {
+      "dependencies": "Libraries",
+      "disclaimer": "Liability, disclaimer and imprint",
+      "headline": "Info",
+      "licenses": {
+        "one": "License",
+        "other": "Licenses"
+      },
+      "privacyDeclaration": "Privacy policy",
+      "sourceCode": "Source code"
     },
     "moreInformation": "More information",
     "numberLicenses": {
-      "zero": "No licenses",
       "one": "1 license",
-      "other": "$n licenses"
+      "other": "$n licenses",
+      "zero": "No licenses"
     },
-    "privacyDeclaration": "Privacy policy",
     "publisher": "Publisher",
     "settings": {
       "headline": "Settings",
       "languageChange": "Change language",
-      "languageNotification": "Your language was changed successfully!"
+      "languageChangeSuccessful": "Your language was changed successfully!"
     },
-    "sourceCode": "Source code",
     "title": "About"
   },
   "category": {

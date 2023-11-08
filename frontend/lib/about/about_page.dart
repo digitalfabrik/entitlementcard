@@ -29,8 +29,6 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-    print('title:${t.about.settings.languageChange}');
-    print('locale:${LocaleSettings.currentLocale.languageCode}');
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
@@ -98,7 +96,7 @@ class AboutPageState extends State<AboutPage> {
                 );
               },
             ),
-            if (buildConfig.featureFlags.settings)
+            if (buildConfig.appLocales.length > 1)
               Column(children: [
                 const Divider(
                   height: 1,
@@ -116,21 +114,22 @@ class AboutPageState extends State<AboutPage> {
               height: 1,
               thickness: 1,
             ),
-            Section(headline: t.about.moreInformation, children: [
-              ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
+            Section(headline: t.about.info.headline, children: [
+              ContentTile(
+                  icon: Icons.copyright, title: t.about.info.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
                 leading: const Icon(Icons.privacy_tip_outlined),
-                title: Text(t.about.privacyDeclaration),
+                title: Text(t.about.info.privacyDeclaration),
                 onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ContentTile(
                 icon: Icons.info_outline,
-                title: t.about.disclaimer,
+                title: t.about.info.disclaimer,
                 children: getDisclaimerText(context),
               ),
               ListTile(
                 leading: const Icon(Icons.book_outlined),
-                title: Text(t.about.dependencies),
+                title: Text(t.about.info.dependencies),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -142,7 +141,7 @@ class AboutPageState extends State<AboutPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.code_outlined),
-                title: Text(t.about.sourceCode),
+                title: Text(t.about.info.sourceCode),
                 onTap: () {
                   launchUrlString(
                     'https://github.com/digitalfabrik/entitlementcard',
