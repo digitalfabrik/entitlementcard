@@ -36,3 +36,4 @@ lib/graphql/graphql_api.graphql.dart
 lib/graphql/graphql_api.graphql.g.dart
 
 lib/proto
+/lib/l10n/translations.g.dart

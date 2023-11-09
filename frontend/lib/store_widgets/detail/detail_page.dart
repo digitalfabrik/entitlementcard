@@ -9,6 +9,8 @@ import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;
   final bool hideShowOnMapButton;
@@ -27,18 +29,18 @@ class DetailPage extends StatelessWidget {
         final data = result.data;
 
         if (result.hasException && exception != null) {
-          return DetailErrorMessage(message: 'Fehler beim Laden der Daten', refetch: refetch);
+          return DetailErrorMessage(message: t.store.loadingDataFailed, refetch: refetch);
         } else if (result.isNotLoading && data != null) {
           final matchingStores = byIdQuery.parse(data).physicalStoresByIdInProject;
           if (matchingStores.length != 1) {
-            return DetailErrorMessage(message: 'Fehler beim Laden der Daten.', refetch: refetch);
+            return DetailErrorMessage(message: t.store.loadingDataFailed, refetch: refetch);
           }
           final matchingStore = matchingStores.first;
           if (matchingStore == null) {
-            return const DetailErrorMessage(message: 'Akzeptanzstelle nicht gefunden.');
+            return DetailErrorMessage(message: t.store.acceptingStoreNotFound);
           }
           final categoryId = matchingStore.store.category.id;
-          final accentColor = getDarkenedColorForCategory(categoryId);
+          final accentColor = getDarkenedColorForCategory(context, categoryId);
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [

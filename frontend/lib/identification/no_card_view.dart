@@ -1,4 +1,4 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:flutter/material.dart';
 
 class NoCardView extends StatelessWidget {
@@ -15,7 +15,6 @@ class NoCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = buildConfig.localization.identification.noCardView;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) => SingleChildScrollView(
         child: ConstrainedBox(
@@ -27,20 +26,20 @@ class NoCardView extends StatelessWidget {
               children: [
                 _TapableCardWithArea(
                   onTap: startApplication,
-                  title: localization.applyTitle,
-                  description: localization.applyDescription,
+                  title: t.identification.applyTitle,
+                  description: t.identification.applyDescription,
                   icon: Icons.assignment,
                 ),
                 _TapableCardWithArea(
                   onTap: startActivation,
-                  title: localization.activateTitle,
-                  description: localization.activateDescription,
+                  title: t.identification.activateTitle,
+                  description: t.identification.activateDescription,
                   icon: Icons.add_card,
                 ),
                 _TapableCardWithArea(
                   onTap: startVerification,
-                  title: localization.verifyTitle,
-                  description: localization.verifyDescription,
+                  title: t.identification.verifyTitle,
+                  description: t.identification.verifyDescription,
                   icon: Icons.verified,
                 ),
               ].wrapWithSpacers(height: 24),

@@ -1,7 +1,9 @@
 import 'package:ehrenamtskarte/about/backend_switch_dialog.dart';
 import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
+import 'package:ehrenamtskarte/about/language_change.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
+import 'package:ehrenamtskarte/about/section.dart';
 import 'package:ehrenamtskarte/about/texts.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
@@ -10,8 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class AboutPage extends StatefulWidget {
   final countToEnableSwitch = 10;
+
   const AboutPage({super.key});
 
   @override
@@ -24,7 +29,6 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
@@ -67,14 +71,14 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text('Herausgeber', style: Theme.of(context).textTheme.titleSmall),
+                      child: Text(t.about.publisher, style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
                       child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
                     ),
                     Text(
-                      'Mehr Informationen',
+                      t.about.moreInformation,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -87,58 +91,80 @@ class AboutPageState extends State<AboutPage> {
                 Navigator.push(
                   context,
                   AppRoute(
-                    builder: (context) => ContentPage(title: 'Herausgeber', children: getPublisherText(context)),
+                    builder: (context) => ContentPage(title: t.about.publisher, children: getPublisherText(context)),
                   ),
                 );
               },
             ),
+            if (buildConfig.appLocales.length > 1)
+              Column(children: [
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
+                Section(
+                  headline: t.about.settingsTitle,
+                  children: [
+                    ContentTile(icon: Icons.language, title: t.about.languageChange, children: [LanguageChange()]),
+                  ],
+                ),
+              ]),
             const Divider(
               height: 1,
               thickness: 1,
             ),
-            const SizedBox(height: 20),
-            ContentTile(icon: Icons.copyright, title: 'Lizenz', children: getCopyrightText(context)),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: const Text('Datenschutzerklärung'),
-              onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
-            ),
-            ContentTile(
-              icon: Icons.info_outline,
-              title: 'Haftung, Haftungsausschluss und Impressum',
-              children: getDisclaimerText(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.book_outlined),
-              title: const Text('Software-Bibliotheken'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  AppRoute(
-                    builder: (context) => const CustomLicensePage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.code_outlined),
-              title: const Text('Quellcode der App'),
-              onTap: () {
-                launchUrlString(
-                  'https://github.com/digitalfabrik/entitlementcard',
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-            ),
-            if (config.showDevSettings)
+            Section(headline: t.about.infoTitle, children: [
+              ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
-                leading: const Icon(Icons.build),
-                title: const Text('Entwickleroptionen'),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) =>
-                      const SimpleDialog(title: Text('Entwickleroptionen'), children: [DevSettingsView()]),
-                ),
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: Text(t.about.privacyDeclaration),
+                onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
+              ),
+              ContentTile(
+                icon: Icons.info_outline,
+                title: t.about.disclaimer,
+                children: getDisclaimerText(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.book_outlined),
+                title: Text(t.about.dependencies),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    AppRoute(
+                      builder: (context) => const CustomLicensePage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.code_outlined),
+                title: Text(t.about.sourceCode),
+                onTap: () {
+                  launchUrlString(
+                    'https://github.com/digitalfabrik/entitlementcard',
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+              ),
+            ]),
+            if (config.showDevSettings)
+              Column(
+                children: [
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.build),
+                    title: Text(t.about.developmentOptions),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) =>
+                          SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
+                    ),
+                  )
+                ],
               )
           ];
         } else {

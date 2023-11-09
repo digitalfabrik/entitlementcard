@@ -11,6 +11,8 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
   final bool hideShowOnMapButton;
@@ -30,8 +32,8 @@ class DetailContent extends StatelessWidget {
     final address = acceptingStore.address;
     final street = address.street;
     final location = '${address.postalCode} ${address.location}';
-    final addressString = "${street != null ? "$street\n" : ""}$location";
-    final mapQueryString = "${street != null ? "$street, " : ""}$location";
+    final addressString = '${street != null ? '$street\n' : ''}$location';
+    final mapQueryString = '${street != null ? '$street, ' : ''}$location';
 
     final contact = acceptingStore.store.contact;
     final currentAccentColor = accentColor;
@@ -59,7 +61,7 @@ class DetailContent extends StatelessWidget {
                 ContactInfoRow(
                   Icons.location_on,
                   addressString,
-                  'Adresse',
+                  t.store.address,
                   onTap: () => _launchMap(mapQueryString),
                   iconColor: readableOnAccentColor,
                   iconFillColor: accentColor,
@@ -68,7 +70,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.language,
                     prepareWebsiteUrlForDisplay(website),
-                    'Website',
+                    t.store.website,
                     onTap: () =>
                         launchUrlString(prepareWebsiteUrlForLaunch(website), mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -78,7 +80,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.phone,
                     telephone,
-                    'Telefon',
+                    t.store.phone,
                     onTap: () =>
                         launchUrlString('tel:${sanitizePhoneNumber(telephone)}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
@@ -88,7 +90,7 @@ class DetailContent extends StatelessWidget {
                   ContactInfoRow(
                     Icons.alternate_email,
                     email,
-                    'E-Mail',
+                    t.store.email,
                     onTap: () => launchUrlString('mailto:${email.trim()}', mode: LaunchMode.externalApplication),
                     iconColor: readableOnAccentColor,
                     iconFillColor: accentColor,
@@ -105,7 +107,7 @@ class DetailContent extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    child: const Text('Auf Karte zeigen'),
+                    child: Text(t.store.showOnMap),
                     onPressed: () => _showOnMap(context),
                   ),
                 ],

@@ -4,6 +4,8 @@ import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class LocationButton extends StatefulWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
 
@@ -52,9 +54,9 @@ class _LocationButtonState extends State<LocationButton> {
     messengerState.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        content: const Text('Die Standortfreigabe ist deaktiviert.'),
+        content: Text(t.location.locationAccessDeactivated),
         action: SnackBarAction(
-          label: 'Einstellungen',
+          label: t.common.settings,
           onPressed: () async {
             await openSettingsToGrantPermissions(context);
           },

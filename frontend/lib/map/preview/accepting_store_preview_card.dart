@@ -4,6 +4,8 @@ import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:flutter/material.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class AcceptingStorePreviewError extends StatelessWidget {
   final void Function()? refetch;
 
@@ -14,10 +16,9 @@ class AcceptingStorePreviewError extends StatelessWidget {
     return InkWell(
       onTap: refetch,
       child: Container(
-        height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: const ErrorMessage('Fehler beim Laden der Infos.'),
-      ),
+          height: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ErrorMessage(t.store.loadingDataFailed)),
     );
   }
 }

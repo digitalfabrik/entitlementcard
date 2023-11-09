@@ -38,6 +38,8 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
   } else if (v is String) {
     final escaped = v.replaceAll('"', '\\"').replaceAll("\n", "\\n");
     output.write('  String get $k => "$escaped";\n');
+  } else if (v is String?) {
+    output.write('  String? get $k => null;\n');
   } else if (v is bool) {
     output.write('  bool get $k => $v;\n');
   } else if (v is double) {
@@ -54,6 +56,8 @@ void pairToField(String k, dynamic v, StringBuffer root, StringBuffer output) {
 
       if (element is int) {
         output.write('  List<int> get $k => $v;\n');
+      } else if (element is String) {
+        output.write('  List<String> get $k => [\'${v.join('\', \'')}\'];\n');
       } else {
         throw "invalid list ${v.runtimeType}";
       }
