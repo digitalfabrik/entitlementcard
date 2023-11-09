@@ -7,4 +7,4 @@ environment:
 shell: /bin/bash -eo pipefail
 steps:
   - checkout
-  - check-circleci-config
+  - check_circleci_config
