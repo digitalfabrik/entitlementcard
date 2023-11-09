@@ -3,18 +3,22 @@
     "dependencies": "Software-Bibliotheken",
     "developmentOptions": "Entwickleroptionen",
     "disclaimer": "Haftung, Haftungsausschluss und Impressum",
+    "infoTitle": "Info",
+    "languageChange": "Sprache wechseln",
+    "languageChangeSuccessful": "Ihre Sprache wurde erfolgreich geändert!",
     "licenses": {
       "one": "Lizenz",
       "other": "Lizenzen"
     },
     "moreInformation": "Mehr Informationen",
     "numberLicenses": {
-      "zero": "Keine Lizenzen",
       "one": "1 Lizenz",
-      "other": "$n Lizenzen"
+      "other": "$n Lizenzen",
+      "zero": "Keine Lizenzen"
     },
     "privacyDeclaration": "Datenschutzerklärung",
     "publisher": "Herausgeber",
+    "settingsTitle": "Einstellungen",
     "sourceCode": "Quellcode der App",
     "title": "Über"
   },

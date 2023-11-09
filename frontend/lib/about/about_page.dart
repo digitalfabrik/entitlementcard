@@ -1,7 +1,9 @@
 import 'package:ehrenamtskarte/about/backend_switch_dialog.dart';
 import 'package:ehrenamtskarte/about/content_tile.dart';
 import 'package:ehrenamtskarte/about/dev_settings_view.dart';
+import 'package:ehrenamtskarte/about/language_change.dart';
 import 'package:ehrenamtskarte/about/license_page.dart';
+import 'package:ehrenamtskarte/about/section.dart';
 import 'package:ehrenamtskarte/about/texts.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
@@ -27,7 +29,6 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
-
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
@@ -95,53 +96,75 @@ class AboutPageState extends State<AboutPage> {
                 );
               },
             ),
+            if (buildConfig.appLocales.length > 1)
+              Column(children: [
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
+                Section(
+                  headline: t.about.settingsTitle,
+                  children: [
+                    ContentTile(icon: Icons.language, title: t.about.languageChange, children: [LanguageChange()]),
+                  ],
+                ),
+              ]),
             const Divider(
               height: 1,
               thickness: 1,
             ),
-            const SizedBox(height: 20),
-            ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(t.about.privacyDeclaration),
-              onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
-            ),
-            ContentTile(
-              icon: Icons.info_outline,
-              title: t.about.disclaimer,
-              children: getDisclaimerText(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.book_outlined),
-              title: Text(t.about.dependencies),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  AppRoute(
-                    builder: (context) => const CustomLicensePage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.code_outlined),
-              title: Text(t.about.sourceCode),
-              onTap: () {
-                launchUrlString(
-                  'https://github.com/digitalfabrik/entitlementcard',
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-            ),
-            if (config.showDevSettings)
+            Section(headline: t.about.infoTitle, children: [
+              ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
-                leading: const Icon(Icons.build),
-                title: Text(t.about.developmentOptions),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) =>
-                      SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
-                ),
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: Text(t.about.privacyDeclaration),
+                onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
+              ),
+              ContentTile(
+                icon: Icons.info_outline,
+                title: t.about.disclaimer,
+                children: getDisclaimerText(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.book_outlined),
+                title: Text(t.about.dependencies),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    AppRoute(
+                      builder: (context) => const CustomLicensePage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.code_outlined),
+                title: Text(t.about.sourceCode),
+                onTap: () {
+                  launchUrlString(
+                    'https://github.com/digitalfabrik/entitlementcard',
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+              ),
+            ]),
+            if (config.showDevSettings)
+              Column(
+                children: [
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.build),
+                    title: Text(t.about.developmentOptions),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) =>
+                          SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
+                    ),
+                  )
+                ],
               )
           ];
         } else {

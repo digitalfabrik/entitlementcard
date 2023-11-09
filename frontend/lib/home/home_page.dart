@@ -51,12 +51,12 @@ class HomePageState extends State<HomePage> {
       if (buildConfig.featureFlags.verification)
         AppFlow(
           IdentificationPage(),
-          Icons.remove_red_eye_outlined,
+          Icons.credit_card,
           (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, (BuildContext context) => t.about.title,
-          GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline,
+          (BuildContext context) => t.about.title, GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 

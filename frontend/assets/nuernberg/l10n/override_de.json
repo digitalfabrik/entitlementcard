@@ -30,5 +30,8 @@
     "usageDescription": "Auf der Karte von Nürnberg können Sie alle Akzeptanzstellen finden. Tippen Sie auf einen Standort, um mehr Informationen sehen zu können.",
     "usageTitle": "Wo kann ich den Nürnberg-Pass nutzen?",
     "welcomeDescription": "Vielen Dank, dass Sie sich die App zum Nürnberg-Pass heruntergeladen haben!"
+  },
+  "about": {
+    "title": "Mehr"
   }
 }
