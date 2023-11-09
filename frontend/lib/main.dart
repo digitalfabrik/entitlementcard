@@ -13,6 +13,10 @@ import 'package:slang/builder/model/enums.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // support android version < 7.1.1 by adding a valid certificate - https://stackoverflow.com/questions/69511057
+  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+
   // Only use device locale if set as available in build config, otherwise fallback to de
   final locale = Platform.localeName.split('_')[0];
   if (buildConfig.appLocales.contains(locale)) {
