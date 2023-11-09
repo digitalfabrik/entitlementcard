@@ -11,6 +11,8 @@ import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 const mapTabIndex = 0;
 
 class HomePage extends StatefulWidget {
@@ -37,23 +39,24 @@ class HomePageState extends State<HomePage> {
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
         ),
         Icons.map_outlined,
-        'Karte',
+        (BuildContext context) => t.map.title,
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
         const SearchPage(),
         Icons.search_outlined,
-        'Suche',
+        (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
-          const IdentificationPage(title: 'Ausweisen'),
-          Icons.remove_red_eye_outlined,
-          'Ausweisen',
+          IdentificationPage(),
+          Icons.credit_card,
+          (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
-      AppFlow(const AboutPage(), Icons.info_outline, 'Über', GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
+      AppFlow(const AboutPage(), buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline,
+          (BuildContext context) => t.about.title, GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
   }
 
@@ -95,7 +98,7 @@ class HomePageState extends State<HomePage> {
       currentIndex: _currentTabIndex,
       backgroundColor: theme.colorScheme.surfaceVariant,
       items: appFlows
-          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.title))
+          .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.getTitle(context)))
           .toList(),
       onTap: _onTabTapped,
       type: BottomNavigationBarType.fixed,

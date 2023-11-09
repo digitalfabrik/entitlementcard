@@ -1,7 +1,8 @@
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class VerificationInfoDialog extends StatelessWidget {
   const VerificationInfoDialog({super.key});
@@ -9,26 +10,23 @@ class VerificationInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
-    final localization = buildConfig.localization.identification.verificationCodeScanner;
     return AlertDialog(
-      title: Text(localization.infoDialogTitle),
+      title: Text(t.identification.verifyInfoTitle),
       content: SingleChildScrollView(
         child: ListBody(
-          children: const [
+          children: [
             _EnumeratedListItem(
               index: 0,
-              child: Text(
-                'Scannen Sie den QR-Code, der auf dem "Ausweisen"-Tab Ihres Gegenübers angezeigt wird.',
-              ),
+              child: Text(t.identification.scanCode),
             ),
-            _EnumeratedListItem(index: 1, child: Text('Der QR-Code wird durch eine Server-Anfrage geprüft.')),
+            _EnumeratedListItem(index: 1, child: Text(t.identification.checkingCode)),
             _EnumeratedListItem(
               index: 2,
-              child: Text('Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab.'),
+              child: Text(t.identification.compareWithID),
             ),
             SizedBox(height: 12),
             Text(
-              'Eine Internetverbindung wird benötigt.',
+              t.identification.internetRequired,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -36,14 +34,14 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: const Text('Nicht mehr anzeigen'),
+          child: Text(t.identification.stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
             _onDone(context);
           },
         ),
         TextButton(
-          child: const Text('Weiter'),
+          child: Text(t.common.next),
           onPressed: () => _onDone(context),
         )
       ],

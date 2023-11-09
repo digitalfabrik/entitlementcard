@@ -6,6 +6,8 @@ import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -37,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     Text(
-                      'Suchresultate'.toUpperCase(),
+                      t.search.searchResults.toUpperCase(),
                       style: const TextStyle(color: Colors.grey),
                     ),
                     const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))

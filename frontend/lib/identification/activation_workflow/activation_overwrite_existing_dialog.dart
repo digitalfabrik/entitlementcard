@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class ActivationOverwriteExistingDialog extends StatelessWidget {
   const ActivationOverwriteExistingDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Karte auf diesem Gerät aktivieren?', style: TextStyle(fontSize: 18)),
+      title: Text(t.identification.activateCurrentDeviceTitle, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(
         child: ListBody(
-          children: const <Widget>[
-            Text(
-              'Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.',
-            ),
+          children: <Widget>[
+            Text(t.identification.activateCurrentDeviceDescription),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Abbrechen'),
+          child: Text(t.common.cancel),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          child: const Text('Aktivieren'),
+          child: Text(t.identification.activate),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

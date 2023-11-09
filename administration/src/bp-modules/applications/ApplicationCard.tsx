@@ -150,7 +150,7 @@ const ApplicationCard = ({
       <SectionCard>
         {withdrawalDate && (
           <WithdrawAlert intent='warning'>
-            Der Antrag wurde vom Antragssteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
+            Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
             zurückgezogen. <br />
             Bitte löschen Sie den Antrag zeitnah.
           </WithdrawAlert>

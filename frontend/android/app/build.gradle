@@ -49,13 +49,13 @@ ext.setupApplication = { ApplicationProductFlavor flavor, buildConfigName ->
 
 ext.setupVariant = { variant, buildConfigName ->
     var buildConfig = createBuildConfig(buildConfigName)
-    if (buildConfig.featureFlags.excludeX86) {
+    if (buildConfig.buildFeatures.excludeX86) {
         // Verify this using:
         // unzip -l frontend/build/app/outputs/apk/Bayern/debug/app-Bayern-debug.apk | grep x86
         // unzip -l frontend/build/app/outputs/apk/Nuernberg/debug/app-Nuernberg-debug.apk | grep x86
         variant.packaging.jniLibs.excludes.add('**/lib/x86**')
     }
-    if (buildConfig.excludeLocationPlayServices) {
+    if (buildConfig.buildFeatures.excludeLocationPlayServices) {
         // Verify this by opening the APKs in Android Studio/IntelliJ. Then select all the .dex files.
         // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
         variant.compileConfiguration.exclude group: 'com.google.android.gms', module: 'play-services-location'

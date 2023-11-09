@@ -1,0 +1,37 @@
+{
+  "identification": {
+    "activateCurrentDeviceDescription": "Your pass is already activated on another device. If you activate your pass on this device, it will be automatically deactivated on your other device.",
+    "activateCurrentDeviceTitle": "Activate pass on this device?",
+    "activateDescription": "You have already applied for the Nürnberg-Pass and received an activation code? Scan the code here.",
+    "activateTitle": "Activate pass",
+    "applyDescription": "You do not yet have a Nürnberg-Pass? Here you can apply for your Nürnberg-Pass.",
+    "cardExpired": "Your pass has expired. You can apply for renewal under \"More actions\"",
+    "cardInvalid": "Your pass is invalid. It has either been revoked or activated on another device.",
+    "cardNotYetValid": "The validity period of your pass has not yet started.",
+    "checkFailed": "Your pass could not be verified. Please make sure you have an internet connection and try again.",
+    "moreActionsActivateDescription": "Your saved passes will be retained. You can remove them manually.",
+    "moreActionsActivateLimitDescription": "To add another Nürnberg-Pass, you must first delete an existing Nürnberg-Pass.",
+    "moreActionsActivateTitle": "Add another Nürnberg-Pass",
+    "moreActionsApplyDescription": "Your saved passes will be retained.",
+    "moreActionsApplyTitle": "Apply for or extend a Nürnberg-Pass",
+    "moreActionsRemoveDescription": "After selection, this Nürnberg-Pass will be deleted from the device.",
+    "moreActionsRemoveTitle": "Delete this Nürnberg-Pass?",
+    "moreActionsVerifyDescription": "Check the validity of a Nürnberg-Pass",
+    "moreActionsVerifyTitle": "Check a Nürnberg-Pass",
+    "removeDescription": "If this pass is deleted, it must be added again before using it again.",
+    "removeTitle": "Delete this pass?",
+    "verificationSuccessful": "Pass is valid",
+    "verifyDescription": "You would like to check the validity of a Nürnberg-Pass? Scan the code here.",
+    "verifyInfoTitle": "How to check the validity of a Nürnberg-Pass"
+  },
+  "intro": {
+    "applyDescription": "Provide your personal information in the form. The application is then forwarded and processed by the responsible office.",
+    "applyTitle": "How can I apply for the Nürnberg-Pass?",
+    "usageDescription": "On the map of Nürnberg you can find all acceptance points. Tap on a location to be able to see more information.",
+    "usageTitle": "Where can I use my Nürnberg-Pass?",
+    "welcomeDescription": "Thank you for downloading the app for the Nürnberg-Pass!"
+  },
+  "about": {
+    "title": "More"
+  }
+}

@@ -13,41 +13,6 @@ export type ThemeType = {
     primaryDark: string
 }
 
-type SlideType = {
-    title: string
-    description: string
-    imagePath: string
-}
-
-export type LocalizationType = {
-    identification: {
-        noCardView: {
-            applyTitle: string
-            applyDescription: string
-            activateTitle: string
-            activateDescription: string
-            verifyTitle: string
-            verifyDescription: string
-        }
-        activationCodeScanner: {
-            title: string
-        }
-        verificationCodeScanner: {
-            title: string
-            infoDialogTitle: string
-            positiveVerificationDialogTitle: string
-        }
-        moreActions: {
-            applyForAnotherCardTitle: string
-            applyForAnotherCardDescription: string
-            activateAnotherCardTitle: string
-            activateAnotherCardDescription: string
-            verifyTitle: string
-            verifyDescription: string
-        }
-    }
-}
-
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
@@ -71,6 +36,8 @@ export type CommonBuildConfigType = {
         production: string
         local: string
     }
+    appLocales: string[]
+    localeOverridePath: string | null
     cardBranding: {
         headerTextColor: string
         headerColor: string
@@ -104,10 +71,7 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number
     }
     iconInAboutTab: string
-    introSlide1: SlideType,
-    introSlide2: SlideType,
-    introSlide3: SlideType,
-    introSlide4: SlideType
+    introSlidesImages: [string, string, string, string],
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
@@ -116,13 +80,13 @@ export type CommonBuildConfigType = {
     publisherAddress: string
     publisherText: string
     disclaimerText: string
-    localization: LocalizationType
+    maxCardAmount: number
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
     // Shows the app icon as splash screen on app start.
     applicationId: string
-    featureFlags: {
+    buildFeatures: {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
     }

@@ -16,7 +16,7 @@ ThemeData get lightTheme {
     ),
     textTheme: defaultTypography.copyWith(
       headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.black87),
-      headlineSmall: defaultTypography.headlineMedium?.apply(color: Colors.black87),
+      headlineSmall: defaultTypography.headlineSmall?.apply(color: Colors.black87),
       titleLarge: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
       bodyLarge: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
       bodyMedium: const TextStyle(fontSize: 15.0, color: Color(0xFF505050)),
@@ -59,7 +59,7 @@ ThemeData get darkTheme {
     ),
     textTheme: defaultTypography.copyWith(
       headlineMedium: defaultTypography.headlineMedium?.apply(color: Colors.white),
-      headlineSmall: defaultTypography.headlineMedium?.apply(color: Colors.white),
+      headlineSmall: defaultTypography.headlineSmall?.apply(color: Colors.white),
       titleLarge: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
       bodyLarge: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal),
       bodyMedium: const TextStyle(fontSize: 15.0, color: Color(0xFFC6C4C4)),

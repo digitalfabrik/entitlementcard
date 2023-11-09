@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
   final CoordinatesInput? coordinates;
@@ -36,8 +38,9 @@ class AcceptingStoreSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemCategoryAsset = store.categoryId < categoryAssets.length ? categoryAssets[store.categoryId] : null;
-    final categoryName = itemCategoryAsset?.name ?? 'Unbekannte Kategorie';
+    final categories = categoryAssets(context);
+    final itemCategoryAsset = store.categoryId < categories.length ? categories[store.categoryId] : null;
+    final categoryName = itemCategoryAsset?.name ?? t.store.unknownCategory;
     final categoryColor = itemCategoryAsset?.color;
 
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
@@ -152,14 +155,14 @@ class StoreTextOverview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            store.name ?? 'Akzeptanzstelle',
+            store.name ?? t.store.acceptingStore,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
-            store.description ?? 'Keine Beschreibung verfügbar',
+            store.description ?? t.store.noDescriptionAvailable,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium,
@@ -180,9 +183,9 @@ class DistanceText extends StatelessWidget {
     if (d < 1) {
       return '${(d * 100).round() * 10} m';
     } else if (d < 10) {
-      return "${NumberFormat("##.0", "de").format(d)} km";
+      return '${NumberFormat('##.0', 'de').format(d)} km';
     } else {
-      return "${NumberFormat("###,###", "de").format(d)} km";
+      return '${NumberFormat('###,###', 'de').format(d)} km';
     }
   }
 

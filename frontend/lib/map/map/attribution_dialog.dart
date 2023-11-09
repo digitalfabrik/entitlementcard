@@ -2,6 +2,8 @@ import 'package:ehrenamtskarte/map/map/attribution_dialog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class AttributionDialog extends StatelessWidget {
   const AttributionDialog({super.key});
 
@@ -9,12 +11,12 @@ class AttributionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme.primary;
     return SimpleDialog(
-      title: const Text('Kartendaten'),
+      title: Text(t.map.mapData),
       children: [
         AttributionDialogItem(
           icon: Icons.copyright,
           color: color,
-          text: 'OpenStreetMap Mitwirkende',
+          text: t.map.osmContributors,
           onPressed: () {
             launchUrlString('https://www.openstreetmap.org/copyright', mode: LaunchMode.externalApplication);
           },
