@@ -37,6 +37,7 @@ message StartDayExtension {
 
 message NuernbergPassIdExtension {
   optional uint32 pass_id = 1;
+  optional NuernergPassIdentifier identifier = 2;
 }
 
 enum NuernergPassIdentifier {
@@ -48,7 +49,6 @@ message CardExtensions {
   optional RegionExtension extension_region = 1;
   optional BirthdayExtension extension_birthday = 2;
   optional NuernbergPassIdExtension extension_nuernberg_pass_id = 3;
-  optional NuernergPassIdentifier nuernberg_pass_identifier = 30;
   optional BavariaCardTypeExtension extension_bavaria_card_type = 4;
   optional StartDayExtension extension_start_day = 5;
 }

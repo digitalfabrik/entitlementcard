@@ -1,7 +1,7 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 
-import { CardExtensions } from '../../generated/card_pb'
+import { CardExtensions, NuernergPassIdentifier } from '../../generated/card_pb'
 import { Extension } from './extensions'
 
 type NuernbergPassIdState = { passId: number }
@@ -52,6 +52,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   }
   setProtobufData(message: PartialMessage<CardExtensions>) {
     message.extensionNuernbergPassId = {
+      identifier: NuernergPassIdentifier.passId,
       passId: this.state?.passId,
     }
   }
