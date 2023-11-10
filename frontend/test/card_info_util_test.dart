@@ -7,7 +7,6 @@ import 'package:test/test.dart';
 void main() {
   group('hashCardInfo', () {
     // Equivalent tests exist in administration to ensure that the algorithms produce the same hashes.
-
     test('should be stable for a Bavarian Blue EAK', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
@@ -53,6 +52,36 @@ void main() {
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
       final pepper = const Base64Decoder().convert('MvMjEqa0ulFDAgACElMjWA==');
       expect(cardInfo.hash(pepper), '1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=');
+    });
+
+    test('should be stable for a Nuernberg Pass with passId identifier', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()
+            ..passId = 99999999
+            ..identifier = NuernergPassIdentifier.passId)
+          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
+      final pepper = const Base64Decoder().convert('MvMjEqa0ulFDAgACElMjWA==');
+      expect(cardInfo.hash(pepper), '6BS3mnTtX1myCu9HSUD3e7KjaFBnX9Bkw7wgkrrWMZg=');
+    });
+
+    test('should be stable for a Nuernberg Pass with passNr identifier', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()
+            ..passId = 99999999
+            ..identifier = NuernergPassIdentifier.passNr)
+          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
+      final pepper = const Base64Decoder().convert('MvMjEqa0ulFDAgACElMjWA==');
+      expect(cardInfo.hash(pepper), 'A7KP1ypGngrmegXVmsyP9iMgheGHUDg9rnqbb9nlMWw=');
     });
   });
 

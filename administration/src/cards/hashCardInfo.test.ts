@@ -5,6 +5,7 @@ import {
   CardExtensions,
   CardInfo,
   NuernbergPassIdExtension,
+  NuernergPassIdentifier,
   RegionExtension,
   StartDayExtension,
 } from '../generated/card_pb'
@@ -215,5 +216,53 @@ describe('hashCardInfo', () => {
     const hash = await hashCardInfo(cardInfo, pepper)
 
     expect(uint8ArrayToBase64(hash)).toBe('1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=')
+  })
+
+  it('should be stable for a Nuernberg Pass with passId identifier', async () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          identifier: NuernergPassIdentifier.passId,
+          passId: 99999999,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
+    const hash = await hashCardInfo(cardInfo, pepper)
+
+    expect(uint8ArrayToBase64(hash)).toBe('6BS3mnTtX1myCu9HSUD3e7KjaFBnX9Bkw7wgkrrWMZg=') 
+  })
+
+  it('should be stable for a Nuernberg Pass with passNr identifier', async () => {
+    const cardInfo = new CardInfo({
+      fullName: 'Max Mustermann',
+      expirationDay: 365 * 40, // Equals 14.600
+      extensions: new CardExtensions({
+        extensionRegion: new RegionExtension({
+          regionId: 93,
+        }),
+        extensionBirthday: new BirthdayExtension({
+          birthday: -365 * 10,
+        }),
+        extensionNuernbergPassId: new NuernbergPassIdExtension({
+          identifier: NuernergPassIdentifier.passNr,
+          passId: 99999999,
+        }),
+        extensionStartDay: new StartDayExtension({ startDay: 365 * 2 }),
+      }),
+    })
+    const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
+    const hash = await hashCardInfo(cardInfo, pepper)
+
+    expect(uint8ArrayToBase64(hash)).toBe('A7KP1ypGngrmegXVmsyP9iMgheGHUDg9rnqbb9nlMWw=') 
   })
 })

@@ -42,8 +42,7 @@ final sampleActivationCodeNuernberg = DynamicUserCode()
       ..extensionBirthday = (BirthdayExtension()..birthday = 19746)
       ..extensionNuernbergPassId = (NuernbergPassIdExtension()
         ..passId = 12323123
-        ..identifier = NuernergPassIdentifier.passId
-      )
+        ..identifier = NuernergPassIdentifier.passId)
       ..extensionRegion = (RegionExtension()..regionId = 93)
       ..extensionStartDay = (StartDayExtension()..startDay = 19592)))
   ..pepper = const Base64Decoder().convert('aGVsbG8gdGhpcyBpcyBhIHRlc3Q=')
