@@ -6,7 +6,7 @@ orbs:
 
 parameters:
   run_commit:
-    default: true
+    default: false
     type: boolean
   run_administration:
     default: false

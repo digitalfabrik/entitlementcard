@@ -371,7 +371,7 @@ jobs:
                 command: sudo apt install openjdk-17-jre-headless -y
                 name: Install openjdk-17-jre-headless
             - run:
-                command: sudo dpkg -i /tmp/workspace/debs/eak-backend*.deb
+                command: sudo dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
                 name: Install backend
             - run:
                 command: /opt/ehrenamtskarte/backend/bin/backend migrate
@@ -407,11 +407,11 @@ jobs:
                 command: |
                     echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
                     echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/srv/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
                 name: SFTP upload
             - run:
                 command: |-
-                    ssh ci@<< parameters.server >>
+                    ssh -o "StrictHostKeyChecking=accept-new" ci@<< parameters.server >>
                     apt update && apt install eak-administration
                 name: Install package
     deploy_backend:
@@ -438,11 +438,11 @@ jobs:
                 command: |
                     echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
                     echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/srv/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
                 name: SFTP upload
             - run:
                 command: |-
-                    ssh ci@<< parameters.server >>
+                    ssh -o "StrictHostKeyChecking=accept-new" ci@<< parameters.server >>
                     apt update && apt install eak-backend eak-martin eak
                 name: Install packages
     pack_administration:
@@ -537,7 +537,7 @@ parameters:
         default: false
         type: boolean
     run_commit:
-        default: true
+        default: false
         type: boolean
     run_frontend:
         default: false
@@ -549,7 +549,7 @@ workflows:
             - build_administration
             - pack_administration:
                 requires:
-                    - administration-build
+                    - build_administration
             - deploy_administration:
                 context:
                     - entitlementcard-apt
@@ -559,21 +559,9 @@ workflows:
                             - /release.*/
                 name: deploy-staging
                 requires:
-                    - administration-pack
+                    - pack_administration
                 server: entitlementcard-test.tuerantuer.org
                 ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-            - deploy_administration:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-production
-                requires:
-                    - administration-pack
-                server: entitlementcard.tuerantuer.org
-                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
         when: << pipeline.parameters.run_administration >>
     backend:
         jobs:
@@ -604,20 +592,6 @@ workflows:
                     - meta-pack
                 server: entitlementcard-test.tuerantuer.org
                 ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-            - deploy_backend:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-production
-                requires:
-                    - backend-pack
-                    - martin-pack
-                    - meta-pack
-                server: entitlementcard.tuerantuer.org
-                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
         when: << pipeline.parameters.run_backend >>
     commit:
         jobs:

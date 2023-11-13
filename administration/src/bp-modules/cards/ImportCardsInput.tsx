@@ -123,7 +123,13 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       description={<ImportCardsRequirementsText header={headers} />}
       action={
         <CardImportInputContainer>
-          <input data-testid='file-upload' ref={fileInput} accept='.csv, text/csv' type='file' onInput={onInputChange} />
+          <input
+            data-testid='file-upload'
+            ref={fileInput}
+            accept='.csv, text/csv'
+            type='file'
+            onInput={onInputChange}
+          />
         </CardImportInputContainer>
       }
     />

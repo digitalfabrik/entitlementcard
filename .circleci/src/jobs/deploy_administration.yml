@@ -22,9 +22,9 @@ steps:
       command: |
         echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
         echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-        sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
+        sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/srv/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
   - run:
       name: "Install package"
       command: |
-         ssh ci@<< parameters.server >>
+         ssh -o "StrictHostKeyChecking=accept-new" ci@<< parameters.server >>
          apt update && apt install eak-administration
