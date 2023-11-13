@@ -13,26 +13,188 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+CREDENTIALS_GIT_REPOSITORY_URL = ENV['CREDENTIALS_GIT_REPOSITORY_URL']
+CREDENTIALS_DIRECTORY_PATH = ENV['CREDENTIALS_DIRECTORY_PATH']
+
+CREDENTIALS_KEYSTORE_PATH = ENV['CREDENTIALS_KEYSTORE_PATH']
+CREDENTIALS_KEYSTORE_PASSWORD = ENV['CREDENTIALS_KEYSTORE_PASSWORD']
+
+KEYSTORE_PATH = ENV['KEYSTORE_PATH']
+KEYSTORE_PASSWORD = ENV['KEYSTORE_PASSWORD']
+
+KEYSTORE_KEY_ALIAS_BAYERN = ENV['KEYSTORE_KEY_ALIAS_BAYERN']
+KEYSTORE_KEY_ALIAS_NUERNBERG = ENV['KEYSTORE_KEY_ALIAS_NUERNBERG']
+KEYSTORE_KEY_PASSWORD_BAYERN = ENV['KEYSTORE_KEY_PASSWORD_BAYERN']
+KEYSTORE_KEY_PASSWORD_NUERNBERG = ENV['KEYSTORE_KEY_PASSWORD_NUERNBERG']
+
+
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
+  desc "Download and decrypt the JKS"
+  lane :keystore do
+    ensure_env_vars(
+      env_vars: ['CREDENTIALS_GIT_REPOSITORY_URL', 'CREDENTIALS_KEYSTORE_PATH', 'CREDENTIALS_DIRECTORY_PATH', 'CREDENTIALS_KEYSTORE_PASSWORD']
+    )
+
+    puts("Cloning repository with keystore")
+
+    unless File.exists? File.expand_path(CREDENTIALS_DIRECTORY_PATH)
+      sh("git clone #{CREDENTIALS_GIT_REPOSITORY_URL} #{CREDENTIALS_DIRECTORY_PATH}")
+    end
+
+    puts("Decrypting keystore")
+
+    sh("id -u")
+    sh("gpg --version") #TODO remove
+
+    sh("gpg --verbose --passphrase #{CREDENTIALS_KEYSTORE_PASSWORD} --pinentry-mode loopback \\
+                -o ~/#{KEYSTORE_PATH} -d #{CREDENTIALS_KEYSTORE_PATH}")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  desc "Validate Play Store Key"
+  lane :validate_play_store_key do
+    validate_play_store_json_key(
+      json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+  desc "Build Android App"
+  lane :build do |options|
+    version_code = options[:version_code]
+    version_name = options[:version_name]
+    flavor = options[:flavor]
+
+    if [version_name, version_code].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    puts(version_code)
+    puts(version_name)
+
+    # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
+    # ENV["EXTRA_PACKAGER_ARGS"] = "--config ./metro.config.ci.js"
+
+    gradle_system_properties = {
+      # 2GB Gradle + 1GB dex + 2-2.5GB RN < 6GB of circleci resource class medium+
+      :"org.gradle.jvmargs" => "-Xms512m -Xmx2024m",
+      :"org.gradle.daemon" => false
+    }
+
+    if ENV['TOTAL_CPUS']
+      # Gradle uses the wrong cpu count from the host (e.g. 36)
+      gradle_system_properties["org.gradle.workers.max"] = ENV['TOTAL_CPUS']
+    end
+
+    if(flavor == 'Bayern')
+      keystore_key_alias = KEYSTORE_KEY_ALIAS_BAYERN
+      keystore_key_password = KEYSTORE_KEY_PASSWORD_BAYERN
+    end
+    if (flavor == 'Nuernberg')
+      KEYSTORE_KEY_ALIAS = KEYSTORE_KEY_ALIAS_NUERNBERG # TODO adjust as above for bayern
+      KEYSTORE_KEY_PASSWORD = KEYSTORE_KEY_PASSWORD_NUERNBERG
+    end
+
+    gradle(
+      task: "bundle",
+      flavor: flavor,
+      build_type: "Release",
+      properties: {
+        :VERSION_CODE => version_code,
+        :VERSION_NAME => version_name,
+        "KEYSTORE_PATH" => KEYSTORE_PATH,
+        "KEYSTORE_KEY_ALIAS" => keystore_key_alias,
+        "KEYSTORE_PASSWORD" => KEYSTORE_PASSWORD,
+        "KEYSTORE_KEY_PASSWORD" => keystore_key_password,
+      }.compact,
+      system_properties: gradle_system_properties,
+      print_command: false
+    )
   end
+
+  desc "Upload Android App to Google Play"
+  lane :upload_to_playstore do |options|
+    ensure_env_vars(
+      env_vars: ["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+
+    version_code = options[:version_code]
+    version_name = options[:version_name]
+    production_delivery = options[:production_delivery]
+    build_config_name = options[:build_config_name]
+
+    if [version_name, version_code, production_delivery, build_config_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+    track = production_delivery === true ? "production" : "beta"
+
+    puts(version_code)
+
+    application_id = sh("app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
+
+    upload_to_play_store(
+      version_code: version_code,
+      version_name: version_name,
+      package_name: application_id,
+      metadata_path: ".android/fastlane/metadata",
+      track: track,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_metadata: true,
+      release_status: "completed",
+      skip_upload_apk: true,
+      aab: "#{ENV['HOME']}/attached_workspace/#{build_config_name}.aab",
+      json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+  end
+
+  desc "Promote the most recent version in the beta track to the production track in the Play Store."
+  lane :playstore_promote do |options|
+    ensure_env_vars(
+      env_vars: ["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+
+    build_config_name = options[:build_config_name]
+
+    if [version_name, version_code, production_delivery, build_config_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    application_id = sh("app-toolbelt v0 build-config to-json #{build_config_name} android | jq .applicationId")
+
+    production_version_codes = google_play_track_version_codes(
+      track: "production",
+      package_name: application_id,
+      json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+    beta_version_codes = google_play_track_version_codes(
+      track: "beta",
+      package_name: application_id,
+      json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+
+    if beta_version_codes.length == 0 || beta_version_codes[0] <= production_version_codes[0]
+      puts("Nothing to do, latest version already available in production track...")
+      next
+    end
+
+    puts("promoting v#{beta_version_codes[0]} to production track")
+
+    # https://docs.fastlane.tools/actions/supply/
+    upload_to_play_store(
+      version_code: beta_version_codes[0],
+      package_name: application_id,
+      track: "beta",
+      track_promote_to: "production",
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_metadata: true,
+      skip_upload_apk: true,
+      release_status: "completed",
+      json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
+    )
+  end
+
 end

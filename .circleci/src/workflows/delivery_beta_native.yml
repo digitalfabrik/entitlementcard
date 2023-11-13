@@ -1,0 +1,41 @@
+when: << pipeline.parameters.run_delivery_beta_native >>
+jobs:
+  - bump_version:
+      prepare_delivery: true
+  #- check_frontend
+  - build_android: #TODO duplicate for nuernberg and floss (check with team if this should be in one workflow or in multiple workflows
+      name: build_android_bayern
+      buildConfig: "bayern"
+      flutterFlavor: "Bayern"
+      requires:
+        - bump_version
+      #  - check_frontend #TODO add again
+      context:
+        - credentials-repo
+        - credentials-ehrenamtskarte
+  - deliver_android:
+      name: deliver_android_bayern
+      buildConfig: "bayern"
+      context:
+        - tuerantuer-google-play
+      production_delivery: false
+      requires:
+        - build_android_bayern
+#  - build_android: #TODO duplicate for nuernberg and floss (check with team if this should be in one workflow or in multiple workflows
+#      name: build_android_nuernberg
+#      buildConfig: "nuernberg"
+#      flutterFlavor: "Nuernberg"
+#      requires:
+#        - bump_version
+#      #  - check_frontend #TODO add again
+#      context:
+#        - credentials-repo
+#        - credentials-ehrenamtskarte
+#  - deliver_android:
+#      name: deliver_android_nuernberg
+#      buildConfig: "nuernberg"
+#      context:
+#        - tuerantuer-google-play
+#      production_delivery: false
+#      requires:
+#        - build_android_nuernberg

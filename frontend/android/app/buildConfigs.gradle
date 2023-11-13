@@ -87,10 +87,23 @@ def determineIcon(buildConfig) {
     return [icon: "${buildConfig.appIcon}"]
 }
 
+
+def determineBuildConfigName() {
+    if (project.hasProperty('BUILD_CONFIG_NAME')) { //TODO we never set this, so check for the correct one
+        return project.BUILD_CONFIG_NAME
+    } else if (System.getenv()["BUILD_CONFIG_NAME"]) {
+        return System.getenv()['BUILD_CONFIG_NAME']
+    } else {
+        logger.warn("WARNING: No build config specified. Using the build config 'bayern'!")
+        return 'bayern'
+    }
+}
+
 ext {
     createBuildConfig = this.&createBuildConfig
     // setupGoogleServices = this.&setupGoogleServices
     setupResourceValues = this.&setupResourceValues
     // determineTheme = this.&determineTheme
     determineIcon = this.&determineIcon
+    determineBuildConfigName = this.&determineBuildConfigName
 }

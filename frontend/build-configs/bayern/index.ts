@@ -1,6 +1,6 @@
-import BuildConfigType, {CommonBuildConfigType} from "../types"
-import publisherText from "./publisherText"
+import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
+import publisherText from "./publisherText"
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
@@ -30,7 +30,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
-    appLocales: ['de'],
+    appLocales: ["de"],
     localeOverridePath: null,
     cardBranding: {
         headerTextColor: "#008dc9",
@@ -62,7 +62,7 @@ export const bayernCommon: CommonBuildConfigType = {
         "assets/bayern/intro_slides/search_with_location.png",
     ],
     featureFlags: {
-        verification: true
+        verification: true,
     },
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
@@ -70,7 +70,7 @@ export const bayernCommon: CommonBuildConfigType = {
         "Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München",
     publisherText,
     disclaimerText,
-    maxCardAmount: 1
+    maxCardAmount: 1,
 }
 
 let bayern: BuildConfigType = {

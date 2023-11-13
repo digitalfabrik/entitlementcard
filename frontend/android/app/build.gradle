@@ -64,6 +64,7 @@ ext.setupVariant = { variant, buildConfigName ->
 }
 
 android {
+    namespace "tuerantuer.app.entitlementcard"
     compileSdkVersion 33
 
     sourceSets {
@@ -89,7 +90,43 @@ android {
     }
 
     signingConfigs {
-        if (localProperties.containsKey("signing.keyAlias")) {
+        var env = System.getenv()
+        println env['KEYSTORE_PATH']
+
+        if (env['KEYSTORE_PATH']) {
+            release {
+                //storeFile file("file:///home/steffi/Dokumente/app-credentials/android/entitlementcard.jks")
+                //storeFile file("${env['KEYSTORE_PATH']}")
+                storeFile file("file:///home/circleci/" + project.property("KEYSTORE_PATH"))
+                //storePassword project.property('my.test')
+                storePassword project.property("KEYSTORE_PASSWORD")
+                keyAlias project.property("KEYSTORE_KEY_ALIAS")
+                keyPassword project.property("KEYSTORE_KEY_PASSWORD")
+            }
+        }
+/*        println "Selecting signingConfig..."
+        var env = System.getenv()
+        println env['KEYSTORE_PATH']
+
+        //if (env['KEYSTORE_PATH']) { // Signing with environment variables (e.g. in the CI)
+        if(project.hasProperty('KEYSTORE_PATH')) { // Signing with environment variables (e.g. in the CI)
+            println "Selected using env var"
+                Bayern {
+                    //TODO can be simplified, if we use the project vars, that have been set according to the project in the fastfile
+                    storeFile file("file:///home/steffi/Dokumente/app-credentials/android/entitlementcard.jks")
+                    //storeFile file("${env['KEYSTORE_PATH']}")
+                    storePassword env['KEYSTORE_PASSWORD']
+                    keyAlias env['KEYSTORE_KEY_ALIAS_BAYERN']
+                    keyPassword env['KEYSTORE_KEY_PASSWORD_BAYERN']
+                }
+                Nuernberg {
+                    storeFile file(env['KEYSTORE_PATH'])
+                    storePassword env['KEYSTORE_PASSWORD']
+                    keyAlias env['KEYSTORE_KEY_ALIAS_NUERNBERG']
+                    keyPassword env['KEYSTORE_KEY_PASSWORD_NUERNBERG']
+                }
+        } else if (localProperties.containsKey("signing.keyAlias")) { // Signing locally with local.properties file
+            println "Selected using localProps"
             localProps {
                 keyAlias localProperties.getProperty('signing.keyAlias')
                 keyPassword localProperties.getProperty('signing.keyPassword')
@@ -97,6 +134,7 @@ android {
                 storePassword localProperties.getProperty('signing.storePassword')
             }
         }
+        println "Finished selecting"*/
     }
 
     buildTypes {
@@ -106,7 +144,12 @@ android {
                 abiFilters 'armeabi-v7a','arm64-v8a','x86_64'
             }
 
-            if (localProperties.containsKey("signing.keyAlias")) {
+            //if (System.getenv('KEYSTORE_PATH')) {
+            if (project.hasProperty('KEYSTORE_PATH')) {
+                signingConfig signingConfigs.release
+                //productFlavors.Bayern.signingConfig = signingConfigs.Bayern
+                //productFlavors.Nuernberg.signingConfig = signingConfigs.Nuernberg
+            } else if ( localProperties.containsKey("signing.keyAlias")) {
                 signingConfig signingConfigs.localProps
             } else {
                 signingConfig signingConfigs.debug
@@ -123,12 +166,22 @@ android {
         }
     }
 
+    def buildConfigName = determineBuildConfigName() //TODO remove never used
+    def buildConfig = createBuildConfig(buildConfigName) //TODO remove never used
+
     defaultConfig {
+        applicationId buildConfig.applicationId
         minSdkVersion 21
         targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        println("set versioncode")
+        if (project.hasProperty('VERSION_CODE')) {
+            println("set to version_code env")
+            versionCode project.VERSION_CODE.toInteger()
+            versionName project.VERSION_NAME
+        }
     }
 
     androidComponents {
@@ -151,4 +204,22 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+// Workaround to fix wrong path lookup by flutter tools, can be removed after upgrading flutter
+// see: https://github.com/flutter/flutter/pull/127133
+// when removing, make sure the release is written to the same directory as before or adjust build_android step to look at the new directory
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith("bundle") && task.name.endsWith("Release")) {
+        def renameTaskName = "rename${task.name.capitalize()}Aab"
+        def oldDir = task.name.substring("bundle".length())
+        def flavor = task.name.substring("bundle".length(), task.name.length() - "Release".length())
+        def flavorLowerCase = flavor.uncapitalize()
+        tasks.create(renameTaskName, Copy) {
+            from("${buildDir}/outputs/bundle/${oldDir}/")
+            into "${buildDir}/outputs/bundle/${flavorLowerCase}Release/"
+            rename "app-${flavor}-release.aab", "app-${flavorLowerCase}-release.aab"
+        }
+        task.finalizedBy(renameTaskName)
+    }
 }

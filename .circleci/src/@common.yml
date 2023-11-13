@@ -14,3 +14,6 @@ parameters:
   run_frontend:
     default: false
     type: boolean
+  run_delivery_beta_native: #TODO add prod_native
+    default: false
+    type: boolean
