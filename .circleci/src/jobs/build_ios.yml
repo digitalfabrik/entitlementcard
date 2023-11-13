@@ -11,10 +11,10 @@ working_directory: ~/project/frontend
 steps:
   - checkout:
       path: ~/project
-  - install-dart-mac
-  - install-fvm
-  - install-app-toolbelt
-  - install-protobuf-mac
+  - install_dart_mac
+  - install_fvm
+  - install_app_toolbelt
+  - install_protobuf_mac
   - run:
       name: Install Flutter Packages
       command: |

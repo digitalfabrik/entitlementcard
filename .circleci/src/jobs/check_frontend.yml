@@ -6,10 +6,10 @@ steps:
   - checkout:
       path: ~/project
   - browser-tools/install-chrome
-  - install-dart-linux
-  - install-fvm
-  - install-app-toolbelt
-  - install-protobuf-linux
+  - install_dart_linux
+  - install_fvm
+  - install_app_toolbelt
+  - install_protobuf_linux
   - run:
       name: Install Flutter Packages
       command: fvm flutter pub get --enforce-lockfile

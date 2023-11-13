@@ -1,31 +1,31 @@
 when: << pipeline.parameters.run_frontend >>
 jobs:
-  - check-frontend
-  - frontend-android-build:
+  - check_frontend
+  - build_android:
       name: frontend-android-build-bayern-floss
       buildConfig: "bayern-floss"
       flutterFlavor: "BayernFloss"
       requires:
         - check-frontend
-  - frontend-android-build:
+  - build_android:
       name: frontend-android-build-bayern
       buildConfig: "bayern"
       flutterFlavor: "Bayern"
       requires:
         - check-frontend
-  - frontend-ios-build:
+  - build_ios:
       name: frontend-ios-build-bayern
       buildConfig: "bayern"
       flutterFlavor: "Bayern"
       requires:
         - check-frontend
-  - frontend-android-build:
+  - build_android:
       name: frontend-android-build-nuernberg
       buildConfig: "nuernberg"
       flutterFlavor: "Nuernberg"
       requires:
         - check-frontend
-  - frontend-ios-build:
+  - build_ios:
       name: frontend-ios-build-nuernberg
       buildConfig: "nuernberg"
       flutterFlavor: "Nuernberg"
