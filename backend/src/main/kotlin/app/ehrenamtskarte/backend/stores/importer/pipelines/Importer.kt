@@ -20,7 +20,7 @@ object Importer {
             logger.info("== Pipeline successfully finished ==")
             true
         } catch (e: Exception) {
-            logger.info("== Pipeline was aborted without altering the database ==", e)
+            logger.error("== Pipeline was aborted without altering the database ==", e)
             false
         }
     }

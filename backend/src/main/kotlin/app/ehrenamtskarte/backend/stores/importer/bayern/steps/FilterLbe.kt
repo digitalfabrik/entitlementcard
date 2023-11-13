@@ -21,7 +21,7 @@ class FilterLbe(config: ImportConfig, private val logger: Logger) :
     private fun filterLbe(store: LbeAcceptingStore) = try {
         store.isValidName() && store.isValidCategory() && store.isValidLocation()
     } catch (e: Exception) {
-        logger.info("$store was filtered out because of an unknown exception while filtering", e)
+        logger.error("$store was filtered out because of an unknown exception while filtering", e)
         false
     }
 

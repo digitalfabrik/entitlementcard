@@ -22,7 +22,7 @@ class FilterGeoData(config: ImportConfig, private val logger: Logger) :
         // TODO can be removed when geodata was added to the csv
         input.filter {
             if (it.longitude == null || it.latitude == null) {
-                logger.info("'${it.name} (${it.streetWithHouseNumber}, ${it.postalCode} ${it.location})' couldn't get proper geoInfo")
+                logger.error("'${it.name} (${it.streetWithHouseNumber}, ${it.postalCode} ${it.location})' couldn't get proper geoInfo")
                 return@filter false
             }
             true
