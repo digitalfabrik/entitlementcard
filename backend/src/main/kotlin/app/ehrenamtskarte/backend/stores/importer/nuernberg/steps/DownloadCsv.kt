@@ -28,7 +28,7 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
 
             return getCSVAcceptingStores(records)
         } catch (e: Exception) {
-            logger.info("Unknown exception while downloading data from csv", e)
+            logger.error("Unknown exception while downloading data from csv", e)
             throw e
         }
     }

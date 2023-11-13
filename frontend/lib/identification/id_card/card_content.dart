@@ -62,9 +62,9 @@ class CardContent extends StatelessWidget {
         : null;
   }
 
-  String? get _passNumber {
-    return cardInfo.extensions.hasExtensionNuernbergPassNumber()
-        ? cardInfo.extensions.extensionNuernbergPassNumber.passNumber.toString()
+  String? get _passId {
+    return cardInfo.extensions.hasExtensionNuernbergPassId()
+        ? cardInfo.extensions.extensionNuernbergPassId.passId.toString()
         : null;
   }
 
@@ -87,7 +87,7 @@ class CardContent extends StatelessWidget {
         ? premiumCardColor
         : standardCardColor;
     final formattedBirthday = _formattedBirthday;
-    final passNumber = _passNumber;
+    final passId = _passId;
     final startDate = _formattedStartDate;
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -201,9 +201,9 @@ class CardContent extends StatelessWidget {
                                       style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                                       textAlign: TextAlign.start,
                                     ),
-                                  if (passNumber != null)
+                                  if (passId != null)
                                     Text(
-                                      passNumber,
+                                      passId,
                                       style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
                                       textAlign: TextAlign.end,
                                     ),

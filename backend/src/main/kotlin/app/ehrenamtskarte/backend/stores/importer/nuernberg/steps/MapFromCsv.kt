@@ -49,7 +49,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
                 null
             )
         } catch (e: Exception) {
-            logger.info("Exception occurred while mapping $it", e)
+            logger.error("Exception occurred while mapping $it", e)
             null
         }
     }

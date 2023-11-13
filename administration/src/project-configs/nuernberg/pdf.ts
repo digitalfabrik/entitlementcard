@@ -1,7 +1,6 @@
 import { PDFForm, rgb } from 'pdf-lib'
 
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
-import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { findExtension } from '../../cards/extensions/extensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'
 import PlainDate from '../../util/PlainDate'
@@ -13,7 +12,7 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
   if (!expirationDay) {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
-  const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.nuernbergPassId
+  const passId = info.extensions?.extensionNuernbergPassId?.passId
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
   const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
@@ -48,14 +47,9 @@ const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlu
   return [nameField, addressLine1Field, addressLine2Field, plzAndLocationField]
 }
 
-const renderPassId = ({ cardBlueprint }: InfoParams) => {
-  const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.nuernbergPassId
-  return passId?.toString() ?? ''
-}
-
-const renderPassNumber = ({ info }: InfoParams) => {
-  const passNumber = info.extensions?.extensionNuernbergPassNumber?.passNumber
-  return passNumber ? `Nürnberg-Pass-Nr.: ${passNumber?.toString()}` : ''
+const renderPassId = ({ info }: InfoParams) => {
+  const passId = info.extensions?.extensionNuernbergPassId?.passId
+  return passId ? `${passId?.toString()}` : ''
 }
 
 const renderCardHash = ({ cardInfoHash }: InfoParams) => {
@@ -75,7 +69,6 @@ const pdfConfiguration: PdfConfig = {
     text: [
       { x: 108, y: 243, maxWidth: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
       { x: 135, y: 85, maxWidth: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
-      { x: 27, y: 265, maxWidth: 46, fontSize: 8, angle: 90, infoToText: renderPassNumber },
       { x: 153.892, y: 178, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
     form: [{ infoToFormFields: createAddressFormFields, x: 18.5, y: 68.5, width: 57, fontSize: 10 }],

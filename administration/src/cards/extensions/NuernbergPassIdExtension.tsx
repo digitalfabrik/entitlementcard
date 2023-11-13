@@ -1,10 +1,12 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { PartialMessage } from '@bufbuild/protobuf'
 
+import { CardExtensions, NuernergPassIdentifier } from '../../generated/card_pb'
 import { Extension } from './extensions'
 
-const nuernbergPassIdNumberLength = 10
+type NuernbergPassIdState = { passId: number }
 
-type NuernbergPassIdState = { nuernbergPassId: number }
+const nuernbergPassIdLength = 10
 class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   public readonly name = NuernbergPassIdExtension.name
 
@@ -19,11 +21,11 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
           id='nuernberg-pass-id-input'
           placeholder='12345678'
           intent={this.isValid() ? undefined : Intent.DANGER}
-          value={this.state?.nuernbergPassId.toString() ?? ''}
-          maxLength={nuernbergPassIdNumberLength}
+          value={this.state?.passId.toString() ?? ''}
+          maxLength={nuernbergPassIdLength}
           onChange={event => {
             const value = event.target.value
-            if (value.length > nuernbergPassIdNumberLength) {
+            if (value.length > nuernbergPassIdLength) {
               return
             }
 
@@ -36,7 +38,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
             }
 
             this.state = {
-              nuernbergPassId: parsedNumber,
+              passId: parsedNumber,
             }
             onUpdate()
           }}
@@ -48,22 +50,24 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   causesInfiniteLifetime() {
     return false
   }
+  setProtobufData(message: PartialMessage<CardExtensions>) {
+    message.extensionNuernbergPassId = {
+      identifier: NuernergPassIdentifier.passId,
+      passId: this.state?.passId,
+    }
+  }
 
   isValid() {
-    return (
-      this.state !== null &&
-      this.state.nuernbergPassId > 0 &&
-      this.state.nuernbergPassId < 10 ** nuernbergPassIdNumberLength
-    )
+    return this.state !== null && this.state.passId > 0 && this.state.passId < 10 ** nuernbergPassIdLength
   }
 
   fromString(state: string) {
-    const nuernbergPassId = parseInt(state, 10)
-    this.state = !isNaN(nuernbergPassId) ? { nuernbergPassId } : null
+    const passId = parseInt(state, 10)
+    this.state = !isNaN(passId) ? { passId } : null
   }
 
   toString() {
-    return this.state ? `${this.state.nuernbergPassId}` : ''
+    return this.state ? `${this.state.passId}` : ''
   }
 }
 

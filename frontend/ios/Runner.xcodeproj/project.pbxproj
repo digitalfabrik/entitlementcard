@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -60,6 +60,55 @@
 			proxyType = 2;
 			remoteGlobalIDString = 502E20F09A7CAFBD1DE1AA882DCC550C;
 			remoteInfo = geolocator_apple;
+		};
+		2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC7FD3A4F7868A76CB9EB9F8F0753493;
+			remoteInfo = fk_user_agent;
+		};
+		2E44B1002ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AE157A33FEF959A214796BFF348717F6;
+			remoteInfo = path_provider_foundation;
+		};
+		2E44B1022ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C7AD28D5FB25A8DEDF61F78996932FA6;
+			remoteInfo = permission_handler_apple;
+		};
+		2E44B1042ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0115C3C00C175D77422084DD0542CE6F;
+			remoteInfo = Sentry;
+		};
+		2E44B1062ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 69E79B6352F5EEE6319DD35575B44D3F;
+			remoteInfo = sentry_flutter;
+		};
+		2E44B1082ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B467DD492938EF656F5C454AC944394E;
+			remoteInfo = SentryPrivate;
+		};
+		2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 93C6A45C6E4792269BE9BE0073839BF0;
+			remoteInfo = shared_preferences_foundation;
 		};
 		502F2F2429803DDE00B6F8ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -145,26 +194,12 @@
 			remoteGlobalIDString = C39BE06027F24EB0328A76E7507FA463;
 			remoteInfo = package_info_plus;
 		};
-		5093F3E728D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BEDB77D7DFDD5C9008E7D3FC4206FEC9;
-			remoteInfo = path_provider_ios;
-		};
 		5093F3E928D8D252009A9A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 21B03CA622E690725A6626C088E1D09F;
 			remoteInfo = ReachabilitySwift;
-		};
-		5093F3EB28D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9DE2C5FB92889028E9DAEBC81231108D;
-			remoteInfo = shared_preferences_ios;
 		};
 		5093F3ED28D8D252009A9A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -245,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				0BE935D1274FD4CA004AF690 /* connectivity_plus */,
+				2E44B0FF2ADED161006E42CD /* fk_user_agent */,
 				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */,
 				0BE935D3274FD4CA004AF690 /* geolocator_apple */,
 				502F2F2529803DDE00B6F8ED /* GoogleDataTransport */,
@@ -258,12 +294,16 @@
 				502F2F2F29803DDE00B6F8ED /* mobile_scanner */,
 				502F2F3129803DDE00B6F8ED /* nanopb */,
 				5093F3E628D8D252009A9A33 /* package_info_plus */,
-				5093F3E828D8D252009A9A33 /* path_provider_ios */,
+				2E44B1012ADED161006E42CD /* path_provider_foundation */,
+				2E44B1032ADED161006E42CD /* permission_handler_apple */,
 				0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */,
 				502F2F3329803DDE00B6F8ED /* PromisesObjC */,
 				502F2F3529803DDE00B6F8ED /* Protobuf */,
 				5093F3EA28D8D252009A9A33 /* ReachabilitySwift */,
-				5093F3EC28D8D252009A9A33 /* shared_preferences_ios */,
+				2E44B1052ADED161006E42CD /* Sentry */,
+				2E44B1072ADED161006E42CD /* sentry_flutter */,
+				2E44B1092ADED161006E42CD /* SentryPrivate */,
+				2E44B10B2ADED161006E42CD /* shared_preferences_foundation */,
 				5093F3EE28D8D252009A9A33 /* url_launcher_ios */,
 			);
 			name = Products;
@@ -480,6 +520,62 @@
 			name = geolocator_apple;
 			path = geolocator_apple.framework;
 			remoteRef = 0BE935D2274FD4CA004AF690 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B0FF2ADED161006E42CD /* fk_user_agent */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = fk_user_agent;
+			path = fk_user_agent.framework;
+			remoteRef = 2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1012ADED161006E42CD /* path_provider_foundation */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = path_provider_foundation;
+			path = path_provider_foundation.framework;
+			remoteRef = 2E44B1002ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1032ADED161006E42CD /* permission_handler_apple */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = permission_handler_apple;
+			path = permission_handler_apple.framework;
+			remoteRef = 2E44B1022ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1052ADED161006E42CD /* Sentry */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = Sentry;
+			path = Sentry.framework;
+			remoteRef = 2E44B1042ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1072ADED161006E42CD /* sentry_flutter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = sentry_flutter;
+			path = sentry_flutter.framework;
+			remoteRef = 2E44B1062ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1092ADED161006E42CD /* SentryPrivate */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = SentryPrivate;
+			path = SentryPrivate.framework;
+			remoteRef = 2E44B1082ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B10B2ADED161006E42CD /* shared_preferences_foundation */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = shared_preferences_foundation;
+			path = shared_preferences_foundation.framework;
+			remoteRef = 2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		502F2F2529803DDE00B6F8ED /* GoogleDataTransport */ = {

@@ -1,21 +1,21 @@
 when: << pipeline.parameters.run_backend >>
 jobs:
-  - backend-build
-  - administration-build
-  - martin-build
-  - backend-pack:
+  - build_backend
+  - build_administration
+  - build_martin
+  - pack_backend:
       requires:
         - backend-build
-  - backend-health-check:
+  - check_health_backend:
       requires:
         - backend-pack
-  - administration-pack:
+  - pack_administration:
       requires:
         - administration-build
-  - martin-pack:
+  - pack_martin:
       requires:
         - martin-build
-  - meta-pack
+  - pack_meta
   - deploy:
       name: deploy-staging
       server: entitlementcard-test.tuerantuer.org

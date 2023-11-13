@@ -24,7 +24,7 @@ class SanitizeAddress(config: ImportConfig, private val logger: Logger) : Pipeli
 
             it.sanitizePostalCode().sanitizeStreetHouseNumber()
         } catch (e: Exception) {
-            logger.info("Exception occurred while sanitizing the address of $it", e)
+            logger.error("Exception occurred while sanitizing the address of $it", e)
             null
         }
     }

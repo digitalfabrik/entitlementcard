@@ -1,11 +1,11 @@
 when: << pipeline.parameters.run_commit >>
 jobs:
   - check
-  - backend-build
-  - backend-pack:
+  - build_backend
+  - pack_backend:
       requires:
-        - backend-build
-  - backend-health-check:
+        - build_backend
+  - check_health_backend:
       requires:
-        - backend-pack
-  - check-frontend
+        - pack_backend
+  - check_frontend

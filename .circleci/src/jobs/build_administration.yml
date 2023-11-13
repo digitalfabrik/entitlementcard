@@ -8,8 +8,8 @@ steps:
   - restore_cache:
       keys:
         - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-  - install-dart-linux
-  - install-protobuf-linux
+  - install_dart_linux
+  - install_protobuf_linux
   - run:
       name: Install node dependencies
       command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
