@@ -8,6 +8,9 @@ parameters:
   run_commit:
     default: true
     type: boolean
+  run_administration:
+    default: false
+    type: boolean
   run_backend:
     default: false
     type: boolean

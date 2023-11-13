@@ -383,7 +383,7 @@ jobs:
             - run:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
                 name: Check health
-    deploy:
+    deploy_administration:
         docker:
             - image: cimg/base:2022.09
         parameters:
@@ -404,11 +404,47 @@ jobs:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - run:
-                command: |-
+                command: |
                     echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
-                    echo "Uploading: " /tmp/workspace/debs/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+                    echo "Uploading: " /tmp/workspace/debs/administration/*.deb
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
                 name: SFTP upload
+            - run:
+                command: |-
+                    ssh ci@<< parameters.server >>
+                    apt update && apt install eak-administration
+                name: Install package
+    deploy_backend:
+        docker:
+            - image: cimg/base:2022.09
+        parameters:
+            server:
+                enum:
+                    - entitlementcard.tuerantuer.org
+                    - entitlementcard-test.tuerantuer.org
+                type: enum
+            ssh-host-fingerprint:
+                enum:
+                    - '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+                    - '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+                type: enum
+        steps:
+            - attach_workspace:
+                at: /tmp/workspace
+            - add_ssh_keys:
+                fingerprints:
+                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+            - run:
+                command: |
+                    echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
+                    echo "Uploading: " /tmp/workspace/debs/backend/*.deb
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+                name: SFTP upload
+            - run:
+                command: |-
+                    ssh ci@<< parameters.server >>
+                    apt update && apt install eak-backend eak-martin eak
+                name: Install packages
     pack_administration:
         docker:
             - image: debian:11
@@ -419,13 +455,13 @@ jobs:
                 at: /tmp/workspace
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
             - run: |
-                mkdir -p /tmp/artifacts/debs
-                mv *.deb /tmp/artifacts/debs
+                mkdir -p /tmp/artifacts/debs/administration
+                mv *.deb /tmp/artifacts/debs/administration
             - store_artifacts:
                 path: /tmp/artifacts
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
+                    - debs/administration/*.deb
                 root: /tmp/artifacts
         working_directory: ~/project/administration
     pack_backend:
@@ -438,13 +474,13 @@ jobs:
                 at: /tmp/workspace
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
-                mkdir -p /tmp/artifacts/debs
-                mv *.deb /tmp/artifacts/debs
+                mkdir -p /tmp/artifacts/debs/backend
+                mv *.deb /tmp/artifacts/debs/backend
             - store_artifacts:
                 path: /tmp/artifacts
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
+                    - debs/backend/*.deb
                 root: /tmp/artifacts
         working_directory: ~/project/backend
     pack_martin:
@@ -494,6 +530,9 @@ orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
 parameters:
+    run_administration:
+        default: false
+        type: boolean
     run_backend:
         default: false
         type: boolean
@@ -505,10 +544,40 @@ parameters:
         type: boolean
 version: 2.1
 workflows:
+    administration:
+        jobs:
+            - build_administration
+            - pack_administration:
+                requires:
+                    - administration-build
+            - deploy_administration:
+                context:
+                    - entitlementcard-apt
+                filters:
+                    branches:
+                        only:
+                            - /release.*/
+                name: deploy-staging
+                requires:
+                    - administration-pack
+                server: entitlementcard-test.tuerantuer.org
+                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+            - deploy_administration:
+                context:
+                    - entitlementcard-apt
+                filters:
+                    branches:
+                        only:
+                            - /release.*/
+                name: deploy-production
+                requires:
+                    - administration-pack
+                server: entitlementcard.tuerantuer.org
+                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+        when: << pipeline.parameters.run_administration >>
     backend:
         jobs:
             - build_backend
-            - build_administration
             - build_martin
             - pack_backend:
                 requires:
@@ -516,14 +585,11 @@ workflows:
             - check_health_backend:
                 requires:
                     - backend-pack
-            - pack_administration:
-                requires:
-                    - administration-build
             - pack_martin:
                 requires:
                     - martin-build
             - pack_meta
-            - deploy:
+            - deploy_backend:
                 context:
                     - entitlementcard-apt
                 filters:
@@ -534,12 +600,11 @@ workflows:
                 requires:
                     - backend-pack
                     - backend-health-check
-                    - administration-pack
                     - martin-pack
                     - meta-pack
                 server: entitlementcard-test.tuerantuer.org
                 ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-            - deploy:
+            - deploy_backend:
                 context:
                     - entitlementcard-apt
                 filters:
@@ -549,7 +614,6 @@ workflows:
                 name: deploy-production
                 requires:
                     - backend-pack
-                    - administration-pack
                     - martin-pack
                     - meta-pack
                 server: entitlementcard.tuerantuer.org
@@ -562,6 +626,10 @@ workflows:
             - pack_backend:
                 requires:
                     - build_backend
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
             - check_health_backend:
                 requires:
                     - pack_backend

@@ -1,42 +1,29 @@
-when: << pipeline.parameters.run_backend >>
+when: << pipeline.parameters.run_administration >>
 jobs:
-  - build_backend
-  - build_martin
-  - pack_backend:
+  - build_administration
+  - pack_administration:
       requires:
-        - backend-build
-  - check_health_backend:
-      requires:
-        - backend-pack
-  - pack_martin:
-      requires:
-        - martin-build
-  - pack_meta
-  - deploy_backend:
+        - administration-build
+  - deploy_administration:
       name: deploy-staging
       server: entitlementcard-test.tuerantuer.org
       ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
       context:
         - entitlementcard-apt
       requires:
-        - backend-pack
-        - backend-health-check
-        - martin-pack
-        - meta-pack
+        - administration-pack
       filters:
         branches:
           only:
             - /release.*/
-  - deploy_backend:
+  - deploy_administration:
       name: deploy-production
       server: entitlementcard.tuerantuer.org
       ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
       context:
         - entitlementcard-apt
       requires:
-        - backend-pack
-        - martin-pack
-        - meta-pack
+        - administration-pack
       filters:
         branches:
           only:

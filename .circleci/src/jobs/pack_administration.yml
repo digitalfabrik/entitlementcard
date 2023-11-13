@@ -8,11 +8,11 @@ steps:
       at: /tmp/workspace
   - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
   - run: |
-      mkdir -p /tmp/artifacts/debs
-      mv *.deb /tmp/artifacts/debs
+      mkdir -p /tmp/artifacts/debs/administration
+      mv *.deb /tmp/artifacts/debs/administration
   - store_artifacts:
       path: /tmp/artifacts
   - persist_to_workspace:
       root: /tmp/artifacts
       paths:
-        - debs/*.deb
+        - debs/administration/*.deb
