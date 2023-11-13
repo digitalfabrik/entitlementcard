@@ -51,14 +51,14 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999));
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
       expect(cardInfo.toCanonicalJsonObject(), {
         '1': 'Max Mustermann',
         '2': '14600',
         '3': {
           '1': {'1': '93'}, // extensionRegion
           '2': {'1': '-3650'}, // extensionBirthday
-          '3': {'1': '99999999'}, // extensionNuernbergPassNumber
+          '3': {'1': '99999999'}, // extensionNuernbergPassId
         },
       });
     });
@@ -70,7 +70,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
-          ..extensionNuernbergPassNumber = (NuernbergPassNumberExtension()..passNumber = 99999999)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
       expect(cardInfo.toCanonicalJsonObject(), {
         '1': 'Max Mustermann',
@@ -78,7 +78,7 @@ void main() {
         '3': {
           '1': {'1': '93'}, // extensionRegion
           '2': {'1': '-3650'}, // extensionBirthday
-          '3': {'1': '99999999'}, // extensionNuernbergPassNumber
+          '3': {'1': '99999999'}, // extensionNuernbergPassId
           '5': {'1': '730'} // startDay extension
         },
       });
