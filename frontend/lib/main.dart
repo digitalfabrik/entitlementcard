@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/settings_provider.dart';
+import 'package:ehrenamtskarte/util/android_certificate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slang/builder/model/enums.dart';
@@ -14,8 +14,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // support android version < 7.1.1 by adding a valid certificate - https://stackoverflow.com/questions/69511057
-  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+  if (Platform.isAndroid && await certificateIsRequired()) {
+    loadCertificate();
+  }
 
   // Only use device locale if set as available in build config, otherwise fallback to de
   final locale = Platform.localeName.split('_')[0];
