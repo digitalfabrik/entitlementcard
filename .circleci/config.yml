@@ -539,7 +539,7 @@ orbs:
     gradle: circleci/gradle@2.2.0
 parameters:
     run_commit:
-        default: false
+        default: true
         type: boolean
     run_deliver_beta_administration:
         default: false
