@@ -1,0 +1,15 @@
+when: << pipeline.parameters.run_deliver_production_administration >>
+jobs:
+  - build_administration
+  - pack_administration:
+      requires:
+        - build_administration
+  - deploy_administration:
+      name: deploy_production
+      server: entitlementcard.tuerantuer.org
+      ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+      context:
+        - entitlementcard-apt
+      requires:
+        - pack_administration
+

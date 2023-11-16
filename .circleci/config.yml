@@ -407,13 +407,17 @@ jobs:
                 command: |
                     echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
                     echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/srv/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
-                name: SFTP upload
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
+                name: SFTP upload package
             - run:
-                command: |-
-                    ssh -o "StrictHostKeyChecking=accept-new" ci@<< parameters.server >>
-                    apt update && apt install eak-administration
-                name: Install package
+                command: |
+                    sudo apt update
+                    sudo apt install curl -y
+                name: Install Curl
+            - run:
+                command: |
+                    curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
+                name: Install package via webhook
     deploy_backend:
         docker:
             - image: cimg/base:2022.09
@@ -438,13 +442,17 @@ jobs:
                 command: |
                     echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
                     echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/srv/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
-                name: SFTP upload
+                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+                name: SFTP upload packages
             - run:
-                command: |-
-                    ssh -o "StrictHostKeyChecking=accept-new" ci@<< parameters.server >>
-                    apt update && apt install eak-backend eak-martin eak
-                name: Install packages
+                command: |
+                    sudo apt update
+                    sudo apt install curl -y
+                name: Install Curl
+            - run:
+                command: |
+                    curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+                name: Install package via webhook
     pack_administration:
         docker:
             - image: debian:11
@@ -530,13 +538,19 @@ orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
 parameters:
-    run_administration:
-        default: false
-        type: boolean
-    run_backend:
-        default: false
-        type: boolean
     run_commit:
+        default: false
+        type: boolean
+    run_deliver_beta_administration:
+        default: false
+        type: boolean
+    run_deliver_beta_backend:
+        default: false
+        type: boolean
+    run_deliver_production_administration:
+        default: false
+        type: boolean
+    run_deliver_production_backend:
         default: false
         type: boolean
     run_frontend:
@@ -544,55 +558,6 @@ parameters:
         type: boolean
 version: 2.1
 workflows:
-    administration:
-        jobs:
-            - build_administration
-            - pack_administration:
-                requires:
-                    - build_administration
-            - deploy_administration:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-staging
-                requires:
-                    - pack_administration
-                server: entitlementcard-test.tuerantuer.org
-                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-        when: << pipeline.parameters.run_administration >>
-    backend:
-        jobs:
-            - build_backend
-            - build_martin
-            - pack_backend:
-                requires:
-                    - backend-build
-            - check_health_backend:
-                requires:
-                    - backend-pack
-            - pack_martin:
-                requires:
-                    - martin-build
-            - pack_meta
-            - deploy_backend:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-staging
-                requires:
-                    - backend-pack
-                    - backend-health-check
-                    - martin-pack
-                    - meta-pack
-                server: entitlementcard-test.tuerantuer.org
-                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-        when: << pipeline.parameters.run_backend >>
     commit:
         jobs:
             - check
@@ -609,6 +574,88 @@ workflows:
                     - pack_backend
             - check_frontend
         when: << pipeline.parameters.run_commit >>
+    deliver_beta_administration:
+        jobs:
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
+            - deploy_administration:
+                context:
+                    - entitlementcard-apt
+                name: deploy_staging
+                requires:
+                    - pack_administration
+                server: entitlementcard-test.tuerantuer.org
+                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+        when: << pipeline.parameters.run_deliver_beta_administration >>
+    deliver_beta_backend:
+        jobs:
+            - build_backend
+            - build_martin
+            - pack_backend:
+                requires:
+                    - build_backend
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+            - pack_meta
+            - deploy_backend:
+                context:
+                    - entitlementcard-apt
+                name: deploy_staging
+                requires:
+                    - pack_backend
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+                server: entitlementcard-test.tuerantuer.org
+                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+        when: << pipeline.parameters.run_deliver_beta_backend >>
+    deliver_production_administration:
+        jobs:
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
+            - deploy_administration:
+                context:
+                    - entitlementcard-apt
+                name: deploy_production
+                requires:
+                    - pack_administration
+                server: entitlementcard.tuerantuer.org
+                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+        when: << pipeline.parameters.run_deliver_production_administration >>
+    deliver_production_backend:
+        jobs:
+            - build_backend
+            - build_martin
+            - pack_backend:
+                requires:
+                    - build_backend
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+            - pack_meta
+            - deploy_backend:
+                context:
+                    - entitlementcard-apt
+                name: deploy_production
+                requires:
+                    - pack_backend
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+                server: entitlementcard.tuerantuer.org
+                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+        when: << pipeline.parameters.run_deliver_production_backend >>
     frontend:
         jobs:
             - check_frontend

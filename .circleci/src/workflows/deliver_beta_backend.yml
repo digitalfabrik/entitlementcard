@@ -1,30 +1,26 @@
-when: << pipeline.parameters.run_backend >>
+when: << pipeline.parameters.run_deliver_beta_backend >>
 jobs:
   - build_backend
   - build_martin
   - pack_backend:
       requires:
-        - backend-build
+        - build_backend
   - check_health_backend:
       requires:
-        - backend-pack
+        - pack_backend
   - pack_martin:
       requires:
-        - martin-build
+        - build_martin
   - pack_meta
   - deploy_backend:
-      name: deploy-staging
+      name: deploy_staging
       server: entitlementcard-test.tuerantuer.org
       ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
       context:
         - entitlementcard-apt
       requires:
-        - backend-pack
-        - backend-health-check
-        - martin-pack
-        - meta-pack
-      filters:
-        branches:
-          only:
-            - /release.*/
+        - pack_backend
+        - check_health_backend
+        - pack_martin
+        - pack_meta
 

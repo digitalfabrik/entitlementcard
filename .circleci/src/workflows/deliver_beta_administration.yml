@@ -1,19 +1,15 @@
-when: << pipeline.parameters.run_administration >>
+when: << pipeline.parameters.run_deliver_beta_administration >>
 jobs:
   - build_administration
   - pack_administration:
       requires:
         - build_administration
   - deploy_administration:
-      name: deploy-staging
+      name: deploy_staging
       server: entitlementcard-test.tuerantuer.org
       ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
       context:
         - entitlementcard-apt
       requires:
         - pack_administration
-      filters:
-        branches:
-          only:
-            - /release.*/
 
