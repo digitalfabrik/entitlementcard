@@ -24,6 +24,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  device_info_plus: "^9.1.0"
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
@@ -110,6 +111,7 @@ flutter:
     - assets/nuernberg/background.png
     - assets/nuernberg/intro_slides/
     - assets/nuernberg/l10n/
+    - assets/ca/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.
