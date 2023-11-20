@@ -4,12 +4,11 @@ jobs:
   - pack_administration:
       requires:
         - build_administration
-  - deploy_administration:
-      name: deploy_staging
-      server: entitlementcard-test.tuerantuer.org
-      ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
+  - deliver_administration:
+      name: deliver_administration_staging
+      production: false
       context:
-        - entitlementcard-apt
+        - credentials-ehrenamtskarte
       requires:
         - pack_administration
 

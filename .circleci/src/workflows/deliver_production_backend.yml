@@ -12,12 +12,11 @@ jobs:
       requires:
         - build_martin
   - pack_meta
-  - deploy_backend:
-      name: deploy_production
-      server: entitlementcard.tuerantuer.org
-      ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
+  - deliver_backend:
+      name: deliver_backend_production
+      production: true
       context:
-        - entitlementcard-apt
+        - credentials-ehrenamtskarte
       requires:
         - pack_backend
         - check_health_backend
