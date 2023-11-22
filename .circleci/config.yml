@@ -526,10 +526,6 @@ workflows:
             - deploy:
                 context:
                     - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
                 name: deploy-staging
                 requires:
                     - pack_backend
@@ -539,22 +535,6 @@ workflows:
                     - pack_meta
                 server: entitlementcard-test.tuerantuer.org
                 ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-            - deploy:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-production
-                requires:
-                    - pack_backend
-                    - check_health_backend
-                    - pack_administration
-                    - pack_martin
-                    - pack_meta
-                server: entitlementcard.tuerantuer.org
-                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
         when: << pipeline.parameters.run_backend >>
     commit:
         jobs:
