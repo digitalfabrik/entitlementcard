@@ -85,7 +85,7 @@ let nuernberg: BuildConfigType = {
     },
     ios: {
         ...nuernbergCommon,
-        bundleIdentifier: "app.entitlementcard.nuernberg",
+        bundleIdentifier: "app.sozialpass.nuernberg",
     },
 }
 

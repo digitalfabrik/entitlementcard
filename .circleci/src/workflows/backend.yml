@@ -5,16 +5,16 @@ jobs:
   - build_martin
   - pack_backend:
       requires:
-        - backend-build
+        - build_backend
   - check_health_backend:
       requires:
-        - backend-pack
+        - pack_backend
   - pack_administration:
       requires:
-        - administration-build
+        - build_administration
   - pack_martin:
       requires:
-        - martin-build
+        - build_martin
   - pack_meta
   - deploy:
       name: deploy-staging
@@ -23,11 +23,11 @@ jobs:
       context:
         - entitlementcard-apt
       requires:
-        - backend-pack
-        - backend-health-check
-        - administration-pack
-        - martin-pack
-        - meta-pack
+        - pack_backend
+        - check_health_backend
+        - pack_administration
+        - pack_martin
+        - pack_meta
       filters:
         branches:
           only:
@@ -39,10 +39,11 @@ jobs:
       context:
         - entitlementcard-apt
       requires:
-        - backend-pack
-        - administration-pack
-        - martin-pack
-        - meta-pack
+        - pack_backend
+        - check_health_backend
+        - pack_administration
+        - pack_martin
+        - pack_meta
       filters:
         branches:
           only:
