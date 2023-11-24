@@ -7,6 +7,7 @@ class LocationServiceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return AlertDialog(
       title: Text(t.location.activateLocationAccess),
       content: Text(t.location.activateLocationAccessSettings),
@@ -25,6 +26,7 @@ class RationaleDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return AlertDialog(
       title: Text(t.location.locationPermission),
       content: Column(

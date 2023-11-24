@@ -178,6 +178,7 @@ class QrCodeAndStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CardStatus status = CardStatus.from(userCode);
+    final t = context.t;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),

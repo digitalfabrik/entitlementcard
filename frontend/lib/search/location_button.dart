@@ -36,6 +36,7 @@ class _LocationButtonState extends State<LocationButton> {
       return Container();
     }
     final settings = Provider.of<SettingsModel>(context);
+    final t = context.t;
     if (settings.locationFeatureEnabled) {
       return Container(
         alignment: Alignment.bottomCenter,

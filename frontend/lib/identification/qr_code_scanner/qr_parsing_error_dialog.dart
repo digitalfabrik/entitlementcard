@@ -9,6 +9,7 @@ class QrParsingErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return AlertDialog(
       title: Text(t.identification.scanningFailed),
       content: SingleChildScrollView(

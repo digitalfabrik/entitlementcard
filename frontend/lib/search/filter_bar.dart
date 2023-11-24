@@ -13,6 +13,7 @@ class FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final sortedCategories = [...categoryAssets(context)];
     sortedCategories.removeWhere((category) => category.id == 9);
     sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));

@@ -8,6 +8,7 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return AlertDialog(
       title: Text(t.identification.cameraAccessRequired, style: TextStyle(fontSize: 18)),
       content: SingleChildScrollView(

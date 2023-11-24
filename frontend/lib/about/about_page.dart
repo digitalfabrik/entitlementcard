@@ -29,6 +29,8 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final config = Configuration.of(context);
+    //final t = context.t;
+    final t = Translations.of(context);
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {

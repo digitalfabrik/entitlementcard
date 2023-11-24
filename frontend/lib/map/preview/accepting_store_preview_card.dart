@@ -13,6 +13,7 @@ class AcceptingStorePreviewError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return InkWell(
       onTap: refetch,
       child: Container(

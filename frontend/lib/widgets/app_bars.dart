@@ -86,6 +86,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return SliverAppBar(
       title: TextField(
