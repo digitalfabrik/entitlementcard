@@ -28,14 +28,12 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Einlesen von QR-Codes und Abfotografieren von Dokumenten für das Bewerbungsformular.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Anhängen von Bildern für das Bewerbungsformular.</string>
+	<key>CFBundleLocalizations</key>
+    <array>
+       <string>en</string>
+       <string>de</string>
+    </array>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
