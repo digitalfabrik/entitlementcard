@@ -5,10 +5,6 @@
     "disclaimer": "Haftung, Haftungsausschluss und Impressum",
     "infoTitle": "Info",
     "languageChange": "Sprache wechseln",
-    "languages(map)": {
-      "en": "Englisch",
-      "de": "Deutsch"
-    },
     "languageChangeSuccessful": "Ihre Sprache wurde erfolgreich geändert!",
     "licenses": {
       "one": "Lizenz",

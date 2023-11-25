@@ -5,10 +5,6 @@
     "disclaimer": "Liability, disclaimer and imprint",
     "infoTitle": "Info",
     "languageChange": "Change language",
-    "languages(map)": {
-      "en": "English",
-      "de": "German"
-    },
     "languageChangeSuccessful": "Your language was changed successfully!",
     "licenses": {
       "one": "License",
