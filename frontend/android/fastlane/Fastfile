@@ -45,9 +45,6 @@ platform :android do
 
     puts("Decrypting keystore")
 
-    sh("id -u")
-    sh("gpg --version") #TODO remove
-
     sh("gpg --verbose --passphrase #{CREDENTIALS_KEYSTORE_PASSWORD} --pinentry-mode loopback \\
                 -o ~/#{KEYSTORE_PATH} -d #{CREDENTIALS_KEYSTORE_PATH}")
   end
@@ -64,16 +61,11 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
     flavor = options[:flavor]
+    build_config_name = options[:build_config_name]
 
     if [version_name, version_code].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
-
-    puts(version_code)
-    puts(version_name)
-
-    # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
-    # ENV["EXTRA_PACKAGER_ARGS"] = "--config ./metro.config.ci.js"
 
     gradle_system_properties = {
       # 2GB Gradle + 1GB dex + 2-2.5GB RN < 6GB of circleci resource class medium+
@@ -86,26 +78,21 @@ platform :android do
       gradle_system_properties["org.gradle.workers.max"] = ENV['TOTAL_CPUS']
     end
 
-    if(flavor == 'Bayern')
-      keystore_key_alias = KEYSTORE_KEY_ALIAS_BAYERN
-      keystore_key_password = KEYSTORE_KEY_PASSWORD_BAYERN
-    end
-    if (flavor == 'Nuernberg')
-      KEYSTORE_KEY_ALIAS = KEYSTORE_KEY_ALIAS_NUERNBERG # TODO adjust as above for bayern
-      KEYSTORE_KEY_PASSWORD = KEYSTORE_KEY_PASSWORD_NUERNBERG
-    end
+    sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
     gradle(
       task: "bundle",
       flavor: flavor,
+      flags: " -Ptarget=lib/main.dart",
       build_type: "Release",
       properties: {
         :VERSION_CODE => version_code,
         :VERSION_NAME => version_name,
-        "KEYSTORE_PATH" => KEYSTORE_PATH,
-        "KEYSTORE_KEY_ALIAS" => keystore_key_alias,
-        "KEYSTORE_PASSWORD" => KEYSTORE_PASSWORD,
-        "KEYSTORE_KEY_PASSWORD" => keystore_key_password,
+        :BUILD_CONFIG_NAME => build_config_name,
+        :KEYSTORE_PATH => KEYSTORE_PATH,
+        :KEYSTORE_KEY_ALIAS => flavor == 'Bayern' ? KEYSTORE_KEY_ALIAS_BAYERN : KEYSTORE_KEY_ALIAS_NUERNBERG,
+        :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
+        :KEYSTORE_KEY_PASSWORD => flavor == 'Bayern' ? KEYSTORE_KEY_PASSWORD_BAYERN : KEYSTORE_KEY_PASSWORD_NUERNBERG,
       }.compact,
       system_properties: gradle_system_properties,
       print_command: false
@@ -126,9 +113,7 @@ platform :android do
     if [version_name, version_code, production_delivery, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
-    track = production_delivery === true ? "production" : "beta"
-
-    puts(version_code)
+    track = production_delivery === true ? "production" : "open-testing"
 
     application_id = sh("app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
 

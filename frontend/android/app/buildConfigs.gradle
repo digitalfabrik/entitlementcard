@@ -41,26 +41,6 @@ def createBuildConfig(buildConfigName) {
     return buildConfig
 }
 
-// def setupGoogleServices(buildConfig, resValue) {
-//     def gs = buildConfig.googleServices
-// 
-//     if (gs == null) {
-//         logger.warn("WARNING: Google Services are not used in this build!")
-//         return
-//     }
-// 
-//     resValue("string", "google_app_id", gs.googleAppId)
-//     resValue("string", "gcm_defaultSenderId", gs.gcmDefaultSenderId)
-//     resValue("string", "default_web_client_id", gs.defaultWebClientId)
-//     if (gs.ga_trackingId != null) {
-//         resValue("string", "ga_trackingId", gs.gaTrackingId)
-//     }
-//     resValue("string", "firebase_database_url", gs.firebaseDatabaseUrl)
-//     resValue("string", "google_api_key", gs.googleApiKey)
-//     resValue("string", "google_crash_reporting_api_key", gs.googleCrashReportingApiKey)
-//     resValue("string", "project_id", gs.projectId)
-// }
-
 def setupResourceValues(buildConfigName, resValue) {
     def proc = execCommand("app-toolbelt v0 build-config to-properties $buildConfigName android")
     def buildConfigProperties = new Properties()
@@ -75,21 +55,13 @@ def setupResourceValues(buildConfigName, resValue) {
     }
 }
 
-// def determineTheme(buildConfig) {
-//     if (buildConfig.splashScreen) {
-//         return [theme: "@style/SplashScreenTheme"]
-//     } else {
-//         return [theme: "@style/AppTheme"]
-//     }
-// }
-
 def determineIcon(buildConfig) {
     return [icon: "${buildConfig.appIcon}"]
 }
 
 
 def determineBuildConfigName() {
-    if (project.hasProperty('BUILD_CONFIG_NAME')) { //TODO we never set this, so check for the correct one
+    if (project.hasProperty('BUILD_CONFIG_NAME')) {
         return project.BUILD_CONFIG_NAME
     } else if (System.getenv()["BUILD_CONFIG_NAME"]) {
         return System.getenv()['BUILD_CONFIG_NAME']

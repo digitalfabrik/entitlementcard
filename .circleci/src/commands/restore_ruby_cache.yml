@@ -6,7 +6,7 @@ parameters:
 steps:
   - restore_cache:
       keys:
-        - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }} #TODO check if this is working properly
+        - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
         - 1-gems-{{ arch }}-
   - run:
       name: '[FL] install'

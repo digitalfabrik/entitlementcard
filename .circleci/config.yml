@@ -246,27 +246,16 @@ jobs:
                 name: Install Flutter Packages
                 working_directory: ~/project/frontend/android
             - run:
-                command: |
-                    fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-                name: Build Runner
-                working_directory: ~/project/frontend/android
-            - run:
                 command: bundle exec fastlane keystore
                 name: '[FL] Prepare Android Keystore'
                 working_directory: ~/project/frontend/android
             - run:
-                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >>
+                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
                 working_directory: ~/project/frontend/android
             - run:
-                command: ls
-                name: to be deleted
-            - run:
                 command: mkdir -p attached_workspace
                 name: Make attached_workspace dir
-            - run:
-                command: ls
-                name: to be deleted
             - run:
                 command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
                 name: Move aab
@@ -522,7 +511,8 @@ jobs:
         resource_class: small
         shell: /bin/bash -eo pipefail
         steps:
-            - checkout
+            - checkout:
+                path: ~/project
             - prepare_workspace
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
@@ -723,6 +713,7 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: true
+            - check_frontend
             - build_android:
                 buildConfig: bayern
                 context:
@@ -732,6 +723,7 @@ workflows:
                 name: build_android_bayern
                 requires:
                     - bump_version
+                    - check_frontend
             - deliver_android:
                 buildConfig: bayern
                 context:
@@ -740,6 +732,24 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: false
+                requires:
+                    - build_android_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:

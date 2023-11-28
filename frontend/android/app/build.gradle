@@ -64,7 +64,6 @@ ext.setupVariant = { variant, buildConfigName ->
 }
 
 android {
-    namespace "tuerantuer.app.entitlementcard"
     compileSdkVersion 33
 
     sourceSets {
@@ -90,42 +89,14 @@ android {
     }
 
     signingConfigs {
-        var env = System.getenv()
-        println env['KEYSTORE_PATH']
-
-        if (env['KEYSTORE_PATH']) {
+        if (System.getenv()['KEYSTORE_PATH']) { // Signing with env variables (CI)
             release {
-                //storeFile file("file:///home/steffi/Dokumente/app-credentials/android/entitlementcard.jks")
-                //storeFile file("${env['KEYSTORE_PATH']}")
-                storeFile file("file:///home/circleci/" + project.property("KEYSTORE_PATH"))
-                //storePassword project.property('my.test')
-                storePassword project.property("KEYSTORE_PASSWORD")
-                keyAlias project.property("KEYSTORE_KEY_ALIAS")
-                keyPassword project.property("KEYSTORE_KEY_PASSWORD")
+                storeFile file("file://" + System.getenv()['HOME'] + project.KEYSTORE_PATH)
+                storePassword project.KEYSTORE_PASSWORD
+                keyAlias project.KEYSTORE_KEY_ALIAS
+                keyPassword project.KEYSTORE_KEY_PASSWORD
             }
-        }
-/*        println "Selecting signingConfig..."
-        var env = System.getenv()
-        println env['KEYSTORE_PATH']
-
-        //if (env['KEYSTORE_PATH']) { // Signing with environment variables (e.g. in the CI)
-        if(project.hasProperty('KEYSTORE_PATH')) { // Signing with environment variables (e.g. in the CI)
-            println "Selected using env var"
-                Bayern {
-                    //TODO can be simplified, if we use the project vars, that have been set according to the project in the fastfile
-                    storeFile file("file:///home/steffi/Dokumente/app-credentials/android/entitlementcard.jks")
-                    //storeFile file("${env['KEYSTORE_PATH']}")
-                    storePassword env['KEYSTORE_PASSWORD']
-                    keyAlias env['KEYSTORE_KEY_ALIAS_BAYERN']
-                    keyPassword env['KEYSTORE_KEY_PASSWORD_BAYERN']
-                }
-                Nuernberg {
-                    storeFile file(env['KEYSTORE_PATH'])
-                    storePassword env['KEYSTORE_PASSWORD']
-                    keyAlias env['KEYSTORE_KEY_ALIAS_NUERNBERG']
-                    keyPassword env['KEYSTORE_KEY_PASSWORD_NUERNBERG']
-                }
-        } else if (localProperties.containsKey("signing.keyAlias")) { // Signing locally with local.properties file
+        } else if (localProperties.containsKey("signing.keyAlias")) { // Signing with local.properties file (locally)
             println "Selected using localProps"
             localProps {
                 keyAlias localProperties.getProperty('signing.keyAlias')
@@ -134,7 +105,6 @@ android {
                 storePassword localProperties.getProperty('signing.storePassword')
             }
         }
-        println "Finished selecting"*/
     }
 
     buildTypes {
@@ -144,11 +114,8 @@ android {
                 abiFilters 'armeabi-v7a','arm64-v8a','x86_64'
             }
 
-            //if (System.getenv('KEYSTORE_PATH')) {
             if (project.hasProperty('KEYSTORE_PATH')) {
                 signingConfig signingConfigs.release
-                //productFlavors.Bayern.signingConfig = signingConfigs.Bayern
-                //productFlavors.Nuernberg.signingConfig = signingConfigs.Nuernberg
             } else if ( localProperties.containsKey("signing.keyAlias")) {
                 signingConfig signingConfigs.localProps
             } else {
@@ -166,19 +133,16 @@ android {
         }
     }
 
-    def buildConfigName = determineBuildConfigName() //TODO remove never used
-    def buildConfig = createBuildConfig(buildConfigName) //TODO remove never used
+    def buildConfigName = determineBuildConfigName()
+    def buildConfig = createBuildConfig(buildConfigName)
 
     defaultConfig {
-        applicationId buildConfig.applicationId
         minSdkVersion 21
         targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        println("set versioncode")
         if (project.hasProperty('VERSION_CODE')) {
-            println("set to version_code env")
             versionCode project.VERSION_CODE.toInteger()
             versionName project.VERSION_NAME
         }

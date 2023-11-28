@@ -31,33 +31,27 @@ steps:
   - restore_ruby_cache:
       directory: ~/project/frontend/android
   - run:
-      name: Install Flutter Packages #TODO missing restore_gradle_cache
+      name: Install Flutter Packages
       command: |
         fvm flutter pub get --enforce-lockfile
         fvm flutter precache --android
       working_directory: ~/project/frontend/android
-  - run:
-      name: Build Runner
-      command: |
-        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-      working_directory: ~/project/frontend/android
+#  - run:
+#      name: Build Runner
+#      command: |
+#        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+#      working_directory: ~/project/frontend/android
   - run:
       name: '[FL] Prepare Android Keystore'
       command: bundle exec fastlane keystore
       working_directory: ~/project/frontend/android
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> #fvm flutter build appbundle --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
+      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
       working_directory: ~/project/frontend/android
-  - run:
-      name: to be deleted
-      command: ls
   - run:
       name: Make attached_workspace dir
       command: mkdir -p attached_workspace
-  - run:
-      name: to be deleted
-      command: ls
   - run:
       name: Move aab
       command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
