@@ -51,6 +51,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _showFeatureDisabled() async {
     final messengerState = ScaffoldMessenger.of(context);
+    final t = context.t;
     messengerState.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,

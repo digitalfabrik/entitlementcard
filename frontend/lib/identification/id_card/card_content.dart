@@ -76,6 +76,7 @@ class CardContent extends StatelessWidget {
   }
 
   String _getCardValidityDate(BuildContext context, String? startDate, String expirationDate) {
+    final t = context.t;
     return startDate != null
         ? t.identification.validFromUntil(startDate: startDate, expirationDate: expirationDate)
         : t.identification.validUntil(expirationDate: expirationDate);

@@ -143,29 +143,35 @@ class ResultsLoaderState extends State<ResultsLoader> {
   Widget _buildProgressIndicator(BuildContext context) =>
       const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
 
-  Widget _buildErrorWithRetry(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.warning, size: 60, color: Colors.orange),
-            Text(t.common.checkConnection),
-            OutlinedButton(
-              onPressed: _pagingController.retryLastFailedRequest,
-              child: Text(t.common.tryAgain),
-            )
-          ],
-        ),
-      );
+  Widget _buildErrorWithRetry(BuildContext context) {
+    final t = context.t;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.warning, size: 60, color: Colors.orange),
+          Text(t.common.checkConnection),
+          OutlinedButton(
+            onPressed: _pagingController.retryLastFailedRequest,
+            child: Text(t.common.tryAgain),
+          )
+        ],
+      ),
+    );
+  }
 
-  Widget _buildNoItemsFoundIndicator(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-            Text(t.search.noAcceptingStoresFound),
-          ],
-        ),
-      );
+  Widget _buildNoItemsFoundIndicator(BuildContext context) {
+    final t = context.t;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
+          Text(t.search.noAcceptingStoresFound),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {

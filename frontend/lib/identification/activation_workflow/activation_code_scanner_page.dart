@@ -32,6 +32,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Column(
       children: [
         CustomAppBar(title: t.identification.activateTitle),
