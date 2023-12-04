@@ -113,9 +113,11 @@ platform :android do
     if [version_name, version_code, production_delivery, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
-    track = production_delivery === true ? "production" : "open-testing"
 
     application_id = sh("app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
+
+    beta_track = application_id == 'de.nrw.it.giz.ehrensache.bayern.android' ? "open-testing" : "beta"
+    track = production_delivery === true ? "production" : beta_track
 
     upload_to_play_store(
       version_code: version_code,
@@ -147,6 +149,7 @@ platform :android do
     end
 
     application_id = sh("app-toolbelt v0 build-config to-json #{build_config_name} android | jq .applicationId")
+    beta_track = application_id == 'de.nrw.it.giz.ehrensache.bayern.android' ? "open-testing" : "beta"
 
     production_version_codes = google_play_track_version_codes(
       track: "production",
@@ -154,7 +157,7 @@ platform :android do
       json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
     )
     beta_version_codes = google_play_track_version_codes(
-      track: "beta",
+      track: beta_track,
       package_name: application_id,
       json_key_data: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
     )
@@ -170,7 +173,7 @@ platform :android do
     upload_to_play_store(
       version_code: beta_version_codes[0],
       package_name: application_id,
-      track: "beta",
+      track: beta_track,
       track_promote_to: "production",
       skip_upload_changelogs: true,
       skip_upload_images: true,
