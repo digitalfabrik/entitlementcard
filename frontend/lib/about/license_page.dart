@@ -20,6 +20,7 @@ class CustomLicensePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return FutureBuilder<List<LicenseEntry>>(
       future: LicenseRegistry.licenses.toList(),
       builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {

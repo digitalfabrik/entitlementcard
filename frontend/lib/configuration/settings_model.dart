@@ -32,6 +32,18 @@ class SettingsModel extends ChangeNotifier {
     return obj;
   }
 
+  String? _getString(String key) {
+    final obj = _preferences?.get(key);
+    if (obj == null) {
+      return null;
+    } else if (obj is! String) {
+      log('Preference key $key has wrong type: Expected string, but got ${obj.runtimeType}. Returning fallback.',
+          level: 1000);
+      return null;
+    }
+    return obj;
+  }
+
   bool get firstStart => _getBool('firstStart') ?? true;
 
   Future<void> setFirstStart({required bool enabled}) async {
@@ -60,8 +72,15 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get language => _getString('language');
+
+  Future<void> setLanguage({required String language}) async {
+    await _preferences?.setString('language', language);
+    notifyListeners();
+  }
+
   @override
   String toString() {
-    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging}';
+    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, language:$language}';
   }
 }

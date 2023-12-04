@@ -1,0 +1,3 @@
+NSCameraUsageDescription="Scanning QR codes";
+NSLocationAlwaysUsageDescription="Show location on the map and acceptance points in the surrounding area";
+NSLocationWhenInUseUsageDescription="Show location on the map and acceptance points in the surrounding area";

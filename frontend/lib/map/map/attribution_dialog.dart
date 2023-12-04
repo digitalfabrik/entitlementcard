@@ -10,6 +10,7 @@ class AttributionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme.primary;
+    final t = context.t;
     return SimpleDialog(
       title: Text(t.map.mapData),
       children: [

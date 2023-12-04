@@ -60,6 +60,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final config = Configuration.of(context);
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
