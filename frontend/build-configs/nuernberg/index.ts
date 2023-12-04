@@ -62,7 +62,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         "assets/nuernberg/intro_slides/search_with_location.png",
     ],
     featureFlags: {
-        verification: true
+        verification: true,
     },
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
@@ -85,7 +85,7 @@ let nuernberg: BuildConfigType = {
     },
     ios: {
         ...nuernbergCommon,
-        bundleIdentifier: "app.entitlementcard.nuernberg",
+        bundleIdentifier: "app.sozialpass.nuernberg",
     },
 }
 

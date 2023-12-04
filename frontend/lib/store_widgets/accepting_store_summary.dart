@@ -38,6 +38,7 @@ class AcceptingStoreSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final categories = categoryAssets(context);
     final itemCategoryAsset = store.categoryId < categories.length ? categories[store.categoryId] : null;
     final categoryName = itemCategoryAsset?.name ?? t.store.unknownCategory;
@@ -148,6 +149,7 @@ class StoreTextOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final location = store.location;
     return Expanded(
       child: Column(

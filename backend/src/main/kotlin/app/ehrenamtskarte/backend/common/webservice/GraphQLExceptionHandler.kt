@@ -10,6 +10,6 @@ class GraphQLExceptionHandler() : SimpleDataFetcherExceptionHandler() {
         val logger = LoggerFactory.getLogger(GraphQLExceptionHandler::class.java)
 
         // do not log stack trace as these should all be expected errors
-        logger.info(error.message)
+        logger.error(error.message)
     }
 }

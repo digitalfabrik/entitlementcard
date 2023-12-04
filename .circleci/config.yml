@@ -654,16 +654,16 @@ workflows:
             - build_martin
             - pack_backend:
                 requires:
-                    - backend-build
+                    - build_backend
             - check_health_backend:
                 requires:
-                    - backend-pack
+                    - pack_backend
             - pack_administration:
                 requires:
-                    - administration-build
+                    - build_administration
             - pack_martin:
                 requires:
-                    - martin-build
+                    - build_martin
             - pack_meta
             - deploy:
                 context:
@@ -674,11 +674,11 @@ workflows:
                             - /release.*/
                 name: deploy-staging
                 requires:
-                    - backend-pack
-                    - backend-health-check
-                    - administration-pack
-                    - martin-pack
-                    - meta-pack
+                    - pack_backend
+                    - check_health_backend
+                    - pack_administration
+                    - pack_martin
+                    - pack_meta
                 server: entitlementcard-test.tuerantuer.org
                 ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
             - deploy:
@@ -690,10 +690,11 @@ workflows:
                             - /release.*/
                 name: deploy-production
                 requires:
-                    - backend-pack
-                    - administration-pack
-                    - martin-pack
-                    - meta-pack
+                    - pack_backend
+                    - check_health_backend
+                    - pack_administration
+                    - pack_martin
+                    - pack_meta
                 server: entitlementcard.tuerantuer.org
                 ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
         when: << pipeline.parameters.run_backend >>
@@ -759,30 +760,30 @@ workflows:
                 flutterFlavor: BayernFloss
                 name: frontend-android-build-bayern-floss
                 requires:
-                    - check-frontend
+                    - check_frontend
             - build_android:
                 buildConfig: bayern
                 flutterFlavor: Bayern
                 name: frontend-android-build-bayern
                 requires:
-                    - check-frontend
+                    - check_frontend
             - build_ios:
                 buildConfig: bayern
                 flutterFlavor: Bayern
                 name: frontend-ios-build-bayern
                 requires:
-                    - check-frontend
+                    - check_frontend
             - build_android:
                 buildConfig: nuernberg
                 flutterFlavor: Nuernberg
                 name: frontend-android-build-nuernberg
                 requires:
-                    - check-frontend
+                    - check_frontend
             - build_ios:
                 buildConfig: nuernberg
                 flutterFlavor: Nuernberg
                 name: frontend-ios-build-nuernberg
                 requires:
-                    - check-frontend
+                    - check_frontend
         when: << pipeline.parameters.run_frontend >>
 

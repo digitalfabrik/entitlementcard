@@ -25,6 +25,7 @@ class MoreActionsDialog extends StatelessWidget {
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final bool cardLimitIsReached = hasReachedCardLimit(userCodeModel.userCodes);
+    final t = context.t;
 
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),

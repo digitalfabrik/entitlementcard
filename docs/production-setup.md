@@ -80,6 +80,7 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 
 #### iOS:
 - `open ./build/ios/archive/Runner.xcarchive`
+- go to "distribute app" and "custom" (XCode 15)
 - use manual signing and choose match appstore certificate
 - Navigate the dialog and finally distribute the app. This will create a release on Testflight. It may take a while until the new build will be listed.
 - Once apple has approved the Testflight release, the app can be “promoted”. 
@@ -100,6 +101,10 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 
 ## Snapshots
 
-The Snapshots are created by executing a bunch of e2e tests locally. Check out `frontend/ios/ScreenshotTest` .
+The snapshots are created by executing a bunch of e2e tests locally. Check out `frontend/ios/ScreenshotTest` .
 
-iOS snapshots can be created via `bundle exec fastlane snapshot` in the `frontend/ios` directory. For that you’ll have to install a bunch of simulators in XCode (see `frontend/ios/fastlane/Snapfile`)
+- ensure local backend is running.
+- check for the required simulators in XCode (see `frontend/ios/fastlane/Snapfile`)
+- set the build config for the particular project.
+- switch to: `frontend/ios`
+- run: `bundle exec fastlane ios <snapshot_lane>` where `snapshot_lane` is either `snap_bayern` or `snap_nuernberg`

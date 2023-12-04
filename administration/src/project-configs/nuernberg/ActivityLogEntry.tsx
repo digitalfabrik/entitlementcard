@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { ActivityLog } from '../../bp-modules/user-settings/ActivityLog'
 import { JSONCardBlueprint } from '../../cards/CardBlueprint'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
-import NuernbergPassNumberExtension from '../../cards/extensions/NuernbergPassNumberExtension'
+import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import { ExtensionClass } from '../../cards/extensions/extensions'
 import PlainDate from '../../util/PlainDate'
 
@@ -17,13 +17,13 @@ const findByExtensionClass = <T extends ExtensionClass>(
 const ActivityLogEntry = (logEntry: ActivityLog): ReactNode => {
   const { card, timestamp } = logEntry
   const birthdayExtension = findByExtensionClass(card, BirthdayExtension)
-  const passNumberExtension = findByExtensionClass(card, NuernbergPassNumberExtension)
+  const passIdExtension = findByExtensionClass(card, NuernbergPassIdExtension)
 
   return (
     <tr key={card.id}>
       <td>{timestamp}</td>
       <td>{card.fullName}</td>
-      {passNumberExtension && <td>{passNumberExtension.state?.passNumber}</td>}
+      {passIdExtension && <td>{passIdExtension.state?.passId}</td>}
       {birthdayExtension && (
         <td>{PlainDate.fromDaysSinceEpoch(birthdayExtension.state?.birthday ?? 0).format('dd.MM.yyyy')}</td>
       )}

@@ -26,6 +26,7 @@ class VerificationQrScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final config = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
     final currentUserCode = userCode;

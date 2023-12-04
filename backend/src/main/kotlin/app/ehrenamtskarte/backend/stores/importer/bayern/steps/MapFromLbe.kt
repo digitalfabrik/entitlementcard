@@ -38,7 +38,7 @@ class MapFromLbe(config: ImportConfig, private val logger: Logger) : PipelineSte
                 it.districtName.clean()
             )
         } catch (e: Exception) {
-            logger.info("Exception occurred while mapping $it", e)
+            logger.error("Exception occurred while mapping $it", e)
             null
         }
     }

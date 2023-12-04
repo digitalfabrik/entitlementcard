@@ -10,6 +10,7 @@ class VerificationInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
+    final t = context.t;
     return AlertDialog(
       title: Text(t.identification.verifyInfoTitle),
       content: SingleChildScrollView(

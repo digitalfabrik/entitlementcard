@@ -36,13 +36,13 @@ object Matomo {
                 val response = tracker.sendRequestAsync(matomoRequest)
                 val httpResponse = response.get()
                 if (httpResponse.statusLine.statusCode > 399) {
-                    logger.debug("Request failed with status code ${httpResponse.statusLine.statusCode}")
+                    logger.error("Request failed with status code ${httpResponse.statusLine.statusCode}")
                 }
             } catch (e: Exception) {
                 when (e) {
-                    is IOException -> logger.debug("Could not send request to Matomo")
+                    is IOException -> logger.error("Could not send request to Matomo")
                     is ExecutionException, is InterruptedException ->
-                        logger.debug("Error while getting response")
+                        logger.error("Error while getting response", e)
                 }
             }
         }

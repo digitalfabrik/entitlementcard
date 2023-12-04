@@ -3,18 +3,22 @@
     "dependencies": "Libraries",
     "developmentOptions": "Developer options",
     "disclaimer": "Liability, disclaimer and imprint",
+    "infoTitle": "Info",
+    "languageChange": "Change language",
+    "languageChangeSuccessful": "Your language was changed successfully!",
     "licenses": {
       "one": "License",
       "other": "Licenses"
     },
     "moreInformation": "More information",
     "numberLicenses": {
-      "zero": "No licenses",
       "one": "1 license",
-      "other": "$n licenses"
+      "other": "$n licenses",
+      "zero": "No licenses"
     },
     "privacyDeclaration": "Privacy policy",
     "publisher": "Publisher",
+    "settingsTitle": "Settings",
     "sourceCode": "Source code",
     "title": "About"
   },

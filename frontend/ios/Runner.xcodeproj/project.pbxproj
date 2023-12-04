@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0BC36C9E26DBC53B00AAB6AB /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC36C9D26DBC53B00AAB6AB /* ScreenshotTests.swift */; };
 		0BC36CA726DBC82200AAB6AB /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC36CA626DBC82200AAB6AB /* SnapshotHelper.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2E331BFF2B11142300F6E2D4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E331C012B11142300F6E2D4 /* InfoPlist.strings */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3D0EE25E4E51B4B66D2C1962 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2AA1F850E210988C8F9C39C /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
@@ -60,6 +61,62 @@
 			proxyType = 2;
 			remoteGlobalIDString = 502E20F09A7CAFBD1DE1AA882DCC550C;
 			remoteInfo = geolocator_apple;
+		};
+		2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02A736E1BDACFC0A6CAE810130768C55;
+			remoteInfo = device_info_plus;
+		};
+		2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC7FD3A4F7868A76CB9EB9F8F0753493;
+			remoteInfo = fk_user_agent;
+		};
+		2E44B1002ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AE157A33FEF959A214796BFF348717F6;
+			remoteInfo = path_provider_foundation;
+		};
+		2E44B1022ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C7AD28D5FB25A8DEDF61F78996932FA6;
+			remoteInfo = permission_handler_apple;
+		};
+		2E44B1042ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0115C3C00C175D77422084DD0542CE6F;
+			remoteInfo = Sentry;
+		};
+		2E44B1062ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 69E79B6352F5EEE6319DD35575B44D3F;
+			remoteInfo = sentry_flutter;
+		};
+		2E44B1082ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B467DD492938EF656F5C454AC944394E;
+			remoteInfo = SentryPrivate;
+		};
+		2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 93C6A45C6E4792269BE9BE0073839BF0;
+			remoteInfo = shared_preferences_foundation;
 		};
 		502F2F2429803DDE00B6F8ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -145,26 +202,12 @@
 			remoteGlobalIDString = C39BE06027F24EB0328A76E7507FA463;
 			remoteInfo = package_info_plus;
 		};
-		5093F3E728D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BEDB77D7DFDD5C9008E7D3FC4206FEC9;
-			remoteInfo = path_provider_ios;
-		};
 		5093F3E928D8D252009A9A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 21B03CA622E690725A6626C088E1D09F;
 			remoteInfo = ReachabilitySwift;
-		};
-		5093F3EB28D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9DE2C5FB92889028E9DAEBC81231108D;
-			remoteInfo = shared_preferences_ios;
 		};
 		5093F3ED28D8D252009A9A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -201,6 +244,8 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2164140A45D94C66A1B0FEC1 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		2E331C002B11142300F6E2D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E331C022B11142500F6E2D4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		47F40A1A0A515BF56DB92CD1 /* Pods-Runner.release-nuernberg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-nuernberg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-nuernberg.xcconfig"; sourceTree = "<group>"; };
 		62F40225E0F5640034AD59F5 /* Pods-Runner.debug-bayern.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-bayern.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-bayern.xcconfig"; sourceTree = "<group>"; };
@@ -245,6 +290,8 @@
 			isa = PBXGroup;
 			children = (
 				0BE935D1274FD4CA004AF690 /* connectivity_plus */,
+				2E331BFE2B11141C00F6E2D4 /* device_info_plus */,
+				2E44B0FF2ADED161006E42CD /* fk_user_agent */,
 				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */,
 				0BE935D3274FD4CA004AF690 /* geolocator_apple */,
 				502F2F2529803DDE00B6F8ED /* GoogleDataTransport */,
@@ -258,12 +305,16 @@
 				502F2F2F29803DDE00B6F8ED /* mobile_scanner */,
 				502F2F3129803DDE00B6F8ED /* nanopb */,
 				5093F3E628D8D252009A9A33 /* package_info_plus */,
-				5093F3E828D8D252009A9A33 /* path_provider_ios */,
+				2E44B1012ADED161006E42CD /* path_provider_foundation */,
+				2E44B1032ADED161006E42CD /* permission_handler_apple */,
 				0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */,
 				502F2F3329803DDE00B6F8ED /* PromisesObjC */,
 				502F2F3529803DDE00B6F8ED /* Protobuf */,
 				5093F3EA28D8D252009A9A33 /* ReachabilitySwift */,
-				5093F3EC28D8D252009A9A33 /* shared_preferences_ios */,
+				2E44B1052ADED161006E42CD /* Sentry */,
+				2E44B1072ADED161006E42CD /* sentry_flutter */,
+				2E44B1092ADED161006E42CD /* SentryPrivate */,
+				2E44B10B2ADED161006E42CD /* shared_preferences_foundation */,
 				5093F3EE28D8D252009A9A33 /* url_launcher_ios */,
 			);
 			name = Products;
@@ -324,6 +375,7 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				2E331C012B11142300F6E2D4 /* InfoPlist.strings */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -482,6 +534,70 @@
 			remoteRef = 0BE935D2274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		2E331BFE2B11141C00F6E2D4 /* device_info_plus */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = device_info_plus;
+			path = device_info_plus.framework;
+			remoteRef = 2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B0FF2ADED161006E42CD /* fk_user_agent */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = fk_user_agent;
+			path = fk_user_agent.framework;
+			remoteRef = 2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1012ADED161006E42CD /* path_provider_foundation */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = path_provider_foundation;
+			path = path_provider_foundation.framework;
+			remoteRef = 2E44B1002ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1032ADED161006E42CD /* permission_handler_apple */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = permission_handler_apple;
+			path = permission_handler_apple.framework;
+			remoteRef = 2E44B1022ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1052ADED161006E42CD /* Sentry */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = Sentry;
+			path = Sentry.framework;
+			remoteRef = 2E44B1042ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1072ADED161006E42CD /* sentry_flutter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = sentry_flutter;
+			path = sentry_flutter.framework;
+			remoteRef = 2E44B1062ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B1092ADED161006E42CD /* SentryPrivate */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = SentryPrivate;
+			path = SentryPrivate.framework;
+			remoteRef = 2E44B1082ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E44B10B2ADED161006E42CD /* shared_preferences_foundation */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = shared_preferences_foundation;
+			path = shared_preferences_foundation.framework;
+			remoteRef = 2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		502F2F2529803DDE00B6F8ED /* GoogleDataTransport */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -578,28 +694,12 @@
 			remoteRef = 5093F3E528D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5093F3E828D8D252009A9A33 /* path_provider_ios */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = path_provider_ios;
-			path = path_provider_ios.framework;
-			remoteRef = 5093F3E728D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		5093F3EA28D8D252009A9A33 /* ReachabilitySwift */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			name = ReachabilitySwift;
 			path = Reachability.framework;
 			remoteRef = 5093F3E928D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5093F3EC28D8D252009A9A33 /* shared_preferences_ios */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = shared_preferences_ios;
-			path = shared_preferences_ios.framework;
-			remoteRef = 5093F3EB28D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5093F3EE28D8D252009A9A33 /* url_launcher_ios */ = {
@@ -628,6 +728,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				2E331BFF2B11142300F6E2D4 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,10 +754,12 @@
 		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
 			outputPaths = (
@@ -667,6 +770,7 @@
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -733,6 +837,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2E331C012B11142300F6E2D4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E331C002B11142300F6E2D4 /* en */,
+				2E331C022B11142500F6E2D4 /* de */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
