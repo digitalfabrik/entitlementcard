@@ -29,7 +29,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.simplejavamail:simple-java-mail:8.1.3")
-    implementation("org.piwik.java.tracking:matomo-java-tracker:3.0.6")
+    implementation("org.piwik.java.tracking:matomo-java-tracker:3.2.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
