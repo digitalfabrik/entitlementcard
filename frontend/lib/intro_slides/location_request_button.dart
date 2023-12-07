@@ -48,6 +48,7 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final settings = Provider.of<SettingsModel>(context);
     final status = _locationPermissionStatus;
     if (status == null) {

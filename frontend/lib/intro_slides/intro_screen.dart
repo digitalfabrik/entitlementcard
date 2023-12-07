@@ -20,6 +20,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),

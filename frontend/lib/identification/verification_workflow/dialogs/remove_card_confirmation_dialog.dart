@@ -31,6 +31,7 @@ class RemoveCardConfirmationDialog extends StatefulWidget {
 class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final projectId = Configuration.of(context).projectId;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(

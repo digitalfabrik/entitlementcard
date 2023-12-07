@@ -239,7 +239,7 @@ describe('hashCardInfo', () => {
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
 
-    expect(uint8ArrayToBase64(hash)).toBe('6BS3mnTtX1myCu9HSUD3e7KjaFBnX9Bkw7wgkrrWMZg=') 
+    expect(uint8ArrayToBase64(hash)).toBe('6BS3mnTtX1myCu9HSUD3e7KjaFBnX9Bkw7wgkrrWMZg=')
   })
 
   it('should be stable for a Nuernberg Pass with passNr identifier', async () => {
@@ -263,6 +263,6 @@ describe('hashCardInfo', () => {
     const pepper = base64ToUint8Array('MvMjEqa0ulFDAgACElMjWA==')
     const hash = await hashCardInfo(cardInfo, pepper)
 
-    expect(uint8ArrayToBase64(hash)).toBe('A7KP1ypGngrmegXVmsyP9iMgheGHUDg9rnqbb9nlMWw=') 
+    expect(uint8ArrayToBase64(hash)).toBe('A7KP1ypGngrmegXVmsyP9iMgheGHUDg9rnqbb9nlMWw=')
   })
 })

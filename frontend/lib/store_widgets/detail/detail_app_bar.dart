@@ -86,6 +86,7 @@ class DetailAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final categoryId = matchingStore.store.category.id;
     final category = categoryAssets(context)[categoryId];
 

@@ -29,6 +29,7 @@ class DetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final address = acceptingStore.address;
     final street = address.street;
     final location = '${address.postalCode} ${address.location}';

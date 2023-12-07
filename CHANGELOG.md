@@ -11,6 +11,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+# [3.2.2] 2023-11-15
+
+### Fixed
+* Fix run configs by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1136
+* 1150: Fix typo by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1159
+* Fix build config by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1167
+* 1191: Fix mail content type header charset by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1194
+* 1029: Empty map auto screenshot by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1183
+* 1029: proposal empty map auto screenshot by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1187
+* 1202: Android invalid certificate by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1203
+
+### Changed
+* build(deps): bump archive from 3.3.7 to 3.3.8 in /frontend by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1126
+* build(deps-dev): bump postcss from 8.4.27 to 8.4.31 in /administration by @dependabot in https://github.com/digitalfabrik/entitlementcard/pull/1130
+* 1087: Adjust pdf template by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1132
+* 1137: generalize create admin queries by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1138
+* 1154 split circleci config by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1166
+* 1190: Increase comprehensibility of application form by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1195
+* Move matomo.env into docker folder by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1192
+* Rename cicleci files by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1201
+* 1128: log errors as errors by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1185
+
+### Added
+* Collect Statistics from Matomo by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1113
+* Add PR template by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1139
+* Update setup readme by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1134
+* 1141: add route for map and styles to our reverse_proxy by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1143
+* 1084: Multi cards by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1142
+* 1039: add mime type text/csv for firefox ubuntu by @sarahsporck in https://github.com/digitalfabrik/entitlementcard/pull/1181
+* 904: Add i18n for translations by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1103
+* 1176: Configure locales in build config by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1180
+* 1177: Use slang for l10n by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1188
+* 1177: Translate build configs by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1189
+* 1178: Translate app constants to English by @steffenkleinle in https://github.com/digitalfabrik/entitlementcard/pull/1179
+* 1175: Language switch by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1197
+* 1081: Switch passID and passNumber by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1147
+
 # [3.2.1] 2023-10-05
 
 ### Added
