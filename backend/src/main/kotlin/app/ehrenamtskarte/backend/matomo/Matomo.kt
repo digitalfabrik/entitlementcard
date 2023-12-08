@@ -152,8 +152,8 @@ object Matomo {
             projectConfig.matomo,
             MatomoRequest.request()
                 .actionName(query)
-     .searchCategory(params.categoryIds?.joinToString(","))
-     .searchQuery(params.searchText ?: "")
+                .searchCategory(params.categoryIds?.joinToString(","))
+                .searchQuery(params.searchText ?: "")
                 .searchResultsCount(numResults.toLong())
                 .also { attachRequestInformation(it, request) }
         )
