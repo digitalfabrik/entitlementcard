@@ -17,12 +17,12 @@ steps:
       paths:
         - .fvm
         - ~/fvm/
-      working_directory: ~/project/frontend/android
+      working_directory: ~/project/frontend/
   - run:
       name: Show Flutter version
       command: fvm flutter --version
-      working_directory: ~/project/frontend/android
+      working_directory: ~/project/frontend/
   - run:
       name: Configure Flutter
       command: fvm flutter config --no-analytics
-      working_directory: ~/project/frontend/android
+      working_directory: ~/project/frontend/

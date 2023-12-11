@@ -70,15 +70,15 @@ commands:
                 paths:
                     - .fvm
                     - ~/fvm/
-                working_directory: ~/project/frontend/android
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter --version
                 name: Show Flutter version
-                working_directory: ~/project/frontend/android
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter config --no-analytics
                 name: Configure Flutter
-                working_directory: ~/project/frontend/android
+                working_directory: ~/project/frontend/
     install_protobuf_linux:
         steps:
             - run:
@@ -259,9 +259,6 @@ jobs:
             - run:
                 command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
                 name: Move aab
-            - run:
-                command: ls
-                name: to be deleted
             - persist_to_workspace:
                 paths:
                     - << parameters.buildConfig >>.aab

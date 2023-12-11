@@ -36,11 +36,6 @@ steps:
         fvm flutter pub get --enforce-lockfile
         fvm flutter precache --android
       working_directory: ~/project/frontend/android
-#  - run:
-#      name: Build Runner
-#      command: |
-#        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-#      working_directory: ~/project/frontend/android
   - run:
       name: '[FL] Prepare Android Keystore'
       command: bundle exec fastlane keystore
@@ -55,9 +50,6 @@ steps:
   - run:
       name: Move aab
       command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
-  - run:
-      name: to be deleted
-      command: ls
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:
