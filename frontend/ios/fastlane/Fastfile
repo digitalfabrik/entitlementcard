@@ -15,7 +15,94 @@
 
 default_platform(:ios)
 
-platform :ios do 
+platform :ios do
+
+  private_lane :apple_auth do |options|
+    ensure_env_vars(
+      env_vars: ["APP_STORE_CONNECT_API_KEY_ID", "APP_STORE_CONNECT_API_ISSUER_ID", "APP_STORE_CONNECT_API_KEY_CONTENT"]
+    )
+
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
+      key_content: Base64.decode64(ENV['APP_STORE_CONNECT_API_KEY_CONTENT'])
+    )
+  end
+
+  # The following parameters have to be passed:
+  # build_config_name: The build config which should be used
+  desc "Download and setup certificates"
+  private_lane :certificates do |options|
+    apple_auth
+
+    build_config_name = options[:build_config_name]
+
+    if [build_config_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
+
+    match(type: "appstore", app_identifier: bundleIdentifier, readonly: true)
+  end
+
+  # The following parameters have to be passed:
+  # version_name: The version name the build should use
+  # version_code: The version code the build should use
+  # build_config_name: The build config which should be used
+  desc "Create a release build"
+  lane :build do |options|
+    version_code = options[:version_code]
+    version_name = options[:version_name]
+    build_config_name = options[:build_config_name]
+    flavor = options[:flavor]
+
+    if [version_code, version_name, build_config_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    apple_auth
+    certificates build_config_name:build_config_name
+
+    ENV["EXTRA_PACKAGER_ARGS"] = "--sourcemap-output ios/output/#{build_config_name}.ios.bundle.map"
+    # DO NOT REMOVE THIS! It is necessary for the javascript build config logic.
+    ENV["BUILD_CONFIG_NAME"] = build_config_name
+    # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
+
+    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
+
+    # https://docs.fastlane.tools/actions/match/
+    match(type: "development", app_identifier: bundleIdentifier, readonly: true)
+    match(type: "appstore", app_identifier: bundleIdentifier, readonly: true)
+
+    sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: flavor,
+      output_directory: "#{ENV['HOME']}",
+      output_name: "#{build_config_name}.ipa",
+      export_method: "app-store",
+    )
+  end
+
+  desc "Deliver iOS App to TestFlight for testers"
+  lane :upload_to_test_flight do |options|
+    apple_auth()
+    ipa_path = options[:ipa_path]
+
+    if [ipa_path].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      apple_id: '1562834995',
+      ipa: "#{ENV['HOME']}/#{ipa_path}",
+      distribute_external: false
+    )
+  end
+
   desc "Generate new localized screenshots"
   lane :snap_bayern do
    sh "fvm flutter pub run build_runner build --define df_build_config=name=bayern"

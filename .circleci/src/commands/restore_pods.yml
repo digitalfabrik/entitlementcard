@@ -1,0 +1,17 @@
+description: Restores and saves the cocoa pods cache.
+steps:
+  - restore_cache:
+      name: Restore CocoaPods Cache
+      keys:
+        - 6-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+  - run:
+      name: '[CP] Install CocoaPods'
+      command: |
+        pod update
+        pod install
+      working_directory: frontend/ios
+  - save_cache:
+      name: Save CocoaPods Cache
+      key: 6-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+      paths:
+        - ~/Library/Caches/CocoaPods/
