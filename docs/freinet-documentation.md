@@ -5,10 +5,10 @@ This document describes the APIs we are using or will be using.
 
 ## LBE Akzeptanzstellen XML
 
-A single large XML file is hosted at [lbe.bayern.de](https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/app-daten.xml):
+A single large XML file is hosted at [lbe.bayern.de](https://www.ehrenamt.bayern.de/xml-json/app-daten.xml):
 
 ```
-https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/app-daten.xml
+https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
 ```
  
 The format is not formally specified. The field `p_eak_agentur_id` specifies the Stadt or Landkreis where the Akzeptanzstelle is located or managed.
