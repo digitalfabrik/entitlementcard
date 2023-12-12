@@ -17,7 +17,7 @@ server:
   dataDirectory: ./data
 projects:
   - id: bayern.ehrenamtskarte.app
-    importUrl: https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/app-daten.xml
+    importUrl: https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
     pipelineName: EhrenamtskarteBayern
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
