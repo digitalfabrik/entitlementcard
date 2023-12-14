@@ -334,10 +334,6 @@ jobs:
                 root: ~/project
         working_directory: ~/project/backend
     build_ios:
-        environment:
-            FASTLANE_SKIP_UPDATE_CHECK: true
-            FL_OUTPUT_DIR: output
-            TOTAL_CPUS: 4
         macos:
             xcode: 14.0.0
         parameters:
@@ -355,7 +351,6 @@ jobs:
                     - BayernFloss
                     - Nuernberg
                 type: enum
-        shell: /bin/bash --login -o pipefail
         steps:
             - checkout:
                 path: ~/project
@@ -370,8 +365,17 @@ jobs:
                     fvm flutter pub get --enforce-lockfile
                     fvm flutter precache --ios
                 name: Install Flutter Packages
-                working_directory: ~/project/frontend/ios
+                working_directory: ~/project/frontend/
             - restore_pods
+            - run:
+                command: |
+                    fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
+                name: Build Runner
+                working_directory: ~/project/frontend/
+            - run:
+                command: app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
+                name: Write xcConfig
+                working_directory: ~/project/frontend/
             - run:
                 command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
