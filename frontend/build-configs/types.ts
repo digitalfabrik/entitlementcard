@@ -14,6 +14,7 @@ export type ThemeType = {
 }
 
 export type CommonBuildConfigType = {
+    activationPath: string
     appName: string
     appIcon: string
     projectId: {

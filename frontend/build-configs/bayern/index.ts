@@ -3,6 +3,7 @@ import publisherText from "./publisherText"
 import disclaimerText from "./disclaimerText"
 
 export const bayernCommon: CommonBuildConfigType = {
+    activationPath: '/activation',
     appName: "Ehrenamt",
     appIcon: "app_icon_bayern",
     projectId: {

@@ -1,6 +1,7 @@
 // This file originally stems from a CRA-eject.
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -14,6 +15,7 @@ import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
+import { DeeplLinkingConfig, getDeeplinkingConfigs } from '../src/project-configs/getDeeplinkingConfigs'
 import getClientEnvironment from './env'
 import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
@@ -50,6 +52,42 @@ const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10
 const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 
+// https://developer.android.com/training/app-links/verify-site-associations#manual-verification
+const generateAssetLinks = (config: DeeplLinkingConfig) => {
+  return JSON.stringify(
+    [
+      {
+        relation: ['delegate_permission/common.handle_all_urls'],
+        target: {
+          namespace: 'android_app',
+          package_name: config.android.applicationId,
+          sha256_cert_fingerprints: [config.android.sha256CertFingerprint],
+        },
+      },
+    ],
+    null,
+    2
+  )
+}
+
+const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
+  return JSON.stringify(
+    {
+      applinks: {
+        apps: [],
+        details: [
+          {
+            appIDs: config.ios.appleAppSiteAssociationAppIds,
+            paths: config.ios.paths,
+          },
+        ],
+      },
+    },
+    null,
+    2
+  )
+}
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.Configuration {
@@ -57,6 +95,9 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
   const isEnvProduction = webpackEnv === 'production'
 
   const paths = getPaths()
+  const distDirectory = path.resolve(__dirname, `../build/`)
+  const assetLinksPreset = path.resolve(__dirname, 'assetlinks.json')
+  const appleAppSiteAssociationPreset = path.resolve(__dirname, 'apple-app-site-association')
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -495,6 +536,20 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
         logger: {
           infrastructure: 'silent',
         },
+      }),
+      new CopyPlugin({
+        patterns: [
+          ...getDeeplinkingConfigs().map(config => ({
+            from: assetLinksPreset,
+            to: `${distDirectory}/${config.projectName}`,
+            transform: () => generateAssetLinks(config),
+          })),
+          ...getDeeplinkingConfigs().map(config => ({
+            from: appleAppSiteAssociationPreset,
+            to: `${distDirectory}/${config.projectName}`,
+            transform: () => generateAppleAppSiteAssociation(config),
+          })),
+        ],
       }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize

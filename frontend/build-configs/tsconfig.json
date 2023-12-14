@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": false, // leads to oom when linting
+    "lib": ["ES5", "ES6"],
+    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "ES2020",
+    "skipLibCheck": true,
+    "useDefineForClassFields": false,
+    "outDir": "dist",
+    "module": "CommonJS"
+  },
+  "include": ["**/*"],
+}

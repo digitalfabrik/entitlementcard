@@ -1,0 +1,3 @@
+# Files will be ignore while package installation
+/.prettierrc
+/.package-lock.json

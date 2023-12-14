@@ -3,6 +3,7 @@ import publisherText from "./publisherText"
 import disclaimerText from "./disclaimerText"
 
 export const nuernbergCommon: CommonBuildConfigType = {
+    activationPath: '/activation',
     appName: "Nürnberg-Pass",
     appIcon: "app_icon_nuernberg",
     projectId: {
