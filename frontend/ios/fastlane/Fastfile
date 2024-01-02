@@ -72,7 +72,7 @@ platform :ios do
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
     # sh("app-toolbelt v0 build-config write-xcconfig #{build_config_name} ios --directory /")
 
-    sh("fvm flutter build ios --dart-define=environment=production --flavor #{flavor} >> --release -t lib/main.dart")
+    sh("fvm flutter build ios --dart-define=environment=production --flavor #{flavor} >> --release -t lib/main.dart --verbose")
     # build_app(
     #   workspace: "Runner.xcworkspace",
     #   scheme: flavor,
