@@ -86,6 +86,7 @@ let nuernberg: BuildConfigType = {
     ios: {
         ...nuernbergCommon,
         bundleIdentifier: "app.sozialpass.nuernberg",
+        provisioningProfileSpecifier: `match AppStore app.sozialpass.nuernberg`,
     },
 }
 
