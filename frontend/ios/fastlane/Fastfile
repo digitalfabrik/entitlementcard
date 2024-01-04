@@ -13,6 +13,10 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+before_all do
+  setup_circle_ci
+end
+
 default_platform(:ios)
 
 platform :ios do
