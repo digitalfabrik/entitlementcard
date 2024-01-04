@@ -74,9 +74,7 @@ platform :ios do
     # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
-    # sh("app-toolbelt v0 build-config write-xcconfig #{build_config_name} ios --directory /")
 
-    #sh("fvm flutter build ios --dart-define=environment=production --flavor #{flavor} >> --release -t lib/main.dart --verbose")
     build_app(
        workspace: "Runner.xcworkspace",
        scheme: flavor,
@@ -89,18 +87,22 @@ platform :ios do
   desc "Deliver iOS App to TestFlight for testers"
   lane :upload_to_test_flight do |options|
     apple_auth()
+
+    build_config_name = options[:build_config_name]
     ipa_path = options[:ipa_path]
 
-    if [ipa_path].include?(nil)
+    if [build_config_name, ipa_path].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    upload_to_testflight(
-      skip_waiting_for_build_processing: true,
-      apple_id: '1562834995',
-      ipa: "#{ENV['HOME']}/#{ipa_path}",
-      distribute_external: false
-    )
+    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
+
+    # upload_to_testflight(
+    #   skip_waiting_for_build_processing: true,
+    #   apple_id: bundleIdentifier,
+    #   ipa: "#{ENV['HOME']}/#{ipa_path}",
+    #   distribute_external: false
+    # )
   end
 
   desc "Generate new localized screenshots"

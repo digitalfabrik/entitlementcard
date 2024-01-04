@@ -368,18 +368,8 @@ jobs:
                 working_directory: ~/project/frontend/
             - restore_pods
             - run:
-                command: |
-                    fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-                name: Build Runner
-                working_directory: ~/project/frontend/
-            - run:
-                command: app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
-                name: Write xcConfig
-                working_directory: ~/project/frontend/
-            - run:
                 command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
-                no_output_timeout: 30m
                 working_directory: ~/project/frontend/ios
             - store_artifacts:
                 path: ~/<< parameters.buildConfig >>.ipa
@@ -563,6 +553,44 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
+    deliver_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.0.1
+        parameters:
+            buildConfig:
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+            production_delivery:
+                description: Whether to deliver the build to production.
+                type: boolean
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - prepare_workspace
+            - restore_environment_variables
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - run:
+                command: yarn --cwd tools manage-metadata prepare-metadata << parameters.buildConfig >> appstore
+                name: Prepare App Store metadata
+            - when:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: bundle exec fastlane ios appstoreconnect_upload ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME} build_config_name:<< parameters.buildConfig >>
+                        name: '[FL] App Store Connect Upload'
+                        working_directory: native
+            - unless:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: bundle exec fastlane ios testflight_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
+                        name: '[FL] TestFlight Upload'
+                        working_directory: native
     deploy:
         docker:
             - image: cimg/base:2022.09
@@ -764,6 +792,31 @@ workflows:
                 name: build_ios_bayern
                 requires:
                     - bump_version
+            - deliver_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                name: deliver_bayern_ios
+                production_delivery: false
+                requires:
+                    - build_ios_bayern
+            - build_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Nuernberg
+                name: build_ios_nuernberg
+                requires:
+                    - bump_version
+            - deliver_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                name: deliver_nuernberg_ios
+                production_delivery: false
+                requires:
+                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:
