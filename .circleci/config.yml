@@ -572,25 +572,23 @@ jobs:
             - checkout
             - prepare_workspace
             - restore_environment_variables
+            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/ios
-            - run:
-                command: yarn --cwd tools manage-metadata prepare-metadata << parameters.buildConfig >> appstore
-                name: Prepare App Store metadata
             - when:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
-                        command: bundle exec fastlane ios appstoreconnect_upload ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME} build_config_name:<< parameters.buildConfig >>
+                        command: echo "not implemented yet"
                         name: '[FL] App Store Connect Upload'
-                        working_directory: native
+                        working_directory: frontend/ios
             - unless:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
-                        command: bundle exec fastlane ios testflight_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
+                        command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
                         name: '[FL] TestFlight Upload'
-                        working_directory: native
+                        working_directory: frontend/ios
     deploy:
         docker:
             - image: cimg/base:2022.09
@@ -800,23 +798,6 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_ios_bayern
-            - build_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                flutterFlavor: Nuernberg
-                name: build_ios_nuernberg
-                requires:
-                    - bump_version
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_nuernberg_ios
-                production_delivery: false
-                requires:
-                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:
