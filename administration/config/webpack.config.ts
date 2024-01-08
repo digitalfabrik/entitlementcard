@@ -52,7 +52,7 @@ const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10
 const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 
-// https://developer.android.com/training/app-links/verify-site-associations#manual-verification
+// https://developer.android.com/training/app-links/verify-android-applinks#web-assoc
 const generateAssetLinks = (config: DeeplLinkingConfig) => {
   return JSON.stringify(
     [
