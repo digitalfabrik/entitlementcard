@@ -1006,6 +1006,7 @@
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
 		};
@@ -1098,6 +1099,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-Nuernberg";
 		};
@@ -1220,6 +1222,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-Nuernberg";
 		};
@@ -1336,6 +1339,7 @@
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Profile-Nuernberg";
 		};
@@ -1456,6 +1460,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-Bayern";
 		};
@@ -1578,6 +1583,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-Bayern";
 		};
@@ -1694,6 +1700,7 @@
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Profile-Bayern";
 		};
@@ -1814,6 +1821,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -1871,6 +1879,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
