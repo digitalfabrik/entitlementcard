@@ -95,11 +95,8 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
-
     upload_to_testflight(
       skip_waiting_for_build_processing: true,
-      apple_id: bundleIdentifier,
       ipa: "#{ENV['HOME']}/#{ipa_path}",
       distribute_external: false
     )
