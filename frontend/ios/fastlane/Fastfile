@@ -68,6 +68,14 @@ platform :ios do
     apple_auth
     certificates build_config_name:build_config_name
 
+    increment_build_number(
+      build_number: version_code
+    )
+
+    increment_version_number(
+      version_number: version_name
+    )
+
     ENV["EXTRA_PACKAGER_ARGS"] = "--sourcemap-output ios/output/#{build_config_name}.ios.bundle.map"
     # DO NOT REMOVE THIS! It is necessary for the javascript build config logic.
     ENV["BUILD_CONFIG_NAME"] = build_config_name
