@@ -90,9 +90,9 @@ platform :android do
         :VERSION_NAME => version_name,
         :BUILD_CONFIG_NAME => build_config_name,
         :KEYSTORE_PATH => KEYSTORE_PATH,
-        :KEYSTORE_KEY_ALIAS => flavor == 'Bayern' ? KEYSTORE_KEY_ALIAS_BAYERN : KEYSTORE_KEY_ALIAS_NUERNBERG,
+        :KEYSTORE_KEY_ALIAS => flavor == 'Nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN,
         :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-        :KEYSTORE_KEY_PASSWORD => flavor == 'Bayern' ? KEYSTORE_KEY_PASSWORD_BAYERN : KEYSTORE_KEY_PASSWORD_NUERNBERG,
+        :KEYSTORE_KEY_PASSWORD => flavor == 'Nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN,
       }.compact,
       system_properties: gradle_system_properties,
       print_command: false
