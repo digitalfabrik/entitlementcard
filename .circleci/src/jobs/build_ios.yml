@@ -22,6 +22,7 @@ steps:
   - install_app_toolbelt
   - install_protobuf_mac
   - prepare_workspace
+  - restore_environment_variables
   - restore_ruby_cache:
       directory: frontend/ios
   - run:

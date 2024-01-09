@@ -61,6 +61,9 @@ platform :ios do
     build_config_name = options[:build_config_name]
     flavor = options[:flavor]
 
+    puts(version_code)
+    puts(version_name)
+
     if [version_code, version_name, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
@@ -69,11 +72,11 @@ platform :ios do
     certificates build_config_name:build_config_name
 
     increment_build_number(
-      build_number: "123"
+      build_number: version_code
     )
 
     increment_version_number(
-      version_number: "123"
+      version_number: version_name
     )
 
     ENV["EXTRA_PACKAGER_ARGS"] = "--sourcemap-output ios/output/#{build_config_name}.ios.bundle.map"
