@@ -33,7 +33,16 @@ steps:
   - restore_pods
   - run:
       name: Check avg tool
-      command: xcrun avgtool
+      command: xcrun -find agvtool
+  - run:
+      name: Check avg tool
+      command: agvtool what-version
+  - run:
+      name: Check avg tool
+      command: agvtool next-version -all
+  - run:
+      name: Check xcrun
+      command: xcrun --show-sdk-platform-path
   - run:
       name: '[FL] Build'
       command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
