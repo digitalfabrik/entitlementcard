@@ -69,11 +69,11 @@ platform :ios do
     certificates build_config_name:build_config_name
 
     increment_build_number(
-      build_number: version_code
+      build_number: "123"
     )
 
     increment_version_number(
-      version_number: version_name
+      version_number: "123"
     )
 
     ENV["EXTRA_PACKAGER_ARGS"] = "--sourcemap-output ios/output/#{build_config_name}.ios.bundle.map"
