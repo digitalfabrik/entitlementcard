@@ -360,30 +360,34 @@ jobs:
             - install_protobuf_mac
             - prepare_workspace
             - restore_ruby_cache:
-                directory: ~/project/frontend/ios
+                directory: frontend/ios
             - run:
                 command: |
                     fvm flutter pub get --enforce-lockfile
                     fvm flutter precache --ios
                 name: Install Flutter Packages
-                working_directory: ~/project/frontend/
+                working_directory: frontend/
             - restore_pods
             - run:
                 command: xcrun -find agvtool
                 name: Check avg tool
+                working_directory: frontend/ios
             - run:
                 command: agvtool what-version
                 name: Check avg tool
+                working_directory: frontend/ios
             - run:
                 command: agvtool next-version -all
                 name: Check avg tool
+                working_directory: frontend/ios
             - run:
                 command: xcrun --show-sdk-platform-path
                 name: Check xcrun
+                working_directory: frontend/ios
             - run:
-                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+                command: bundle exec fastlane ios build --verbose version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
-                working_directory: ~/project/frontend/ios
+                working_directory: frontend/ios
             - store_artifacts:
                 path: ~/<< parameters.buildConfig >>.ipa
             - persist_to_workspace:
