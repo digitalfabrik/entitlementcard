@@ -1,2 +1,0 @@
-json_key_file("fastlane/play-store-credentials.json") # Path to the json secret file - https://docs.fastlane.tools/actions/supply/#setup
-package_name("de.nrw.it.giz.ehrensache.bayern.android")

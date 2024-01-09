@@ -89,7 +89,15 @@ android {
     }
 
     signingConfigs {
-        if (localProperties.containsKey("signing.keyAlias")) {
+        if (System.getenv()['KEYSTORE_PATH']) { // Signing with env variables (CI)
+            release {
+                storeFile file("file://" + System.getenv()['HOME'] + project.KEYSTORE_PATH)
+                storePassword project.KEYSTORE_PASSWORD
+                keyAlias project.KEYSTORE_KEY_ALIAS
+                keyPassword project.KEYSTORE_KEY_PASSWORD
+            }
+        } else if (localProperties.containsKey("signing.keyAlias")) { // Signing with local.properties file (locally)
+            println "Selected using localProps"
             localProps {
                 keyAlias localProperties.getProperty('signing.keyAlias')
                 keyPassword localProperties.getProperty('signing.keyPassword')
@@ -106,7 +114,9 @@ android {
                 abiFilters 'armeabi-v7a','arm64-v8a','x86_64'
             }
 
-            if (localProperties.containsKey("signing.keyAlias")) {
+            if (project.hasProperty('KEYSTORE_PATH')) {
+                signingConfig signingConfigs.release
+            } else if ( localProperties.containsKey("signing.keyAlias")) {
                 signingConfig signingConfigs.localProps
             } else {
                 signingConfig signingConfigs.debug
@@ -123,12 +133,19 @@ android {
         }
     }
 
+    def buildConfigName = determineBuildConfigName()
+    def buildConfig = createBuildConfig(buildConfigName)
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        if (project.hasProperty('VERSION_CODE')) {
+            versionCode project.VERSION_CODE.toInteger()
+            versionName project.VERSION_NAME
+        }
     }
 
     androidComponents {
@@ -151,4 +168,22 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+// Workaround to fix wrong path lookup by flutter tools, can be removed after upgrading flutter
+// see: https://github.com/flutter/flutter/pull/127133
+// when removing, make sure the release is written to the same directory as before or adjust build_android step to look at the new directory
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith("bundle") && task.name.endsWith("Release")) {
+        def renameTaskName = "rename${task.name.capitalize()}Aab"
+        def oldDir = task.name.substring("bundle".length())
+        def flavor = task.name.substring("bundle".length(), task.name.length() - "Release".length())
+        def flavorLowerCase = flavor.uncapitalize()
+        tasks.create(renameTaskName, Copy) {
+            from("${buildDir}/outputs/bundle/${oldDir}/")
+            into "${buildDir}/outputs/bundle/${flavorLowerCase}Release/"
+            rename "app-${flavor}-release.aab", "app-${flavorLowerCase}-release.aab"
+        }
+        task.finalizedBy(renameTaskName)
+    }
 }

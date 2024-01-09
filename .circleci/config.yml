@@ -56,24 +56,29 @@ commands:
                 command: |
                     dart pub global activate fvm
                     echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
+                    export PATH="$PATH":"$HOME/.pub-cache/bin"
                 name: Install FVM
             - restore_cache:
                 keys:
-                    - fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+                    - fvm-0-{{ checksum "frontend/.fvm/fvm_config.json" }}-{{ arch }}
             - run:
                 command: fvm install
                 name: Install Flutter
+                working_directory: ~/project/frontend/
             - save_cache:
-                key: fvm-0-{{ checksum ".fvm/fvm_config.json" }}-{{ arch }}
+                key: fvm-0-{{ checksum "frontend/.fvm/fvm_config.json" }}-{{ arch }}
                 paths:
                     - .fvm
                     - ~/fvm/
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter --version
                 name: Show Flutter version
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter config --no-analytics
                 name: Configure Flutter
+                working_directory: ~/project/frontend/
     install_protobuf_linux:
         steps:
             - run:
@@ -96,6 +101,58 @@ commands:
             - run:
                 command: dart pub global activate protoc_plugin
                 name: Install Flutter plugin
+    persist_environment_variables:
+        description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
+        steps:
+            - run:
+                command: cat ${BASH_ENV}
+                name: List environment variables
+            - run:
+                command: cat ${BASH_ENV} >> environment_variables
+                name: Save environment variables to file
+            - persist_to_workspace:
+                paths:
+                    - environment_variables
+                root: ./
+    prepare_workspace:
+        description: Attach the workspace at ~/attached_workspace and list its contents
+        steps:
+            - attach_workspace:
+                at: ~/attached_workspace
+            - run:
+                command: ls -A ~/attached_workspace
+                name: Attached workspace contents
+            - run:
+                command: ls -AR ~/attached_workspace
+                name: Recursively list attached workspace contents
+    restore_environment_variables:
+        description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
+        steps:
+            - run:
+                command: cat ~/attached_workspace/environment_variables
+                name: List environment variables
+            - run:
+                command: cat ~/attached_workspace/environment_variables >> ${BASH_ENV}
+                name: Restore environment variables
+    restore_ruby_cache:
+        description: Restores and saves fastlane cache of the passed directory.
+        parameters:
+            directory:
+                default: native
+                type: string
+        steps:
+            - restore_cache:
+                keys:
+                    - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                    - 1-gems-{{ arch }}-
+            - run:
+                command: bundle check || bundle install
+                name: '[FL] install'
+                working_directory: << parameters.directory >>
+            - save_cache:
+                key: 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                paths:
+                    - << parameters.directory >>/vendor/bundle
     setup_npm_global:
         steps:
             - run:
@@ -151,34 +208,63 @@ jobs:
         parameters:
             buildConfig:
                 description: Name of the build config to use
-                type: string
+                enum:
+                    - bayern
+                    - bayern-floss
+                    - nuernberg
+                type: enum
             flutterFlavor:
                 description: Flutter Flavor to use
-                type: string
+                enum:
+                    - Bayern
+                    - BayernFloss
+                    - Nuernberg
+                type: enum
         resource_class: large
         steps:
             - checkout:
                 path: ~/project
+            - add_ssh_keys:
+                fingerprints:
+                    - 24:1d:3b:b7:b3:49:69:d7:54:c3:93:a5:a2:d1:71:db
+            - prepare_workspace
             - install_dart_linux
             - install_fvm
             - install_app_toolbelt
             - install_protobuf_linux
             - run:
+                command: bundle update --bundler
+                name: Install bundler
+                working_directory: ~/project/frontend/android
+            - restore_environment_variables
+            - restore_ruby_cache:
+                directory: ~/project/frontend/android
+            - run:
                 command: |
                     fvm flutter pub get --enforce-lockfile
                     fvm flutter precache --android
                 name: Install Flutter Packages
+                working_directory: ~/project/frontend/android
             - run:
-                command: |
-                    fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-                name: Build Runner
+                command: bundle exec fastlane keystore
+                name: '[FL] Prepare Android Keystore'
+                working_directory: ~/project/frontend/android
             - run:
-                command: |
-                    fvm flutter build apk --dart-define=environment=production --flavor << parameters.flutterFlavor >> --release -t lib/main.dart
-                name: Build
+                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+                name: '[FL] Build'
+                working_directory: ~/project/frontend/android
+            - run:
+                command: mkdir -p attached_workspace
+                name: Make attached_workspace dir
+            - run:
+                command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+                name: Move aab
+            - persist_to_workspace:
+                paths:
+                    - << parameters.buildConfig >>.aab
+                root: ~/attached_workspace
             - store_artifacts:
-                path: build/app/outputs/flutter-apk/
-        working_directory: ~/project/frontend
+                path: ~/attached_workspace/
     build_backend:
         docker:
             - image: cimg/openjdk:17.0.6-node
@@ -299,6 +385,27 @@ jobs:
                     - martin/martin
                 root: /tmp/artifacts
         working_directory: ~/martin
+    bump_version:
+        docker:
+            - image: cimg/node:18.14.1
+        parameters:
+            prepare_delivery:
+                default: false
+                description: Whether to prepare for a delivery. If true, the version bump is committed.
+                type: boolean
+        resource_class: small
+        steps:
+            - checkout
+            - run:
+                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+                name: Install app-toolbelt
+            - run:
+                command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+                name: Calculate next version name
+            - run:
+                command: echo "export NEW_VERSION_CODE=$(app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+                name: Calculate next version code
+            - persist_environment_variables
     check:
         docker:
             - image: cimg/node:19.1.0-browsers
@@ -383,6 +490,35 @@ jobs:
             - run:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
                 name: Check health
+    deliver_android:
+        docker:
+            - image: cimg/android:2023.02.1-node
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        parameters:
+            buildConfig:
+                enum:
+                    - bayern
+                    - bayern-floss
+                    - nuernberg
+                type: enum
+            production_delivery:
+                description: Whether to deliver the build to production.
+                type: boolean
+        resource_class: small
+        shell: /bin/bash -eo pipefail
+        steps:
+            - checkout:
+                path: ~/project
+            - prepare_workspace
+            - restore_ruby_cache:
+                directory: ~/project/frontend/android
+            - install_app_toolbelt
+            - restore_environment_variables
+            - run:
+                command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
+                name: '[FL] Play Store Upload'
+                working_directory: ~/project/frontend/android
     deploy:
         docker:
             - image: cimg/base:2022.09
@@ -500,6 +636,9 @@ parameters:
     run_commit:
         default: true
         type: boolean
+    run_delivery_beta_native:
+        default: false
+        type: boolean
     run_frontend:
         default: false
         type: boolean
@@ -568,6 +707,48 @@ workflows:
                     - pack_backend
             - check_frontend
         when: << pipeline.parameters.run_commit >>
+    delivery_beta_native:
+        jobs:
+            - bump_version:
+                prepare_delivery: true
+            - check_frontend
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_bayern
+                production_delivery: false
+                requires:
+                    - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: false
+                requires:
+                    - build_android_nuernberg
+        when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:
             - check_frontend
