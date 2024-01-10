@@ -334,12 +334,8 @@ jobs:
                 root: ~/project
         working_directory: ~/project/backend
     build_ios:
-        environment:
-            FASTLANE_SKIP_UPDATE_CHECK: true
-            FL_OUTPUT_DIR: output
-            TOTAL_CPUS: 4
         macos:
-            xcode: 14.0.0
+            xcode: 14.3.1
         parameters:
             buildConfig:
                 description: Name of the build config to use
@@ -355,7 +351,6 @@ jobs:
                     - BayernFloss
                     - Nuernberg
                 type: enum
-        shell: /bin/bash --login -o pipefail
         steps:
             - checkout:
                 path: ~/project
@@ -363,19 +358,21 @@ jobs:
             - install_fvm
             - install_app_toolbelt
             - install_protobuf_mac
+            - prepare_workspace
+            - restore_environment_variables
             - restore_ruby_cache:
-                directory: ~/project/frontend/ios
+                directory: frontend/ios
             - run:
                 command: |
                     fvm flutter pub get --enforce-lockfile
                     fvm flutter precache --ios
                 name: Install Flutter Packages
-                working_directory: ~/project/frontend/ios
+                working_directory: frontend/
             - restore_pods
             - run:
                 command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
-                working_directory: ~/project/frontend/ios
+                working_directory: frontend/ios
             - store_artifacts:
                 path: ~/<< parameters.buildConfig >>.ipa
             - persist_to_workspace:
@@ -558,6 +555,42 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
+    deliver_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.0.1
+        parameters:
+            buildConfig:
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+            production_delivery:
+                description: Whether to deliver the build to production.
+                type: boolean
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - prepare_workspace
+            - restore_environment_variables
+            - install_app_toolbelt
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - when:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: echo "not implemented yet"
+                        name: '[FL] App Store Connect Upload'
+                        working_directory: frontend/ios
+            - unless:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
+                        name: '[FL] TestFlight Upload'
+                        working_directory: frontend/ios
     deploy:
         docker:
             - image: cimg/base:2022.09
@@ -750,6 +783,43 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: true
+            - check_frontend
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_bayern
+                production_delivery: false
+                requires:
+                    - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: false
+                requires:
+                    - build_android_nuernberg
             - build_ios:
                 buildConfig: bayern
                 context:
@@ -759,6 +829,33 @@ workflows:
                 name: build_ios_bayern
                 requires:
                     - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                name: deliver_bayern_ios
+                production_delivery: false
+                requires:
+                    - build_ios_bayern
+            - build_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Nuernberg
+                name: build_ios_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                name: deliver_nuernberg_ios
+                production_delivery: false
+                requires:
+                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:

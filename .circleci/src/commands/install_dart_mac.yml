@@ -14,6 +14,3 @@ steps:
         - /usr/local/Cellar/dart/
         - /usr/local/Homebrew/Library/Taps/dart-lang/homebrew-dart
         - ~/Library/Caches/Homebrew
-#        - /usr/local/opt/dart/libexec #not working
-#        - ~/go/pkg #adjust for dart
-#        - ~/Library/Caches/go-build #adjust for dart

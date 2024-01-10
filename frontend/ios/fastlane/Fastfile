@@ -13,6 +13,10 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+before_all do
+  setup_circle_ci
+end
+
 default_platform(:ios)
 
 platform :ios do
@@ -57,6 +61,9 @@ platform :ios do
     build_config_name = options[:build_config_name]
     flavor = options[:flavor]
 
+    puts(version_code)
+    puts(version_name)
+
     if [version_code, version_name, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
@@ -64,40 +71,43 @@ platform :ios do
     apple_auth
     certificates build_config_name:build_config_name
 
+    increment_build_number(
+      build_number: version_code
+    )
+
+    increment_version_number(
+      version_number: version_name
+    )
+
     ENV["EXTRA_PACKAGER_ARGS"] = "--sourcemap-output ios/output/#{build_config_name}.ios.bundle.map"
     # DO NOT REMOVE THIS! It is necessary for the javascript build config logic.
     ENV["BUILD_CONFIG_NAME"] = build_config_name
     # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
 
-    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
-
-    # https://docs.fastlane.tools/actions/match/
-    match(type: "development", app_identifier: bundleIdentifier, readonly: true)
-    match(type: "appstore", app_identifier: bundleIdentifier, readonly: true)
-
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
     build_app(
-      workspace: "Runner.xcworkspace",
-      scheme: flavor,
-      output_directory: "#{ENV['HOME']}",
-      output_name: "#{build_config_name}.ipa",
-      export_method: "app-store",
-    )
+       workspace: "Runner.xcworkspace",
+       scheme: flavor,
+       output_directory: "#{ENV['HOME']}",
+       output_name: "#{build_config_name}.ipa",
+       export_method: "app-store",
+     )
   end
 
   desc "Deliver iOS App to TestFlight for testers"
   lane :upload_to_test_flight do |options|
     apple_auth()
+
+    build_config_name = options[:build_config_name]
     ipa_path = options[:ipa_path]
 
-    if [ipa_path].include?(nil)
+    if [build_config_name, ipa_path].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
     end
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true,
-      apple_id: '1562834995',
       ipa: "#{ENV['HOME']}/#{ipa_path}",
       distribute_external: false
     )
