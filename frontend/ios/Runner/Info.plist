@@ -33,6 +33,14 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Einlesen von QR-Codes.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

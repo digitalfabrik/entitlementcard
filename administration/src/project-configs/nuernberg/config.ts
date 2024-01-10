@@ -32,7 +32,7 @@ const config: ProjectConfig = {
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   activityLogConfig: {
-    columnNames: ['Erstellt', 'Name', 'Passnummer', 'Geburtstag', 'Gültig bis'],
+    columnNames: ['Erstellt', 'Name', 'Pass-ID', 'Geburtstag', 'Gültig bis'],
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
