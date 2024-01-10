@@ -1,5 +1,5 @@
 macos:
-  xcode: 15.0.1
+  xcode: 14.3.1
 parameters:
   buildConfig:
     description: "Name of the build config to use"
