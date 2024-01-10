@@ -1,7 +1,5 @@
 source "https://rubygems.org"
 
-gem "fastlane", ">= 2.216.0"
-gem "cocoapods", "~> 1.14.2"
+gem "fastlane", ">= 2.214.0"
+gem "cocoapods", "~> 1.12.1"
 
-#gem "activesupport", "= 7.0.8" # Can be removed, once the acctivesupport version with the bug is updated
-# see https://github.com/CocoaPods/CocoaPods/issues/12080
