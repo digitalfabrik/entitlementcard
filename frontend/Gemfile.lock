@@ -2,6 +2,11 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (3.0.3)
+    activesupport (7.0.8)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     artifactory (3.0.15)
@@ -28,6 +33,7 @@ GEM
     colored2 (3.1.2)
     commander (4.6.0)
       highline (~> 2.0.0)
+    concurrent-ruby (1.2.2)
     declarative (0.0.20)
     digest-crc (0.6.4)
       rake (>= 12.0.0, < 14.0.0)
@@ -143,12 +149,15 @@ GEM
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     httpclient (2.8.3)
+    i18n (1.14.1)
+      concurrent-ruby (~> 1.0)
     jmespath (1.6.1)
     json (2.5.1)
     jwt (2.2.3)
     memoist (0.16.2)
     mini_magick (4.11.0)
     mini_mime (1.1.1)
+    minitest (5.20.0)
     multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
@@ -184,6 +193,8 @@ GEM
     tty-screen (0.8.1)
     tty-spinner (0.9.3)
       tty-cursor (~> 0.7)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
@@ -207,6 +218,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (= 7.0.8)
   fastlane (~> 2.194)
 
 BUNDLED WITH

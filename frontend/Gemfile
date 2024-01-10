@@ -7,3 +7,8 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 # gem "rails"
 
 gem "fastlane", "~> 2.194"
+
+gem "activesupport", "= 7.0.8"
+# Can be removed, once the acctivesupport version with the bug is updated
+#gem "activesupport", ["!= 7.1.0", "!= 7.1.1"] # Can be removed, once the acctivesupport version with the bug is updated
+# see https://github.com/CocoaPods/CocoaPods/issues/12080

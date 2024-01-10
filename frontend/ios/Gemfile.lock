@@ -276,7 +276,6 @@ PLATFORMS
   x86_64-darwin-21
 
 DEPENDENCIES
-  activesupport (= 7.0.8)
   cocoapods (~> 1.12.1)
   fastlane (>= 2.214.0)
 
