@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+# [3.2.3] 2023-12-05
+
+### Fixed
+* fix wrong headline by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1220
+* 1224: Fix language switch by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1225
+* 1226: Fix duckerei cache by @f1sh1918 in https://github.com/digitalfabrik/entitlementcard/pull/1227
+* 1228: Rename nuernberg pass id in activity log by @ztefanie in https://github.com/digitalfabrik/entitlementcard/pull/1231
+
 # [3.2.2] 2023-11-15
 
 ### Fixed
