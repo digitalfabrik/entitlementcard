@@ -518,6 +518,7 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
             syntactic: true,
           },
           mode: 'write-references',
+          build: true,
           // profile: true,
         },
         issue: {
