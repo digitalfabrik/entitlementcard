@@ -149,7 +149,7 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - 6-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                    - 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
                 name: Restore CocoaPods Cache
             - run:
                 command: |
@@ -158,7 +158,7 @@ commands:
                 name: '[CP] Install CocoaPods'
                 working_directory: frontend/ios
             - save_cache:
-                key: 6-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                key: 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
                 name: Save CocoaPods Cache
                 paths:
                     - ~/Library/Caches/CocoaPods/

@@ -1,6 +1,6 @@
-import BuildConfigType, {CommonBuildConfigType} from "../types"
-import publisherText from "./publisherText"
+import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
+import publisherText from "./publisherText"
 
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Nürnberg-Pass",
@@ -30,8 +30,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
-    appLocales: ['de', 'en'],
-    localeOverridePath: 'assets/nuernberg/l10n',
+    appLocales: ["de", "en"],
+    localeOverridePath: "assets/nuernberg/l10n",
     cardBranding: {
         headerTextColor: "#000000",
         headerTextFontSize: 9,
@@ -41,8 +41,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogo: "assets/nuernberg/header-logo.png",
         headerLogoPadding: 0,
         headerLogoWidth: 60,
-        headerContainerPadding: {top: 0, right: 24, bottom: 0, left: 16},
-        bodyContainerPadding: {top: 0, right: 24, bottom: 6, left: 16},
+        headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
+        bodyContainerPadding: { top: 0, right: 24, bottom: 6, left: 16 },
         bodyLogo: "assets/nuernberg/body-logo.png",
         bodyLogoPosition: "right",
         bodyLogoWidth: 60,
@@ -86,7 +86,7 @@ let nuernberg: BuildConfigType = {
     ios: {
         ...nuernbergCommon,
         bundleIdentifier: "app.sozialpass.nuernberg",
-        provisioningProfileSpecifier: `match AppStore app.sozialpass.nuernberg`,
+        provisioningProfileSpecifier: "match AppStore app.sozialpass.nuernberg",
     },
 }
 
