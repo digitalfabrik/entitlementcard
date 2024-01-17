@@ -95,6 +95,7 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
 export type iOSBuildConfigType = CommonBuildConfigType & {
     // iOS application identifier.
     bundleIdentifier: string
+    provisioningProfileSpecifier: string
 }
 
 export default BuildConfigType
