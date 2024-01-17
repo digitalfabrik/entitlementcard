@@ -2,18 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:base32/base32.dart';
+import 'package:ehrenamtskarte/activation/deeplink_activation.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
-import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
-import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
@@ -162,71 +156,13 @@ class DevSettingsView extends StatelessWidget {
             TextButton(
               child: const Text('Activate Card'),
               onPressed: () {
-                _activateCard(context, base64Controller.text);
+                activateCard(context, base64Controller.text);
               },
             )
           ],
         );
       },
     );
-  }
-
-  Future<void> _activateCard(BuildContext context, String base64qrcode) async {
-    final messengerState = ScaffoldMessenger.of(context);
-    final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
-    final client = GraphQLProvider.of(context).value;
-    final projectId = Configuration.of(context).projectId;
-    try {
-      final activationCode =
-          const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
-
-      final activationResult = await activateCode(
-        client: client,
-        projectId: projectId,
-        activationSecretBase64: const Base64Encoder().convert(activationCode.activationSecret),
-        cardInfoHashBase64: activationCode.info.hash(activationCode.pepper),
-        overwriteExisting: true,
-      );
-
-      switch (activationResult.activationState) {
-        case ActivationState.success:
-          if (activationResult.totpSecret == null) {
-            throw const ActivationInvalidTotpSecretException();
-          }
-          final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-          final userCode = DynamicUserCode()
-            ..info = activationCode.info
-            ..pepper = activationCode.pepper
-            ..totpSecret = totpSecret;
-          userCodesModel.insertCode(userCode);
-          break;
-        case ActivationState.failed:
-          await QrParsingErrorDialog.showErrorDialog(
-            context,
-            'Der eingescannte Code ist ungültig.',
-          );
-          break;
-        case ActivationState.didNotOverwriteExisting:
-          throw const ActivationDidNotOverwriteExisting();
-        default:
-          throw const ServerCardActivationException(
-            'Die Aktivierung befindet sich in einem ungültigen Zustand.',
-          );
-      }
-
-      messengerState.showSnackBar(
-        const SnackBar(
-          content: Text('Aktivierung erfolgreich.'),
-        ),
-      );
-      Navigator.pop(context);
-    } on QrCodeParseException catch (e, _) {
-      messengerState.showSnackBar(
-        SnackBar(
-          content: Text(e.reason),
-        ),
-      );
-    }
   }
 
   void _showIntroSlides(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/app.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
+import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 
@@ -15,7 +16,12 @@ class IntroScreen extends StatelessWidget {
 
   void onDonePress(BuildContext context) {
     onFinishedCallback?.call();
-    Navigator.of(context).pushReplacementNamed(homeRouteName);
+    Navigator.push(
+      context,
+      AppRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
   }
 
   @override

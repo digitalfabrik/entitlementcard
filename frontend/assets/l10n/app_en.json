@@ -22,6 +22,15 @@
     "sourceCode": "Source code",
     "title": "About"
   },
+  "activation" : {
+    "headline": "Activate card",
+    "description": "Do you want to activate this card?",
+    "limitReached": "Your card limit is reached. Please remove a card first.",
+    "buttonText": "Activate Card",
+    "invalidCode": "Your activation code is invalid",
+    "alreadyExists": "This card was already activated on this device.",
+    "activationSuccessful": "The Activation was successful."
+  },
   "category": {
     "clothing": "Clothing",
     "clothingLong": "Clothing/Second hand",

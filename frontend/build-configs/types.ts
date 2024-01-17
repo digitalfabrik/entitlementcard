@@ -20,6 +20,7 @@ export type CommonBuildConfigType = {
         showcase: string
         production: string
         local: string
+        staging: string
     }
     mapStyleUrl: {
         showcase: string

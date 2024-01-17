@@ -9,6 +9,7 @@ export const bayernCommon: CommonBuildConfigType = {
         production: "bayern.ehrenamtskarte.app",
         showcase: "showcase.entitlementcard.app",
         local: "bayern.ehrenamtskarte.app",
+        staging: "staging.bayern.ehrenamtskarte.app",
     },
     categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     theme: {

@@ -9,6 +9,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         production: "nuernberg.sozialpass.app",
         showcase: "showcase.entitlementcard.app",
         local: "nuernberg.sozialpass.app",
+        staging: "staging.nuernberg.sozialpass.app",
     },
     categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     theme: {
