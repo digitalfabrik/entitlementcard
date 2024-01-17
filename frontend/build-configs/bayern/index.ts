@@ -87,6 +87,7 @@ let bayern: BuildConfigType = {
     ios: {
         ...bayernCommon,
         bundleIdentifier: "de.nrw.it.ehrensachebayern",
+        provisioningProfileSpecifier: "match AppStore de.nrw.it.ehrensachebayern",
     },
 }
 
