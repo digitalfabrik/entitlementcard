@@ -130,6 +130,9 @@ jobs:
                 command: npm run test -- --maxWorkers=2
                 name: Test
             - run:
+                command: npm run ts:check
+                name: Typescript
+            - run:
                 command: npm run build
                 name: Build
             - save_cache:
