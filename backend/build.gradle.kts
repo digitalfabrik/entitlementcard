@@ -13,6 +13,7 @@ plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
+    id("com.google.protobuf") version "0.9.4"
 
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -23,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.protobuf:protobuf-kotlin:3.25.2")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("io.javalin:javalin:5.6.2")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -67,6 +69,28 @@ dependencies {
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("../specs")
+            include("**/*.proto")
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.19.4"
+    }
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                create("kotlin")
+            }
+        }
+    }
 }
 
 application {
