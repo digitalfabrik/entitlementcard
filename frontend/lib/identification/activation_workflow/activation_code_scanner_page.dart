@@ -53,6 +53,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
+      if (Navigator.canPop(context)) Navigator.maybePop(context);
     } on ActivationDidNotOverwriteExisting catch (_) {
       await showError(t.identification.cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
