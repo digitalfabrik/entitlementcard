@@ -1,7 +1,6 @@
 docker:
   - image: cimg/node:19.1.0-browsers
 resource_class: small
-working_directory: ~/project/frontend
 steps:
   - checkout:
       path: ~/project
@@ -13,23 +12,28 @@ steps:
   - run:
       name: Install Flutter Packages
       command: fvm flutter pub get --enforce-lockfile
+      working_directory: ~/project/frontend/
   - run:
       name: Check Formatting
       command: fvm dart format -l 120 -o none --set-exit-if-changed .
+      working_directory: ~/project/frontend/
   - run:
       name: Build Runner
       command: |
         # Statically use "bayern" build config for analyzing here
         fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+      working_directory: ~/project/frontend/
   - run:
       name: Check Analyzer and Linting
       command: |
         fvm flutter analyze --fatal-infos --fatal-warnings
         fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
         fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
+      working_directory: ~/project/frontend/
   - run:
       name: Tests
       command: |
         fvm flutter test
         fvm flutter test pubs/df_build_config
         fvm flutter test pubs/df_protobuf
+      working_directory: ~/project/frontend/
