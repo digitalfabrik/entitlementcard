@@ -153,8 +153,10 @@ DynamicActivationCode? getActivationCode(BuildContext context, String base64qrco
           const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
       return activationCode;
     }
+    return null;
   } on QrCodeParseException catch (e, _) {
     debugPrint('Der eingescannte Code ist ungültig.');
+    return null;
   }
 }
 
