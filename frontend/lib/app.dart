@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'home/home_page.dart';
 
 const initialRouteName = '/';
-const activationRouteName = 'activation/:activationCode';
+const activationRouteName = 'activation/:base64qrcode';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -62,7 +62,7 @@ class App extends StatelessWidget {
             GoRoute(
               path: activationRouteName,
               builder: (BuildContext context, GoRouterState state) {
-                return DeepLinkActivation(activationCode: state.pathParameters['activationCode']!);
+                return DeepLinkActivation(base64qrcode: state.pathParameters['base64qrcode']!);
               },
             ),
           ],

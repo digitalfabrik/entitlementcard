@@ -29,7 +29,8 @@
     "buttonText": "Activate Card",
     "invalidCode": "Your activation code is invalid",
     "alreadyExists": "This card was already activated on this device.",
-    "activationSuccessful": "The Activation was successful."
+    "activationSuccessful": "The Activation was successful.",
+    "activationInvalid": "The activation is in an invalid state."
   },
   "category": {
     "clothing": "Clothing",

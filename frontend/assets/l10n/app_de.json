@@ -29,7 +29,8 @@
     "buttonText": "Karte aktivieren",
     "invalidCode": "Ihr Aktivierungscode ist ungültig.",
     "alreadyExists": "Diese Karte wurde bereits auf dem Gerät aktiviert.",
-    "activationSuccessful": "Die Aktivierung war erfolgreich."
+    "activationSuccessful": "Die Aktivierung war erfolgreich.",
+    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
   },
   "category": {
     "clothing": "Kleidung",

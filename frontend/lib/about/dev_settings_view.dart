@@ -139,7 +139,7 @@ class DevSettingsView extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SelectableText(
-                    'Create a QR code from a PDF: pdftoppm berechtigungskarten.pdf | zbarimg -q --raw  -',
+                    'Get the base64 activationCode from the console when card was created',
                   ),
                   TextFormField(
                     controller: base64Controller,
@@ -156,7 +156,12 @@ class DevSettingsView extends StatelessWidget {
             TextButton(
               child: const Text('Activate Card'),
               onPressed: () {
-                activateCard(context, base64Controller.text);
+                Navigator.pushReplacement(
+                  context,
+                  AppRoute(
+                    builder: (context) => DeepLinkActivation(base64qrcode: base64Controller.text),
+                  ),
+                );
               },
             )
           ],
