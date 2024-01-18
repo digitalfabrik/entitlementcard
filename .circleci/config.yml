@@ -23,7 +23,7 @@ commands:
                       echo "The CircleCI config is up to date."
                       exit 0;
                     else
-                      echo "The CircleCI config is not up to date. You can update it by running `yarn run circleci:update-config`."
+                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config.sh` script."
                       exit 1;
                     fi
                 name: CircleCI config up to date
@@ -80,7 +80,6 @@ commands:
                 paths:
                     - .fvm
                     - ~/fvm/
-                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter --version
                 name: Show Flutter version
@@ -468,27 +467,31 @@ jobs:
             - run:
                 command: fvm flutter pub get --enforce-lockfile
                 name: Install Flutter Packages
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check Formatting
+                working_directory: ~/project/frontend/
             - run:
                 command: |
                     # Statically use "bayern" build config for analyzing here
                     fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
                 name: Build Runner
+                working_directory: ~/project/frontend/
             - run:
                 command: |
                     fvm flutter analyze --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
                 name: Check Analyzer and Linting
+                working_directory: ~/project/frontend/
             - run:
-                command: |-
+                command: |
                     fvm flutter test
                     fvm flutter test pubs/df_build_config
                     fvm flutter test pubs/df_protobuf
                 name: Tests
-        working_directory: ~/project/frontend
+                working_directory: ~/project/frontend/
     check_health_backend:
         docker:
             - image: cimg/base:2023.03
