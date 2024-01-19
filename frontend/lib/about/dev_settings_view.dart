@@ -2,17 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:base32/base32.dart';
-import 'package:ehrenamtskarte/activation/deeplink_activation.dart';
+import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
-import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
-import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -156,12 +155,7 @@ class DevSettingsView extends StatelessWidget {
             TextButton(
               child: const Text('Activate Card'),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  AppRoute(
-                    builder: (context) => DeepLinkActivation(base64qrcode: base64Controller.text),
-                  ),
-                );
+                GoRouter.of(context).push('$activationRouteName/${base64Controller.text}/');
               },
             )
           ],
@@ -171,12 +165,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   void _showIntroSlides(BuildContext context) {
-    Navigator.push(
-      context,
-      AppRoute(
-        builder: (context) => const IntroScreen(),
-      ),
-    );
+    GoRouter.of(context).push(introRouteName);
   }
 
   void _setExpiredLastVerifications(BuildContext context) {

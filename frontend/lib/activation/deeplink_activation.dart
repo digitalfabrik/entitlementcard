@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
@@ -13,8 +14,8 @@ import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
-import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
@@ -76,6 +77,7 @@ class DeepLinkActivation extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(t.activation.headline),
+              leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
             ),
             body: Padding(
                 padding: const EdgeInsets.all(20),
@@ -185,12 +187,7 @@ Future<void> activateCard(BuildContext context, DynamicActivationCode activation
         ..pepper = activationCode.pepper
         ..totpSecret = totpSecret;
       userCodesModel.insertCode(userCode);
-      Navigator.push(
-        context,
-        AppRoute(
-          builder: (context) => HomePage(initialTabIndex: identityTabIndex),
-        ),
-      );
+      GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
       messengerState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).colorScheme.primary,

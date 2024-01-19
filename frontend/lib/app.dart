@@ -17,7 +17,11 @@ import 'package:provider/provider.dart';
 import 'home/home_page.dart';
 
 const initialRouteName = '/';
-const activationRouteName = 'activation/:base64qrcode';
+const activationRouteCodeParamName = 'base64qrcode';
+const activationRouteName = 'activation';
+const homeRouteParamTabIndexName = 'tabIndex';
+const homeRouteName = '/home';
+const introRouteName = '/intro';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -60,13 +64,27 @@ class App extends StatelessWidget {
           },
           routes: [
             GoRoute(
-              path: activationRouteName,
+              path: '$activationRouteName/:$activationRouteCodeParamName',
               builder: (BuildContext context, GoRouterState state) {
-                return DeepLinkActivation(base64qrcode: state.pathParameters['base64qrcode']!);
+                return DeepLinkActivation(base64qrcode: state.pathParameters[activationRouteCodeParamName]!);
               },
             ),
           ],
-        )
+        ),
+        GoRoute(
+          path: '$homeRouteName/:$homeRouteParamTabIndexName',
+          builder: (BuildContext context, GoRouterState state) {
+            return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
+          },
+        ),
+        GoRoute(
+          path: introRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return IntroScreen(
+              onFinishedCallback: () => settings.setFirstStart(enabled: false),
+            );
+          },
+        ),
       ],
     );
 

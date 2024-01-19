@@ -1,11 +1,12 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
-import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intro_slider/intro_slider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
+import '../app.dart';
 
 typedef OnFinishedCallback = void Function();
 
@@ -16,12 +17,7 @@ class IntroScreen extends StatelessWidget {
 
   void onDonePress(BuildContext context) {
     onFinishedCallback?.call();
-    Navigator.push(
-      context,
-      AppRoute(
-        builder: (context) => HomePage(),
-      ),
-    );
+    GoRouter.of(context).pushReplacement(homeRouteName);
   }
 
   @override
