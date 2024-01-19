@@ -1,0 +1,6 @@
+mutation createCards($cards: [CardCreationModelInput!]!) {
+  cards: createCards(cards: $cards) {
+    dynamicActivationCodeBase64,
+    staticVerificationCodeBase64
+  }
+}

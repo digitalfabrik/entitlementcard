@@ -1,72 +1,121 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
+import Card
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.matomo.Matomo
+import app.ehrenamtskarte.backend.verification.CanonicalJson
+import app.ehrenamtskarte.backend.verification.Hmac
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.ActivationState
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardActivationResultModel
-import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGenerationModel
+import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationModel
+import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationResultModel
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.google.protobuf.ByteString
 import graphql.schema.DataFetchingEnvironment
+import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
-    @GraphQLDescription("Stores a batch of new digital entitlementcards")
-    fun addCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardGenerationModel>): Boolean {
+    private val pepperLength = 16
+    private val activationSecretLength = 20
+
+    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int): String {
+        return transaction {
+            val pepper = ByteArray(pepperLength)
+            SecureRandom.getInstanceStrong().nextBytes(pepper)
+
+            val rawActivationSecret = ByteArray(activationSecretLength)
+            SecureRandom.getInstanceStrong().nextBytes(rawActivationSecret)
+
+            val activationSecret = CardActivator.hashActivationSecret(rawActivationSecret)
+            val cardInfoBinary = CanonicalJson.serialize(cardInfo).toByteArray()
+            val hashedCardInfo = Hmac.digest(cardInfoBinary, pepper)
+
+            CardRepository.insert(
+                hashedCardInfo,
+                activationSecret,
+                cardInfo.expirationDay.toLong(),
+                cardInfo.extensions.extensionRegion.regionId,
+                userId,
+                CodeType.DYNAMIC,
+                cardInfo.extensions.extensionStartDay.startDay.toLong()
+            )
+
+            Card.DynamicActivationCode.newBuilder()
+                .setInfo(cardInfo)
+                .setPepper(ByteString.copyFrom(pepper))
+                .setActivationSecret(ByteString.copyFrom(rawActivationSecret))
+                .build()
+                .toByteArray()
+                .encodeBase64()
+        }
+    }
+
+    private fun createStativVerificationCode(cardInfo: Card.CardInfo, userId: Int): String {
+        return transaction {
+            val pepper = ByteArray(pepperLength)
+            SecureRandom.getInstanceStrong().nextBytes(pepper)
+
+            val cardInfoBinary = CanonicalJson.serialize(cardInfo).toByteArray()
+            val hashedCardInfo = Hmac.digest(cardInfoBinary, pepper)
+
+            CardRepository.insert(
+                hashedCardInfo,
+                null,
+                cardInfo.expirationDay.toLong(),
+                cardInfo.extensions.extensionRegion.regionId,
+                userId,
+                CodeType.STATIC,
+                cardInfo.extensions.extensionStartDay.startDay.toLong()
+            )
+
+            Card.StaticVerificationCode.newBuilder()
+                .setInfo(cardInfo)
+                .setPepper(ByteString.copyFrom(pepper))
+                .build()
+                .toByteArray()
+                .encodeBase64()
+        }
+    }
+
+    @GraphQLDescription("Creates a new digital entitlementcard and returns it")
+    fun createCards(dfe: DataFetchingEnvironment, cards: List<CardCreationModel>): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val backendConfig = context.backendConfiguration
-        val projectConfig = backendConfig.projects.first { it.id == project }
-        transaction {
+        val activationCodes = transaction {
             val user =
                 AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw UnauthorizedException()
 
-            for (card in cards) {
-                if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
+            return@transaction cards.map { card ->
+                val decodedCardInfoHash = Base64.getDecoder().decode(card.encodedCardInfoBase64)
+                val cardInfo = Card.CardInfo.parseFrom(decodedCardInfoHash)
+
+                if (!Authorizer.mayCreateCardInRegion(user, cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()
                 }
-                if (!isCodeTypeValid(card)) {
-                    throw InvalidCodeTypeException()
-                }
-                val decodedCardInfoHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-                if (!isCardHashValid(decodedCardInfoHash)) {
-                    throw InvalidCardHashException()
-                }
-                val activationSecret =
-                    card.activationSecretBase64?.let {
-                        val decodedRawActivationSecret = Base64.getDecoder().decode(it)
-                        CardActivator.hashActivationSecret(decodedRawActivationSecret)
-                    }
-
-                CardRepository.insert(
-                    decodedCardInfoHash,
-                    activationSecret,
-                    card.cardExpirationDay,
-                    card.regionId,
-                    user.id.value,
-                    card.codeType,
-                    card.cardStartDay
+                return@map CardCreationResultModel(
+                    if (card.generateDynamicActivationCode) createDynamicActivationCode(cardInfo, user.id.value) else null,
+                    if (card.generateStaticVerificationCode) createStativVerificationCode(cardInfo, user.id.value) else null
                 )
             }
         }
 
-        Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, cards)
-        return true
+        return activationCodes
     }
 
     @GraphQLDescription("Activate a dynamic entitlement card")
@@ -119,15 +168,5 @@ class CardMutationService {
         }
         Matomo.trackActivation(projectConfig, context.request, dfe.field.name, cardHash, activationResult.activationState != ActivationState.failed)
         return activationResult
-    }
-
-    private fun isCodeTypeValid(card: CardGenerationModel): Boolean {
-        return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
-            (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
-    }
-
-    private fun isCardHashValid(cardHash: ByteArray): Boolean {
-        // we expect a SHA-256 hash, thus the byte array should be of size 256/8=32
-        return cardHash.size == 32
     }
 }

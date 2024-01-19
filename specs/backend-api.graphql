@@ -77,6 +77,11 @@ type CardActivationResultModel {
   totpSecret: String
 }
 
+type CardCreationResultModel {
+  dynamicActivationCodeBase64: String
+  staticVerificationCodeBase64: String
+}
+
 type CardVerificationResultModel {
   valid: Boolean!
   verificationTimeStamp: String!
@@ -110,6 +115,8 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new digital entitlementcard and returns it"
+  createCards(cards: [CardCreationModelInput!]!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -354,6 +361,12 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CardCreationModelInput {
+  encodedCardInfoBase64: String!
+  generateDynamicActivationCode: Boolean!
+  generateStaticVerificationCode: Boolean!
 }
 
 input CardGenerationModelInput {

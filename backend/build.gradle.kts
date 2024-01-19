@@ -25,6 +25,8 @@ repositories {
 
 dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:3.25.2")
+    // can probably be removed when upgrading protoc
+    // https://github.com/protocolbuffers/protobuf/issues/12056
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("io.javalin:javalin:5.6.2")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -75,15 +77,11 @@ sourceSets {
     main {
         proto {
             srcDir("../specs")
-            include("**/*.proto")
         }
     }
 }
 
 protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.19.4"
-    }
     generateProtoTasks {
         all().forEach {
             it.builtins {

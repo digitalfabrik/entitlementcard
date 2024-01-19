@@ -1,4 +1,3 @@
-import { BavariaCardType } from '../generated/card_pb'
 import PlainDate from '../util/PlainDate'
 import CardBlueprint from './CardBlueprint'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
@@ -31,21 +30,4 @@ describe('CardBlueprint', () => {
     expect(card.extensions[1].state).toEqual({ regionId: 0 })
   })
 
-  it('should generate CardInfo even with invalid expiration date', () => {
-    const card = new CardBlueprint('', cardConfig, [region])
-    card.expirationDate = PlainDate.from('1900-01-01')
-    expect(card.generateCardInfo().toJson({ enumAsInteger: true }) as object).toEqual({
-      fullName: '',
-      expirationDay: 0,
-      extensions: {
-        extensionRegion: {
-          regionId: 0,
-        },
-        extensionBavariaCardType: {
-          cardType: BavariaCardType.STANDARD,
-        },
-      },
-    })
-    expect(card.hasValidSize()).toBe(true)
-  })
 })
