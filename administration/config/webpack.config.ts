@@ -15,19 +15,15 @@ import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
-import { DeeplLinkingConfig, getDeeplinkingConfigs } from '../src/project-configs/getDeeplinkingConfigs'
+import { DeeplLinkingConfig } from 'build-configs'
 import getClientEnvironment from './env'
 import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
 import createEnvironmentHash from './webpack/persistentCache/createEnvironmentHash'
+import getDeepLinkingConfigs from "../src/project-configs/getDeeplinkingConfigs";
 
 // No types exists:
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
-
-const ForkTsCheckerWebpackPlugin =
-  process.env.TSC_COMPILE_ON_ERROR === 'true'
-    ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
-    : require('react-dev-utils/ForkTsCheckerWebpackPlugin')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
@@ -77,8 +73,11 @@ const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
         apps: [],
         details: [
           {
-            appIDs: config.ios.appleAppSiteAssociationAppIds,
-            paths: config.ios.paths,
+            appID: config.ios.appleAppSiteAssociationAppId,
+            components: [{
+              "/": config.ios.path,
+              comment: config.ios.pathComment
+            }],
           },
         ],
       },
@@ -500,12 +499,12 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
       }),
       new CopyPlugin({
         patterns: [
-          ...getDeeplinkingConfigs().map(config => ({
+          ...getDeepLinkingConfigs().map(config => ({
             from: assetLinksPreset,
             to: `${distDirectory}/${config.projectName}`,
             transform: () => generateAssetLinks(config),
           })),
-          ...getDeeplinkingConfigs().map(config => ({
+          ...getDeepLinkingConfigs().map(config => ({
             from: appleAppSiteAssociationPreset,
             to: `${distDirectory}/${config.projectName}`,
             transform: () => generateAppleAppSiteAssociation(config),

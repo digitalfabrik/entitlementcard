@@ -8,13 +8,26 @@ export type FeatureFlagsType = {
     verification: boolean
 }
 
+export type DeeplLinkingConfig = {
+    android: {
+        applicationId: string,
+        sha256CertFingerprint: string
+    }
+    ios: {
+        appleAppSiteAssociationAppId: string
+        path: string
+        pathComment: string
+    }
+    projectName: string,
+    customScheme: string
+}
+
 export type ThemeType = {
     primaryLight: string
     primaryDark: string
 }
 
 export type CommonBuildConfigType = {
-    activationPath: string
     appName: string
     appIcon: string
     projectId: {
@@ -81,12 +94,14 @@ export type CommonBuildConfigType = {
     publisherAddress: string
     publisherText: string
     disclaimerText: string
-    maxCardAmount: number
+    maxCardAmount: number,
+    activationPath: string,
+    deepLinking: DeeplLinkingConfig
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
     // Shows the app icon as splash screen on app start.
-    applicationId: string
+    applicationId: string,
     buildFeatures: {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
@@ -95,7 +110,7 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
 
 export type iOSBuildConfigType = CommonBuildConfigType & {
     // iOS application identifier.
-    bundleIdentifier: string
+    bundleIdentifier: string,
 }
 
 export default BuildConfigType

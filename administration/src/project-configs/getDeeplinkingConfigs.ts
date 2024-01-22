@@ -1,18 +1,7 @@
-import deepLinkConfigBayern from './bayern/deepLinkConfig'
-import deepLinkConfigNuernberg from './nuernberg/deepLinkConfig'
+import { buildConfigBayern, buildConfigNuernberg, DeeplLinkingConfig } from 'build-configs'
 
-export type DeeplLinkingConfig = {
-  android: {
-    applicationId: string
-    sha256CertFingerprint: string
-  }
-  ios: {
-    appleAppSiteAssociationAppIds: string[]
-    paths: string[]
-  }
-  projectName: string
+const getDeepLinkingConfigs = (): DeeplLinkingConfig[] => {
+  return [buildConfigBayern.common.deepLinking, buildConfigNuernberg.common.deepLinking]
 }
 
-export const getDeeplinkingConfigs = (): DeeplLinkingConfig[] => {
-  return [deepLinkConfigBayern, deepLinkConfigNuernberg]
-}
+export default getDeepLinkingConfigs
