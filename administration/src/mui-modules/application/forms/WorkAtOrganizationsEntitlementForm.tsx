@@ -14,11 +14,13 @@ const WorkAtOrganizationFormHelper = ({
   listKey,
   setStateByKey,
   deleteByKey,
+  applicantName,
   ...otherProps
 }: {
   listKey: number
   setStateByKey: (key: number) => SetState<WorkAtOrganizationFormState>
   deleteByKey?: (key: number) => void
+  applicantName: string
   state: WorkAtOrganizationFormState
 }) => {
   const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
@@ -26,7 +28,14 @@ const WorkAtOrganizationFormHelper = ({
     () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
     [deleteByKey, listKey]
   )
-  return <WorkAtOrganizationForm.Component setState={setState} onDelete={onDelete} {...otherProps} />
+  return (
+    <WorkAtOrganizationForm.Component
+      setState={setState}
+      onDelete={onDelete}
+      applicantName={applicantName}
+      {...otherProps}
+    />
+  )
 }
 
 function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
@@ -44,7 +53,7 @@ function removeAt<T>(array: T[], index: number): T[] {
 type State = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
@@ -65,7 +74,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
       },
     }
   },
-  Component: ({ state, setState }) => {
+  Component: ({ state, setState, applicantName }) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1
@@ -101,6 +110,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
             state={value}
             deleteByKey={deleteByKey}
             setStateByKey={setStateByKey}
+            applicantName={applicantName}
           />
         ))}
         <CustomDivider />
