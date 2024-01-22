@@ -1,6 +1,6 @@
-import BuildConfigType, {CommonBuildConfigType} from "../types"
-import publisherText from "./publisherText"
+import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
+import publisherText from "./publisherText"
 
 const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
 const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
@@ -34,7 +34,7 @@ export const bayernCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app",
         local: "http://localhost:8000",
     },
-    appLocales: ['de'],
+    appLocales: ["de"],
     localeOverridePath: null,
     cardBranding: {
         headerTextColor: "#008dc9",
@@ -105,6 +105,7 @@ let bayern: BuildConfigType = {
     ios: {
         ...bayernCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
+        provisioningProfileSpecifier: "match AppStore de.nrw.it.ehrensachebayern",
     },
 }
 

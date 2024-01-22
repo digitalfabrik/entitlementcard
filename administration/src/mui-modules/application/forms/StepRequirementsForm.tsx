@@ -15,7 +15,7 @@ type ValidatedInput =
   | { type: BavariaCardType.Blue; value: BlueCardEntitlementInput }
   | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: BavariaCardType | null }
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
@@ -35,19 +35,21 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
         return { type: 'error' }
     }
   },
-  Component: ({ state, setState, options }) => (
+  Component: ({ state, setState, options, applicantName }) => (
     <SwitchComponent value={options.cardType}>
       {{
         [BavariaCardType.Blue]: (
           <SubForms.blueCardEntitlement.Component
             state={state.blueCardEntitlement}
             setState={useUpdateStateCallback(setState, 'blueCardEntitlement')}
+            applicantName={applicantName}
           />
         ),
         [BavariaCardType.Golden]: (
           <SubForms.goldenCardEntitlement.Component
             state={state.goldenCardEntitlement}
             setState={useUpdateStateCallback(setState, 'goldenCardEntitlement')}
+            applicantName={applicantName}
           />
         ),
       }}

@@ -81,7 +81,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       setState,
       'stepRequirements',
       { cardType: state.stepCardType.cardType.selectedValue },
-      {}
+      { applicantName: `${state.stepPersonalData.forenames.shortText} ${state.stepPersonalData.surname.shortText}` }
     )
     const sendStep = useFormAsStep(
       'Antrag Senden',

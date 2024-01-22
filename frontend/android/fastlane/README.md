@@ -13,39 +13,47 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## iOS
+## Android
 
-### ios build
-
-```sh
-[bundle exec] fastlane ios build
-```
-
-Create a release build
-
-### ios upload_to_test_flight
+### android keystore
 
 ```sh
-[bundle exec] fastlane ios upload_to_test_flight
+[bundle exec] fastlane android keystore
 ```
 
-Deliver iOS App to TestFlight for testers
+Download and decrypt the JKS
 
-### ios snap_bayern
+### android validate_play_store_key
 
 ```sh
-[bundle exec] fastlane ios snap_bayern
+[bundle exec] fastlane android validate_play_store_key
 ```
 
-Generate new localized screenshots
+Validate Play Store Key
 
-### ios snap_nuernberg
+### android build
 
 ```sh
-[bundle exec] fastlane ios snap_nuernberg
+[bundle exec] fastlane android build
 ```
 
+Build Android App
 
+### android upload_to_playstore
+
+```sh
+[bundle exec] fastlane android upload_to_playstore
+```
+
+Upload Android App to Google Play
+
+### android playstore_promote
+
+```sh
+[bundle exec] fastlane android playstore_promote
+```
+
+Promote the most recent version in the beta track to the production track in the Play Store.
 
 ----
 
