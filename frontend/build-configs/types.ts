@@ -94,14 +94,14 @@ export type CommonBuildConfigType = {
     publisherAddress: string
     publisherText: string
     disclaimerText: string
-    maxCardAmount: number,
-    activationPath: string,
+    maxCardAmount: number
+    activationPath: string
     deepLinking: DeeplLinkingConfig
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
     // Shows the app icon as splash screen on app start.
-    applicationId: string,
+    applicationId: string
     buildFeatures: {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
@@ -110,7 +110,7 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
 
 export type iOSBuildConfigType = CommonBuildConfigType & {
     // iOS application identifier.
-    bundleIdentifier: string,
+    bundleIdentifier: string
     provisioningProfileSpecifier: string
 }
 
