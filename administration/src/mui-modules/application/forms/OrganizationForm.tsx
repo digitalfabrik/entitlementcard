@@ -1,4 +1,4 @@
-import { Alert, Typography } from '@mui/material'
+import { Alert, Typography, styled } from '@mui/material'
 
 import { OrganizationInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
@@ -14,6 +14,10 @@ import {
   createCompoundValidate,
 } from '../util/compoundFormUtils'
 import AddressForm from './AddressForm'
+
+const WarningContactPersonSamePerson = styled(Alert)`
+  margin: 8px 0;
+`
 
 const organizationCategoryOptions = {
   items: [
@@ -95,7 +99,9 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
       </Typography>
       {applicantName === state.contactName.shortText && (
-        <Alert severity='warning'>Die Kontaktperson in der Organisation darf nicht der Antragssteller sein.</Alert>
+        <WarningContactPersonSamePerson severity='warning'>
+          Die Kontaktperson in der Organisation darf nicht der Antragssteller sein.
+        </WarningContactPersonSamePerson>
       )}
       <ShortTextForm.Component
         state={state.contactName}
