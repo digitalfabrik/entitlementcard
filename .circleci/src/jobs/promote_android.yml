@@ -13,7 +13,8 @@ environment:
 steps:
   - checkout
   - restore_ruby_cache:
-      directory: native
+      directory: ~/project/frontend/android
+  - install_app_toolbelt
   - run:
       name: '[FL] Play Store Promotion'
       command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
