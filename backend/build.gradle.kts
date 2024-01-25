@@ -73,6 +73,12 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
 }
 
+ktlint {
+    filter {
+        exclude { it.file.path.contains("$buildDir/generated") }
+    }
+}
+
 sourceSets {
     main {
         proto {

@@ -93,15 +93,15 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
-    fun createCards(dfe: DataFetchingEnvironment, cards: List<CardCreationModel>): List<CardCreationResultModel> {
+    fun createCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardCreationModel>): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
+        val projectConfig =
+            context.backendConfiguration.projects.find { it.id == project }
+                ?: throw ProjectNotFoundException(project)
         val jwtPayload = context.enforceSignedIn()
+        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         val activationCodes = transaction {
-            val user =
-                AdministratorEntity.findById(jwtPayload.adminId)
-                    ?: throw UnauthorizedException()
-
-            return@transaction cards.map { card ->
+            cards.map { card ->
                 val decodedCardInfoHash = Base64.getDecoder().decode(card.encodedCardInfoBase64)
                 val cardInfo = Card.CardInfo.parseFrom(decodedCardInfoHash)
 
@@ -115,6 +115,8 @@ class CardMutationService {
             }
         }
 
+        val regionId = user.regionId?.value
+        if (regionId != null) Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, regionId, cards)
         return activationCodes
     }
 
