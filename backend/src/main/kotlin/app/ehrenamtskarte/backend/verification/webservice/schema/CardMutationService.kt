@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.CanonicalJson
 import app.ehrenamtskarte.backend.verification.Hmac
@@ -14,6 +15,7 @@ import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardActivator
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
+import app.ehrenamtskarte.backend.verification.webservice.QRCodeUtil
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.ActivationState
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationModel
@@ -44,6 +46,15 @@ class CardMutationService {
             val activationSecret = CardActivator.hashActivationSecret(rawActivationSecret)
             val cardInfoBinary = CanonicalJson.serialize(cardInfo).toByteArray()
             val hashedCardInfo = Hmac.digest(cardInfoBinary, pepper)
+            val dynamicActivationCode = Card.DynamicActivationCode.newBuilder()
+                .setInfo(cardInfo)
+                .setPepper(ByteString.copyFrom(pepper))
+                .setActivationSecret(ByteString.copyFrom(rawActivationSecret))
+                .build()
+
+            if (!QRCodeUtil.isContentLengthValid(dynamicActivationCode)) {
+                throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.DYNAMIC)
+            }
 
             CardRepository.insert(
                 hashedCardInfo,
@@ -55,13 +66,7 @@ class CardMutationService {
                 cardInfo.extensions.extensionStartDay.startDay.toLong()
             )
 
-            Card.DynamicActivationCode.newBuilder()
-                .setInfo(cardInfo)
-                .setPepper(ByteString.copyFrom(pepper))
-                .setActivationSecret(ByteString.copyFrom(rawActivationSecret))
-                .build()
-                .toByteArray()
-                .encodeBase64()
+            dynamicActivationCode.toByteArray().encodeBase64()
         }
     }
 
@@ -72,6 +77,14 @@ class CardMutationService {
 
             val cardInfoBinary = CanonicalJson.serialize(cardInfo).toByteArray()
             val hashedCardInfo = Hmac.digest(cardInfoBinary, pepper)
+            val staticVerificationCode = Card.StaticVerificationCode.newBuilder()
+                .setInfo(cardInfo)
+                .setPepper(ByteString.copyFrom(pepper))
+                .build()
+
+            if (!QRCodeUtil.isContentLengthValid(staticVerificationCode)) {
+                throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.STATIC)
+            }
 
             CardRepository.insert(
                 hashedCardInfo,
@@ -83,12 +96,7 @@ class CardMutationService {
                 cardInfo.extensions.extensionStartDay.startDay.toLong()
             )
 
-            Card.StaticVerificationCode.newBuilder()
-                .setInfo(cardInfo)
-                .setPepper(ByteString.copyFrom(pepper))
-                .build()
-                .toByteArray()
-                .encodeBase64()
+            staticVerificationCode.toByteArray().encodeBase64()
         }
     }
 

@@ -71,6 +71,8 @@ dependencies {
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
+
+    implementation("com.google.zxing:core:3.5.2")
 }
 
 ktlint {

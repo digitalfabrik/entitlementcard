@@ -30,7 +30,7 @@ const useCardGenerator = (region: Region) => {
 
       const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
 
-      const codes = await createCards(client, cardInfos, projectConfig.staticQrCodesEnabled)
+      const codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
 
       const pdfDataUri = await generatePdf(codes.dynamicActivationCodes, codes.staticVerificationCodes, cardBlueprints, region, projectConfig.pdf)
 

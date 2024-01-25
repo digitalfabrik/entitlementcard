@@ -18,14 +18,14 @@ export class CreateCardsError extends Error {
 
 type CreateCardsResult = { dynamicActivationCodes: DynamicActivationCode[], staticVerificationCodes: StaticVerificationCode[] }
 
-async function createCards(client: ApolloClient<object>, cardInfos: CardInfo[], staticCodes: boolean): Promise<CreateCardsResult> {
+async function createCards(client: ApolloClient<object>, projectId: string, cardInfos: CardInfo[], staticCodes: boolean): Promise<CreateCardsResult> {
   const cards = cardInfos.map(cardInfo => {
     const encodedCardInfoBase64 = uint8ArrayToBase64(cardInfo.toBinary())
     return { encodedCardInfoBase64, generateDynamicActivationCode: true, generateStaticVerificationCode: staticCodes }
   })
   const result = await client.mutate<CreateCardsMutation, CreateCardsMutationVariables>({
     mutation: CreateCardsDocument,
-    variables: { cards },
+    variables: { project: projectId, cards },
   })
 
   if (result.errors) {

@@ -1,9 +1,11 @@
 import { ReactElement } from 'react'
 
-import { GraphQlExceptionCode } from '../generated/graphql'
+import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
 import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
 import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
+import { CardInfo } from '../generated/card_pb'
+import { base64ToUint8Array } from '../util/base64'
 
 type GraphQLErrorMessage = {
   title: string
@@ -13,6 +15,8 @@ type GraphQLErrorMessage = {
 type ErrorExtensions = {
   code?: GraphQlExceptionCode
   maxSize?: number
+  encodedCardInfoBase64?: string
+  codeType?: CodeType
   [key: string]: any
 }
 
@@ -52,9 +56,8 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: 'Die Datei ist zu groß.',
       }
     case GraphQlExceptionCode.InvalidDataPolicySize:
-      const maxChars = extensions['maxSize']
       return {
-        title: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal sind ${maxChars} Zeichen erlaubt.`,
+        title: `Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal sind ${extensions.maxSize} Zeichen erlaubt.`,
       }
     case GraphQlExceptionCode.InvalidJson:
       return {
@@ -68,6 +71,12 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: 'Ungültiger Link',
         description: <InvalidPasswordResetLink />,
+      }
+    case GraphQlExceptionCode.InvalidQrCodeSize:
+      const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
+      const codeTypeText = extensions.codeType === CodeType.Dynamic ? "Aktivierungscode" : "statische QR-Code"
+    return {
+        title: `Der ${codeTypeText} für ${cardInfo.fullName} kann nicht generiert werden, da er zu viele Daten enthält.`,
       }
     case GraphQlExceptionCode.InvalidRole:
       return {

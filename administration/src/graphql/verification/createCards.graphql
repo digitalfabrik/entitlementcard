@@ -1,5 +1,5 @@
-mutation createCards($cards: [CardCreationModelInput!]!) {
-  cards: createCards(cards: $cards) {
+mutation createCards($project: String!, $cards: [CardCreationModelInput!]!) {
+  cards: createCards(project: $project, cards: $cards) {
     dynamicActivationCodeBase64,
     staticVerificationCodeBase64
   }
