@@ -91,10 +91,10 @@ android {
     signingConfigs {
         if (System.getenv()['KEYSTORE_PATH']) { // Signing with env variables (CI)
             release {
-                storeFile file("file://" + System.getenv()['HOME'] + project.KEYSTORE_PATH)
-                storePassword project.KEYSTORE_PASSWORD
-                keyAlias project.KEYSTORE_KEY_ALIAS
-                keyPassword project.KEYSTORE_KEY_PASSWORD
+                storeFile file("file://" + System.getenv()['HOME'] + System.getenv()['KEYSTORE_PATH'])
+                storePassword System.getenv()['KEYSTORE_PASSWORD']
+                keyAlias System.getenv()['KEYSTORE_KEY_ALIAS']
+                keyPassword System.getenv()['KEYSTORE_KEY_PASSWORD']
             }
         } else if (localProperties.containsKey("signing.keyAlias")) { // Signing with local.properties file (locally)
             println "Selected using localProps"
@@ -114,7 +114,7 @@ android {
                 abiFilters 'armeabi-v7a','arm64-v8a','x86_64'
             }
 
-            if (project.hasProperty('KEYSTORE_PATH')) {
+            if (System.getenv()['KEYSTORE_PATH']) {
                 signingConfig signingConfigs.release
             } else if ( localProperties.containsKey("signing.keyAlias")) {
                 signingConfig signingConfigs.localProps
@@ -142,9 +142,9 @@ android {
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        if (project.hasProperty('VERSION_CODE')) {
-            versionCode project.VERSION_CODE.toInteger()
-            versionName project.VERSION_NAME
+        if (System.getenv()['VERSION_CODE']) {
+            versionCode System.getenv()['VERSION_CODE'].toInteger()
+            versionName System.getenv()['VERSION_NAME']
         }
     }
 

@@ -805,14 +805,6 @@ workflows:
                 requires:
                     - bump_version
                     - check_frontend
-            - deliver_android:
-                buildConfig: bayern
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_bayern
-                production_delivery: false
-                requires:
-                    - build_android_bayern
             - build_android:
                 buildConfig: nuernberg
                 context:
@@ -823,14 +815,6 @@ workflows:
                 requires:
                     - bump_version
                     - check_frontend
-            - deliver_android:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_nuernberg
-                production_delivery: false
-                requires:
-                    - build_android_nuernberg
             - build_ios:
                 buildConfig: bayern
                 context:
@@ -841,14 +825,6 @@ workflows:
                 requires:
                     - bump_version
                     - check_frontend
-            - deliver_ios:
-                buildConfig: bayern
-                context:
-                    - tuerantuer-apple
-                name: deliver_bayern_ios
-                production_delivery: false
-                requires:
-                    - build_ios_bayern
             - build_ios:
                 buildConfig: nuernberg
                 context:
@@ -859,14 +835,6 @@ workflows:
                 requires:
                     - bump_version
                     - check_frontend
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_nuernberg_ios
-                production_delivery: false
-                requires:
-                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:
