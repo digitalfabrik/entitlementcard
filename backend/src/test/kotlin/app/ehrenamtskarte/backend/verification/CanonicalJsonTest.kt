@@ -1,10 +1,92 @@
 package app.ehrenamtskarte.backend.verification
 
+import app.ehrenamtskarte.backend.helper.CardType
+import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 internal class CanonicalJsonTest {
+
+    @Test
+    fun mapEmptyCardInfo() {
+        val cardInfo = Card.CardInfo.newBuilder().build()
+        assertEquals(CanonicalJson.messageToMap(cardInfo), emptyMap())
+    }
+
+    @Test
+    fun mapCardInfoWithFullName() {
+        val wildName = "Biene Maja ßäЦЧШܐܳܠܰܦ"
+        val cardInfo = Card.CardInfo.newBuilder().setFullName(wildName).build()
+        assertEquals(CanonicalJson.messageToMap(cardInfo), mapOf("1" to wildName))
+    }
+
+    @Test
+    fun mapCardInfoForBavarianBlueEAK() {
+        val cardInfo = ExampleCardInfo.get(CardType.BavarianStandard)
+
+        assertEquals(
+            CanonicalJson.messageToMap(cardInfo),
+            mapOf(
+                "1" to "Max Mustermann",
+                "2" to "14600",
+                "3" to mapOf(
+                    "1" to mapOf("1" to "16"), // extensionRegion
+                    "4" to mapOf("1" to "0") // extensionBavariaCardType
+                )
+            )
+        )
+    }
+
+    @Test
+    fun mapCardInfoForBavarianGoldenEAK() {
+        val cardInfo = ExampleCardInfo.get(CardType.BavarianGold)
+        assertEquals(
+            CanonicalJson.messageToMap(cardInfo),
+            mapOf(
+                "1" to "Max Mustermann",
+                "3" to mapOf(
+                    "1" to mapOf("1" to "16"), // extensionRegion
+                    "4" to mapOf("1" to "1") // extensionBavariaCardType
+                )
+            )
+        )
+    }
+
+    @Test
+    fun mapCardInfoForNuernbergPass() {
+        val cardInfo = ExampleCardInfo.get(CardType.Nuernberg)
+        assertEquals(
+            CanonicalJson.messageToMap(cardInfo),
+            mapOf(
+                "1" to "Max Mustermann",
+                "2" to "14600",
+                "3" to mapOf(
+                    "1" to mapOf("1" to "93"), // extensionRegion
+                    "2" to mapOf("1" to "-3650"), // extensionBirthday
+                    "3" to mapOf("1" to "99999999") // extensionNuernbergPassId
+                )
+            )
+        )
+    }
+
+    @Test
+    fun mapCardInfoForNuernbergPassWithStartDay() {
+        val cardInfo = ExampleCardInfo.get(CardType.NuernbergWithStartDay)
+        assertEquals(
+            CanonicalJson.messageToMap(cardInfo),
+            mapOf(
+                "1" to "Max Mustermann",
+                "2" to "14600",
+                "3" to mapOf(
+                    "1" to mapOf("1" to "93"), // extensionRegion
+                    "2" to mapOf("1" to "-3650"), // extensionBirthday
+                    "3" to mapOf("1" to "99999999"), // extensionNuernbergPassId
+                    "5" to mapOf("1" to "730") // extensionStartDay
+                )
+            )
+        )
+    }
 
     @Test
     fun emptyArray() {

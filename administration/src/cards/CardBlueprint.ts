@@ -123,8 +123,7 @@ export class CardBlueprint {
     const extensionsMessage: PartialMessage<CardExtensions> = {}
 
     this.extensions.forEach(extension => {
-      if (extension.state === null || !extension.setProtobufData) {
-        // We allow to skip invalid extensions to enable computing the protobuf size.
+      if (!extension.setProtobufData) {
         return
       }
       extension.setProtobufData(extensionsMessage)

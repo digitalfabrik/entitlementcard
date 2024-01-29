@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
 
+import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
+import { base64ToUint8Array } from '../util/base64'
 import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
 import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
-import { CardInfo } from '../generated/card_pb'
-import { base64ToUint8Array } from '../util/base64'
 
 type GraphQLErrorMessage = {
   title: string
@@ -74,8 +74,8 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.InvalidQrCodeSize:
       const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
-      const codeTypeText = extensions.codeType === CodeType.Dynamic ? "Aktivierungscode" : "statische QR-Code"
-    return {
+      const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
+      return {
         title: `Der ${codeTypeText} für ${cardInfo.fullName} kann nicht generiert werden, da er zu viele Daten enthält.`,
       }
     case GraphQlExceptionCode.InvalidRole:

@@ -5,7 +5,6 @@ import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.stores.webservice.schema.SearchParams
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
-import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationModel
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -89,22 +88,18 @@ object Matomo {
             .also { attachRequestInformation(it, request) }
     }
 
-    fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, cards: List<CardCreationModel>) {
+    fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, numberOfCards: Int, staticCardsGenerated: Boolean) {
         if (projectConfig.matomo == null) return
-        val numberOfDynamicCardsCreated = cards.count { card -> card.generateDynamicActivationCode }
-        val numberOfStaticCardsCreated = cards.count { card -> card.generateStaticVerificationCode }
 
-        if (numberOfDynamicCardsCreated > 0 && numberOfStaticCardsCreated > 0) {
+        if (numberOfCards > 0 && staticCardsGenerated) {
             sendBulkTrackingRequest(
                 projectConfig.matomo,
                 listOf(
-                    buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfStaticCardsCreated),
-                    buildCardsTrackingRequest(request, regionId, query, CodeType.DYNAMIC, numberOfDynamicCardsCreated)
+                    buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfCards),
+                    buildCardsTrackingRequest(request, regionId, query, CodeType.DYNAMIC, numberOfCards)
                 )
             )
-        } else if (numberOfStaticCardsCreated > 0) {
-            sendTrackingRequest(projectConfig.matomo, buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfStaticCardsCreated))
-        } else if (numberOfDynamicCardsCreated > 0) {
+        } else if (numberOfCards > 0) {
             sendTrackingRequest(
                 projectConfig.matomo,
                 buildCardsTrackingRequest(
@@ -112,7 +107,7 @@ object Matomo {
                     regionId,
                     query,
                     CodeType.DYNAMIC,
-                    numberOfDynamicCardsCreated
+                    numberOfCards
                 )
             )
         }

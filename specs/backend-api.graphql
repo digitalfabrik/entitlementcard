@@ -78,7 +78,7 @@ type CardActivationResultModel {
 }
 
 type CardCreationResultModel {
-  dynamicActivationCodeBase64: String
+  dynamicActivationCode: DynamicActivationCodeResult!
   staticVerificationCodeBase64: String
 }
 
@@ -104,6 +104,11 @@ type Coordinates {
   lng: Float!
 }
 
+type DynamicActivationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
@@ -114,7 +119,7 @@ type Mutation {
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard and returns it"
-  createCards(cards: [CardCreationModelInput!]!, project: String!): [CardCreationResultModel!]!
+  createCards(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -360,12 +365,6 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
-}
-
-input CardCreationModelInput {
-  encodedCardInfoBase64: String!
-  generateDynamicActivationCode: Boolean!
-  generateStaticVerificationCode: Boolean!
 }
 
 input CardVerificationModelInput {

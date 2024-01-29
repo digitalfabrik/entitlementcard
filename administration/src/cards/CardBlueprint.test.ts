@@ -29,5 +29,4 @@ describe('CardBlueprint', () => {
     expect(card.extensions[0].state).toBe('Standard')
     expect(card.extensions[1].state).toEqual({ regionId: 0 })
   })
-
 })
