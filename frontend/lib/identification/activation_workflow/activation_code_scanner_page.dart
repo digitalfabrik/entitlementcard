@@ -53,7 +53,6 @@ class ActivationCodeScannerPage extends StatelessWidget {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
       await _activateCode(context, activationCode);
-      if (Navigator.canPop(context)) Navigator.maybePop(context);
     } on ActivationDidNotOverwriteExisting catch (_) {
       await showError(t.identification.cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
@@ -111,7 +110,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         userCodesModel.insertCode(userCode);
         moveToLastCard();
         debugPrint('Card Activation: Successfully activated.');
-
+        if (Navigator.canPop(context)) Navigator.maybePop(context);
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
