@@ -1,7 +1,5 @@
 package app.ehrenamtskarte.backend.helper
 
-import nuernbergPassIdExtension
-
 enum class CardType {
     BavarianStandard,
     BavarianGold,
@@ -46,9 +44,11 @@ object ExampleCardInfo {
         if (bavariaCardType != null) extensions.extensionBavariaCardTypeBuilder.setCardType(bavariaCardType)
         if (birthDay != null) extensions.extensionBirthdayBuilder.setBirthday(birthDay)
         if (nuernbergPassId != null) extensions.extensionNuernbergPassIdBuilder.setPassId(nuernbergPassId)
-        if (nuernbergPassIdIdentifier != null) extensions.extensionNuernbergPassIdBuilder.setIdentifier(
-            nuernbergPassIdIdentifier
-        )
+        if (nuernbergPassIdIdentifier != null) {
+            extensions.extensionNuernbergPassIdBuilder.setIdentifier(
+                nuernbergPassIdIdentifier
+            )
+        }
         if (startDay != null) extensions.extensionStartDayBuilder.setStartDay(startDay)
         return cardInfo.buildPartial()
     }

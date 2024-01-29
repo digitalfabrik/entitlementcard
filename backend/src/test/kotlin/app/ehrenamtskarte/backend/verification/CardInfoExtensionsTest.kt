@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.verification
 
-import Card
 import app.ehrenamtskarte.backend.helper.CardType
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import io.ktor.util.decodeBase64Bytes
@@ -10,6 +9,7 @@ import kotlin.test.assertEquals
 
 internal class CardInfoExtensionsTest {
     private val pepper = "MvMjEqa0ulFDAgACElMjWA==".decodeBase64Bytes()
+
     @Test
     fun shouldCreateStableHashForBavarianBlueEAK() {
         val cardInfo = ExampleCardInfo.get(CardType.BavarianStandard)

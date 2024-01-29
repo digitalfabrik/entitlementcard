@@ -23,9 +23,9 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreat
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.DynamicActivationCodeResult
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
-import extensionRegionOrNull
 import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
+import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -114,7 +114,7 @@ class CardMutationService {
         val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
-                val decodedCardInfoHash = Base64.getDecoder().decode(encodedCardInfo)
+                val decodedCardInfoHash = encodedCardInfo.decodeBase64Bytes()
                 val cardInfo = Card.CardInfo.parseFrom(decodedCardInfoHash)
 
                 if (!Authorizer.mayCreateCardInRegion(user, cardInfo.extensions.extensionRegion.regionId)) {

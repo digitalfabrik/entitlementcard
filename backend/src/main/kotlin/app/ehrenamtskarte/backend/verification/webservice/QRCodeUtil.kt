@@ -12,10 +12,10 @@ class QRCodeUtil {
         // Level 7 with EC of L gives 154 bytes
         // Level 8 seems appropriate right now.
         val DEFAULT_VERSION = Version.getVersionForNumber(8)
+
         // From EC L to M we have a double of EC capability: 7% -> 15%
         val DEFAULT_ERROR_CORRECTION = ErrorCorrectionLevel.M
         val DEFAULT_MODE = Mode.BYTE
-
 
         private fun willFit(numInputBits: Int, version: Version, ecLevel: ErrorCorrectionLevel?): Boolean {
             // In the following comments, we use numbers of Version 7-H.
@@ -43,7 +43,7 @@ class QRCodeUtil {
             val headerBits = BitArray()
             appendModeInfo(DEFAULT_MODE, headerBits)
 
-            return headerBits.size + DEFAULT_MODE.getCharacterCountBits(DEFAULT_VERSION) + content.count() * 8;
+            return headerBits.size + DEFAULT_MODE.getCharacterCountBits(DEFAULT_VERSION) + content.count() * 8
         }
 
         private fun isContentLengthValid(content: ByteArray): Boolean {

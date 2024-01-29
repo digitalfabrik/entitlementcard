@@ -77,7 +77,7 @@ dependencies {
 
 ktlint {
     filter {
-        exclude { it.file.path.contains("$buildDir/generated") }
+        exclude { it.file.path.contains("$buildDir/generated/") }
     }
 }
 
