@@ -80,10 +80,12 @@ platform :android do
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
+    env_prod = sh("echo -n environment=production | base64")
+
     gradle(
       task: "bundle",
       flavor: flavor,
-      flags: " -Ptarget=lib/main.dart",
+      flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod}",
       build_type: "Release",
       properties: {
         :VERSION_CODE => version_code,
