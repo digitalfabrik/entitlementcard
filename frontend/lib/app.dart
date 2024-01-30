@@ -66,7 +66,8 @@ class App extends StatelessWidget {
             GoRoute(
               path: '$activationRouteName/:$activationRouteCodeParamName',
               builder: (BuildContext context, GoRouterState state) {
-                return DeepLinkActivation(base64qrcode: state.pathParameters[activationRouteCodeParamName]!);
+                print(state.uri.fragment);
+                return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
               },
             ),
           ],
