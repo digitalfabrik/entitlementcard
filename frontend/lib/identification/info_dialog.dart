@@ -28,7 +28,7 @@ class InfoDialog extends StatelessWidget {
       content: child,
       actions: [
         TextButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(), child: Text(t.common.ok))
-      ], //TODO make close an prop
+      ],
     );
   }
 }
