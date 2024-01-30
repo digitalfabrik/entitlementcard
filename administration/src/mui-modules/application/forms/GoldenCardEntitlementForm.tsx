@@ -40,7 +40,7 @@ const SubForms = {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardEntitlementInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
@@ -50,7 +50,7 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
     MILITARY_RESERVE: 'militaryReserveEntitlement',
     HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
   }),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState, applicantName }) => (
     <>
       <SubForms.entitlementType.Component
         state={state.entitlementType}
@@ -65,6 +65,7 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
             <SubForms.workAtOrganizationsEntitlement.Component
               state={state.workAtOrganizationsEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
+              applicantName={applicantName}
             />
           ),
           [GoldenCardEntitlementType.HonoredByMinisterPresident]: (
@@ -77,6 +78,7 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
             <SubForms.workAtDepartmentEntitlement.Component
               state={state.workAtDepartmentEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
+              applicantName={applicantName}
             />
           ),
           [GoldenCardEntitlementType.MilitaryReserve]: (

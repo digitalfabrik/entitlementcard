@@ -1,0 +1,3 @@
+{
+    "workspaces": ["administration","frontend/build-configs" ]
+}
