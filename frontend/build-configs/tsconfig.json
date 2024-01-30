@@ -1,0 +1,10 @@
+{
+  "extends": "../../administration/tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": [],
+    "noEmit": false,
+    "outDir": "dist"
+  },
+  "include": ["**/*"]
+}
