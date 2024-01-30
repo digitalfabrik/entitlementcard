@@ -37,7 +37,7 @@
 
                 <data android:scheme="https"/>
                 <data android:host="@string/BUILD_CONFIG_PROJECT_ID_PRODUCTION"/>
-                <data android:pathPattern="/activation/.*"/>
+                <data android:pathPattern="@string/BUILD_CONFIG_DEEP_LINKING_ANDROID_PATH"/>
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
@@ -46,16 +46,16 @@
 
                 <data android:scheme="https"/>
                 <data android:host="@string/BUILD_CONFIG_PROJECT_ID_STAGING"/>
-                <data android:pathPattern="/activation/.*"/>
+                <data android:pathPattern="@string/BUILD_CONFIG_DEEP_LINKING_ANDROID_PATH"/>
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="berechtigungskarte"/>
+                <data android:scheme="@string/BUILD_CONFIG_DEEP_LINKING_CUSTOM_SCHEME"/>
                 <data android:host="@string/BUILD_CONFIG_PROJECT_ID_PRODUCTION"/>
-                <data android:pathPattern="/activation/.*"/>
+                <data android:pathPattern="@string/BUILD_CONFIG_DEEP_LINKING_ANDROID_PATH"/>
             </intent-filter>
             <meta-data
                     android:name="flutter_deeplinking_enabled"

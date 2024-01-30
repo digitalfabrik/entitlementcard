@@ -155,7 +155,7 @@ class DevSettingsView extends StatelessWidget {
             TextButton(
               child: const Text('Activate Card'),
               onPressed: () {
-                GoRouter.of(context).push('$activationRouteName/${base64Controller.text}/');
+                GoRouter.of(context).push('/$activationRouteName/code#${base64Controller.text}/');
               },
             )
           ],

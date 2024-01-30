@@ -4,7 +4,7 @@ import publisherText from "./publisherText"
 
 const ANDROID_APPLICATION_ID = "app.entitlementcard.nuernberg"
 const IOS_BUNDLE_IDENTIFIER = "app.sozialpass.nuernberg"
-const ACTIVATION_PATH = "/activation"
+const ACTIVATION_PATH = "activation"
 
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Nürnberg-Pass",
@@ -82,13 +82,14 @@ export const nuernbergCommon: CommonBuildConfigType = {
         customScheme: "berechtigungskarte",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
+            path: `/${ACTIVATION_PATH}/.*`,
             sha256CertFingerprint:
                 "BC:46:1D:87:A8:DC:3F:39:0E:68:D6:4A:D7:39:43:BD:24:98:5B:76:D6:7E:96:2E:C2:03:AE:E3:35:42:3D:2D",
         },
         ios: {
             appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
-            path: `${ACTIVATION_PATH}/*`,
-            pathComment: `Matches any URL with a path that starts with ${ACTIVATION_PATH}/.`
+            path: `/${ACTIVATION_PATH}/*`,
+            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
         },
     }
 }

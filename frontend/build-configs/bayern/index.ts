@@ -4,7 +4,7 @@ import publisherText from "./publisherText"
 
 const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
 const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
-const ACTIVATION_PATH = "/activation"
+const ACTIVATION_PATH = "activation"
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
@@ -82,13 +82,14 @@ export const bayernCommon: CommonBuildConfigType = {
         customScheme: "berechtigungskarte",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
+            path: `/${ACTIVATION_PATH}/.*`,
             sha256CertFingerprint:
                 "9D:BE:FB:95:02:09:90:B6:8D:4E:06:BA:8A:35:8C:8A:AD:53:4E:98:60:DA:F3:07:B1:3F:E2:8A:24:5D:B2:8B",
         },
         ios: {
             appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
-            path: `${ACTIVATION_PATH}/*`,
-            pathComment: `Matches any URL with a path that starts with ${ACTIVATION_PATH}/.`
+            path: `/${ACTIVATION_PATH}/*`,
+            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
         },
     }
 }
