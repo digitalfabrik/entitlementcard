@@ -23,7 +23,7 @@ commands:
                       echo "The CircleCI config is up to date."
                       exit 0;
                     else
-                      echo "The CircleCI config is not up to date. You can update it by running `yarn run circleci:update-config`."
+                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config.sh` script."
                       exit 1;
                     fi
                 name: CircleCI config up to date
@@ -45,11 +45,21 @@ commands:
                 name: Install Dart
     install_dart_mac:
         steps:
+            - restore_cache:
+                keys:
+                    - brew-dart-4
             - run:
-                command: |-
+                command: |
                     brew tap dart-lang/dart
                     brew install dart
+                    brew link dart
                 name: Install Dart
+            - save_cache:
+                key: brew-dart-4
+                paths:
+                    - /usr/local/Cellar/dart/
+                    - /usr/local/Homebrew/Library/Taps/dart-lang/homebrew-dart
+                    - ~/Library/Caches/Homebrew
     install_fvm:
         steps:
             - run:
@@ -70,7 +80,6 @@ commands:
                 paths:
                     - .fvm
                     - ~/fvm/
-                working_directory: ~/project/frontend/
             - run:
                 command: fvm flutter --version
                 name: Show Flutter version
@@ -134,6 +143,24 @@ commands:
             - run:
                 command: cat ~/attached_workspace/environment_variables >> ${BASH_ENV}
                 name: Restore environment variables
+    restore_pods:
+        description: Restores and saves the cocoa pods cache.
+        steps:
+            - restore_cache:
+                keys:
+                    - 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                name: Restore CocoaPods Cache
+            - run:
+                command: |
+                    pod update
+                    pod install
+                name: '[CP] Install CocoaPods'
+                working_directory: frontend/ios
+            - save_cache:
+                key: 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                name: Save CocoaPods Cache
+                paths:
+                    - ~/Library/Caches/CocoaPods/
     restore_ruby_cache:
         description: Restores and saves fastlane cache of the passed directory.
         parameters:
@@ -307,14 +334,22 @@ jobs:
         working_directory: ~/project/backend
     build_ios:
         macos:
-            xcode: 14.0.0
+            xcode: 14.3.1
         parameters:
             buildConfig:
                 description: Name of the build config to use
-                type: string
+                enum:
+                    - bayern
+                    - bayern-floss
+                    - nuernberg
+                type: enum
             flutterFlavor:
                 description: Flutter Flavor to use
-                type: string
+                enum:
+                    - Bayern
+                    - BayernFloss
+                    - Nuernberg
+                type: enum
         steps:
             - checkout:
                 path: ~/project
@@ -322,27 +357,27 @@ jobs:
             - install_fvm
             - install_app_toolbelt
             - install_protobuf_mac
+            - prepare_workspace
+            - restore_environment_variables
+            - restore_ruby_cache:
+                directory: frontend/ios
             - run:
                 command: |
                     fvm flutter pub get --enforce-lockfile
                     fvm flutter precache --ios
                 name: Install Flutter Packages
+                working_directory: frontend/
+            - restore_pods
             - run:
-                command: |
-                    cd ios
-                    pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
-                    pod install
-                name: Update Pods
-            - run:
-                command: |
-                    fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-                name: Build Runner
-            - run:
-                command: |
-                    app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
-                    fvm flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
-                name: Build
-        working_directory: ~/project/frontend
+                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+                name: '[FL] Build'
+                working_directory: frontend/ios
+            - store_artifacts:
+                path: ~/<< parameters.buildConfig >>.ipa
+            - persist_to_workspace:
+                paths:
+                    - << parameters.buildConfig >>.ipa
+                root: ~/
     build_martin:
         docker:
             - image: rust:bullseye
@@ -405,6 +440,12 @@ jobs:
             - run:
                 command: echo "export NEW_VERSION_CODE=$(app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
                 name: Calculate next version code
+            - when:
+                condition: << parameters.prepare_delivery >>
+                steps:
+                    - run:
+                        command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
+                        name: Bump git version
             - persist_environment_variables
     check:
         docker:
@@ -432,27 +473,31 @@ jobs:
             - run:
                 command: fvm flutter pub get --enforce-lockfile
                 name: Install Flutter Packages
+                working_directory: ~/project/frontend/
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check Formatting
+                working_directory: ~/project/frontend/
             - run:
                 command: |
                     # Statically use "bayern" build config for analyzing here
                     fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
                 name: Build Runner
+                working_directory: ~/project/frontend/
             - run:
                 command: |
                     fvm flutter analyze --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
                 name: Check Analyzer and Linting
+                working_directory: ~/project/frontend/
             - run:
-                command: |-
+                command: |
                     fvm flutter test
                     fvm flutter test pubs/df_build_config
                     fvm flutter test pubs/df_protobuf
                 name: Tests
-        working_directory: ~/project/frontend
+                working_directory: ~/project/frontend/
     check_health_backend:
         docker:
             - image: cimg/base:2023.03
@@ -519,6 +564,42 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
+    deliver_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.0.1
+        parameters:
+            buildConfig:
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+            production_delivery:
+                description: Whether to deliver the build to production.
+                type: boolean
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - prepare_workspace
+            - restore_environment_variables
+            - install_app_toolbelt
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - when:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: echo "not implemented yet"
+                        name: '[FL] App Store Connect Upload'
+                        working_directory: frontend/ios
+            - unless:
+                condition: << parameters.production_delivery >>
+                steps:
+                    - run:
+                        command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
+                        name: '[FL] TestFlight Upload'
+                        working_directory: frontend/ios
     deploy:
         docker:
             - image: cimg/base:2022.09
@@ -710,6 +791,8 @@ workflows:
     delivery_beta_native:
         jobs:
             - bump_version:
+                context:
+                    - deliverino
                 prepare_delivery: true
             - check_frontend
             - build_android:
@@ -748,6 +831,42 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_android_nuernberg
+            - build_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Bayern
+                name: build_ios_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                name: deliver_bayern_ios
+                production_delivery: false
+                requires:
+                    - build_ios_bayern
+            - build_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Nuernberg
+                name: build_ios_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                name: deliver_nuernberg_ios
+                production_delivery: false
+                requires:
+                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     frontend:
         jobs:

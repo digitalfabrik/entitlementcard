@@ -1,13 +1,14 @@
 macos:
-  xcode: 14.0.0
+  xcode: 14.3.1
 parameters:
   buildConfig:
     description: "Name of the build config to use"
-    type: string
+    type: enum
+    enum: ['bayern', 'bayern-floss', 'nuernberg']
   flutterFlavor:
     description: "Flutter Flavor to use"
-    type: string
-working_directory: ~/project/frontend
+    type: enum
+    enum: ['Bayern', 'BayernFloss', 'Nuernberg']
 steps:
   - checkout:
       path: ~/project
@@ -15,23 +16,24 @@ steps:
   - install_fvm
   - install_app_toolbelt
   - install_protobuf_mac
+  - prepare_workspace
+  - restore_environment_variables
+  - restore_ruby_cache:
+      directory: frontend/ios
   - run:
       name: Install Flutter Packages
       command: |
         fvm flutter pub get --enforce-lockfile
         fvm flutter precache --ios
+      working_directory: frontend/
+  - restore_pods
   - run:
-      name: Update Pods
-      command: |
-        cd ios
-        pod update # This command is somehow needed: https://github.com/m0nac0/flutter-maplibre-gl/pull/9
-        pod install
-  - run:
-      name: Build Runner
-      command: |
-        fvm flutter pub run build_runner build --define "df_build_config=name=<< parameters.buildConfig >>"
-  - run:
-      name: Build
-      command: |
-        app-toolbelt v0 build-config write-xcconfig "<< parameters.buildConfig >>" ios --directory ios/
-        fvm flutter build ios --dart-define=environment=production --flavor << parameters.flutterFlavor >> --no-codesign --release -t lib/main.dart
+      name: '[FL] Build'
+      command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+      working_directory: frontend/ios
+  - store_artifacts:
+      path: ~/<< parameters.buildConfig >>.ipa
+  - persist_to_workspace:
+      root: ~/
+      paths:
+        - << parameters.buildConfig >>.ipa

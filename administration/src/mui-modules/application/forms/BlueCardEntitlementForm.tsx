@@ -42,7 +42,7 @@ const SubForms = {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardEntitlementInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
@@ -53,7 +53,7 @@ const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalPr
     WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
     WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
   }),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState, applicantName }) => (
     <>
       <SubForms.entitlementType.Component
         state={state.entitlementType}
@@ -68,6 +68,7 @@ const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalPr
             <SubForms.workAtOrganizationsEntitlement.Component
               state={state.workAtOrganizationsEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
+              applicantName={applicantName}
             />
           ),
           [BlueCardEntitlementType.Juleica]: (
@@ -80,6 +81,7 @@ const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalPr
             <SubForms.workAtDepartmentEntitlement.Component
               state={state.workAtDepartmentEntitlement}
               setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
+              applicantName={applicantName}
             />
           ),
           [BlueCardEntitlementType.MilitaryReserve]: (

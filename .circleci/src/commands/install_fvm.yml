@@ -17,7 +17,6 @@ steps:
       paths:
         - .fvm
         - ~/fvm/
-      working_directory: ~/project/frontend/
   - run:
       name: Show Flutter version
       command: fvm flutter --version
