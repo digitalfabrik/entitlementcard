@@ -23,3 +23,9 @@ parameters:
   run_frontend:
     default: false
     type: boolean
+  run_delivery_beta_native:
+    default: false
+    type: boolean
+  run_promote_native:
+    default: false
+    type: boolean

@@ -1,0 +1,10 @@
+description: Attach the workspace at ~/attached_workspace and list its contents
+steps:
+  - attach_workspace:
+      at: ~/attached_workspace
+  - run:
+      name: Attached workspace contents
+      command: ls -A ~/attached_workspace
+  - run:
+      name: Recursively list attached workspace contents
+      command: ls -AR ~/attached_workspace

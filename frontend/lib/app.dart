@@ -54,6 +54,13 @@ class App extends StatelessWidget {
 
     final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;
 
+    // Load default language from settings
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (settings.language != null) {
+        LocaleSettings.setLocaleRaw(settings.language!);
+      }
+    });
+
     return Configuration(
       mapStyleUrl: mapStyleUrl,
       graphqlUrl: graphqlUrl,

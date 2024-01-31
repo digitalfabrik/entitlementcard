@@ -1,0 +1,38 @@
+# First step of each workflow. Reads and bumps the current version code and name. For deliveries the bump is committed.
+parameters:
+  prepare_delivery:
+    description: Whether to prepare for a delivery. If true, the version bump is committed.
+    type: boolean
+    default: false
+docker:
+  - image: cimg/node:18.14.1
+resource_class: small
+steps:
+  - checkout
+  - run:
+      name: Install app-toolbelt
+      command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+  - run:
+      name: Calculate next version name
+      command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+  - run:
+      name: Calculate next version code
+      command: echo "export NEW_VERSION_CODE=$(app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+  - when:
+      condition: << parameters.prepare_delivery >>
+      steps:
+        - run:
+            name: Bump git version
+            command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
+# TODO 1199
+#  - when:
+#      condition:
+#        and:
+#          - << parameters.prepare_delivery >>
+#          - not:
+#              equal: [main, << pipeline.git.branch >>]
+#      steps:
+#        - notify:
+#            success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
+#            only_for_branch: ${CIRCLE_BRANCH}
+  - persist_environment_variables

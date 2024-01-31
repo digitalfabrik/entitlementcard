@@ -1,3 +1,5 @@
+import { Alert, Typography, styled } from '@mui/material'
+
 import { OrganizationInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -12,6 +14,10 @@ import {
   createCompoundValidate,
 } from '../util/compoundFormUtils'
 import AddressForm from './AddressForm'
+
+const WarningContactPersonSamePerson = styled(Alert)`
+  margin: 8px 0;
+`
 
 const organizationCategoryOptions = {
   items: [
@@ -51,7 +57,7 @@ const getValidatedCompoundInput = createCompoundValidate(SubForms, {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
@@ -73,7 +79,7 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       },
     }
   },
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState, applicantName }) => (
     <>
       <h4>Angaben zur Organisation</h4>
       <ShortTextForm.Component
@@ -88,11 +94,19 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         label='Einsatzgebiet'
         options={organizationCategoryOptions}
       />
-      <h4>Kontaktperson der Organisation</h4>
+      <h4>Kontaktperson in der Organisation</h4>
+      <Typography>
+        Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
+      </Typography>
+      {applicantName === state.contactName.shortText && (
+        <WarningContactPersonSamePerson severity='warning'>
+          Die Kontaktperson in der Organisation darf nicht der Antragssteller sein.
+        </WarningContactPersonSamePerson>
+      )}
       <ShortTextForm.Component
         state={state.contactName}
         setState={useUpdateStateCallback(setState, 'contactName')}
-        label='Vor- und Nachname'
+        label='Vor- und Nachname der Kontaktperson in der Organisation'
       />
       <EmailForm.Component
         state={state.contactEmail}

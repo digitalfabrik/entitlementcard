@@ -106,6 +106,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
+  final t = context.t;
   final serviceEnabled = EnvironmentConfig.androidFloss
       ? await isNonGoogleLocationServiceEnabled()
       : await Geolocator.isLocationServiceEnabled();

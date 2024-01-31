@@ -18,6 +18,7 @@ class InfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
     return AlertDialog(
       title: ListTile(
@@ -25,7 +26,9 @@ class InfoDialog extends StatelessWidget {
         title: Text(title, style: theme.textTheme.headlineSmall),
       ),
       content: child,
-      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(t.common.ok))],
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(), child: Text(t.common.ok))
+      ],
     );
   }
 }

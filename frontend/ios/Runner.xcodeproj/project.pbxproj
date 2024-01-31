@@ -10,6 +10,7 @@
 		0BC36C9E26DBC53B00AAB6AB /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC36C9D26DBC53B00AAB6AB /* ScreenshotTests.swift */; };
 		0BC36CA726DBC82200AAB6AB /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC36CA626DBC82200AAB6AB /* SnapshotHelper.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2E331BFF2B11142300F6E2D4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E331C012B11142300F6E2D4 /* InfoPlist.strings */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3D0EE25E4E51B4B66D2C1962 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2AA1F850E210988C8F9C39C /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
@@ -60,6 +61,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 502E20F09A7CAFBD1DE1AA882DCC550C;
 			remoteInfo = geolocator_apple;
+		};
+		2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02A736E1BDACFC0A6CAE810130768C55;
+			remoteInfo = device_info_plus;
 		};
 		2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -236,6 +244,8 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2164140A45D94C66A1B0FEC1 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		2E331C002B11142300F6E2D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E331C022B11142500F6E2D4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		47F40A1A0A515BF56DB92CD1 /* Pods-Runner.release-nuernberg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-nuernberg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-nuernberg.xcconfig"; sourceTree = "<group>"; };
 		62F40225E0F5640034AD59F5 /* Pods-Runner.debug-bayern.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-bayern.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-bayern.xcconfig"; sourceTree = "<group>"; };
@@ -280,6 +290,7 @@
 			isa = PBXGroup;
 			children = (
 				0BE935D1274FD4CA004AF690 /* connectivity_plus */,
+				2E331BFE2B11141C00F6E2D4 /* device_info_plus */,
 				2E44B0FF2ADED161006E42CD /* fk_user_agent */,
 				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */,
 				0BE935D3274FD4CA004AF690 /* geolocator_apple */,
@@ -364,6 +375,7 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				2E331C012B11142300F6E2D4 /* InfoPlist.strings */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -522,6 +534,14 @@
 			remoteRef = 0BE935D2274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		2E331BFE2B11141C00F6E2D4 /* device_info_plus */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = device_info_plus;
+			path = device_info_plus.framework;
+			remoteRef = 2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		2E44B0FF2ADED161006E42CD /* fk_user_agent */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -674,28 +694,12 @@
 			remoteRef = 5093F3E528D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5093F3E828D8D252009A9A33 /* path_provider_ios */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = path_provider_ios;
-			path = path_provider_ios.framework;
-			remoteRef = 5093F3E728D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		5093F3EA28D8D252009A9A33 /* ReachabilitySwift */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			name = ReachabilitySwift;
 			path = Reachability.framework;
 			remoteRef = 5093F3E928D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5093F3EC28D8D252009A9A33 /* shared_preferences_ios */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = shared_preferences_ios;
-			path = shared_preferences_ios.framework;
-			remoteRef = 5093F3EB28D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5093F3EE28D8D252009A9A33 /* url_launcher_ios */ = {
@@ -724,6 +728,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				2E331BFF2B11142300F6E2D4 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,10 +754,12 @@
 		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
 			outputPaths = (
@@ -763,6 +770,7 @@
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -829,6 +837,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2E331C012B11142300F6E2D4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E331C002B11142300F6E2D4 /* en */,
+				2E331C022B11142500F6E2D4 /* de */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -968,7 +985,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_ARCHS = "";
@@ -983,10 +1002,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
 		};
@@ -996,9 +1017,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1015,11 +1036,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore app.sozialpass.nuernberg";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1057,7 +1075,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1078,8 +1098,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-Nuernberg";
 		};
@@ -1089,9 +1111,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_nuernberg;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1108,11 +1130,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore app.sozialpass.nuernberg";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1180,9 +1199,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1196,12 +1218,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-Nuernberg";
 		};
@@ -1211,9 +1235,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_nuernberg;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1230,11 +1254,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore app.sozialpass.nuernberg";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1300,7 +1321,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_ARCHS = "";
@@ -1315,10 +1338,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Profile-Nuernberg";
 		};
@@ -1328,9 +1353,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_nuernberg;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1347,10 +1372,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1416,7 +1439,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1437,8 +1462,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-Bayern";
 		};
@@ -1448,9 +1475,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1467,10 +1494,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1538,9 +1563,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1554,12 +1582,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-Bayern";
 		};
@@ -1569,9 +1599,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1588,10 +1618,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1657,7 +1685,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_ARCHS = "";
@@ -1672,10 +1702,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Profile-Bayern";
 		};
@@ -1685,9 +1717,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1704,10 +1736,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1773,7 +1803,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1794,8 +1826,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -1828,9 +1862,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1844,12 +1881,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -1859,9 +1898,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1878,10 +1917,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1895,9 +1932,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_bayern;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1914,10 +1951,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = app.sozialpass.nuernberg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

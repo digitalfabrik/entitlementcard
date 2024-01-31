@@ -1,12 +1,13 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-Map<String, String> languages = {'en': 'Englisch', 'de': 'Deutsch'};
+Map<String, String> nativeLanguageNames = {'en': 'English', 'de': 'Deutsch'};
 
 class LanguageChange extends StatelessWidget {
   const LanguageChange({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -17,7 +18,7 @@ class LanguageChange extends StatelessWidget {
                   : null),
           child: ListTile(
               title: Text(
-                languages[item]!,
+                nativeLanguageNames[item]!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -27,7 +28,10 @@ class LanguageChange extends StatelessWidget {
 
   switchLanguage(BuildContext context, String language) {
     final messengerState = ScaffoldMessenger.of(context);
+    final settings = Provider.of<SettingsModel>(context, listen: false);
     LocaleSettings.setLocaleRaw(language);
+    settings.setLanguage(language: language);
+    Navigator.pop(context);
     messengerState.showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -35,6 +39,5 @@ class LanguageChange extends StatelessWidget {
             Text(t.about.languageChangeSuccessful, style: TextStyle(color: Theme.of(context).colorScheme.background)),
       ),
     );
-    Navigator.pop(context);
   }
 }

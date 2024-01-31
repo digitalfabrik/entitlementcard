@@ -5,7 +5,6 @@ import 'package:ehrenamtskarte/search/location_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
-
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class SearchPage extends StatefulWidget {
@@ -22,6 +21,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final currentCoordinatesInput = _coordinates;
     return Stack(
       children: [

@@ -36,6 +36,7 @@ class _QRViewState extends State<QrCodeScanner> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final controller = _controller;
     return Stack(
       children: [

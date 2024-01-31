@@ -21,17 +21,18 @@ const SubForms = {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type Options = {}
-type AdditionalProps = {}
+type AdditionalProps = { applicantName: string }
 const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState, applicantName }) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
       <SubForms.organization.Component
         state={state.organization}
         setState={useUpdateStateCallback(setState, 'organization')}
+        applicantName={applicantName}
       />
       <h4>Angaben zur Tätigkeit</h4>
       <SubForms.responsibility.Component
