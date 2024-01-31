@@ -80,6 +80,7 @@ class VerificationQrScannerPage extends StatelessWidget {
         );
       } else {
         await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
+        await Navigator.of(context).maybePop();
       }
     } on ServerVerificationException catch (e) {
       await _onConnectionError(
@@ -112,9 +113,6 @@ class VerificationQrScannerPage extends StatelessWidget {
         t.identification.codeUnknownError,
         e,
       );
-    } finally {
-      // close current 'Karte verifizieren' view
-      await Navigator.of(context).maybePop();
     }
   }
 

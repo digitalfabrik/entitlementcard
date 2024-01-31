@@ -2,6 +2,10 @@ import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
 
+const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
+const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
+const ACTIVATION_PATH = "/activation"
+
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
     appIcon: "app_icon_bayern",
@@ -41,8 +45,8 @@ export const bayernCommon: CommonBuildConfigType = {
         headerLogo: "assets/bayern/header-logo.png",
         headerLogoPadding: 4,
         headerLogoWidth: 60,
-        headerContainerPadding: { top: 0, right: 4, bottom: 0, left: 8 },
-        bodyContainerPadding: { top: 8, right: 8, bottom: 8, left: 8 },
+        headerContainerPadding: {top: 0, right: 4, bottom: 0, left: 8},
+        bodyContainerPadding: {top: 8, right: 8, bottom: 8, left: 8},
         bodyLogo: "assets/bayern/body-logo.png",
         bodyLogoPosition: "center",
         bodyLogoWidth: 125,
@@ -71,13 +75,28 @@ export const bayernCommon: CommonBuildConfigType = {
     publisherText,
     disclaimerText,
     maxCardAmount: 1,
+    activationPath: ACTIVATION_PATH,
+    deepLinking: {
+        projectName: "bayern",
+        customScheme: "berechtigungskarte",
+        android: {
+            applicationId: ANDROID_APPLICATION_ID,
+            sha256CertFingerprint:
+                "9D:BE:FB:95:02:09:90:B6:8D:4E:06:BA:8A:35:8C:8A:AD:53:4E:98:60:DA:F3:07:B1:3F:E2:8A:24:5D:B2:8B",
+        },
+        ios: {
+            appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
+            path: `${ACTIVATION_PATH}/*`,
+            pathComment: `Matches any URL with a path that starts with ${ACTIVATION_PATH}/.`
+        },
+    }
 }
 
 let bayern: BuildConfigType = {
     common: bayernCommon,
     android: {
         ...bayernCommon,
-        applicationId: "de.nrw.it.giz.ehrensache.bayern.android",
+        applicationId: ANDROID_APPLICATION_ID,
         buildFeatures: {
             excludeLocationPlayServices: false,
             excludeX86: false,
@@ -85,7 +104,7 @@ let bayern: BuildConfigType = {
     },
     ios: {
         ...bayernCommon,
-        bundleIdentifier: "de.nrw.it.ehrensachebayern",
+        bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore de.nrw.it.ehrensachebayern",
     },
 }

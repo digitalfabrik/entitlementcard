@@ -22,7 +22,7 @@ function getClientEnvironment(publicUrl: string) {
     NODE_ENV !== 'test' && `${paths.dotenv}.local`,
     `${paths.dotenv}.${NODE_ENV}`,
     paths.dotenv,
-  ].filter(Boolean)
+  ].filter(Boolean) as string[]
 
   // Load environment variables from .env* files. Suppress warnings using silent
   // if this file is missing. dotenv will never modify any environment variables
