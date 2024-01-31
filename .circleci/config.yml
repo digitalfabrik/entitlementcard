@@ -526,7 +526,7 @@ jobs:
                 command: sudo apt install openjdk-17-jre-headless -y
                 name: Install openjdk-17-jre-headless
             - run:
-                command: sudo dpkg -i /tmp/workspace/debs/eak-backend*.deb
+                command: sudo dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
                 name: Install backend
             - run:
                 command: /opt/ehrenamtskarte/backend/bin/backend migrate
@@ -538,6 +538,55 @@ jobs:
             - run:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
                 name: Check health
+    deliver_administration:
+        docker:
+            - image: cimg/base:2022.09
+        parameters:
+            production:
+                description: Whether builds are delivered to production or beta.
+                type: boolean
+        steps:
+            - run:
+                command: |
+                    sudo apt update
+                    sudo apt install curl -y
+                name: Install Curl
+            - attach_workspace:
+                at: /tmp/workspace
+            - add_ssh_keys:
+                fingerprints:
+                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+            - when:
+                condition:
+                    equal:
+                        - true
+                        - << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
+                            echo "Uploading: " /tmp/workspace/debs/administration/*.deb
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
+                        name: SFTP upload package
+                    - run:
+                        command: |
+                            https://webhook.entitlementcard.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
+                        name: Install package via webhook
+            - when:
+                condition:
+                    equal:
+                        - false
+                        - << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
+                            echo "Uploading: " /tmp/workspace/debs/administration/*.deb
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
+                        name: SFTP upload package
+                    - run:
+                        command: "https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK    \n"
+                        name: Install package via webhook
     deliver_android:
         docker:
             - image: cimg/android:2023.02.1-node
@@ -567,6 +616,55 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
+    deliver_backend:
+        docker:
+            - image: cimg/base:2022.09
+        parameters:
+            production:
+                description: Whether builds are delivered to production or beta.
+                type: boolean
+        steps:
+            - run:
+                command: |
+                    sudo apt update
+                    sudo apt install curl -y
+                name: Install Curl
+            - attach_workspace:
+                at: /tmp/workspace
+            - add_ssh_keys:
+                fingerprints:
+                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+            - when:
+                condition:
+                    equal:
+                        - true
+                        - << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
+                            echo "Uploading: " /tmp/workspace/debs/backend/*.deb
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+                        name: SFTP upload package
+                    - run:
+                        command: |
+                            curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+                        name: Install package via webhook
+            - when:
+                condition:
+                    equal:
+                        - false
+                        - << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
+                            echo "Uploading: " /tmp/workspace/debs/backend/*.deb
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+                        name: SFTP upload package
+                    - run:
+                        command: "curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK        \n"
+                        name: Install package via webhook
     deliver_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -603,32 +701,6 @@ jobs:
                         command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
                         name: '[FL] TestFlight Upload'
                         working_directory: frontend/ios
-    deploy:
-        docker:
-            - image: cimg/base:2022.09
-        parameters:
-            server:
-                enum:
-                    - entitlementcard.tuerantuer.org
-                    - entitlementcard-test.tuerantuer.org
-                type: enum
-            ssh-host-fingerprint:
-                enum:
-                    - '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-                    - '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
-                type: enum
-        steps:
-            - attach_workspace:
-                at: /tmp/workspace
-            - add_ssh_keys:
-                fingerprints:
-                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
-            - run:
-                command: |-
-                    echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
-                    echo "Uploading: " /tmp/workspace/debs/*.deb
-                    sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
-                name: SFTP upload
     pack_administration:
         docker:
             - image: debian:11
@@ -639,13 +711,13 @@ jobs:
                 at: /tmp/workspace
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
             - run: |
-                mkdir -p /tmp/artifacts/debs
-                mv *.deb /tmp/artifacts/debs
+                mkdir -p /tmp/artifacts/debs/administration
+                mv *.deb /tmp/artifacts/debs/administration
             - store_artifacts:
                 path: /tmp/artifacts
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
+                    - debs/administration/*.deb
                 root: /tmp/artifacts
         working_directory: ~/project/administration
     pack_backend:
@@ -658,13 +730,13 @@ jobs:
                 at: /tmp/workspace
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
-                mkdir -p /tmp/artifacts/debs
-                mv *.deb /tmp/artifacts/debs
+                mkdir -p /tmp/artifacts/debs/backend
+                mv *.deb /tmp/artifacts/debs/backend
             - store_artifacts:
                 path: /tmp/artifacts
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
+                    - debs/backend/*.deb
                 root: /tmp/artifacts
         working_directory: ~/project/backend
     pack_martin:
@@ -737,11 +809,20 @@ orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
 parameters:
-    run_backend:
-        default: false
-        type: boolean
     run_commit:
         default: true
+        type: boolean
+    run_deliver_beta_administration:
+        default: false
+        type: boolean
+    run_deliver_beta_backend:
+        default: false
+        type: boolean
+    run_deliver_production_administration:
+        default: false
+        type: boolean
+    run_deliver_production_backend:
+        default: false
         type: boolean
     run_delivery_beta_native:
         default: false
@@ -754,57 +835,6 @@ parameters:
         type: boolean
 version: 2.1
 workflows:
-    backend:
-        jobs:
-            - build_backend
-            - build_administration
-            - build_martin
-            - pack_backend:
-                requires:
-                    - build_backend
-            - check_health_backend:
-                requires:
-                    - pack_backend
-            - pack_administration:
-                requires:
-                    - build_administration
-            - pack_martin:
-                requires:
-                    - build_martin
-            - pack_meta
-            - deploy:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-staging
-                requires:
-                    - pack_backend
-                    - check_health_backend
-                    - pack_administration
-                    - pack_martin
-                    - pack_meta
-                server: entitlementcard-test.tuerantuer.org
-                ssh-host-fingerprint: '|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k'
-            - deploy:
-                context:
-                    - entitlementcard-apt
-                filters:
-                    branches:
-                        only:
-                            - /release.*/
-                name: deploy-production
-                requires:
-                    - pack_backend
-                    - check_health_backend
-                    - pack_administration
-                    - pack_martin
-                    - pack_meta
-                server: entitlementcard.tuerantuer.org
-                ssh-host-fingerprint: '|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66'
-        when: << pipeline.parameters.run_backend >>
     commit:
         jobs:
             - check
@@ -812,11 +842,93 @@ workflows:
             - pack_backend:
                 requires:
                     - build_backend
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
             - check_health_backend:
                 requires:
                     - pack_backend
             - check_frontend
         when: << pipeline.parameters.run_commit >>
+    deliver_beta_administration:
+        jobs:
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
+            - deliver_administration:
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_administration_staging
+                production: false
+                requires:
+                    - pack_administration
+        when: << pipeline.parameters.run_deliver_beta_administration >>
+    deliver_beta_backend:
+        jobs:
+            - build_backend
+            - build_martin
+            - pack_backend:
+                requires:
+                    - build_backend
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+            - pack_meta
+            - deliver_backend:
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_backend_staging
+                production: false
+                requires:
+                    - pack_backend
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+        when: << pipeline.parameters.run_deliver_beta_backend >>
+    deliver_production_administration:
+        jobs:
+            - build_administration
+            - pack_administration:
+                requires:
+                    - build_administration
+            - deliver_administration:
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_administration_production
+                production: true
+                requires:
+                    - pack_administration
+        when: << pipeline.parameters.run_deliver_production_administration >>
+    deliver_production_backend:
+        jobs:
+            - build_backend
+            - build_martin
+            - pack_backend:
+                requires:
+                    - build_backend
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+            - pack_meta
+            - deliver_backend:
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_backend_production
+                production: true
+                requires:
+                    - pack_backend
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+        when: << pipeline.parameters.run_deliver_production_backend >>
     delivery_beta_native:
         jobs:
             - bump_version:
