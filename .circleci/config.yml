@@ -710,6 +710,29 @@ jobs:
                     - debs/*.deb
                 root: /tmp/artifacts
         working_directory: ~/project/administration
+    promote_android:
+        docker:
+            - image: cimg/android:2023.02.1-node
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        parameters:
+            build_config_name:
+                default: bayern
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+        resource_class: small
+        shell: /bin/bash -eo pipefail
+        steps:
+            - checkout
+            - restore_ruby_cache:
+                directory: ~/project/frontend/android
+            - install_app_toolbelt
+            - run:
+                command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
+                name: '[FL] Play Store Promotion'
+                working_directory: frontend/android
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
@@ -724,6 +747,9 @@ parameters:
         default: false
         type: boolean
     run_frontend:
+        default: false
+        type: boolean
+    run_promote_native:
         default: false
         type: boolean
 version: 2.1
@@ -905,4 +931,19 @@ workflows:
                 requires:
                     - check_frontend
         when: << pipeline.parameters.run_frontend >>
+    promote_native:
+        jobs:
+            - promote_android:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_bayern_android
+            - promote_android:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_nuernberg_android
+        when: << pipeline.parameters.run_promote_native >>
 

@@ -1,0 +1,14 @@
+when: << pipeline.parameters.run_promote_native >>
+jobs:
+  - promote_android:
+      name: promote_bayern_android
+      build_config_name: bayern
+      context:
+        - mattermost
+        - tuerantuer-google-play
+  - promote_android:
+      name: promote_nuernberg_android
+      build_config_name: nuernberg
+      context:
+        - mattermost
+        - tuerantuer-google-play
