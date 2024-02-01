@@ -88,7 +88,7 @@ platform :android do
       gradle(
         task: task,
         flavor: flavor,
-        flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod}",
+        flags: " -Ptarget=lib/main.dart -Pdart-defines='#{env_prod}'",
         build_type: "Release",
         properties: {
           :VERSION_CODE => version_code,
