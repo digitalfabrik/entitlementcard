@@ -8,11 +8,14 @@ steps:
   - restore_cache:
       keys:
         - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-  - install_dart_linux
-  - install_protobuf_linux
+  - run:
+      name: ls
+      command: ls
   - run:
       name: Install node dependencies
       command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
+  - install_dart_linux
+  - install_protobuf_linux
   - run: |
       npm run generate-graphql
       npm run generate-protobuf

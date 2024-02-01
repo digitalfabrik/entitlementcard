@@ -471,11 +471,14 @@ jobs:
             - restore_cache:
                 keys:
                     - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-            - install_dart_linux
-            - install_protobuf_linux
+            - run:
+                command: ls
+                name: ls
             - run:
                 command: '[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
                 name: Install node dependencies
+            - install_dart_linux
+            - install_protobuf_linux
             - run: |
                 npm run generate-graphql
                 npm run generate-protobuf
