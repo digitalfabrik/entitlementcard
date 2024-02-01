@@ -45,7 +45,7 @@ adb shell am start -a android.intent.action.VIEW \
 ```
 
 ### Note
-For android only signed apks can apply trusted associations. So if you want to test `https` scheme on android, you have to build a signed apk.
+For android only signed apks can apply trusted associations. So if you want to test `https` scheme on android, you have to build a signed apk e.g. a release apk.
 
 ### a) iOS
 ```
