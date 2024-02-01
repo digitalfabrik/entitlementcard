@@ -32,7 +32,7 @@ berechtigungskarte://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpb
 ```
 
 #### Note
-This activation codes are local and won't work on real devices.
+These are local activation codes are local and won't work on real devices.
 We use a `fragment (code#)` for the activation code to avoid sending user data to the server 
 
 ## Testing
