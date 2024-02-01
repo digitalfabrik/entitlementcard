@@ -879,7 +879,13 @@ workflows:
             - check_backend
             - check_administration
             - check_frontend
-        when: << pipeline.parameters.run_commit >>
+        when:
+            and:
+                - << pipeline.parameters.run_commit >>
+                - not:
+                    equal:
+                        - main
+                        - << pipeline.git.branch >>
     commit_main:
         jobs:
             - bump_version:
