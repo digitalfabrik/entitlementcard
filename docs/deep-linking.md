@@ -7,9 +7,9 @@ We use deep linking to simplify the card activation for the user.
 ### 1. Https
 
 This scheme has a trust association to our server and only works if `assetlinks.json` and `apple-app-site-association` files are properly deployed on our webserver.
-We need this scheme because some mail clients can not resolve custom scheme if we send activation links via mail.
-Mind that we only have one web application for all projects and the `ProjectConfig` is depending on the url. 
-So in nginx are redirects configured for each project to reach the particular association file:
+We need this scheme because some mail clients can not resolve a custom scheme if we send activation links via mail.
+Please note that we only have one web application for all projects and the `ProjectConfig` is depending on the url. 
+So in nginx redirects are configured for each project to reach the particular association file:
 
 #### Example
 `https://staging.bayern.ehrenamtskarte.app/.well-known/assetlinks.json` -> `bayern/assetlinks.json`
