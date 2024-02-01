@@ -198,7 +198,7 @@ jobs:
                 path: ~/project
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
             - install_dart_linux
             - install_protobuf_linux
             - run:
@@ -220,7 +220,7 @@ jobs:
                 command: npm run build
                 name: Build
             - save_cache:
-                key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
                 paths:
                     - node_modules
             - store_artifacts:
@@ -310,15 +310,6 @@ jobs:
                 key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - restore_cache:
                 key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
-            - run:
-                command: |
-                    ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-                    git diff --exit-code
-                name: Check that GraphQL scheme is stable
-            - run:
-                command: |
-                    ./gradlew test
-                name: Test
             - run: ./gradlew build
             - save_cache:
                 key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -461,6 +452,71 @@ jobs:
         steps:
             - checkout
             - check_circleci_config
+    check_administration:
+        docker:
+            - image: cimg/node:19.1.0
+        environment: null
+        steps:
+            - checkout:
+                path: ~/project
+            - restore_cache:
+                keys:
+                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+            - install_dart_linux
+            - install_protobuf_linux
+            - run:
+                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
+                name: Install node dependencies
+            - run: |
+                npm run generate-graphql
+                npm run generate-protobuf
+            - run:
+                command: npm run lint
+                name: Lint
+            - run:
+                command: npm run test -- --maxWorkers=2
+                name: Test
+            - run:
+                command: npm run ts:check
+                name: Typescript
+            - save_cache:
+                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                paths:
+                    - node_modules
+        working_directory: ~/project/administration
+    check_backend:
+        docker:
+            - image: cimg/openjdk:17.0.6-node
+        environment:
+            _JAVA_OPTIONS: -Xmx3g
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        steps:
+            - checkout:
+                path: ~/project
+            - run: git submodule sync
+            - run: git submodule update --init
+            - restore_cache:
+                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - restore_cache:
+                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+            - run:
+                command: |
+                    ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+                    git diff --exit-code
+                name: Check that GraphQL scheme is stable
+            - run:
+                command: |
+                    ./gradlew test
+                name: Test
+            - save_cache:
+                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+                paths:
+                    - .gradle/wrapper
+            - save_cache:
+                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+                paths:
+                    - .gradle/caches
+        working_directory: ~/project/backend
     check_frontend:
         docker:
             - image: cimg/node:19.1.0-browsers
@@ -557,10 +613,7 @@ jobs:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - when:
-                condition:
-                    equal:
-                        - true
-                        - << parameters.production >>
+                condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
@@ -572,11 +625,8 @@ jobs:
                         command: |
                             https://webhook.entitlementcard.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
                         name: Install package via webhook
-            - when:
-                condition:
-                    equal:
-                        - false
-                        - << parameters.production >>
+            - unless:
+                condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
@@ -584,9 +634,6 @@ jobs:
                             echo "Uploading: " /tmp/workspace/debs/administration/*.deb
                             sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
                         name: SFTP upload package
-                    - run:
-                        command: "https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK    \n"
-                        name: Install package via webhook
     deliver_android:
         docker:
             - image: cimg/android:2023.02.1-node
@@ -635,10 +682,7 @@ jobs:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - when:
-                condition:
-                    equal:
-                        - true
-                        - << parameters.production >>
+                condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
@@ -650,11 +694,8 @@ jobs:
                         command: |
                             curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
                         name: Install package via webhook
-            - when:
-                condition:
-                    equal:
-                        - false
-                        - << parameters.production >>
+            - unless:
+                condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
@@ -709,7 +750,9 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
-            - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+            - prepare_workspace
+            - restore_environment_variables
+            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
             - run: |
                 mkdir -p /tmp/artifacts/debs/administration
                 mv *.deb /tmp/artifacts/debs/administration
@@ -728,7 +771,9 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
-            - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+            - prepare_workspace
+            - restore_environment_variables
+            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
                 mkdir -p /tmp/artifacts/debs/backend
                 mv *.deb /tmp/artifacts/debs/backend
@@ -747,11 +792,13 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - prepare_workspace
+            - restore_environment_variables
             - run:
                 command: |
                     cp ~/project/docker/martin-config.yaml config.yaml
                     cp /tmp/workspace/martin/martin .
-                    ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
+                    ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
                 name: Build .deb
             - run:
                 command: |
@@ -771,7 +818,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
+            - prepare_workspace
+            - restore_environment_variables
+            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
             - run: |
                 mkdir -p /tmp/artifacts/debs
                 cp *.deb /tmp/artifacts/debs
@@ -812,6 +861,9 @@ parameters:
     run_commit:
         default: true
         type: boolean
+    run_commit_main:
+        default: true
+        type: boolean
     run_deliver_beta_administration:
         default: false
         type: boolean
@@ -837,23 +889,64 @@ version: 2.1
 workflows:
     commit:
         jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: false
             - check
-            - build_backend
-            - pack_backend:
+            - check_backend
+            - check_administration
+            - check_frontend
+        when: << pipeline.parameters.run_commit >>
+    commit_main:
+        jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: false
+            - check
+            - check_administration
+            - check_backend
+            - build_administration:
                 requires:
-                    - build_backend
-            - build_administration
+                    - check_administration
+                    - bump_version
             - pack_administration:
                 requires:
                     - build_administration
+            - build_martin
+            - build_backend:
+                requires:
+                    - check_backend
+            - pack_backend:
+                requires:
+                    - build_backend
+                    - bump_version
             - check_health_backend:
                 requires:
                     - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
             - check_frontend
-        when: << pipeline.parameters.run_commit >>
+        when:
+            and:
+                - << pipeline.parameters.run_commit_main >>
     deliver_beta_administration:
         jobs:
-            - build_administration
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: false
+            - check_administration
+            - build_administration:
+                requires:
+                    - check_administration
+                    - bump_version
             - pack_administration:
                 requires:
                     - build_administration
@@ -867,18 +960,28 @@ workflows:
         when: << pipeline.parameters.run_deliver_beta_administration >>
     deliver_beta_backend:
         jobs:
-            - build_backend
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: false
             - build_martin
+            - build_backend:
+                requires:
+                    - check_backend
             - pack_backend:
                 requires:
                     - build_backend
+                    - bump_version
             - check_health_backend:
                 requires:
                     - pack_backend
             - pack_martin:
                 requires:
                     - build_martin
-            - pack_meta
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
             - deliver_backend:
                 context:
                     - credentials-ehrenamtskarte
@@ -892,10 +995,17 @@ workflows:
         when: << pipeline.parameters.run_deliver_beta_backend >>
     deliver_production_administration:
         jobs:
-            - build_administration
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: true
+            - build_administration:
+                requires:
+                    - check_administration
             - pack_administration:
                 requires:
                     - build_administration
+                    - bump_version
             - deliver_administration:
                 context:
                     - credentials-ehrenamtskarte
@@ -906,18 +1016,28 @@ workflows:
         when: << pipeline.parameters.run_deliver_production_administration >>
     deliver_production_backend:
         jobs:
-            - build_backend
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: true
             - build_martin
+            - build_backend:
+                requires:
+                    - check_backend
             - pack_backend:
                 requires:
                     - build_backend
+                    - bump_version
             - check_health_backend:
                 requires:
                     - pack_backend
             - pack_martin:
                 requires:
                     - build_martin
-            - pack_meta
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
             - deliver_backend:
                 context:
                     - credentials-ehrenamtskarte
