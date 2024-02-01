@@ -8,6 +8,20 @@ export type FeatureFlagsType = {
     verification: boolean
 }
 
+export type DeeplLinkingConfig = {
+    android: {
+        applicationId: string,
+        sha256CertFingerprint: string
+    }
+    ios: {
+        appleAppSiteAssociationAppId: string
+        path: string
+        pathComment: string
+    }
+    projectName: string,
+    customScheme: string
+}
+
 export type ThemeType = {
     primaryLight: string
     primaryDark: string
@@ -81,6 +95,8 @@ export type CommonBuildConfigType = {
     publisherText: string
     disclaimerText: string
     maxCardAmount: number
+    activationPath: string
+    deepLinking: DeeplLinkingConfig
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

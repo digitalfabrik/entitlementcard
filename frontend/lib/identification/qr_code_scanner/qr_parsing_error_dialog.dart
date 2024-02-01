@@ -23,7 +23,7 @@ class QrParsingErrorDialog extends StatelessWidget {
         TextButton(
           child: Text(t.common.ok),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context, rootNavigator: true).pop();
           },
         ),
       ],

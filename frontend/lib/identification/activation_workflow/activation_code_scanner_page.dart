@@ -110,7 +110,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
         userCodesModel.insertCode(userCode);
         moveToLastCard();
         debugPrint('Card Activation: Successfully activated.');
-
+        if (Navigator.canPop(context)) Navigator.maybePop(context);
         break;
       case ActivationState.failed:
         await QrParsingErrorDialog.showErrorDialog(
