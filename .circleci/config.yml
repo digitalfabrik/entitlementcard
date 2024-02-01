@@ -202,20 +202,11 @@ jobs:
             - install_dart_linux
             - install_protobuf_linux
             - run:
-                command: '[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
-                name: Install node dependencies
+                command: cd .. && [ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
+                name: Install node dependencies on root level
             - run: |
                 npm run generate-graphql
                 npm run generate-protobuf
-            - run:
-                command: npm run lint
-                name: Lint
-            - run:
-                command: npm run test -- --maxWorkers=2
-                name: Test
-            - run:
-                command: npm run ts:check
-                name: Typescript
             - run:
                 command: npm run build
                 name: Build
@@ -465,8 +456,8 @@ jobs:
             - install_dart_linux
             - install_protobuf_linux
             - run:
-                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
-                name: Install node dependencies
+                command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
+                name: Install node dependencies on root level
             - run: |
                 npm run generate-graphql
                 npm run generate-protobuf
@@ -619,12 +610,7 @@ jobs:
                         command: |
                             echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
                             echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
                         name: SFTP upload package
-                    - run:
-                        command: |
-                            https://webhook.entitlementcard.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
-                        name: Install package via webhook
             - unless:
                 condition: << parameters.production >>
                 steps:
@@ -634,6 +620,10 @@ jobs:
                             echo "Uploading: " /tmp/workspace/debs/administration/*.deb
                             sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
                         name: SFTP upload package
+                    - run:
+                        command: |
+                            https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
+                        name: Install package via webhook
     deliver_android:
         docker:
             - image: cimg/android:2023.02.1-node
@@ -688,12 +678,7 @@ jobs:
                         command: |
                             echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
                             echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
                         name: SFTP upload package
-                    - run:
-                        command: |
-                            curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
-                        name: Install package via webhook
             - unless:
                 condition: << parameters.production >>
                 steps:
@@ -704,7 +689,8 @@ jobs:
                             sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
                         name: SFTP upload package
                     - run:
-                        command: "curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK        \n"
+                        command: |
+                            curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
                         name: Install package via webhook
     deliver_ios:
         environment:
@@ -889,10 +875,6 @@ version: 2.1
 workflows:
     commit:
         jobs:
-            - bump_version:
-                context:
-                    - deliverino
-                prepare_delivery: false
             - check
             - check_backend
             - check_administration
@@ -933,9 +915,32 @@ workflows:
                 requires:
                     - bump_version
             - check_frontend
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - build_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Bayern
+                name: build_ios_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
         when:
             and:
                 - << pipeline.parameters.run_commit_main >>
+                - equal:
+                    - main
+                    - << pipeline.git.branch >>
     deliver_beta_administration:
         jobs:
             - bump_version:

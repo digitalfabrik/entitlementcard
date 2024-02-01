@@ -23,11 +23,12 @@ steps:
             command: |
               echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
               echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
-        - run:
-            name: Install package via webhook
-            command: |
-              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+# will be enabled with #1271
+#              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
+#        - run:
+#            name: Install package via webhook
+#            command: |
+#              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
   - unless:
       condition: << parameters.production >>
       steps:
@@ -40,4 +41,4 @@ steps:
         - run:
             name: Install package via webhook
             command: |
-              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK        
+              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK

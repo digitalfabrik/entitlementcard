@@ -11,8 +11,8 @@ steps:
   - install_dart_linux
   - install_protobuf_linux
   - run:
-      name: Install node dependencies
-      command: "[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
+      name: Install node dependencies on root level
+      command: "cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
   - run: |
       npm run generate-graphql
       npm run generate-protobuf
