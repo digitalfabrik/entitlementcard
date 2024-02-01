@@ -6,6 +6,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.google.zxing.qrcode.decoder.Mode
 import com.google.zxing.qrcode.decoder.Version
 
+// implementation mostly taken from -> https://github.com/zxing-js/library/blob/master/src/core/qrcode/encoder/Encoder.ts
 class QRCodeUtil {
     companion object {
         // Level 8 with EC of M gives 152 bytes

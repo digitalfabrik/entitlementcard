@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
-enum class CardType {
+enum class CardInfoTestSample {
     BavarianStandard,
     BavarianGold,
     Nuernberg,
@@ -53,32 +53,32 @@ object ExampleCardInfo {
         return cardInfo.buildPartial()
     }
 
-    fun get(cardType: CardType): Card.CardInfo {
-        return when (cardType) {
-            CardType.BavarianStandard -> buildCardInfo(
+    fun get(cardInfoTestSample: CardInfoTestSample): Card.CardInfo {
+        return when (cardInfoTestSample) {
+            CardInfoTestSample.BavarianStandard -> buildCardInfo(
                 bavarianBase,
                 expirationDay = 365 * 40, // Equals 14.600
                 bavariaCardType = Card.BavariaCardType.STANDARD
             )
 
-            CardType.BavarianGold -> buildCardInfo(
+            CardInfoTestSample.BavarianGold -> buildCardInfo(
                 bavarianBase,
                 bavariaCardType = Card.BavariaCardType.GOLD
             )
 
-            CardType.Nuernberg -> nuernbergBase
-            CardType.NuernbergWithStartDay -> buildCardInfo(
+            CardInfoTestSample.Nuernberg -> nuernbergBase
+            CardInfoTestSample.NuernbergWithStartDay -> buildCardInfo(
                 nuernbergBase,
                 startDay = 365 * 2
             )
 
-            CardType.NuernbergWithPassId -> buildCardInfo(
+            CardInfoTestSample.NuernbergWithPassId -> buildCardInfo(
                 nuernbergBase,
                 nuernbergPassIdIdentifier = Card.NuernergPassIdentifier.passId,
                 startDay = 365 * 2
             )
 
-            CardType.NuernbergWithPassNr -> buildCardInfo(
+            CardInfoTestSample.NuernbergWithPassNr -> buildCardInfo(
                 nuernbergBase,
                 nuernbergPassIdIdentifier = Card.NuernergPassIdentifier.passNr,
                 startDay = 365 * 2

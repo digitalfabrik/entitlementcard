@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification
 
-import app.ehrenamtskarte.backend.helper.CardType
+import Card
+import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +24,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianBlueEAK() {
-        val cardInfo = ExampleCardInfo.get(CardType.BavarianStandard)
+        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.BavarianStandard)
 
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
@@ -40,7 +41,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianGoldenEAK() {
-        val cardInfo = ExampleCardInfo.get(CardType.BavarianGold)
+        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.BavarianGold)
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -55,7 +56,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPass() {
-        val cardInfo = ExampleCardInfo.get(CardType.Nuernberg)
+        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.Nuernberg)
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -72,7 +73,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPassWithStartDay() {
-        val cardInfo = ExampleCardInfo.get(CardType.NuernbergWithStartDay)
+        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.NuernbergWithStartDay)
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(

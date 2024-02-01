@@ -38,14 +38,15 @@ class CardMutationService {
     private val activationSecretLength = 20
 
     private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int): DynamicActivationCodeResult {
+        val secureRandom = SecureRandom.getInstanceStrong()
         return transaction {
             val pepper = ByteArray(PEPPER_LENGTH)
-            SecureRandom.getInstanceStrong().nextBytes(pepper)
+            secureRandom.nextBytes(pepper)
 
             val rawActivationSecret = ByteArray(activationSecretLength)
-            SecureRandom.getInstanceStrong().nextBytes(rawActivationSecret)
+            secureRandom.nextBytes(rawActivationSecret)
 
-            val activationSecret = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
             val hashedCardInfo = cardInfo.hash(pepper)
             val dynamicActivationCode = Card.DynamicActivationCode.newBuilder()
                 .setInfo(cardInfo)
@@ -63,7 +64,7 @@ class CardMutationService {
 
             CardRepository.insert(
                 hashedCardInfo,
-                activationSecret,
+                activationSecretHash,
                 cardInfo.expirationDay.toLong(),
                 cardInfo.extensions.extensionRegion.regionId,
                 userId,
@@ -71,7 +72,10 @@ class CardMutationService {
                 cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
             )
 
-            DynamicActivationCodeResult(hashedCardInfo.encodeBase64(), dynamicActivationCode.toByteArray().encodeBase64())
+            DynamicActivationCodeResult(
+                hashedCardInfo.encodeBase64(),
+                dynamicActivationCode.toByteArray().encodeBase64()
+            )
         }
     }
 
@@ -105,7 +109,12 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
-    fun createCards(dfe: DataFetchingEnvironment, project: String, encodedCardInfos: List<String>, generateStaticCodes: Boolean): List<CardCreationResultModel> {
+    fun createCards(
+        dfe: DataFetchingEnvironment,
+        project: String,
+        encodedCardInfos: List<String>,
+        generateStaticCodes: Boolean
+    ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig =
             context.backendConfiguration.projects.find { it.id == project }
@@ -114,8 +123,8 @@ class CardMutationService {
         val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
-                val decodedCardInfoHash = encodedCardInfo.decodeBase64Bytes()
-                val cardInfo = Card.CardInfo.parseFrom(decodedCardInfoHash)
+                val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
+                val cardInfo = Card.CardInfo.parseFrom(cardInfoBytes)
 
                 if (!Authorizer.mayCreateCardInRegion(user, cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()
@@ -129,7 +138,16 @@ class CardMutationService {
         }
 
         val regionId = user.regionId?.value
-        if (regionId != null) Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, regionId, encodedCardInfos.size, generateStaticCodes)
+        if (regionId != null) {
+            Matomo.trackCreateCards(
+                projectConfig,
+                context.request,
+                dfe.field.name,
+                regionId,
+                encodedCardInfos.size,
+                generateStaticCodes
+            )
+        }
         return activationCodes
     }
 
@@ -181,7 +199,13 @@ class CardMutationService {
             logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
-        Matomo.trackActivation(projectConfig, context.request, dfe.field.name, cardHash, activationResult.activationState != ActivationState.failed)
+        Matomo.trackActivation(
+            projectConfig,
+            context.request,
+            dfe.field.name,
+            cardHash,
+            activationResult.activationState != ActivationState.failed
+        )
         return activationResult
     }
 }
