@@ -25,16 +25,7 @@ steps:
   - run:
       name: Typescript
       command: npm run ts:check
-  - run:
-      name: Build
-      command: npm run build
   - save_cache:
       paths:
         - node_modules
       key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-  - store_artifacts:
-      path: build
-  - persist_to_workspace:
-      root: ~/project
-      paths:
-        - administration/build

@@ -1,9 +1,16 @@
 when: << pipeline.parameters.run_deliver_production_administration >>
 jobs:
-  - build_administration
+  - bump_version:
+      prepare_delivery: true
+      context:
+        - deliverino
+  - build_administration:
+      requires:
+        - check_administration
   - pack_administration:
       requires:
         - build_administration
+        - bump_version
   - deliver_administration:
       name: deliver_administration_production
       production: true

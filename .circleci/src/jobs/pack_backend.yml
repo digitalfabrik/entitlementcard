@@ -6,7 +6,9 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
-  - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+  - prepare_workspace
+  - restore_environment_variables
+  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
   - run: |
       mkdir -p /tmp/artifacts/debs/backend
       mv *.deb /tmp/artifacts/debs/backend

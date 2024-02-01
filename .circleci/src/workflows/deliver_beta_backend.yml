@@ -1,17 +1,25 @@
 when: << pipeline.parameters.run_deliver_beta_backend >>
 jobs:
+  - bump_version:
+      prepare_delivery: false
+      context:
+        - deliverino
   - build_backend
   - build_martin
   - pack_backend:
       requires:
         - build_backend
+        - bump_version
   - check_health_backend:
       requires:
         - pack_backend
   - pack_martin:
       requires:
         - build_martin
-  - pack_meta
+        - bump_version
+  - pack_meta:
+      requires:
+        - bump_version
   - deliver_backend:
       name: deliver_backend_staging
       production: false
