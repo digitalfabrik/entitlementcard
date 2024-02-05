@@ -2,8 +2,6 @@ when: << pipeline.parameters.run_deliver_beta_administration >>
 jobs:
   - bump_version:
         prepare_delivery: false
-        context:
-          - deliverino
   - check_administration
   - build_administration:
       requires:
@@ -12,9 +10,10 @@ jobs:
   - pack_administration:
       requires:
         - build_administration
-  - deliver_administration:
+  - deliver_to_server:
       name: deliver_administration_staging
       production: false
+      bundle: administration
       context:
         - credentials-ehrenamtskarte
       requires:

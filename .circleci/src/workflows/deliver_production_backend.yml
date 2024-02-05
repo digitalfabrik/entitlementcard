@@ -5,6 +5,7 @@ jobs:
       context:
         - deliverino
   - build_martin
+  - check_backend
   - build_backend:
       requires:
         - check_backend
@@ -22,13 +23,13 @@ jobs:
   - pack_meta:
       requires:
         - bump_version
-  - deliver_backend:
+  - deliver_to_server:
       name: deliver_backend_production
       production: true
+      bundle: backend
       context:
         - credentials-ehrenamtskarte
       requires:
-        - pack_backend
         - check_health_backend
         - pack_martin
         - pack_meta

@@ -4,6 +4,7 @@ jobs:
       prepare_delivery: true
       context:
         - deliverino
+  - check_administration
   - build_administration:
       requires:
         - check_administration
@@ -11,9 +12,10 @@ jobs:
       requires:
         - build_administration
         - bump_version
-  - deliver_administration:
+  - deliver_to_server:
       name: deliver_administration_production
       production: true
+      bundle: administration
       context:
         - credentials-ehrenamtskarte
       requires:

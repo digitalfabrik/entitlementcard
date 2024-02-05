@@ -14,6 +14,7 @@ steps:
   - restore_cache:
       keys:
         - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+  - prepare_workspace
   - run:
       name: "Install OpenSSL"
       command: |
@@ -31,11 +32,11 @@ steps:
   - run:
       name: "Prepare storing"
       command: |
-        mkdir -p /tmp/artifacts/martin
-        cp target/x86_64-unknown-linux-gnu/release/martin /tmp/artifacts/martin
+        mkdir -p ~/attached_workspace/artifacts/martin
+        cp target/x86_64-unknown-linux-gnu/release/martin ~/attached_workspace/artifacts/martin
   - store_artifacts:
-      path: /tmp/artifacts
+      path: ~/attached_workspace/artifacts
   - persist_to_workspace:
-      root: /tmp/artifacts
+      root: ~/attached_workspace/artifacts
       paths:
         - martin/martin

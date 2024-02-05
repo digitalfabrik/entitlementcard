@@ -4,17 +4,15 @@ working_directory: ~/project/backend
 steps:
   - checkout:
       path: ~/project
-  - attach_workspace:
-      at: /tmp/workspace
   - prepare_workspace
   - restore_environment_variables
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
   - run: |
-      mkdir -p /tmp/artifacts/debs/backend
-      mv *.deb /tmp/artifacts/debs/backend
+      mkdir -p ~/attached_workspace/debs/backend
+      mv *.deb ~/attached_workspace/debs/backend
   - store_artifacts:
-      path: /tmp/artifacts
+      path: ~/attached_workspace
   - persist_to_workspace:
-      root: /tmp/artifacts
+      root: ~/attached_workspace
       paths:
         - debs/backend/*.deb

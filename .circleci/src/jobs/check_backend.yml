@@ -9,10 +9,11 @@ steps:
       path: ~/project
   - run: git submodule sync
   - run: git submodule update --init
+  - prepare_workspace
   - restore_cache:
-      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   - restore_cache:
-      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
   - run:
       name: Check that GraphQL scheme is stable
       command: |
@@ -24,9 +25,9 @@ steps:
         ./gradlew test
   - save_cache:
       paths:
-        - .gradle/wrapper
-      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+        - ~/.gradle/wrapper
+      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   - save_cache:
       paths:
-        - .gradle/caches
-      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+        - ~/.gradle/caches
+      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}

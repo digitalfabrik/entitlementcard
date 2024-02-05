@@ -4,24 +4,22 @@ working_directory: ~/project/map-tiles/martin
 steps:
   - checkout:
       path: ~/project
-  - attach_workspace:
-      at: /tmp/workspace
   - prepare_workspace
   - restore_environment_variables
   - run:
       name: "Build .deb"
       command: |
         cp ~/project/docker/martin-config.yaml config.yaml
-        cp /tmp/workspace/martin/martin .
+        cp ~/attached_workspace/martin/martin .
         ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
   - run:
       name: "Move .deb to artifacts folder"
       command: |
-        mkdir -p /tmp/artifacts/debs
-        mv *.deb /tmp/artifacts/debs
+        mkdir -p ~/attached_workspace/debs/backend
+        mv *.deb ~/attached_workspace/debs/backend
   - store_artifacts:
-      path: /tmp/artifacts
+      path: ~/attached_workspace
   - persist_to_workspace:
-      root: /tmp/artifacts
+      root: ~/attached_workspace
       paths:
-        - debs/*.deb
+        - debs/backend/*.deb

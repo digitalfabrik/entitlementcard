@@ -7,9 +7,10 @@ steps:
       path: ~/project
   - restore_cache:
       keys:
-        - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+        - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
   - install_dart_linux
   - install_protobuf_linux
+  - prepare_workspace
   - run:
       name: Install node dependencies on root level
       command: "cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
@@ -27,5 +28,5 @@ steps:
       command: npm run ts:check
   - save_cache:
       paths:
-        - node_modules
-      key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+        - ~/node_modules
+      key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}

@@ -192,17 +192,17 @@ jobs:
     build_administration:
         docker:
             - image: cimg/node:19.1.0
-        environment: null
         steps:
             - checkout:
                 path: ~/project
             - restore_cache:
                 keys:
-                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                    - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
             - install_dart_linux
             - install_protobuf_linux
+            - prepare_workspace
             - run:
-                command: cd .. && [ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
+                command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
                 name: Install node dependencies on root level
             - run: |
                 npm run generate-graphql
@@ -211,11 +211,11 @@ jobs:
                 command: npm run build
                 name: Build
             - save_cache:
-                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
                 paths:
                     - node_modules
             - store_artifacts:
-                path: build
+                path: ~/attached_workspace/build
             - persist_to_workspace:
                 paths:
                     - administration/build
@@ -297,21 +297,22 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
+            - prepare_workspace
             - restore_cache:
-                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - restore_cache:
-                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
             - run: ./gradlew build
             - save_cache:
-                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
                 paths:
-                    - .gradle/wrapper
+                    - ~/gradle/wrapper
             - save_cache:
-                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
                 paths:
-                    - .gradle/caches
+                    - ~/.gradle/caches
             - store_artifacts:
-                path: build/libs
+                path: ~/attached_workspace/build/libs
             - persist_to_workspace:
                 paths:
                     - backend/build/distributions/*
@@ -379,6 +380,7 @@ jobs:
             - restore_cache:
                 keys:
                     - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+            - prepare_workspace
             - run:
                 command: |
                     apt update
@@ -395,15 +397,15 @@ jobs:
                     - target
             - run:
                 command: |
-                    mkdir -p /tmp/artifacts/martin
-                    cp target/x86_64-unknown-linux-gnu/release/martin /tmp/artifacts/martin
+                    mkdir -p ~/attached_workspace/artifacts/martin
+                    cp target/x86_64-unknown-linux-gnu/release/martin ~/attached_workspace/artifacts/martin
                 name: Prepare storing
             - store_artifacts:
-                path: /tmp/artifacts
+                path: ~/attached_workspace/artifacts
             - persist_to_workspace:
                 paths:
                     - martin/martin
-                root: /tmp/artifacts
+                root: ~/attached_workspace/artifacts
         working_directory: ~/martin
     bump_version:
         docker:
@@ -452,9 +454,10 @@ jobs:
                 path: ~/project
             - restore_cache:
                 keys:
-                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                    - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
             - install_dart_linux
             - install_protobuf_linux
+            - prepare_workspace
             - run:
                 command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
                 name: Install node dependencies on root level
@@ -471,9 +474,9 @@ jobs:
                 command: npm run ts:check
                 name: Typescript
             - save_cache:
-                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+                key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
                 paths:
-                    - node_modules
+                    - ~/node_modules
         working_directory: ~/project/administration
     check_backend:
         docker:
@@ -486,10 +489,11 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
+            - prepare_workspace
             - restore_cache:
-                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - restore_cache:
-                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
             - run:
                 command: |
                     ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
@@ -500,13 +504,13 @@ jobs:
                     ./gradlew test
                 name: Test
             - save_cache:
-                key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
                 paths:
-                    - .gradle/wrapper
+                    - ~/.gradle/wrapper
             - save_cache:
-                key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
                 paths:
-                    - .gradle/caches
+                    - ~/.gradle/caches
         working_directory: ~/project/backend
     check_frontend:
         docker:
@@ -585,45 +589,6 @@ jobs:
             - run:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
                 name: Check health
-    deliver_administration:
-        docker:
-            - image: cimg/base:2022.09
-        parameters:
-            production:
-                description: Whether builds are delivered to production or beta.
-                type: boolean
-        steps:
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install curl -y
-                name: Install Curl
-            - attach_workspace:
-                at: /tmp/workspace
-            - add_ssh_keys:
-                fingerprints:
-                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
-            - when:
-                condition: << parameters.production >>
-                steps:
-                    - run:
-                        command: |
-                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
-                            echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-                        name: SFTP upload package
-            - unless:
-                condition: << parameters.production >>
-                steps:
-                    - run:
-                        command: |
-                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
-                            echo "Uploading: " /tmp/workspace/debs/administration/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/administration/*.deb"
-                        name: SFTP upload package
-                    - run:
-                        command: |
-                            https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-admin-$EAK_WEBHOOK
-                        name: Install package via webhook
     deliver_android:
         docker:
             - image: cimg/android:2023.02.1-node
@@ -653,45 +618,6 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
-    deliver_backend:
-        docker:
-            - image: cimg/base:2022.09
-        parameters:
-            production:
-                description: Whether builds are delivered to production or beta.
-                type: boolean
-        steps:
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install curl -y
-                name: Install Curl
-            - attach_workspace:
-                at: /tmp/workspace
-            - add_ssh_keys:
-                fingerprints:
-                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
-            - when:
-                condition: << parameters.production >>
-                steps:
-                    - run:
-                        command: |
-                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
-                            echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-                        name: SFTP upload package
-            - unless:
-                condition: << parameters.production >>
-                steps:
-                    - run:
-                        command: |
-                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
-                            echo "Uploading: " /tmp/workspace/debs/backend/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/backend/*.deb"
-                        name: SFTP upload package
-                    - run:
-                        command: |
-                            curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
-                        name: Install package via webhook
     deliver_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -728,26 +654,64 @@ jobs:
                         command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
                         name: '[FL] TestFlight Upload'
                         working_directory: frontend/ios
+    deliver_to_server:
+        docker:
+            - image: cimg/base:2022.09
+        parameters:
+            bundle:
+                description: Defines which bundle should be deployed to the server
+                enum:
+                    - administration
+                    - backend
+                type: enum
+            production:
+                description: Whether builds are delivered to production or beta.
+                type: boolean
+        steps:
+            - run:
+                command: |
+                    sudo apt update
+                    sudo apt install curl -y
+                name: Install Curl
+            - prepare_workspace
+            - add_ssh_keys:
+                fingerprints:
+                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+            - when:
+                condition: << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
+                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                        name: SFTP upload package
+            - unless:
+                condition: << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
+                            echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                        name: SFTP upload package
     pack_administration:
         docker:
             - image: debian:11
         steps:
             - checkout:
                 path: ~/project
-            - attach_workspace:
-                at: /tmp/workspace
             - prepare_workspace
             - restore_environment_variables
-            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
             - run: |
-                mkdir -p /tmp/artifacts/debs/administration
-                mv *.deb /tmp/artifacts/debs/administration
+                mkdir -p ~/attached_workspace/debs/administration
+                mv *.deb ~/attached_workspace/debs/administration
             - store_artifacts:
-                path: /tmp/artifacts
+                path: ~/attached_workspace
             - persist_to_workspace:
                 paths:
                     - debs/administration/*.deb
-                root: /tmp/artifacts
+                root: ~/attached_workspace
         working_directory: ~/project/administration
     pack_backend:
         docker:
@@ -755,20 +719,18 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - attach_workspace:
-                at: /tmp/workspace
             - prepare_workspace
             - restore_environment_variables
-            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
-                mkdir -p /tmp/artifacts/debs/backend
-                mv *.deb /tmp/artifacts/debs/backend
+                mkdir -p ~/attached_workspace/debs/backend
+                mv *.deb ~/attached_workspace/debs/backend
             - store_artifacts:
-                path: /tmp/artifacts
+                path: ~/attached_workspace
             - persist_to_workspace:
                 paths:
                     - debs/backend/*.deb
-                root: /tmp/artifacts
+                root: ~/attached_workspace
         working_directory: ~/project/backend
     pack_martin:
         docker:
@@ -776,27 +738,25 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - attach_workspace:
-                at: /tmp/workspace
             - prepare_workspace
             - restore_environment_variables
             - run:
                 command: |
                     cp ~/project/docker/martin-config.yaml config.yaml
-                    cp /tmp/workspace/martin/martin .
+                    cp ~/attached_workspace/martin/martin .
                     ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
                 name: Build .deb
             - run:
                 command: |
-                    mkdir -p /tmp/artifacts/debs
-                    mv *.deb /tmp/artifacts/debs
+                    mkdir -p ~/attached_workspace/debs/backend
+                    mv *.deb ~/attached_workspace/debs/backend
                 name: Move .deb to artifacts folder
             - store_artifacts:
-                path: /tmp/artifacts
+                path: ~/attached_workspace
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
-                root: /tmp/artifacts
+                    - debs/backend/*.deb
+                root: ~/attached_workspace
         working_directory: ~/project/map-tiles/martin
     pack_meta:
         docker:
@@ -808,14 +768,14 @@ jobs:
             - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
             - run: |
-                mkdir -p /tmp/artifacts/debs
-                cp *.deb /tmp/artifacts/debs
+                mkdir -p ~/attached_workspace/debs/backend
+                cp *.deb ~/attached_workspace/debs/backend
             - store_artifacts:
-                path: /tmp/artifacts
+                path: ~/attached_workspace
             - persist_to_workspace:
                 paths:
-                    - debs/*.deb
-                root: /tmp/artifacts
+                    - debs/backend/*.deb
+                root: ~/attached_workspace
         working_directory: ~/project/administration
     promote_android:
         docker:
@@ -889,8 +849,6 @@ workflows:
     commit_main:
         jobs:
             - bump_version:
-                context:
-                    - deliverino
                 prepare_delivery: false
             - check
             - check_administration
@@ -950,8 +908,6 @@ workflows:
     deliver_beta_administration:
         jobs:
             - bump_version:
-                context:
-                    - deliverino
                 prepare_delivery: false
             - check_administration
             - build_administration:
@@ -961,7 +917,8 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - deliver_administration:
+            - deliver_to_server:
+                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
                 name: deliver_administration_staging
@@ -972,10 +929,9 @@ workflows:
     deliver_beta_backend:
         jobs:
             - bump_version:
-                context:
-                    - deliverino
                 prepare_delivery: false
             - build_martin
+            - check_backend
             - build_backend:
                 requires:
                     - check_backend
@@ -993,13 +949,13 @@ workflows:
             - pack_meta:
                 requires:
                     - bump_version
-            - deliver_backend:
+            - deliver_to_server:
+                bundle: backend
                 context:
                     - credentials-ehrenamtskarte
                 name: deliver_backend_staging
                 production: false
                 requires:
-                    - pack_backend
                     - check_health_backend
                     - pack_martin
                     - pack_meta
@@ -1010,6 +966,7 @@ workflows:
                 context:
                     - deliverino
                 prepare_delivery: true
+            - check_administration
             - build_administration:
                 requires:
                     - check_administration
@@ -1017,7 +974,8 @@ workflows:
                 requires:
                     - build_administration
                     - bump_version
-            - deliver_administration:
+            - deliver_to_server:
+                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
                 name: deliver_administration_production
@@ -1032,6 +990,7 @@ workflows:
                     - deliverino
                 prepare_delivery: true
             - build_martin
+            - check_backend
             - build_backend:
                 requires:
                     - check_backend
@@ -1049,13 +1008,13 @@ workflows:
             - pack_meta:
                 requires:
                     - bump_version
-            - deliver_backend:
+            - deliver_to_server:
+                bundle: backend
                 context:
                     - credentials-ehrenamtskarte
                 name: deliver_backend_production
                 production: true
                 requires:
-                    - pack_backend
                     - check_health_backend
                     - pack_martin
                     - pack_meta
