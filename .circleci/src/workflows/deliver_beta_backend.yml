@@ -1,7 +1,9 @@
 when: << pipeline.parameters.run_deliver_beta_backend >>
 jobs:
   - bump_version:
-      prepare_delivery: false
+      prepare_delivery: true
+      context:
+        - deliverino
   - build_martin
   - check_backend
   - build_backend:

@@ -1,7 +1,9 @@
 when: << pipeline.parameters.run_deliver_beta_administration >>
 jobs:
   - bump_version:
-        prepare_delivery: false
+        prepare_delivery: true
+        context:
+          - deliverino
   - check_administration
   - build_administration:
       requires:

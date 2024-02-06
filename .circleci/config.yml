@@ -692,8 +692,12 @@ jobs:
                         command: |
                             echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/<< parameters.bundle >>/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
+                    - run:
+                        command: |
+                            curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+                        name: Install package via webhook
     pack_administration:
         docker:
             - image: debian:11
@@ -908,7 +912,9 @@ workflows:
     deliver_beta_administration:
         jobs:
             - bump_version:
-                prepare_delivery: false
+                context:
+                    - deliverino
+                prepare_delivery: true
             - check_administration
             - build_administration:
                 requires:
@@ -929,7 +935,9 @@ workflows:
     deliver_beta_backend:
         jobs:
             - bump_version:
-                prepare_delivery: false
+                context:
+                    - deliverino
+                prepare_delivery: true
             - build_martin
             - check_backend
             - build_backend:
