@@ -17,7 +17,7 @@ So in nginx redirects are configured for each project to reach the particular as
 
 ### 2. Custom scheme
 
-This scheme is basically used for local testing and can also be used as a fallback if `https` scheme is not working.
+The custom scheme `berechtigungskarte` is basically used for local testing and can also be used as a fallback if `https` scheme is not working.
 
 ## ActivationLink
 
@@ -37,11 +37,16 @@ We use a `fragment (code#)` for the activation code to avoid sending user data t
 
 ## Testing
 
+Install: `npm i -g uri-scheme` if you want to use the simplified command
+
 ### a) Android
 ```
 adb shell am start -a android.intent.action.VIEW \
 -c android.intent.category.BROWSABLE \
 -d https://bayern.ehrenamtskarte.app/activation/code#<activationCode>
+```
+```
+ npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --android
 ```
 
 ### Note
@@ -51,4 +56,9 @@ For android only signed apks can apply trusted associations. So if you want to t
 ```
 xcrun simctl openurl booted https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>
 ```
+```
+ npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
+```
+
+
 

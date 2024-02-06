@@ -1,10 +1,10 @@
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
+import {ACTIVATION_PATH} from "../constants";
 
 const ANDROID_APPLICATION_ID = "app.entitlementcard.nuernberg"
 const IOS_BUNDLE_IDENTIFIER = "app.sozialpass.nuernberg"
-const ACTIVATION_PATH = "activation"
 
 export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Nürnberg-Pass",

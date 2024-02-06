@@ -22,7 +22,7 @@
     "sourceCode": "Source code",
     "title": "About"
   },
-  "activation" : {
+  "deeplinkActivation" : {
     "headline": "Activate card",
     "description": "Do you want to activate this card?",
     "limitReached": "Your card limit has been reached. Please remove a card first.",

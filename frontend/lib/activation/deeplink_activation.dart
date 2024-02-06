@@ -5,13 +5,10 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
-import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
-import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
+import 'package:ehrenamtskarte/identification/util/activate_card.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +52,7 @@ class DeepLinkActivation extends StatelessWidget {
     DynamicActivationCode? activationCode = getActivationCode(context, base64qrcode);
     CardInfo? cardInfo = activationCode?.info;
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-    final DeepLinkActivationStatus status = DeepLinkActivationStatus.from(userCodeModel, activationCode);
+    final status = DeepLinkActivationStatus.from(userCodeModel, activationCode);
     final regionId = cardInfo?.extensions.extensionRegion.regionId ?? -1;
     final regionsQuery = GetRegionsByIdQuery(
       variables: GetRegionsByIdArguments(
@@ -76,7 +73,7 @@ class DeepLinkActivation extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(t.activation.headline),
+              title: Text(t.deeplinkActivation.headline),
               leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
             ),
             body: Padding(
@@ -87,7 +84,7 @@ class DeepLinkActivation extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       child: status == DeepLinkActivationStatus.invalidLink
                           ? null
-                          : Text(t.activation.description,
+                          : Text(t.deeplinkActivation.description,
                               style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
                     ),
                     Center(
@@ -106,19 +103,25 @@ class DeepLinkActivation extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ...switch (status) {
-                            DeepLinkActivationStatus.invalidLink => [_WarningText(t.activation.invalidCode)],
+                            DeepLinkActivationStatus.invalidLink => [_WarningText(t.deeplinkActivation.invalidCode)],
                             DeepLinkActivationStatus.limitReached => [
-                                _WarningText('${t.activation.limitReached} ($cardsInUse/$maxCardAmount)')
+                                _WarningText('${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)')
                               ],
-                            DeepLinkActivationStatus.alreadyExists => [_WarningText(t.activation.alreadyExists)],
+                            DeepLinkActivationStatus.alreadyExists => [
+                                _WarningText(t.deeplinkActivation.alreadyExists)
+                              ],
                             DeepLinkActivationStatus.valid => [
                                 ElevatedButton(
                                   onPressed: activationCode != null
                                       ? () {
-                                          activateCard(context, activationCode);
+                                          activateCard(
+                                              context,
+                                              () => GoRouter.of(context)
+                                                  .pushReplacement('$homeRouteName/$identityTabIndex'),
+                                              activationCode);
                                         }
                                       : null,
-                                  child: Text(t.activation.buttonText),
+                                  child: Text(t.deeplinkActivation.buttonText),
                                 )
                               ],
                           },
@@ -150,62 +153,13 @@ class _WarningText extends StatelessWidget {
 
 DynamicActivationCode? getActivationCode(BuildContext context, String base64qrcode) {
   try {
-    if (base64qrcode.length % 4 == 0) {
-      final activationCode =
-          const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
-      return activationCode;
-    }
-    return null;
+    final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
+    return activationCode;
   } on QrCodeParseException catch (e, _) {
-    debugPrint('Der eingescannte Code ist ungültig.');
+    debugPrint('Der Aktivierungscode ist ungültig.');
     return null;
-  }
-}
-
-Future<void> activateCard(BuildContext context, DynamicActivationCode activationCode) async {
-  final messengerState = ScaffoldMessenger.of(context);
-  final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
-  final client = GraphQLProvider.of(context).value;
-  final projectId = Configuration.of(context).projectId;
-
-  final activationResult = await activateCode(
-    client: client,
-    projectId: projectId,
-    activationSecretBase64: const Base64Encoder().convert(activationCode.activationSecret),
-    cardInfoHashBase64: activationCode.info.hash(activationCode.pepper),
-    overwriteExisting: true,
-  );
-
-  switch (activationResult.activationState) {
-    case ActivationState.success:
-      if (activationResult.totpSecret == null) {
-        throw const ActivationInvalidTotpSecretException();
-      }
-      final totpSecret = const Base64Decoder().convert(activationResult.totpSecret!);
-      final userCode = DynamicUserCode()
-        ..info = activationCode.info
-        ..pepper = activationCode.pepper
-        ..totpSecret = totpSecret;
-      userCodesModel.insertCode(userCode);
-      GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
-      messengerState.showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          content: Text(t.activation.activationSuccessful),
-        ),
-      );
-      break;
-    case ActivationState.failed:
-      await QrParsingErrorDialog.showErrorDialog(
-        context,
-        t.activation.invalidCode,
-      );
-      break;
-    case ActivationState.didNotOverwriteExisting:
-      throw const ActivationDidNotOverwriteExisting();
-    default:
-      throw ServerCardActivationException(
-        t.activation.activationInvalid,
-      );
+  } on FormatException catch (e, _) {
+    debugPrint('Das Format des Aktivierungscodes ist ungültig.');
+    return null;
   }
 }

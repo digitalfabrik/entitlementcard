@@ -1,10 +1,10 @@
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
+import {ACTIVATION_PATH} from "../constants";
 
 const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
 const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
-const ACTIVATION_PATH = "activation"
 
 export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
