@@ -38,3 +38,4 @@ steps:
       root: ~/project
       paths:
         - administration/build
+  - notify

@@ -8,3 +8,4 @@ shell: /bin/bash -eo pipefail
 steps:
   - checkout
   - check_circleci_config
+  - notify

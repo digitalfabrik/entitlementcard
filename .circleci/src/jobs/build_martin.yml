@@ -39,3 +39,4 @@ steps:
       root: /tmp/artifacts
       paths:
         - martin/martin
+  - notify

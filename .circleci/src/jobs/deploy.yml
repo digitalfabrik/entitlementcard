@@ -23,3 +23,4 @@ steps:
         echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
         echo "Uploading: " /tmp/workspace/debs/*.deb
         sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+  - notify
