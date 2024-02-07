@@ -280,9 +280,13 @@ jobs:
             - run:
                 command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
                 name: Move aab
+            - run:
+                command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+                name: Move apk
             - persist_to_workspace:
                 paths:
                     - << parameters.buildConfig >>.aab
+                    - << parameters.buildConfig >>.apk
                 root: ~/attached_workspace
             - store_artifacts:
                 path: ~/attached_workspace/
