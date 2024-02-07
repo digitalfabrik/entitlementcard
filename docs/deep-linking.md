@@ -57,7 +57,7 @@ For android only signed apks can apply trusted associations. So if you want to t
 xcrun simctl openurl booted https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>
 ```
 ```
- npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
+npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
 ```
 
 
