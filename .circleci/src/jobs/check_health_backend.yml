@@ -10,6 +10,8 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
+  - run: apt update -y && apt install -y nodejs npm
+  - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
@@ -34,3 +36,4 @@ steps:
   - run:
       name: Check health
       command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
+  - notify

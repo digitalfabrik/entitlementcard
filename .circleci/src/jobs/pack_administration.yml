@@ -6,6 +6,7 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
+  - install_app_toolbelt
   - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
   - run: |
       mkdir -p /tmp/artifacts/debs
@@ -16,3 +17,4 @@ steps:
       root: /tmp/artifacts
       paths:
         - debs/*.deb
+  - notify

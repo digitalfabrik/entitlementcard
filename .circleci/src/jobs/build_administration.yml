@@ -10,6 +10,7 @@ steps:
         - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
   - install_dart_linux
   - install_protobuf_linux
+  - install_app_toolbelt
   - run:
       name: Install node dependencies
       command: "[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
@@ -38,3 +39,4 @@ steps:
       root: ~/project
       paths:
         - administration/build
+  - notify

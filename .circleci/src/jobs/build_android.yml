@@ -60,3 +60,4 @@ steps:
         - << parameters.buildConfig >>.apk
   - store_artifacts:
       path: ~/attached_workspace/
+  - notify

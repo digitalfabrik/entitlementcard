@@ -14,6 +14,7 @@ parameters:
 steps:
   - attach_workspace:
       at: /tmp/workspace
+  - install_app_toolbelt
   - add_ssh_keys:
       fingerprints:
         - "a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05"
@@ -23,3 +24,4 @@ steps:
         echo "<< parameters.ssh-host-fingerprint >>" >> known_hosts
         echo "Uploading: " /tmp/workspace/debs/*.deb
         sftp -b - -o UserKnownHostsFile=known_hosts ci@<< parameters.server >>:/local-apt-repository/ \<<< "put -r /tmp/workspace/debs/*.deb"
+  - notify
