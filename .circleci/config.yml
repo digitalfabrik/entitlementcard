@@ -663,7 +663,7 @@ jobs:
             - image: cimg/base:2022.09
         parameters:
             bundle:
-                description: Defines which bundle should be deployed to the server
+                description: Defines which bundle should be deployed to the server.
                 enum:
                     - administration
                     - backend

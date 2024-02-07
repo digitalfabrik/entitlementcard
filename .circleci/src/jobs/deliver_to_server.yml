@@ -5,7 +5,7 @@ parameters:
     description: Whether builds are delivered to production or beta.
     type: boolean
   bundle:
-    description: Defines which bundle should be deployed to the server
+    description: Defines which bundle should be deployed to the server.
     enum: ["administration" , "backend"]
     type: enum
 steps:
