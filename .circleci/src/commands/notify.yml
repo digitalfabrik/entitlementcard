@@ -30,7 +30,7 @@ steps:
       when: on_success
   - run:
       command: |
-        echo 'export set-allow-all-branches-flag=<<parameters.allow-all-branches>> || $CIRCLE_BRANCH == release*>>' 
+        echo "export set-allow-all-branches-flag=<<parameters.allow-all-branches>> || $CIRCLE_BRANCH == release*>>" >> ${BASH_ENV}
         app-toolbelt v0 notify mattermost --message MM_MESSAGE --channel << parameters.channel >> ${set-allow-all-branches-flag:+--allow-all-branches}
       name: Mattermost Status Alert
       when: always
