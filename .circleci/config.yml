@@ -131,7 +131,7 @@ commands:
         steps:
             - run:
                 command: |
-                    echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the main branch! :fire:\n<< parameters.failure_mentions >>"' >> $BASH_ENV
+                    echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the ${CIRCLE_BRANCH} branch! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
                 name: Mattermost - Prepare failure message
                 when: on_fail
             - run:
@@ -142,7 +142,9 @@ commands:
                 name: Mattermost - Prepare success message
                 when: on_success
             - run:
-                command: "echo 'export set-allow-all-branches-flag=<<parameters.allow-all-branches>> || $CIRCLE_BRANCH == release*>>' \napp-toolbelt v0 notify mattermost --message MM_MESSAGE --channel << parameters.channel >> ${set-allow-all-branches-flag:+--allow-all-branches}\n"
+                command: |
+                    echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
+                    app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
                 name: Mattermost Status Alert
                 when: always
     persist_environment_variables:
@@ -516,6 +518,7 @@ jobs:
             - checkout
             - install_app_toolbelt
             - check_circleci_config
+            - run: thiswillfail
             - notify
     check_frontend:
         docker:
@@ -571,6 +574,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
@@ -721,6 +725,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
@@ -742,6 +747,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
@@ -768,6 +774,7 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
             - run: |
