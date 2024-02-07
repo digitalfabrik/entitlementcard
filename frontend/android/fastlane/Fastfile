@@ -80,23 +80,29 @@ platform :android do
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
-    gradle(
-      task: "bundle",
-      flavor: flavor,
-      flags: " -Ptarget=lib/main.dart",
-      build_type: "Release",
-      properties: {
-        :VERSION_CODE => version_code,
-        :VERSION_NAME => version_name,
-        :BUILD_CONFIG_NAME => build_config_name,
-        :KEYSTORE_PATH => KEYSTORE_PATH,
-        :KEYSTORE_KEY_ALIAS => flavor == 'Nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN,
-        :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-        :KEYSTORE_KEY_PASSWORD => flavor == 'Nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN,
-      }.compact,
-      system_properties: gradle_system_properties,
-      print_command: false
-    )
+    env_prod = sh("echo -n environment=production | base64")
+
+    tasks = ["bundle", "assemble"]
+
+    tasks.each do | task |
+      gradle(
+        task: task,
+        flavor: flavor,
+        flags: " -Ptarget=lib/main.dart -Pdart-defines='#{env_prod}'",
+        build_type: "Release",
+        properties: {
+          :VERSION_CODE => version_code,
+          :VERSION_NAME => version_name,
+          :BUILD_CONFIG_NAME => build_config_name,
+          :KEYSTORE_PATH => KEYSTORE_PATH,
+          :KEYSTORE_KEY_ALIAS => flavor == 'Nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN,
+          :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
+          :KEYSTORE_KEY_PASSWORD => flavor == 'Nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN,
+        }.compact,
+        system_properties: gradle_system_properties,
+        print_command: false
+      )
+    end
   end
 
   desc "Upload Android App to Google Play"
