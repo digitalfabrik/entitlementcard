@@ -236,6 +236,7 @@ jobs:
                     - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
             - install_dart_linux
             - install_protobuf_linux
+            - install_app_toolbelt
             - run:
                 command: '[ ! -d node_modules ] && npm ci --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
                 name: Install node dependencies
@@ -343,6 +344,7 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
+            - install_app_toolbelt
             - restore_cache:
                 key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - restore_cache:
@@ -424,6 +426,7 @@ jobs:
         docker:
             - image: rust:bullseye
         steps:
+            - install_app_toolbelt
             - run:
                 command: |
                     mkdir -p ~/.ssh
@@ -474,9 +477,7 @@ jobs:
         resource_class: small
         steps:
             - checkout
-            - run:
-                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
-                name: Install app-toolbelt
+            - install_app_toolbelt
             - run:
                 command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
                 name: Calculate next version name
@@ -513,6 +514,7 @@ jobs:
         shell: /bin/bash -eo pipefail
         steps:
             - checkout
+            - install_app_toolbelt
             - check_circleci_config
             - notify
     check_frontend:
@@ -569,6 +571,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - install_app_toolbelt
             - run:
                 command: |
                     sudo apt update
@@ -678,6 +681,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: /tmp/workspace
+            - install_app_toolbelt
             - add_ssh_keys:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
@@ -696,6 +700,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - install_app_toolbelt
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -f /tmp/workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
             - run: |
                 mkdir -p /tmp/artifacts/debs
@@ -716,6 +721,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - install_app_toolbelt
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -t /tmp/workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
                 mkdir -p /tmp/artifacts/debs
@@ -736,6 +742,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - install_app_toolbelt
             - run:
                 command: |
                     cp ~/project/docker/martin-config.yaml config.yaml
@@ -761,6 +768,7 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
             - run: |
                 mkdir -p /tmp/artifacts/debs

@@ -7,5 +7,6 @@ environment:
 shell: /bin/bash -eo pipefail
 steps:
   - checkout
+  - install_app_toolbelt
   - check_circleci_config
   - notify

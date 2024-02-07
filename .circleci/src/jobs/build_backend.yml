@@ -9,6 +9,7 @@ steps:
       path: ~/project
   - run: git submodule sync
   - run: git submodule update --init
+  - install_app_toolbelt
   - restore_cache:
       key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   - restore_cache:

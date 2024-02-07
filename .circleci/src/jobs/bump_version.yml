@@ -9,9 +9,7 @@ docker:
 resource_class: small
 steps:
   - checkout
-  - run:
-      name: Install app-toolbelt
-      command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+  - install_app_toolbelt
   - run:
       name: Calculate next version name
       command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}

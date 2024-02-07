@@ -10,6 +10,7 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
+  - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
