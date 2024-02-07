@@ -14,17 +14,19 @@ import 'package:provider/provider.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 const mapTabIndex = 0;
+const identityTabIndex = 2;
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int? initialTabIndex;
+  const HomePage({super.key, this.initialTabIndex});
 
   @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-  int _currentTabIndex = 0;
   late List<AppFlow> appFlows;
+  int _currentTabIndex = mapTabIndex;
 
   MapPageController? mapPageController;
   int? selectedAcceptingStoreId;
@@ -32,6 +34,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _currentTabIndex = widget.initialTabIndex ?? mapTabIndex;
     appFlows = [
       AppFlow(
         MapPage(
