@@ -83,10 +83,11 @@ class IntroScreen extends StatelessWidget {
                   maxLines: 100,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                  child: LocationRequestButton(),
-                )
+                if (buildConfig.featureFlags.location)
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                    child: LocationRequestButton(),
+                  )
               ],
             ),
           ),

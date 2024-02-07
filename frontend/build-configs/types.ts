@@ -6,6 +6,7 @@ type BuildConfigType = {
 
 export type FeatureFlagsType = {
     verification: boolean
+    location: boolean
 }
 
 export type DeeplLinkingConfig = {
@@ -98,7 +99,8 @@ export type CommonBuildConfigType = {
     disclaimerText: string
     maxCardAmount: number
     activationPath: string
-    deepLinking: DeeplLinkingConfig
+    deepLinking: DeeplLinkingConfig,
+    enableSentry: boolean
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
@@ -107,6 +109,7 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
     buildFeatures: {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
+
     }
 }
 

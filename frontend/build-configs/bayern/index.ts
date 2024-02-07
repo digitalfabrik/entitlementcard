@@ -1,4 +1,4 @@
-import BuildConfigType, { CommonBuildConfigType } from "../types"
+import BuildConfigType, {CommonBuildConfigType} from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
 import {ACTIVATION_PATH} from "../constants";
@@ -68,6 +68,7 @@ export const bayernCommon: CommonBuildConfigType = {
     ],
     featureFlags: {
         verification: true,
+        location: true
     },
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
@@ -91,7 +92,8 @@ export const bayernCommon: CommonBuildConfigType = {
             path: `/${ACTIVATION_PATH}/*`,
             pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
         },
-    }
+    },
+    enableSentry: true
 }
 
 let bayern: BuildConfigType = {

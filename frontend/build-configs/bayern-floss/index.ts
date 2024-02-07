@@ -4,6 +4,11 @@ import bayern, {bayernCommon} from "../bayern";
 let bayernFlossCommon: CommonBuildConfigType = {
     ...bayernCommon,
     appName: "Ehrenamt FLOSS",
+    enableSentry: false,
+    featureFlags: {
+        verification : false,
+        location: false,
+    }
 };
 
 let bayernFloss: BuildConfigType = {
@@ -15,7 +20,7 @@ let bayernFloss: BuildConfigType = {
         buildFeatures: {
             ...bayern.android.buildFeatures,
             excludeLocationPlayServices: true,
-            excludeX86: true
+            excludeX86: true,
         }
     },
     ios: {

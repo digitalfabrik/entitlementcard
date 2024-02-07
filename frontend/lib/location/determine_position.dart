@@ -1,6 +1,5 @@
-import 'package:ehrenamtskarte/environment.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/location/dialogs.dart';
-import 'package:ehrenamtskarte/location/location_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
@@ -79,6 +78,10 @@ Future<RequestedPosition> determinePosition(
   Future<void> Function()? onDisableFeature,
   Future<void> Function()? onEnableFeature,
 }) async {
+  if (!buildConfig.featureFlags.location) {
+    return RequestedPosition.unknown();
+  }
+
   final permission = await checkAndRequestLocationPermission(
     context,
     requestIfNotGranted: requestIfNotGranted,
@@ -90,8 +93,8 @@ Future<RequestedPosition> determinePosition(
     return RequestedPosition.unknown();
   }
 
-  var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
-  position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  var position = await Geolocator.getLastKnownPosition();
+  position ??= await Geolocator.getCurrentPosition();
 
   return RequestedPosition(position);
 }
@@ -107,9 +110,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
   Future<void> Function()? onEnableFeature,
 }) async {
   final t = context.t;
-  final serviceEnabled = EnvironmentConfig.androidFloss
-      ? await isNonGoogleLocationServiceEnabled()
-      : await Geolocator.isLocationServiceEnabled();
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     if (requestIfNotGranted) {
       final bool? result =

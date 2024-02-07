@@ -1,4 +1,4 @@
-import BuildConfigType, { CommonBuildConfigType } from "../types"
+import BuildConfigType, {CommonBuildConfigType} from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
 import {ACTIVATION_PATH} from "../constants";
@@ -68,6 +68,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     ],
     featureFlags: {
         verification: true,
+        location: true
     },
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
@@ -91,7 +92,8 @@ export const nuernbergCommon: CommonBuildConfigType = {
             path: `/${ACTIVATION_PATH}/*`,
             pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
         },
-    }
+    },
+    enableSentry: true
 }
 
 let nuernberg: BuildConfigType = {

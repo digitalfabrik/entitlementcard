@@ -46,7 +46,7 @@ Future<void> main() async {
     return runApp(TranslationProvider(child: SettingsProvider(child: const App())));
   }
 
-  if (isProduction()) {
+  if (isProduction() && buildConfig.enableSentry) {
     runAppWithSentry(run);
   } else {
     run();

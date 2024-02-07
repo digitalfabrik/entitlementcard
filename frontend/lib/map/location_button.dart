@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
@@ -24,6 +25,9 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   Widget build(BuildContext context) {
+    if (!buildConfig.featureFlags.location) {
+      return Container();
+    }
     final theme = Theme.of(context);
     final settings = Provider.of<SettingsModel>(context);
 
