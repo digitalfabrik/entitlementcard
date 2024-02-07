@@ -1,6 +1,5 @@
 {
   "name": "administration",
-  "version": "3.2.3",
   "private": true,
   "dependenciesComments": {
     "typescript": "Keeping on 5.0.x because of current incompatibility of 5.1.x with @typescript-eslint"
@@ -17,6 +16,7 @@
     "@mui/material": "^5.13.6",
     "@zxing/library": "^0.20.0",
     "apollo-upload-client": "^17.0.0",
+    "build-configs": "file:../frontend/build-configs",
     "date-fns": "^2.30.0",
     "graphql": "^16.8.1",
     "localforage": "^1.10.0",
@@ -57,6 +57,7 @@
     "bfj": "^7.0.2",
     "browserslist": "^4.21.9",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "dotenv": "^16.3.1",
@@ -89,6 +90,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "lint": "NODE_ENV=test eslint . && prettier . --check",
+    "ts:check": "tsc --build",
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
     "generate-protobuf": "protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=./node_modules/.bin/protoc-gen-es ../specs/card.proto",

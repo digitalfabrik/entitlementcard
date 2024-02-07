@@ -2,6 +2,8 @@ when: << pipeline.parameters.run_delivery_beta_native >>
 jobs:
   - bump_version:
       prepare_delivery: true
+      context:
+        - deliverino
   - check_frontend
   - build_android:
       name: build_android_bayern

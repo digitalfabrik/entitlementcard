@@ -23,6 +23,9 @@ steps:
       name: Test
       command: npm run test -- --maxWorkers=2
   - run:
+      name: Typescript
+      command: npm run ts:check
+  - run:
       name: Build
       command: npm run build
   - save_cache:

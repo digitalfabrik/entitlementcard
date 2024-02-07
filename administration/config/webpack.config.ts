@@ -1,6 +1,7 @@
 // This file originally stems from a CRA-eject.
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -14,18 +15,15 @@ import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
+import { DeeplLinkingConfig } from 'build-configs'
 import getClientEnvironment from './env'
 import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
 import createEnvironmentHash from './webpack/persistentCache/createEnvironmentHash'
+import getDeepLinkingConfigs from "../src/project-configs/getDeeplinkingConfigs";
 
 // No types exists:
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
-
-const ForkTsCheckerWebpackPlugin =
-  process.env.TSC_COMPILE_ON_ERROR === 'true'
-    ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
-    : require('react-dev-utils/ForkTsCheckerWebpackPlugin')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
@@ -50,6 +48,45 @@ const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10
 const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 
+// https://developer.android.com/training/app-links/verify-android-applinks#web-assoc
+const generateAssetLinks = (config: DeeplLinkingConfig) => {
+  return JSON.stringify(
+    [
+      {
+        relation: ['delegate_permission/common.handle_all_urls'],
+        target: {
+          namespace: 'android_app',
+          package_name: config.android.applicationId,
+          sha256_cert_fingerprints: [config.android.sha256CertFingerprint],
+        },
+      },
+    ],
+    null,
+    2
+  )
+}
+
+const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
+  return JSON.stringify(
+    {
+      applinks: {
+        apps: [],
+        details: [
+          {
+            appID: config.ios.appleAppSiteAssociationAppId,
+            components: [{
+              "/": config.ios.path,
+              comment: config.ios.pathComment
+            }],
+          },
+        ],
+      },
+    },
+    null,
+    2
+  )
+}
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.Configuration {
@@ -57,6 +94,9 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
   const isEnvProduction = webpackEnv === 'production'
 
   const paths = getPaths()
+  const distDirectory = path.resolve(__dirname, `../build/`)
+  const assetLinksPreset = path.resolve(__dirname, 'assetlinks.json')
+  const appleAppSiteAssociationPreset = path.resolve(__dirname, 'apple-app-site-association')
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -457,44 +497,19 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
           }
         },
       }),
-      // TypeScript type checking
-      new ForkTsCheckerWebpackPlugin({
-        async: isEnvDevelopment,
-        typescript: {
-          configOverwrite: {
-            compilerOptions: {
-              sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-              skipLibCheck: true,
-              inlineSourceMap: false,
-              declarationMap: false,
-              noEmit: true,
-              incremental: true,
-              tsBuildInfoFile: paths.appTsBuildInfoFile,
-            },
-          },
-          context: paths.appPath,
-          diagnosticOptions: {
-            syntactic: true,
-          },
-          mode: 'write-references',
-          // profile: true,
-        },
-        issue: {
-          // This one is specifically to match during CI tests,
-          // as micromatch doesn't match
-          // '../cra-template-typescript/template/src/App.tsx'
-          // otherwise.
-          include: [{ file: '../**/src/**/*.{ts,tsx}' }, { file: '**/src/**/*.{ts,tsx}' }],
-          exclude: [
-            { file: '**/src/**/__tests__/**' },
-            { file: '**/src/**/?(*.){spec|test}.*' },
-            { file: '**/src/setupProxy.*' },
-            { file: '**/src/setupTests.*' },
-          ],
-        },
-        logger: {
-          infrastructure: 'silent',
-        },
+      new CopyPlugin({
+        patterns: [
+          ...getDeepLinkingConfigs().map(config => ({
+            from: assetLinksPreset,
+            to: `${distDirectory}/${config.projectName}`,
+            transform: () => generateAssetLinks(config),
+          })),
+          ...getDeepLinkingConfigs().map(config => ({
+            from: appleAppSiteAssociationPreset,
+            to: `${distDirectory}/${config.projectName}`,
+            transform: () => generateAppleAppSiteAssociation(config),
+          })),
+        ],
       }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
