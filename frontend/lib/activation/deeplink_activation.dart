@@ -80,23 +80,21 @@ class DeepLinkActivation extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: status == DeepLinkActivationStatus.invalidLink
-                          ? null
-                          : Text(t.deeplinkActivation.description,
-                              style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
-                    ),
-                    Center(
-                        child: cardInfo != null
-                            ? IdCard(
-                                cardInfo: cardInfo,
-                                region: region != null ? Region(region.prefix, region.name) : null,
-                                // We trust the backend to have checked for expiration.
-                                isExpired: false,
-                                isNotYetValid: false,
-                              )
-                            : null),
+                    if (status != DeepLinkActivationStatus.invalidLink)
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(t.deeplinkActivation.description,
+                            style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
+                      ),
+                    if (cardInfo != null)
+                      Center(
+                          child: IdCard(
+                        cardInfo: cardInfo,
+                        region: region != null ? Region(region.prefix, region.name) : null,
+                        // We trust the backend to have checked for expiration.
+                        isExpired: false,
+                        isNotYetValid: false,
+                      )),
                     Padding(
                       padding: const EdgeInsets.all(32),
                       child: Column(
