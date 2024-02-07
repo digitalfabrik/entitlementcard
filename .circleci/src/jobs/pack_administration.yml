@@ -16,3 +16,4 @@ steps:
       root: /tmp/artifacts
       paths:
         - debs/*.deb
+  - notify

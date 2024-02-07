@@ -37,3 +37,4 @@ steps:
         fvm flutter test pubs/df_build_config
         fvm flutter test pubs/df_protobuf
       working_directory: ~/project/frontend/
+  - notify

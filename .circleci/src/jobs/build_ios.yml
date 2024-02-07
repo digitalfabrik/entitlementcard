@@ -37,3 +37,4 @@ steps:
       root: ~/
       paths:
         - << parameters.buildConfig >>.ipa
+  - notify

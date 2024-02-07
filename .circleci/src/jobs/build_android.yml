@@ -56,3 +56,4 @@ steps:
         - << parameters.buildConfig >>.aab
   - store_artifacts:
       path: ~/attached_workspace/
+  - notify
