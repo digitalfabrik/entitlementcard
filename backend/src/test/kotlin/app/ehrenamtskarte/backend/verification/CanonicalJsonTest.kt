@@ -118,8 +118,8 @@ internal class CanonicalJsonTest {
 
     @Test
     fun objectInArray() {
-        val input = listOf<Any?>(mapOf("b" to 123, 1 to "string"))
-        val expected = """[{"1":"string","b":123}]"""
+        val input = listOf<Any?>(mapOf("b" to 123, "a" to "string"))
+        val expected = """[{"a":"string","b":123}]"""
         val actual = CanonicalJson.serializeToString(input)
 
         assertEquals(expected, actual)
@@ -175,14 +175,5 @@ internal class CanonicalJsonTest {
         val input = object { val unknown = "unknown" }
 
         assertFailsWith<Error> { CanonicalJson.serializeToString(input) }
-    }
-
-    @Test
-    fun objectWithNumberKey() {
-        val input = mapOf(42 to "foo")
-        val expected = """{"42":"foo"}"""
-        val actual = CanonicalJson.serializeToString(input)
-
-        assertEquals(expected, actual)
     }
 }

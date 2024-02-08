@@ -89,6 +89,15 @@ class CanonicalJson {
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
         private fun Int.isSafeInteger() = this >= lowestSafeInt && this <= highestSafeInt
 
+        /**
+         * Taken & adjusted from https://github.com/erdtman/canonicalize/blob/HEAD/lib/canonicalize.js
+         * Under Apache 2.0 License
+         *
+         * @param o one of null, any "atomic" kotlin object, a collection, or a map
+         * @return A serialization of the passed object according to [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785).
+         * @throws Error if a non JSON serializable object is passed to the function (instead of returning undefined).
+         * Especially, in the case of NaN or infinite number values.
+         */
         fun serializeToString(o: Any?): String {
             return when (o) {
                 null -> "null"
@@ -97,7 +106,9 @@ class CanonicalJson {
                 is Int -> if (o.isSafeInteger()) o.toString() else throw Error("Number cannot safely parsed to JS Integer")
                 is Collection<*> -> o.joinToString(",", "[", "]") { serializeToString(it) }
                 is Map<*, *> -> {
-                    o.mapKeys { it.key.toString() }.toSortedMap(Comparator.naturalOrder()).entries.map {
+                    o.mapKeys {
+                        if (it.key is String) it.key.toString() else throw Error("Map key should be of type String.")
+                    }.toSortedMap(Comparator.naturalOrder()).entries.map {
                         return@map "\"${it.key}\":${serializeToString(it.value)}"
                     }.joinToString(",", "{", "}")
                 }
