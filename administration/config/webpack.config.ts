@@ -1,5 +1,6 @@
 // This file originally stems from a CRA-eject.
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import { DeeplLinkingConfig } from 'build-configs'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
@@ -15,12 +16,11 @@ import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
-import { DeeplLinkingConfig } from 'build-configs'
+import getDeepLinkingConfigs from '../src/project-configs/getDeeplinkingConfigs'
 import getClientEnvironment from './env'
 import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
 import createEnvironmentHash from './webpack/persistentCache/createEnvironmentHash'
-import getDeepLinkingConfigs from "../src/project-configs/getDeeplinkingConfigs";
 
 // No types exists:
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
@@ -74,10 +74,12 @@ const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
         details: [
           {
             appID: config.ios.appleAppSiteAssociationAppId,
-            components: [{
-              "/": config.ios.path,
-              comment: config.ios.pathComment
-            }],
+            components: [
+              {
+                '/': config.ios.path,
+                comment: config.ios.pathComment,
+              },
+            ],
           },
         ],
       },

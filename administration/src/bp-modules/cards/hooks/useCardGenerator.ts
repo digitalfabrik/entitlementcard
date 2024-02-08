@@ -28,13 +28,23 @@ const useCardGenerator = (region: Region) => {
     try {
       setState(CardActivationState.loading)
 
-      const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
+      const dynamicCodes = cardBlueprints.map(cardBlueprint => {
+        if (projectConfig.activityLogConfig) {
+          new ActivityLog(cardBlueprint).saveToSessionStorage()
+        }
+        return cardBlueprint.generateActivationCode()
+      })
+      const staticCodes = projectConfig.staticQrCodesEnabled
+        ? cardBlueprints.map(cardBlueprints => {
+            return cardBlueprints.generateStaticVerificationCode()
+          })
+        : []
 
-      const codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
+      const pdfDataUri = await generatePdf(dynamicCodes, staticCodes, cardBlueprints, region, projectConfig.pdf)
 
-      const pdfDataUri = await generatePdf(codes, cardBlueprints, region, projectConfig.pdf)
+      const codes = [...dynamicCodes, ...staticCodes]
+      await createCards(client, projectConfig.projectId, codes, region)
 
-      cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
       setState(CardActivationState.finished)
     } catch (e) {

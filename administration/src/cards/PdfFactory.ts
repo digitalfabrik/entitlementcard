@@ -1,10 +1,11 @@
 import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
 
-import { QrCode } from '../generated/card_pb'
+import { DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
+import { uint8ArrayToBase64 } from '../util/base64'
 import CardBlueprint from './CardBlueprint'
-import { CreateCardsResult } from './createCards'
+import hashCardInfo from './hashCardInfo'
 import pdfFormElement from './pdf/PdfFormElement'
 import pdfQrCodeElement from './pdf/PdfQrCodeElement'
 import pdfTextElement from './pdf/PdfTextElement'
@@ -19,7 +20,6 @@ export class PDFError extends Error {
 async function fillContentAreas(
   doc: PDFDocument,
   templatePage: PDFPage,
-  cardInfoHashBase64: string,
   dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
   staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
   region: Region,
@@ -36,9 +36,9 @@ async function fillContentAreas(
     pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
       pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode })
     )
-  } else if (pdfConfig.elements?.staticVerificationQrCodes) {
-    throw Error('To create this PDF a static QR-Code is required. However, it seems to be missing.')
   }
+
+  const cardInfoHash = await hashCardInfo(dynamicCode.value.info!, dynamicCode.value.pepper!)
 
   const form = doc.getForm()
   pdfConfig.elements?.form?.forEach(configOptions =>
@@ -49,7 +49,7 @@ async function fillContentAreas(
       info: dynamicCode.value.info!,
       region: region,
       cardBlueprint,
-      cardInfoHash: cardInfoHashBase64,
+      cardInfoHash: uint8ArrayToBase64(cardInfoHash),
     })
   )
 
@@ -60,13 +60,14 @@ async function fillContentAreas(
       info: dynamicCode.value.info!,
       region: region,
       cardBlueprint,
-      cardInfoHash: cardInfoHashBase64,
+      cardInfoHash: uint8ArrayToBase64(cardInfoHash),
     })
   )
 }
 
 export async function generatePdf(
-  codes: CreateCardsResult[],
+  dynamicCodes: DynamicActivationCode[],
+  staticCodes: StaticVerificationCode[],
   cardBlueprints: CardBlueprint[],
   region: Region,
   pdfConfig: PdfConfig
@@ -79,10 +80,13 @@ export async function generatePdf(
         ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
         : null
 
-    for (let k = 0; k < codes.length; k++) {
-      const dynamicCode = codes[k].dynamicActivationCode
-      const staticCode = codes[k].staticVerificationCode
-      const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
+    if (staticCodes.length !== 0 && dynamicCodes.length !== staticCodes.length) {
+      throw new PDFError('Activation codes count does not match static codes count.')
+    }
+
+    for (let k = 0; k < dynamicCodes.length; k++) {
+      const dynamicCode = dynamicCodes[k]
+      const staticCode = staticCodes?.at(k)
       const cardBlueprint = cardBlueprints[k]
 
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
@@ -92,7 +96,6 @@ export async function generatePdf(
       await fillContentAreas(
         doc,
         page,
-        cardInfoHashBase64,
         {
           case: 'dynamicActivationCode',
           value: dynamicCode,

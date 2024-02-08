@@ -1,0 +1,3 @@
+mutation addCards($project: String!, $cards: [CardGenerationModelInput!]!) {
+  success: addCards(project: $project, cards: $cards)
+}

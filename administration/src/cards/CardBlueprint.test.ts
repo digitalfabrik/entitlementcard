@@ -46,5 +46,6 @@ describe('CardBlueprint', () => {
         },
       },
     })
+    expect(card.hasValidSize()).toBe(true)
   })
 })

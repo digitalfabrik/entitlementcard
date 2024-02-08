@@ -112,6 +112,8 @@ type DynamicActivationCodeResult {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Stores a batch of new digital entitlementcards"
+  addCards(cards: [CardGenerationModelInput!]!, project: String!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Changes an administrator's password"
@@ -119,7 +121,7 @@ type Mutation {
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard and returns it"
-  createCards(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -365,6 +367,15 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CardGenerationModelInput {
+  activationSecretBase64: String
+  cardExpirationDay: Long
+  cardInfoHashBase64: String!
+  cardStartDay: Long
+  codeType: CodeType!
+  regionId: Int!
 }
 
 input CardVerificationModelInput {
