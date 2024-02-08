@@ -50,9 +50,13 @@ steps:
   - run:
       name: Move aab
       command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+  - run:
+      name: Move apk
+      command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:
         - << parameters.buildConfig >>.aab
+        - << parameters.buildConfig >>.apk
   - store_artifacts:
       path: ~/attached_workspace/
