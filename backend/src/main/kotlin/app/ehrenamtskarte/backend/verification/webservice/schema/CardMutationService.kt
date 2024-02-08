@@ -8,7 +8,6 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.PEPPER_LENGTH
@@ -21,7 +20,6 @@ import app.ehrenamtskarte.backend.verification.webservice.QRCodeUtil
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.ActivationState
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationResultModel
-import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGenerationModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.StaticVerificationCodeResult
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -155,61 +153,6 @@ class CardMutationService {
         return activationCodes
     }
 
-    @GraphQLDescription("Stores a batch of new digital entitlementcards")
-    fun addCards(dfe: DataFetchingEnvironment, project: String, cards: List<CardGenerationModel>): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
-        val backendConfig = context.backendConfiguration
-        val projectConfig = backendConfig.projects.find { it.id == project }
-            ?: throw ProjectNotFoundException(project)
-        val jwtPayload = context.enforceSignedIn()
-        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
-        transaction {
-            for (card in cards) {
-                if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
-                    throw ForbiddenException()
-                }
-                if (!isCodeTypeValid(card)) {
-                    throw InvalidCodeTypeException()
-                }
-                val decodedCardInfoHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-                if (!isCardHashValid(decodedCardInfoHash)) {
-                    throw InvalidCardHashException()
-                }
-                val activationSecret =
-                    card.activationSecretBase64?.let {
-                        val decodedRawActivationSecret = Base64.getDecoder().decode(it)
-                        CardActivator.hashActivationSecret(decodedRawActivationSecret)
-                    }
-
-                CardRepository.insert(
-                    decodedCardInfoHash,
-                    activationSecret,
-                    card.cardExpirationDay,
-                    card.regionId,
-                    user.id.value,
-                    card.codeType,
-                    card.cardStartDay
-                )
-            }
-        }
-
-        val regionId = user.regionId?.value
-        if (regionId != null) {
-            val numberOfDynamicCardsCreated = cards.count { it.codeType === CodeType.DYNAMIC }
-            val numberOfStaticCardsCreated = cards.size - numberOfDynamicCardsCreated
-            Matomo.trackCreateCards(
-                projectConfig,
-                context.request,
-                dfe.field.name,
-                regionId,
-                numberOfDynamicCardsCreated,
-                numberOfStaticCardsCreated
-            )
-        }
-
-        return true
-    }
-
     @GraphQLDescription("Activate a dynamic entitlement card")
     fun activateCard(
         project: String,
@@ -266,15 +209,5 @@ class CardMutationService {
             activationResult.activationState != ActivationState.failed
         )
         return activationResult
-    }
-
-    private fun isCodeTypeValid(card: CardGenerationModel): Boolean {
-        return (card.codeType == CodeType.STATIC && card.activationSecretBase64 == null) ||
-            (card.codeType == CodeType.DYNAMIC && card.activationSecretBase64 != null)
-    }
-
-    private fun isCardHashValid(cardHash: ByteArray): Boolean {
-        // we expect a SHA-256 hash, thus the byte array should be of size 256/8=32
-        return cardHash.size == 32
     }
 }

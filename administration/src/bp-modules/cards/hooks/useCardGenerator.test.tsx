@@ -7,6 +7,7 @@ import { ReactElement } from 'react'
 import CardBlueprint from '../../../cards/CardBlueprint'
 import { PDFError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError } from '../../../cards/createCards'
+import { DynamicActivationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
@@ -45,10 +46,20 @@ describe('useCardGenerator', () => {
     new CardBlueprint('Thea Test', bayernConfig.card, [region]),
     new CardBlueprint('Thea Test', bayernConfig.card, [region]),
   ]
+  const codes = [
+    {
+      dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
+      dynamicActivationCode: new DynamicActivationCode({ info: cards[0].generateCardInfo() }),
+    },
+    {
+      dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
+      dynamicActivationCode: new DynamicActivationCode({ info: cards[1].generateCardInfo() }),
+    },
+  ]
 
   it('should successfully create multiple cards', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-
+    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
     act(() => result.current.setCardBlueprints(cards))
@@ -85,6 +96,7 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message for failed pdf generation', async () => {
+    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     mocked(generatePdf).mockImplementationOnce(() => {
       throw new PDFError('error')
     })
