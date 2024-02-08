@@ -310,6 +310,7 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
+            - install_protobuf_linux
             - restore_cache:
                 key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - restore_cache:
