@@ -7,8 +7,8 @@ import kotlin.math.pow
 
 class CanonicalJson {
     companion object {
-        private val lowestSafeInt = -(2.0.pow(53) - 1)
-        private val highestSafeInt = -lowestSafeInt
+        private val highestSafeInt = 2.0.pow(53) - 1
+        private val lowestSafeInt = -highestSafeInt
 
         private fun GeneratedMessageV3.assertOnlyKnownFields() {
             if (this.unknownFields.serializedSize > 0) {
@@ -87,7 +87,7 @@ class CanonicalJson {
         }
 
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
-        private fun Int.isSafeInteger() = this > lowestSafeInt && this < highestSafeInt
+        private fun Int.isSafeInteger() = this >= lowestSafeInt && this <= highestSafeInt
 
         fun serializeToString(o: Any?): String {
             return when (o) {
