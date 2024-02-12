@@ -45,6 +45,9 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm:2.3.4")
     implementation("io.ktor:ktor-client-cio-jvm:2.3.4")
 
+    // Use the Kotlin json serialisation library
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
@@ -72,7 +75,7 @@ dependencies {
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("com.google.zxing:core:3.5.2")
+    implementation("com.google.zxing:core:3.5.2") // QR-Codes
 }
 
 ktlint {

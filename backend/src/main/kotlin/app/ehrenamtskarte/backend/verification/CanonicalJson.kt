@@ -3,6 +3,11 @@ package app.ehrenamtskarte.backend.verification
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.GeneratedMessageV3
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlin.math.pow
 
 class CanonicalJson {
@@ -93,28 +98,33 @@ class CanonicalJson {
          * Taken & adjusted from https://github.com/erdtman/canonicalize/blob/HEAD/lib/canonicalize.js
          * Under Apache 2.0 License
          *
-         * @param o one of null, any "atomic" kotlin object, a collection, or a map
+         * @param o one of null, any primitive kotlin object, a collection, or a map
          * @return A serialization of the passed object according to [RFC 8785 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785).
          * @throws Error if a non JSON serializable object is passed to the function (instead of returning undefined).
          * Especially, in the case of NaN or infinite number values.
          */
         fun serializeToString(o: Any?): String {
-            return when (o) {
-                null -> "null"
-                is String -> "\"${o}\""
-                is Boolean -> o.toString()
-                is Int -> if (o.isSafeInteger()) o.toString() else throw Error("Number cannot safely parsed to JS Integer")
-                is Collection<*> -> o.joinToString(",", "[", "]") { serializeToString(it) }
-                is Map<*, *> -> {
-                    o.mapKeys {
-                        if (it.key is String) it.key.toString() else throw Error("Map key should be of type String.")
-                    }.toSortedMap(Comparator.naturalOrder()).entries.map {
-                        return@map "\"${it.key}\":${serializeToString(it.value)}"
-                    }.joinToString(",", "{", "}")
-                }
+            fun buildJson(json: Any?): JsonElement {
+                return when (json) {
+                    null -> JsonNull
+                    is String -> JsonPrimitive(json)
+                    is Boolean -> JsonPrimitive(json)
+                    is Int -> if (json.isSafeInteger()) JsonPrimitive(json) else throw Error("Number cannot safely parsed to JS Integer")
+                    is Collection<*> -> buildJsonArray { json.forEach { add(buildJson(it)) } }
+                    is Map<*, *> -> {
+                        buildJsonObject {
+                            json.mapKeys {
+                                if (it.key is String) it.key.toString() else throw Error("Map key should be of type String.")
+                            }.toSortedMap(Comparator.naturalOrder()).forEach { (key, value) ->
+                                put(key, buildJson(value))
+                            }
+                        }
+                    }
 
-                else -> throw Error("Invalid argument of type ${o::class.simpleName} passed to serializeToCanonicalJson.")
+                    else -> throw Error("Invalid argument of type ${json::class.simpleName} passed to serializeToCanonicalJson.")
+                }
             }
+            return buildJson(o).toString()
         }
     }
 }

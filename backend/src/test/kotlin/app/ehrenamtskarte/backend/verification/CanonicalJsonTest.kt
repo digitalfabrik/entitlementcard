@@ -145,8 +145,8 @@ internal class CanonicalJsonTest {
 
     @Test
     fun objectWithOneProperty() {
-        val input = mapOf("hello" to "world")
-        val expected = """{"hello":"world"}"""
+        val input = mapOf("he\\llo" to "world")
+        val expected = """{"he\\llo":"world"}"""
         val actual = CanonicalJson.serializeToString(input)
 
         assertEquals(expected, actual)
@@ -172,8 +172,34 @@ internal class CanonicalJsonTest {
 
     @Test
     fun unknownType() {
-        val input = object { val unknown = "unknown" }
+        val input = object {}
 
         assertFailsWith<Error> { CanonicalJson.serializeToString(input) }
+    }
+
+    @Test
+    fun sortsAndEscapesProperly() {
+        // taken from the rfc: https://www.rfc-editor.org/rfc/rfc8785#section-3.2.3
+        val input = mapOf(
+            "\u20ac" to "Euro Sign",
+            "\r" to "Carriage Return",
+            "\ufb33" to "Hebrew Letter Dalet With Dagesh",
+            "1" to "One",
+            "\ud83d\ude00" to "Emoji to Grinning Face",
+            "\u0080" to "Control",
+            "\u00f6" to "Latin Small Letter O With Diaeresis"
+        )
+        val expected = """{
+            "\r":"Carriage Return",
+            "1":"One",
+            "${"\u0080"}":"Control",
+            "${"\u00f6"}":"Latin Small Letter O With Diaeresis",
+            "${"\u20ac"}":"Euro Sign",
+            "${"\ud83d\ude00"}":"Emoji to Grinning Face",
+            "${"\ufb33"}":"Hebrew Letter Dalet With Dagesh"
+        }""".split("\n").joinToString(separator = "") { it.trim() }
+        val actual = CanonicalJson.serializeToString(input)
+
+        assertEquals(expected, actual)
     }
 }
