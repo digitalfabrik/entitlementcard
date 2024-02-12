@@ -201,6 +201,7 @@ jobs:
             - install_dart_linux
             - install_protobuf_linux
             - prepare_workspace
+            - restore_environment_variables
             - run:
                 command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
                 name: Install node dependencies on root level
@@ -208,7 +209,7 @@ jobs:
                 npm run generate-graphql
                 npm run generate-protobuf
             - run:
-                command: npm run build
+                command: npm run build --version_name=${NEW_VERSION_NAME}
                 name: Build
             - save_cache:
                 key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
@@ -696,7 +697,7 @@ jobs:
                         command: |
                             echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/<< parameters.bundle >>/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
                     - run:
                         command: |

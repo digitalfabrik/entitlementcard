@@ -27,7 +27,7 @@ steps:
               echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
               echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
 # will be enabled with #1271
-#              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/<< parameters.bundle >>/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+#              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
 #        - run:
 #            name: Install package via webhook
 #            command: |
@@ -40,7 +40,7 @@ steps:
             command: |
               echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/<< parameters.bundle >>/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
         - run:
             name: Install package via webhook
             command: |
