@@ -1,6 +1,6 @@
 docker:
   - image: cimg/node:19.1.0
-working_directory: ~/project/administration
+working_directory: ~/project
 steps:
   - checkout:
       path: ~/project
@@ -11,19 +11,19 @@ steps:
   - install_protobuf_linux
   - prepare_workspace
   - restore_environment_variables
+  - restore_npm_cache
   - run:
-      name: Install node dependencies on root level
-      command: "cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
-  - run: |
-      npm run generate-graphql
-      npm run generate-protobuf
+      name: Generate GraphQL
+      command: npm run generate-graphql
+      working_directory: ~/project/administration
+  - run:
+      name: Generate Protobuf
+      command: npm run generate-protobuf
+      working_directory: ~/project/administration
   - run:
       name: Build
       command: npm run build --version_name=${NEW_VERSION_NAME}
-  - save_cache:
-      paths:
-        - node_modules
-      key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      working_directory: ~/project/administration
   - store_artifacts:
       path: ~/attached_workspace/build
   - persist_to_workspace:

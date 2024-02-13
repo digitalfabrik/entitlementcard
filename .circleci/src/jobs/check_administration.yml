@@ -1,32 +1,30 @@
 docker:
   - image: cimg/node:19.1.0
-environment:
-working_directory: ~/project/administration
+working_directory: ~/project
 steps:
   - checkout:
       path: ~/project
-  - restore_cache:
-      keys:
-        - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
   - install_dart_linux
   - install_protobuf_linux
   - prepare_workspace
+  - restore_npm_cache
   - run:
-      name: Install node dependencies on root level
-      command: "cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
-  - run: |
-      npm run generate-graphql
-      npm run generate-protobuf
+      name: Generate GraphQL
+      command: npm run generate-graphql
+      working_directory: ~/project/administration
+  - run:
+      name: Generate Protobuf
+      command: npm run generate-protobuf
+      working_directory: ~/project/administration
   - run:
       name: Lint
       command: npm run lint
+      working_directory: ~/project/administration
   - run:
       name: Test
       command: npm run test -- --maxWorkers=2
+      working_directory: ~/project/administration
   - run:
       name: Typescript
       command: npm run ts:check
-  - save_cache:
-      paths:
-        - ~/node_modules
-      key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
+      working_directory: ~/project/administration

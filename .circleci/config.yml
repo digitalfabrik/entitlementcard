@@ -143,6 +143,27 @@ commands:
             - run:
                 command: cat ~/attached_workspace/environment_variables >> ${BASH_ENV}
                 name: Restore environment variables
+    restore_gradle_caches:
+        description: Restores and saves the gradle caches for backend.
+        steps:
+            - restore_cache:
+                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - restore_cache:
+                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+    restore_npm_cache:
+        description: Restores and saves the node_modules directories of the npm workspaces.
+        steps:
+            - restore_cache:
+                keys:
+                    - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+            - run:
+                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
+                name: Install node dependencies for npm workspace
+            - save_cache:
+                key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+                paths:
+                    - ~/node_modules
+                    - ~/administration/node_modules
     restore_pods:
         description: Restores and saves the cocoa pods cache.
         steps:
@@ -202,26 +223,26 @@ jobs:
             - install_protobuf_linux
             - prepare_workspace
             - restore_environment_variables
+            - restore_npm_cache
             - run:
-                command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
-                name: Install node dependencies on root level
-            - run: |
-                npm run generate-graphql
-                npm run generate-protobuf
+                command: npm run generate-graphql
+                name: Generate GraphQL
+                working_directory: ~/project/administration
+            - run:
+                command: npm run generate-protobuf
+                name: Generate Protobuf
+                working_directory: ~/project/administration
             - run:
                 command: npm run build --version_name=${NEW_VERSION_NAME}
                 name: Build
-            - save_cache:
-                key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-                paths:
-                    - node_modules
+                working_directory: ~/project/administration
             - store_artifacts:
                 path: ~/attached_workspace/build
             - persist_to_workspace:
                 paths:
                     - administration/build
                 root: ~/project
-        working_directory: ~/project/administration
+        working_directory: ~/project
     build_android:
         docker:
             - image: cimg/android:2022.09.2-node
@@ -453,36 +474,34 @@ jobs:
     check_administration:
         docker:
             - image: cimg/node:19.1.0
-        environment: null
         steps:
             - checkout:
                 path: ~/project
-            - restore_cache:
-                keys:
-                    - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
             - install_dart_linux
             - install_protobuf_linux
             - prepare_workspace
+            - restore_npm_cache
             - run:
-                command: cd .. && [ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.
-                name: Install node dependencies on root level
-            - run: |
-                npm run generate-graphql
-                npm run generate-protobuf
+                command: npm run generate-graphql
+                name: Generate GraphQL
+                working_directory: ~/project/administration
+            - run:
+                command: npm run generate-protobuf
+                name: Generate Protobuf
+                working_directory: ~/project/administration
             - run:
                 command: npm run lint
                 name: Lint
+                working_directory: ~/project/administration
             - run:
                 command: npm run test -- --maxWorkers=2
                 name: Test
+                working_directory: ~/project/administration
             - run:
                 command: npm run ts:check
                 name: Typescript
-            - save_cache:
-                key: v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-                paths:
-                    - ~/node_modules
-        working_directory: ~/project/administration
+                working_directory: ~/project/administration
+        working_directory: ~/project
     check_backend:
         docker:
             - image: cimg/openjdk:17.0.6-node
@@ -687,7 +706,7 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            echo "|1|iikuvSrIo3wkj+EqUgLRMsAq6yk=|r9bSjkawWFa94b45qE/se5Oio5k= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED3MwobbCs+ENMLXdyqlJb3bJ26TuIYt977TA3NrN66" >> known_hosts
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> known_hosts
                             echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
                         name: SFTP upload package
             - unless:
@@ -695,7 +714,7 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            echo "|1|dkYQrdGB1QML0o+POL3QzAkBbek=|b4Tm0Ymh82UKyZPJfVKy4t+MFV8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONuARu18Fktz+j4QosI+nRqgMnFOMgE7OZLuTOwgZ0k" >> known_hosts
+                            echo ${APT_FINGERPRINT_STAGING} >> known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
