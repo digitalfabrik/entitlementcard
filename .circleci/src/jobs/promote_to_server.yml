@@ -1,0 +1,27 @@
+docker:
+  - image: cimg/base:2022.09
+parameters:
+  bundle:
+    description: Defines which bundle should be promoted to production server.
+    enum: ["administration" , "backend"]
+    type: enum
+steps:
+  - run:
+      name: Install Curl
+      command: |
+        sudo apt update
+        sudo apt install curl -y
+  - prepare_workspace
+  - add_ssh_keys:
+      fingerprints:
+        - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+  - run:
+      name: Transfer artifacts to production
+      command: |
+              echo ${APT_FINGERPRINT_STAGING} >> known_hosts_staging
+              echo ${APT_FINGERPRINT_PRODUCTION} >> known_hosts_production
+              scp - -o UserKnownHostsFile=known_hosts_staging -o UserKnownHostsFile=known_hosts_production ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/eak-<< parameters.bundle >>*.deb ci@entitlementcard.tuerantuer.org:/local-apt-repository/
+#        - run:
+#            name: Install package via webhook
+#            command: |
+#              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK

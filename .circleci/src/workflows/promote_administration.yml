@@ -1,0 +1,7 @@
+when: << pipeline.parameters.run_promote_administration >>
+jobs:
+  - promote_to_server:
+      name: promote_administration
+      bundle: administration
+      context:
+        - credentials-ehrenamtskarte

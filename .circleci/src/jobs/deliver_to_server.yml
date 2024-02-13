@@ -26,12 +26,11 @@ steps:
             command: |
               echo ${APT_FINGERPRINT_PRODUCTION} >> known_hosts
               echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-# will be enabled with #1271
-#              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-#        - run:
-#            name: Install package via webhook
-#            command: |
-#              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+              sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+        - run:
+            name: Install package via webhook
+            command: |
+              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
   - unless:
       condition: << parameters.production >>
       steps:

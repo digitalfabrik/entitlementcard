@@ -32,3 +32,6 @@ parameters:
   run_promote_native:
     default: false
     type: boolean
+  run_promote_administration:
+    default: false
+    type: boolean
