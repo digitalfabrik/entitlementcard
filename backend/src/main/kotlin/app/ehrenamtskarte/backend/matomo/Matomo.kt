@@ -88,18 +88,18 @@ object Matomo {
             .also { attachRequestInformation(it, request) }
     }
 
-    fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, numberOfCards: Int, staticCardsGenerated: Boolean) {
+    fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, numberOfDynamicCards: Int, numberOfStaticCards: Int) {
         if (projectConfig.matomo == null) return
 
-        if (numberOfCards > 0 && staticCardsGenerated) {
+        if (numberOfDynamicCards > 0 && numberOfStaticCards > 0) {
             sendBulkTrackingRequest(
                 projectConfig.matomo,
                 listOf(
-                    buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfCards),
-                    buildCardsTrackingRequest(request, regionId, query, CodeType.DYNAMIC, numberOfCards)
+                    buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfStaticCards),
+                    buildCardsTrackingRequest(request, regionId, query, CodeType.DYNAMIC, numberOfDynamicCards)
                 )
             )
-        } else if (numberOfCards > 0) {
+        } else if (numberOfDynamicCards > 0) {
             sendTrackingRequest(
                 projectConfig.matomo,
                 buildCardsTrackingRequest(
@@ -107,7 +107,7 @@ object Matomo {
                     regionId,
                     query,
                     CodeType.DYNAMIC,
-                    numberOfCards
+                    numberOfDynamicCards
                 )
             )
         }

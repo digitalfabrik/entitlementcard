@@ -23,6 +23,7 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardActiv
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardCreationResultModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardGenerationModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.DynamicActivationCodeResult
+import app.ehrenamtskarte.backend.verification.webservice.schema.types.StaticVerificationCodeResult
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
 import extensionStartDayOrNull
@@ -41,29 +42,28 @@ class CardMutationService {
 
     private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int): DynamicActivationCodeResult {
         val secureRandom = SecureRandom.getInstanceStrong()
+        val pepper = ByteArray(PEPPER_LENGTH)
+        secureRandom.nextBytes(pepper)
+
+        val rawActivationSecret = ByteArray(activationSecretLength)
+        secureRandom.nextBytes(rawActivationSecret)
+
+        val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+        val hashedCardInfo = cardInfo.hash(pepper)
+        val dynamicActivationCode = Card.DynamicActivationCode.newBuilder()
+            .setInfo(cardInfo)
+            .setPepper(ByteString.copyFrom(pepper))
+            .setActivationSecret(ByteString.copyFrom(rawActivationSecret))
+            .build()
+
+        if (!QRCodeUtil.isContentLengthValid(dynamicActivationCode)) {
+            throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.DYNAMIC)
+        }
+
+        if (!cardInfo.extensions.hasExtensionRegion()) {
+            throw InvalidCardHashException()
+        }
         return transaction {
-            val pepper = ByteArray(PEPPER_LENGTH)
-            secureRandom.nextBytes(pepper)
-
-            val rawActivationSecret = ByteArray(activationSecretLength)
-            secureRandom.nextBytes(rawActivationSecret)
-
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
-            val hashedCardInfo = cardInfo.hash(pepper)
-            val dynamicActivationCode = Card.DynamicActivationCode.newBuilder()
-                .setInfo(cardInfo)
-                .setPepper(ByteString.copyFrom(pepper))
-                .setActivationSecret(ByteString.copyFrom(rawActivationSecret))
-                .build()
-
-            if (!QRCodeUtil.isContentLengthValid(dynamicActivationCode)) {
-                throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.DYNAMIC)
-            }
-
-            if (!cardInfo.extensions.hasExtensionRegion()) {
-                throw InvalidCardHashException()
-            }
-
             CardRepository.insert(
                 hashedCardInfo,
                 activationSecretHash,
@@ -75,27 +75,26 @@ class CardMutationService {
             )
 
             DynamicActivationCodeResult(
-                hashedCardInfo.encodeBase64(),
-                dynamicActivationCode.toByteArray().encodeBase64()
+                cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
+                codeBase64 = dynamicActivationCode.toByteArray().encodeBase64()
             )
         }
     }
 
-    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int): String {
+    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int): StaticVerificationCodeResult {
+        val pepper = ByteArray(PEPPER_LENGTH)
+        SecureRandom.getInstanceStrong().nextBytes(pepper)
+
+        val hashedCardInfo = cardInfo.hash(pepper)
+        val staticVerificationCode = Card.StaticVerificationCode.newBuilder()
+            .setInfo(cardInfo)
+            .setPepper(ByteString.copyFrom(pepper))
+            .build()
+
+        if (!QRCodeUtil.isContentLengthValid(staticVerificationCode)) {
+            throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.STATIC)
+        }
         return transaction {
-            val pepper = ByteArray(PEPPER_LENGTH)
-            SecureRandom.getInstanceStrong().nextBytes(pepper)
-
-            val hashedCardInfo = cardInfo.hash(pepper)
-            val staticVerificationCode = Card.StaticVerificationCode.newBuilder()
-                .setInfo(cardInfo)
-                .setPepper(ByteString.copyFrom(pepper))
-                .build()
-
-            if (!QRCodeUtil.isContentLengthValid(staticVerificationCode)) {
-                throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.STATIC)
-            }
-
             CardRepository.insert(
                 hashedCardInfo,
                 null,
@@ -106,7 +105,10 @@ class CardMutationService {
                 cardInfo.extensions.extensionStartDay.startDay.toLong()
             )
 
-            staticVerificationCode.toByteArray().encodeBase64()
+            StaticVerificationCodeResult(
+                cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
+                codeBase64 = staticVerificationCode.toByteArray().encodeBase64()
+            )
         }
     }
 
@@ -146,8 +148,8 @@ class CardMutationService {
                 context.request,
                 dfe.field.name,
                 regionId,
-                encodedCardInfos.size,
-                generateStaticCodes
+                numberOfDynamicCards = encodedCardInfos.size,
+                numberOfStaticCards = if (generateStaticCodes) encodedCardInfos.size else 0
             )
         }
         return activationCodes
@@ -160,11 +162,8 @@ class CardMutationService {
         val projectConfig = backendConfig.projects.find { it.id == project }
             ?: throw ProjectNotFoundException(project)
         val jwtPayload = context.enforceSignedIn()
+        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         transaction {
-            val user =
-                AdministratorEntity.findById(jwtPayload.adminId)
-                    ?: throw UnauthorizedException()
-
             for (card in cards) {
                 if (!Authorizer.mayCreateCardInRegion(user, card.regionId)) {
                     throw ForbiddenException()
@@ -194,10 +193,20 @@ class CardMutationService {
             }
         }
 
-        val regionId = cards.firstOrNull()?.regionId ?: -1
-        val numberOfDynamicCardsCreated = cards.count { it.codeType === CodeType.DYNAMIC }
-        val staticCardsCreated = cards.size > numberOfDynamicCardsCreated
-        Matomo.trackCreateCards(projectConfig, context.request, dfe.field.name, regionId, numberOfDynamicCardsCreated, staticCardsCreated)
+        val regionId = user.regionId?.value
+        if (regionId != null) {
+            val numberOfDynamicCardsCreated = cards.count { it.codeType === CodeType.DYNAMIC }
+            val numberOfStaticCardsCreated = cards.size - numberOfDynamicCardsCreated
+            Matomo.trackCreateCards(
+                projectConfig,
+                context.request,
+                dfe.field.name,
+                regionId,
+                numberOfDynamicCardsCreated,
+                numberOfStaticCardsCreated
+            )
+        }
+
         return true
     }
 

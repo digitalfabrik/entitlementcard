@@ -5,7 +5,12 @@ data class DynamicActivationCodeResult(
     val codeBase64: String
 )
 
+data class StaticVerificationCodeResult(
+    val cardInfoHashBase64: String,
+    val codeBase64: String
+)
+
 data class CardCreationResultModel(
     val dynamicActivationCode: DynamicActivationCodeResult,
-    val staticVerificationCodeBase64: String?
+    val staticVerificationCode: StaticVerificationCodeResult?
 )

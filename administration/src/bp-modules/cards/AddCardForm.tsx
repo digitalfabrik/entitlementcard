@@ -45,7 +45,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           placeholder='Erika Mustermann'
           autoFocus
           //If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
-          intent={cardBlueprint.isFullNameValid() ? undefined : Intent.DANGER}
+          intent={cardBlueprint.isFullNameValid() && cardBlueprint.hasValidSize() ? undefined : Intent.DANGER}
           value={cardBlueprint.fullName}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             cardBlueprint.fullName = event.target.value

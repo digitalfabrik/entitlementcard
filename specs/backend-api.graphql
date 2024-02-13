@@ -79,7 +79,7 @@ type CardActivationResultModel {
 
 type CardCreationResultModel {
   dynamicActivationCode: DynamicActivationCodeResult!
-  staticVerificationCodeBase64: String
+  staticVerificationCode: StaticVerificationCodeResult
 }
 
 type CardVerificationResultModel {
@@ -222,6 +222,11 @@ type Region {
 
 type SignInPayload {
   token: String!
+}
+
+type StaticVerificationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
 }
 
 enum ActivationState {

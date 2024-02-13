@@ -8,6 +8,8 @@ mutation createCards($project: String!, $encodedCardInfos: [String!]!, $generate
       cardInfoHashBase64
       codeBase64
     }
-    staticVerificationCodeBase64
+    staticVerificationCode {
+      codeBase64
+    }
   }
 }

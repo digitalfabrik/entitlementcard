@@ -12,8 +12,6 @@ import kotlin.math.pow
 
 class CanonicalJson {
     companion object {
-        private val highestSafeInt = 2.0.pow(53) - 1
-        private val lowestSafeInt = -highestSafeInt
 
         private fun GeneratedMessageV3.assertOnlyKnownFields() {
             if (this.unknownFields.serializedSize > 0) {
@@ -92,7 +90,16 @@ class CanonicalJson {
         }
 
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
-        private fun Int.isSafeInteger() = this >= lowestSafeInt && this <= highestSafeInt
+
+        /**
+         * Kotlin's implementation of JavaScript [Number.isSafeInteger()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger)
+         * @return true if this is in (-(2^53 - 1), 2^53 - 1)
+         */
+        private fun Int.isSafeInteger(): Boolean {
+            val highestSafeInt = 2.0.pow(53) - 1
+            val lowestSafeInt = -highestSafeInt
+            return this >= lowestSafeInt && this <= highestSafeInt
+        }
 
         /**
          * Taken & adjusted from https://github.com/erdtman/canonicalize/blob/HEAD/lib/canonicalize.js
@@ -114,7 +121,9 @@ class CanonicalJson {
                     is Map<*, *> -> {
                         buildJsonObject {
                             json.mapKeys {
-                                if (it.key is String) it.key.toString() else throw Error("Map key should be of type String.")
+                                val key = it.key
+                                if (key !is String) throw Error("Map key should be of type String.")
+                                key
                             }.toSortedMap(Comparator.naturalOrder()).forEach { (key, value) ->
                                 put(key, buildJson(value))
                             }
