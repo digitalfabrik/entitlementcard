@@ -706,9 +706,10 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            echo ${APT_FINGERPRINT_PRODUCTION} >> known_hosts
+                            mkdir /home/circleci/.ssh
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
                             echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
                     - run:
                         command: |
@@ -719,9 +720,10 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            echo ${APT_FINGERPRINT_STAGING} >> known_hosts
+                            mkdir /home/circleci/.ssh
+                            echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - -o UserKnownHostsFile=known_hosts ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
                     - run:
                         command: |
@@ -836,13 +838,6 @@ jobs:
     promote_to_server:
         docker:
             - image: cimg/base:2022.09
-        parameters:
-            bundle:
-                description: Defines which bundle should be promoted to production server.
-                enum:
-                    - administration
-                    - backend
-                type: enum
         steps:
             - run:
                 command: |
@@ -855,10 +850,18 @@ jobs:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - run:
                 command: |
-                    echo ${APT_FINGERPRINT_STAGING} >> known_hosts_staging
-                    echo ${APT_FINGERPRINT_PRODUCTION} >> known_hosts_production
-                    scp - -o UserKnownHostsFile=known_hosts_staging -o UserKnownHostsFile=known_hosts_production ci@entitlementcard-test.tuerantuer.org:/local-apt-repository/eak-<< parameters.bundle >>*.deb ci@entitlementcard.tuerantuer.org:/local-apt-repository/
+                    mkdir /home/circleci/.ssh
+                    echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
+                    echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                    scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
                 name: Transfer artifacts to production
+            - run:
+                command: |
+                    curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-administration-$EAK_WEBHOOK
+                name: Install administration package via webhook
+            - run:
+                command: curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+                name: Install backend packages via webhook
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
@@ -869,16 +872,10 @@ parameters:
     run_commit_main:
         default: true
         type: boolean
-    run_deliver_beta_administration:
+    run_deliver_beta_backend_administration:
         default: false
         type: boolean
-    run_deliver_beta_backend:
-        default: false
-        type: boolean
-    run_deliver_production_administration:
-        default: false
-        type: boolean
-    run_deliver_production_backend:
+    run_deliver_production_backend_administration:
         default: false
         type: boolean
     run_delivery_beta_native:
@@ -887,7 +884,7 @@ parameters:
     run_frontend:
         default: false
         type: boolean
-    run_promote_administration:
+    run_promote_backend_administration:
         default: false
         type: boolean
     run_promote_native:
@@ -967,7 +964,7 @@ workflows:
                 - equal:
                     - main
                     - << pipeline.git.branch >>
-    deliver_beta_administration:
+    deliver_beta_backend_administration:
         jobs:
             - bump_version:
                 context:
@@ -981,21 +978,6 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - deliver_to_server:
-                bundle: administration
-                context:
-                    - credentials-ehrenamtskarte
-                name: deliver_administration_staging
-                production: false
-                requires:
-                    - pack_administration
-        when: << pipeline.parameters.run_deliver_beta_administration >>
-    deliver_beta_backend:
-        jobs:
-            - bump_version:
-                context:
-                    - deliverino
-                prepare_delivery: true
             - build_martin
             - check_backend
             - build_backend:
@@ -1016,17 +998,29 @@ workflows:
                 requires:
                     - bump_version
             - deliver_to_server:
+                bundle: administration
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_administration_staging
+                production: false
+                requires:
+                    - pack_administration
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+            - deliver_to_server:
                 bundle: backend
                 context:
                     - credentials-ehrenamtskarte
                 name: deliver_backend_staging
                 production: false
                 requires:
+                    - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
-        when: << pipeline.parameters.run_deliver_beta_backend >>
-    deliver_production_administration:
+        when: << pipeline.parameters.run_deliver_beta_backend_administration >>
+    deliver_production_backend_administration:
         jobs:
             - bump_version:
                 context:
@@ -1036,9 +1030,28 @@ workflows:
             - build_administration:
                 requires:
                     - check_administration
+                    - bump_version
             - pack_administration:
                 requires:
                     - build_administration
+            - build_martin
+            - check_backend
+            - build_backend:
+                requires:
+                    - check_backend
+            - pack_backend:
+                requires:
+                    - build_backend
+                    - bump_version
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+                    - bump_version
+            - pack_meta:
+                requires:
                     - bump_version
             - deliver_to_server:
                 bundle: administration
@@ -1048,32 +1061,9 @@ workflows:
                 production: true
                 requires:
                     - pack_administration
-        when: << pipeline.parameters.run_deliver_production_administration >>
-    deliver_production_backend:
-        jobs:
-            - bump_version:
-                context:
-                    - deliverino
-                prepare_delivery: true
-            - build_martin
-            - check_backend
-            - build_backend:
-                requires:
-                    - check_backend
-            - pack_backend:
-                requires:
-                    - build_backend
-                    - bump_version
-            - check_health_backend:
-                requires:
-                    - pack_backend
-            - pack_martin:
-                requires:
-                    - build_martin
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
             - deliver_to_server:
                 bundle: backend
                 context:
@@ -1081,10 +1071,11 @@ workflows:
                 name: deliver_backend_production
                 production: true
                 requires:
+                    - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
-        when: << pipeline.parameters.run_deliver_production_backend >>
+        when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:
             - bump_version:
@@ -1199,14 +1190,13 @@ workflows:
                 requires:
                     - check_frontend
         when: << pipeline.parameters.run_frontend >>
-    promote_administration:
+    promote_backend_administration:
         jobs:
             - promote_to_server:
-                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: promote_administration
-        when: << pipeline.parameters.run_promote_administration >>
+                name: promote_backend_administration
+        when: << pipeline.parameters.run_promote_backend_administration >>
     promote_native:
         jobs:
             - promote_android:
