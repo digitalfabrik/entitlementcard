@@ -4,13 +4,15 @@ working_directory: ~/project/administration
 steps:
   - checkout:
       path: ~/project
-  - run: ~/project/scripts/pack_deb.sh -v "0.$CIRCLE_BUILD_NUM" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
+  - prepare_workspace
+  - restore_environment_variables
+  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
   - run: |
-      mkdir -p /tmp/artifacts/debs
-      cp *.deb /tmp/artifacts/debs
+      mkdir -p ~/attached_workspace/debs/backend
+      cp *.deb ~/attached_workspace/debs/backend
   - store_artifacts:
-      path: /tmp/artifacts
+      path: ~/attached_workspace
   - persist_to_workspace:
-      root: /tmp/artifacts
+      root: ~/attached_workspace
       paths:
-        - debs/*.deb
+        - debs/backend/*.deb
