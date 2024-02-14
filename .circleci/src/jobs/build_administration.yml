@@ -4,9 +4,6 @@ working_directory: ~/project
 steps:
   - checkout:
       path: ~/project
-  - restore_cache:
-      keys:
-        - v2-node-modules-administration-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
   - install_dart_linux
   - install_protobuf_linux
   - prepare_workspace
