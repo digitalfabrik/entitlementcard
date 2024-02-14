@@ -9,6 +9,7 @@ steps:
       path: ~/project
   - run: git submodule sync
   - run: git submodule update --init
+  - install_protobuf_linux
   - prepare_workspace
   - restore_cache:
       key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
