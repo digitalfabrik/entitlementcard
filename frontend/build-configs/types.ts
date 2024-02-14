@@ -10,7 +10,8 @@ export type FeatureFlagsType = {
 
 export type DeeplLinkingConfig = {
     android: {
-        applicationId: string,
+        path: string
+        applicationId: string
         sha256CertFingerprint: string
     }
     ios: {
@@ -18,7 +19,7 @@ export type DeeplLinkingConfig = {
         path: string
         pathComment: string
     }
-    projectName: string,
+    projectName: string
     customScheme: string
 }
 
@@ -34,6 +35,7 @@ export type CommonBuildConfigType = {
         showcase: string
         production: string
         local: string
+        staging: string
     }
     mapStyleUrl: {
         showcase: string

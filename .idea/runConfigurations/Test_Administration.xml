@@ -1,10 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test Administration" type="JavaScriptTestRunnerKarma">
-    <config-file value="$PROJECT_DIR$/administration/karma.conf.js" />
-    <karma-package-dir value="$PROJECT_DIR$/administration/node_modules/karma" />
-    <working-directory value="$PROJECT_DIR$/administration" />
-    <node-interpreter value="project" />
-    <envs />
-    <method v="2" />
-  </configuration>
+    <configuration default="false" name="Test administration" type="js.build_tools.npm">
+        <package-json value="$PROJECT_DIR$/administration/package.json" />
+        <command value="test" />
+        <node-interpreter value="project" />
+        <envs />
+        <method v="2" />
+    </configuration>
 </component>

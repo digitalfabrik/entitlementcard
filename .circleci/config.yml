@@ -89,6 +89,10 @@ commands:
                 name: Configure Flutter
                 working_directory: ~/project/frontend/
     install_protobuf_linux:
+        parameters:
+            dart_plugin:
+                default: false
+                type: boolean
         steps:
             - run:
                 command: |
@@ -96,9 +100,12 @@ commands:
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf from GitHub
-            - run:
-                command: dart pub global activate protoc_plugin
-                name: Install Flutter plugin
+            - when:
+                condition: << parameters.dart_plugin >>
+                steps:
+                    - run:
+                        command: dart pub global activate protoc_plugin
+                        name: Install Flutter plugin
     install_protobuf_mac:
         steps:
             - run:
@@ -271,7 +278,8 @@ jobs:
             - install_dart_linux
             - install_fvm
             - install_app_toolbelt
-            - install_protobuf_linux
+            - install_protobuf_linux:
+                dart_plugin: true
             - run:
                 command: bundle update --bundler
                 name: Install bundler
@@ -545,7 +553,8 @@ jobs:
             - install_dart_linux
             - install_fvm
             - install_app_toolbelt
-            - install_protobuf_linux
+            - install_protobuf_linux:
+                dart_plugin: true
             - run:
                 command: fvm flutter pub get --enforce-lockfile
                 name: Install Flutter Packages

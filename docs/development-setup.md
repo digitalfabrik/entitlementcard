@@ -51,13 +51,14 @@ adb reverse tcp:8000 tcp:8000
 7. Open the IntelliJ "Project Structure" and setup the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 8. Clone the submodule inside `backend/ehrenamtskarte-maplibre-style`
-9. Run the backend migration: `run --args "migrate"`
-10. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
-11. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
-12. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
-13. Take a look at the style by viewing the test map: [http://localhost:5002/map.html](http://localhost:5002)
-14. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
-15. (optional) Add your matomo config for each project to the backend config
+9. Initialize all submodules by running `git submodule update --init --recursive` in the root directory
+10. Run the backend migration: `run --args "migrate"`
+11. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows
+12. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
+13. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
+14. Take a look at the style by viewing the test map: [http://localhost:5002/map.html](http://localhost:5002)
+15. Set up the matomo instance [http://localhost:5003](http://localhost:5003) (The public version is available at https://matomo-entitlementcard.tuerantuer.org)
+16. (optional) Add your matomo config for each project to the backend config
 ```yaml
 projects:
   - id: ...
