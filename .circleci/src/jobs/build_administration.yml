@@ -8,7 +8,6 @@ steps:
   - restore_cache:
       keys:
         - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}
-  - install_dart_linux
   - install_protobuf_linux
   - run:
       name: Install node dependencies
