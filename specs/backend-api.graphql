@@ -77,6 +77,11 @@ type CardActivationResultModel {
   totpSecret: String
 }
 
+type CardCreationResultModel {
+  dynamicActivationCode: DynamicActivationCodeResult!
+  staticVerificationCode: StaticVerificationCodeResult
+}
+
 type CardVerificationResultModel {
   valid: Boolean!
   verificationTimeStamp: String!
@@ -99,6 +104,11 @@ type Coordinates {
   lng: Float!
 }
 
+type DynamicActivationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
@@ -110,6 +120,8 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new digital entitlementcard and returns it"
+  createCardsByCardInfos(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -212,6 +224,11 @@ type SignInPayload {
   token: String!
 }
 
+type StaticVerificationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
+}
+
 enum ActivationState {
   did_not_overwrite_existing
   failed
@@ -260,6 +277,7 @@ enum GraphQLExceptionCode {
   INVALID_LINK
   INVALID_PASSWORD
   INVALID_PASSWORD_RESET_LINK
+  INVALID_QR_CODE_SIZE
   INVALID_ROLE
   MAIL_NOT_SENT
   PASSWORD_RESET_KEY_EXPIRED
