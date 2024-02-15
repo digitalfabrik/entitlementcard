@@ -34,8 +34,10 @@ class UserCodeStore {
       String? userCodesBase64FirstRead = await storage.read(key: _userCodesBase64Key);
       userCodesBase64 = await storage.read(key: _userCodesBase64Key);
       // report error if first read is null but second read contains data to collect sentry data for reproduction
-      if (userCodesBase64FirstRead == null && userCodesBase64 != null) {
-        reportError('First read from secure storage is null but user data exists', null);
+      if (userCodesBase64FirstRead != userCodesBase64) {
+        bool firstIsNull = userCodesBase64FirstRead == null;
+        bool secondIsNull = userCodesBase64 == null;
+        reportError("First read from secure storage differs from second: firstNull=${firstIsNull}, secondNull=${secondIsNull}", null);
       }
     } else {
       userCodesBase64 = await storage.read(key: _userCodesBase64Key);
