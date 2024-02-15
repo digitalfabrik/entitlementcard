@@ -37,7 +37,9 @@ class UserCodeStore {
       if (userCodesBase64FirstRead != userCodesBase64) {
         bool firstIsNull = userCodesBase64FirstRead == null;
         bool secondIsNull = userCodesBase64 == null;
-        reportError("First read from secure storage differs from second: firstNull=${firstIsNull}, secondNull=${secondIsNull}", null);
+        reportError(
+            'First read from secure storage differs from second: firstNull=$firstIsNull, secondNull=$secondIsNull',
+            null);
       }
     } else {
       userCodesBase64 = await storage.read(key: _userCodesBase64Key);
