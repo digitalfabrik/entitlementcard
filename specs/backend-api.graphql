@@ -124,6 +124,8 @@ type Mutation {
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
+  "Deletes a batch of cards (that have not yet been activated)"
+  deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Reset the administrator's password"

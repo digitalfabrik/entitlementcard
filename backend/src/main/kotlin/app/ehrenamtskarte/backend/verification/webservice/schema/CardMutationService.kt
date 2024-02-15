@@ -210,4 +210,20 @@ class CardMutationService {
         )
         return activationResult
     }
+
+    @GraphQLDescription("Deletes a batch of cards (that have not yet been activated)")
+    fun deleteInactiveCards(dfe: DataFetchingEnvironment, regionId: Int, cardInfoHashBase64List: List<String>): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
+
+        val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
+        transaction {
+            if (!Authorizer.mayDeleteCardInRegion(user, regionId)) {
+                throw ForbiddenException()
+            }
+            CardRepository.deleteInactiveCardsByHash(regionId, cardInfoHashList)
+        }
+        return true
+    }
 }

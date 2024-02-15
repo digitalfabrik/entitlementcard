@@ -7,10 +7,12 @@ import { ReactElement } from 'react'
 import CardBlueprint from '../../../cards/CardBlueprint'
 import { PDFError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError } from '../../../cards/createCards'
+import deleteCards from '../../../cards/deleteCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
+import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
@@ -33,6 +35,8 @@ jest.mock('../../../cards/createCards', () => ({
   __esModule: true,
   default: jest.fn(),
 }))
+jest.mock('../../../cards/deleteCards')
+jest.mock('../../../util/downloadDataUri')
 
 describe('useCardGenerator', () => {
   const region: Region = {
@@ -71,13 +75,14 @@ describe('useCardGenerator', () => {
 
     expect(toasterSpy).not.toHaveBeenCalled()
     expect(createCards).toHaveBeenCalled()
+    expect(downloadDataUri).toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.finished)
     expect(result.current.cardBlueprints).toEqual([])
   })
 
   it('should show error message for failed card generation', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    mocked(createCards).mockImplementationOnce(() => {
+    mocked(createCards).mockImplementation(() => {
       throw new CreateCardsError('error')
     })
 
@@ -91,12 +96,14 @@ describe('useCardGenerator', () => {
     })
 
     expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
+    expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
     expect(result.current.cardBlueprints).toEqual([])
   })
 
-  it('should show error message for failed pdf generation', async () => {
+  it('should show error message and run rollback for failed pdf generation', async () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
+    mocked(deleteCards).mockReturnValueOnce(Promise.resolve())
     mocked(generatePdf).mockImplementationOnce(() => {
       throw new PDFError('error')
     })
@@ -112,6 +119,7 @@ describe('useCardGenerator', () => {
     })
 
     expect(toasterSpy).toHaveBeenCalledWith(expect.objectContaining({ intent: 'danger' }))
+    expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
     expect(result.current.cardBlueprints).toEqual([])
   })
