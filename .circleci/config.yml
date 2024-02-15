@@ -886,45 +886,6 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: false
-            - check
-            - check_administration
-            - check_backend
-            - build_administration:
-                requires:
-                    - check_administration
-                    - bump_version
-            - pack_administration:
-                requires:
-                    - build_administration
-            - build_martin
-            - build_backend:
-                requires:
-                    - check_backend
-            - pack_backend:
-                requires:
-                    - build_backend
-                    - bump_version
-            - check_health_backend:
-                requires:
-                    - pack_backend
-            - pack_martin:
-                requires:
-                    - build_martin
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
-            - check_frontend
-            - build_android:
-                buildConfig: bayern
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
-                name: build_android_bayern
-                requires:
-                    - bump_version
-                    - check_frontend
             - build_ios:
                 buildConfig: bayern
                 context:
@@ -934,13 +895,9 @@ workflows:
                 name: build_ios_bayern
                 requires:
                     - bump_version
-                    - check_frontend
         when:
             and:
                 - << pipeline.parameters.run_commit_main >>
-                - equal:
-                    - main
-                    - << pipeline.git.branch >>
     deliver_beta_administration:
         jobs:
             - bump_version:
