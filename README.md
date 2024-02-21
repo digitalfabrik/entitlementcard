@@ -24,7 +24,7 @@
 
 ## What is a "entitlementcard"
 
-Short answer, it is a whitelabel for benefit cards in Germany, manly targeted at volunteers and socially vulnerable
+Short answer, it is a whitelabel for benefit cards in Germany, mainly targeted at volunteers and socially vulnerable
 groups.
 
 To name some examples, this project has a whitelabel for
