@@ -73,17 +73,23 @@ class App extends StatelessWidget {
           ],
         ),
         GoRoute(
-          path: '$homeRouteName/:$homeRouteParamTabIndexName',
-          builder: (BuildContext context, GoRouterState state) {
-            return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
-          },
-        ),
-        GoRoute(
           path: introRouteName,
           builder: (BuildContext context, GoRouterState state) {
             return IntroScreen(
               onFinishedCallback: () => settings.setFirstStart(enabled: false),
             );
+          },
+        ),
+        GoRoute(
+          path: homeRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return HomePage();
+          },
+        ),
+        GoRoute(
+          path: '$homeRouteName/:$homeRouteParamTabIndexName',
+          builder: (BuildContext context, GoRouterState state) {
+            return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
           },
         ),
       ],

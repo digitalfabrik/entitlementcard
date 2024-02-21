@@ -44,43 +44,60 @@ class SettingsModel extends ChangeNotifier {
     return obj;
   }
 
-  bool get firstStart => _getBool('firstStart') ?? true;
+  String firstStartKey = 'firstStart';
+  bool get firstStart => _getBool(firstStartKey) ?? true;
 
   Future<void> setFirstStart({required bool enabled}) async {
-    await _preferences?.setBool('firstStart', enabled);
-    notifyListeners();
+    bool? currentlyFirstStartEnabled = firstStart;
+    await _preferences?.setBool(firstStartKey, enabled);
+    notifyChange(currentlyFirstStartEnabled, enabled);
   }
 
-  bool get enableStaging => _getBool('enableStaging') ?? false;
+  String enableStagingKey = 'enableStaging';
+  bool get enableStaging => _getBool(enableStagingKey) ?? false;
 
   Future<void> setEnableStaging({required bool enabled}) async {
-    await _preferences?.setBool('enableStaging', enabled);
-    notifyListeners();
+    bool? currentlyEnabledStaging = enableStaging;
+    await _preferences?.setBool(enableStagingKey, enabled);
+    notifyChange(currentlyEnabledStaging, enabled);
   }
 
-  bool get hideVerificationInfo => _getBool('hideVerificationInfo') ?? true;
+  String hideVerificationInfoKey = 'hideVerificationInfo';
+  bool get hideVerificationInfo => _getBool(hideVerificationInfoKey) ?? true;
 
   Future<void> setHideVerificationInfo({required bool enabled}) async {
-    await _preferences?.setBool('hideVerificationInfo', enabled);
-    notifyListeners();
+    bool? currentlyHideVerificationInfo = hideVerificationInfo;
+    await _preferences?.setBool(hideVerificationInfoKey, enabled);
+    notifyChange(currentlyHideVerificationInfo, enabled);
   }
 
-  bool get locationFeatureEnabled => _getBool('location') ?? false;
+  String locationFeatureKey = 'location';
+  bool get locationFeatureEnabled => _getBool(locationFeatureKey) ?? false;
 
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {
-    await _preferences?.setBool('location', enabled);
-    notifyListeners();
+    bool? currentlyLocationFeatureEnabled = locationFeatureEnabled;
+    await _preferences?.setBool(locationFeatureKey, enabled);
+    notifyChange(currentlyLocationFeatureEnabled, enabled);
   }
 
-  String? get language => _getString('language');
+  String languageKey= 'language';
+  String? get language => _getString(languageKey);
 
   Future<void> setLanguage({required String language}) async {
-    await _preferences?.setString('language', language);
-    notifyListeners();
+    String? currentLanguage = language;
+    await _preferences?.setString(languageKey, language);
+    notifyChange(currentLanguage, language);
   }
 
   @override
   String toString() {
     return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, language:$language}';
+  }
+
+  // only notify if value has changed
+  void notifyChange(dynamic oldValue, dynamic newValue) {
+    if(oldValue != newValue) {
+      notifyListeners();
+    }
   }
 }
