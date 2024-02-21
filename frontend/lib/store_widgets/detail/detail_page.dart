@@ -11,11 +11,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import '../../map/map_page.dart';
+
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;
-  final bool hideShowOnMapButton;
+  final void Function(PhysicalStoreFeatureData)? showOnMap;
 
-  const DetailPage(this._acceptingStoreId, {super.key, this.hideShowOnMapButton = false});
+  const DetailPage(this._acceptingStoreId, {super.key, this.showOnMap});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class DetailPage extends StatelessWidget {
               Expanded(
                 child: DetailContent(
                   matchingStore,
-                  hideShowOnMapButton: hideShowOnMapButton,
+                  showOnMap: showOnMap,
                   accentColor: accentColor,
                 ),
               )
