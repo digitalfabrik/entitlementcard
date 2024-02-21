@@ -14,7 +14,7 @@ There are two cases to consider:
 4. In the database query for the card:
 ```sql
 select * from "cards"
-where "cardInfoHash" =decode('b7c9af18c9c855a5fcf84d776c43593be783b8f94286589e14849f97368b2fb0', 'hex');
+where "cardInfoHash" = decode('b7c9af18c9c855a5fcf84d776c43593be783b8f94286589e14849f97368b2fb0', 'hex');
 ```
 
 5. Verify that there is only one result (for the very unlikely situation that the specific hash is not unique).
