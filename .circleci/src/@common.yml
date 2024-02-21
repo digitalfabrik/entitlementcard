@@ -8,7 +8,19 @@ parameters:
   run_commit:
     default: true
     type: boolean
-  run_backend:
+  run_commit_main:
+    default: true
+    type: boolean
+  run_deliver_beta_administration:
+    default: false
+    type: boolean
+  run_deliver_beta_backend:
+    default: false
+    type: boolean
+  run_deliver_production_administration:
+    default: false
+    type: boolean
+  run_deliver_production_backend:
     default: false
     type: boolean
   run_frontend:

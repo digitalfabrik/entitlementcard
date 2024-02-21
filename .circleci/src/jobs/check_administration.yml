@@ -7,7 +7,6 @@ steps:
   - install_dart_linux
   - install_protobuf_linux
   - prepare_workspace
-  - restore_environment_variables
   - restore_npm_cache
   - run:
       name: Generate GraphQL
@@ -18,12 +17,14 @@ steps:
       command: npm run generate-protobuf
       working_directory: ~/project/administration
   - run:
-      name: Build
-      command: npm run build --version_name=${NEW_VERSION_NAME}
+      name: Lint
+      command: npm run lint
       working_directory: ~/project/administration
-  - store_artifacts:
-      path: ~/attached_workspace/build
-  - persist_to_workspace:
-      root: ~/project
-      paths:
-        - administration/build
+  - run:
+      name: Test
+      command: npm run test -- --maxWorkers=2
+      working_directory: ~/project/administration
+  - run:
+      name: Typescript
+      command: npm run ts:check
+      working_directory: ~/project/administration

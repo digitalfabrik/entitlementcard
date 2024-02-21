@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
 import app.ehrenamtskarte.backend.mail.Mailer
@@ -22,10 +23,11 @@ class ResetPasswordMutationService {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        val projectConfig = backendConfig.projects.first { it.id == project }
+        val projectConfig = backendConfig.projects.find { it.id == project }
+            ?: throw ProjectNotFoundException(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase())and (Administrators.deleted eq false))
+                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
                 .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
@@ -37,12 +39,24 @@ class ResetPasswordMutationService {
     }
 
     @GraphQLDescription("Reset the administrator's password")
-    fun resetPassword(project: String, email: String, passwordResetKey: String, newPassword: String): Boolean {
+    fun resetPassword(
+        dfe: DataFetchingEnvironment,
+        project: String,
+        email: String,
+        passwordResetKey: String,
+        newPassword: String
+    ): Boolean {
+        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+        if (!backendConfig.projects.any { it.id === project }) throw ProjectNotFoundException(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
-                .single().let { AdministratorEntity.wrapRow(it) }
+                .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
 
+            // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
+            if (user === null) {
+                return@transaction
+            }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw PasswordResetKeyExpiredException()
             } else if (user.passwordResetKey != passwordResetKey) {
