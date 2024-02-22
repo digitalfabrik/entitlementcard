@@ -1,16 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserCodeStore {
   const UserCodeStore();
 
   static const _userCodesBase64Key = 'userCodesBase64';
+
   // legacy key for single card
   static const _userCodeBase64Key = 'userCodeBase64';
   static const _storageDelimiter = ',';
+
   Future<void> store(List<DynamicUserCode> userCodes) async {
     const storage = FlutterSecureStorage();
     Iterable<String> userCodeString = userCodes.map((code) => const Base64Encoder().convert(code.writeToBuffer()));
@@ -24,7 +28,23 @@ class UserCodeStore {
 
   Future<List<DynamicUserCode>> load() async {
     const storage = FlutterSecureStorage();
-    final String? userCodesBase64 = await storage.read(key: _userCodesBase64Key);
+    String? userCodesBase64;
+    // make fake read on android - workaround for https://github.com/mogol/flutter_secure_storage/issues/653
+    if (Platform.isAndroid) {
+      String? userCodesBase64FirstRead = await storage.read(key: _userCodesBase64Key);
+      userCodesBase64 = await storage.read(key: _userCodesBase64Key);
+      // report error if first read is null but second read contains data to collect sentry data for reproduction
+      if (userCodesBase64FirstRead != userCodesBase64) {
+        bool firstIsNull = userCodesBase64FirstRead == null;
+        bool secondIsNull = userCodesBase64 == null;
+        reportError(
+            'First read from secure storage differs from second: firstNull=$firstIsNull, secondNull=$secondIsNull',
+            null);
+      }
+    } else {
+      userCodesBase64 = await storage.read(key: _userCodesBase64Key);
+    }
+
     if (userCodesBase64 == null) return [];
     return userCodesBase64
         .split(_storageDelimiter)
