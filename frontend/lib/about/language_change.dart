@@ -26,12 +26,12 @@ class LanguageChange extends StatelessWidget {
     ]);
   }
 
-  switchLanguage(BuildContext context, String language) {
+  Future<void> switchLanguage(BuildContext context, String language) async {
     final messengerState = ScaffoldMessenger.of(context);
     final settings = Provider.of<SettingsModel>(context, listen: false);
     LocaleSettings.setLocaleRaw(language);
-    settings.setLanguage(language: language);
-    Navigator.of(context).pop();
+    await settings.setLanguage(language: language);
+    Navigator.pop(context);
     messengerState.showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
-import 'verification_code_view.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
 
 class CardDetailView extends StatefulWidget {
   final DynamicUserCode userCode;

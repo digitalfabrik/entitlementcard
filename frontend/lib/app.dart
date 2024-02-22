@@ -14,7 +14,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'home/home_page.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 
 const activationRouteName = '/activation/code';
 const homeRouteParamTabIndexName = 'tabIndex';
@@ -31,9 +31,7 @@ final GoRouter router = GoRouter(
     if (!settings.firstStart || state.matchedLocation == introRouteName) {
       return null;
     }
-    final location =
-        '${state.uri.path}${state.uri.hasQuery ? '?${state.uri.query}' : ''}${state.uri.hasFragment ? '#${state.uri.fragment}' : ''}';
-    return '$introRouteName?$introRouteRedirectParamName=${Uri.encodeQueryComponent(location)}';
+    return '$introRouteName?$introRouteRedirectParamName=${Uri.encodeQueryComponent(state.uri.toString())}';
   },
   initialLocation: initialLocation,
   routes: <RouteBase>[
