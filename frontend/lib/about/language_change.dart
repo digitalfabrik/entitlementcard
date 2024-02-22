@@ -1,8 +1,6 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
-import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,12 +31,7 @@ class LanguageChange extends StatelessWidget {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     LocaleSettings.setLocaleRaw(language);
     settings.setLanguage(language: language);
-    Navigator.push(
-      context,
-      AppRoute(
-        builder: (context) => HomePage(),
-      ),
-    );
+    Navigator.of(context).pop();
     messengerState.showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
