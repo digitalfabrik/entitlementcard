@@ -16,12 +16,13 @@ import 'package:provider/provider.dart';
 
 import 'home/home_page.dart';
 
-const initialRouteName = '/';
 const activationRouteName = '/activation/code';
 const homeRouteParamTabIndexName = 'tabIndex';
 const homeRouteName = '/home';
 const introRouteName = '/intro';
 const introRouteRedirectParamName = 'redirect';
+
+final initialLocation = '$homeRouteName/$mapTabIndex';
 
 final GoRouter router = GoRouter(
   redirect: (context, state) {
@@ -30,19 +31,16 @@ final GoRouter router = GoRouter(
     if (!settings.firstStart || state.matchedLocation == introRouteName) {
       return null;
     }
-    final path =
+    final location =
         '${state.uri.path}${state.uri.hasQuery ? '?${state.uri.query}' : ''}${state.uri.hasFragment ? '#${state.uri.fragment}' : ''}';
-    return '$introRouteName?$introRouteRedirectParamName=${Uri.encodeQueryComponent(path)}';
+    return '$introRouteName?$introRouteRedirectParamName=${Uri.encodeQueryComponent(location)}';
   },
+  initialLocation: initialLocation,
   routes: <RouteBase>[
-    GoRoute(
-      path: initialRouteName,
-      redirect: (_, __) => '$homeRouteName/$mapTabIndex',
-    ),
     GoRoute(
       path: introRouteName,
       builder: (BuildContext context, GoRouterState state) {
-        final redirectTo = state.uri.queryParameters[introRouteRedirectParamName] ?? '$homeRouteName/$mapTabIndex';
+        final redirectTo = state.uri.queryParameters[introRouteRedirectParamName] ?? initialLocation;
         final settings = Provider.of<SettingsModel>(context, listen: false);
         return IntroScreen(
           onFinishedCallback: () async {
