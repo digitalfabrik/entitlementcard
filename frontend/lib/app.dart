@@ -17,8 +17,7 @@ import 'package:provider/provider.dart';
 import 'home/home_page.dart';
 
 const initialRouteName = '/';
-const activationRouteCodeParamName = 'base64qrcode';
-const activationRouteName = '/activation';
+const activationRouteName = '/activation/code';
 const homeRouteParamTabIndexName = 'tabIndex';
 const homeRouteName = '/home';
 const introRouteName = '/intro';
@@ -54,9 +53,8 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '$activationRouteName/:$activationRouteCodeParamName',
+      path: activationRouteName,
       builder: (BuildContext context, GoRouterState state) {
-        print(state.uri.fragment);
         return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
       },
     ),
