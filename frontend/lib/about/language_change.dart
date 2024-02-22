@@ -31,7 +31,7 @@ class LanguageChange extends StatelessWidget {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     LocaleSettings.setLocaleRaw(language);
     settings.setLanguage(language: language);
-    Navigator.of(context).pop(true);
+    Navigator.of(context).pop();
     messengerState.showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
