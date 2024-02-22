@@ -165,7 +165,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   void _showIntroSlides(BuildContext context) {
-    GoRouter.of(context).push(introRouteName);
+    GoRouter.of(context).pushReplacement(introRouteName);
   }
 
   void _setExpiredLastVerifications(BuildContext context) {

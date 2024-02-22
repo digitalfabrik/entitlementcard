@@ -1,23 +1,21 @@
+import 'dart:async';
+
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intro_slider/intro_slider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-import '../app.dart';
-
-typedef OnFinishedCallback = void Function();
+typedef OnFinishedCallback = FutureOr<void> Function();
 
 class IntroScreen extends StatelessWidget {
-  final OnFinishedCallback? onFinishedCallback;
+  final OnFinishedCallback onFinishedCallback;
 
-  const IntroScreen({super.key, this.onFinishedCallback});
+  const IntroScreen({super.key, required this.onFinishedCallback});
 
   void onDonePress(BuildContext context) {
-    onFinishedCallback?.call();
-    GoRouter.of(context).pushReplacement(homeRouteName);
+    onFinishedCallback.call();
   }
 
   @override

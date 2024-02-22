@@ -74,7 +74,9 @@ class DeepLinkActivation extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(t.deeplinkActivation.headline),
-              leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
+              leading: BackButton(onPressed: () {
+                GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
+              }),
             ),
             body: Padding(
                 padding: const EdgeInsets.all(20),

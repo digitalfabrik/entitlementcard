@@ -18,51 +18,52 @@ import 'home/home_page.dart';
 
 const initialRouteName = '/';
 const activationRouteCodeParamName = 'base64qrcode';
-const activationRouteName = 'activation';
+const activationRouteName = '/activation';
 const homeRouteParamTabIndexName = 'tabIndex';
 const homeRouteName = '/home';
 const introRouteName = '/intro';
+const introRouteRedirectParamName = 'redirect';
 
 final GoRouter router = GoRouter(
+  redirect: (context, state) {
+    // Redirect to intro screen if it has not been shown yet.
+    final settings = Provider.of<SettingsModel>(context, listen: false);
+    if (!settings.firstStart || state.matchedLocation == introRouteName) {
+      return null;
+    }
+    final path =
+        '${state.uri.path}${state.uri.hasQuery ? '?${state.uri.query}' : ''}${state.uri.hasFragment ? '#${state.uri.fragment}' : ''}';
+    return '$introRouteName?$introRouteRedirectParamName=${Uri.encodeQueryComponent(path)}';
+  },
   routes: <RouteBase>[
     GoRoute(
       path: initialRouteName,
-      builder: (BuildContext context, GoRouterState state) {
-        final settings = Provider.of<SettingsModel>(context);
-        return settings.firstStart
-            ? IntroScreen(
-                onFinishedCallback: () => settings.setFirstStart(enabled: false),
-              )
-            : HomePage();
-      },
-      routes: [
-        GoRoute(
-          path: '$activationRouteName/:$activationRouteCodeParamName',
-          builder: (BuildContext context, GoRouterState state) {
-            print(state.uri.fragment);
-            return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
-          },
-        ),
-      ],
-    ),
-    GoRoute(
-        path: homeRouteName,
-        builder: (BuildContext context, GoRouterState state) {
-          return HomePage();
-        }),
-    GoRoute(
-      path: '$homeRouteName/:$homeRouteParamTabIndexName',
-      builder: (BuildContext context, GoRouterState state) {
-        return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
-      },
+      redirect: (_, __) => '$homeRouteName/$mapTabIndex',
     ),
     GoRoute(
       path: introRouteName,
       builder: (BuildContext context, GoRouterState state) {
+        final redirectTo = state.uri.queryParameters[introRouteRedirectParamName] ?? '$homeRouteName/$mapTabIndex';
         final settings = Provider.of<SettingsModel>(context, listen: false);
         return IntroScreen(
-          onFinishedCallback: () => settings.setFirstStart(enabled: false),
+          onFinishedCallback: () async {
+            await settings.setFirstStart(enabled: false);
+            GoRouter.of(context).pushReplacement(redirectTo);
+          },
         );
+      },
+    ),
+    GoRoute(
+      path: '$activationRouteName/:$activationRouteCodeParamName',
+      builder: (BuildContext context, GoRouterState state) {
+        print(state.uri.fragment);
+        return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
+      },
+    ),
+    GoRoute(
+      path: '$homeRouteName/:$homeRouteParamTabIndexName',
+      builder: (BuildContext context, GoRouterState state) {
+        return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
       },
     ),
   ],
