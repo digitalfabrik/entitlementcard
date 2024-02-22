@@ -8,7 +8,7 @@ export type FeatureFlagsType = {
     verification: boolean
 }
 
-export type DeeplLinkingConfig = {
+export type DeepLinkingConfig = {
     android: {
         path: string
         applicationId: string
@@ -87,7 +87,7 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number
     }
     iconInAboutTab: string
-    introSlidesImages: [string, string, string, string],
+    introSlidesImages: [string, string, string, string]
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
@@ -98,7 +98,7 @@ export type CommonBuildConfigType = {
     disclaimerText: string
     maxCardAmount: number
     activationPath: string
-    deepLinking: DeeplLinkingConfig
+    deepLinking: DeepLinkingConfig
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {
