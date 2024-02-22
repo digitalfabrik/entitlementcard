@@ -50,7 +50,7 @@ class SettingsModel extends ChangeNotifier {
   Future<void> setFirstStart({required bool enabled}) async {
     bool? currentlyFirstStartEnabled = firstStart;
     await _preferences?.setBool(firstStartKey, enabled);
-    notifyChange(currentlyFirstStartEnabled, enabled);
+    _notifyChange(currentlyFirstStartEnabled, enabled);
   }
 
   String enableStagingKey = 'enableStaging';
@@ -59,7 +59,7 @@ class SettingsModel extends ChangeNotifier {
   Future<void> setEnableStaging({required bool enabled}) async {
     bool? currentlyEnabledStaging = enableStaging;
     await _preferences?.setBool(enableStagingKey, enabled);
-    notifyChange(currentlyEnabledStaging, enabled);
+    _notifyChange(currentlyEnabledStaging, enabled);
   }
 
   String hideVerificationInfoKey = 'hideVerificationInfo';
@@ -68,7 +68,7 @@ class SettingsModel extends ChangeNotifier {
   Future<void> setHideVerificationInfo({required bool enabled}) async {
     bool? currentlyHideVerificationInfo = hideVerificationInfo;
     await _preferences?.setBool(hideVerificationInfoKey, enabled);
-    notifyChange(currentlyHideVerificationInfo, enabled);
+    _notifyChange(currentlyHideVerificationInfo, enabled);
   }
 
   String locationFeatureKey = 'location';
@@ -77,16 +77,16 @@ class SettingsModel extends ChangeNotifier {
   Future<void> setLocationFeatureEnabled({required bool enabled}) async {
     bool? currentlyLocationFeatureEnabled = locationFeatureEnabled;
     await _preferences?.setBool(locationFeatureKey, enabled);
-    notifyChange(currentlyLocationFeatureEnabled, enabled);
+    _notifyChange(currentlyLocationFeatureEnabled, enabled);
   }
 
-  String languageKey= 'language';
+  String languageKey = 'language';
   String? get language => _getString(languageKey);
 
   Future<void> setLanguage({required String language}) async {
     String? currentLanguage = language;
     await _preferences?.setString(languageKey, language);
-    notifyChange(currentLanguage, language);
+    _notifyChange(currentLanguage, language);
   }
 
   @override
@@ -95,8 +95,8 @@ class SettingsModel extends ChangeNotifier {
   }
 
   // only notify if value has changed
-  void notifyChange(dynamic oldValue, dynamic newValue) {
-    if(oldValue != newValue) {
+  void _notifyChange<T>(T oldValue, T newValue) {
+    if (oldValue != newValue) {
       notifyListeners();
     }
   }
