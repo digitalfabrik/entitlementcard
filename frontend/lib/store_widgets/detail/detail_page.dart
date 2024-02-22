@@ -11,7 +11,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-import '../../map/map_page.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
 
 class DetailPage extends StatelessWidget {
   final int _acceptingStoreId;

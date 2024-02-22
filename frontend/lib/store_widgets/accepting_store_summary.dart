@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-import '../map/map_page.dart';
+import 'package:ehrenamtskarte/map/map_page.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;

@@ -8,7 +8,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-import '../home/home_page.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
