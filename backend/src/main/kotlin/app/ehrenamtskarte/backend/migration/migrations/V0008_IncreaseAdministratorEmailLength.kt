@@ -6,7 +6,8 @@ import app.ehrenamtskarte.backend.migration.Statement
 /**
  * Increase email varchar length to 254.
  */
-class V0008_IncreaseAdministratorEmailLength: Migration() {
+@Suppress("ClassName")
+internal class V0008_IncreaseAdministratorEmailLength : Migration() {
     override val migrate: Statement = {
         exec(
             """
