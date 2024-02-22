@@ -46,6 +46,11 @@ final GoRouter router = GoRouter(
       ],
     ),
     GoRoute(
+        path: homeRouteName,
+        builder: (BuildContext context, GoRouterState state) {
+          return HomePage();
+        }),
+    GoRoute(
       path: '$homeRouteName/:$homeRouteParamTabIndexName',
       builder: (BuildContext context, GoRouterState state) {
         return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
