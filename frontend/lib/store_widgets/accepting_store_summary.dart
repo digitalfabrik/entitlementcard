@@ -11,18 +11,20 @@ import 'package:intl/intl.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import 'package:ehrenamtskarte/map/map_page.dart';
+
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
   final CoordinatesInput? coordinates;
   final double wideDepictionThreshold;
-  final bool showMapButtonOnDetails;
+  final void Function(PhysicalStoreFeatureData)? showOnMap;
   final bool showLocation;
 
   const AcceptingStoreSummary({
     super.key,
     required this.store,
     this.coordinates,
-    required this.showMapButtonOnDetails,
+    required this.showOnMap,
     this.showLocation = true,
     this.wideDepictionThreshold = 400,
   });
@@ -88,10 +90,9 @@ class AcceptingStoreSummary extends StatelessWidget {
   }
 
   void _openDetailView(BuildContext context) {
-    Navigator.push(
-      context,
+    Navigator.of(context, rootNavigator: true).push(
       AppRoute(
-        builder: (context) => DetailPage(store.id, hideShowOnMapButton: !showMapButtonOnDetails),
+        builder: (context) => DetailPage(store.id, showOnMap: showOnMap),
       ),
     );
   }
