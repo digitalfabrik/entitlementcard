@@ -14,7 +14,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'home/home_page.dart';
+import 'package:ehrenamtskarte/home/home_page.dart';
 
 const initialRouteName = '/';
 const activationRouteCodeParamName = 'base64qrcode';
