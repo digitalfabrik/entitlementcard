@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/activation/deeplink_activation.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
@@ -10,12 +11,17 @@ import 'package:ehrenamtskarte/themes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'home/home_page.dart';
 
-const introRouteName = '/intro';
+const initialRouteName = '/';
+const activationRouteCodeParamName = 'base64qrcode';
+const activationRouteName = 'activation';
+const homeRouteParamTabIndexName = 'tabIndex';
 const homeRouteName = '/home';
+const introRouteName = '/intro';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -45,14 +51,43 @@ class App extends StatelessWidget {
             ? buildConfig.projectId.local
             : buildConfig.projectId.showcase;
 
-    final routes = <String, WidgetBuilder>{
-      introRouteName: (context) => IntroScreen(
-            onFinishedCallback: () => settings.setFirstStart(enabled: false),
-          ),
-      homeRouteName: (context) => const HomePage()
-    };
-
-    final String initialRoute = settings.firstStart ? introRouteName : homeRouteName;
+    final GoRouter router = GoRouter(
+      routes: <RouteBase>[
+        GoRoute(
+          path: initialRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return settings.firstStart
+                ? IntroScreen(
+                    onFinishedCallback: () => settings.setFirstStart(enabled: false),
+                  )
+                : HomePage();
+          },
+          routes: [
+            GoRoute(
+              path: '$activationRouteName/:$activationRouteCodeParamName',
+              builder: (BuildContext context, GoRouterState state) {
+                print(state.uri.fragment);
+                return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
+              },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '$homeRouteName/:$homeRouteParamTabIndexName',
+          builder: (BuildContext context, GoRouterState state) {
+            return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
+          },
+        ),
+        GoRoute(
+          path: introRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return IntroScreen(
+              onFinishedCallback: () => settings.setFirstStart(enabled: false),
+            );
+          },
+        ),
+      ],
+    );
 
     // Load default language from settings
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -69,7 +104,7 @@ class App extends StatelessWidget {
       child: ConfiguredGraphQlProvider(
         child: ChangeNotifierProvider(
           create: (context) => UserCodeModel()..initialize(),
-          child: MaterialApp(
+          child: MaterialApp.router(
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
@@ -81,8 +116,7 @@ class App extends StatelessWidget {
             ],
             supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
             locale: TranslationProvider.of(context).flutterLocale,
-            initialRoute: initialRoute,
-            routes: routes,
+            routerConfig: router,
           ),
         ),
       ),

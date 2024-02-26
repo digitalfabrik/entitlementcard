@@ -25,7 +25,7 @@ steps:
       command: sudo apt install openjdk-17-jre-headless -y
   - run:
       name: Install backend
-      command: sudo dpkg -i /tmp/workspace/debs/eak-backend*.deb
+      command: sudo dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
   - run:
       name: Run migrate
       command: /opt/ehrenamtskarte/backend/bin/backend migrate

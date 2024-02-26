@@ -1,0 +1,36 @@
+when: << pipeline.parameters.run_deliver_production_backend >>
+jobs:
+  - bump_version:
+      prepare_delivery: true
+      context:
+        - deliverino
+  - build_martin
+  - check_backend
+  - build_backend:
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - build_backend
+        - bump_version
+  - check_health_backend:
+      requires:
+        - pack_backend
+  - pack_martin:
+      requires:
+        - build_martin
+        - bump_version
+  - pack_meta:
+      requires:
+        - bump_version
+  - deliver_to_server:
+      name: deliver_backend_production
+      production: true
+      bundle: backend
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - check_health_backend
+        - pack_martin
+        - pack_meta
+

@@ -9,33 +9,24 @@ steps:
       path: ~/project
   - run: git submodule sync
   - run: git submodule update --init
-  - install_app_toolbelt
+  - install_protobuf_linux
+  - prepare_workspace
   - restore_cache:
-      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   - restore_cache:
-      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
-  - run:
-      name: Check that GraphQL scheme is stable
-      command: |
-        ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-        git diff --exit-code
-  - run:
-      name: Test
-      command: |
-        ./gradlew test
+      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
   - run: ./gradlew build
   - save_cache:
       paths:
-        - .gradle/wrapper
-      key: v2-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+        - ~/gradle/wrapper
+      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
   - save_cache:
       paths:
-        - .gradle/caches
-      key: v2-gradle-cache-{{ checksum "build.gradle.kts" }}
+        - ~/.gradle/caches
+      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
   - store_artifacts:
-      path: build/libs
+      path: ~/attached_workspace/build/libs
   - persist_to_workspace:
       root: ~/project
       paths:
         - backend/build/distributions/*
-  - notify

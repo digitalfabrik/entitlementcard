@@ -67,6 +67,16 @@
     "settings": "Einstellungen",
     "tryAgain": "Erneut versuchen"
   },
+  "deeplinkActivation" : {
+    "headline": "Karte aktivieren",
+    "description": "Wollen Sie diese Karte aktivieren?",
+    "limitReached": "Ihr Kartenlimit wurde erreicht. Bitte entfernen Sie vorher eine Karte, damit Sie eine neue aktivieren können.",
+    "buttonText": "Karte aktivieren",
+    "invalidCode": "Ihr Aktivierungscode ist ungültig.",
+    "alreadyExists": "Diese Karte wurde bereits auf dem Gerät aktiviert.",
+    "activationSuccessful": "Die Aktivierung war erfolgreich.",
+    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
+  },
   "identification": {
     "activate": "Aktivieren",
     "activateCurrentDeviceDescription": "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",

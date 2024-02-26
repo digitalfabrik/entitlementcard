@@ -31,7 +31,7 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
 
   // Log base64 activationCode for development purposes
   if (qrCode.case === 'dynamicActivationCode' && isDevMode()) {
-    console.log(uint8ArrayToBase64(qrCodeContent))
+    console.log(encodeURIComponent(uint8ArrayToBase64(qrCodeContent)))
   }
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
