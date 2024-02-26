@@ -22,7 +22,8 @@ steps:
   - install_dart_linux
   - install_fvm
   - install_app_toolbelt
-  - install_protobuf_linux
+  - install_protobuf_linux:
+      dart_plugin: true
   - run:
       name: Install bundler
       command: bundle update --bundler
@@ -50,10 +51,14 @@ steps:
   - run:
       name: Move aab
       command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+  - run:
+      name: Move apk
+      command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:
         - << parameters.buildConfig >>.aab
+        - << parameters.buildConfig >>.apk
   - store_artifacts:
       path: ~/attached_workspace/
   - notify

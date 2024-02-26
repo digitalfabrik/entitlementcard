@@ -90,6 +90,7 @@ android {
 
     signingConfigs {
         if (System.getenv()['KEYSTORE_PATH']) { // Signing with env variables (CI)
+            println "Selected using env variables"
             release {
                 storeFile file("file://" + System.getenv()['HOME'] + project.KEYSTORE_PATH)
                 storePassword project.KEYSTORE_PASSWORD
@@ -104,6 +105,8 @@ android {
                 storeFile file(localProperties.getProperty('signing.storeFile'))
                 storePassword localProperties.getProperty('signing.storePassword')
             }
+        } else {
+            println "Selecting debug keystore"
         }
     }
 

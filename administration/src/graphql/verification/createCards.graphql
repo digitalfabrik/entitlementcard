@@ -1,0 +1,15 @@
+mutation createCards($project: String!, $encodedCardInfos: [String!]!, $generateStaticCodes: Boolean!) {
+  cards: createCardsByCardInfos(
+    project: $project
+    encodedCardInfos: $encodedCardInfos
+    generateStaticCodes: $generateStaticCodes
+  ) {
+    dynamicActivationCode {
+      cardInfoHashBase64
+      codeBase64
+    }
+    staticVerificationCode {
+      codeBase64
+    }
+  }
+}
