@@ -28,3 +28,4 @@ steps:
       name: Typescript
       command: npm run ts:check
       working_directory: ~/project/administration
+  - notify

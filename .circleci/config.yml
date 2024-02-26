@@ -117,6 +117,43 @@ commands:
             - run:
                 command: dart pub global activate protoc_plugin
                 name: Install Flutter plugin
+    notify:
+        description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
+        parameters:
+            allow-all-branches:
+                default: false
+                type: boolean
+            channel:
+                default: '@stefanie.metzger'
+                type: string
+            failure_mentions:
+                default: '@stefanie.metzger @andreas.fischer'
+                type: string
+            success_mentions:
+                default: ""
+                type: string
+            success_message:
+                default: ""
+                type: string
+        steps:
+            - run:
+                command: |
+                    echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the ${CIRCLE_BRANCH} branch! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
+                name: Mattermost - Prepare failure message
+                when: on_fail
+            - run:
+                command: |
+                    if [ -n "<< parameters.success_message >>" ]; then
+                        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
+                    fi
+                name: Mattermost - Prepare success message
+                when: on_success
+            - run:
+                command: |
+                    echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
+                    app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
+                name: Mattermost Status Alert
+                when: always
     persist_environment_variables:
         description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
         steps:
@@ -246,6 +283,7 @@ jobs:
                 paths:
                     - administration/build
                 root: ~/project
+            - notify
         working_directory: ~/project
     build_android:
         docker:
@@ -317,6 +355,7 @@ jobs:
                 root: ~/attached_workspace
             - store_artifacts:
                 path: ~/attached_workspace/
+            - notify
     build_backend:
         docker:
             - image: cimg/openjdk:17.0.6-node
@@ -349,6 +388,7 @@ jobs:
                 paths:
                     - backend/build/distributions/*
                 root: ~/project
+            - notify
         working_directory: ~/project/backend
     build_ios:
         macos:
@@ -396,10 +436,12 @@ jobs:
                 paths:
                     - << parameters.buildConfig >>.ipa
                 root: ~/
+            - notify
     build_martin:
         docker:
             - image: rust:bullseye
         steps:
+            - install_app_toolbelt
             - run:
                 command: |
                     mkdir -p ~/.ssh
@@ -438,6 +480,7 @@ jobs:
                 paths:
                     - martin/martin
                 root: ~/attached_workspace/artifacts
+            - notify
         working_directory: ~/martin
     bump_version:
         docker:
@@ -450,9 +493,7 @@ jobs:
         resource_class: small
         steps:
             - checkout
-            - run:
-                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
-                name: Install app-toolbelt
+            - install_app_toolbelt
             - run:
                 command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
                 name: Calculate next version name
@@ -465,7 +506,20 @@ jobs:
                     - run:
                         command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
                         name: Bump git version
+            - when:
+                condition:
+                    and:
+                        - << parameters.prepare_delivery >>
+                        - not:
+                            equal:
+                                - main
+                                - << pipeline.git.branch >>
+                steps:
+                    - notify:
+                        allow-all-branches: true
+                        success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
             - persist_environment_variables
+            - notify
     check:
         docker:
             - image: cimg/node:19.1.0-browsers
@@ -476,7 +530,10 @@ jobs:
         shell: /bin/bash -eo pipefail
         steps:
             - checkout
+            - install_app_toolbelt
             - check_circleci_config
+            - run: thiswillfail
+            - notify
     check_administration:
         docker:
             - image: cimg/node:19.1.0
@@ -507,6 +564,7 @@ jobs:
                 command: npm run ts:check
                 name: Typescript
                 working_directory: ~/project/administration
+            - notify
         working_directory: ~/project
     check_backend:
         docker:
@@ -542,6 +600,7 @@ jobs:
                 key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
+            - notify
         working_directory: ~/project/backend
     check_frontend:
         docker:
@@ -584,6 +643,7 @@ jobs:
                     fvm flutter test pubs/df_protobuf
                 name: Tests
                 working_directory: ~/project/frontend/
+            - notify
     check_health_backend:
         docker:
             - image: cimg/base:2023.03
@@ -597,6 +657,8 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
+            - run: apt update -y && apt install -y nodejs npm
+            - install_app_toolbelt
             - run:
                 command: |
                     sudo apt update
@@ -621,6 +683,7 @@ jobs:
             - run:
                 command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
                 name: Check health
+            - notify
     deliver_android:
         docker:
             - image: cimg/android:2023.02.1-node
@@ -650,6 +713,7 @@ jobs:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
                 working_directory: ~/project/frontend/android
+            - notify
     deliver_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -686,6 +750,7 @@ jobs:
                         command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
                         name: '[FL] TestFlight Upload'
                         working_directory: frontend/ios
+            - notify
     deliver_to_server:
         docker:
             - image: cimg/base:2022.09
@@ -730,6 +795,7 @@ jobs:
                         command: |
                             curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
                         name: Install package via webhook
+            - notify
     pack_administration:
         docker:
             - image: debian:11
@@ -748,6 +814,7 @@ jobs:
                 paths:
                     - debs/administration/*.deb
                 root: ~/attached_workspace
+            - notify
         working_directory: ~/project/administration
     pack_backend:
         docker:
@@ -767,6 +834,7 @@ jobs:
                 paths:
                     - debs/backend/*.deb
                 root: ~/attached_workspace
+            - notify
         working_directory: ~/project/backend
     pack_martin:
         docker:
@@ -793,6 +861,7 @@ jobs:
                 paths:
                     - debs/backend/*.deb
                 root: ~/attached_workspace
+            - notify
         working_directory: ~/project/map-tiles/martin
     pack_meta:
         docker:
@@ -812,6 +881,7 @@ jobs:
                 paths:
                     - debs/backend/*.deb
                 root: ~/attached_workspace
+            - notify
         working_directory: ~/project/administration
     promote_android:
         docker:
@@ -836,6 +906,7 @@ jobs:
                 command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
+            - notify
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0

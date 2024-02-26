@@ -45,3 +45,4 @@ steps:
             name: Install package via webhook
             command: |
               curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+  - notify

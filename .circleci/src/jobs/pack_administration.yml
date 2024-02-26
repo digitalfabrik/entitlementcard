@@ -16,3 +16,4 @@ steps:
       root: ~/attached_workspace
       paths:
         - debs/administration/*.deb
+  - notify

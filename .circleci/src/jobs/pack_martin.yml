@@ -23,3 +23,4 @@ steps:
       root: ~/attached_workspace
       paths:
         - debs/backend/*.deb
+  - notify

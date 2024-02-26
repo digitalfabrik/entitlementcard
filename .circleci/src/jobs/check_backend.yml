@@ -32,3 +32,4 @@ steps:
       paths:
         - ~/.gradle/caches
       key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+  - notify
