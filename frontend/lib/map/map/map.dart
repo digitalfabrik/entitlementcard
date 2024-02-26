@@ -9,7 +9,7 @@ import 'package:ehrenamtskarte/map/map/screen_parent_resizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
