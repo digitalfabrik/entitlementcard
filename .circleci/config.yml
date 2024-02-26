@@ -590,6 +590,9 @@ jobs:
                     git diff --exit-code
                 name: Check that GraphQL scheme is stable
             - run:
+                command: ./gradlew ktlintCheck
+                name: Check backend formatting
+            - run:
                 command: |
                     ./gradlew test
                 name: Test

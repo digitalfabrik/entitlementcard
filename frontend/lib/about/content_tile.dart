@@ -15,8 +15,7 @@ class ContentTile extends StatelessWidget {
   }
 
   void _showContent(BuildContext context) {
-    Navigator.push(
-      context,
+    Navigator.of(context, rootNavigator: true).push(
       AppRoute(
         builder: (context) => ContentPage(title: title, children: children),
       ),
