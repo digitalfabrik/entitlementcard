@@ -6,9 +6,9 @@ import { ReactElement } from 'react'
 
 import CardBlueprint from '../../../cards/CardBlueprint'
 import { PDFError, generatePdf } from '../../../cards/PdfFactory'
-import createCards, { CreateCardsError } from '../../../cards/createCards'
+import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { DynamicActivationCode } from '../../../generated/card_pb'
+import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
@@ -50,7 +50,7 @@ describe('useCardGenerator', () => {
     new CardBlueprint('Thea Test', bayernConfig.card, [region]),
     new CardBlueprint('Thea Test', bayernConfig.card, [region]),
   ]
-  const codes = [
+  const codes: CreateCardsResult[] = [
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
       dynamicActivationCode: new DynamicActivationCode({ info: cards[0].generateCardInfo() }),
@@ -58,6 +58,8 @@ describe('useCardGenerator', () => {
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
       dynamicActivationCode: new DynamicActivationCode({ info: cards[1].generateCardInfo() }),
+      staticCardInfoHash64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
+      staticVerificationCode: new StaticVerificationCode({ info: cards[1].generateCardInfo() }),
     },
   ]
 
@@ -118,7 +120,14 @@ describe('useCardGenerator', () => {
       await result.current.generateCards()
     })
 
+    const codesToDelete = [
+      codes[0].dynamicCardInfoHashBase64,
+      codes[1].staticCardInfoHash64,
+      codes[1].dynamicCardInfoHashBase64,
+    ]
+
     expect(toasterSpy).toHaveBeenCalledWith(expect.objectContaining({ intent: 'danger' }))
+    expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codesToDelete)
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
     expect(result.current.cardBlueprints).toEqual([])
