@@ -8,5 +8,9 @@ shell: /bin/bash -eo pipefail
 steps:
   - checkout
   - install_app_toolbelt
+  - run:
+      name: error
+      command: npm run lint1
   - check_circleci_config
-  - notify
+  - notify:
+      allow-all-branches: true

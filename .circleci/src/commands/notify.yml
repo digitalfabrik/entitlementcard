@@ -18,7 +18,7 @@ parameters:
 steps:
   - run:
       command: |
-            echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the main branch! :fire:\n<< parameters.failure_mentions >>"' >> $BASH_ENV
+        echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the ${CIRCLE_BRANCH} branch! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
       name: Mattermost - Prepare failure message
       when: on_fail
   - run:
@@ -30,7 +30,7 @@ steps:
       when: on_success
   - run:
       command: |
-        echo "export set-allow-all-branches-flag=<<parameters.allow-all-branches>> || $CIRCLE_BRANCH == release*>>" >> ${BASH_ENV}
-        app-toolbelt v0 notify mattermost --message MM_MESSAGE --channel << parameters.channel >> ${set-allow-all-branches-flag:+--allow-all-branches}
+        echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
+        app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
       name: Mattermost Status Alert
       when: always

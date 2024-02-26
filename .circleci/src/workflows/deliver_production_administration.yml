@@ -1,0 +1,23 @@
+when: << pipeline.parameters.run_deliver_production_administration >>
+jobs:
+  - bump_version:
+      prepare_delivery: true
+      context:
+        - deliverino
+  - check_administration
+  - build_administration:
+      requires:
+        - check_administration
+  - pack_administration:
+      requires:
+        - build_administration
+        - bump_version
+  - deliver_to_server:
+      name: deliver_administration_production
+      production: true
+      bundle: administration
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - pack_administration
+

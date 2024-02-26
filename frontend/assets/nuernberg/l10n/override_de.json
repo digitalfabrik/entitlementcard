@@ -33,5 +33,15 @@
   },
   "about": {
     "title": "Mehr"
+  },
+  "deeplinkActivation" : {
+    "headline": "Pass aktivieren",
+    "description": "Wollen Sie diesen Pass aktivieren?",
+    "limitReached": "Ihr Passlimit wurde erreicht. Bitte entfernen Sie vorher einen Pass, damit Sie einen neuen aktivieren können.",
+    "buttonText": "Pass aktivieren",
+    "invalidCode": "Ihr Aktivierungscode ist ungültig.",
+    "alreadyExists": "Dieser Pass wurde bereits auf dem Gerät aktiviert.",
+    "activationSuccessful": "Die Aktivierung war erfolgreich.",
+    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
   }
 }

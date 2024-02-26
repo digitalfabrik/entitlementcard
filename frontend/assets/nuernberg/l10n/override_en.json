@@ -33,5 +33,15 @@
   },
   "about": {
     "title": "More"
+  },
+  "deeplinkActivation" : {
+    "headline": "Activate pass",
+    "description": "Do you want to activate this pass?",
+    "limitReached": "Your pass limit has been reached. Please remove a pass first.",
+    "buttonText": "Activate pass",
+    "invalidCode": "The activation code is invalid.",
+    "alreadyExists": "This pass has already been activated on this device.",
+    "activationSuccessful": "The activation was successful.",
+    "activationInvalid": "The activation is in an invalid state."
   }
 }
