@@ -123,7 +123,7 @@ export class CardBlueprint {
     const extensionsMessage: PartialMessage<CardExtensions> = {}
 
     this.extensions.forEach(extension => {
-      if (!extension.setProtobufData) {
+      if (extension.state === null || !extension.setProtobufData) {
         return
       }
       extension.setProtobufData(extensionsMessage)
