@@ -15,7 +15,7 @@ export class CreateCardsError extends Error {
 export type CreateCardsResult = {
   dynamicCardInfoHashBase64: string
   dynamicActivationCode: DynamicActivationCode
-  staticCardInfoHash64?: string
+  staticCardInfoHashBase64?: string
   staticVerificationCode?: StaticVerificationCode
 }
 
@@ -49,7 +49,7 @@ async function createCards(
     return {
       dynamicActivationCode,
       staticVerificationCode,
-      staticCardInfoHash64: card.staticVerificationCode?.codeBase64,
+      staticCardInfoHashBase64: card.staticVerificationCode?.cardInfoHashBase64,
       dynamicCardInfoHashBase64: card.dynamicActivationCode.cardInfoHashBase64,
     }
   })

@@ -58,7 +58,7 @@ describe('useCardGenerator', () => {
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
       dynamicActivationCode: new DynamicActivationCode({ info: cards[1].generateCardInfo() }),
-      staticCardInfoHash64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
+      staticCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
       staticVerificationCode: new StaticVerificationCode({ info: cards[1].generateCardInfo() }),
     },
   ]
@@ -122,7 +122,7 @@ describe('useCardGenerator', () => {
 
     const codesToDelete = [
       codes[0].dynamicCardInfoHashBase64,
-      codes[1].staticCardInfoHash64,
+      codes[1].staticCardInfoHashBase64,
       codes[1].dynamicCardInfoHashBase64,
     ]
 

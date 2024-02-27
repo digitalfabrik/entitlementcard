@@ -19,8 +19,8 @@ export enum CardActivationState {
 
 const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
   return codes.flatMap(code => {
-    if (code.staticCardInfoHash64) {
-      return [code.dynamicCardInfoHashBase64, code.staticCardInfoHash64]
+    if (code.staticCardInfoHashBase64) {
+      return [code.dynamicCardInfoHashBase64, code.staticCardInfoHashBase64]
     }
     return code.dynamicCardInfoHashBase64
   })
