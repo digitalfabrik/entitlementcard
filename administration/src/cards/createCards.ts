@@ -1,19 +1,9 @@
 import { ApolloClient, ApolloError } from '@apollo/client'
 
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
-import {
-  AddCardsDocument,
-  AddCardsMutation,
-  AddCardsMutationVariables,
-  CardGenerationModelInput,
-  CodeType,
-  Region,
-} from '../generated/graphql'
-import { uint8ArrayToBase64 } from '../util/base64'
-import hashCardInfo from './hashCardInfo'
-
-type Codes = (DynamicActivationCode | StaticVerificationCode)[]
+import { CardInfo, DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
+import { CreateCardsDocument, CreateCardsMutation, CreateCardsMutationVariables } from '../generated/graphql'
+import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 
 export class CreateCardsError extends Error {
   constructor(message: string) {
@@ -22,37 +12,47 @@ export class CreateCardsError extends Error {
   }
 }
 
-async function createCards(client: ApolloClient<object>, project: string, activationCodes: Codes, region: Region) {
-  const cards: CardGenerationModelInput[] = await Promise.all(
-    activationCodes.map(async code => {
-      const codeType = code instanceof DynamicActivationCode ? CodeType.Dynamic : CodeType.Static
-      const cardInfoHash = await hashCardInfo(code.info!, code.pepper)
-      const expirationDay = code.info!.expirationDay
-      const startDay = code.info!.extensions?.extensionStartDay?.startDay
-      const activationSecretBase64 =
-        code instanceof DynamicActivationCode ? uint8ArrayToBase64(code.activationSecret) : null
-      return {
-        cardExpirationDay: expirationDay ?? null, // JS number can represent integers up to 2^53, so it can represent all values of an uint32 (protobuf)
-        cardInfoHashBase64: uint8ArrayToBase64(cardInfoHash),
-        activationSecretBase64: activationSecretBase64,
-        regionId: region.id,
-        codeType,
-        cardStartDay: startDay,
-      }
-    })
-  )
-  const result = await client.mutate<AddCardsMutation, AddCardsMutationVariables>({
-    mutation: AddCardsDocument,
-    variables: { cards, project },
+export type CreateCardsResult = {
+  dynamicCardInfoHashBase64: string
+  dynamicActivationCode: DynamicActivationCode
+  staticCardInfoHashBase64?: string
+  staticVerificationCode?: StaticVerificationCode
+}
+
+async function createCards(
+  client: ApolloClient<object>,
+  projectId: string,
+  cardInfos: CardInfo[],
+  generateStaticCodes: boolean
+): Promise<CreateCardsResult[]> {
+  const encodedCardInfos = cardInfos.map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
+  const result = await client.mutate<CreateCardsMutation, CreateCardsMutationVariables>({
+    mutation: CreateCardsDocument,
+    variables: { project: projectId, encodedCardInfos, generateStaticCodes },
   })
 
   if (result.errors) {
     const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
     throw new CreateCardsError(title)
   }
-  if (!result.data?.success) {
+  if (!result.data) {
     throw new CreateCardsError('Beim erstellen der Karte(n) ist ein Fehler aufgetreten.')
   }
+
+  return result.data.cards.map(card => {
+    const dynamicActivationCode = DynamicActivationCode.fromBinary(
+      base64ToUint8Array(card.dynamicActivationCode.codeBase64)
+    )
+    const staticVerificationCode = card.staticVerificationCode
+      ? StaticVerificationCode.fromBinary(base64ToUint8Array(card.staticVerificationCode.codeBase64))
+      : undefined
+    return {
+      dynamicActivationCode,
+      staticVerificationCode,
+      staticCardInfoHashBase64: card.staticVerificationCode?.cardInfoHashBase64,
+      dynamicCardInfoHashBase64: card.dynamicActivationCode.cardInfoHashBase64,
+    }
+  })
 }
 
 export default createCards

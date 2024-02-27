@@ -11,16 +11,10 @@ parameters:
   run_commit_main:
     default: true
     type: boolean
-  run_deliver_beta_administration:
+  run_deliver_beta_backend_administration:
     default: false
     type: boolean
-  run_deliver_beta_backend:
-    default: false
-    type: boolean
-  run_deliver_production_administration:
-    default: false
-    type: boolean
-  run_deliver_production_backend:
+  run_deliver_production_backend_administration:
     default: false
     type: boolean
   run_frontend:
@@ -30,5 +24,8 @@ parameters:
     default: false
     type: boolean
   run_promote_native:
+    default: false
+    type: boolean
+  run_promote_backend_administration:
     default: false
     type: boolean

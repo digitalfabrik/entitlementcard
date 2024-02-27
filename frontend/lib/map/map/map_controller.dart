@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 abstract class MapController {
   Future<void> bringCameraToLocation(LatLng location, {double zoomLevel});

@@ -2,7 +2,7 @@ import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/map/map/map_controller.dart';
 import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class PhysicalStoreFeatureData {
   final int? id;
