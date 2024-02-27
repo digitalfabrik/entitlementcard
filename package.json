@@ -1,3 +1,6 @@
 {
-    "workspaces": ["administration","frontend/build-configs" ]
+    "workspaces": ["administration","frontend/build-configs" ],
+    "scripts": {
+        "expose:ports": "adb get-state 1>/dev/null 2>&1 && adb reverse tcp:8000 tcp:8000 & adb reverse tcp:5002 tcp:5002 || echo 'no android device attached'"
+    }
 }
