@@ -5,7 +5,15 @@
     <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main.dart" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Set build config bayern" run_configuration_type="ShConfigurationType" />
-      <option name="RunConfigurationTask" enabled="false" run_configuration_name="Expose android ports" run_configuration_type="ShConfigurationType" />
+      <option name="NpmBeforeRunTask" enabled="true">
+        <package-json value="$PROJECT_DIR$/package.json" />
+        <command value="run" />
+        <scripts>
+          <script value="expose:ports" />
+        </scripts>
+        <node-interpreter value="project" />
+        <envs />
+      </option>
     </method>
   </configuration>
 </component>
