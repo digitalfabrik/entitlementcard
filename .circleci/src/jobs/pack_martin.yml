@@ -6,6 +6,10 @@ steps:
       path: ~/project
   - prepare_workspace
   - restore_environment_variables
+  - attach_workspace:
+      at: /tmp/workspace
+  - run: apt update -y && apt install -y nodejs npm
+  - install_app_toolbelt
   - run:
       name: "Build .deb"
       command: |
@@ -23,3 +27,4 @@ steps:
       root: ~/attached_workspace
       paths:
         - debs/backend/*.deb
+  - notify

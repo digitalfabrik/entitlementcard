@@ -2,6 +2,7 @@ docker:
   - image: rust:bullseye
 working_directory: ~/martin
 steps:
+  - install_app_toolbelt
   - run:
       name: "Checkout"
       command: |
@@ -40,3 +41,4 @@ steps:
       root: ~/attached_workspace/artifacts
       paths:
         - martin/martin
+  - notify
