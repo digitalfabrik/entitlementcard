@@ -1,13 +1,13 @@
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
-import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -15,14 +15,14 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class DetailContent extends StatelessWidget {
   final AcceptingStoreById$Query$PhysicalStore acceptingStore;
-  final bool hideShowOnMapButton;
+  final void Function(PhysicalStoreFeatureData)? showOnMap;
   final Color? accentColor;
   final Color? readableOnAccentColor;
 
   const DetailContent(
     this.acceptingStore, {
     super.key,
-    this.hideShowOnMapButton = false,
+    this.showOnMap,
     this.accentColor,
     this.readableOnAccentColor,
   });
@@ -98,7 +98,7 @@ class DetailContent extends StatelessWidget {
                   ),
               ],
             ),
-            if (!hideShowOnMapButton) ...[
+            if (showOnMap != null) ...[
               Divider(
                 thickness: 0.7,
                 height: 48,
@@ -130,9 +130,15 @@ class DetailContent extends StatelessWidget {
     }
   }
 
-  void _showOnMap(BuildContext context) {
+  Future<void> _showOnMap(BuildContext context) async {
     // Hint: The promise here is unused
-    HomePageData.of(context)?.navigateToMapTab(
+    final showOnMapProp = showOnMap;
+    if (showOnMapProp == null) {
+      log('Error: showOnMap is null, but button was pressed.');
+      return;
+    }
+    Navigator.of(context).pop();
+    showOnMapProp(
       PhysicalStoreFeatureData(
         acceptingStore.id,
         LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),

@@ -6,7 +6,7 @@ import 'package:intro_slider/intro_slider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-import '../app.dart';
+import 'package:ehrenamtskarte/app.dart';
 
 typedef OnFinishedCallback = void Function();
 
