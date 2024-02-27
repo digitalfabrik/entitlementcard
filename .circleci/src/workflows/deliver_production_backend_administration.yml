@@ -1,3 +1,4 @@
+# Please use the deliver_beta_backend_administration and promote_backend_administration workflows. This is just for emergencies.
 when: << pipeline.parameters.run_deliver_production_backend_administration >>
 jobs:
   - bump_version:
