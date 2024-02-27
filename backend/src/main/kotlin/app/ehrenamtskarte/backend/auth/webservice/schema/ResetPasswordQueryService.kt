@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidPasswordResetLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
@@ -18,10 +19,17 @@ class ResetPasswordQueryService {
     @GraphQLDescription("Verify password reset link")
     fun checkPasswordResetLink(project: String, resetKey: String): Boolean {
         return transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
+            val projectEntity =
+                ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
+                    project
+                )
             val projectId = projectEntity.id.value
             val admin = AdministratorEntity
-                .find { Administrators.passwordResetKey eq resetKey and (Administrators.projectId eq projectId) and not(Administrators.deleted) }.singleOrNull()
+                .find {
+                    Administrators.passwordResetKeyHash.isNotNull() and (Administrators.projectId eq projectId) and not(
+                        Administrators.deleted
+                    )
+                }.firstOrNull { PasswordCrypto.verifyPassword(resetKey, it.passwordResetKeyHash!!) }
             if (admin == null) {
                 throw InvalidPasswordResetLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
