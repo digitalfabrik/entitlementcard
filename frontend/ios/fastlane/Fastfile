@@ -132,7 +132,7 @@ platform :ios do
       ipa: "#{ENV['HOME']}/#{ipa_path}",
       app_version: version_name,
       submit_for_review: true,
-      automatic_release: false,
+      automatic_release: true,
       force: true,
       skip_screenshots: true,
       skip_metadata: true,

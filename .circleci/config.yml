@@ -1152,6 +1152,42 @@ workflows:
                     - deliverino
                 prepare_delivery: true
             - check_frontend
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_bayern
+                production_delivery: true
+                requires:
+                    - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: true
+                requires:
+                    - build_android_nuernberg
             - build_ios:
                 buildConfig: bayern
                 context:
