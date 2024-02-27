@@ -41,13 +41,10 @@ PODS:
   - GoogleUtilitiesComponents (1.1.0):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.7.2)
-  - MapLibre (5.12.2)
+  - MapLibre (5.14.0-pre3)
   - maplibre_gl (0.0.1):
     - Flutter
-    - MapLibre (~> 5.12.2)
-    - MapLibreAnnotationExtension (~> 0.0.1-beta.2)
-  - MapLibreAnnotationExtension (0.0.1-beta.2):
-    - MapLibre (~> 5.12.0)
+    - MapLibre (= 5.14.0-pre3)
   - MLImage (1.0.0-beta3)
   - MLKitBarcodeScanning (2.2.0):
     - MLKitCommon (~> 8.0)
@@ -106,9 +103,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
-  - MapLibre
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
-  - MapLibreAnnotationExtension
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -118,9 +113,6 @@ DEPENDENCIES:
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
-  https://github.com/m0nac0/flutter-maplibre-podspecs.git:
-    - MapLibre
-    - MapLibreAnnotationExtension
   trunk:
     - GoogleDataTransport
     - GoogleMLKit
@@ -128,6 +120,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GoogleUtilitiesComponents
     - GTMSessionFetcher
+    - MapLibre
     - MLImage
     - MLKitBarcodeScanning
     - MLKitCommon
@@ -182,9 +175,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
-  MapLibre: 5aa820115d91293a4d09e681e7470f88bd34b672
-  maplibre_gl: 2a0ce99f40b3a133b0e8b40b5ef37e0562165399
-  MapLibreAnnotationExtension: bc7f1041206218d7d24ba0908e3145cd54b86664
+  MapLibre: 620fc933c1d6029b33738c905c1490d024e5d4ef
+  maplibre_gl: a2efec727dd340e4c65e26d2b03b584f14881fd9
   MLImage: 489dfec109f21da8621b28d476401aaf7a0d4ff4
   MLKitBarcodeScanning: d92fe1911001ec36870162c5a0eb206f612b7169
   MLKitCommon: f6da6c5659618c070b50a80db01248ebe2964175
@@ -203,6 +195,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
-PODFILE CHECKSUM: b1bf66f8804a3c89a999c4d9cd086240d4ea0498
+PODFILE CHECKSUM: 911aea8a3150d910789c4f32e348c4d0ff803162
 
 COCOAPODS: 1.13.0

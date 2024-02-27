@@ -19,7 +19,7 @@ dependencies:
   maplibre_gl:
     git:
       url: https://github.com/maplibre/flutter-maplibre-gl.git
-      ref: a32f8d939b580b853ab34a8fb0cc61c66b71d36b
+      ref: git-release-0.18.0
   provider: ^6.0.3
   graphql_flutter: ^5.1.2
   url_launcher: ^6.1.6

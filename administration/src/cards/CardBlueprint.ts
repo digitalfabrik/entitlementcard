@@ -1,21 +1,18 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 
 import { maxCardValidity } from '../bp-modules/cards/AddCardForm'
-import { CardExtensions, CardInfo, DynamicActivationCode, QrCode, StaticVerificationCode } from '../generated/card_pb'
+import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { isContentLengthValid } from '../util/qrcode'
 import RegionExtension from './extensions/RegionExtension'
 import StartDayExtension from './extensions/StartDayExtension'
 import { Extension, ExtensionInstance, JSONExtension, findExtension } from './extensions/extensions'
-import { PEPPER_LENGTH } from './hashCardInfo'
 
 // Due to limited space on the cards
 const MAX_NAME_LENGTH = 30
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
-const ACTIVATION_SECRET_LENGTH = 20
 
 export interface JSONCardBlueprint<E = ExtensionInstance> {
   id: number
@@ -118,24 +115,8 @@ export class CardBlueprint {
       // Extensions valid
       this.extensions.every(ext => ext.isValid()) &&
       // Expiration date valid
-      (this.isExpirationDateValid() || this.hasInfiniteLifetime()) &&
-      // Number of bytes is valid
-      this.hasValidSize()
+      (this.isExpirationDateValid() || this.hasInfiniteLifetime())
     )
-  }
-
-  hasValidSize(): boolean {
-    // See https://github.com/digitalfabrik/entitlementcard/issues/690  for more context.
-
-    const dynamicCode = new QrCode({
-      qrCode: { value: this.generateActivationCode(), case: 'dynamicActivationCode' },
-    }).toBinary()
-
-    const staticCode = new QrCode({
-      qrCode: { value: this.generateStaticVerificationCode(), case: 'staticVerificationCode' },
-    }).toBinary()
-
-    return isContentLengthValid(dynamicCode) && isContentLengthValid(staticCode)
   }
 
   generateCardInfo = (): CardInfo => {
@@ -143,7 +124,6 @@ export class CardBlueprint {
 
     this.extensions.forEach(extension => {
       if (extension.state === null || !extension.setProtobufData) {
-        // We allow to skip invalid extensions to enable computing the protobuf size.
         return
       }
       extension.setProtobufData(extensionsMessage)
@@ -159,38 +139,6 @@ export class CardBlueprint {
       fullName: this.fullName,
       expirationDay,
       extensions: new CardExtensions(extensionsMessage),
-    })
-  }
-
-  generateActivationCode = (): DynamicActivationCode => {
-    if (!window.isSecureContext) {
-      // localhost is considered secure.
-      throw Error('Environment is not considered secure nor are we using Internet Explorer.')
-    }
-    const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
-    crypto.getRandomValues(pepper)
-
-    const activationSecret = new Uint8Array(ACTIVATION_SECRET_LENGTH)
-    crypto.getRandomValues(activationSecret)
-
-    return new DynamicActivationCode({
-      info: this.generateCardInfo(),
-      pepper: pepper,
-      activationSecret: activationSecret,
-    })
-  }
-
-  generateStaticVerificationCode = (): StaticVerificationCode => {
-    if (!window.isSecureContext) {
-      // localhost is considered secure.
-      throw Error('Environment is not considered secure nor are we using Internet Explorer.')
-    }
-    const pepper = new Uint8Array(PEPPER_LENGTH) // 128 bit randomness
-    crypto.getRandomValues(pepper)
-
-    return new StaticVerificationCode({
-      info: this.generateCardInfo(),
-      pepper: pepper,
     })
   }
 }

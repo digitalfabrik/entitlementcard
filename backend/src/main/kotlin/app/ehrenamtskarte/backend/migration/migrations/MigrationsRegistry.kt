@@ -8,6 +8,7 @@ object MigrationsRegistry {
         V0004_AddNotificationSettings(),
         V0005_AddRegionApplicationActivation(),
         V0006_AddStoreCreatedDate(),
-        V0007_AddStartDay()
+        V0007_AddStartDay(),
+        V0008_IncreaseAdministratorEmailLength()
     )
 }

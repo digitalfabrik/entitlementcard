@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/location/dialogs.dart';
 import 'package:ehrenamtskarte/location/location_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 

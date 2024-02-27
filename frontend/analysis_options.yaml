@@ -163,6 +163,7 @@ linter:
     sort_pub_dependencies: false
 
     prefer_single_quotes: true
+    always_use_package_imports: true
 
     # TODO: Enable in #435
     use_build_context_synchronously: false

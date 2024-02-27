@@ -89,8 +89,7 @@ class AboutPageState extends State<AboutPage> {
                 ),
               ),
               onTap: () {
-                Navigator.push(
-                  context,
+                Navigator.of(context, rootNavigator: true).push(
                   AppRoute(
                     builder: (context) => ContentPage(title: t.about.publisher, children: getPublisherText(context)),
                   ),
@@ -130,8 +129,7 @@ class AboutPageState extends State<AboutPage> {
                 leading: const Icon(Icons.book_outlined),
                 title: Text(t.about.dependencies),
                 onTap: () {
-                  Navigator.push(
-                    context,
+                  Navigator.of(context, rootNavigator: true).push(
                     AppRoute(
                       builder: (context) => const CustomLicensePage(),
                     ),
