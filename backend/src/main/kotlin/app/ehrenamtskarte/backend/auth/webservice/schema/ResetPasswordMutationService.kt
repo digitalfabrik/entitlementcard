@@ -48,7 +48,7 @@ class ResetPasswordMutationService {
         newPassword: String
     ): Boolean {
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        if (!backendConfig.projects.any { it.id === project }) throw ProjectNotFoundException(project)
+        if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
@@ -61,7 +61,7 @@ class ResetPasswordMutationService {
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw PasswordResetKeyExpiredException()
-            } else if (!PasswordCrypto.verifyPassword(passwordResetKey, passwordResetKeyHash)) {
+            } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
                 throw InvalidLinkException()
             }
 

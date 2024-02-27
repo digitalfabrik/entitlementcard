@@ -29,7 +29,7 @@ class ResetPasswordQueryService {
                     Administrators.passwordResetKeyHash.isNotNull() and (Administrators.projectId eq projectId) and not(
                         Administrators.deleted
                     )
-                }.firstOrNull { PasswordCrypto.verifyPassword(resetKey, it.passwordResetKeyHash!!) }
+                }.firstOrNull { PasswordCrypto.verifyPasswordResetKey(resetKey, it.passwordResetKeyHash!!) }
             if (admin == null) {
                 throw InvalidPasswordResetLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(Instant.now())) {

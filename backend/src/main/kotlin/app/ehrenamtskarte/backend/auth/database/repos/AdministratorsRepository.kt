@@ -109,7 +109,7 @@ object AdministratorsRepository {
         val byteArray = ByteArray(64)
         SecureRandom.getInstanceStrong().nextBytes(byteArray)
         val key = Base64.getUrlEncoder().encodeToString(byteArray)
-        administrator.passwordResetKeyHash = PasswordCrypto.hashPasswort(key)
+        administrator.passwordResetKeyHash = PasswordCrypto.hashPasswordResetKey(key)
         administrator.passwordResetKeyExpiry = Instant.now().plus(Period.ofDays(1))
         return key
     }
