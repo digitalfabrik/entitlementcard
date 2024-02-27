@@ -534,8 +534,7 @@ jobs:
             - checkout
             - install_app_toolbelt
             - check_circleci_config
-            - notify:
-                allow-all-branches: true
+            - notify
     check_administration:
         docker:
             - image: cimg/node:19.1.0
