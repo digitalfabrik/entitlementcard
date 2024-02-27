@@ -8,6 +8,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import 'package:ehrenamtskarte/home/home_page.dart';
+
 class ResultsLoader extends StatefulWidget {
   final CoordinatesInput? coordinates;
   final String? searchText;
@@ -126,7 +128,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
                 item.physicalStore?.address.location,
               ),
               coordinates: widget.coordinates,
-              showMapButtonOnDetails: true,
+              showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
             ),
           );
         },
