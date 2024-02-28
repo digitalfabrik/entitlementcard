@@ -1,12 +1,12 @@
 import { PDFPage } from 'pdf-lib'
 
 import { QrCode } from '../../generated/card_pb'
-import { uint8ArrayToBase64 } from '../../util/base64'
-import { isDevMode } from '../../util/helper'
+import generateDeepLink from '../../util/generateDeepLink'
+import { isDevMode, isStagingMode } from '../../util/helper'
 import { drawQRCode } from '../../util/qrcode'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
-type PdfQrCode = Extract<QrCode['qrCode'], { case: 'staticVerificationCode' | 'dynamicActivationCode' }>
+export type PdfQrCode = Extract<QrCode['qrCode'], { case: 'staticVerificationCode' | 'dynamicActivationCode' }>
 
 export type PdfQrCodeElementProps = {
   size: number
@@ -29,9 +29,9 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
     qrCode: qrCode,
   }).toBinary()
 
-  // Log base64 activationCode for development purposes
-  if (qrCode.case === 'dynamicActivationCode' && isDevMode()) {
-    console.log(encodeURIComponent(uint8ArrayToBase64(qrCodeContent)))
+  // Log deepLink for development and testing purposes
+  if (isDevMode() || isStagingMode()) {
+    console.log(generateDeepLink(qrCode))
   }
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)

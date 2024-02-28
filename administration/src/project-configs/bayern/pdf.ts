@@ -31,6 +31,7 @@ const pdfConfiguration: PdfConfig = {
       { x: 108, y: 170, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
       { x: 149.75, y: 162, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
+    deepLink: { x: 16, y: 160, fontSize: 10, name: 'Aktivierung' },
   },
 }
 

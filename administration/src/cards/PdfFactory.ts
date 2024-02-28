@@ -3,10 +3,12 @@ import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
 import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
+import generateDeepLink from '../util/generateDeepLink'
 import CardBlueprint from './CardBlueprint'
 import { CreateCardsResult } from './createCards'
 import pdfFormElement from './pdf/PdfFormElement'
-import pdfQrCodeElement from './pdf/PdfQrCodeElement'
+import pdfLinkElement from './pdf/PdfLinkElement'
+import pdfQrCodeElement, { PdfQrCode } from './pdf/PdfQrCodeElement'
 import pdfTextElement from './pdf/PdfTextElement'
 
 export class PDFError extends Error {
@@ -24,13 +26,23 @@ async function fillContentAreas(
   staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
   region: Region,
   cardBlueprint: CardBlueprint,
-  pdfConfig: PdfConfig
+  pdfConfig: PdfConfig,
+  deepLink: string
 ) {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
-
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
+
+  if (pdfConfig.elements?.deepLink) {
+    const helveticaBoldFont = await doc.embedFont(StandardFonts.HelveticaBold)
+    pdfLinkElement(pdfConfig.elements.deepLink, {
+      doc,
+      page: templatePage,
+      font: helveticaBoldFont,
+      url: deepLink,
+    })
+  }
 
   if (staticCode) {
     pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
@@ -88,15 +100,16 @@ export async function generatePdf(
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
       const page = doc.addPage(templatePage ? templatePage : undefined)
+      const dynamicPdfQrCode: PdfQrCode = {
+        case: 'dynamicActivationCode',
+        value: dynamicCode,
+      }
 
       await fillContentAreas(
         doc,
         page,
         cardInfoHashBase64,
-        {
-          case: 'dynamicActivationCode',
-          value: dynamicCode,
-        },
+        dynamicPdfQrCode,
         staticCode
           ? {
               case: 'staticVerificationCode',
@@ -105,7 +118,8 @@ export async function generatePdf(
           : null,
         region,
         cardBlueprint,
-        pdfConfig
+        pdfConfig,
+        generateDeepLink(dynamicPdfQrCode)
       )
     }
 

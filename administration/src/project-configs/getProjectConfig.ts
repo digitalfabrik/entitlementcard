@@ -4,6 +4,7 @@ import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
+import { PdfLinkElementProps } from '../cards/pdf/PdfLinkElement'
 import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
@@ -19,6 +20,7 @@ export interface PdfConfig {
     dynamicActivationQrCodes: PdfQrCodeElementProps[]
     text: PdfTextElementProps[]
     form?: PdfFormElementProps[]
+    deepLink?: PdfLinkElementProps
   }
 }
 
