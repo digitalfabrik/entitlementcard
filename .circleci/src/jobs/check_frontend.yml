@@ -8,7 +8,8 @@ steps:
   - install_dart_linux
   - install_fvm
   - install_app_toolbelt
-  - install_protobuf_linux
+  - install_protobuf_linux:
+      dart_plugin: true
   - run:
       name: Install Flutter Packages
       command: fvm flutter pub get --enforce-lockfile
@@ -37,3 +38,4 @@ steps:
         fvm flutter test pubs/df_build_config
         fvm flutter test pubs/df_protobuf
       working_directory: ~/project/frontend/
+  - notify

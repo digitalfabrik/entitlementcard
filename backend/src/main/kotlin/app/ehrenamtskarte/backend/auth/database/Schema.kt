@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 
 object Administrators : IntIdTable() {
-    val email = varchar("email", 100)
+    val email = varchar("email", 254)
     val projectId = reference("projectId", Projects)
     val regionId = optReference("regionId", Regions)
     val role = varchar("role", 32)

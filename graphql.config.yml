@@ -1,0 +1,12 @@
+schema: specs/backend-api.graphql
+documents:
+  - administration/src/graphql/*.graphql
+  - frontend/graphql_queries/*.graphql
+extensions:
+  endpoints:
+    frontend:
+      url: http://localhost:8000/
+    administration:
+      url: http://localhost:8000/
+      headers:
+        Authorization: Bearer ${JWT_SECRET}

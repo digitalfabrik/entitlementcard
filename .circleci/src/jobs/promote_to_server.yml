@@ -1,0 +1,27 @@
+docker:
+  - image: cimg/base:2022.09
+steps:
+  - run:
+      name: Install Curl
+      command: |
+        sudo apt update
+        sudo apt install curl -y
+  - prepare_workspace
+  - add_ssh_keys:
+      fingerprints:
+        - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+  - run:
+      name: Transfer artifacts to production
+      command: |
+              mkdir /home/circleci/.ssh
+              echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
+              echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+              scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
+  - run:
+      name: Install administration package via webhook
+      command: |
+              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-administration-$EAK_WEBHOOK
+  - run:
+      name: Install backend packages via webhook
+      command: |
+              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK

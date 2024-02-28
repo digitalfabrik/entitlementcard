@@ -8,11 +8,20 @@ import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import java.time.Instant
 
 object CardRepository {
+    fun deleteInactiveCardsByHash(regionId: Int, cardInfoHashList: List<ByteArray>) {
+        Cards.deleteWhere {
+            firstActivationDate.isNull() and (cardInfoHash inList cardInfoHashList) and (Cards.regionId eq regionId)
+        }
+    }
 
     fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
         val query =

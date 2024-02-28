@@ -10,5 +10,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/backend/ehrenamtskarte-maplibre-style" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/backend/ehrenamtskarte-maplibre-style/font-glyphs" vcs="Git" />
   </component>
 </project>

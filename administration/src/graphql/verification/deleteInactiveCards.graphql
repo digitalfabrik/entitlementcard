@@ -1,0 +1,3 @@
+mutation deleteCards($regionId: Int!, $cardInfoHashBase64List: [String!]!) {
+  deleteInactiveCards(regionId: $regionId, cardInfoHashBase64List: $cardInfoHashBase64List)
+}

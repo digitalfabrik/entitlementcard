@@ -22,7 +22,8 @@ steps:
   - install_dart_linux
   - install_fvm
   - install_app_toolbelt
-  - install_protobuf_linux
+  - install_protobuf_linux:
+      dart_plugin: true
   - run:
       name: Install bundler
       command: bundle update --bundler
@@ -60,3 +61,4 @@ steps:
         - << parameters.buildConfig >>.apk
   - store_artifacts:
       path: ~/attached_workspace/
+  - notify

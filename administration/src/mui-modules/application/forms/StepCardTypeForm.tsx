@@ -98,7 +98,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
           Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können
           Sie{' '}
           <a
-            href='https://www.lbe.bayern.de/engagement-anerkennen/ehrenamtskarte/voraussetzungen/index.php'
+            href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/'
             target='_blank'
             rel='noreferrer'>
             hier einsehen

@@ -1,0 +1,30 @@
+docker:
+  - image: cimg/node:19.1.0
+working_directory: ~/project
+steps:
+  - checkout:
+      path: ~/project
+  - install_dart_linux
+  - install_protobuf_linux
+  - prepare_workspace
+  - restore_npm_cache
+  - run:
+      name: Generate GraphQL
+      command: npm run generate-graphql
+      working_directory: ~/project/administration
+  - run:
+      name: Generate Protobuf
+      command: npm run generate-protobuf
+      working_directory: ~/project/administration
+  - run:
+      name: Lint
+      command: npm run lint
+      working_directory: ~/project/administration
+  - run:
+      name: Test
+      command: npm run test -- --maxWorkers=2
+      working_directory: ~/project/administration
+  - run:
+      name: Typescript
+      command: npm run ts:check
+      working_directory: ~/project/administration
