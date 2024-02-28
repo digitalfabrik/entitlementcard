@@ -1,3 +1,9 @@
+import {
+  BAYERN_PRODUCTION_ID,
+  BAYERN_STAGING_ID,
+  NUERNBERG_PRODUCTION_ID,
+  NUERNBERG_STAGING_ID,
+} from 'build-configs/constants'
 import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
@@ -62,11 +68,11 @@ export const setProjectConfigOverride = (hostname: string) => {
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem('project-override') ?? hostname) {
-    case 'bayern.ehrenamtskarte.app':
-    case 'staging.bayern.ehrenamtskarte.app':
+    case BAYERN_PRODUCTION_ID:
+    case BAYERN_STAGING_ID:
       return bayernConfig
-    case 'nuernberg.sozialpass.app':
-    case 'staging.nuernberg.sozialpass.app':
+    case NUERNBERG_PRODUCTION_ID:
+    case NUERNBERG_STAGING_ID:
       return nuernbergConfig
     default:
       console.debug('Falling back to showcase.')

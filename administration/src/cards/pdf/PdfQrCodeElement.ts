@@ -30,7 +30,7 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
   }).toBinary()
 
   // Log deepLink for development and testing purposes
-  if (isDevMode() || isStagingMode()) {
+  if ((isDevMode() || isStagingMode()) && qrCode.case === 'dynamicActivationCode') {
     console.log(generateDeepLink(qrCode))
   }
 

@@ -1,14 +1,21 @@
-import { ACTIVATION_FRAGMENT, ACTIVATION_PATH } from 'build-configs/constants'
+import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, CUSTOM_SCHEME, HTTPS_SCHEME } from 'build-configs/constants'
 
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
+import getBuildConfig from './getBuildConfig'
+import { isDevMode, isStagingMode } from './helper'
+
+type DeepLinkSchemeTypes = typeof CUSTOM_SCHEME | typeof HTTPS_SCHEME
 
 const generateDeepLink = (qrCode: PdfQrCode): string => {
   const qrCodeContent = new QrCode({
     qrCode: qrCode,
   }).toBinary()
-  return `${window.location.origin}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodeURIComponent(
+  const scheme: DeepLinkSchemeTypes = isDevMode() ? CUSTOM_SCHEME : HTTPS_SCHEME
+  const buildConfig = getBuildConfig(window.location.hostname)
+  const host = isStagingMode() ? buildConfig.common.projectId.staging : buildConfig.common.projectId.production
+  return `${scheme}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
   )}`
 }

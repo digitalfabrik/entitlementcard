@@ -1,4 +1,4 @@
-import { PDFDocument, PDFFont, PDFName, PDFPage, PDFRef, PDFString, rgb } from 'pdf-lib'
+import { PDFDocument, PDFFont, PDFPage, PDFRef, PDFString, rgb } from 'pdf-lib'
 
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
@@ -59,6 +59,6 @@ const pdfLinkElement: PdfElement<PdfLinkElementProps, PdfLinkElementRendererProp
     thickness: 0.5,
   })
   const link = createPageLinkAnnotation(url, linkXCoordinate, linkYCoordinate, width, fontSize, doc)
-  page.node.set(PDFName.of('Annots'), doc.context.obj([link]))
+  page.node.addAnnot(link)
 }
 export default pdfLinkElement
