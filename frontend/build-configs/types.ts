@@ -1,4 +1,4 @@
-type BuildConfigType = {
+export type BuildConfigType = {
     common: CommonBuildConfigType
     android: AndroidBuildConfigType
     ios: iOSBuildConfigType

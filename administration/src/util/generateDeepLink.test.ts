@@ -15,7 +15,6 @@ import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import generateDeepLink from './generateDeepLink'
-import getBuildConfig from './getBuildConfig'
 
 describe('DeepLink generation', () => {
   const region: Region = {
@@ -48,9 +47,8 @@ describe('DeepLink generation', () => {
   window = Object.create(window)
 
   it('should generate a correct link for development', () => {
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.local
-    expect(generateDeepLink(dynamicPdfQrCode)).toBe(
-      `${CUSTOM_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
+      `${CUSTOM_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
   it('should generate a correct link for staging', () => {
@@ -61,9 +59,8 @@ describe('DeepLink generation', () => {
       },
       writable: true,
     })
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
-    expect(generateDeepLink(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_STAGING_ID)).toBe(
+      `${HTTPS_SCHEME}://${BAYERN_STAGING_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
   it('should generate a correct link for production', () => {
@@ -74,9 +71,8 @@ describe('DeepLink generation', () => {
       },
       writable: true,
     })
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.production
-    expect(generateDeepLink(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
+      `${HTTPS_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
 })

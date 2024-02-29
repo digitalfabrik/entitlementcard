@@ -1,8 +1,6 @@
 import { PDFPage } from 'pdf-lib'
 
 import { QrCode } from '../../generated/card_pb'
-import generateDeepLink from '../../util/generateDeepLink'
-import { isDevMode, isStagingMode } from '../../util/helper'
 import { drawQRCode } from '../../util/qrcode'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
@@ -28,11 +26,6 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
   const qrCodeContent = new QrCode({
     qrCode: qrCode,
   }).toBinary()
-
-  // Log deepLink for development and testing purposes
-  if ((isDevMode() || isStagingMode()) && qrCode.case === 'dynamicActivationCode') {
-    console.log(generateDeepLink(qrCode))
-  }
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)
 }

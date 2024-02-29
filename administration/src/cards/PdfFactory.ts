@@ -2,7 +2,7 @@ import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
 
 import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import { PdfConfig } from '../project-configs/getProjectConfig'
+import { PdfConfig, ProjectConfig } from '../project-configs/getProjectConfig'
 import generateDeepLink from '../util/generateDeepLink'
 import CardBlueprint from './CardBlueprint'
 import { CreateCardsResult } from './createCards'
@@ -30,9 +30,9 @@ async function fillContentAreas(
   deepLink: string
 ) {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
-  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions => {
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
-  )
+  })
 
   if (pdfConfig.elements?.deepLink) {
     const helveticaBoldFont = await doc.embedFont(StandardFonts.HelveticaBold)
@@ -81,8 +81,9 @@ export async function generatePdf(
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
   region: Region,
-  pdfConfig: PdfConfig
+  projectConfig: ProjectConfig
 ) {
+  const { pdf: pdfConfig, projectId } = projectConfig
   try {
     const doc = await PDFDocument.create()
 
@@ -119,7 +120,7 @@ export async function generatePdf(
         region,
         cardBlueprint,
         pdfConfig,
-        generateDeepLink(dynamicPdfQrCode)
+        generateDeepLink(dynamicPdfQrCode, projectId)
       )
     }
 

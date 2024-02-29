@@ -42,7 +42,7 @@ const useCardGenerator = (region: Region) => {
       const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
       codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
 
-      const pdfDataUri = await generatePdf(codes, cardBlueprints, region, projectConfig.pdf)
+      const pdfDataUri = await generatePdf(codes, cardBlueprints, region, projectConfig)
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
