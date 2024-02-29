@@ -1,9 +1,4 @@
-import {
-  BAYERN_PRODUCTION_ID,
-  BAYERN_STAGING_ID,
-  NUERNBERG_PRODUCTION_ID,
-  NUERNBERG_STAGING_ID,
-} from 'build-configs/constants'
+import { BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from 'build-configs'
 import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
