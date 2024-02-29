@@ -3,7 +3,7 @@ import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, CUSTOM_SCHEME, HTTPS_SCHEME } fro
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
-import { getBuildConfig } from './getProjectConfig'
+import { getBuildConfig } from './getBuildConfig'
 import { isDevMode, isStagingMode } from './helper'
 
 type DeepLinkSchemeTypes = typeof CUSTOM_SCHEME | typeof HTTPS_SCHEME

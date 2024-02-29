@@ -9,7 +9,7 @@ import {
 } from 'build-configs'
 
 export const getBuildConfig = (hostname: string): BuildConfigType => {
-  switch (hostname) {
+  switch (window.localStorage.getItem('project-override') ?? hostname) {
     case BAYERN_PRODUCTION_ID:
     case BAYERN_STAGING_ID:
       return buildConfigBayern

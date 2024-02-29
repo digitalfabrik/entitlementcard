@@ -15,7 +15,7 @@ import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import generateDeepLink from './generateDeepLink'
-import { getBuildConfig } from './getProjectConfig'
+import { getBuildConfig } from './getBuildConfig'
 
 describe('DeepLink generation', () => {
   const region: Region = {
@@ -45,35 +45,31 @@ describe('DeepLink generation', () => {
   }
 
   const activationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EI2jARoICgIIACICCAA%3D'
-  window = Object.create(window)
+
+  const defineHostname = (hostname: string) =>
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname,
+      },
+      writable: true,
+    })
 
   it('should generate a correct link for development', () => {
+    localStorage.setItem('project-override', BAYERN_PRODUCTION_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.local
     expect(generateDeepLink(dynamicPdfQrCode)).toBe(
       `${CUSTOM_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
   it('should generate a correct link for staging', () => {
-    const hostname = BAYERN_STAGING_ID
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
+    defineHostname(BAYERN_STAGING_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
     expect(generateDeepLink(dynamicPdfQrCode)).toBe(
       `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
   it('should generate a correct link for production', () => {
-    const hostname = BAYERN_PRODUCTION_ID
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
+    defineHostname(BAYERN_PRODUCTION_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.production
     expect(generateDeepLink(dynamicPdfQrCode)).toBe(
       `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`

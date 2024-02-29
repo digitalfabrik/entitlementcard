@@ -12,6 +12,7 @@ import bayernConfig from './bayern/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
+export const LOCAL_STORAGE_PROJECT_KEY = 'project-override'
 export interface PdfConfig {
   title: string
   templatePath: string | null
@@ -58,11 +59,11 @@ export interface ProjectConfig {
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
-  window.localStorage.setItem('project-override', hostname)
+  window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
-  switch (window.localStorage.getItem('project-override') ?? hostname) {
+  switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
     case BAYERN_PRODUCTION_ID:
     case BAYERN_STAGING_ID:
       return bayernConfig
