@@ -8,7 +8,7 @@ import { isDevMode, isStagingMode } from './helper'
 
 type DeepLinkSchemeTypes = typeof CUSTOM_SCHEME | typeof HTTPS_SCHEME
 
-const generateDeepLink = (qrCode: PdfQrCode): string => {
+const getDeepLinkFromQrCode = (qrCode: PdfQrCode): string => {
   const qrCodeContent = new QrCode({
     qrCode: qrCode,
   }).toBinary()
@@ -17,11 +17,11 @@ const generateDeepLink = (qrCode: PdfQrCode): string => {
   const host = isStagingMode() ? buildConfig.common.projectId.staging : buildConfig.common.projectId.production
   const deepLink = `${scheme}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
-  )}`
+  )}/`
   // Log deepLink for development and testing purposes
   if (isDevMode() || isStagingMode()) {
     console.log(deepLink)
   }
   return deepLink
 }
-export default generateDeepLink
+export default getDeepLinkFromQrCode

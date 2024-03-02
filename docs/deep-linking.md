@@ -26,9 +26,9 @@ The card activation links will be printed on the pdf or send via mail. It's impo
 ### Examples:
 
 ```
-https://staging.bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
+https://staging.bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D/
 
-berechtigungskarte://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
+berechtigungskarte://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D/
 ```
 
 #### Note
@@ -43,10 +43,10 @@ Install: `npm i -g uri-scheme` if you want to use the simplified command
 ```
 adb shell am start -a android.intent.action.VIEW \
 -c android.intent.category.BROWSABLE \
--d https://bayern.ehrenamtskarte.app/activation/code#<activationCode>
+-d https://bayern.ehrenamtskarte.app/activation/code#<activationCode>/
 ```
 ```
- npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --android
+ npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>/ --android
 ```
 
 ### Note
@@ -54,10 +54,10 @@ For android only signed apks can apply trusted associations. So if you want to t
 
 ### a) iOS
 ```
-xcrun simctl openurl booted https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>
+xcrun simctl openurl booted https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>/
 ```
 ```
-npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
+npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>/ --ios
 ```
 
 
