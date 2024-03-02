@@ -1,5 +1,4 @@
 import { PDFDocument, PDFPage, PDFRef, PDFString } from 'pdf-lib'
-
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type PdfLinkAreaProps = {

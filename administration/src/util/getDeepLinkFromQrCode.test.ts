@@ -16,6 +16,7 @@ import { DynamicActivationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
 import { getBuildConfig } from './getBuildConfig'
+
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
 
 describe('DeepLink generation', () => {
@@ -46,14 +47,7 @@ describe('DeepLink generation', () => {
   }
 
   const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EI%2BjARoICgIIACICCAA%3D'
-
   const defineHostname = (hostname: string) =>
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
 
   it('should generate a correct link for development', () => {
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, BAYERN_PRODUCTION_ID)
