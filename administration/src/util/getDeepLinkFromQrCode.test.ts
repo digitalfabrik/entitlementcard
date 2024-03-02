@@ -14,7 +14,7 @@ import RegionExtension from '../cards/extensions/RegionExtension'
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import generateDeepLink from './generateDeepLink'
+import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
 
 describe('DeepLink generation', () => {
   const region: Region = {
@@ -47,7 +47,7 @@ describe('DeepLink generation', () => {
   window = Object.create(window)
 
   it('should generate a correct link for development', () => {
-    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
       `${CUSTOM_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
@@ -59,7 +59,7 @@ describe('DeepLink generation', () => {
       },
       writable: true,
     })
-    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_STAGING_ID)).toBe(
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_STAGING_ID)).toBe(
       `${HTTPS_SCHEME}://${BAYERN_STAGING_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
@@ -71,7 +71,7 @@ describe('DeepLink generation', () => {
       },
       writable: true,
     })
-    expect(generateDeepLink(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
       `${HTTPS_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
     )
   })
