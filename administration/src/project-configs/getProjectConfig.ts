@@ -14,6 +14,7 @@ import { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
 import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
+import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
@@ -63,11 +64,11 @@ export interface ProjectConfig {
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
-  window.localStorage.setItem('project-override', hostname)
+  window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
-  switch (window.localStorage.getItem('project-override') ?? hostname) {
+  switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
     case BAYERN_PRODUCTION_ID:
     case BAYERN_STAGING_ID:
       return bayernConfig

@@ -5,7 +5,7 @@ import {
   BAYERN_STAGING_ID,
   CUSTOM_SCHEME,
   HTTPS_SCHEME,
-} from 'build-configs/constants'
+} from 'build-configs'
 
 import CardBlueprint from '../cards/CardBlueprint'
 import { CreateCardsResult } from '../cards/createCards'
@@ -14,6 +14,8 @@ import RegionExtension from '../cards/extensions/RegionExtension'
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
+import { getBuildConfig } from './getBuildConfig'
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
 
 describe('DeepLink generation', () => {
@@ -43,36 +45,34 @@ describe('DeepLink generation', () => {
     value: code.dynamicActivationCode,
   }
 
-  const activationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EI2jARoICgIIACICCAA%3D'
-  window = Object.create(window)
+  const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EJGjARoICgIIACICCAA%3D'
+  const overrideHostname = (hostname: string) =>
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname,
+      },
+      writable: true,
+    })
 
   it('should generate a correct link for development', () => {
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
-      `${CUSTOM_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, BAYERN_PRODUCTION_ID)
+    const projectId = getBuildConfig(window.location.hostname).common.projectId.local
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
+      `${CUSTOM_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
     )
   })
   it('should generate a correct link for staging', () => {
-    const hostname = BAYERN_STAGING_ID
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_STAGING_ID)).toBe(
-      `${HTTPS_SCHEME}://${BAYERN_STAGING_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    overrideHostname(BAYERN_STAGING_ID)
+    const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
+      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
     )
   })
   it('should generate a correct link for production', () => {
-    const hostname = BAYERN_PRODUCTION_ID
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode, BAYERN_PRODUCTION_ID)).toBe(
-      `${HTTPS_SCHEME}://${BAYERN_PRODUCTION_ID}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${activationCodeBase64}`
+    overrideHostname(BAYERN_PRODUCTION_ID)
+    const projectId = getBuildConfig(window.location.hostname).common.projectId.production
+    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
+      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
     )
   })
 })
