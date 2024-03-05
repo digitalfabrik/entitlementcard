@@ -13,7 +13,7 @@ parameters:
     default: false
     type: boolean
   channel:
-    default: stefanie.metzger
+    default: "@stefanie.metzger"
     type: string
 steps:
   - run:

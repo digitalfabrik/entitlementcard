@@ -124,7 +124,7 @@ commands:
                 default: false
                 type: boolean
             channel:
-                default: stefanie.metzger
+                default: '@stefanie.metzger'
                 type: string
             failure_mentions:
                 default: '@stefanie.metzger @andreas.fischer'
