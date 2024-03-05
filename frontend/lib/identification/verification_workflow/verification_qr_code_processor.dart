@@ -20,7 +20,7 @@ Future<CardInfo?> verifyQrCodeContent(
     final verificationCode = qrcode.staticVerificationCode;
     return verifyStaticVerificationCode(client, projectId, verificationCode);
   } else {
-    throw QrCodeWrongTypeException();
+    throw QrCodeWrongTypeException(getQRCodeTypeMessage(qrcode));
   }
 }
 

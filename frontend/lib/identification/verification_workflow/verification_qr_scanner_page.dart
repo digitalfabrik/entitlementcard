@@ -110,7 +110,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on Exception catch (e) {
       await _onError(
         context,
-        t.identification.codeUnknownError,
+        t.identification.codeUnknownType,
         e,
       );
     }

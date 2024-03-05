@@ -11,5 +11,6 @@ class QrCodeFieldMissingException extends QrCodeParseException {
 }
 
 class QrCodeWrongTypeException extends QrCodeParseException {
-  QrCodeWrongTypeException() : super('Wrong QrCode type was read.');
+  final String qrCodeType;
+  QrCodeWrongTypeException(this.qrCodeType) : super('Wrong QrCode type was read: $qrCodeType');
 }
