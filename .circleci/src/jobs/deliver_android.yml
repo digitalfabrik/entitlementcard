@@ -16,9 +16,9 @@ steps:
   - checkout:
       path: ~/project
   - prepare_workspace
+  - install_app_toolbelt
   - restore_ruby_cache:
       directory: ~/project/frontend/android
-  - install_app_toolbelt
   - restore_environment_variables
   - run:
       name: '[FL] Play Store Upload'

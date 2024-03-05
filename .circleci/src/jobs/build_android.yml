@@ -24,10 +24,6 @@ steps:
   - install_app_toolbelt
   - install_protobuf_linux:
       dart_plugin: true
-  - run:
-      name: Install bundler
-      command: bundle update --bundler
-      working_directory: ~/project/frontend/android
   - restore_environment_variables
   - restore_ruby_cache:
       directory: ~/project/frontend/android

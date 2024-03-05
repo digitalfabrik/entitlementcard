@@ -4,6 +4,10 @@ parameters:
     type: string
     default: native
 steps:
+  - run:
+      name: Install bundler
+      command: bundle update --bundler
+      working_directory: ~/project/frontend/android
   - restore_cache:
       keys:
         - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
