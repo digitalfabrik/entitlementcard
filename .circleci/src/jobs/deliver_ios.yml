@@ -23,7 +23,7 @@ steps:
       steps:
         - run:
             name: '[FL] App Store Connect Upload'
-            command: echo "not implemented yet" #bundle exec fastlane ios appstoreconnect_upload ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME} build_config_name:<< parameters.buildConfig >>
+            command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME}
             working_directory: frontend/ios
   - unless:
       condition: << parameters.production_delivery >>

@@ -23,6 +23,9 @@ parameters:
   run_delivery_beta_native:
     default: false
     type: boolean
+  run_delivery_production_native:
+    default: false
+    type: boolean
   run_promote_native:
     default: false
     type: boolean

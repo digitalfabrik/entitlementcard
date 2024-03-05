@@ -742,7 +742,7 @@ jobs:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
-                        command: echo "not implemented yet"
+                        command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME}
                         name: '[FL] App Store Connect Upload'
                         working_directory: frontend/ios
             - unless:
@@ -968,6 +968,9 @@ parameters:
         default: false
         type: boolean
     run_delivery_beta_native:
+        default: false
+        type: boolean
+    run_delivery_production_native:
         default: false
         type: boolean
     run_frontend:
@@ -1245,6 +1248,86 @@ workflows:
                 requires:
                     - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
+    delivery_production_native:
+        jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: true
+            - check_frontend
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_bayern
+                production_delivery: true
+                requires:
+                    - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: true
+                requires:
+                    - build_android_nuernberg
+            - build_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Bayern
+                name: build_ios_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                name: deliver_bayern_ios
+                production_delivery: true
+                requires:
+                    - build_ios_bayern
+            - build_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Nuernberg
+                name: build_ios_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                name: deliver_nuernberg_ios
+                production_delivery: true
+                requires:
+                    - build_ios_nuernberg
+        when: << pipeline.parameters.run_delivery_production_native >>
     frontend:
         jobs:
             - check_frontend
