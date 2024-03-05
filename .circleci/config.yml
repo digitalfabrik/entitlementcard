@@ -706,8 +706,8 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - prepare_workspace
             - install_app_toolbelt
+            - prepare_workspace
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
             - restore_environment_variables
@@ -924,28 +924,6 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
-    promote_ios:
-        environment:
-            FASTLANE_SKIP_UPDATE_CHECK: true
-        macos:
-            xcode: 15.0.1
-        parameters:
-            build_config_name:
-                default: bayern
-                enum:
-                    - bayern
-                    - nuernberg
-                type: enum
-        shell: /bin/bash --login -o pipefail
-        steps:
-            - checkout
-            - restore_ruby_cache:
-                directory: ~/project/frontend/android
-            - install_app_toolbelt
-            - run:
-                command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
-                name: '[FL] Play Store Promotion'
-                working_directory: frontend/android
     promote_to_server:
         docker:
             - image: cimg/base:2022.09

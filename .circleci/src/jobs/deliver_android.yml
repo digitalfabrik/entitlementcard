@@ -15,8 +15,8 @@ environment:
 steps:
   - checkout:
       path: ~/project
-  - prepare_workspace
   - install_app_toolbelt
+  - prepare_workspace
   - restore_ruby_cache:
       directory: ~/project/frontend/android
   - restore_environment_variables
