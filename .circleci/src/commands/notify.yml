@@ -13,7 +13,7 @@ parameters:
     default: false
     type: boolean
   channel:
-    default: entitlementcard-notifications
+    default: stefanie.metzger
     type: string
 steps:
   - run:
@@ -30,9 +30,11 @@ steps:
       when: on_success
   - run:
       command: |
+        echo $MM_MESSAGE
         echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
         app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
         unset MM_MESSAGE
+        echo $MM_MESSAGE
       name: Mattermost Status Alert
       when: always
 

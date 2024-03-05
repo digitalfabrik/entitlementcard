@@ -124,7 +124,7 @@ commands:
                 default: false
                 type: boolean
             channel:
-                default: entitlementcard-notifications
+                default: stefanie.metzger
                 type: string
             failure_mentions:
                 default: '@stefanie.metzger @andreas.fischer'
@@ -150,9 +150,11 @@ commands:
                 when: on_success
             - run:
                 command: |
+                    echo $MM_MESSAGE
                     echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
                     app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
                     unset MM_MESSAGE
+                    echo $MM_MESSAGE
                 name: Mattermost Status Alert
                 when: always
     persist_environment_variables:
@@ -240,14 +242,14 @@ commands:
                 working_directory: ~/project/frontend/android
             - restore_cache:
                 keys:
-                    - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - 1-gems-{{ arch }}-
+                    - 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                    - 2-gems-{{ arch }}-
             - run:
                 command: bundle check || bundle install
                 name: '[FL] install'
                 working_directory: << parameters.directory >>
             - save_cache:
-                key: 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
                 paths:
                     - << parameters.directory >>/vendor/bundle
     setup_npm_global:
@@ -1186,68 +1188,6 @@ workflows:
                 requires:
                     - bump_version
                     - check_frontend
-            - deliver_android:
-                buildConfig: bayern
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_bayern
-                production_delivery: false
-                requires:
-                    - build_android_bayern
-            - build_android:
-                buildConfig: nuernberg
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                flutterFlavor: Nuernberg
-                name: build_android_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_nuernberg
-                production_delivery: false
-                requires:
-                    - build_android_nuernberg
-            - build_ios:
-                buildConfig: bayern
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                flutterFlavor: Bayern
-                name: build_ios_bayern
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: bayern
-                context:
-                    - tuerantuer-apple
-                name: deliver_bayern_ios
-                production_delivery: false
-                requires:
-                    - build_ios_bayern
-            - build_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                flutterFlavor: Nuernberg
-                name: build_ios_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_nuernberg_ios
-                production_delivery: false
-                requires:
-                    - build_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     delivery_production_native:
         jobs:
