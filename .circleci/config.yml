@@ -143,19 +143,7 @@ commands:
                 when: on_fail
             - run:
                 command: |
-                    if [ -n "<< parameters.success_message >>" ]; then
-                        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
-                    fi
-                name: Mattermost - Prepare success message
-                when: on_success
-            - run:
-                command: |
-                    echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
-                name: Set ALLOW_ALL_BRANCHES flag
-                when: always
-            - run:
-                command: |
-                    app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
+                    app-toolbelt v0 notify mattermost --message "${parameters.success_message}" --channel << parameters.channel >> ${parameters.allow-all-branches:+--allow-all-branches}
                 name: Mattermost Status Alert
                 when: always
     persist_environment_variables:
@@ -507,12 +495,6 @@ jobs:
                 command: echo "export NEW_VERSION_CODE=$(app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
                 name: Calculate next version code
             - when:
-                condition: << parameters.prepare_delivery >>
-                steps:
-                    - run:
-                        command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
-                        name: Bump git version
-            - when:
                 condition:
                     and:
                         - << parameters.prepare_delivery >>
@@ -692,7 +674,7 @@ jobs:
             - notify
     deliver_android:
         docker:
-            - image: cimg/android:2022.09.2-node
+            - image: cimg/android:2023.02.1-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
@@ -1178,17 +1160,6 @@ workflows:
                 context:
                     - deliverino
                 prepare_delivery: true
-            - check_frontend
-            - build_android:
-                buildConfig: bayern
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
-                name: build_android_bayern
-                requires:
-                    - bump_version
-                    - check_frontend
         when: << pipeline.parameters.run_delivery_beta_native >>
     delivery_production_native:
         jobs:
