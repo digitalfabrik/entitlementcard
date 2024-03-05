@@ -38,13 +38,3 @@ steps:
         app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
       name: Mattermost Status Alert
       when: always
-  - run:
-      command: |
-        unset MM_MESSAGE
-      name: Unset MM_MESSAGE
-      when: always
-  - run:
-      command: |
-        unset ALLOW_ALL_BRANCHES
-      name: Unset ALLOW_ALL_BRANCHES
-      when: always

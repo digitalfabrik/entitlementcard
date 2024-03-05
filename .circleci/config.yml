@@ -158,16 +158,6 @@ commands:
                     app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
                 name: Mattermost Status Alert
                 when: always
-            - run:
-                command: |
-                    unset MM_MESSAGE
-                name: Unset MM_MESSAGE
-                when: always
-            - run:
-                command: |
-                    unset ALLOW_ALL_BRANCHES
-                name: Unset ALLOW_ALL_BRANCHES
-                when: always
     persist_environment_variables:
         description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
         steps:
@@ -248,7 +238,7 @@ commands:
                 type: string
         steps:
             - run:
-                command: bundle update --bundler
+                command: sudo bundle update --bundler
                 name: Install bundler
                 working_directory: ~/project/frontend/android
             - restore_cache:
@@ -534,8 +524,8 @@ jobs:
                     - notify:
                         allow-all-branches: true
                         success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
-            - persist_environment_variables
             - notify
+            - persist_environment_variables
     check:
         docker:
             - image: cimg/node:19.1.0-browsers

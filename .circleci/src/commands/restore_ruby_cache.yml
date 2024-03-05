@@ -6,7 +6,7 @@ parameters:
 steps:
   - run:
       name: Install bundler
-      command: bundle update --bundler
+      command: sudo bundle update --bundler
       working_directory: ~/project/frontend/android
   - restore_cache:
       keys:

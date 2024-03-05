@@ -32,5 +32,5 @@ steps:
         - notify:
             success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
             allow-all-branches: true
-  - persist_environment_variables
   - notify
+  - persist_environment_variables
