@@ -150,12 +150,14 @@ commands:
                 when: on_success
             - run:
                 command: |
-                    echo $MM_MESSAGE
                     echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
                     app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
-                    unset MM_MESSAGE
-                    echo $MM_MESSAGE
                 name: Mattermost Status Alert
+                when: always
+            - run:
+                command: |
+                    unset MM_MESSAGE
+                name: Unset MM_MESSAGE
                 when: always
     persist_environment_variables:
         description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
