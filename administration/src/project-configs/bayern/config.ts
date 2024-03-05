@@ -2,6 +2,7 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
@@ -57,6 +58,10 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
+  activation: {
+    activationText: ActivationText,
+    downloadLink: 'https://download.bayern.ehrenamtskarte.app/',
+  },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
 }

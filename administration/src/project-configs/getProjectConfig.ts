@@ -52,6 +52,10 @@ export interface ProjectConfig {
   pdf: PdfConfig
   timezone: string
   activityLogConfig?: ActivityLogConfig
+  activation?: {
+    activationText: (applicationName: string, downloadLink: string) => ReactElement
+    downloadLink: string
+  }
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
