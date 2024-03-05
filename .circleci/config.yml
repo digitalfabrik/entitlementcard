@@ -295,7 +295,7 @@ jobs:
         working_directory: ~/project
     build_android:
         docker:
-            - image: cimg/android:2022.09.2-node
+            - image: cimg/android:2023.02.1-node
         environment:
             GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         parameters:
