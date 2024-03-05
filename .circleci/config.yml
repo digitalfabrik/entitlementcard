@@ -152,6 +152,7 @@ commands:
                 command: |
                     echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
                     app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
+                    unset MM_MESSAGE
                 name: Mattermost Status Alert
                 when: always
     persist_environment_variables:
@@ -688,7 +689,7 @@ jobs:
             - notify
     deliver_android:
         docker:
-            - image: cimg/android:2023.02.1-node
+            - image: cimg/android:2022.09.2-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
