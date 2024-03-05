@@ -14,7 +14,7 @@ steps:
         - 2-gems-{{ arch }}-
   - run:
       name: '[FL] install'
-      command: bundle check || bundle install
+      command: sudo bundle check || sudo bundle install
       working_directory: << parameters.directory >>
   - save_cache:
       key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
