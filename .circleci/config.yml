@@ -143,18 +143,6 @@ commands:
                 when: on_fail
             - run:
                 command: |
-                    if [ -n "<< parameters.success_message >>" ]; then
-                        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
-                    fi
-                name: Mattermost - Prepare success message
-                when: on_success
-            - run:
-                command: |
-                    echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
-                name: Set ALLOW_ALL_BRANCHES flag
-                when: always
-            - run:
-                command: |
                     app-toolbelt v0 notify mattermost --message "<< parameters.success_message >>" --channel << parameters.channel >> <<#parameters.allow-all-branches>>--allow-all-branches<</parameters.allow-all-branches>>
                 name: Mattermost Status Alert
                 when: always
@@ -928,6 +916,28 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.0.1
+        parameters:
+            build_config_name:
+                default: bayern
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - install_app_toolbelt
+            - run:
+                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
+                name: '[FL] Appstore Connect Store Promotion'
+                working_directory: frontend/ios
     promote_to_server:
         docker:
             - image: cimg/base:2022.09
@@ -1390,5 +1400,17 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
         when: << pipeline.parameters.run_promote_native >>
 

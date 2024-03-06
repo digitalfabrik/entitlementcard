@@ -143,6 +143,46 @@ platform :ios do
     )
   end
 
+  # The following parameters have to be passed:
+  # build_config_name: The name of the build config
+  desc "Promote the app from testflight to production in App Store Connect."
+  lane :appstoreconnect_promote do |options|
+    apple_auth()
+
+    build_config_name = options[:build_config_name]
+
+    if [build_config_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    bundle_identifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier ")
+
+    testflight_build_number = latest_testflight_build_number(app_identifier: bundle_identifier)
+    testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
+    app_store_build_number = app_store_build_number(app_identifier: bundle_identifier)
+
+    if testflight_build_number <= app_store_build_number
+      puts("Nothing to do, latest version already available in app store connect...")
+      next
+    end
+
+    puts("promoting #{build_config_name} v#{testflight_version} - #{testflight_build_number} to app store connect")
+
+    # https://docs.fastlane.tools/actions/deliver/#submit-build
+    deliver(
+      app_version: testflight_version,
+      build_number: testflight_build_number.to_s,
+      app_identifier: bundle_identifier,
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      skip_metadata: false,
+      skip_screenshots: true,
+      skip_binary_upload: true,
+      precheck_include_in_app_purchases: false, # We do not have inapp purchases
+    )
+  end
+
   desc "Generate new localized screenshots"
   lane :snap_bayern do
    sh "fvm flutter pub run build_runner build --define df_build_config=name=bayern"
