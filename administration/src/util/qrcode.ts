@@ -14,6 +14,8 @@ import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
 import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
 import { PDFPage, rgb } from 'pdf-lib'
 
+import { DynamicActivationCode, QrCode } from '../generated/card_pb'
+
 const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 
 // Level 8 with EC of M gives 152 bytes
@@ -246,3 +248,20 @@ export const drawQRCode = (
     size
   )
 }
+
+export const convertProtobufToHexCode = (protobufQRCode: DynamicActivationCode): string => {
+  const qrCode = new QrCode({
+    qrCode: {
+      case: 'dynamicActivationCode',
+      value: protobufQRCode,
+    },
+  }).toBinary()
+  const qrCodeMatrix = encodeQRCode(qrCode).getMatrix()
+  return convertBitmapToHexmap(qrCodeMatrix)
+}
+
+const convertBitmapToHexmap = (matrix: QRCodeByteMatrix): string =>
+  matrix
+    .getArray()
+    .map(row => parseInt(row.join(''), 2).toString(16))
+    .join('-')
