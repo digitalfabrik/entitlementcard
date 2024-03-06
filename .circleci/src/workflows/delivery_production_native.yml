@@ -1,13 +1,10 @@
-when: << pipeline.parameters.run_delivery_beta_native >>
+when: << pipeline.parameters.run_delivery_production_native >>
 jobs:
   - bump_version:
       prepare_delivery: true
       context:
         - deliverino
-  - check
-  - check_frontend:
-      requires:
-        - check
+  - check_frontend
   - build_android:
       name: build_android_bayern
       buildConfig: "bayern"
@@ -23,7 +20,7 @@ jobs:
       buildConfig: "bayern"
       context:
         - tuerantuer-google-play
-      production_delivery: false
+      production_delivery: true
       requires:
         - build_android_bayern
   - build_android:
@@ -41,7 +38,7 @@ jobs:
       buildConfig: "nuernberg"
       context:
         - tuerantuer-google-play
-      production_delivery: false
+      production_delivery: true
       requires:
         - build_android_nuernberg
   - build_ios:
@@ -59,7 +56,7 @@ jobs:
       buildConfig: bayern
       context:
         - tuerantuer-apple
-      production_delivery: false
+      production_delivery: true
       requires:
         - build_ios_bayern
   - build_ios:
@@ -77,6 +74,6 @@ jobs:
       buildConfig: nuernberg
       context:
         - tuerantuer-apple
-      production_delivery: false
+      production_delivery: true
       requires:
         - build_ios_nuernberg

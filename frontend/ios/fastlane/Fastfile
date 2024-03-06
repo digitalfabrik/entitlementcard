@@ -113,6 +113,36 @@ platform :ios do
     )
   end
 
+  desc "Deliver iOS App to production"
+  lane :appstoreconnect_upload do |options|
+    apple_auth()
+
+    version_name = options[:version_name]
+    build_config_name = options[:build_config_name]
+    ipa_path = options[:ipa_path]
+
+    if [build_config_name, ipa_path, version_name].include?(nil)
+      raise "'nil' passed as parameter! Aborting..."
+    end
+
+    puts("delivering #{build_config_name} v#{version_name}")
+
+    # https://docs.fastlane.tools/actions/deliver/
+    deliver(
+      ipa: "#{ENV['HOME']}/#{ipa_path}",
+      app_version: version_name,
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      overwrite_screenshots: true,
+      precheck_include_in_app_purchases: false, # We do not have inapp purchases
+      submission_information: { add_id_info_uses_idfa: false }  # https://firebase.google.com/docs/analytics/configure-data-collection?platform=ios
+    # https://support.google.com/firebase/answer/6318039?hl=en
+    )
+  end
+
   desc "Generate new localized screenshots"
   lane :snap_bayern do
    sh "fvm flutter pub run build_runner build --define df_build_config=name=bayern"

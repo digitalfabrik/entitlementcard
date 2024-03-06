@@ -6,6 +6,7 @@ steps:
       path: ~/project
   - install_dart_linux
   - install_protobuf_linux
+  - install_app_toolbelt
   - prepare_workspace
   - restore_environment_variables
   - restore_npm_cache
@@ -27,3 +28,4 @@ steps:
       root: ~/project
       paths:
         - administration/build
+  - notify

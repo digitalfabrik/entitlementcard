@@ -15,12 +15,13 @@ environment:
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - prepare_workspace
   - restore_ruby_cache:
       directory: ~/project/frontend/android
-  - install_app_toolbelt
   - restore_environment_variables
   - run:
       name: '[FL] Play Store Upload'
       command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
       working_directory: ~/project/frontend/android
+  - notify

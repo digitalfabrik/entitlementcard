@@ -9,6 +9,7 @@ steps:
       path: ~/project
   - run: git submodule sync
   - run: git submodule update --init
+  - install_app_toolbelt
   - install_protobuf_linux
   - prepare_workspace
   - restore_cache:
@@ -30,3 +31,4 @@ steps:
       root: ~/project
       paths:
         - backend/build/distributions/*
+  - notify
