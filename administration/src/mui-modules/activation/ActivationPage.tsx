@@ -2,7 +2,6 @@ import { Card } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement, useContext } from 'react'
 
-import StandaloneCenter from '../../bp-modules/StandaloneCenter'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivationPageContent from './components/ActivationPageContent'
 
@@ -12,8 +11,12 @@ const CardContainer = styled(Card)`
   max-width: 500px;
 `
 
-const StandaloneHorizontalCenter = styled(StandaloneCenter)`
+const StandaloneHorizontalCenter = styled('div')`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
   justify-content: start;
+  align-items: center;
   margin-top: 10%;
 `
 
