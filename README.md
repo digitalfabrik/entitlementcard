@@ -81,14 +81,14 @@ and Social Affairs).
 
 ## Contributing
 
-We use this emoji code for reviews:
-:+1: or :+1:: This is great! It always feels good when somebody likes your work. Show them!
-:question: or :question:: I have a question / can you clarify?
-:x: or :x:: This has to change. It’s possibly an error or strongly violates existing conventions.
-:wrench: or :wrench:: This is a well-meant suggestion. Take it or leave it.
-:upside_down_face: or :upside_down_face:: This is a nitpick. Normally related to a small formatting or stylizing detail that shouldn’t block moving forward.
-:thought_balloon: or :thought_balloon:: I’m just thinking out loud here. Something doesn’t necessarily have to change, but I want to make sure to share my thoughts.
-:clown_face: or :clown_face:: This is a complaint about something with no obvious answer, not necessarily a problem originating from changes.
+We use this emoji code for reviewing:
+- :+1: or `:+1:` This is great! It always feels good when somebody likes your work. Show them!
+- :question: or `:question:` I have a question / can you clarify?
+- :x: or `:x:` This has to change. It’s possibly an error or strongly violates existing conventions.
+- :wrench: or `:wrench:` This is a well-meant suggestion. Take it or leave it.
+- :upside_down_face: or `:upside_down_face:` This is a nitpick. Normally related to a small formatting or stylizing detail that shouldn’t block moving forward.
+- :thought_balloon: or `:thought_balloon:` I’m just thinking out loud here. Something doesn’t necessarily have to change, but I want to make sure to share my thoughts.
+- :clown_face: or `:clown_face:` This is a complaint about something with no obvious answer, not necessarily a problem originating from changes.
 
 2023 the project became part of Tür an Tür Digital Factory.
 
