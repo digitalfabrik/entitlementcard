@@ -4,7 +4,7 @@ import React from 'react'
 export const ActivationText = (applicationName: string, downloadLink: string) => (
   <div>
     <Typography variant='h6' mb='8px'>
-      App nicht installiert
+      Aktivierung nur in der App möglich
     </Typography>
     <ol>
       <li>
