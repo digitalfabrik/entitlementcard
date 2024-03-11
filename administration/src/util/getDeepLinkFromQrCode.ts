@@ -16,7 +16,6 @@ const getDeepLinkFromQrCode = (qrCode: PdfQrCode): string => {
   const deepLink = `${HTTPS_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
   )}/`
-  // Log deepLink for development and testing purposes
   if (isDevMode() || isStagingMode()) {
     console.log(deepLink)
   }

@@ -44,7 +44,7 @@ describe('DeepLink generation', () => {
     value: code.dynamicActivationCode,
   }
 
-  const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EJOjARoICgIIACICCAA%3D'
+  const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EJijARoICgIIACICCAA%3D'
   const overrideHostname = (hostname: string) =>
     Object.defineProperty(window, 'location', {
       value: {
