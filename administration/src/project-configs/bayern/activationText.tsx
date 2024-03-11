@@ -20,7 +20,8 @@ export const ActivationText = (applicationName: string, downloadLink: string) =>
       </li>
       <li>
         Öffnen Sie nach erfolgreicher Installation die PDF mit dem Aktivierungscode und führen Sie die Aktivierung
-        erneut durch. Gegebenenfalls müssen Sie dabei die heruntergeladene App auswählen, um den Vorgang in der App zu starten.
+        erneut durch. Gegebenenfalls müssen Sie dabei die heruntergeladene App auswählen, um den Vorgang in der App zu
+        starten.
       </li>
     </ol>
   </div>
