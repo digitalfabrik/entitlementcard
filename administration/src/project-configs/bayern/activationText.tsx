@@ -12,7 +12,7 @@ export const ActivationText = (applicationName: string, downloadLink: string) =>
       </li>
       <li>
         {' '}
-        Öffnen Sie dafür den folgenden Link auf ihrem Smartphone:
+        Öffnen Sie dafür den folgenden Link auf Ihrem Smartphone:
         <br />
         <a href={downloadLink} target='_blank' rel='noreferrer'>
           {downloadLink}
