@@ -31,7 +31,10 @@ steps:
   - run:
       command: |
         echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
-        app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
+      name: Set ALLOW_ALL_BRANCHES flag
+      when: always
+  - run:
+      command: |
+        app-toolbelt v0 notify mattermost --message "<< parameters.success_message >>" --channel << parameters.channel >> <<#parameters.allow-all-branches>>--allow-all-branches<</parameters.allow-all-branches>>
       name: Mattermost Status Alert
       when: always
-

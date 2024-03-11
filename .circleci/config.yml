@@ -151,7 +151,11 @@ commands:
             - run:
                 command: |
                     echo 'export ALLOW_ALL_BRANCHES="<< parameters.allow-all-branches >>"' >> $BASH_ENV
-                    app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> ${ALLOW_ALL_BRANCHES:+--allow-all-branches}
+                name: Set ALLOW_ALL_BRANCHES flag
+                when: always
+            - run:
+                command: |
+                    app-toolbelt v0 notify mattermost --message "<< parameters.success_message >>" --channel << parameters.channel >> <<#parameters.allow-all-branches>>--allow-all-branches<</parameters.allow-all-branches>>
                 name: Mattermost Status Alert
                 when: always
     persist_environment_variables:
@@ -233,16 +237,20 @@ commands:
                 default: native
                 type: string
         steps:
+            - run:
+                command: sudo bundle update --bundler
+                name: Install bundler
+                working_directory: ~/project/frontend/android
             - restore_cache:
                 keys:
-                    - 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - 1-gems-{{ arch }}-
+                    - 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                    - 2-gems-{{ arch }}-
             - run:
-                command: bundle check || bundle install
+                command: sudo bundle check || sudo bundle install
                 name: '[FL] install'
                 working_directory: << parameters.directory >>
             - save_cache:
-                key: 1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
                 paths:
                     - << parameters.directory >>/vendor/bundle
     setup_npm_global:
@@ -288,7 +296,7 @@ jobs:
         working_directory: ~/project
     build_android:
         docker:
-            - image: cimg/android:2022.09.2-node
+            - image: cimg/android:2023.02.1-node
         environment:
             GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         parameters:
@@ -319,10 +327,6 @@ jobs:
             - install_app_toolbelt
             - install_protobuf_linux:
                 dart_plugin: true
-            - run:
-                command: bundle update --bundler
-                name: Install bundler
-                working_directory: ~/project/frontend/android
             - restore_environment_variables
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
@@ -706,10 +710,10 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - prepare_workspace
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
-            - install_app_toolbelt
             - restore_environment_variables
             - run:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
@@ -1174,7 +1178,10 @@ workflows:
                 context:
                     - deliverino
                 prepare_delivery: true
-            - check_frontend
+            - check
+            - check_frontend:
+                requires:
+                    - check
             - build_android:
                 buildConfig: bayern
                 context:

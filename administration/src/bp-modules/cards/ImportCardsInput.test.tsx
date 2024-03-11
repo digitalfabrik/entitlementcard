@@ -6,6 +6,7 @@ import CSVCard from '../../cards/CSVCard'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { AppToasterProvider } from '../AppToaster'
@@ -40,7 +41,7 @@ describe('ImportCardsInput', () => {
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
 
-    localStorage.setItem('project-override', projectConfig.projectId)
+    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
 
     const { getByTestId } = render(
       <ImportCardsInput

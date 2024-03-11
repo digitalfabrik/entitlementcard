@@ -1,7 +1,11 @@
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
-import {ACTIVATION_PATH} from "../constants";
+import {
+    ACTIVATION_PATH,
+    BAYERN_PRODUCTION_ID,
+    BAYERN_STAGING_ID, CUSTOM_SCHEME,
+} from "../constants";
 
 const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
 const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
@@ -10,10 +14,10 @@ export const bayernCommon: CommonBuildConfigType = {
     appName: "Ehrenamt",
     appIcon: "app_icon_bayern",
     projectId: {
-        production: "bayern.ehrenamtskarte.app",
+        production: BAYERN_PRODUCTION_ID,
         showcase: "showcase.entitlementcard.app",
-        local: "bayern.ehrenamtskarte.app",
-        staging: "staging.bayern.ehrenamtskarte.app",
+        local: BAYERN_PRODUCTION_ID,
+        staging: BAYERN_STAGING_ID,
     },
     categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     theme: {
@@ -79,7 +83,7 @@ export const bayernCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "bayern",
-        customScheme: "berechtigungskarte",
+        customScheme: CUSTOM_SCHEME,
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,
