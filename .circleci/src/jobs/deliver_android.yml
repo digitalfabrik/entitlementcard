@@ -15,10 +15,10 @@ environment:
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - prepare_workspace
   - restore_ruby_cache:
       directory: ~/project/frontend/android
-  - install_app_toolbelt
   - restore_environment_variables
   - run:
       name: '[FL] Play Store Upload'

@@ -1,12 +1,20 @@
+import {
+  BAYERN_PRODUCTION_ID,
+  BAYERN_STAGING_ID,
+  NUERNBERG_PRODUCTION_ID,
+  NUERNBERG_STAGING_ID,
+} from 'build-configs/constants'
 import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
 import { ExtensionClass } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
+import { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
 import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
+import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
@@ -19,6 +27,7 @@ export interface PdfConfig {
     dynamicActivationQrCodes: PdfQrCodeElementProps[]
     text: PdfTextElementProps[]
     form?: PdfFormElementProps[]
+    deepLinkArea?: PdfLinkAreaProps
   }
 }
 
@@ -59,16 +68,16 @@ export interface ProjectConfig {
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
-  window.localStorage.setItem('project-override', hostname)
+  window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
-  switch (window.localStorage.getItem('project-override') ?? hostname) {
-    case 'bayern.ehrenamtskarte.app':
-    case 'staging.bayern.ehrenamtskarte.app':
+  switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
+    case BAYERN_PRODUCTION_ID:
+    case BAYERN_STAGING_ID:
       return bayernConfig
-    case 'nuernberg.sozialpass.app':
-    case 'staging.nuernberg.sozialpass.app':
+    case NUERNBERG_PRODUCTION_ID:
+    case NUERNBERG_STAGING_ID:
       return nuernbergConfig
     default:
       console.debug('Falling back to showcase.')
