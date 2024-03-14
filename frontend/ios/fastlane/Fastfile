@@ -85,6 +85,8 @@ platform :ios do
     # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
+     # use base64 encoded variable "environment=production" directly, because shell result does not work for gym as it does for gradle (android/Fastfile)
+    env_prod_base64 = "ZW52aXJvbm1lbnQ9cHJvZHVjdGlvbg=="
 
     build_app(
        workspace: "Runner.xcworkspace",
@@ -92,8 +94,7 @@ platform :ios do
        output_directory: "#{ENV['HOME']}",
        output_name: "#{build_config_name}.ipa",
        export_method: "app-store",
-       # pass base64 encoded env variable "environment=production" directly, because shell result does not work for gym as it does for gradle (android/Fastfile)
-       xcargs: "DART_DEFINES='ZW52aXJvbm1lbnQ9cHJvZHVjdGlvbg=='"
+       xcargs: "DART_DEFINES='#{env_prod_base64}'"
      )
   end
 
