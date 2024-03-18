@@ -26,11 +26,12 @@ const pdfConfiguration: PdfConfig = {
   templatePath: pdfTemplate,
   issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
   elements: {
-    dynamicActivationQrCodes: [{ x: 108, y: 73, size: 84 }],
+    dynamicActivationQrCodes: [{ x: 140, y: 73, size: 51 }],
     text: [
-      { x: 108, y: 170, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
-      { x: 149.75, y: 162, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
+      { x: 142, y: 137, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
+      { x: 165, y: 129, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
+    deepLinkArea: { x: 140, y: 73, size: 51 },
   },
 }
 

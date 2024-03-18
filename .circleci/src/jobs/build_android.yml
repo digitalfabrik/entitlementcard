@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/android:2022.09.2-node
+  - image: cimg/android:2023.02.1-node
 parameters:
   buildConfig:
     description: "Name of the build config to use"
@@ -24,10 +24,6 @@ steps:
   - install_app_toolbelt
   - install_protobuf_linux:
       dart_plugin: true
-  - run:
-      name: Install bundler
-      command: bundle update --bundler
-      working_directory: ~/project/frontend/android
   - restore_environment_variables
   - restore_ruby_cache:
       directory: ~/project/frontend/android

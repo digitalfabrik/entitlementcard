@@ -20,7 +20,7 @@ class ActivationCodeParser {
     final QrCode qrCode = rawContent.parseQRCodeContent();
 
     if (!qrCode.hasDynamicActivationCode()) {
-      throw QrCodeWrongTypeException();
+      throw QrCodeWrongTypeException(getQRCodeTypeMessage(qrCode));
     }
 
     final DynamicActivationCode activationCode = qrCode.dynamicActivationCode;
@@ -39,4 +39,17 @@ class ActivationCodeParser {
       throw QrCodeFieldMissingException('activationSecret');
     }
   }
+}
+
+String getQRCodeTypeMessage(QrCode code) {
+  if (code.hasDynamicVerificationCode()) {
+    return 'dynamic verification code';
+  }
+  if (code.hasStaticVerificationCode()) {
+    return 'static verification code';
+  }
+  if (code.hasDynamicActivationCode()) {
+    return 'dynamic activation code';
+  }
+  return 'unknown code';
 }
