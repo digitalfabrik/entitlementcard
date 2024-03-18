@@ -17,6 +17,8 @@ import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
 import { getBuildConfig } from './getBuildConfig'
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
 
+jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+
 describe('DeepLink generation', () => {
   const region: Region = {
     id: 0,
@@ -44,7 +46,7 @@ describe('DeepLink generation', () => {
     value: code.dynamicActivationCode,
   }
 
-  const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0EJijARoICgIIACICCAA%3D'
+  const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0ENOiARoICgIIACICCAA%3D'
   const overrideHostname = (hostname: string) =>
     Object.defineProperty(window, 'location', {
       value: {
