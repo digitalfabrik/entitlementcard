@@ -23,7 +23,7 @@ describe('qrcode', () => {
       )
     })
 
-    it('should be the same stativVerificationCode after converting back', () => {
+    it('should be the same staticVerificationCode after converting back', () => {
       const cardInfo = {
         fullName: 'Thea Test',
         expirationDay: 20165,

@@ -261,8 +261,6 @@ export const convertHexmapToUInt8Array = (hexmap: string): Uint8Array[] => {
   const zeroASCIICode = 48
   const hexRows = hexmap.split('-')
   const binaryStringMatrix = hexRows.map(hex => BigInt(`0x${hex}`).toString(2).padStart(hexRows.length, '0'))
-  const binaryUInt8Matrix = binaryStringMatrix.map(stringRow =>
-    Uint8Array.from(stringRow.split(''), x => x.charCodeAt(0) - zeroASCIICode)
-  )
+  const binaryUInt8Matrix = binaryStringMatrix.map(stringRow => Uint8Array.from(stringRow.split(''), x => Number(x)))
   return binaryUInt8Matrix
 }
