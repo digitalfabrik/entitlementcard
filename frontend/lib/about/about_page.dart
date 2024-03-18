@@ -123,7 +123,7 @@ class AboutPageState extends State<AboutPage> {
                 onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ListTile(
-                leading: const Icon(Icons.privacy_tip_outlined),
+                leading: const Icon(Icons.accessibility_new_outlined),
                 title: Text(t.about.accessibilityPolicy),
                 onTap: () => launchUrlString(accessibilityPolicyUrl, mode: LaunchMode.externalApplication),
               ),
