@@ -2,5 +2,11 @@
   "name": "build-configs",
   "version": "0.0.1",
   "private": true,
-  "main": "index.ts"
+  "main": "dist/index.js",
+  "scripts": {
+    "prepare": "tsc --build"
+  },
+  "devDependencies": {
+    "typescript": "~5.0.4"
+  }
 }

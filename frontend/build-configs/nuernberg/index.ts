@@ -1,7 +1,7 @@
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
-import {ACTIVATION_PATH} from "../constants";
+import {ACTIVATION_PATH, CUSTOM_SCHEME, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID} from "../constants";
 
 const ANDROID_APPLICATION_ID = "app.entitlementcard.nuernberg"
 const IOS_BUNDLE_IDENTIFIER = "app.sozialpass.nuernberg"
@@ -10,10 +10,10 @@ export const nuernbergCommon: CommonBuildConfigType = {
     appName: "Nürnberg-Pass",
     appIcon: "app_icon_nuernberg",
     projectId: {
-        production: "nuernberg.sozialpass.app",
+        production: NUERNBERG_PRODUCTION_ID,
         showcase: "showcase.entitlementcard.app",
-        local: "nuernberg.sozialpass.app",
-        staging: "staging.nuernberg.sozialpass.app",
+        local: NUERNBERG_PRODUCTION_ID,
+        staging: NUERNBERG_STAGING_ID,
     },
     categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     theme: {
@@ -79,7 +79,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "nuernberg",
-        customScheme: "berechtigungskarte",
+        customScheme: CUSTOM_SCHEME,
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,

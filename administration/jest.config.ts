@@ -3,9 +3,8 @@ import { defaults as tsjPreset } from 'ts-jest/presets'
 
 const config: JestConfigWithTsJest = {
   ...tsjPreset,
-  preset: 'ts-jest',
   rootDir: 'src',
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jsdom',
   verbose: true,
   automock: false,
   moduleNameMapper: {
@@ -17,6 +16,9 @@ const config: JestConfigWithTsJest = {
   restoreMocks: true,
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   maxWorkers: '50%',
+  transform: {
+    '^.+\\.(j|t)sx?$': ['ts-jest', { isolatedModules: true }],
+  },
 }
 
 export default config
