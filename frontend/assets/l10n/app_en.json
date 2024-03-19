@@ -16,13 +16,14 @@
       "other": "$n licenses",
       "zero": "No licenses"
     },
-    "privacyDeclaration": "Privacy policy",
+    "privacyPolicy": "Privacy policy",
+    "accessibilityPolicy": "Accessibility policy",
     "publisher": "Publisher",
     "settingsTitle": "Settings",
     "sourceCode": "Source code",
     "title": "About"
   },
-  "deeplinkActivation" : {
+  "deeplinkActivation": {
     "headline": "Activate card",
     "description": "Do you want to activate this card?",
     "limitReached": "Your card limit has been reached. Please remove a card first.",
