@@ -33,7 +33,7 @@ class ResetPasswordMutationService {
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
-                Mailer.sendResetPasswodMail(backendConfig, projectConfig, key, email)
+                Mailer.sendResetPasswordMail(backendConfig, projectConfig, key, email)
             }
         }
         return true

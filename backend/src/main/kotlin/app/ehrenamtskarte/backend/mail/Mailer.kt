@@ -182,7 +182,7 @@ object Mailer {
         )
     }
 
-    fun sendResetPasswodMail(
+    fun sendResetPasswordMail(
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         passwortResetKey: String,

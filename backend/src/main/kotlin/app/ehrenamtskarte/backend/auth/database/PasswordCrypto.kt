@@ -1,7 +1,9 @@
 package app.ehrenamtskarte.backend.auth.database
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import at.favre.lib.crypto.bcrypt.LongPasswordStrategies
+import java.security.MessageDigest
+import java.security.SecureRandom
+import java.util.Base64
 
 object PasswordCrypto {
     private const val cost = 11
@@ -12,9 +14,19 @@ object PasswordCrypto {
     fun verifyPassword(password: String, hash: ByteArray) =
         BCrypt.verifyer().verify(password.toCharArray(), hash).verified
 
-    fun hashPasswordResetKey(passwordResetKey: String): ByteArray =
-        BCrypt.with(LongPasswordStrategies.none()).hash(cost, passwordResetKey.toCharArray())
+    fun generatePasswordResetKey(): String {
+        val resetKeyBytes = ByteArray(64)
+        SecureRandom.getInstanceStrong().nextBytes(resetKeyBytes)
+        return Base64.getUrlEncoder().encodeToString(resetKeyBytes)
+    }
 
-    fun verifyPasswordResetKey(passwordResetKey: String, hash: ByteArray) =
-        BCrypt.verifyer(null, LongPasswordStrategies.none()).verify(passwordResetKey.toCharArray(), hash).verified
+    fun hashPasswordResetKey(passwordResetKey: String): ByteArray {
+        val resetKeyBytes = Base64.getUrlDecoder().decode(passwordResetKey)
+        return MessageDigest.getInstance("SHA-256").digest(resetKeyBytes)
+    }
+
+    fun verifyPasswordResetKey(passwordResetKey: String, hash: ByteArray): Boolean {
+        val actualHash = hashPasswordResetKey(passwordResetKey)
+        return MessageDigest.isEqual(actualHash, hash)
+    }
 }
