@@ -9,6 +9,9 @@ parameters:
     enum: ["administration" , "backend"]
     type: enum
 steps:
+  - checkout:
+      path: ~/project
+  - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
@@ -46,3 +49,4 @@ steps:
             name: Install package via webhook
             command: |
               curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+  - notify

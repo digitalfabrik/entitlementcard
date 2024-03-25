@@ -8,7 +8,8 @@ docker:
   - image: cimg/node:18.14.1
 resource_class: small
 steps:
-  - checkout
+  - checkout:
+      path: ~/project
   - install_app_toolbelt
   - run:
       name: Calculate next version name

@@ -1,6 +1,9 @@
 docker:
   - image: cimg/base:2022.09
 steps:
+  - checkout:
+      path: ~/project
+  - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
@@ -25,3 +28,4 @@ steps:
       name: Install backend packages via webhook
       command: |
               curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+  - notify
