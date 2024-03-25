@@ -19,7 +19,7 @@ object Administrators : IntIdTable() {
     val regionId = optReference("regionId", Regions)
     val role = varchar("role", 32)
     val passwordHash = binary("passwordHash").nullable()
-    val passwordResetKey = varchar("passwordResetKey", 100).nullable()
+    val passwordResetKeyHash = binary("passwordResetKeyHash").nullable()
     val passwordResetKeyExpiry = timestamp("passwordResetKeyExpiry").nullable()
     val notificationOnApplication = bool("notificationOnApplication").default(false)
     val notificationOnVerification = bool("notificationOnVerification").default(false)
@@ -48,7 +48,7 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var regionId by Administrators.regionId
     var role by Administrators.role
     var passwordHash by Administrators.passwordHash
-    var passwordResetKey by Administrators.passwordResetKey
+    var passwordResetKeyHash by Administrators.passwordResetKeyHash
     var passwordResetKeyExpiry by Administrators.passwordResetKeyExpiry
     var notificationOnApplication by Administrators.notificationOnApplication
     var notificationOnVerification by Administrators.notificationOnVerification
