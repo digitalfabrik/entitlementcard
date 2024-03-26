@@ -9,6 +9,7 @@ object MigrationsRegistry {
         V0005_AddRegionApplicationActivation(),
         V0006_AddStoreCreatedDate(),
         V0007_AddStartDay(),
-        V0008_IncreaseAdministratorEmailLength()
+        V0008_IncreaseAdministratorEmailLength(),
+        V0009_HashPasswordResetKey()
     )
 }
