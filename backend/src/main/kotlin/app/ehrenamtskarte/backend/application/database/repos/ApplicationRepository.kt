@@ -199,4 +199,16 @@ object ApplicationRepository {
                 .sortByKeys({ it.id.value }, ids)
         }
     }
+
+    fun updateApplicationNote(applicationId: Int, note: String): Boolean {
+        return transaction {
+            val application = ApplicationEntity.findById(applicationId)
+            if (application != null) {
+                application.note = note
+                true
+            } else {
+                false
+            }
+        }
+    }
 }

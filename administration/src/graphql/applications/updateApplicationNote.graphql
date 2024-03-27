@@ -1,0 +1,3 @@
+mutation updateApplicationNote($applicationId: Int!, $text: String!) {
+  applicationNote: updateApplicationNote(applicationId: $applicationId, noteText: $text)
+}

@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
+import app.ehrenamtskarte.backend.auth.service.Authorizer.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
@@ -126,6 +127,31 @@ class EakApplicationMutationService {
             } else {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }
+        }
+    }
+
+    @GraphQLDescription("Updates a note of an application")
+    fun updateApplicationNote(
+        applicationId: Int,
+        noteText: String,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        return transaction {
+            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
+            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
+            // `applicationId` and whether this application was contained in the user's project & region.
+
+            val user = AdministratorEntity.findById(jwtPayload.adminId)
+                ?: throw UnauthorizedException()
+
+            if (!mayViewApplicationsInRegion(user, application.regionId.value)) {
+                throw ForbiddenException()
+            }
+
+            ApplicationRepository.updateApplicationNote(applicationId, noteText)
         }
     }
 }
