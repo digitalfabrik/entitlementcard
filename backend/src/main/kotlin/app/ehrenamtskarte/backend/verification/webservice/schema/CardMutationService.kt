@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.verification.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.verification.database.CodeType
@@ -224,6 +225,19 @@ class CardMutationService {
             }
             CardRepository.deleteInactiveCardsByHash(regionId, cardInfoHashList)
         }
+        return true
+    }
+
+    @GraphQLDescription("Sends a confirmation mail to the user when the card creation was successful")
+    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+        transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
+        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+        val projectConfig =
+            context.backendConfiguration.projects.find { it.id == project }
+                ?: throw ProjectNotFoundException(project)
+        Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
         return true
     }
 }

@@ -1,0 +1,13 @@
+mutation sendCardCreationConfirmationMail(
+  $project: String!
+  $recipientAddress: String!
+  $recipientName: String!
+  $deepLink: String!
+) {
+  sendCardCreationConfirmationMail(
+    project: $project
+    recipientAddress: $recipientAddress
+    recipientName: $recipientName
+    deepLink: $deepLink
+  )
+}

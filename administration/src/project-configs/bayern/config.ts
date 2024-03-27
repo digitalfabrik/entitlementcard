@@ -1,5 +1,6 @@
 import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldView'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import EMailExtension from '../../cards/extensions/EMailExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -7,7 +8,7 @@ import pdfConfiguration from './pdf'
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>
-): { forenames?: string; surname?: string } | null => {
+): { forenames?: string; surname?: string; emailAddress?: string } | null => {
   const personalData = findValue(json, 'personalData', 'Array')
 
   if (!personalData) {
@@ -16,8 +17,9 @@ export const applicationJsonToPersonalData = (
 
   const forenames = findValue(personalData, 'forenames', 'String')
   const surname = findValue(personalData, 'surname', 'String')
+  const emailAddress = findValue(personalData, 'emailAddress', 'String')
 
-  return { forenames: forenames?.value, surname: surname?.value }
+  return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
 }
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
@@ -35,6 +37,10 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
   const cardTypeExtensionIdx = config.card.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
   query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+  if (personalData.emailAddress) {
+    const applicantMailExtensionIdx = config.card.extensions.findIndex(ext => ext === EMailExtension)
+    query.set(config.card.extensionColumnNames[applicantMailExtensionIdx] ?? '', personalData.emailAddress)
+  }
 
   return `?${query.toString()}`
 }
@@ -51,8 +57,8 @@ const config: ProjectConfig = {
     defaultValidity: { years: 3 },
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null],
-    extensions: [BavariaCardTypeExtension, RegionExtension],
+    extensionColumnNames: ['Kartentyp', null, 'Mail'],
+    extensions: [BavariaCardTypeExtension, RegionExtension, EMailExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
