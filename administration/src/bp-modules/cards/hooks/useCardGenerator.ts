@@ -1,13 +1,17 @@
-import { useApolloClient } from '@apollo/client'
+import { ApolloClient, useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
 import { CardBlueprint } from '../../../cards/CardBlueprint'
 import { generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
+import EMailExtension from '../../../cards/extensions/EMailExtension'
+import { findExtension } from '../../../cards/extensions/extensions'
+import sendCardConfirmationMail from '../../../cards/sendCardConfirmationMail'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
+import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
 import { ActivityLog } from '../../user-settings/ActivityLog'
 
@@ -24,6 +28,27 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
     }
     return code.dynamicCardInfoHashBase64
   })
+}
+
+const sendCardConfirmationMails = async (
+  codes: CreateCardsResult[],
+  cardBlueprints: CardBlueprint[],
+  client: ApolloClient<object>,
+  projectId: string
+): Promise<void> => {
+  for (let k = 0; k < codes.length; k++) {
+    const cardBlueprint = cardBlueprints[k]
+    const mailExtension = findExtension(cardBlueprint.extensions, EMailExtension)
+    if (!mailExtension?.state) {
+      return
+    }
+    const dynamicCode = codes[k].dynamicActivationCode
+    const deepLink = getDeepLinkFromQrCode({
+      case: 'dynamicActivationCode',
+      value: dynamicCode,
+    })
+    await sendCardConfirmationMail(client, projectId, mailExtension.state, cardBlueprint.fullName, deepLink)
+  }
 }
 
 const useCardGenerator = (region: Region) => {
@@ -46,6 +71,7 @@ const useCardGenerator = (region: Region) => {
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
+      await sendCardConfirmationMails(codes, cardBlueprints, client, projectConfig.projectId)
       setState(CardActivationState.finished)
     } catch (e) {
       if (codes !== undefined) {

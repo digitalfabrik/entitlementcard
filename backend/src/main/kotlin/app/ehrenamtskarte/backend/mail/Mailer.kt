@@ -232,4 +232,34 @@ object Mailer {
         """.trimIndent()
         sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipient, "Kontoerstellung", message)
     }
+
+    fun sendCardCreationConfirmationMail(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        deepLink: String,
+        recipientAddress: String,
+        recipientName: String
+    ) {
+        val message = """
+        Guten Tag $recipientName,
+
+        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt.
+
+        Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt.
+
+        Wenn Sie Ihre digitale Karte bereits vorab nutzen möchten, laden Sie sich die App "Ehrenamtskarte Bayern" im App- oder PlayStore auf Ihrem Smartphone herunter.
+        Öffnen Sie dafür den folgenden Link auf Ihrem Smartphone:
+        https://download.bayern.ehrenamtskarte.app/
+
+        Sobald Sie die App „Ehrenamtskarte Bayern“ auf ihrem Smartphone eingerichtet haben, können Sie Ihre digitale Karte auf vielen Endgeräten auch vorab schon aktivieren. 
+        Klicken Sie dazu von Ihrem Gerät, auf dem die App installiert ist, auf den folgenden Link: 
+        $deepLink
+
+        
+        $DO_NOT_ANSWER_MESSAGE
+        
+        - ${projectConfig.administrationName}
+        """.trimIndent()
+        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipientAddress, "Kartenerstellung erfolgreich", message)
+    }
 }
