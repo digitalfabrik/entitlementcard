@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: debian:11
 parameters:
   production:
     description: Whether builds are delivered to production or beta.
@@ -11,13 +11,8 @@ parameters:
 steps:
   - checkout:
       path: ~/project
-  - run: sudo apt update -y && sudo apt install -y nodejs npm
+  - run: apt update -y && apt install -y nodejs npm curl
   - install_app_toolbelt
-  - run:
-      name: Install Curl
-      command: |
-        sudo apt update -y
-        sudo apt install curl -y
   - prepare_workspace
   - add_ssh_keys:
       fingerprints:
@@ -42,7 +37,7 @@ steps:
         - run:
             name: SFTP upload package
             command: |
-              mkdir /home/circleci/.ssh
+              mkdir -p /home/circleci/.ssh
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"

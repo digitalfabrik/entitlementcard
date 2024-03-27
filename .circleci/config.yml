@@ -753,7 +753,7 @@ jobs:
             - notify
     deliver_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: debian:11
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.
@@ -767,13 +767,8 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - run: sudo apt update -y && sudo apt install -y nodejs npm
+            - run: apt update -y && apt install -y nodejs npm curl
             - install_app_toolbelt
-            - run:
-                command: |
-                    sudo apt update -y
-                    sudo apt install curl -y
-                name: Install Curl
             - prepare_workspace
             - add_ssh_keys:
                 fingerprints:
@@ -797,7 +792,7 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            mkdir /home/circleci/.ssh
+                            mkdir -p /home/circleci/.ssh
                             echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
