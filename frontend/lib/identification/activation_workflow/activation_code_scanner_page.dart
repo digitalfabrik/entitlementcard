@@ -37,7 +37,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
 
   Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
     Future<void> showError(String msg, dynamic stackTrace) async =>
-        {await QrParsingErrorDialog.showErrorDialog(context, msg), await reportError(msg, stackTrace)};
+        [await QrParsingErrorDialog.showErrorDialog(context, msg), await reportError(msg, stackTrace)];
 
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);

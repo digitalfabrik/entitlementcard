@@ -40,7 +40,7 @@ class IdCard extends StatelessWidget {
           aspectRatio: creditCardAspectRatio,
           child: MediaQuery(
             // Ignore text scale factor to enforce the same layout on all devices.
-            data: mediaQueryData.copyWith(textScaleFactor: 1),
+            data: mediaQueryData.copyWith(textScaler: TextScaler.linear(1)),
             child: CardContent(cardInfo: cardInfo, region: region, isExpired: isExpired, isNotYetValid: isNotYetValid),
           ),
         ),
