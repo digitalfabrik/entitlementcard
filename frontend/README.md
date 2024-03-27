@@ -21,7 +21,7 @@ To install FVM and the project Flutter version
 
     We are unsure why/when this error occurs. Usually, it is solved by a combination of:
     * Make sure `protoc --plugin=protoc-gen-dart=[YOUR_HOME_DIR]/.pub-cache/bin/protoc-gen-dart --dart_out=lib/proto/ ./card.proto` runs successfully. (Replace `YOUR_HOME_DIR` with your home directory).
-    * Remove the `build` and `build_resolvers` folders of the `.dart_tool` folder.
+    * Remove the `build` and `build_resolvers` folders of the `(project-directory)/frontend/.dart_tool` folder.
     * Reboot your system.
 * For IntelliJ support, select the new Flutter Sdk by:
     * Open `Settings > Languages & Frameworks > Flutter`.
