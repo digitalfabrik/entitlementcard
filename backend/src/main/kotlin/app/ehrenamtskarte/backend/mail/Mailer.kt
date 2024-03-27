@@ -243,18 +243,12 @@ object Mailer {
         val message = """
         Guten Tag $recipientName,
 
-        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt.
-
-        Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt.
-
-        Wenn Sie Ihre digitale Karte bereits vorab nutzen möchten, laden Sie sich die App "Ehrenamtskarte Bayern" im App- oder PlayStore auf Ihrem Smartphone herunter.
-        Öffnen Sie dafür den folgenden Link auf Ihrem Smartphone:
-        https://download.bayern.ehrenamtskarte.app/
-
-        Sobald Sie die App „Ehrenamtskarte Bayern“ auf ihrem Smartphone eingerichtet haben, können Sie Ihre digitale Karte auf vielen Endgeräten auch vorab schon aktivieren. 
-        Klicken Sie dazu von Ihrem Gerät, auf dem die App installiert ist, auf den folgenden Link: 
+        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt.
+        
+        Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. Klicken Sie dazu von Ihrem Smartphone, auf dem die App installiert ist, auf den folgenden Link: 
         $deepLink
-
+        
+        Hinweis: Die Vorab-Aktivierung wird nicht von allen Endgeräten unterstützt. Falls der Vorgang fehlschlägt, warten Sie bitte auf das offizielle Schreiben.
         
         $DO_NOT_ANSWER_MESSAGE
         

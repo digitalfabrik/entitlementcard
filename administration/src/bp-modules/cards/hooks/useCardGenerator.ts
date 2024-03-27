@@ -7,7 +7,7 @@ import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards
 import deleteCards from '../../../cards/deleteCards'
 import EMailExtension from '../../../cards/extensions/EMailExtension'
 import { findExtension } from '../../../cards/extensions/extensions'
-import sendCardConfirmationMail from '../../../cards/sendCardConfirmationMail'
+import sendCardConfirmationMail, { SendCardConfirmationMailError } from '../../../cards/sendCardConfirmationMail'
 import { Region } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
@@ -80,7 +80,7 @@ const useCardGenerator = (region: Region) => {
           await deleteCards(client, region.id, extractCardInfoHashes(codes))
         } catch {}
       }
-      if (e instanceof CreateCardsError) {
+      if (e instanceof CreateCardsError || e instanceof SendCardConfirmationMailError) {
         appToaster?.show({
           message: e.message,
           intent: 'danger',
