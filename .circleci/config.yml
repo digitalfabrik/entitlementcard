@@ -753,7 +753,7 @@ jobs:
             - notify
     deliver_to_server:
         docker:
-            - image: debian:11
+            - image: cimg/base:2022.09
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.
@@ -767,12 +767,12 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
+            - run: sudo apt update -y && sudo apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
-                    apt update -y
-                    apt install curl -y
+                    sudo apt update -y
+                    sudo apt install curl -y
                 name: Install Curl
             - prepare_workspace
             - add_ssh_keys:
@@ -806,7 +806,6 @@ jobs:
                         command: |
                             curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
                         name: Install package via webhook
-            - notify
     pack_administration:
         docker:
             - image: debian:11

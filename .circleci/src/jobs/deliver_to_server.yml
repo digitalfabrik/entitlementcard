@@ -1,5 +1,5 @@
 docker:
-  - image: debian:11
+  - image: cimg/base:2022.09
 parameters:
   production:
     description: Whether builds are delivered to production or beta.
@@ -11,13 +11,13 @@ parameters:
 steps:
   - checkout:
       path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
+  - run: sudo apt update -y && sudo apt install -y nodejs npm
   - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
-        apt update -y
-        apt install curl -y
+        sudo apt update -y
+        sudo apt install curl -y
   - prepare_workspace
   - add_ssh_keys:
       fingerprints:
@@ -50,4 +50,4 @@ steps:
             name: Install package via webhook
             command: |
               curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
-  - notify
+#  - notify
