@@ -143,9 +143,7 @@ commands:
                 when: on_fail
             - run:
                 command: |
-                    if [ -n "<< parameters.success_message >>" ]; then
-                        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
-                    fi
+                    echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
                 name: Mattermost - Prepare success message
                 when: on_success
             - run:
@@ -755,7 +753,7 @@ jobs:
             - notify
     deliver_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: debian:11
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.
@@ -769,11 +767,12 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
-                    sudo apt update
-                    sudo apt install curl -y
+                    apt update -y
+                    apt install curl -y
                 name: Install Curl
             - prepare_workspace
             - add_ssh_keys:

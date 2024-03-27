@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: debian:11
 parameters:
   production:
     description: Whether builds are delivered to production or beta.
@@ -11,12 +11,13 @@ parameters:
 steps:
   - checkout:
       path: ~/project
+  - run: apt update -y && apt install -y nodejs npm
   - install_app_toolbelt
   - run:
       name: Install Curl
       command: |
-        sudo apt update
-        sudo apt install curl -y
+        apt update -y
+        apt install curl -y
   - prepare_workspace
   - add_ssh_keys:
       fingerprints:
