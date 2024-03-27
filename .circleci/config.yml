@@ -792,8 +792,8 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
+                            mkdir -p /root/.ssh
+                            echo ${APT_FINGERPRINT_STAGING} >> /root/.ssh/known_hosts
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
