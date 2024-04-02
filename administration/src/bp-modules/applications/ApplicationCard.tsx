@@ -92,10 +92,6 @@ const SectionCardHeader = styled.div`
   flex-direction: row-reverse;
 `
 
-const NoteButton = styled(PrintAwareButton)`
-  align-self: flex-start;
-`
-
 type ApplicationCardProps = {
   application: Application
   gotDeleted: () => void
@@ -143,93 +139,87 @@ const ApplicationCard = ({
   )
 
   return (
-    <>
-      <ApplicationViewCard
-        title={
-          <div>
-            <Title>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;</Title>{' '}
-            {personalData && personalData.forenames && personalData.surname && (
-              <CardContentHint>
-                Name: {personalData.surname}, {personalData.forenames}
-              </CardContentHint>
-            )}
-          </div>
-        }
-        rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
-        elevation={1}
-        icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
-        collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
-        collapsible
-        $hideInPrintMode={!isSelectedForPrint}>
-        <SectionCard>
-          <SectionCardHeader>
-            <NoteButton onClick={() => setOpenNoteDialog(true)} intent='none' icon='annotation'>
-              Notiz anzeigen
-            </NoteButton>
-            {withdrawalDate && (
-              <WithdrawAlert intent='warning'>
-                Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
-                zurückgezogen. <br />
-                Bitte löschen Sie den Antrag zeitnah.
-              </WithdrawAlert>
-            )}
-          </SectionCardHeader>
-          <JsonFieldView
-            jsonField={jsonField}
-            baseUrl={baseUrl}
-            key={0}
-            hierarchyIndex={0}
-            attachmentAccessible
-            expandedRoot={false}
+    <ApplicationViewCard
+      title={
+        <div>
+          <Title>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;</Title>{' '}
+          {personalData && personalData.forenames && personalData.surname && (
+            <CardContentHint>
+              Name: {personalData.surname}, {personalData.forenames}
+            </CardContentHint>
+          )}
+        </div>
+      }
+      rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
+      elevation={1}
+      icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
+      collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
+      collapsible
+      $hideInPrintMode={!isSelectedForPrint}>
+      <SectionCard>
+        <SectionCardHeader>
+          <NoteDialogController
+            application={application}
+            isOpen={openNoteDialog}
+            onOpenNoteDialog={setOpenNoteDialog}
           />
-        </SectionCard>
-        <SectionCard>
-          <VerificationsView verifications={application.verifications} />
-        </SectionCard>
-        <SectionCard>
-          <ButtonContainer>
-            <Tooltip
-              disabled={!!createCardQuery}
-              content={
-                'Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'
-              }>
-              <PrintAwareAnchorButton
-                disabled={!createCardQuery}
-                href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-                icon='id-number'
-                intent='primary'>
-                Karte erstellen
-              </PrintAwareAnchorButton>
-            </Tooltip>
-            <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
-              Antrag löschen
-            </PrintAwareButton>
-            <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
-              PDF exportieren
-            </PrintAwareButton>
-            <CollapseIcon
-              icon={'chevron-up'}
-              onClick={() => setIsExpanded(!isExpanded)}
-              style={{ marginLeft: 'auto' }}
-            />
-          </ButtonContainer>
-          <Alert
-            cancelButtonText='Abbrechen'
-            confirmButtonText='Antrag löschen'
-            icon='trash'
-            intent='danger'
-            isOpen={deleteDialogOpen}
-            loading={loading}
-            onCancel={() => setDeleteDialogOpen(false)}
-            onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
-            <p>Möchten Sie den Antrag unwiderruflich löschen?</p>
-          </Alert>
-        </SectionCard>
-      </ApplicationViewCard>
-      {openNoteDialog && (
-        <NoteDialogController application={application} isOpen={openNoteDialog} onOpenNoteDialog={setOpenNoteDialog} />
-      )}
-    </>
+
+          {withdrawalDate && (
+            <WithdrawAlert intent='warning'>
+              Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
+              zurückgezogen. <br />
+              Bitte löschen Sie den Antrag zeitnah.
+            </WithdrawAlert>
+          )}
+        </SectionCardHeader>
+        <JsonFieldView
+          jsonField={jsonField}
+          baseUrl={baseUrl}
+          key={0}
+          hierarchyIndex={0}
+          attachmentAccessible
+          expandedRoot={false}
+        />
+      </SectionCard>
+      <SectionCard>
+        <VerificationsView verifications={application.verifications} />
+      </SectionCard>
+      <SectionCard>
+        <ButtonContainer>
+          <Tooltip
+            disabled={!!createCardQuery}
+            content={
+              'Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'
+            }>
+            <PrintAwareAnchorButton
+              disabled={!createCardQuery}
+              href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
+              icon='id-number'
+              intent='primary'>
+              Karte erstellen
+            </PrintAwareAnchorButton>
+          </Tooltip>
+          <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
+            Antrag löschen
+          </PrintAwareButton>
+          <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
+            PDF exportieren
+          </PrintAwareButton>
+          <CollapseIcon icon={'chevron-up'} onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
+        </ButtonContainer>
+        <Alert
+          cancelButtonText='Abbrechen'
+          confirmButtonText='Antrag löschen'
+          icon='trash'
+          intent='danger'
+          isOpen={deleteDialogOpen}
+          loading={loading}
+          onCancel={() => setDeleteDialogOpen(false)}
+          onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
+          <p>Möchten Sie den Antrag unwiderruflich löschen?</p>
+        </Alert>
+      </SectionCard>
+    </ApplicationViewCard>
   )
 }
 

@@ -1,4 +1,6 @@
+import { Button, Tooltip } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
+import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetApplicationByIdQuery, useUpdateApplicationNoteMutation } from '../../generated/graphql'
@@ -7,11 +9,25 @@ import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { Application } from './ApplicationsOverview'
 
+const NoteButton = styled(Button)`
+  margin-right: 10px;
+  align-self: flex-start;
+  @media print {
+    display: none;
+  }
+`
+
+const MultilineContent = styled(Tooltip)`
+  white-space: pre-wrap;
+`
+
 type NoteDialogControllerProps = {
   application: Application
   onOpenNoteDialog: (value: boolean) => void
   isOpen: boolean
 }
+
+const EXCERPT_LENGTH = 80
 
 const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDialogControllerProps): ReactElement => {
   const appToaster = useAppToaster()
@@ -20,7 +36,10 @@ const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDia
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
-    onCompleted: () => appToaster?.show({ intent: 'success', message: 'Notiz erfolgreich geändert.', timeout: 2000 }),
+    onCompleted: () => {
+      appToaster?.show({ intent: 'success', message: 'Notiz erfolgreich geändert.', timeout: 2000 })
+      applicationQuery.refetch({ applicationId: application.id })
+    },
   })
   const applicationQuery = useGetApplicationByIdQuery({
     variables: { applicationId: application.id },
@@ -35,15 +54,35 @@ const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDia
     onOpenNoteDialog(false)
   }
 
+  const getNoteExcerpt = (maxChars: number, text?: string | null): string => {
+    if (!text) {
+      return ''
+    }
+    return text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
+  }
+
   return (
-    <TextAreaDialog
-      onSave={onSave}
-      onClose={onClose}
-      loading={loading}
-      defaultText={applicationQuery.data?.application.note}
-      placeholder={'Fügen Sie hier eine Notiz hinzu...'}
-      isOpen={isOpen}
-    />
+    <>
+      <Tooltip
+        content={
+          <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, applicationQuery.data?.application.note)}</MultilineContent>
+        }>
+        <NoteButton onClick={() => onOpenNoteDialog(true)} intent='none' icon='annotation'>
+          Notiz anzeigen
+        </NoteButton>
+      </Tooltip>
+      {isOpen && (
+        <TextAreaDialog
+          defaultText={applicationQuery.data?.application.note}
+          isOpen={isOpen}
+          maxChars={1000}
+          loading={loading}
+          onSave={onSave}
+          onClose={onClose}
+          placeholder={'Fügen Sie hier eine Notiz hinzu...'}
+        />
+      )}
+    </>
   )
 }
 

@@ -11,7 +11,7 @@ internal class V0010_ApplicationNote : Migration() {
     override val migrate: Statement = {
         exec(
             """
-            ALTER TABLE applications ADD "note" text NULL;
+            ALTER TABLE applications ADD "note" varchar(1000) NULL;
             """.trimIndent()
         )
     }
