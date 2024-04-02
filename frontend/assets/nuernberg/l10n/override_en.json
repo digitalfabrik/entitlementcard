@@ -1,6 +1,6 @@
 {
   "identification": {
-    "activateCurrentDeviceDescription": "Your pass is already activated on another device. If you activate your pass on this device, it will be automatically deactivated on your other device.",
+    "activateCurrentDeviceDescription": "Your pass has already been activated on another device. If you continue, your pass will be automatically deactivated on the other device if it is still active there.",
     "activateCurrentDeviceTitle": "Activate pass on this device?",
     "activateDescription": "You have already applied for the Nürnberg-Pass and received an activation code? Scan the code here.",
     "activateTitle": "Activate pass",
