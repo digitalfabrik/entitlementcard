@@ -54,19 +54,15 @@ const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDia
     onOpenNoteDialog(false)
   }
 
-  const getNoteExcerpt = (maxChars: number, text?: string | null): string => {
-    if (!text) {
-      return ''
-    }
-    return text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
-  }
+  const getNoteExcerpt = (maxChars: number, text: string): string =>
+    text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
 
+  const note = applicationQuery.data?.application.note
+  const toolTipContent =
+    note && note.length > 0 ? <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, note)}</MultilineContent> : undefined
   return (
     <>
-      <Tooltip
-        content={
-          <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, applicationQuery.data?.application.note)}</MultilineContent>
-        }>
+      <Tooltip content={toolTipContent}>
         <NoteButton onClick={() => onOpenNoteDialog(true)} intent='none' icon='annotation'>
           Notiz anzeigen
         </NoteButton>
