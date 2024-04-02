@@ -80,7 +80,7 @@
   },
   "identification": {
     "activate": "Aktivieren",
-    "activateCurrentDeviceDescription": "Ihre Karte ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihre Karte auf diesem Gerät aktivieren, wird sie auf Ihrem anderen Gerät automatisch deaktiviert.",
+    "activateCurrentDeviceDescription": "Ihre Karte wurde bereits auf einem anderen Gerät aktiviert. Wenn Sie fortfahren, wird Ihre Karte automatisch auf dem anderen Gerät deaktiviert, falls sie dort noch aktiv ist.",
     "activateCurrentDeviceTitle": "Karte auf diesem Gerät aktivieren?",
     "activateDescription": "Sie haben die Ehrenamtskarte bereits beantragt und den Aktivierungscode Ihrer digitalen Ehrenamtskarte erhalten? Scannen Sie den Code hier ein.",
     "activateTitle": "Karte aktivieren",

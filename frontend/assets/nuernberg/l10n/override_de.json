@@ -1,6 +1,6 @@
 {
   "identification": {
-    "activateCurrentDeviceDescription": "Ihr Pass ist bereits auf einem anderen Gerät aktiviert. Wenn Sie Ihren Pass auf diesem Gerät aktivieren, wird er auf Ihrem anderen Gerät automatisch deaktiviert.",
+    "activateCurrentDeviceDescription": "Ihr Pass wurde bereits auf einem anderen Gerät aktiviert. Wenn Sie fortfahren, wird Ihr Pass automatisch auf dem anderen Gerät deaktiviert, falls er dort noch aktiv ist.",
     "activateCurrentDeviceTitle": "Pass auf diesem Gerät aktivieren?",
     "activateDescription": "Sie haben den Nürnberg-Pass bereits beantragt und einen Aktivierungscode erhalten? Scannen Sie den Code hier ein.",
     "activateTitle": "Pass aktivieren",

@@ -19,6 +19,7 @@ import DataPrivacyController from './bp-modules/regions/data-privacy-policy/Data
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
+import ActivationPage from './mui-modules/activation/ActivationPage'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
 import ApplyController from './mui-modules/application/ApplyController'
@@ -43,6 +44,7 @@ const Router = () => {
       { path: '/forgot-password', element: <ForgotPasswordController /> },
       { path: '/reset-password/', element: <ResetPasswordController /> },
       { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
+      { path: '/activation/:activationCode', element: <ActivationPage /> },
       ...(projectConfig.applicationFeature
         ? [
             { path: '/beantragen', element: <ApplyController /> },
