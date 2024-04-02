@@ -21,7 +21,7 @@ import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
 import JsonFieldView, { JsonField } from './JsonFieldView'
-import NoteDialog from './NoteDialog'
+import NoteDialogController from './NoteDialogController'
 import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
 
 export const printAwareCss = css`
@@ -93,7 +93,6 @@ const SectionCardHeader = styled.div`
 `
 
 const NoteButton = styled(PrintAwareButton)`
-  //width: 33%;
   align-self: flex-start;
 `
 
@@ -111,7 +110,6 @@ const ApplicationCard = ({
   isSelectedForPrint,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [noteText, setNoteText] = useState<string>(application?.note ?? '')
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -229,13 +227,7 @@ const ApplicationCard = ({
         </SectionCard>
       </ApplicationViewCard>
       {openNoteDialog && (
-        <NoteDialog
-          noteText={noteText}
-          setNoteText={setNoteText}
-          application={application}
-          isOpen={openNoteDialog}
-          onOpenNoteDialog={setOpenNoteDialog}
-        />
+        <NoteDialogController application={application} isOpen={openNoteDialog} onOpenNoteDialog={setOpenNoteDialog} />
       )}
     </>
   )

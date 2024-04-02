@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.migration.Migration
 import app.ehrenamtskarte.backend.migration.Statement
 
 /**
- * Change type and name of passwordResetKey column
+ * Adds note column to application table
  */
 @Suppress("ClassName")
 internal class V0010_ApplicationNote : Migration() {

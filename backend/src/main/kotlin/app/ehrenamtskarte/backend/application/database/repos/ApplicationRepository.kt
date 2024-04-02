@@ -211,4 +211,10 @@ object ApplicationRepository {
             }
         }
     }
+
+    fun getApplicationById(applicationId: Int): ApplicationEntity {
+        return transaction {
+            ApplicationEntity.find { Applications.id eq applicationId }.single()
+        }
+    }
 }
