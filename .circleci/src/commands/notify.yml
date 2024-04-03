@@ -23,9 +23,7 @@ steps:
       when: on_fail
   - run:
       command: |
-        if [ -n "<< parameters.success_message >>" ]; then
-            echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
-        fi
+        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
       name: Mattermost - Prepare success message
       when: on_success
   - run:
