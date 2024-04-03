@@ -1,5 +1,0 @@
-query getApplicationById($applicationId: Int!) {
-  application: getApplicationById(applicationId: $applicationId) {
-    note
-  }
-}

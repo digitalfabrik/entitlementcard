@@ -138,7 +138,7 @@ type Mutation {
   "Updates the activation state of a region for the application process"
   updateActivatedForApplication(activated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
-  updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
+  updateApplicationNote(applicationId: Int!, noteText: String!): String!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
@@ -172,8 +172,6 @@ type Query {
   getApplicationByApplicant(accessKey: String!): ApplicationView!
   "Queries an application by application accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationView!
-  "Queries an application by id"
-  getApplicationById(applicationId: Int!): ApplicationView!
   "Queries an application verification by application accessKey"
   getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"

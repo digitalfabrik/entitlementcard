@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
@@ -59,32 +58,6 @@ class EakApplicationQueryService {
         return transaction {
             ApplicationRepository.getApplicationVerification(accessKey).let {
                 ApplicationVerificationView.fromDbEntity(it)
-            }
-        }
-    }
-
-    @GraphQLDescription("Queries an application by id")
-    fun getApplicationById(
-        applicationId: Int,
-        dfe: DataFetchingEnvironment
-    ): ApplicationView {
-        val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
-
-        return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
-            // `applicationId` and whether this application was contained in the user's project & region.
-
-            val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
-
-            if (!Authorizer.mayViewApplicationsInRegion(user, application.regionId.value)) {
-                throw ForbiddenException()
-            }
-
-            ApplicationRepository.getApplicationById(applicationId).let {
-                ApplicationView.fromDbEntity(it)
             }
         }
     }

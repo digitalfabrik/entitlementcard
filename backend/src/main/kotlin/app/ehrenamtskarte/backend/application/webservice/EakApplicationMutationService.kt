@@ -137,7 +137,7 @@ class EakApplicationMutationService {
         applicationId: Int,
         noteText: String,
         dfe: DataFetchingEnvironment
-    ): Boolean {
+    ): String {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
 
@@ -156,6 +156,7 @@ class EakApplicationMutationService {
             }
 
             ApplicationRepository.updateApplicationNote(applicationId, noteText)
+            return@transaction noteText
         }
     }
 }

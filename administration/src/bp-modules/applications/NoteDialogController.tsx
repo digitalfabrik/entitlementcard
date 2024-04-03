@@ -3,8 +3,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useGetApplicationByIdQuery, useUpdateApplicationNoteMutation } from '../../generated/graphql'
-import getQueryResult from '../../mui-modules/util/getQueryResult'
+import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { Application } from './ApplicationsOverview'
@@ -29,23 +28,21 @@ type NoteDialogControllerProps = {
 
 const EXCERPT_LENGTH = 80
 
-const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDialogControllerProps): ReactElement => {
+const NoteDialogController = ({
+  application,
+  onOpenNoteDialog,
+  isOpen,
+}: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
-  const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
+  const [updateApplicationNote, { loading, data: applicationData }] = useUpdateApplicationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Notiz erfolgreich geändert.', timeout: 2000 })
-      applicationQuery.refetch({ applicationId: application.id })
     },
   })
-  const applicationQuery = useGetApplicationByIdQuery({
-    variables: { applicationId: application.id },
-  })
-  const applicationQueryHandler = getQueryResult(applicationQuery)
-  if (!applicationQueryHandler.successful) return applicationQueryHandler.component
 
   const onClose = () => onOpenNoteDialog(false)
 
@@ -57,7 +54,8 @@ const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDia
   const getNoteExcerpt = (maxChars: number, text: string): string =>
     text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
 
-  const note = applicationQuery.data?.application.note
+  const note = applicationData ? applicationData.applicationNote : application.note
+
   const toolTipContent =
     note && note.length > 0 ? <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, note)}</MultilineContent> : undefined
   return (
@@ -69,7 +67,7 @@ const NoteDialogController = ({ application, onOpenNoteDialog, isOpen }: NoteDia
       </Tooltip>
       {isOpen && (
         <TextAreaDialog
-          defaultText={applicationQuery.data?.application.note}
+          defaultText={note}
           isOpen={isOpen}
           maxChars={1000}
           loading={loading}
