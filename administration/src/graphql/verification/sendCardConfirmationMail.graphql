@@ -4,7 +4,7 @@ mutation sendCardCreationConfirmationMail(
   $recipientName: String!
   $deepLink: String!
 ) {
-  sendCardCreationConfirmationMail(
+  result: sendCardCreationConfirmationMail(
     project: $project
     recipientAddress: $recipientAddress
     recipientName: $recipientName

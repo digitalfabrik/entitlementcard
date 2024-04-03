@@ -60,7 +60,7 @@ object Mailer {
                 ).join()
         } catch (exception: MailException) {
             logger.error(exception.message)
-            throw MailNotSentException()
+            throw MailNotSentException(to)
         }
     }
 

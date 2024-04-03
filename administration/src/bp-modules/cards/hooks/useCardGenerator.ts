@@ -1,4 +1,4 @@
-import { ApolloClient, useApolloClient } from '@apollo/client'
+import { useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
 import { CardBlueprint } from '../../../cards/CardBlueprint'
@@ -7,8 +7,8 @@ import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards
 import deleteCards from '../../../cards/deleteCards'
 import EMailExtension from '../../../cards/extensions/EMailExtension'
 import { findExtension } from '../../../cards/extensions/extensions'
-import sendCardConfirmationMail, { SendCardConfirmationMailError } from '../../../cards/sendCardConfirmationMail'
-import { Region } from '../../../generated/graphql'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { Region, useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
@@ -30,34 +30,52 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
   })
 }
 
-const sendCardConfirmationMails = async (
-  codes: CreateCardsResult[],
-  cardBlueprints: CardBlueprint[],
-  client: ApolloClient<object>,
-  projectId: string
-): Promise<void> => {
-  for (let k = 0; k < codes.length; k++) {
-    const cardBlueprint = cardBlueprints[k]
-    const mailExtension = findExtension(cardBlueprint.extensions, EMailExtension)
-    if (!mailExtension?.state) {
-      return
-    }
-    const dynamicCode = codes[k].dynamicActivationCode
-    const deepLink = getDeepLinkFromQrCode({
-      case: 'dynamicActivationCode',
-      value: dynamicCode,
-    })
-    await sendCardConfirmationMail(client, projectId, mailExtension.state, cardBlueprint.fullName, deepLink)
-  }
-}
-
 const useCardGenerator = (region: Region) => {
   const projectConfig = useContext(ProjectConfigContext)
-
+  const [sendMail] = useSendCardCreationConfirmationMailMutation({
+    onCompleted: () => {
+      appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({
+        intent: 'danger',
+        message: title,
+        timeout: 0,
+      })
+    },
+  })
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const [state, setState] = useState(CardActivationState.input)
   const client = useApolloClient()
   const appToaster = useAppToaster()
+
+  const sendCardConfirmationMails = async (
+    codes: CreateCardsResult[],
+    cardBlueprints: CardBlueprint[],
+    projectId: string
+  ): Promise<void> => {
+    for (let k = 0; k < codes.length; k++) {
+      const cardBlueprint = cardBlueprints[k]
+      const mailExtension = findExtension(cardBlueprint.extensions, EMailExtension)
+      if (!mailExtension?.state) {
+        return
+      }
+      const dynamicCode = codes[k].dynamicActivationCode
+      const deepLink = getDeepLinkFromQrCode({
+        case: 'dynamicActivationCode',
+        value: dynamicCode,
+      })
+      await sendMail({
+        variables: {
+          project: projectId,
+          recipientAddress: mailExtension.state,
+          recipientName: cardBlueprint.fullName,
+          deepLink,
+        },
+      })
+    }
+  }
 
   const generateCards = useCallback(async () => {
     let codes: CreateCardsResult[] | undefined
@@ -71,7 +89,7 @@ const useCardGenerator = (region: Region) => {
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
-      await sendCardConfirmationMails(codes, cardBlueprints, client, projectConfig.projectId)
+      await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
       setState(CardActivationState.finished)
     } catch (e) {
       if (codes !== undefined) {
@@ -80,7 +98,7 @@ const useCardGenerator = (region: Region) => {
           await deleteCards(client, region.id, extractCardInfoHashes(codes))
         } catch {}
       }
-      if (e instanceof CreateCardsError || e instanceof SendCardConfirmationMailError) {
+      if (e instanceof CreateCardsError) {
         appToaster?.show({
           message: e.message,
           intent: 'danger',
