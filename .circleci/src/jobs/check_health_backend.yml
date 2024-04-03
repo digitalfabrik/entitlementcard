@@ -1,6 +1,6 @@
 docker:
-  - image: cimg/base:2023.03
-  - image: postgis/postgis:13-3.0-alpine
+  - image: debian:11
+  - image: postgis/postgis:13-3.0
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
@@ -10,22 +10,17 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
-  - run: apt update -y && apt install -y nodejs npm
+  - run: apt update -y && apt install -y nodejs npm curl
   - install_app_toolbelt
   - run:
-      name: Install Curl
-      command: |
-        sudo apt update
-        sudo apt install curl -y
-  - run:
       name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129
-      command: sudo apt install ca-certificates-java
+      command: apt install ca-certificates-java -y
   - run:
       name: Install openjdk-17-jre-headless
-      command: sudo apt install openjdk-17-jre-headless -y
+      command: apt install openjdk-17-jre-headless -y
   - run:
       name: Install backend
-      command: sudo dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
+      command: dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
   - run:
       name: Run migrate
       command: /opt/ehrenamtskarte/backend/bin/backend migrate

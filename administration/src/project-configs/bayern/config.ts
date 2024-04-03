@@ -3,6 +3,7 @@ import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExte
 import EMailExtension from '../../cards/extensions/EMailExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
@@ -63,6 +64,10 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
+  activation: {
+    activationText: ActivationText,
+    downloadLink: 'https://download.bayern.ehrenamtskarte.app/',
+  },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
 }

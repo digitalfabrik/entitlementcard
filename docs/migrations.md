@@ -3,12 +3,17 @@
 Our database relies on the [jetbrains exposed](https://github.com/JetBrains/Exposed) framework. As the framework did not already provide a proper migration routine/setup, we decided to implement migrations ourselves. The implementation can be found in the [migration package in the backend directory](../backend/src/main/kotlin/app/ehrenamtskarte/backend/migration). The migration scripts themselves reside in a [subfolder](../backend/src/main/kotlin/app/ehrenamtskarte/backend/migration/migrations/) of this package.
 In the CI the migration script is run automatically in the postinstall process of the debian package installation (apt upgrade).
 
-## How to use it?
+## How to use it locally?
 
 Simply run `./gradlew run --args="migrate"` to apply all migrations. Migrations that are already present in the `migrations` table are not executed.
 When starting the backend server the state of the database is checked. If the exposed definitions are out of sync with the actual database the, backend server is not started.
 
 If you switched branch and due to that the database is out of sync you'll need to restore a synchronized database. How to deal with that is explained in the following example.
+
+## How to use it on server?
+
+Simply run `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate`.
+Then restart backend service: `systemctl restart eak-backend.service`
 
 ### Example
 
