@@ -16,13 +16,8 @@ import org.slf4j.LoggerFactory
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-enum class ContentType(val content: String) {
-    HTML("text/html; charset=UTF-8"),
-    PLAIN("text/plain; charset=UTF-8")
-}
-
 object Mailer {
-    val DO_NOT_ANSWER_MESSAGE = "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
+    private const val DO_NOT_ANSWER_MESSAGE = "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
 
     private fun sendMail(
         backendConfig: BackendConfiguration,
@@ -30,21 +25,10 @@ object Mailer {
         fromName: String,
         to: String,
         subject: String,
-        contentType: ContentType,
-        message: String
+        message: String,
+        messageHTML: String? = null
     ) {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
-
-        var messagePlain: String? = null
-        var messageHTML: String? = null
-
-        if (contentType === ContentType.PLAIN) {
-            messagePlain = message
-        }
-
-        if (contentType === ContentType.HTML) {
-            messageHTML = message
-        }
 
         if (!backendConfig.production) {
             logger.info(
@@ -71,9 +55,8 @@ object Mailer {
                         .to(to)
                         .from(fromName, smtpConfig.username)
                         .withSubject(subject)
-                        .withPlainText(messagePlain)
+                        .withPlainText(message)
                         .withHTMLText(messageHTML)
-                        .withHeader("Content-Type", contentType.content)
                         .buildEmail()
                 ).join()
         } catch (exception: MailException) {
@@ -109,7 +92,6 @@ object Mailer {
                     projectConfig.administrationName,
                     recipient.email,
                     "Ein neuer Antrag ist eingegangen",
-                    ContentType.PLAIN,
                     message
                 )
             } catch (_: MailException) {}
@@ -143,7 +125,6 @@ object Mailer {
                     projectConfig.administrationName,
                     recipient.email,
                     "Ein Antrag ist verifiziert worden",
-                    ContentType.PLAIN,
                     message
                 )
             } catch (_: MailException) {}
@@ -170,7 +151,6 @@ object Mailer {
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
             "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]",
-            ContentType.PLAIN,
             message
         )
     }
@@ -199,7 +179,6 @@ object Mailer {
             projectConfig.administrationName,
             personalData.emailAddress.email,
             "Antrag erfolgreich eingereicht",
-            ContentType.PLAIN,
             message
         )
     }
@@ -229,7 +208,6 @@ object Mailer {
             projectConfig.administrationName,
             recipient,
             "Passwort Zurücksetzen",
-            ContentType.PLAIN,
             message
         )
     }
@@ -253,7 +231,7 @@ object Mailer {
         
         - ${projectConfig.administrationName}
         """.trimIndent()
-        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipient, "Kontoerstellung", ContentType.PLAIN, message)
+        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipient, "Kontoerstellung", message)
     }
 
     fun sendCardCreationConfirmationMail(
@@ -264,6 +242,20 @@ object Mailer {
         recipientName: String
     ) {
         val message = """
+        Guten Tag $recipientName,
+
+        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt.
+        
+        Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. Klicken Sie dazu von Ihrem Smartphone, auf dem die App installiert ist, auf den folgenden Link: 
+        $deepLink
+        
+        Hinweis: Die Vorab-Aktivierung wird nicht von allen Endgeräten unterstützt. Falls der Vorgang fehlschlägt, warten Sie bitte auf das offizielle Schreiben.
+        
+        $DO_NOT_ANSWER_MESSAGE
+        
+        - ${projectConfig.administrationName}
+        """.trimIndent()
+        val messageHTML = """
         <p>Guten Tag $recipientName,</p>
 
         <p>Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt.</p>
@@ -278,6 +270,6 @@ object Mailer {
         <p> - ${projectConfig.administrationName}
         </p>
         """.trimIndent()
-        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipientAddress, "Kartenerstellung erfolgreich", ContentType.HTML, message)
+        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipientAddress, "Kartenerstellung erfolgreich", message, messageHTML)
     }
 }
