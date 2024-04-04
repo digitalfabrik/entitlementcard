@@ -70,7 +70,7 @@ const TextAreaDialog = ({
       />
       <DialogFooter actions={actions}>
         {maxChars && (
-          <CharacterCounter $hasError={maxCharsExceeded}>
+          <CharacterCounter $hasError={maxCharsExceeded} aria-label='Character Counter'>
             {text.length}/{maxChars}
           </CharacterCounter>
         )}
