@@ -5,7 +5,7 @@ import { mocked } from 'jest-mock'
 import { ReactElement } from 'react'
 
 import CardBlueprint from '../../../cards/CardBlueprint'
-import { PDFError, generatePdf } from '../../../cards/PdfFactory'
+import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
@@ -72,7 +72,7 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cardBlueprints).toEqual(cards)
     await act(async () => {
-      await result.current.generateCards()
+      await result.current.generateCardsPdf()
     })
 
     expect(toasterSpy).not.toHaveBeenCalled()
@@ -94,7 +94,7 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cardBlueprints).toEqual(cards)
     await act(async () => {
-      await result.current.generateCards()
+      await result.current.generateCardsPdf()
     })
 
     expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
@@ -107,7 +107,7 @@ describe('useCardGenerator', () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     mocked(deleteCards).mockReturnValueOnce(Promise.resolve())
     mocked(generatePdf).mockImplementationOnce(() => {
-      throw new PDFError('error')
+      throw new PdfError('error')
     })
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
@@ -117,7 +117,7 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cardBlueprints).toEqual(cards)
     await act(async () => {
-      await result.current.generateCards()
+      await result.current.generateCardsPdf()
     })
 
     const codesToDelete = [

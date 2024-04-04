@@ -36,6 +36,7 @@ const config: ProjectConfig = {
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
+  csvExportEnabled: true,
 }
 
 export default config

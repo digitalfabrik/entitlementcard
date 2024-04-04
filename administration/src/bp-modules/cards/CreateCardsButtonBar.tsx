@@ -1,16 +1,25 @@
 import { Button, Tooltip } from '@blueprintjs/core'
+import { useContext } from 'react'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ButtonBar from '../ButtonBar'
 
 type CreateCardsButtonBarProps = {
   cardBlueprints: CardBlueprint[]
   goBack: () => void
-  generateCards: () => Promise<void>
+  generateCardsPdf: () => Promise<void>
+  generateCardsCsv: () => Promise<void>
 }
 
-const CreateCardsButtonBar = ({ cardBlueprints, generateCards, goBack }: CreateCardsButtonBarProps) => {
+const CreateCardsButtonBar = ({
+  cardBlueprints,
+  generateCardsPdf,
+  generateCardsCsv,
+  goBack,
+}: CreateCardsButtonBarProps) => {
   const allCardsValid = cardBlueprints.every(cardBlueprint => cardBlueprint.isValid())
+  const { csvExportEnabled } = useContext(ProjectConfigContext)
 
   return (
     <ButtonBar>
@@ -27,10 +36,28 @@ const CreateCardsButtonBar = ({ cardBlueprints, generateCards, goBack }: CreateC
           icon='export'
           text='QR-Codes drucken'
           intent='success'
-          onClick={generateCards}
+          onClick={generateCardsPdf}
           disabled={!allCardsValid || cardBlueprints.length === 0}
         />
       </Tooltip>
+      {csvExportEnabled && (
+        <Tooltip
+          placement='top'
+          content={
+            cardBlueprints.length === 0
+              ? 'Legen Sie zunächst eine Karte an.'
+              : 'Mindestens eine Karte enthält ungültige Eingaben.'
+          }
+          disabled={allCardsValid && cardBlueprints.length > 0}>
+          <Button
+            icon='th-derived'
+            text='CSV Export'
+            intent='success'
+            onClick={generateCardsCsv}
+            disabled={!allCardsValid || cardBlueprints.length === 0}
+          />
+        </Tooltip>
+      )}
     </ButtonBar>
   )
 }

@@ -14,7 +14,12 @@ describe('CreateCardsButtonBar', () => {
   it('Should goBack when clicking back', async () => {
     const goBack = jest.fn()
     const { getByText } = render(
-      <CreateCardsButtonBar goBack={goBack} cardBlueprints={[]} generateCards={() => Promise.resolve()} />,
+      <CreateCardsButtonBar
+        goBack={goBack}
+        cardBlueprints={[]}
+        generateCardsPdf={() => Promise.resolve()}
+        generateCardsCsv={() => Promise.resolve()}
+      />,
       { wrapper }
     )
 
@@ -28,9 +33,15 @@ describe('CreateCardsButtonBar', () => {
   })
 
   it('Should disable generate button for no cards', async () => {
-    const generateCards = jest.fn()
+    const generateCardsPdf = jest.fn()
+    const generateCardsCsv = jest.fn()
     const { getByText } = render(
-      <CreateCardsButtonBar goBack={() => {}} cardBlueprints={[]} generateCards={generateCards} />,
+      <CreateCardsButtonBar
+        goBack={() => {}}
+        cardBlueprints={[]}
+        generateCardsPdf={generateCardsPdf}
+        generateCardsCsv={generateCardsCsv}
+      />,
       { wrapper }
     )
 
@@ -45,14 +56,20 @@ describe('CreateCardsButtonBar', () => {
     })
 
     expect(getByText('Legen Sie zunächst eine Karte an.')).toBeTruthy()
-    expect(generateCards).not.toHaveBeenCalled()
+    expect(generateCardsPdf).not.toHaveBeenCalled()
   })
 
   it('Should disable generate button for invalid cards', async () => {
-    const generateCards = jest.fn()
+    const generateCardsPdf = jest.fn()
+    const generateCardsCsv = jest.fn()
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
     const { getByText } = render(
-      <CreateCardsButtonBar goBack={() => {}} cardBlueprints={cards} generateCards={generateCards} />,
+      <CreateCardsButtonBar
+        goBack={() => {}}
+        cardBlueprints={cards}
+        generateCardsPdf={generateCardsPdf}
+        generateCardsCsv={generateCardsCsv}
+      />,
       { wrapper }
     )
 
@@ -68,11 +85,12 @@ describe('CreateCardsButtonBar', () => {
 
     expect(generateButton.disabled).toBeTruthy()
     expect(getByText('Mindestens eine Karte enthält ungültige Eingaben.')).toBeTruthy()
-    expect(generateCards).not.toHaveBeenCalled()
+    expect(generateCardsPdf).not.toHaveBeenCalled()
   })
 
   it('Should generate valid cards', async () => {
-    const generateCards = jest.fn()
+    const generateCardsPdf = jest.fn()
+    const generateCardsCsv = jest.fn()
     const region = {
       id: 0,
       name: 'augsburg',
@@ -81,7 +99,12 @@ describe('CreateCardsButtonBar', () => {
     }
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(
-      <CreateCardsButtonBar goBack={() => {}} cardBlueprints={cards} generateCards={generateCards} />,
+      <CreateCardsButtonBar
+        goBack={() => {}}
+        cardBlueprints={cards}
+        generateCardsPdf={generateCardsPdf}
+        generateCardsCsv={generateCardsCsv}
+      />,
       { wrapper }
     )
 
@@ -91,6 +114,6 @@ describe('CreateCardsButtonBar', () => {
     fireEvent.click(generateButton)
     await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
-    expect(generateCards).toHaveBeenCalled()
+    expect(generateCardsPdf).toHaveBeenCalled()
   })
 })

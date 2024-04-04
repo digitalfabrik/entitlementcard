@@ -65,6 +65,7 @@ export interface ProjectConfig {
     activationText: (applicationName: string, downloadLink: string) => ReactElement
     downloadLink: string
   }
+  csvExportEnabled: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

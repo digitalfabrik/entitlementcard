@@ -36,7 +36,8 @@ export const getHeaders = (projectConfig: ProjectConfig) => [
 ]
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
-  const { state, setState, generateCards, setCardBlueprints, cardBlueprints } = useCardGenerator(region)
+  const { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints } =
+    useCardGenerator(region)
   const projectConfig = useContext(ProjectConfigContext)
   const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
@@ -88,7 +89,12 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       ) : (
         <CardImportTable cardBlueprints={cardBlueprints} headers={headers} />
       )}
-      <CreateCardsButtonBar cardBlueprints={cardBlueprints} goBack={goBack} generateCards={generateCards} />
+      <CreateCardsButtonBar
+        cardBlueprints={cardBlueprints}
+        goBack={goBack}
+        generateCardsPdf={generateCardsPdf}
+        generateCardsCsv={generateCardsCsv}
+      />
     </>
   )
 }

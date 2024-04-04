@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
 import { CardBlueprint } from '../../../cards/CardBlueprint'
+import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
@@ -34,29 +35,17 @@ const useCardGenerator = (region: Region) => {
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
-  const generateCards = useCallback(async () => {
-    let codes: CreateCardsResult[] | undefined
-    setState(CardActivationState.loading)
-
-    try {
-      const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
-      codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
-
-      const pdfDataUri = await generatePdf(codes, cardBlueprints, region, projectConfig.pdf)
-
-      cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
-      downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
-      setState(CardActivationState.finished)
-    } catch (e) {
+  const handleError = useCallback(
+    async (error: unknown, codes: CreateCardsResult[] | undefined) => {
       if (codes !== undefined) {
         // try rollback
         try {
           await deleteCards(client, region.id, extractCardInfoHashes(codes))
         } catch {}
       }
-      if (e instanceof CreateCardsError) {
+      if (error instanceof CreateCardsError) {
         appToaster?.show({
-          message: e.message,
+          message: error.message,
           intent: 'danger',
         })
       } else {
@@ -66,12 +55,50 @@ const useCardGenerator = (region: Region) => {
         })
       }
       setState(CardActivationState.input)
-    } finally {
-      setCardBlueprints([])
-    }
-  }, [appToaster, cardBlueprints, client, projectConfig, region])
+    },
+    [appToaster, client, region]
+  )
 
-  return { state, setState, generateCards, setCardBlueprints, cardBlueprints }
+  const generateCards = useCallback(
+    async (
+      generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob>,
+      filename: string
+    ) => {
+      let codes: CreateCardsResult[] | undefined
+      setState(CardActivationState.loading)
+
+      try {
+        const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
+        codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
+
+        const dataUri = await generateFunction(codes, cardBlueprints)
+
+        cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
+
+        downloadDataUri(dataUri, filename)
+        setState(CardActivationState.finished)
+      } catch (error) {
+        handleError(error, codes)
+      } finally {
+        setCardBlueprints([])
+      }
+    },
+    [cardBlueprints, client, projectConfig, handleError]
+  )
+
+  const generateCardsPdf = useCallback(async () => {
+    generateCards(
+      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+        generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
+      'berechtigungskarten.pdf'
+    )
+  }, [projectConfig, region, generateCards])
+
+  const generateCardsCsv = useCallback(async () => {
+    generateCards(generateCsv, getCSVFilename(cardBlueprints))
+  }, [cardBlueprints, generateCards])
+
+  return { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints }
 }
 
 export default useCardGenerator
