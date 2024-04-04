@@ -166,21 +166,3 @@ flutter {
     source '../..'
     target 'lib/main.dart'
 }
-
-// Workaround to fix wrong path lookup by flutter tools, can be removed after upgrading flutter
-// see: https://github.com/flutter/flutter/pull/127133
-// when removing, make sure the release is written to the same directory as before or adjust build_android step to look at the new directory
-tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("bundle") && task.name.endsWith("Release")) {
-        def renameTaskName = "rename${task.name.capitalize()}Aab"
-        def oldDir = task.name.substring("bundle".length())
-        def flavor = task.name.substring("bundle".length(), task.name.length() - "Release".length())
-        def flavorLowerCase = flavor.uncapitalize()
-        tasks.create(renameTaskName, Copy) {
-            from("${buildDir}/outputs/bundle/${oldDir}/")
-            into "${buildDir}/outputs/bundle/${flavorLowerCase}Release/"
-            rename "app-${flavor}-release.aab", "app-${flavorLowerCase}-release.aab"
-        }
-        task.finalizedBy(renameTaskName)
-    }
-}
