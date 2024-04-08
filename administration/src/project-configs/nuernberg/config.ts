@@ -36,6 +36,7 @@ const config: ProjectConfig = {
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
+  cardCreationConfirmationMailEnabled: false,
 }
 
 export default config

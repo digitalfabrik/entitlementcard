@@ -1,7 +1,7 @@
 import { Extension } from './extensions'
 
-class EMailExtension extends Extension<string, null> {
-  public readonly name = EMailExtension.name
+class EMailNotificationExtension extends Extension<string, null> {
+  public readonly name = EMailNotificationExtension.name
 
   setInitialState() {}
   createForm() {
@@ -21,4 +21,4 @@ class EMailExtension extends Extension<string, null> {
   }
 }
 
-export default EMailExtension
+export default EMailNotificationExtension
