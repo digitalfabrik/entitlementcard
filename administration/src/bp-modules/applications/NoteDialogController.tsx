@@ -24,6 +24,7 @@ type NoteDialogControllerProps = {
   application: Application
   onOpenNoteDialog: (value: boolean) => void
   isOpen: boolean
+  gotChanged: (application: Application) => void
 }
 
 const EXCERPT_LENGTH = 80
@@ -32,29 +33,32 @@ const NoteDialogController = ({
   application,
   onOpenNoteDialog,
   isOpen,
+  gotChanged,
 }: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
-  const [updateApplicationNote, { loading, data: applicationData }] = useUpdateApplicationNoteMutation({
+  const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Notiz erfolgreich geändert.', timeout: 2000 })
+      onOpenNoteDialog(false)
     },
   })
 
   const onClose = () => onOpenNoteDialog(false)
 
   const onSave = (text: string) => {
-    updateApplicationNote({ variables: { applicationId: application.id, text } })
-    onOpenNoteDialog(false)
+    updateApplicationNote({ variables: { applicationId: application.id, text } }).then(
+      result => result.data?.success && gotChanged({ ...application, note: text })
+    )
   }
 
   const getNoteExcerpt = (maxChars: number, text: string): string =>
     text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
 
-  const note = applicationData ? applicationData.applicationNote : application.note
+  const note = application.note
 
   const toolTipContent =
     note && note.length > 0 ? <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, note)}</MultilineContent> : undefined

@@ -76,6 +76,9 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
                 key={application.id}
                 application={application}
                 gotDeleted={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
+                gotChanged={application =>
+                  setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
+                }
               />
             ))}
           </ApplicationList>

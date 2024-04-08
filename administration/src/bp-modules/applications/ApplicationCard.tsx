@@ -97,6 +97,7 @@ type ApplicationCardProps = {
   gotDeleted: () => void
   printApplicationById: (applicationId: number) => void
   isSelectedForPrint: boolean
+  gotChanged: (application: Application) => void
 }
 
 const ApplicationCard = ({
@@ -104,6 +105,7 @@ const ApplicationCard = ({
   gotDeleted,
   printApplicationById,
   isSelectedForPrint,
+  gotChanged,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
@@ -162,6 +164,7 @@ const ApplicationCard = ({
             application={application}
             isOpen={openNoteDialog}
             onOpenNoteDialog={setOpenNoteDialog}
+            gotChanged={gotChanged}
           />
 
           {withdrawalDate && (
