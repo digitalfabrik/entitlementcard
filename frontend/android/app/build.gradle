@@ -1,17 +1,19 @@
 import kotlin.Pair
 import com.android.build.api.dsl.ApplicationProductFlavor
 
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "idea"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -24,11 +26,7 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply from: "buildConfigs.gradle"
-apply plugin: 'idea'
 
 idea {
     module {
@@ -167,36 +165,4 @@ android {
 flutter {
     source '../..'
     target 'lib/main.dart'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // https://github.com/maplibre/flutter-maplibre-gl/issues/370
-    constraints {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
-            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
-        }
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
-            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
-        }
-    }
-
-}
-
-// Workaround to fix wrong path lookup by flutter tools, can be removed after upgrading flutter
-// see: https://github.com/flutter/flutter/pull/127133
-// when removing, make sure the release is written to the same directory as before or adjust build_android step to look at the new directory
-tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("bundle") && task.name.endsWith("Release")) {
-        def renameTaskName = "rename${task.name.capitalize()}Aab"
-        def oldDir = task.name.substring("bundle".length())
-        def flavor = task.name.substring("bundle".length(), task.name.length() - "Release".length())
-        def flavorLowerCase = flavor.uncapitalize()
-        tasks.create(renameTaskName, Copy) {
-            from("${buildDir}/outputs/bundle/${oldDir}/")
-            into "${buildDir}/outputs/bundle/${flavorLowerCase}Release/"
-            rename "app-${flavor}-release.aab", "app-${flavorLowerCase}-release.aab"
-        }
-        task.finalizedBy(renameTaskName)
-    }
 }

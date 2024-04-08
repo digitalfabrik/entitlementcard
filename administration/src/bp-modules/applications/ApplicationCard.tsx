@@ -154,7 +154,7 @@ const ApplicationCard = ({
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
-      collapsible
+      collapsible={!isSelectedForPrint}
       $hideInPrintMode={!isSelectedForPrint}>
       <SectionCard>
         <SectionCardHeader>

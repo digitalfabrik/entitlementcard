@@ -19,7 +19,10 @@ const PrintAwareTag = styled(Tag)`
 `
 
 const PrintOnlySpan = styled.span`
-  ${printAwareCss};
+  visibility: hidden;
+  @media print {
+    visibility: visible;
+  }
 `
 
 const JsonFieldAttachment = memo(
