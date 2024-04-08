@@ -6,6 +6,8 @@ import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.constants.categoryMapping
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.stores.importer.nuernberg.utils.Discounts
+import app.ehrenamtskarte.backend.stores.importer.nuernberg.utils.mergeDiscount
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
 import org.slf4j.Logger
 
@@ -29,6 +31,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
             null
         }
 
+        val discount = mergeDiscount(Discounts(discountDE = it.discountDE, discountEN = it.discountEN))
         try {
             AcceptingStore(
                 it.name.clean()!!,
@@ -44,7 +47,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
-                it.discount.clean(false),
+                discount.clean(false),
                 null,
                 null
             )

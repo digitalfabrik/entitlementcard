@@ -29,12 +29,14 @@ fun writeCsvWithGeoInformation(input: List<AcceptingStore>) {
             "Telefon",
             "Email",
             "Website",
-            "Rabatt",
+            "RabattDE",
+            "RabattEN",
             "Kategorie"
         )
     )
 
     input.forEach { record ->
+        val discounts = splitDiscount(record.discount)
         printer.printRecord(
             "",
             record.name,
@@ -47,7 +49,8 @@ fun writeCsvWithGeoInformation(input: List<AcceptingStore>) {
             record.telephone,
             record.email,
             record.website,
-            record.discount,
+            discounts.discountDE,
+            discounts.discountEN,
             record.categoryId
         )
     }

@@ -53,7 +53,8 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
                         record[9],
                         record[10],
                         record[11],
-                        record[12]
+                        record[12],
+                        record[13]
                     )
                 )
             }
