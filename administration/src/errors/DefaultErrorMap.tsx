@@ -63,6 +63,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: 'Daten konnten nicht geparsed werden.',
       }
+    case GraphQlExceptionCode.InvalidNoteSize:
+      return {
+        title: `Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind ${extensions.maxSize} Zeichen erlaubt.`,
+      }
     case GraphQlExceptionCode.InvalidPassword:
       return {
         title: 'Kein gültiges Passwort.',
