@@ -24,7 +24,7 @@ type NoteDialogControllerProps = {
   application: Application
   onOpenNoteDialog: (value: boolean) => void
   isOpen: boolean
-  gotChanged: (application: Application) => void
+  onChange: (application: Application) => void
 }
 
 const EXCERPT_LENGTH = 80
@@ -33,7 +33,7 @@ const NoteDialogController = ({
   application,
   onOpenNoteDialog,
   isOpen,
-  gotChanged,
+  onChange,
 }: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
@@ -51,7 +51,7 @@ const NoteDialogController = ({
 
   const onSave = (text: string) => {
     updateApplicationNote({ variables: { applicationId: application.id, text } }).then(
-      result => result.data?.success && gotChanged({ ...application, note: text })
+      result => result.data?.success && onChange({ ...application, note: text })
     )
   }
 

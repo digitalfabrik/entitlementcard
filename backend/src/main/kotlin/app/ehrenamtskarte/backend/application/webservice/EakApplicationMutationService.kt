@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsI
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
@@ -87,10 +88,7 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
-            // `applicationId` and whether this application was contained in the user's project & region.
-
+            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw UnauthorizedException()
 
@@ -142,9 +140,7 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
-            // `applicationId` and whether this application was contained in the user's project & region.
+            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             if (noteText.length > NOTE_MAX_CHARS) {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }

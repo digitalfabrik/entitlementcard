@@ -94,18 +94,18 @@ const SectionCardHeader = styled.div`
 
 type ApplicationCardProps = {
   application: Application
-  gotDeleted: () => void
+  onDelete: () => void
   printApplicationById: (applicationId: number) => void
   isSelectedForPrint: boolean
-  gotChanged: (application: Application) => void
+  onChange: (application: Application) => void
 }
 
 const ApplicationCard = ({
   application,
-  gotDeleted,
+  onDelete,
   printApplicationById,
   isSelectedForPrint,
-  gotChanged,
+  onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
@@ -122,7 +122,7 @@ const ApplicationCard = ({
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) {
-        gotDeleted()
+        onDelete()
       } else {
         console.error('Delete operation returned false.')
         appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
@@ -164,7 +164,7 @@ const ApplicationCard = ({
             application={application}
             isOpen={openNoteDialog}
             onOpenNoteDialog={setOpenNoteDialog}
-            gotChanged={gotChanged}
+            onChange={onChange}
           />
 
           {withdrawalDate && (
