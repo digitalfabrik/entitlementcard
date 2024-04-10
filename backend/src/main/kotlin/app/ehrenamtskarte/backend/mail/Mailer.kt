@@ -198,6 +198,7 @@ object Mailer {
                 br()
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
+            p { +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt." }
             p { +DO_NOT_ANSWER_MESSAGE }
             p { +"- ${projectConfig.administrationName}" }
         }
