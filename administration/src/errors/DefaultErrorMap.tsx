@@ -24,7 +24,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
   if (!extensions || !extensions['code']) return defaultError
-  console.log(extensions['code'])
   switch (extensions['code']) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {

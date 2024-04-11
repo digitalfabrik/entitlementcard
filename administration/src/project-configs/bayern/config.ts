@@ -73,7 +73,7 @@ const config: ProjectConfig = {
   },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
-  // Wait for bavarian confirmation until we enable it on production
+  // TODO Wait for bavarian confirmation until we enable it on production
   cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
 }
 
