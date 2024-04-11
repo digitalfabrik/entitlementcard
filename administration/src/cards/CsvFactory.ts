@@ -1,3 +1,5 @@
+import { stringify } from 'csv-stringify/browser/esm/sync'
+
 import { QrCode } from '../generated/card_pb'
 import { convertProtobufToHexCode } from '../util/qrcode'
 import CardBlueprint from './CardBlueprint'
@@ -34,8 +36,8 @@ const buildCsvLine = (createCardsResult: CreateCardsResult, cardBlueprint: CardB
     findExtension(cardBlueprint.extensions, ext)
   )
   const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.passId
-  const birthday = findExtension(cardBlueprint.extensions, BirthdayExtension)?.state?.birthday
-  const startDay = findExtension(cardBlueprint.extensions, StartDayExtension)?.state?.startDay
+  const birthday = findExtension(cardBlueprint.extensions, BirthdayExtension)?.toString()
+  const startDay = findExtension(cardBlueprint.extensions, StartDayExtension)?.toString()
   const activationHex = convertProtobufToHexCode(
     new QrCode({
       qrCode: {
@@ -55,7 +57,21 @@ const buildCsvLine = (createCardsResult: CreateCardsResult, cardBlueprint: CardB
       )
     : ''
 
-  return `${cardBlueprint.fullName},${addressLine1},${addressLine2},${plz} ${location},${passId},${birthday},${startDay},${cardBlueprint.expirationDate},${createCardsResult.staticCardInfoHashBase64},${activationHex},${staticVerificationHex}\n`
+  return stringify([
+    [
+      cardBlueprint.fullName,
+      addressLine1?.state,
+      addressLine2?.state,
+      `${plz} ${location}`,
+      passId,
+      birthday,
+      startDay,
+      cardBlueprint.expirationDate?.format(),
+      createCardsResult.staticCardInfoHashBase64,
+      activationHex,
+      staticVerificationHex,
+    ],
+  ])
 }
 
 export const getCSVFilename = (cardBlueprints: CardBlueprint[]): string => {

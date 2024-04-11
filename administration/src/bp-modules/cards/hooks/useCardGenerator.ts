@@ -2,8 +2,8 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
 import { CardBlueprint } from '../../../cards/CardBlueprint'
-import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
-import { generatePdf } from '../../../cards/PdfFactory'
+import { CsvError, generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
+import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { Region } from '../../../generated/graphql'
@@ -48,9 +48,19 @@ const useCardGenerator = (region: Region) => {
           message: error.message,
           intent: 'danger',
         })
+      } else if (error instanceof PdfError) {
+        appToaster?.show({
+          message: 'Etwas ist schiefgegangen beim Erstellen der PDF.',
+          intent: 'danger',
+        })
+      } else if (error instanceof CsvError) {
+        appToaster?.show({
+          message: 'Etwas ist schiefgegangen beim Erstellen der CSV.',
+          intent: 'danger',
+        })
       } else {
         appToaster?.show({
-          message: 'Etwas ist schiefgegangen beim erstellen der PDF.',
+          message: 'Unbekannter Fehler: Etwas ist schiefgegangen.',
           intent: 'danger',
         })
       }
