@@ -24,7 +24,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
   if (!extensions || !extensions['code']) return defaultError
-  console.log(extensions['code'])
   switch (extensions['code']) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
@@ -62,6 +61,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
     case GraphQlExceptionCode.InvalidJson:
       return {
         title: 'Daten konnten nicht geparsed werden.',
+      }
+    case GraphQlExceptionCode.InvalidNoteSize:
+      return {
+        title: `Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind ${extensions.maxSize} Zeichen erlaubt.`,
       }
     case GraphQlExceptionCode.InvalidPassword:
       return {

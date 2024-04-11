@@ -27,7 +27,7 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:3.25.2")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
-    implementation("io.javalin:javalin:5.6.2")
+    implementation("io.javalin:javalin:6.1.3")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
@@ -41,8 +41,8 @@ dependencies {
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.ktor:ktor-client-core-jvm:2.3.4")
-    implementation("io.ktor:ktor-client-cio-jvm:2.3.4")
+    implementation("io.ktor:ktor-client-core-jvm:2.3.9")
+    implementation("io.ktor:ktor-client-cio-jvm:2.3.9")
 
     // Use the Kotlin json serialisation library
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
@@ -57,7 +57,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.6.0")
+    implementation("org.postgresql:postgresql:42.7.3")
     implementation("com.kohlschutter.junixsocket:junixsocket-core:2.7.0")
     implementation("com.kohlschutter.junixsocket:junixsocket-common:2.7.0")
 

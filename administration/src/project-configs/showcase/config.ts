@@ -28,6 +28,7 @@ const config: ProjectConfig = {
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
     elements: bayern.pdf.elements,
   },
+  cardCreationConfirmationMailEnabled: false,
 }
 
 export default config

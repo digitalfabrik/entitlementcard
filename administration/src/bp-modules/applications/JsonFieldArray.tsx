@@ -23,7 +23,7 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
 
 const CollapsableHeader = styled(H6)`
   padding-bottom: 10px;
-  margin-bottom: 0%;
+  margin-bottom: 0;
   &:hover {
     cursor: pointer;
   }
@@ -40,6 +40,7 @@ const PrintableCollapse = styled(Collapse)`
 
     .${Classes.COLLAPSE_BODY} {
       display: block !important;
+      transform: none !important;
     }
   }
 `

@@ -5,7 +5,7 @@ import { CardBlueprint } from '../../../cards/CardBlueprint'
 import { generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import EMailExtension from '../../../cards/extensions/EMailExtension'
+import EMailNotificationExtension from '../../../cards/extensions/EMailNotificationExtension'
 import { findExtension } from '../../../cards/extensions/extensions'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { Region, useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
@@ -57,8 +57,8 @@ const useCardGenerator = (region: Region) => {
   ): Promise<void> => {
     for (let k = 0; k < codes.length; k++) {
       const cardBlueprint = cardBlueprints[k]
-      const mailExtension = findExtension(cardBlueprint.extensions, EMailExtension)
-      if (!mailExtension?.state) {
+      const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
+      if (!mailNotificationExtension?.state) {
         return
       }
       const dynamicCode = codes[k].dynamicActivationCode
@@ -69,7 +69,7 @@ const useCardGenerator = (region: Region) => {
       await sendMail({
         variables: {
           project: projectId,
-          recipientAddress: mailExtension.state,
+          recipientAddress: mailNotificationExtension.state,
           recipientName: cardBlueprint.fullName,
           deepLink,
         },
@@ -89,7 +89,9 @@ const useCardGenerator = (region: Region) => {
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
-      await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
+      if (projectConfig.cardCreationConfirmationMailEnabled) {
+        await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
+      }
       setState(CardActivationState.finished)
     } catch (e) {
       if (codes !== undefined) {

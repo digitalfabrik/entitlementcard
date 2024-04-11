@@ -1,7 +1,8 @@
 import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldView'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
-import EMailExtension from '../../cards/extensions/EMailExtension'
+import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { isDevMode, isStagingMode } from '../../util/helper'
 import { ProjectConfig } from '../getProjectConfig'
 import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -39,8 +40,10 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
   query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
   if (personalData.emailAddress) {
-    const applicantMailExtensionIdx = config.card.extensions.findIndex(ext => ext === EMailExtension)
-    query.set(config.card.extensionColumnNames[applicantMailExtensionIdx] ?? '', personalData.emailAddress)
+    const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
+      ext => ext === EMailNotificationExtension
+    )
+    query.set(config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
   }
 
   return `?${query.toString()}`
@@ -58,8 +61,8 @@ const config: ProjectConfig = {
     defaultValidity: { years: 3 },
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null, 'Mail'],
-    extensions: [BavariaCardTypeExtension, RegionExtension, EMailExtension],
+    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
@@ -70,6 +73,8 @@ const config: ProjectConfig = {
   },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
+  // TODO Wait for bavarian confirmation until we enable it on production
+  cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
 }
 
 export default config
