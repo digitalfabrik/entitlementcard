@@ -24,7 +24,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
   if (!extensions || !extensions['code']) return defaultError
-
   switch (extensions['code']) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
@@ -88,7 +87,7 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.MailNotSent:
       return {
-        title: 'Email konnte nicht gesendet werden.',
+        title: `Email konnte nicht an ${extensions['recipient']} gesendet werden.`,
       }
     case GraphQlExceptionCode.PasswordResetKeyExpired:
       return {

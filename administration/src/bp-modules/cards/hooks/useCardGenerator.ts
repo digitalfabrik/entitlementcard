@@ -5,9 +5,13 @@ import { CardBlueprint } from '../../../cards/CardBlueprint'
 import { generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { Region } from '../../../generated/graphql'
+import EMailNotificationExtension from '../../../cards/extensions/EMailNotificationExtension'
+import { findExtension } from '../../../cards/extensions/extensions'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { Region, useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
+import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
 import { ActivityLog } from '../../user-settings/ActivityLog'
 
@@ -28,11 +32,50 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
 
 const useCardGenerator = (region: Region) => {
   const projectConfig = useContext(ProjectConfigContext)
-
+  const [sendMail] = useSendCardCreationConfirmationMailMutation({
+    onCompleted: () => {
+      appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({
+        intent: 'danger',
+        message: title,
+        timeout: 0,
+      })
+    },
+  })
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const [state, setState] = useState(CardActivationState.input)
   const client = useApolloClient()
   const appToaster = useAppToaster()
+
+  const sendCardConfirmationMails = async (
+    codes: CreateCardsResult[],
+    cardBlueprints: CardBlueprint[],
+    projectId: string
+  ): Promise<void> => {
+    for (let k = 0; k < codes.length; k++) {
+      const cardBlueprint = cardBlueprints[k]
+      const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
+      if (!mailNotificationExtension?.state) {
+        return
+      }
+      const dynamicCode = codes[k].dynamicActivationCode
+      const deepLink = getDeepLinkFromQrCode({
+        case: 'dynamicActivationCode',
+        value: dynamicCode,
+      })
+      await sendMail({
+        variables: {
+          project: projectId,
+          recipientAddress: mailNotificationExtension.state,
+          recipientName: cardBlueprint.fullName,
+          deepLink,
+        },
+      })
+    }
+  }
 
   const generateCards = useCallback(async () => {
     let codes: CreateCardsResult[] | undefined
@@ -46,6 +89,9 @@ const useCardGenerator = (region: Region) => {
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
+      if (projectConfig.cardCreationConfirmationMailEnabled) {
+        await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
+      }
       setState(CardActivationState.finished)
     } catch (e) {
       if (codes !== undefined) {

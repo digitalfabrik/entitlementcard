@@ -1,6 +1,13 @@
 package app.ehrenamtskarte.backend.exception.webservice.exceptions
 
-import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
+import graphql.GraphqlErrorException
 
-class MailNotSentException() : GraphQLBaseException(GraphQLExceptionCode.MAIL_NOT_SENT)
+class MailNotSentException(mailAddress: String) : GraphqlErrorException(
+    newErrorException().extensions(
+        mapOf(
+            Pair("code", GraphQLExceptionCode.MAIL_NOT_SENT),
+            Pair("recipient", mailAddress)
+        )
+    )
+)

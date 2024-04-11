@@ -5,6 +5,7 @@ import { CardExtensions } from '../../generated/card_pb'
 import AddressExtensions from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
+import EMailNotificationExtension from './EMailNotificationExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import RegionExtension from './RegionExtension'
 import StartDayExtension from './StartDayExtension'
@@ -39,5 +40,6 @@ export type ExtensionClass =
   | typeof NuernbergPassIdExtension
   | typeof RegionExtension
   | typeof StartDayExtension
+  | typeof EMailNotificationExtension
   | (typeof AddressExtensions)[number]
 export type ExtensionInstance = InstanceType<ExtensionClass>
