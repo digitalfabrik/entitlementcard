@@ -2,13 +2,17 @@ import { Colors, H5, Icon, Tooltip } from '@blueprintjs/core'
 import { ReactNode, memo } from 'react'
 import styled from 'styled-components'
 
+import JuleicaLogo from '../../assets/juleica.svg'
 import { GetApplicationsQuery } from '../../generated/graphql'
 
 const UnFocusedDiv = styled.div`
+  display: flex;
+  align-items: center;
   flex: 1;
   :focus {
     outline: none;
   }
+  height: 25px;
 `
 
 const StyledIndicator = styled.span`
@@ -50,10 +54,10 @@ const getIntentByStatus = (status: VerificationStatus) => {
   }
 }
 
-const Indicator = ({ status, text }: { status: VerificationStatus; text: ReactNode }) => {
+const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }) => {
   return (
     <StyledIndicator>
-      <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />: {text}
+      <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />{text}
     </StyledIndicator>
   )
 }
@@ -69,33 +73,59 @@ export const getStatus = (verification: Application['verifications'][number]) =>
 }
 
 export const VerificationsQuickIndicator = memo(
-  ({ verifications }: { verifications: Application['verifications'] }) => {
+  ({
+    verifications,
+    isJuleicaEntitlementType,
+  }: {
+    verifications: Application['verifications']
+    isJuleicaEntitlementType: boolean
+  }) => {
     const verificationStati = verifications.map(getStatus)
-    return (
-      <Tooltip
-        content={
-          <div>
-            <b>Bestätigung(en) durch Organisationen:</b>
-            <br />
-            Bestätigt/Ausstehend/Widersprochen
-          </div>
-        }>
-        <UnFocusedDiv>
-          <Indicator
-            status={VerificationStatus.Verified}
-            text={verificationStati.filter(v => v === VerificationStatus.Verified).length}
-          />
-          <Indicator
-            status={VerificationStatus.Awaiting}
-            text={verificationStati.filter(v => v === VerificationStatus.Awaiting).length}
-          />
-          <Indicator
-            status={VerificationStatus.Rejected}
-            text={verificationStati.filter(v => v === VerificationStatus.Rejected).length}
-          />
-        </UnFocusedDiv>
-      </Tooltip>
-    )
+    if (isJuleicaEntitlementType) {
+      return (
+        <Tooltip
+          content={
+            <div>
+              <b>Bestätigung(en) durch Organisationen:</b>
+              <br />
+              Bestätigung ist nicht erforderlich
+            </div>
+          }>
+            <UnFocusedDiv>
+                <Indicator
+                    status={VerificationStatus.Verified}
+                />
+                <img src={JuleicaLogo} alt='juleica' height='100%'/>
+            </UnFocusedDiv>
+        </Tooltip>
+      )
+    } else {
+        return (
+        <Tooltip
+          content={
+            <div>
+              <b>Bestätigung(en) durch Organisationen:</b>
+              <br />
+              Bestätigt/Ausstehend/Widersprochen
+            </div>
+          }>
+          <UnFocusedDiv>
+            <Indicator
+              status={VerificationStatus.Verified}
+              text={`: ${verificationStati.filter(v => v === VerificationStatus.Verified).length}`}
+            />
+            <Indicator
+              status={VerificationStatus.Awaiting}
+              text={`: ${verificationStati.filter(v => v === VerificationStatus.Awaiting).length}`}
+            />
+            <Indicator
+              status={VerificationStatus.Rejected}
+              text={`: ${verificationStati.filter(v => v === VerificationStatus.Rejected).length}`}
+            />
+          </UnFocusedDiv>
+        </Tooltip>
+      )
+    }
   }
 )
 
