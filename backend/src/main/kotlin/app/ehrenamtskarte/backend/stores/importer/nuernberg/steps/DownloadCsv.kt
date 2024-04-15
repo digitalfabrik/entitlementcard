@@ -40,12 +40,12 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
                 throw IllegalArgumentException("CSV record " + record.recordNumber + " has an empty name.")
             }
 
-            val discount =
-                if (parser.headerMap.contains("Rabatt")) {
+            val (discountDE, discountEN) =
+                if (parser.headerMap.containsKey("Rabatt")) {
                     // Legacy format used until April 2024. Can be removed in future releases.
-                    record.get("Rabatt")
+                    Pair(record.get("Rabatt"), null)
                 } else {
-                    (record.get("RabattDE") + "\n\n" + record.get("RabattEN")).trim()
+                    Pair(record.get("RabattDE"), record.get("RabattEN"))
                 }
 
             stores.add(
@@ -61,7 +61,8 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
                     telephone = record.get("Telefon"),
                     email = record.get("Email"),
                     homepage = record.get("Website"),
-                    discount = discount,
+                    discountDE = discountDE,
+                    discountEN = discountEN,
                     categoryId = record.get("Kategorie")
                 )
             )

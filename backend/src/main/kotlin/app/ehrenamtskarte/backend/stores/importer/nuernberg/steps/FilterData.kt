@@ -6,6 +6,9 @@ import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingSt
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 
+/**
+ * Filters out stores with insufficient location info
+ */
 class FilterData(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<CSVAcceptingStore>, List<CSVAcceptingStore>>(config) {
     override fun execute(input: List<CSVAcceptingStore>): List<CSVAcceptingStore> = runBlocking {

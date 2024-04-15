@@ -25,11 +25,14 @@ object SozialpassNuernberg : Pipeline {
     }
 
     override fun import(config: ImportConfig, logger: Logger) {
-        Unit.addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
+        val csvStores = Unit
+            .addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
+        val geocoded = csvStores
             .addStep(FilterData(config, logger), logger) { logger.info("== Filter Data ==") }
             .addStep(MapFromCsv(config, logger), logger) { logger.info("== Map CSV Data ==") }
             .addStep(SanitizeAddress(config, logger), logger) { logger.info("== Sanitize Address ==") }
             .addStep(SanitizeGeocode(config, logger, httpClient), logger) { logger.info("== Get Geoinformation ==") }
+        Pair(csvStores, geocoded)
             .addStep(FilterGeoData(config, logger), logger) { logger.info("== Filter store missing geoinformation ==") }
             .addStep(FilterDuplicates(config, logger), logger) { logger.info("== Filter Duplicates ==") }
             .addStep(Store(config, logger), logger) { logger.info("== Store in DB ==") }

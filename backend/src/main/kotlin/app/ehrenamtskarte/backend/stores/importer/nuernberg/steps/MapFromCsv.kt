@@ -44,7 +44,7 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
                 it.email.clean(),
                 it.telephone.clean(),
                 it.homepage.clean(),
-                it.discount.clean(false),
+                (it.discountDE + "\n\n" + it.discountEN).clean(false),
                 null,
                 null
             )
