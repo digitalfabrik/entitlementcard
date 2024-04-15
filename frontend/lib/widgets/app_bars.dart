@@ -84,12 +84,20 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
+  var keyboardToggler = false;
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return SliverAppBar(
       title: TextField(
+        onTap: () {
+          keyboardToggler = true;
+        },
+        onTapOutside: (PointerDownEvent event) {
+          focusNode.nextFocus();
+        },
         onChanged: _onSearchFieldTextChanged,
         controller: textEditingController,
         focusNode: focusNode,
@@ -122,10 +130,11 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
   }
 
   _onSearchPressed() {
-    if (focusNode.hasPrimaryFocus) {
-      focusNode.nextFocus();
+    if (keyboardToggler && !focusNode.hasPrimaryFocus) {
+      keyboardToggler = false;
     } else {
       focusNode.requestFocus();
+      keyboardToggler = true;
     }
   }
 
