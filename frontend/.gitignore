@@ -24,9 +24,7 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
-
 vendor/
-.fvm/flutter_sdk
 runConfigurations.xml
 
 # Generated code
@@ -39,3 +37,6 @@ lib/proto
 /lib/l10n/translations.g.dart
 
 dist/
+
+# FVM Version Cache
+.fvm/

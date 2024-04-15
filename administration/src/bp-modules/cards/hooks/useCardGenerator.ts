@@ -35,8 +35,47 @@ const useCardGenerator = (region: Region) => {
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
-  const handleError = useCallback(
-    async (error: unknown, codes: CreateCardsResult[] | undefined) => {
+  const sendCardConfirmationMails = async (
+      codes: CreateCardsResult[],
+      cardBlueprints: CardBlueprint[],
+      projectId: string
+  ): Promise<void> => {
+    for (let k = 0; k < codes.length; k++) {
+      const cardBlueprint = cardBlueprints[k]
+      const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
+      if (!mailNotificationExtension?.state) {
+        return
+      }
+      const dynamicCode = codes[k].dynamicActivationCode
+      const deepLink = getDeepLinkFromQrCode({
+        case: 'dynamicActivationCode',
+        value: dynamicCode,
+      })
+      await sendMail({
+        variables: {
+          project: projectId,
+          recipientAddress: mailNotificationExtension.state,
+          recipientName: cardBlueprint.fullName,
+          deepLink,
+        },
+      })
+    }
+  }
+
+  const generateCards = useCallback(async () => {
+    let codes: CreateCardsResult[] | undefined
+    setState(CardActivationState.loading)
+
+    try {
+      const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
+      codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
+
+      const pdfDataUri = await generatePdf(codes, cardBlueprints, region, projectConfig.pdf)
+
+      cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
+      downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
+      setState(CardActivationState.finished)
+    } catch (e) {
       if (codes !== undefined) {
         // try rollback
         try {

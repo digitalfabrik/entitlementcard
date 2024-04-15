@@ -77,6 +77,7 @@ export interface ProjectConfig {
     activationText: (applicationName: string, downloadLink: string) => ReactElement
     downloadLink: string
   }
+  cardCreationConfirmationMailEnabled: boolean
   csvExport: CsvExport
 }
 

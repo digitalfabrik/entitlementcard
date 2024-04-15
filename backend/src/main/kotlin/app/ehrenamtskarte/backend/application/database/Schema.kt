@@ -10,12 +10,14 @@ import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.not
 
+const val NOTE_MAX_CHARS = 1000
 object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
     val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp())
     val accessKey = varchar("accessKey", 100).uniqueIndex()
     val withdrawalDate = timestamp("withdrawalDate").nullable()
+    val note = varchar("note", NOTE_MAX_CHARS).nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -28,6 +30,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var createdDate by Applications.createdDate
     var accessKey by Applications.accessKey
     var withdrawalDate by Applications.withdrawalDate
+    var note by Applications.note
 }
 
 object ApplicationVerifications : IntIdTable() {

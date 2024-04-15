@@ -19,7 +19,6 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
   queryResult: QueryResult<Data, Variables>
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
-
   if (loading) return { successful: false, component: <Spinner /> }
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
