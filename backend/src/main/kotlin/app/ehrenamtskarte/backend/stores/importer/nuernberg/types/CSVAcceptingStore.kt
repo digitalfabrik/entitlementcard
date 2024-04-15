@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer.nuernberg.types
 
 data class CSVAcceptingStore(
-    var id: String?,
     var name: String?,
     var street: String?,
     var houseNumber: String?,

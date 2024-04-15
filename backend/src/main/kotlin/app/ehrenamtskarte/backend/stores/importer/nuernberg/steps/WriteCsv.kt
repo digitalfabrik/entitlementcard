@@ -38,7 +38,6 @@ class WriteCsv(config: ImportConfig) :
         )
 
         val columns = listOf(
-            Col("ID") { null },
             Col("Name") { it.second.name },
             Col("Straße") { it.second.street },
             Col("Hausnummer") { it.second.houseNumber },

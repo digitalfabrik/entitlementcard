@@ -50,7 +50,6 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
 
             stores.add(
                 CSVAcceptingStore(
-                    id = record.get("ID"),
                     name = name,
                     street = record.get("Straße"),
                     houseNumber = record.get("Hausnummer"),
