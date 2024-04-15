@@ -1,11 +1,11 @@
 ---
 name: User Story
-about: This a user story
+about: Bundle multiple tasks/ideas into one user story
 title: ''
 labels: user story
 assignees: ''
-
 ---
+
 
 As a user I want XYZ such that XYZ.
 
