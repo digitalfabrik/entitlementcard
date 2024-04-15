@@ -2,8 +2,8 @@
 
 1. Make sure you have installed [Protobuf Compiler](https://github.com/protocolbuffers/protobuf):
    - The simplest way to install it is to download a pre-built binary from [GitHub release page](https://github.com/protocolbuffers/protobuf/releases). 
-   In the downloads section of each release, you can find pre-built binaries in zip packages: `protoc-$VERSION-$PLATFORM.zip`. 
-   :grey_exclamation: The selected version should match (or may be older than) the version of protobuf-kotlin dependency used in [build.gradle.kts](../backend/build.gradle.kts). 
+   In the downloads section of each release, you can find pre-built binaries in zip packages: `protoc-$VERSION-$PLATFORM.zip`.
+   ❕ The selected version should match (or may be older than) the version of protobuf-kotlin dependency used in [build.gradle.kts](../backend/build.gradle.kts). 
 2. Make sure you have JDK installed (at least JDK 17 LTS). 
 If you go for a later version, it should be compatible with the [configured Gradle version](../frontend/android/gradle/wrapper/gradle-wrapper.properties).
 Check [Gradle Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html#java) for details.
