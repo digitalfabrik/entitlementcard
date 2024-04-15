@@ -1,10 +1,9 @@
 ---
-name: Technical Task
-about: Suggest an idea for this project
+name: "Task \U0001F4A1"
+about: Suggest an idea or enhancement for this project
 title: ''
-labels: technical task
+labels: Task
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.**
