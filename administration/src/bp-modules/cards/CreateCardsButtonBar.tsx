@@ -19,7 +19,7 @@ const CreateCardsButtonBar = ({
   goBack,
 }: CreateCardsButtonBarProps) => {
   const allCardsValid = cardBlueprints.every(cardBlueprint => cardBlueprint.isValid())
-  const { csvExportEnabled } = useContext(ProjectConfigContext)
+  const { csvExport } = useContext(ProjectConfigContext)
 
   return (
     <ButtonBar>
@@ -40,7 +40,7 @@ const CreateCardsButtonBar = ({
           disabled={!allCardsValid || cardBlueprints.length === 0}
         />
       </Tooltip>
-      {csvExportEnabled && (
+      {csvExport.enabled && (
         <Tooltip
           placement='top'
           content={

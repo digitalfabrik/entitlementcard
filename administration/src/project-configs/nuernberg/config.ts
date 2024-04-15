@@ -5,6 +5,7 @@ import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ProjectConfig } from '../getProjectConfig'
 import ActivityLogEntry from './ActivityLogEntry'
+import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
@@ -36,7 +37,12 @@ const config: ProjectConfig = {
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
-  csvExportEnabled: true,
+  csvExport: {
+    enabled: true,
+    csvHeader:
+      'Name,AddressLine1,AddressLine2,AddressLocation,PassId,Birthday,StartDate,ExpirationDate,CardHash,ActivationCode,StaticUserCode\n',
+    buildCsvLine: buildCsvLine,
+  },
 }
 
 export default config

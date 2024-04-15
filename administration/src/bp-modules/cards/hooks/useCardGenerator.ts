@@ -105,7 +105,11 @@ const useCardGenerator = (region: Region) => {
   }, [projectConfig, region, generateCards])
 
   const generateCardsCsv = useCallback(async () => {
-    generateCards(generateCsv, getCSVFilename(cardBlueprints))
+    generateCards(
+      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+        generateCsv(codes, cardBlueprints, projectConfig.csvExport),
+      getCSVFilename(cardBlueprints)
+    )
   }, [cardBlueprints, generateCards])
 
   return { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints }

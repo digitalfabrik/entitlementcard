@@ -35,6 +35,9 @@ jest.mock('../../../cards/createCards', () => ({
   __esModule: true,
   default: jest.fn(),
 }))
+jest.mock('csv-stringify/browser/esm/sync', () => ({
+  stringify: jest.fn(),
+}))
 jest.mock('../../../cards/deleteCards')
 jest.mock('../../../util/downloadDataUri')
 

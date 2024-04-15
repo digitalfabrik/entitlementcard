@@ -1,13 +1,7 @@
-import { stringify } from 'csv-stringify/browser/esm/sync'
-
-import { QrCode } from '../generated/card_pb'
-import { convertProtobufToHexCode } from '../util/qrcode'
+import { CsvExport } from '../project-configs/getProjectConfig'
 import CardBlueprint from './CardBlueprint'
 import { CreateCardsResult } from './createCards'
-import AddressExtensions from './extensions/AddressFieldExtensions'
-import BirthdayExtension from './extensions/BirthdayExtension'
 import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
-import StartDayExtension from './extensions/StartDayExtension'
 import { findExtension } from './extensions/extensions'
 
 export class CsvError extends Error {
@@ -17,61 +11,24 @@ export class CsvError extends Error {
   }
 }
 
-export async function generateCsv(codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) {
+export async function generateCsv(
+  codes: CreateCardsResult[],
+  cardBlueprints: CardBlueprint[],
+  csvProjectConfig: CsvExport
+) {
+  if (!csvProjectConfig.enabled) {
+    throw new CsvError('CSV Export is disabled for this project')
+  }
   try {
-    let csvContent =
-      'Name,AddressLine1,AddressLine2,AddressLocation,PassId,Birthday,StartDate,ExpirationDate,CardHash,ActivationCode,StaticUserCode\n'
+    let csvContent = csvProjectConfig.csvHeader
     for (let k = 0; k < codes.length; k++) {
-      csvContent += buildCsvLine(codes[k], cardBlueprints[k])
+      csvContent += csvProjectConfig.buildCsvLine(codes[k], cardBlueprints[k])
     }
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {
     if (error instanceof Error) throw new CsvError(error.message)
     throw error
   }
-}
-
-const buildCsvLine = (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint): string => {
-  const [addressLine1, addressLine2, plz, location] = AddressExtensions.map(ext =>
-    findExtension(cardBlueprint.extensions, ext)
-  )
-  const passId = findExtension(cardBlueprint.extensions, NuernbergPassIdExtension)?.state?.passId
-  const birthday = findExtension(cardBlueprint.extensions, BirthdayExtension)?.toString()
-  const startDay = findExtension(cardBlueprint.extensions, StartDayExtension)?.toString()
-  const activationHex = convertProtobufToHexCode(
-    new QrCode({
-      qrCode: {
-        case: 'dynamicActivationCode',
-        value: createCardsResult.dynamicActivationCode,
-      },
-    })
-  )
-  const staticVerificationHex = createCardsResult.staticVerificationCode
-    ? convertProtobufToHexCode(
-        new QrCode({
-          qrCode: {
-            case: 'staticVerificationCode',
-            value: createCardsResult.staticVerificationCode,
-          },
-        })
-      )
-    : ''
-
-  return stringify([
-    [
-      cardBlueprint.fullName,
-      addressLine1?.state,
-      addressLine2?.state,
-      `${plz} ${location}`,
-      passId,
-      birthday,
-      startDay,
-      cardBlueprint.expirationDate?.format(),
-      createCardsResult.staticCardInfoHashBase64,
-      activationHex,
-      staticVerificationHex,
-    ],
-  ])
 }
 
 export const getCSVFilename = (cardBlueprints: CardBlueprint[]): string => {
