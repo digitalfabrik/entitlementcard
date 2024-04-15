@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.stores.importer.nuernberg.utils
 
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVPrinter
 import java.io.BufferedWriter
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -15,41 +14,31 @@ fun writeCsvWithGeoInformation(input: List<AcceptingStore>) {
     val writer: BufferedWriter =
         Files.newBufferedWriter(Paths.get("src/main/resources/import/nuernberg-akzeptanzstellen_geoinfo.csv"))
 
-    val printer = CSVPrinter(
-        writer,
-        CSVFormat.RFC4180.withHeader(
-            "ID",
-            "Name",
-            "Straße",
-            "Hausnummer",
-            "PLZ",
-            "Ort",
-            "Breitengrad",
-            "Längengrad",
-            "Telefon",
-            "Email",
-            "Website",
-            "Rabatt",
-            "Kategorie"
-        )
+    data class Col(
+        val name: String,
+        val fromRecord: (store: AcceptingStore) -> String?
     )
 
+    val columns = listOf(
+        Col("ID") { null },
+        Col("Name") { it.name },
+        Col("Straße") { it.street },
+        Col("Hausnummer") { it.houseNumber },
+        Col("PLZ") { it.postalCode },
+        Col("Ort") { it.location },
+        Col("Breitengrad") { it.latitude.toString() },
+        Col("Längengrad") { it.longitude.toString() },
+        Col("Telefon") { it.telephone },
+        Col("Email") { it.email },
+        Col("Website") { it.website },
+        Col("RabattDE") { it.discount },
+        Col("RabattEN") { null },
+        Col("Kategorie") { it.categoryId.toString() }
+    )
+
+    val printer = CSVFormat.RFC4180.builder().setHeader(*columns.map { it.name }.toTypedArray()).build().print(writer)
     input.forEach { record ->
-        printer.printRecord(
-            "",
-            record.name,
-            record.street,
-            record.houseNumber,
-            record.postalCode,
-            record.location,
-            record.latitude,
-            record.longitude,
-            record.telephone,
-            record.email,
-            record.website,
-            record.discount,
-            record.categoryId
-        )
+        printer.printRecord(*(columns.map { it.fromRecord(record) }.toTypedArray()))
     }
     printer.flush()
 }
