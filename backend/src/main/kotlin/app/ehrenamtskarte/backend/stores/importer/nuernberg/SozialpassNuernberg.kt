@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.DownloadCsv
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterData
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.FilterGeoData
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.MapFromCsv
+import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.WriteCsv
 import app.ehrenamtskarte.backend.stores.importer.pipelines.Pipeline
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
@@ -32,7 +33,11 @@ object SozialpassNuernberg : Pipeline {
             .addStep(MapFromCsv(config, logger), logger) { logger.info("== Map CSV Data ==") }
             .addStep(SanitizeAddress(config, logger), logger) { logger.info("== Sanitize Address ==") }
             .addStep(SanitizeGeocode(config, logger, httpClient), logger) { logger.info("== Get Geoinformation ==") }
-        Pair(csvStores, geocoded)
+        if (config.backendConfig.csvWriter.enabled) {
+            Pair(csvStores, geocoded)
+                .addStep(WriteCsv(config), logger) { logger.info("== Write csv data ==") }
+        }
+        geocoded
             .addStep(FilterGeoData(config, logger), logger) { logger.info("== Filter store missing geoinformation ==") }
             .addStep(FilterDuplicates(config, logger), logger) { logger.info("== Filter Duplicates ==") }
             .addStep(Store(config, logger), logger) { logger.info("== Store in DB ==") }
