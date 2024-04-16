@@ -8,11 +8,8 @@ import nuernbergConfig from '../config'
 import config from '../config'
 import { buildCsvLine } from '../csvExport'
 
-jest.mock('csv-stringify', () => ({
-  stringify: jest.fn(input => {
-    console.log(input)
-    return input[0].join(',')
-  }),
+jest.mock('csv-stringify/browser/esm/sync', () => ({
+  stringify: (input: any[]) => input[0].join(',')
 }))
 
 jest.mock('../../getProjectConfig')
@@ -45,7 +42,7 @@ describe('csvExport', () => {
     ]
 
     const line = buildCsvLine(codes[0], cards[0])
-    //console.log(line)
+    // console.log(line)
     const csvConfig = config.csvExport
     expect(csvConfig.enabled).toBeTruthy()
     if (csvConfig.enabled) {
