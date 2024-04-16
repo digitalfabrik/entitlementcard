@@ -16,10 +16,7 @@ steps:
   - run:
       name: Upload android apks to github release
       command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
-  - run:
-      name: Upload ios ipas to github release
-      command: app-toolbelt v0 github-release-asset upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.ipa)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
   - notify:
       success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
       channel: releases
-      allow-all-branches: true
+      allow-all-branches: false
