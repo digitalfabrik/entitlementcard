@@ -108,11 +108,10 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
       actions: [
         if (textEditingController.value.text.isNotEmpty)
           IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {},
-          color: foregroundColor,
-        )
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.50)),
+        ),
       ],
     );
   }
