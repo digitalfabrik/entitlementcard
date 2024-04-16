@@ -54,7 +54,7 @@ export interface ApplicationFeature {
 export type CsvExport =
   | {
       enabled: true
-      csvHeader: string
+      csvHeader: string[]
       buildCsvLine: (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint) => string
     }
   | {

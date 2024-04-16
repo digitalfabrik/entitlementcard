@@ -1,3 +1,5 @@
+import { stringify } from 'csv-stringify/browser/esm/sync'
+
 import { CsvExport } from '../project-configs/getProjectConfig'
 import CardBlueprint from './CardBlueprint'
 import { CreateCardsResult } from './createCards'
@@ -20,7 +22,7 @@ export async function generateCsv(
     throw new CsvError('CSV Export is disabled for this project')
   }
   try {
-    let csvContent = csvProjectConfig.csvHeader
+    let csvContent = stringify([csvProjectConfig.csvHeader])
     for (let k = 0; k < codes.length; k++) {
       csvContent += csvProjectConfig.buildCsvLine(codes[k], cardBlueprints[k])
     }

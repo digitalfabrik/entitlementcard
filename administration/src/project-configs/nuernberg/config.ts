@@ -40,8 +40,19 @@ const config: ProjectConfig = {
   cardCreationConfirmationMailEnabled: false,
   csvExport: {
     enabled: true,
-    csvHeader:
-      'Name,AddressLine1,AddressLine2,AddressLocation,PassId,Birthday,StartDate,ExpirationDate,CardHash,ActivationCode,StaticUserCode\n',
+    csvHeader: [
+      'Name',
+      'AddressLine1',
+      'AddressLine2',
+      'AddressLocation',
+      'PassId',
+      'Birthday',
+      'StartDate',
+      'ExpirationDate',
+      'CardHash',
+      'ActivationCode',
+      'StaticUserCode',
+    ],
     buildCsvLine: buildCsvLine,
   },
 }
