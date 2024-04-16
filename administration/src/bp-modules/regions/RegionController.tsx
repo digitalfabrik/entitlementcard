@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
-import ActivatedForApplicationCard from './ActivatedForApplicationCard'
 import DataPrivacyCard from './DataPrivacyCard'
+import RegionSettingsController from './RegionSettingsController'
 
 const RegionSettingsContainer = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const RegionController = (): ReactElement => {
     return (
       <RegionSettingsContainer>
         <DataPrivacyCard />
-        <ActivatedForApplicationCard regionId={region.id} />
+        <RegionSettingsController regionId={region.id} />
       </RegionSettingsContainer>
     )
   }

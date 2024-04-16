@@ -89,7 +89,7 @@ const useCardGenerator = (region: Region) => {
 
       cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
       downloadDataUri(pdfDataUri, 'berechtigungskarten.pdf')
-      if (projectConfig.cardCreationConfirmationMailEnabled) {
+      if (region.activatedForCardConfirmationMail) {
         await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
       }
       setState(CardActivationState.finished)
