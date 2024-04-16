@@ -21,8 +21,10 @@ import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
 import JsonFieldView, { JsonField, findValue } from './JsonFieldView'
+import JuleicaVerificationQuickIndicator from './JuleicaVerificationQuickIndicator'
 import NoteDialogController from './NoteDialogController'
-import VerificationsView, { JulicaVerificationQuickIndicator, VerificationsQuickIndicator } from './VerificationsView'
+import VerificationsQuickIndicator from './VerificationsQuickIndicator'
+import VerificationsView from './VerificationsView'
 
 export const printAwareCss = css`
   @media print {
@@ -160,7 +162,7 @@ const ApplicationCard = ({
       }
       rightElement={
         isJuleicaEntitlementType() ? (
-          <JulicaVerificationQuickIndicator />
+          <JuleicaVerificationQuickIndicator />
         ) : (
           <VerificationsQuickIndicator verifications={application.verifications} />
         )

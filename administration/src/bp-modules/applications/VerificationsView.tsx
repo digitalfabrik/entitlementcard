@@ -1,19 +1,7 @@
-import { Colors, H5, Icon, Tooltip } from '@blueprintjs/core'
-import { memo } from 'react'
+import { Colors, H5, Icon } from '@blueprintjs/core'
 import styled from 'styled-components'
 
-import JuleicaLogo from '../../assets/juleica.svg'
 import { GetApplicationsQuery } from '../../generated/graphql'
-
-const UnFocusedDiv = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  :focus {
-    outline: none;
-  }
-  height: 25px;
-`
 
 const StyledIndicator = styled.span`
   display: inline-block;
@@ -32,7 +20,7 @@ export enum VerificationStatus {
   Awaiting,
 }
 
-const getIconByStatus = (status: VerificationStatus) => {
+export const getIconByStatus = (status: VerificationStatus) => {
   switch (status) {
     case VerificationStatus.Verified:
       return verifiedIcon
@@ -43,7 +31,7 @@ const getIconByStatus = (status: VerificationStatus) => {
   }
 }
 
-const getIntentByStatus = (status: VerificationStatus) => {
+export const getIntentByStatus = (status: VerificationStatus) => {
   switch (status) {
     case VerificationStatus.Verified:
       return 'success'
@@ -54,7 +42,7 @@ const getIntentByStatus = (status: VerificationStatus) => {
   }
 }
 
-const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }) => {
+export const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }) => {
   return (
     <StyledIndicator>
       <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />
@@ -72,55 +60,6 @@ export const getStatus = (verification: Application['verifications'][number]) =>
     return VerificationStatus.Awaiting
   }
 }
-
-export const JulicaVerificationQuickIndicator = memo(() => {
-  return (
-    <Tooltip
-      content={
-        <div>
-          <b>Bestätigung(en) durch Organisationen:</b>
-          <br />
-          Bestätigung ist nicht erforderlich
-        </div>
-      }>
-      <UnFocusedDiv>
-        <Indicator status={VerificationStatus.Verified} />
-        <img src={JuleicaLogo} alt='juleica' height='100%' />
-      </UnFocusedDiv>
-    </Tooltip>
-  )
-})
-
-export const VerificationsQuickIndicator = memo(
-  ({ verifications }: { verifications: Application['verifications'] }) => {
-    const verificationStati = verifications.map(getStatus)
-    return (
-      <Tooltip
-        content={
-          <div>
-            <b>Bestätigung(en) durch Organisationen:</b>
-            <br />
-            Bestätigt/Ausstehend/Widersprochen
-          </div>
-        }>
-        <UnFocusedDiv>
-          <Indicator
-            status={VerificationStatus.Verified}
-            text={`: ${verificationStati.filter(v => v === VerificationStatus.Verified).length}`}
-          />
-          <Indicator
-            status={VerificationStatus.Awaiting}
-            text={`: ${verificationStati.filter(v => v === VerificationStatus.Awaiting).length}`}
-          />
-          <Indicator
-            status={VerificationStatus.Rejected}
-            text={`: ${verificationStati.filter(v => v === VerificationStatus.Rejected).length}`}
-          />
-        </UnFocusedDiv>
-      </Tooltip>
-    )
-  }
-)
 
 const VerificationListItem = styled.li<{ $color: string }>`
   position: relative;
@@ -167,7 +106,7 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
                   <tr>
                     <td>Status:</td>
                     <td>
-                      <Indicator status={status} text={text} />
+                      <Indicator status={status} text={` ${text}`} />
                     </td>
                   </tr>
                 </tbody>
