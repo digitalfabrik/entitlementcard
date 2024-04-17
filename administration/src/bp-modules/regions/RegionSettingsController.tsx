@@ -25,7 +25,7 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
   const regionSettingsByIdQueryResult = getQueryResult(regionSettingsByIdQuery)
   if (!regionSettingsByIdQueryResult.successful) return regionSettingsByIdQueryResult.component
 
-  const onUpdate = (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => {
+  const onSave = (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => {
     updateRegionSettings({
       variables: {
         regionId,
@@ -39,7 +39,7 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
 
   return (
     <RegionSettingsCard
-      onUpdate={onUpdate}
+      onSave={onSave}
       loading={loading}
       defaultApplicationActivation={activatedForApplication}
       defaultConfirmationMailActivation={activatedForCardConfirmationMail}

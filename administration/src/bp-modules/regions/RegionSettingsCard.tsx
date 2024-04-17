@@ -14,12 +14,12 @@ const Headline = styled(H2)`
 `
 
 const RegionSettingsCard = ({
-  onUpdate,
+  onSave,
   loading,
   defaultApplicationActivation,
   defaultConfirmationMailActivation,
 }: {
-  onUpdate: (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => void
+  onSave: (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => void
   loading: boolean
   defaultApplicationActivation: boolean
   defaultConfirmationMailActivation: boolean
@@ -46,7 +46,7 @@ const RegionSettingsCard = ({
         <Button
           text={'Speichern'}
           intent={'primary'}
-          onClick={() => onUpdate(activatedForApplication, activatedForCardConfirmationMail)}
+          onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)}
           loading={loading}
         />
       </ButtonContainer>
