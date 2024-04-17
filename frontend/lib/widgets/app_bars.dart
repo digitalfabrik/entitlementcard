@@ -90,6 +90,9 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
     final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     return SliverAppBar(
       title: TextField(
+        onTapOutside: (PointerDownEvent event) {
+          focusNode.nextFocus();
+        },
         onChanged: _onSearchFieldTextChanged,
         controller: textEditingController,
         focusNode: focusNode,
@@ -105,11 +108,10 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
       actions: [
         if (textEditingController.value.text.isNotEmpty)
           IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: _onSearchPressed,
-          color: foregroundColor,
-        )
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.50)),
+        ),
       ],
     );
   }
@@ -119,14 +121,6 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
     super.dispose();
     focusNode.dispose();
     textEditingController.dispose();
-  }
-
-  _onSearchPressed() {
-    if (focusNode.hasPrimaryFocus) {
-      focusNode.nextFocus();
-    } else {
-      focusNode.requestFocus();
-    }
   }
 
   _onSearchFieldTextChanged(String text) {
