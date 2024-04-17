@@ -114,7 +114,7 @@ const useCardGenerator = (region: Region) => {
 
   const generateCards = useCallback(
     async (
-      generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob>,
+      generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob> | Blob,
       filename: string
     ) => {
       let codes: CreateCardsResult[] | undefined
