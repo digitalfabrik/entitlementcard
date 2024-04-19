@@ -14,6 +14,9 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.statements.StatementType
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import java.sql.ResultSet
 import java.time.Instant
 
 object CardRepository {
@@ -64,5 +67,15 @@ object CardRepository {
         if (card.firstActivationDate == null) {
             card.firstActivationDate = Instant.now()
         }
+    }
+
+    fun <T : Any> String.executeAndMapSelectStatement(transform: (ResultSet) -> T): List<T> {
+        val result = arrayListOf<T>()
+        TransactionManager.current().exec(this, explicitStatementType = StatementType.SELECT) { rs ->
+            while (rs.next()) {
+                result += transform(rs)
+            }
+        }
+        return result
     }
 }

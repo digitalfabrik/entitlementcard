@@ -54,6 +54,10 @@ object Authorizer {
             mayViewUsersInProject(user, region.projectId.value)
     }
 
+    fun mayViewCardStatisticsInProject(user: AdministratorEntity?, projectId: Int): Boolean {
+        return user?.projectId?.value == projectId && user.role == Role.PROJECT_ADMIN.db_value
+    }
+
     fun mayCreateUser(
         actingAdmin: AdministratorEntity,
         newAdminProjectId: Int,

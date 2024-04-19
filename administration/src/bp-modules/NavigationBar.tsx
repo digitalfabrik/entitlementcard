@@ -49,9 +49,14 @@ const Navigation = (props: Props) => {
           </>
         ) : null}
         {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
-          <NavLink to={'/users'}>
-            <Button minimal icon='people' text='Benutzer verwalten' />
-          </NavLink>
+          <>
+            <NavLink to={'/users'}>
+              <Button minimal icon='people' text='Benutzer verwalten' />
+            </NavLink>
+            <NavLink to={'/statistics'}>
+              <Button minimal icon='stacked-chart' text='Statistiken' />
+            </NavLink>
+          </>
         ) : null}
         {role === Role.RegionAdmin && config.applicationFeature ? (
           <NavLink to={'/region'}>

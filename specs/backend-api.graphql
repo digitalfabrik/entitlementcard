@@ -83,6 +83,12 @@ type CardCreationResultModel {
   staticVerificationCode: StaticVerificationCodeResult
 }
 
+type CardStatisticsResultModel {
+  cardsActivated: Int!
+  cardsCreated: Int!
+  region: String!
+}
+
 type CardVerificationResultModel {
   valid: Boolean!
   verificationTimeStamp: String!
@@ -178,6 +184,8 @@ type Query {
   getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Returns card statistics"
+  getCardStatisticsInProjectByRegion(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
