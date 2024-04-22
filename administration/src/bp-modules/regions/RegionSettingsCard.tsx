@@ -40,7 +40,7 @@ const RegionSettingsCard = ({
       <Checkbox
         checked={activatedForCardConfirmationMail}
         onChange={e => setActivatedForCardConfirmationMail(e.currentTarget.checked)}
-        label='Benachrichtigung über erfolgte Kartenerstellung wird an den Antragssteller versendet'
+        label='Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung'
       />
       <ButtonContainer>
         <Button

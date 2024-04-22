@@ -37,7 +37,9 @@ describe('RegionSettingsCard', () => {
     })
     expect(getByLabelText('Region ist für den neuen Beantragungsprozess freigeschaltet')).toBeChecked()
     expect(
-      getByLabelText('Benachrichtigung über erfolgte Kartenerstellung wird an den Antragssteller versendet')
+      getByLabelText(
+        'Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung'
+      )
     ).not.toBeChecked()
   })
 })
