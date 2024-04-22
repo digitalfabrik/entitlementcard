@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.utils.convertDateStringToTimestamp
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -9,7 +10,7 @@ import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.verification.database.CodeType
-import app.ehrenamtskarte.backend.verification.service.CardStatistics
+import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import app.ehrenamtskarte.backend.verification.service.CardVerifier
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
@@ -54,7 +55,7 @@ class CardQueryService {
         return verificationResult
     }
 
-// TODO add proper permission checking, execute different queries, find better sql query format
+// TODO add proper permission checking, execute different queries
     @GraphQLDescription("Returns card statistics")
     fun getCardStatisticsInProjectByRegion(project: String, dateStart: String, dateEnd: String, dfe: DataFetchingEnvironment): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
@@ -68,7 +69,7 @@ class CardQueryService {
                 throw ForbiddenException()
             }
 
-            CardStatistics.getCardStatisticsPerProject(project, dateStart, dateEnd)
+            CardRepository.getCardStatisticsForProject(project, convertDateStringToTimestamp(dateStart), convertDateStringToTimestamp(dateEnd))
         }
     }
 }

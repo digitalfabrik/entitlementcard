@@ -23,9 +23,9 @@ const StatisticsOverview = ({ statistics, onApplyFilter }: StatisticsOverviewPro
     <OverviewContainer height={statistics.length * barHeight + axisHeight}>
       <ResponsiveBar
         data={statistics}
-        keys={['cardsCreated', 'cardsActivated']}
+        keys={['Erstellte_Karten', 'Aktivierte_Karten']}
         indexBy='region'
-        margin={{ top: 20, right: 200, bottom: 50, left: 200 }}
+        margin={{ top: 20, right: 200, bottom: 50, left: 270 }}
         innerPadding={2.0}
         padding={0.2}
         groupMode='grouped'

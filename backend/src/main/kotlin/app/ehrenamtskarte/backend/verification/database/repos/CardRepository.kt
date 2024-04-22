@@ -7,16 +7,21 @@ import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.database.CodeType
+import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardStatisticsResultModel
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.Coalesce
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.intLiteral
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.statements.StatementType
-import org.jetbrains.exposed.sql.transactions.TransactionManager
-import java.sql.ResultSet
+import java.sql.Timestamp
 import java.time.Instant
 
 object CardRepository {
@@ -69,13 +74,29 @@ object CardRepository {
         }
     }
 
-    fun <T : Any> String.executeAndMapSelectStatement(transform: (ResultSet) -> T): List<T> {
-        val result = arrayListOf<T>()
-        TransactionManager.current().exec(this, explicitStatementType = StatementType.SELECT) { rs ->
-            while (rs.next()) {
-                result += transform(rs)
-            }
-        }
+    fun getCardStatisticsForProject(project: String, dateStart: Timestamp, dateEnd: Timestamp): List<CardStatisticsResultModel> {
+        val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
+        val allCards = (Regions leftJoin Cards leftJoin Projects)
+            .slice(Regions.id, numAlias)
+            .select { Cards.issueDate.greaterEq(dateStart) and Cards.issueDate.lessEq(dateEnd) }
+            .groupBy(Regions.id)
+            .alias("AllCards")
+        val activeCards = (Regions leftJoin Cards)
+            .slice(Regions.id, numAlias)
+            .select { Cards.firstActivationDate.isNotNull() and Cards.issueDate.greaterEq(dateStart) and Cards.issueDate.lessEq(dateEnd) }
+            .groupBy(Regions.id)
+            .alias("ActiveCards")
+        val result =
+            Regions
+                .join(allCards, JoinType.LEFT, Regions.id, allCards[Regions.id])
+                .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
+                .join(Projects, JoinType.LEFT, Projects.id, Regions.projectId)
+                .slice(Regions.name, Regions.prefix, allCards[numAlias], activeCards[numAlias])
+                .select(Projects.project eq project)
+                .orderBy(Regions.name, SortOrder.DESC)
+                .orderBy(Regions.prefix, SortOrder.DESC)
+                .map { CardStatisticsResultModel(region = it[Regions.prefix] + ' ' + it[Regions.name], cardsCreated = (it[allCards[numAlias]] ?: 0).toInt(), cardsActivated = (it[activeCards[numAlias]] ?: 0).toInt()) }
+                .toList()
         return result
     }
 }
