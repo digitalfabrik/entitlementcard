@@ -818,7 +818,7 @@ jobs:
             - restore_environment_variables
             - install_app_toolbelt
             - run:
-                command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --production-release << parameters.production_delivery >> --should-use-predefined-release-notes false)'" >> ${BASH_ENV}
+                command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --production-release << parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
             - run:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
