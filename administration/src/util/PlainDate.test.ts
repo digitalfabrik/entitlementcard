@@ -42,16 +42,16 @@ describe('PlainDate.fromDaysSinceEpoch', () => {
   })
 
   it('should return the epoch day in the correct custom format for 0', () => {
-    expect(PlainDate.fromDaysSinceEpoch(0).format('dd.MM.yyyy')).toBe('01.01.1970')
+    expect(PlainDate.fromDaysSinceEpoch(0).format()).toBe('01.01.1970')
   })
 
   it('should return the day after epoch in the correct custom format for 1', () => {
-    expect(PlainDate.fromDaysSinceEpoch(1).format('dd.MM.yyyy')).toBe('02.01.1970')
+    expect(PlainDate.fromDaysSinceEpoch(1).format()).toBe('02.01.1970')
   })
 
   // A similar test exists in the backend
   it('should return the correct day in the correct custom format for a random day', () => {
     // These values were copied to "randomDayIsConformantWithAdministrationFrontend" and the result was verified there
-    expect(PlainDate.fromDaysSinceEpoch(40518).format('dd.MM.yyyy')).toBe('07.12.2080')
+    expect(PlainDate.fromDaysSinceEpoch(40518).format()).toBe('07.12.2080')
   })
 })

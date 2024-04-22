@@ -11,7 +11,7 @@ import pdfLinkArea from './pdf/PdfLinkArea'
 import pdfQrCodeElement, { PdfQrCode } from './pdf/PdfQrCodeElement'
 import pdfTextElement from './pdf/PdfTextElement'
 
-export class PDFError extends Error {
+export class PdfError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'PDFError'
@@ -129,7 +129,7 @@ export async function generatePdf(
     const pdfBytes = await doc.save()
     return new Blob([pdfBytes], { type: 'application/pdf' })
   } catch (error) {
-    if (error instanceof Error) throw new PDFError(error.message)
+    if (error instanceof Error) throw new PdfError(error.message)
     throw error
   }
 }
