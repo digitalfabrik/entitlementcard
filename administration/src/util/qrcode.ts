@@ -14,6 +14,8 @@ import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
 import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
 import { PDFPage, rgb } from 'pdf-lib'
 
+import { QrCode } from '../generated/card_pb'
+
 const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 
 // Level 8 with EC of M gives 152 bytes
@@ -245,4 +247,19 @@ export const drawQRCode = (
     },
     size
   )
+}
+
+export const convertProtobufToHexCode = (qrCode: QrCode): string => {
+  const qrCodeMatrix = encodeQRCode(qrCode.toBinary()).getMatrix()
+  return qrCodeMatrix
+    .getArray()
+    .map(row => BigInt(`0b${row.join('')}`).toString(16))
+    .join('-')
+}
+
+export const convertHexmapToUInt8Array = (hexmap: string): Uint8Array[] => {
+  const hexRows = hexmap.split('-')
+  const binaryStringMatrix = hexRows.map(hex => BigInt(`0x${hex}`).toString(2).padStart(hexRows.length, '0'))
+  const binaryUInt8Matrix = binaryStringMatrix.map(stringRow => Uint8Array.from(stringRow.split(''), x => Number(x)))
+  return binaryUInt8Matrix
 }

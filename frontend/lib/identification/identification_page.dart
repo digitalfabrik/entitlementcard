@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatefulWidget {
   const IdentificationPage({super.key});
+
   @override
   IdentificationPageState createState() => IdentificationPageState();
 }
@@ -86,8 +87,8 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   Future<void> _startActivation(BuildContext context) async {
     if (await Permission.camera.request().isGranted) {
-      Navigator.push(context,
-          AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
+      Navigator.of(context, rootNavigator: true)
+          .push(AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
       return;
     }
     handleDeniedCameraPermission(context);

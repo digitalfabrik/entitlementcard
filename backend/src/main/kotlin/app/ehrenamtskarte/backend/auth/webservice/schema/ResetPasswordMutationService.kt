@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -32,7 +33,7 @@ class ResetPasswordMutationService {
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
-                Mailer.sendResetPasswodMail(backendConfig, projectConfig, key, email)
+                Mailer.sendResetPasswordMail(backendConfig, projectConfig, key, email)
             }
         }
         return true
@@ -47,19 +48,20 @@ class ResetPasswordMutationService {
         newPassword: String
     ): Boolean {
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        if (!backendConfig.projects.any { it.id === project }) throw ProjectNotFoundException(project)
+        if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
                 .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
 
+            val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
-            if (user === null) {
+            if (user === null || passwordResetKeyHash === null) {
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 throw PasswordResetKeyExpiredException()
-            } else if (user.passwordResetKey != passwordResetKey) {
+            } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
                 throw InvalidLinkException()
             }
 

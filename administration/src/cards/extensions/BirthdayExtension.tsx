@@ -83,7 +83,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
    */
   fromString(value: string) {
     try {
-      const birthday = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+      const birthday = PlainDate.fromCustomFormat(value)
       this.state = { birthday: birthday.toDaysSinceEpoch() }
     } catch (e) {
       this.state = null
@@ -91,7 +91,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   toString() {
-    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.birthday).format('dd.MM.yyyy') : ''
+    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.birthday).format() : ''
   }
 }
 

@@ -13,11 +13,31 @@ import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
 import org.slf4j.LoggerFactory
+import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 object Mailer {
-    val DO_NOT_ANSWER_MESSAGE = "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
+    private const val DO_NOT_ANSWER_MESSAGE =
+        "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
+
+    private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
+        p {
+            +"Email-Benachrichtigungen zu Anträgen können Sie hier konfigurieren:"
+            br()
+            link(URL("${projectConfig.administrationBaseUrl}/user-settings"))
+        }
+    }
+
+    private fun EmailBody.viewApplicationsParagraph(projectConfig: ProjectConfig) {
+        p {
+            +"Unter folgendem Link können Sie Anträge einsehen und bearbeiten:"
+            br()
+            link(URL("${projectConfig.administrationBaseUrl}/applications"))
+        }
+    }
+
+    private fun urlEncode(str: String) = URLEncoder.encode(str, StandardCharsets.UTF_8)
 
     private fun sendMail(
         backendConfig: BackendConfiguration,
@@ -25,7 +45,7 @@ object Mailer {
         fromName: String,
         to: String,
         subject: String,
-        message: String
+        message: EmailBody
     ) {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
 
@@ -38,10 +58,11 @@ object Mailer {
                 Subject: $subject
                 -----------------------
                 
-                """.trimIndent() + message
+                """.trimIndent() + message.renderPlain()
             )
 
             if (!JMail.isValid(smtpConfig.username)) {
+                logger.info("SMTP config invalid; did not try to send email.")
                 return
             }
         }
@@ -54,13 +75,13 @@ object Mailer {
                         .to(to)
                         .from(fromName, smtpConfig.username)
                         .withSubject(subject)
-                        .withPlainText(message)
-                        .withHeader("Content-Type", "text/plain; charset=UTF-8")
+                        .withPlainText(message.renderPlain())
+                        .withHTMLText(message.renderHtml())
                         .buildEmail()
                 ).join()
         } catch (exception: MailException) {
             logger.error(exception.message)
-            throw MailNotSentException()
+            throw MailNotSentException(to)
         }
     }
 
@@ -71,18 +92,16 @@ object Mailer {
         regionId: Int
     ) {
         val recipients = AdministratorsRepository.getNotificationRecipientsForApplication(project, regionId)
-        val message = """
-        Guten Tag,
+        val subject = "Ein neuer Antrag ist eingegangen"
+        val message = emailBody {
+            p { +"Guten Tag," }
+            p { +"ein neuer Antrag liegt in ${projectConfig.administrationName} vor." }
+            viewApplicationsParagraph(projectConfig)
+            adjustNotificationsParagraph(projectConfig)
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
 
-        ein neuer Antrag liegt in ${projectConfig.administrationName} vor.
-        Sie können neue Anträge direkt unter ${projectConfig.administrationBaseUrl}/applications einsehen und bearbeiten.
-
-        Falls Sie keine weiteren Benachrichtigungen zu neuen Anträgen erhalten möchten, können Sie dies unter ${projectConfig.administrationBaseUrl}/user-settings deaktivieren.
-
-        $DO_NOT_ANSWER_MESSAGE
-
-        - ${projectConfig.administrationName}
-        """.trimIndent()
         for (recipient: AdministratorEntity in recipients) {
             try {
                 sendMail(
@@ -90,10 +109,10 @@ object Mailer {
                     projectConfig.smtp,
                     projectConfig.administrationName,
                     recipient.email,
-                    "Ein neuer Antrag ist eingegangen",
+                    subject,
                     message
                 )
-            } catch (_: MailException) {}
+            } catch (_: MailNotSentException) {}
         }
     }
 
@@ -104,18 +123,16 @@ object Mailer {
         regionId: Int
     ) {
         val recipients = AdministratorsRepository.getNotificationRecipientsForVerification(project, regionId)
-        val message = """
-        Guten Tag,
+        val subject = "Ein Antrag wurde verifiziert"
+        val message = emailBody {
+            p { +"Guten Tag," }
+            p { +"ein Antrag wurde verifiziert." }
+            viewApplicationsParagraph(projectConfig)
+            adjustNotificationsParagraph(projectConfig)
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
 
-        ein Antrag ist verifiziert worden. 
-        Sie können Anträge direkt unter ${projectConfig.administrationBaseUrl}/applications einsehen und bearbeiten.
-
-        Falls Sie keine weiteren Benachrichtigungen zu neuen Anträgen erhalten möchten können Sie dies unter ${projectConfig.administrationBaseUrl}/user-settings deaktivieren.
-
-        $DO_NOT_ANSWER_MESSAGE
-        
-        - ${projectConfig.administrationName}
-        """.trimIndent()
         for (recipient: AdministratorEntity in recipients) {
             try {
                 sendMail(
@@ -123,33 +140,45 @@ object Mailer {
                     projectConfig.smtp,
                     projectConfig.administrationName,
                     recipient.email,
-                    "Ein Antrag ist verifiziert worden",
+                    subject,
                     message
                 )
-            } catch (_: MailException) {}
+            } catch (_: MailNotSentException) {
+            }
         }
     }
 
-    fun sendApplicationVerificationMail(backendConfig: BackendConfiguration, applicantName: String, projectConfig: ProjectConfig, applicationVerification: ApplicationVerificationEntity) {
-        val message = """
-        Guten Tag ${applicationVerification.contactName},
+    fun sendApplicationVerificationMail(
+        backendConfig: BackendConfiguration,
+        applicantName: String,
+        projectConfig: ProjectConfig,
+        applicationVerification: ApplicationVerificationEntity
+    ) {
+        val subject = "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]"
+        val verificationLink =
+            URL("${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(applicationVerification.accessKey)}")
 
-        Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. Die Antragstellerin oder der
-        Antragsteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben. 
-        Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:
-        ${projectConfig.administrationBaseUrl}/antrag-verifizieren/${URLEncoder.encode(applicationVerification.accessKey, StandardCharsets.UTF_8)}
-
-        $DO_NOT_ANSWER_MESSAGE
-
-        - ${projectConfig.administrationName}
-        """.trimIndent()
+        val message = emailBody {
+            p { +"Guten Tag ${applicationVerification.contactName}" }
+            p {
+                +"Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. "
+                +"Die Antragstellerin oder der Antragsteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben."
+            }
+            p {
+                +"Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:"
+                br()
+                link(verificationLink)
+            }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
 
         sendMail(
             backendConfig,
             projectConfig.smtp,
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
-            "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]",
+            subject,
             message
         )
     }
@@ -160,53 +189,57 @@ object Mailer {
         personalData: PersonalData,
         accessKey: String
     ) {
-        val message = """
-        Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText},
-
-        Ihr Antrag zur Bayerischen Ehrenamtskarte wurde erfolgreich eingereicht. 
-        
-        Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:
-        ${projectConfig.administrationBaseUrl}/antrag-einsehen/${URLEncoder.encode(accessKey, StandardCharsets.UTF_8)}
-
-        $DO_NOT_ANSWER_MESSAGE
-
-        - ${projectConfig.administrationName}
-        """.trimIndent()
+        val subject = "Antrag erfolgreich eingereicht"
+        val message = emailBody {
+            p { +"Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText}," }
+            p { +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde erfolgreich eingereicht." }
+            p {
+                +"Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:"
+                br()
+                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
+            }
+            p { +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt." }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
         sendMail(
             backendConfig,
             projectConfig.smtp,
             projectConfig.administrationName,
             personalData.emailAddress.email,
-            "Antrag erfolgreich eingereicht",
+            subject,
             message
         )
     }
 
-    fun sendResetPasswodMail(
+    fun sendResetPasswordMail(
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         passwortResetKey: String,
         recipient: String
     ) {
-        val message = """
-        Guten Tag,
-        
-        Sie haben angefragt, Ihr Passwort für ${projectConfig.administrationName} zurückzusetzen.
-        Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:
-        ${projectConfig.administrationBaseUrl}/reset-password?email=${URLEncoder.encode(recipient, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(passwortResetKey, StandardCharsets.UTF_8)}
-        
-        Dieser Link ist 24 Stunden gültig.
-        
-        $DO_NOT_ANSWER_MESSAGE
-        
-        - ${projectConfig.administrationName}
-        """.trimIndent()
+        val subject = "Passwort Zurücksetzen"
+        val encodedRecipient = urlEncode(recipient)
+        val encodedResetKey = urlEncode(passwortResetKey)
+        val message = emailBody {
+            p { +"Guten Tag," }
+            p { +"Sie haben angefragt, Ihr Passwort für ${projectConfig.administrationName} zurückzusetzen." }
+            p {
+                +"Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:"
+                br()
+                link(URL("${projectConfig.administrationBaseUrl}/reset-password?email=$encodedRecipient&token=$encodedResetKey"))
+            }
+            p { +"Dieser Link ist 24 Stunden gültig." }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
+
         sendMail(
             backendConfig,
             projectConfig.smtp,
             projectConfig.administrationName,
             recipient,
-            "Passwort Zurücksetzen",
+            subject,
             message
         )
     }
@@ -217,19 +250,71 @@ object Mailer {
         passwordResetKey: String,
         recipient: String
     ) {
-        val message = """
-        Guten Tag,
-        
-        für Sie wurde ein Account für ${projectConfig.administrationName} erstellt.
-        Sie können Ihr Passwort unter dem folgenden Link setzen:
-        ${projectConfig.administrationBaseUrl}/reset-password?email=${URLEncoder.encode(recipient, StandardCharsets.UTF_8)}&token=${URLEncoder.encode(passwordResetKey, StandardCharsets.UTF_8)}
-        
-        Dieser Link ist 24 Stunden gültig.
-        
-        $DO_NOT_ANSWER_MESSAGE
-        
-        - ${projectConfig.administrationName}
-        """.trimIndent()
-        sendMail(backendConfig, projectConfig.smtp, projectConfig.administrationName, recipient, "Kontoerstellung", message)
+        val passwordResetLink =
+            "${projectConfig.administrationBaseUrl}/reset-password?email=${urlEncode(recipient)}&token=${
+            urlEncode(
+                passwordResetKey
+            )
+            }"
+        val subject = "Kontoerstellung"
+        val message = emailBody {
+            p { +"Guten Tag," }
+            p { +"für Sie wurde ein Account für ${projectConfig.administrationName} erstellt." }
+            p {
+                +"Sie können Ihr Passwort unter dem folgenden Link setzen:"
+                br()
+                link(URL(passwordResetLink))
+            }
+            p { +"Dieser Link ist 24 Stunden gültig." }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
+
+        sendMail(
+            backendConfig,
+            projectConfig.smtp,
+            projectConfig.administrationName,
+            recipient,
+            subject,
+            message
+        )
+    }
+
+    fun sendCardCreationConfirmationMail(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        deepLink: String,
+        recipientAddress: String,
+        recipientName: String
+    ) {
+        val subject = "Kartenerstellung erfolgreich"
+        val message = emailBody {
+            p { +"Guten Tag $recipientName," }
+            p {
+                +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. "
+                +"Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt."
+            }
+            p {
+                +"Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. "
+                +"Klicken Sie dazu von Ihrem Smartphone, auf dem die App installiert ist, auf den folgenden Link:"
+                br()
+                link(URL(deepLink))
+            }
+            p {
+                +"Hinweis: Die Vorab-Aktivierung wird nicht von allen Endgeräten unterstützt. "
+                +"Falls der Vorgang fehlschlägt, warten Sie bitte auf das offizielle Schreiben."
+            }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
+
+        sendMail(
+            backendConfig,
+            projectConfig.smtp,
+            projectConfig.administrationName,
+            recipientAddress,
+            subject,
+            message
+        )
     }
 }

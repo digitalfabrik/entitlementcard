@@ -18,8 +18,8 @@ const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
-Geburtsdatum: ${birthdayDate.format('dd.MM.yyyy')}
-Gültig: ${startDate.format('dd.MM.yyyy')} bis ${expirationDate.format('dd.MM.yyyy')}`
+Geburtsdatum: ${birthdayDate.format()}
+Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
 const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlueprint }: InfoParams) => {

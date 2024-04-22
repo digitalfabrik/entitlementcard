@@ -10,16 +10,9 @@ class AppFlowsStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final currentState = appFlows[currentIndex].navigatorKey.currentState;
-        final currentStatePopped = await currentState?.maybePop() ?? false;
-        return !currentStatePopped;
-      },
-      child: IndexedStack(
-        index: currentIndex,
-        children: _buildChildren(),
-      ),
+    return IndexedStack(
+      index: currentIndex,
+      children: _buildChildren(),
     );
   }
 

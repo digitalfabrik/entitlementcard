@@ -4,12 +4,12 @@ working_directory: ~/project/map-tiles/martin
 steps:
   - checkout:
       path: ~/project
+  - run: apt update -y && apt install -y nodejs npm
+  - install_app_toolbelt
   - prepare_workspace
   - restore_environment_variables
   - attach_workspace:
       at: /tmp/workspace
-  - run: apt update -y && apt install -y nodejs npm
-  - install_app_toolbelt
   - run:
       name: "Build .deb"
       command: |
