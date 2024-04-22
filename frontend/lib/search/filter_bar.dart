@@ -15,8 +15,13 @@ class FilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final sortedCategories = [...categoryAssets(context)];
-    sortedCategories.removeWhere((category) => category.id == 9);
     sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
+
+    // Move the "Others" category to the end of the list
+    final othersCategory = sortedCategories.where((category) => category.id == 9).single;
+    sortedCategories.remove(othersCategory);
+    sortedCategories.add(othersCategory);
+
     final filteredCategories = sortedCategories.where((element) => buildConfig.categories.contains(element.id));
 
     return SliverToBoxAdapter(
