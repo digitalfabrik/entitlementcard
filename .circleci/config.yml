@@ -954,6 +954,7 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
