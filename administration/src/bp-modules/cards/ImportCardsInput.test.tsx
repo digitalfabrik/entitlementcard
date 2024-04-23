@@ -13,6 +13,10 @@ import { AppToasterProvider } from '../AppToaster'
 import { getHeaders } from './ImportCardsController'
 import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
 
+jest.mock('csv-stringify/browser/esm/sync', () => ({
+  stringify: jest.fn(),
+}))
+
 const wrapper = ({ children }: { children: ReactElement }) => (
   <AppToasterProvider>
     <ProjectConfigProvider>{children}</ProjectConfigProvider>

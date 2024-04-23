@@ -8,6 +8,8 @@ import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
+import CardBlueprint from '../cards/CardBlueprint'
+import { CreateCardsResult } from '../cards/createCards'
 import { ExtensionClass } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
 import { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
@@ -49,19 +51,29 @@ export interface ApplicationFeature {
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
 
-export type StatisticsTheme = {
-  primaryColor: string
-  primaryColorLight: string
-}
-
-type CardStatistics =
+export type CsvExport =
   | {
       enabled: true
-      theme: StatisticsTheme
+      csvHeader: string[]
+      buildCsvLine: (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint) => string
     }
   | {
       enabled: false
     }
+
+export type StatisticsTheme = {
+    primaryColor: string
+    primaryColorLight: string
+}
+
+type CardStatistics =
+    | {
+    enabled: true
+    theme: StatisticsTheme
+}
+    | {
+    enabled: false
+}
 
 export interface ProjectConfig {
   name: string
@@ -80,6 +92,7 @@ export interface ProjectConfig {
     downloadLink: string
   }
   cardCreationConfirmationMailEnabled: boolean
+  csvExport: CsvExport
   cardStatistics: CardStatistics
 }
 

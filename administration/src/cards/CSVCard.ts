@@ -20,7 +20,7 @@ class CSVCard extends CardBlueprint {
       case this.cardConfig.nameColumnName:
         return this.fullName
       case this.cardConfig.expiryColumnName:
-        return this.expirationDate ? this.expirationDate.format('dd.MM.yyyy') : null
+        return this.expirationDate ? this.expirationDate.format() : null
       default:
         const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
         if (extensionIdx === -1) {

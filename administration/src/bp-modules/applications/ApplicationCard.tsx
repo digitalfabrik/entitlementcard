@@ -20,9 +20,11 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
-import JsonFieldView, { JsonField } from './JsonFieldView'
+import JsonFieldView, { JsonField, findValue } from './JsonFieldView'
+import JuleicaVerificationQuickIndicator from './JuleicaVerificationQuickIndicator'
 import NoteDialogController from './NoteDialogController'
-import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import VerificationsQuickIndicator from './VerificationsQuickIndicator'
+import VerificationsView from './VerificationsView'
 
 export const printAwareCss = css`
   @media print {
@@ -140,6 +142,12 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonField]
   )
 
+  const isJuleicaEntitlementType = (): boolean => {
+    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
+    return !!blueCardJuleicaEntitlement
+  }
+
   return (
     <ApplicationViewCard
       title={
@@ -152,7 +160,13 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
+      rightElement={
+        isJuleicaEntitlementType() ? (
+          <JuleicaVerificationQuickIndicator />
+        ) : (
+          <VerificationsQuickIndicator verifications={application.verifications} />
+        )
+      }
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
