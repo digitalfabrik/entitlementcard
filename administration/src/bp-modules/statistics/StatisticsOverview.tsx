@@ -7,13 +7,19 @@ import StatisticsFilterBar from './components/StatisticsFilterBar'
 type StatisticsOverviewProps = {
   statistics: CardStatisticsResultModel[]
   onApplyFilter: (dateStart: string, dateEnd: string) => void
+
 }
 
-const StatisticsOverview = ({ statistics, onApplyFilter }: StatisticsOverviewProps): ReactElement => {
+const exportCardDataToCsv = () => {
+
+}
+
+const StatisticsOverview = ({ statistics, onApplyFilter}: StatisticsOverviewProps): ReactElement => {
+
   return (
     <>
       <StatisticsBarChart statistics={statistics} />
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} />
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} onExportCsv={exportCardDataToCsv} isDataAvailable={statistics.length>0}/>
     </>
   )
 }
