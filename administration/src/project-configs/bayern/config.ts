@@ -75,6 +75,9 @@ const config: ProjectConfig = {
   pdf: pdfConfiguration,
   // TODO Wait for bavarian confirmation until we enable it on production
   cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
+  csvExport: {
+    enabled: false,
+  },
   cardStatistics: {
     enabled: true,
     theme: {

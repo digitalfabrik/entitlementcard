@@ -29,6 +29,9 @@ const config: ProjectConfig = {
     elements: bayern.pdf.elements,
   },
   cardCreationConfirmationMailEnabled: false,
+  csvExport: {
+    enabled: false,
+  },
   cardStatistics: { enabled: false },
 }
 
