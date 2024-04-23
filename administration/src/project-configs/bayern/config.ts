@@ -75,6 +75,14 @@ const config: ProjectConfig = {
   pdf: pdfConfiguration,
   // TODO Wait for bavarian confirmation until we enable it on production
   cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
+  cardStatistics: {
+    enabled: true,
+    theme: {
+      primaryColor: '#8377A9',
+      // https://a.atmos.washington.edu/~ovens/javascript/colorpicker.html - 80% lighter than primaryColor
+      primaryColorLight: '#c6c0d8',
+    },
+  },
 }
 
 export default config

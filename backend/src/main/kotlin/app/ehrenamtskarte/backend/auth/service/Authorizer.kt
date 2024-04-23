@@ -58,6 +58,10 @@ object Authorizer {
         return user?.projectId?.value == projectId && user.role == Role.PROJECT_ADMIN.db_value
     }
 
+    fun mayViewCardStatisticsInRegion(user: AdministratorEntity?, region: RegionEntity): Boolean {
+        return user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id
+    }
+
     fun mayCreateUser(
         actingAdmin: AdministratorEntity,
         newAdminProjectId: Int,

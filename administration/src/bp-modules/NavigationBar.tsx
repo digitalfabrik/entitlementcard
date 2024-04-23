@@ -53,9 +53,11 @@ const Navigation = (props: Props) => {
             <NavLink to={'/users'}>
               <Button minimal icon='people' text='Benutzer verwalten' />
             </NavLink>
-            <NavLink to={'/statistics'}>
-              <Button minimal icon='stacked-chart' text='Statistiken' />
-            </NavLink>
+            {config.cardStatistics.enabled ? (
+              <NavLink to={'/statistics'}>
+                <Button minimal icon='stacked-chart' text='Statistiken' />
+              </NavLink>
+            ) : null}
           </>
         ) : null}
         {role === Role.RegionAdmin && config.applicationFeature ? (

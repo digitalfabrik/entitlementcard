@@ -37,6 +37,7 @@ const config: ProjectConfig = {
   },
   pdf: pdfConfig,
   cardCreationConfirmationMailEnabled: false,
+  cardStatistics: { enabled: false },
 }
 
 export default config

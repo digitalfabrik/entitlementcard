@@ -49,6 +49,20 @@ export interface ApplicationFeature {
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
 
+export type StatisticsTheme = {
+  primaryColor: string
+  primaryColorLight: string
+}
+
+type CardStatistics =
+  | {
+      enabled: true
+      theme: StatisticsTheme
+    }
+  | {
+      enabled: false
+    }
+
 export interface ProjectConfig {
   name: string
   projectId: string
@@ -66,6 +80,7 @@ export interface ProjectConfig {
     downloadLink: string
   }
   cardCreationConfirmationMailEnabled: boolean
+  cardStatistics: CardStatistics
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

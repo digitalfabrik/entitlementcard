@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardStati
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
@@ -74,7 +75,7 @@ object CardRepository {
         }
     }
 
-    fun getCardStatisticsForProject(project: String, dateStart: Timestamp, dateEnd: Timestamp): List<CardStatisticsResultModel> {
+    fun getCardStatisticsByProjectAndRegion(project: String, dateStart: Timestamp, dateEnd: Timestamp, regionId: Int?): List<CardStatisticsResultModel> {
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
         val allCards = (Regions leftJoin Cards leftJoin Projects)
             .slice(Regions.id, numAlias)
@@ -86,17 +87,24 @@ object CardRepository {
             .select { Cards.firstActivationDate.isNotNull() and Cards.issueDate.greaterEq(dateStart) and Cards.issueDate.lessEq(dateEnd) }
             .groupBy(Regions.id)
             .alias("ActiveCards")
-        val result =
+        val query =
             Regions
                 .join(allCards, JoinType.LEFT, Regions.id, allCards[Regions.id])
                 .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
                 .join(Projects, JoinType.LEFT, Projects.id, Regions.projectId)
                 .slice(Regions.name, Regions.prefix, allCards[numAlias], activeCards[numAlias])
                 .select(Projects.project eq project)
-                .orderBy(Regions.name, SortOrder.DESC)
-                .orderBy(Regions.prefix, SortOrder.DESC)
-                .map { CardStatisticsResultModel(region = it[Regions.prefix] + ' ' + it[Regions.name], cardsCreated = (it[allCards[numAlias]] ?: 0).toInt(), cardsActivated = (it[activeCards[numAlias]] ?: 0).toInt()) }
-                .toList()
+        if (regionId !== null) {
+            query.adjustWhere { Op.build { Regions.id eq regionId } }
+        } else {
+            query.adjustWhere { Op.build { Projects.project eq project } }
+        }
+            .orderBy(Regions.name, SortOrder.DESC)
+            .orderBy(Regions.prefix, SortOrder.DESC)
+        val result = query
+            .map { CardStatisticsResultModel(region = it[Regions.prefix] + ' ' + it[Regions.name], cardsCreated = (it[allCards[numAlias]] ?: 0).toInt(), cardsActivated = (it[activeCards[numAlias]] ?: 0).toInt()) }
+            .toList()
+
         return result
     }
 }

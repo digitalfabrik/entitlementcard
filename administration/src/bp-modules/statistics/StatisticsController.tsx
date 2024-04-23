@@ -2,20 +2,22 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Role, useGetCardStatisticsInProjectByRegionQuery } from '../../generated/graphql'
+import {
+  Region,
+  Role,
+  useGetCardStatisticsInProjectQuery,
+  useGetCardStatisticsInRegionQuery,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import getQueryResult from '../util/getQueryResult'
 import StatisticsOverview from './StatisticsOverview'
+import { defaultEndDate, defaultStartDate } from './constants'
 
-export const defaultStartDate = PlainDate.fromLocalDate(
-  new Date(new Date().setFullYear(new Date().getFullYear() - 1))
-).toString()
-const StatisticsController = (): ReactElement => {
-  const { role } = useContext(WhoAmIContext).me!
+const ViewProjectStatistics = () => {
   const { projectId } = useContext(ProjectConfigContext)
-  const cardStatisticsQuery = useGetCardStatisticsInProjectByRegionQuery({
-    variables: { projectId, dateEnd: PlainDate.fromLocalDate(new Date()).toString(), dateStart: defaultStartDate },
+  const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
+    variables: { projectId, dateEnd: defaultEndDate, dateStart: defaultStartDate },
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
@@ -24,8 +26,37 @@ const StatisticsController = (): ReactElement => {
   }
 
   if (!cardStatisticsQueryResult.successful) return cardStatisticsQueryResult.component
-  else if (role === Role.RegionAdmin || role === Role.ProjectAdmin) {
-    return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
+  return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
+}
+
+const ViewRegionStatistics = ({ region }: { region: Region }) => {
+  const { projectId } = useContext(ProjectConfigContext)
+  const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
+    variables: {
+      projectId,
+      dateEnd: PlainDate.fromLocalDate(new Date()).toString(),
+      dateStart: defaultStartDate,
+      regionId: region.id,
+    },
+  })
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
+
+  const applyFilter = (dateStart: string, dateEnd: string) => {
+    cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart, regionId: region.id })
+  }
+
+  if (!cardStatisticsQueryResult.successful) return cardStatisticsQueryResult.component
+  return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
+}
+const StatisticsController = (): ReactElement => {
+  const { role, region } = useContext(WhoAmIContext).me!
+  const { cardStatistics } = useContext(ProjectConfigContext)
+
+  if (role === Role.RegionAdmin && region && cardStatistics.enabled) {
+    return <ViewRegionStatistics region={region} />
+  }
+  if (role === Role.ProjectAdmin && cardStatistics.enabled) {
+    return <ViewProjectStatistics />
   } else {
     return (
       <NonIdealState
@@ -36,5 +67,4 @@ const StatisticsController = (): ReactElement => {
     )
   }
 }
-
 export default StatisticsController

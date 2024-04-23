@@ -1,11 +1,11 @@
-import { Button, FormGroup } from '@blueprintjs/core'
+import { Button, FormGroup, Tooltip } from '@blueprintjs/core'
 import { TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
 import PlainDate from '../../../util/PlainDate'
 import StickyBottomBar from '../../StickyBottomBar'
-import { defaultStartDate } from '../StatisticsController'
+import { defaultEndDate, defaultStartDate } from '../constants'
 
 const StyledFormGroup = styled(FormGroup)`
   margin: 0 16px 0 0;
@@ -23,24 +23,43 @@ type StatisticsFilterBarProps = {
   onApplyFilter: (dateStart: string, dateEnd: string) => void
 }
 
+const isValidDateString = (value: string): boolean => {
+  if (value !== null) {
+    try {
+      PlainDate.from(value)
+      return true
+    } catch (error) {
+      console.error(`Could not parse date from string '${value}'.`, error)
+      return false
+    }
+  }
+  return false
+}
+const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
+  if (!isValidDateString(dateStart) || !isValidDateString(dateEnd)) {
+    return false
+  }
+  return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) === -1
+}
+
 const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): ReactElement => {
-  // TODO send timestamp or next day for between, error handling for wrong value format in dateField
   const [dateStart, setDateStart] = useState(defaultStartDate)
-  const [dateEnd, setDateEnd] = useState(PlainDate.fromLocalDate(new Date()).toString())
+  const [dateEnd, setDateEnd] = useState(defaultEndDate)
+
   return (
     <StickyBottomBar>
       <InputContainer>
-        <StyledFormGroup label='Startzeitraum' inline intent='primary'>
+        <StyledFormGroup label='Startzeitraum' inline>
           <TextField
             fullWidth
             type='date'
             required
             size='small'
-            error={false}
+            error={!isValidDateString(dateStart)}
             value={dateStart}
             sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
             inputProps={{
-              max: PlainDate.fromLocalDate(new Date()).toString(),
+              max: dateEnd,
               style: { fontSize: 14, padding: '6px 10px' },
             }}
             onChange={e => setDateStart(e.target.value)}
@@ -52,7 +71,7 @@ const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): React
             type='date'
             required
             size='small'
-            error={false}
+            error={!isValidDateString(dateEnd)}
             value={dateEnd}
             sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
             inputProps={{
@@ -62,15 +81,20 @@ const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): React
             onChange={e => setDateEnd(e.target.value)}
           />
         </StyledFormGroup>
-        <Button
-          icon='tick'
-          text='Filter anwenden'
-          intent='success'
-          onClick={() => onApplyFilter(dateStart, dateEnd)}
-          disabled={false}
-        />
+        <Tooltip
+          disabled={IsValidDateTimePeriod(dateStart, dateEnd)}
+          content={'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Startdatum muss vor dem Enddatum liegen.'}>
+          <Button
+            icon='tick'
+            text='Filter anwenden'
+            intent='success'
+            onClick={() => onApplyFilter(dateStart, dateEnd)}
+            disabled={!IsValidDateTimePeriod(dateStart, dateEnd)}
+          />
+        </Tooltip>
       </InputContainer>
-      <Button icon='floppy-disk' text='CSV Export' intent='primary' onClick={undefined} disabled={false} />
+      {/* TODO 1409 Statistics created cards csv export }
+      {/*<Button icon='floppy-disk' text='CSV Export' intent='primary' onClick={undefined} disabled={false} />*/}
     </StickyBottomBar>
   )
 }
