@@ -3,7 +3,7 @@ docker:
 steps:
   - checkout:
       path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
+  - run: sudo apt update -y && sudo apt install -y nodejs npm
   - install_app_toolbelt
   - run:
       name: Install Curl
