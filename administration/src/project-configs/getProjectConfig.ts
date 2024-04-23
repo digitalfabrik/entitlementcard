@@ -62,18 +62,18 @@ export type CsvExport =
     }
 
 export type StatisticsTheme = {
-    primaryColor: string
-    primaryColorLight: string
+  primaryColor: string
+  primaryColorLight: string
 }
 
 type CardStatistics =
-    | {
-    enabled: true
-    theme: StatisticsTheme
-}
-    | {
-    enabled: false
-}
+  | {
+      enabled: true
+      theme: StatisticsTheme
+    }
+  | {
+      enabled: false
+    }
 
 export interface ProjectConfig {
   name: string
