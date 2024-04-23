@@ -20,10 +20,8 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.security.SecureRandom
 import java.time.Instant
 import java.time.Period
-import java.util.Base64
 import java.util.UUID
 
 object AdministratorsRepository {
@@ -95,7 +93,7 @@ object AdministratorsRepository {
         }
 
         administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
-        administrator.passwordResetKey = null
+        administrator.passwordResetKeyHash = null
         administrator.passwordResetKeyExpiry = null
     }
 
@@ -106,12 +104,10 @@ object AdministratorsRepository {
     }
 
     fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
-        val byteArray = ByteArray(64)
-        SecureRandom.getInstanceStrong().nextBytes(byteArray)
-        val key = Base64.getUrlEncoder().encodeToString(byteArray)
-        administrator.passwordResetKey = key
+        val passwordResetKey = PasswordCrypto.generatePasswordResetKey()
+        administrator.passwordResetKeyHash = PasswordCrypto.hashPasswordResetKey(passwordResetKey)
         administrator.passwordResetKeyExpiry = Instant.now().plus(Period.ofDays(1))
-        return key
+        return passwordResetKey
     }
 
     fun updateNotificationSettings(

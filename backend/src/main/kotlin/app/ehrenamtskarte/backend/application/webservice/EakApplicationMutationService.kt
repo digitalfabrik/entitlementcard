@@ -1,16 +1,20 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository.getApplicationByApplicationVerificationAccessKey
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
+import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
@@ -84,10 +88,7 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw UnauthorizedException()
-            // We throw an UnauthorizedException here, as we do not know whether there was an application with id
-            // `applicationId` and whether this application was contained in the user's project & region.
-
+            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw UnauthorizedException()
 
@@ -126,6 +127,31 @@ class EakApplicationMutationService {
             } else {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }
+        }
+    }
+
+    @GraphQLDescription("Updates a note of an application")
+    fun updateApplicationNote(
+        applicationId: Int,
+        noteText: String,
+        dfe: DataFetchingEnvironment
+    ): Boolean {
+        val context = dfe.getContext<GraphQLContext>()
+        val jwtPayload = context.enforceSignedIn()
+
+        return transaction {
+            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
+            if (noteText.length > NOTE_MAX_CHARS) {
+                throw InvalidNoteSizeException(NOTE_MAX_CHARS)
+            }
+            val user = AdministratorEntity.findById(jwtPayload.adminId)
+                ?: throw UnauthorizedException()
+
+            if (!mayUpdateApplicationsInRegion(user, application.regionId.value)) {
+                throw ForbiddenException()
+            }
+
+            ApplicationRepository.updateApplicationNote(applicationId, noteText)
         }
     }
 }

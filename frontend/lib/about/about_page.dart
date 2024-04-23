@@ -14,6 +14,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+const String accessibilityPolicyUrl = 'https://berechtigungskarte.app/barrierefreiheit/';
+
 class AboutPage extends StatefulWidget {
   final countToEnableSwitch = 10;
 
@@ -117,8 +119,13 @@ class AboutPageState extends State<AboutPage> {
               ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
                 leading: const Icon(Icons.privacy_tip_outlined),
-                title: Text(t.about.privacyDeclaration),
+                title: Text(t.about.privacyPolicy),
                 onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
+              ),
+              ListTile(
+                leading: const Icon(Icons.accessibility_new_outlined),
+                title: Text(t.about.accessibilityPolicy),
+                onTap: () => launchUrlString(accessibilityPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ContentTile(
                 icon: Icons.info_outline,

@@ -1,13 +1,16 @@
 import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldView'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { isDevMode, isStagingMode } from '../../util/helper'
 import { ProjectConfig } from '../getProjectConfig'
+import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>
-): { forenames?: string; surname?: string } | null => {
+): { forenames?: string; surname?: string; emailAddress?: string } | null => {
   const personalData = findValue(json, 'personalData', 'Array')
 
   if (!personalData) {
@@ -16,8 +19,9 @@ export const applicationJsonToPersonalData = (
 
   const forenames = findValue(personalData, 'forenames', 'String')
   const surname = findValue(personalData, 'surname', 'String')
+  const emailAddress = findValue(personalData, 'emailAddress', 'String')
 
-  return { forenames: forenames?.value, surname: surname?.value }
+  return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
 }
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
@@ -35,6 +39,12 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
   const cardTypeExtensionIdx = config.card.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
   query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+  if (personalData.emailAddress) {
+    const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
+      ext => ext === EMailNotificationExtension
+    )
+    query.set(config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
+  }
 
   return `?${query.toString()}`
 }
@@ -51,14 +61,23 @@ const config: ProjectConfig = {
     defaultValidity: { years: 3 },
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null],
-    extensions: [BavariaCardTypeExtension, RegionExtension],
+    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
+  activation: {
+    activationText: ActivationText,
+    downloadLink: 'https://download.bayern.ehrenamtskarte.app/',
+  },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
+  // TODO Wait for bavarian confirmation until we enable it on production
+  cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
+  csvExport: {
+    enabled: false,
+  },
 }
 
 export default config

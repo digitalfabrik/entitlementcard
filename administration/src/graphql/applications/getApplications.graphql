@@ -4,6 +4,7 @@ query getApplications($regionId: Int!) {
     createdDate
     jsonValue
     withdrawalDate
+    note
     verifications {
       contactEmailAddress
       organizationName

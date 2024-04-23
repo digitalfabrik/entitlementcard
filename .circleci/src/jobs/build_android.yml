@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/android:2023.02.1-node
+  - image: cimg/android:2024.01.1-node
 parameters:
   buildConfig:
     description: "Name of the build config to use"
@@ -46,7 +46,7 @@ steps:
       command: mkdir -p attached_workspace
   - run:
       name: Move aab
-      command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+      command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.flutterFlavor >>Release/app-<< parameters.flutterFlavor >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
   - run:
       name: Move apk
       command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk

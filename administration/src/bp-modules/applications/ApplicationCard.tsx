@@ -20,8 +20,11 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
-import JsonFieldView, { JsonField } from './JsonFieldView'
-import VerificationsView, { VerificationsQuickIndicator } from './VerificationsView'
+import JsonFieldView, { JsonField, findValue } from './JsonFieldView'
+import JuleicaVerificationQuickIndicator from './JuleicaVerificationQuickIndicator'
+import NoteDialogController from './NoteDialogController'
+import VerificationsQuickIndicator from './VerificationsQuickIndicator'
+import VerificationsView from './VerificationsView'
 
 export const printAwareCss = css`
   @media print {
@@ -84,18 +87,27 @@ const CardContentHint = styled(Title)`
   color: ${Colors.GRAY1};
 `
 
+const SectionCardHeader = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+  flex-direction: row-reverse;
+`
+
 type ApplicationCardProps = {
   application: Application
-  gotDeleted: () => void
+  onDelete: () => void
   printApplicationById: (applicationId: number) => void
   isSelectedForPrint: boolean
+  onChange: (application: Application) => void
 }
 
 const ApplicationCard = ({
   application,
-  gotDeleted,
+  onDelete,
   printApplicationById,
   isSelectedForPrint,
+  onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
@@ -104,6 +116,7 @@ const ApplicationCard = ({
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -111,7 +124,7 @@ const ApplicationCard = ({
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) {
-        gotDeleted()
+        onDelete()
       } else {
         console.error('Delete operation returned false.')
         appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
@@ -129,6 +142,12 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonField]
   )
 
+  const isJuleicaEntitlementType = (): boolean => {
+    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
+    return !!blueCardJuleicaEntitlement
+  }
+
   return (
     <ApplicationViewCard
       title={
@@ -141,20 +160,35 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={<VerificationsQuickIndicator verifications={application.verifications} />}
+      rightElement={
+        isJuleicaEntitlementType() ? (
+          <JuleicaVerificationQuickIndicator />
+        ) : (
+          <VerificationsQuickIndicator verifications={application.verifications} />
+        )
+      }
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
-      collapsible
+      collapsible={!isSelectedForPrint}
       $hideInPrintMode={!isSelectedForPrint}>
       <SectionCard>
-        {withdrawalDate && (
-          <WithdrawAlert intent='warning'>
-            Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
-            zurückgezogen. <br />
-            Bitte löschen Sie den Antrag zeitnah.
-          </WithdrawAlert>
-        )}
+        <SectionCardHeader>
+          <NoteDialogController
+            application={application}
+            isOpen={openNoteDialog}
+            onOpenNoteDialog={setOpenNoteDialog}
+            onChange={onChange}
+          />
+
+          {withdrawalDate && (
+            <WithdrawAlert intent='warning'>
+              Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
+              zurückgezogen. <br />
+              Bitte löschen Sie den Antrag zeitnah.
+            </WithdrawAlert>
+          )}
+        </SectionCardHeader>
         <JsonFieldView
           jsonField={jsonField}
           baseUrl={baseUrl}

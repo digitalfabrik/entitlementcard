@@ -192,11 +192,15 @@ object ApplicationRepository {
         }
     }
 
-    fun findVerificationsByIds(ids: List<Int>): List<ApplicationVerificationEntity?> {
+    fun updateApplicationNote(applicationId: Int, note: String): Boolean {
         return transaction {
-            ApplicationVerificationEntity
-                .find { ApplicationVerifications.id inList ids }
-                .sortByKeys({ it.id.value }, ids)
+            val application = ApplicationEntity.findById(applicationId)
+            if (application != null) {
+                application.note = note
+                true
+            } else {
+                false
+            }
         }
     }
 }

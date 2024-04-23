@@ -37,8 +37,8 @@ class WebService {
 
         val app = Javalin.create { cfg ->
             if (!production) {
-                cfg.plugins.enableDevLogging()
-                cfg.plugins.enableCors { cors -> cors.add { it.anyHost() } }
+                cfg.bundledPlugins.enableDevLogging()
+                cfg.bundledPlugins.enableCors { cors -> cors.addRule { it.anyHost() } }
             }
             cfg.staticFiles.add {
                 it.directory = "/graphiql"
