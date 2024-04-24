@@ -46,7 +46,13 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   }
 
   if (!cardStatisticsQueryResult.successful) return cardStatisticsQueryResult.component
-  return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
+  return (
+    <StatisticsOverview
+      onApplyFilter={applyFilter}
+      statistics={cardStatisticsQueryResult.data.result}
+      region={region}
+    />
+  )
 }
 const StatisticsController = (): ReactElement => {
   const { role, region } = useContext(WhoAmIContext).me!

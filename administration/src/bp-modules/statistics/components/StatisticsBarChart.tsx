@@ -34,7 +34,7 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
     <BarContainer height={statistics.length * barHeight + axisHeight}>
       <ResponsiveBar
         data={statistics}
-        keys={[statisticKeys[2], statisticKeys[3]]}
+        keys={[statisticKeys[1], statisticKeys[2]]}
         indexBy='region'
         margin={{ top: 20, right: 300, bottom: 50, left: 300 }}
         innerPadding={2.0}
