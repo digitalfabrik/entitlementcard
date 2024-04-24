@@ -99,8 +99,8 @@ object CardRepository {
         } else {
             query.adjustWhere { Op.build { Projects.project eq project } }
         }
-            .orderBy(Regions.name, SortOrder.DESC)
-            .orderBy(Regions.prefix, SortOrder.DESC)
+            .orderBy(Regions.name, SortOrder.ASC)
+            .orderBy(Regions.prefix, SortOrder.ASC)
         val result = query
             .map { CardStatisticsResultModel(region = it[Regions.prefix] + ' ' + it[Regions.name], cardsCreated = (it[allCards[numAlias]] ?: 0).toInt(), cardsActivated = (it[activeCards[numAlias]] ?: 0).toInt()) }
             .toList()

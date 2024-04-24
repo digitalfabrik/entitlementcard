@@ -33,7 +33,8 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
   return (
     <BarContainer height={statistics.length * barHeight + axisHeight}>
       <ResponsiveBar
-        data={statistics}
+        /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
+        data={[...statistics].reverse()}
         keys={[statisticKeys[1], statisticKeys[2]]}
         indexBy='region'
         margin={{ top: 20, right: 300, bottom: 50, left: 300 }}
