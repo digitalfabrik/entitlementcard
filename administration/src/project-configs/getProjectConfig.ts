@@ -66,7 +66,7 @@ export type StatisticsTheme = {
   primaryColorLight: string
 }
 
-type CardStatistics =
+export type CardStatistics =
   | {
       enabled: true
       theme: StatisticsTheme

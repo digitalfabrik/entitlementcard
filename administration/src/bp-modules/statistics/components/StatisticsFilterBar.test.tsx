@@ -6,9 +6,12 @@ import StatisticsFilterBar from './StatisticsFilterBar'
 jest.useFakeTimers()
 describe('StatisticFilterBar', () => {
   const onApplyFilter = jest.fn()
+  const onExportCsv = jest.fn()
 
-  it('should execute onApplyFilter if button was clicked', async () => {
-    const { getByText } = render(<StatisticsFilterBar onApplyFilter={onApplyFilter} />)
+  it('should execute onApplyFilter if filter button was clicked', async () => {
+    const { getByText } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
+    )
     const applyFilterButton = getByText('Filter anwenden')
     fireEvent.click(applyFilterButton)
     await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
@@ -16,7 +19,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should disable filter button if start date is after end date', async () => {
-    const { getByText, getByDisplayValue } = render(<StatisticsFilterBar onApplyFilter={onApplyFilter} />)
+    const { getByText, getByDisplayValue } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
+    )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(defaultStartDate)
     const endInput = getByDisplayValue(defaultEndDate)
@@ -34,7 +39,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should disable filter button if input is not a correct date string', () => {
-    const { getByText, getByDisplayValue } = render(<StatisticsFilterBar onApplyFilter={onApplyFilter} />)
+    const { getByText, getByDisplayValue } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
+    )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(defaultStartDate)
     fireEvent.change(startInput, {
@@ -46,7 +53,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should display a proper tooltip message if filter button is disabled and filtering should not be applied', async () => {
-    const { getByText, getByDisplayValue } = render(<StatisticsFilterBar onApplyFilter={onApplyFilter} />)
+    const { getByText, getByDisplayValue } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
+    )
     const startInput = getByDisplayValue(defaultStartDate)
     fireEvent.change(startInput, {
       target: {
@@ -63,5 +72,31 @@ describe('StatisticFilterBar', () => {
       getByText('Bitte geben Sie ein gültiges Start- und Enddatum an. Das Startdatum muss vor dem Enddatum liegen.')
     ).toBeTruthy()
     expect(onApplyFilter).not.toHaveBeenCalled()
+  })
+
+  it('should execute onExportCsv if csv export button was clicked', async () => {
+    const { getByText } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
+    )
+    const csvExportButton = getByText('CSV Export')
+    fireEvent.click(csvExportButton)
+    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    expect(onExportCsv).toHaveBeenCalled()
+  })
+
+  it('should disable csv export button if no data is available and show tooltip', async () => {
+    const { getByText } = render(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable={false} onExportCsv={onExportCsv} />
+    )
+
+    const csvExportButton = getByText('CSV Export')
+    fireEvent.mouseOver(csvExportButton)
+    fireEvent.click(csvExportButton)
+    await act(async () => {
+      jest.advanceTimersByTime(100)
+    })
+    expect(getByText('Es sind keine Daten zum Export verfügbar.')).toBeTruthy()
+    expect(csvExportButton.closest('button')).toBeDisabled()
+    expect(onExportCsv).not.toHaveBeenCalled()
   })
 })

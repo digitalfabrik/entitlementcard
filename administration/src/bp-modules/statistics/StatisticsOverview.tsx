@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import { CardStatisticsResultModel, Region } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
-import { generateCsv, getCsvFileName } from './CSVStatistics'
+import { useAppToaster } from '../AppToaster'
+import { CsvStatisticsError, generateCsv, getCsvFileName } from './CSVStatistics'
 import StatisticsBarChart from './components/StatisticsBarChart'
 import StatisticsFilterBar from './components/StatisticsFilterBar'
 
@@ -13,8 +15,20 @@ type StatisticsOverviewProps = {
 }
 
 const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
-  const exportCardDataToCsv = (dateStart: string, dateEnd: string) =>
-    downloadDataUri(generateCsv(statistics), getCsvFileName(`${dateStart}_${dateEnd}`, region))
+  const appToaster = useAppToaster()
+  const { cardStatistics } = useContext(ProjectConfigContext)
+  const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
+    try {
+      downloadDataUri(generateCsv(statistics, cardStatistics), getCsvFileName(`${dateStart}_${dateEnd}`, region))
+    } catch (error) {
+      if (error instanceof CsvStatisticsError) {
+        appToaster?.show({
+          message: 'Etwas ist schiefgegangen beim Export der CSV.',
+          intent: 'danger',
+        })
+      }
+    }
+  }
 
   return (
     <>
