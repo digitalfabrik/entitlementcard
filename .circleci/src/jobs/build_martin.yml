@@ -1,5 +1,5 @@
 docker:
-  - image: rust:bullseye
+  - image: rust:bookworm
 working_directory: ~/martin
 steps:
   - checkout:
