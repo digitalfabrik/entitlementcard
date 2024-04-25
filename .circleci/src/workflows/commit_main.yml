@@ -1,7 +1,9 @@
 when:
-  and:
-    - << pipeline.parameters.run_commit_main >>
-    - equal: [main, << pipeline.git.branch >>]
+  or:
+    - equal: [<< pipeline.parameters.run_commit_main >>, "run"]
+    - and:
+      - equal: [<< pipeline.parameters.run_commit_main >>, "run_if_on_main"]
+      - equal: [main, << pipeline.git.branch >>]
 jobs:
   - bump_version:
         prepare_delivery: false

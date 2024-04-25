@@ -9,8 +9,9 @@ parameters:
     default: true
     type: boolean
   run_commit_main:
-    default: true
-    type: boolean
+    default: "run_if_on_main"
+    type: enum
+    enum: ["run_if_on_main", "run", "skip"]
   run_deliver_beta_backend_administration:
     default: false
     type: boolean
