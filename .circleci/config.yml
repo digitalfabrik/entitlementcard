@@ -438,7 +438,7 @@ jobs:
             - notify
     build_martin:
         docker:
-            - image: rust:bullseye
+            - image: rust:bookworm
         steps:
             - checkout:
                 path: ~/project
@@ -650,7 +650,7 @@ jobs:
             - notify
     check_health_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
             - environment:
                 - POSTGRES_DB=ehrenamtskarte
                 - POSTGRES_USER=postgres
@@ -829,7 +829,7 @@ jobs:
                 success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -851,7 +851,7 @@ jobs:
             - notify
     pack_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -873,7 +873,7 @@ jobs:
         working_directory: ~/project/backend
     pack_martin:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -904,7 +904,7 @@ jobs:
         working_directory: ~/project/map-tiles/martin
     pack_meta:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
