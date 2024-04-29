@@ -438,7 +438,7 @@ jobs:
             - notify
     build_martin:
         docker:
-            - image: rust:bullseye
+            - image: rust:bookworm
         steps:
             - checkout:
                 path: ~/project
@@ -650,7 +650,7 @@ jobs:
             - notify
     check_health_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
             - environment:
                 - POSTGRES_DB=ehrenamtskarte
                 - POSTGRES_USER=postgres
@@ -830,7 +830,7 @@ jobs:
                 success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -852,7 +852,7 @@ jobs:
             - notify
     pack_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -874,7 +874,7 @@ jobs:
         working_directory: ~/project/backend
     pack_martin:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -905,7 +905,7 @@ jobs:
         working_directory: ~/project/map-tiles/martin
     pack_meta:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -949,12 +949,35 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.2.0
+        parameters:
+            build_config_name:
+                default: bayern
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - install_app_toolbelt
+            - run:
+                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
+                name: '[FL] Appstore Connect Store Promotion'
+                working_directory: frontend/ios
     promote_to_server:
         docker:
             - image: cimg/base:2022.09
         steps:
             - checkout:
                 path: ~/project
+            - run: sudo apt update -y && sudo apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
@@ -989,8 +1012,12 @@ parameters:
         default: true
         type: boolean
     run_commit_main:
-        default: true
-        type: boolean
+        default: run_if_on_main
+        enum:
+            - run_if_on_main
+            - run
+            - skip
+        type: enum
     run_deliver_beta_backend_administration:
         default: false
         type: boolean
@@ -1084,11 +1111,17 @@ workflows:
                     - bump_version
                     - check_frontend
         when:
-            and:
-                - << pipeline.parameters.run_commit_main >>
+            or:
                 - equal:
-                    - main
-                    - << pipeline.git.branch >>
+                    - << pipeline.parameters.run_commit_main >>
+                    - run
+                - and:
+                    - equal:
+                        - << pipeline.parameters.run_commit_main >>
+                        - run_if_on_main
+                    - equal:
+                        - main
+                        - << pipeline.git.branch >>
     deliver_beta_all:
         jobs:
             - bump_version:
@@ -1569,5 +1602,17 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
         when: << pipeline.parameters.run_promote_native >>
 
