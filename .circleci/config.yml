@@ -805,6 +805,28 @@ jobs:
                         command: |
                             curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
                         name: Install package via webhook
+    notify_release:
+        docker:
+            - image: cimg/node:19.1.0
+        parameters:
+            production_delivery:
+                description: Whether builds are delivered to the production or beta lane of the play store.
+                type: boolean
+        resource_class: small
+        steps:
+            - prepare_workspace
+            - restore_environment_variables
+            - install_app_toolbelt
+            - run:
+                command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
+                name: Create github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload android apks to github release
+            - notify:
+                allow-all-branches: false
+                channel: releases
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
             - image: debian:11
@@ -1235,7 +1257,7 @@ workflows:
                 buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_bayern_ios
+                name: deliver_ios_bayern
                 production_delivery: false
                 requires:
                     - build_ios_bayern
@@ -1253,10 +1275,19 @@ workflows:
                 buildConfig: nuernberg
                 context:
                     - tuerantuer-apple
-                name: deliver_nuernberg_ios
+                name: deliver_ios_nuernberg
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
+                    - deliver_ios_bayern
+                    - deliver_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     delivery_production_native:
         jobs:
