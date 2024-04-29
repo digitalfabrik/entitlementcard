@@ -68,6 +68,10 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
+    if build_config_name != flavor.downcase
+      raise "flavor and build config not matching! Aborting..."
+    end
+
     apple_auth
     certificates build_config_name:build_config_name
 
