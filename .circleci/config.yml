@@ -391,7 +391,7 @@ jobs:
         working_directory: ~/project/backend
     build_ios:
         macos:
-            xcode: 14.3.1
+            xcode: 15.2.0
         parameters:
             buildConfig:
                 description: Name of the build config to use
@@ -717,7 +717,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.0.1
+            xcode: 15.2.0
         parameters:
             buildConfig:
                 enum:
