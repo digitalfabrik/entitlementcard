@@ -930,7 +930,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.0.1
+            xcode: 15.2.0
         parameters:
             build_config_name:
                 default: bayern
