@@ -1171,6 +1171,15 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
+                    - deliver_ios_bayern
+                    - deliver_ios_nuernberg
             - check_administration
             - build_administration:
                 requires:
