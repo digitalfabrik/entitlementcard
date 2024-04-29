@@ -948,12 +948,35 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.2.0
+        parameters:
+            build_config_name:
+                default: bayern
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - install_app_toolbelt
+            - run:
+                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
+                name: '[FL] Appstore Connect Store Promotion'
+                working_directory: frontend/ios
     promote_to_server:
         docker:
             - image: cimg/base:2022.09
         steps:
             - checkout:
                 path: ~/project
+            - run: sudo apt update -y && sudo apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
@@ -1424,5 +1447,17 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
         when: << pipeline.parameters.run_promote_native >>
 
