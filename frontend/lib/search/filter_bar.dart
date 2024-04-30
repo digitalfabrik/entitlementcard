@@ -14,13 +14,10 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final sortedCategories = [...categoryAssets(context)];
-    sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
 
-    // Move the "Others" category to the end of the list
-    final othersCategory = sortedCategories.where((category) => category.id == 9).single;
-    sortedCategories.remove(othersCategory);
-    sortedCategories.add(othersCategory);
+    final sortedCategories = [...categoryAssets(context).where((category) => category.id != 9)];
+    sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
+    sortedCategories.add(categoryAssets(context).where((category) => category.id == 9).single);
 
     final filteredCategories = sortedCategories.where((element) => buildConfig.categories.contains(element.id));
 
