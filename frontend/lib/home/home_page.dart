@@ -5,6 +5,7 @@ import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
+import 'package:ehrenamtskarte/favorites/favorites_page.dart';
 import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
@@ -18,6 +19,7 @@ const identityTabIndex = 2;
 
 class HomePage extends StatefulWidget {
   final int? initialTabIndex;
+
   const HomePage({super.key, this.initialTabIndex});
 
   @override
@@ -58,6 +60,12 @@ class HomePageState extends State<HomePage> {
           (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
         ),
+      AppFlow(
+        const FavoritesPage(),
+        Icons.favorite_border_outlined,
+        (BuildContext context) => t.favorites.title,
+        GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
+      ),
       AppFlow(const AboutPage(), buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline,
           (BuildContext context) => t.about.title, GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];

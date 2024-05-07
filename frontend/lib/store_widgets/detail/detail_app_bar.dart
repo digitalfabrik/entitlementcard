@@ -1,12 +1,14 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:provider/provider.dart';
 
 const double bottomSize = 100;
 
@@ -87,12 +89,14 @@ class DetailAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final favoritesProvider = Provider.of<FavoritesModel>(context, listen: true);
+
+    final title = matchingStore.store.name ?? t.store.acceptingStore;
     final categoryId = matchingStore.store.category.id;
     final category = categoryAssets(context)[categoryId];
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
-    final title = matchingStore.store.name ?? t.store.acceptingStore;
-
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
@@ -100,6 +104,16 @@ class DetailAppBar extends StatelessWidget {
     return AppBarWithBottom(
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
+      actions: [
+        IconButton(
+            icon: favoritesProvider.favoriteStoreIds.contains(matchingStore.id)
+                ? Icon(Icons.favorite)
+                : Icon(Icons.favorite_border_outlined),
+            onPressed: () {
+              favoritesProvider.toggleFavorites(matchingStore.id);
+            },
+            color: foregroundColor),
+      ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(bottomSize),
         // The SizedBox makes sure that the text does not move above the
