@@ -121,7 +121,7 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       <CheckboxForm.Component
         state={state.contactHasGivenPermission}
         setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
-        label='Die Kontaktperson hat der Weitergabe seiner Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden.'
+        label='Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden.'
         options={contactHasGivenPermissionOptions}
       />
     </>
