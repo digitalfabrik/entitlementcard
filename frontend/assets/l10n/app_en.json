@@ -184,5 +184,9 @@
     "showOnMap": "Show on map",
     "unknownCategory": "Unknown category",
     "website": "Website"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "noFavoritesFound": "You have not added any acceptance points to your favorites yet."
   }
 }

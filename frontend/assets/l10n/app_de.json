@@ -184,5 +184,9 @@
     "showOnMap": "Auf Karte zeigen",
     "unknownCategory": "Unbekannte Kategorie",
     "website": "Website"
+  },
+  "favorites": {
+    "title": "Favoriten",
+    "noFavoritesFound": "Sie haben noch keine Akzeptanzstellen zu Ihren Favoriten hinzugefügt."
   }
 }

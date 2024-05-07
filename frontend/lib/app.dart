@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
@@ -109,8 +110,11 @@ class App extends StatelessWidget {
       projectId: projectId,
       showDevSettings: kDebugMode,
       child: ConfiguredGraphQlProvider(
-        child: ChangeNotifierProvider(
-          create: (context) => UserCodeModel()..initialize(),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
+            ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize())
+          ],
           child: MaterialApp.router(
             theme: lightTheme,
             darkTheme: darkTheme,
