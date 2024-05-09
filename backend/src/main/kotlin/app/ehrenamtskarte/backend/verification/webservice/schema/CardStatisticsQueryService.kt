@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.utils.convertDateStringToTimestamp
+import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -19,30 +19,50 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class CardStatisticsQueryService {
 
-    @GraphQLDescription("Returns card statistics for project")
-    fun getCardStatisticsInProject(project: String, dateStart: String, dateEnd: String, dfe: DataFetchingEnvironment): List<CardStatisticsResultModel> {
+    @GraphQLDescription("Returns card statistics for project. `dateStart` is inclusive, `dateEnd` exclusive.")
+    fun getCardStatisticsInProject(
+        project: String,
+        dateStart: String,
+        dateEnd: String,
+        dfe: DataFetchingEnvironment
+    ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
+            val projectConfig = context.backendConfiguration.projects.find { it.id == project }
+                ?: throw ProjectNotFoundException(project)
             val projectId = projectEntity.id.value
             if (!Authorizer.mayViewCardStatisticsInProject(admin, projectId)) {
                 throw ForbiddenException()
             }
 
-            CardRepository.getCardStatisticsByProjectAndRegion(projectEntity.project, convertDateStringToTimestamp(dateStart), convertDateStringToTimestamp(dateEnd), null)
+            CardRepository.getCardStatisticsByProjectAndRegion(
+                projectId,
+                dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
+                dateStringToStartOfDayInstant(dateEnd, projectConfig.timezone),
+                null
+            )
         }
     }
 
     @GraphQLDescription("Returns card statistics for region")
-    fun getCardStatisticsInRegion(project: String, regionId: Int, dateStart: String, dateEnd: String, dfe: DataFetchingEnvironment): List<CardStatisticsResultModel> {
+    fun getCardStatisticsInRegion(
+        project: String,
+        regionId: Int,
+        dateStart: String,
+        dateEnd: String,
+        dfe: DataFetchingEnvironment
+    ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+            val projectConfig = context.backendConfiguration.projects.find { it.id == project }
                 ?: throw ProjectNotFoundException(project)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
 
@@ -50,7 +70,12 @@ class CardStatisticsQueryService {
                 throw ForbiddenException()
             }
 
-            CardRepository.getCardStatisticsByProjectAndRegion(projectEntity.project, convertDateStringToTimestamp(dateStart), convertDateStringToTimestamp(dateEnd), regionId)
+            CardRepository.getCardStatisticsByProjectAndRegion(
+                projectEntity.id.value,
+                dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
+                dateStringToStartOfDayInstant(dateEnd, projectConfig.timezone),
+                regionId
+            )
         }
     }
 }

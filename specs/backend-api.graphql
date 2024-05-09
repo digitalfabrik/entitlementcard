@@ -184,7 +184,7 @@ type Query {
   getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
-  "Returns card statistics for project"
+  "Returns card statistics for project. `dateStart` is inclusive, `dateEnd` exclusive."
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region"
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
