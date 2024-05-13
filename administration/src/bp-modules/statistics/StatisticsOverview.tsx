@@ -2,12 +2,12 @@ import React, { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { CardStatisticsResultModel, Region, Role } from '../../generated/graphql'
-import StatisticsBarChart from './components/StatisticsBarChart'
-import StatisticsFilterBar from './components/StatisticsFilterBar'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
 import { CsvStatisticsError, generateCsv, getCsvFileName } from './CSVStatistics'
+import StatisticsBarChart from './components/StatisticsBarChart'
+import StatisticsFilterBar from './components/StatisticsFilterBar'
 import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
 
 type StatisticsOverviewProps = {
@@ -17,8 +17,8 @@ type StatisticsOverviewProps = {
 }
 
 const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
-    const { role } = useContext(WhoAmIContext).me!
-    const appToaster = useAppToaster()
+  const { role } = useContext(WhoAmIContext).me!
+  const appToaster = useAppToaster()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
     try {
@@ -33,8 +33,7 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
     }
   }
 
-
-      return (
+  return (
     <>
       {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
       <StatisticsBarChart statistics={statistics} />

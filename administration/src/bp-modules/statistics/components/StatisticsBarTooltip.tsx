@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
-import { statisticKeyLabels } from './StatisticsBarChart'
+import { statisticKeyLabels } from '../constants'
 
 const ToolTipContainer = styled.div`
   background: white;

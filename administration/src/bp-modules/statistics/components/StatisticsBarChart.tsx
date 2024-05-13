@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { statisticKeyLabels } from '../constants'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
 const BarContainer = styled.div<{ height: number }>`
@@ -15,10 +16,6 @@ type StatisticsBarChartProps = {
   statistics: CardStatisticsResultModel[]
 }
 
-export const statisticKeyLabels = new Map<string, string>([
-  ['cardsCreated', 'Erstellte Karten'],
-  ['cardsActivated', 'Davon aktiviert'],
-])
 const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const barHeight = 50
