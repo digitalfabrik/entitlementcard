@@ -20,7 +20,7 @@ steps:
       working_directory: ~/project/administration
   - run:
       name: Build
-      command: npm run build --version_name=${NEW_VERSION_NAME}
+      command: npm run build --version_name=2024.3.24
       working_directory: ~/project/administration
   - store_artifacts:
       path: ~/attached_workspace/build
@@ -28,4 +28,4 @@ steps:
       root: ~/project
       paths:
         - administration/build
-  - notify
+#  - notify

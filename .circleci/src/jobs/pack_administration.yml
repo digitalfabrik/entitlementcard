@@ -7,7 +7,7 @@ steps:
   - install_app_toolbelt
   - prepare_workspace
   - restore_environment_variables
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+  - run: ~/project/scripts/pack_deb.sh -v "2024.3.24" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
   - install_app_toolbelt
   - run: |
       mkdir -p ~/attached_workspace/debs/administration
@@ -18,4 +18,4 @@ steps:
       root: ~/attached_workspace
       paths:
         - debs/administration/*.deb
-  - notify
+#  - notify

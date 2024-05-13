@@ -44,4 +44,4 @@ steps:
       root: ~/attached_workspace/artifacts
       paths:
         - martin/martin
-  - notify
+#  - notify

@@ -31,4 +31,4 @@ steps:
       root: ~/project
       paths:
         - backend/build/distributions/*
-  - notify
+#  - notify

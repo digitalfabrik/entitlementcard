@@ -8,7 +8,7 @@ steps:
   - restore_environment_variables
   - run: apt update -y && apt install -y nodejs npm
   - install_app_toolbelt
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+  - run: ~/project/scripts/pack_deb.sh -v "2024.3.24" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
   - run: |
       mkdir -p ~/attached_workspace/debs/backend
       mv *.deb ~/attached_workspace/debs/backend
@@ -18,4 +18,4 @@ steps:
       root: ~/attached_workspace
       paths:
         - debs/backend/*.deb
-  - notify
+#  - notify

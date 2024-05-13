@@ -45,8 +45,8 @@ steps:
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-        - run:
-            name: Install package via webhook
-            command: |
-              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+#        - run:
+#            name: Install package via webhook
+#            command: |
+#              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
 #  - notify
