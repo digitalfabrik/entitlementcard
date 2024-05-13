@@ -54,6 +54,13 @@ object Authorizer {
             mayViewUsersInProject(user, region.projectId.value)
     }
 
+    fun maySendMailsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.regionId?.value == regionId && user.role in setOf(
+            Role.REGION_MANAGER.db_value,
+            Role.REGION_ADMIN.db_value
+        )
+    }
+
     fun mayCreateUser(
         actingAdmin: AdministratorEntity,
         newAdminProjectId: Int,

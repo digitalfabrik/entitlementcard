@@ -100,6 +100,7 @@ describe('CreateCardsButtonBar', () => {
       name: 'augsburg',
       prefix: 'a',
       activatedForApplication: true,
+      activatedForCardConfirmationMail: true,
     }
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(

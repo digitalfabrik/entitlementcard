@@ -60,10 +60,10 @@ const useCardGenerator = (region: Region) => {
     for (let k = 0; k < codes.length; k++) {
       const cardBlueprint = cardBlueprints[k]
       const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
-      if (!mailNotificationExtension?.state) {
+      const dynamicCode = codes[k].dynamicActivationCode
+      if (!mailNotificationExtension?.state || !dynamicCode.info?.extensions?.extensionRegion?.regionId) {
         return
       }
-      const dynamicCode = codes[k].dynamicActivationCode
       const deepLink = getDeepLinkFromQrCode({
         case: 'dynamicActivationCode',
         value: dynamicCode,
@@ -71,6 +71,7 @@ const useCardGenerator = (region: Region) => {
       await sendMail({
         variables: {
           project: projectId,
+          regionId: dynamicCode.info?.extensions?.extensionRegion?.regionId,
           recipientAddress: mailNotificationExtension.state,
           recipientName: cardBlueprint.fullName,
           deepLink,

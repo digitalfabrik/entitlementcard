@@ -232,7 +232,7 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Sends a confirmation mail to the user when the card creation was successful")
-    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
+    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, regionId: Int, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         transaction {
@@ -240,6 +240,9 @@ class CardMutationService {
             val region = user.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
+            }
+            if (!Authorizer.maySendMailsInRegion(user, regionId)) {
+                throw ForbiddenException()
             }
             val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
             val projectConfig =
