@@ -235,17 +235,18 @@ class CardMutationService {
     fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
-        val region = user.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
-
-        if (region != null && !region.activatedForCardConfirmationMail) {
-            throw RegionNotActivatedForCardConfirmationMailException()
+        transaction {
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            val region = user.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+            if (region != null && !region.activatedForCardConfirmationMail) {
+                throw RegionNotActivatedForCardConfirmationMailException()
+            }
+            val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+            val projectConfig =
+                context.backendConfiguration.projects.find { it.id == project }
+                    ?: throw ProjectNotFoundException(project)
+            Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
         }
-        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        val projectConfig =
-            context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
-        Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
         return true
     }
 }

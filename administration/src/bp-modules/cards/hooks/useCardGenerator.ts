@@ -38,6 +38,7 @@ const useCardGenerator = (region: Region) => {
       appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
     },
     onError: error => {
+      console.log(error.message)
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
