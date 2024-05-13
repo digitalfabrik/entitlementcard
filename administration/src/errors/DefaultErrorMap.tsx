@@ -31,7 +31,7 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.InvalidLink:
       return {
-        title: 'Ihr Link ist ungültig',
+        title: 'Ihr Link ist nicht (mehr) gültig',
         description: <InvalidLink />,
       }
     case GraphQlExceptionCode.InvalidCardHash:

@@ -96,7 +96,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
    */
   fromString(value: string) {
     try {
-      const startDay = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+      const startDay = PlainDate.fromCustomFormat(value)
       this.state = { startDay: startDay.toDaysSinceEpoch() }
     } catch (e) {
       this.state = null
@@ -104,7 +104,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
   }
 
   toString() {
-    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.startDay).format('dd.MM.yyyy') : ''
+    return this.state ? PlainDate.fromDaysSinceEpoch(this.state.startDay).format() : ''
   }
 }
 

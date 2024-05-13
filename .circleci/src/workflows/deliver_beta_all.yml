@@ -1,0 +1,140 @@
+when: << pipeline.parameters.run_delivery_beta_all >>
+jobs:
+  - bump_version:
+      prepare_delivery: true
+      context:
+        - deliverino
+  - check
+  - check_frontend:
+      requires:
+        - check
+  - build_android:
+      name: build_android_bayern
+      buildConfig: "bayern"
+      flutterFlavor: "Bayern"
+      requires:
+        - bump_version
+        - check_frontend
+      context:
+        - credentials-repo
+        - credentials-ehrenamtskarte
+  - deliver_android:
+      name: deliver_android_bayern
+      buildConfig: "bayern"
+      context:
+        - tuerantuer-google-play
+      production_delivery: false
+      requires:
+        - build_android_bayern
+  - build_android:
+      name: build_android_nuernberg
+      buildConfig: "nuernberg"
+      flutterFlavor: "Nuernberg"
+      requires:
+        - bump_version
+        - check_frontend
+      context:
+        - credentials-repo
+        - credentials-ehrenamtskarte
+  - deliver_android:
+      name: deliver_android_nuernberg
+      buildConfig: "nuernberg"
+      context:
+        - tuerantuer-google-play
+      production_delivery: false
+      requires:
+        - build_android_nuernberg
+  - build_ios:
+      name: build_ios_bayern
+      buildConfig: "bayern"
+      flutterFlavor: "Bayern"
+      requires:
+        - bump_version
+        - check_frontend
+      context:
+        - tuerantuer-apple
+        - fastlane-match
+  - deliver_ios:
+      name: deliver_bayern_ios
+      buildConfig: bayern
+      context:
+        - tuerantuer-apple
+      production_delivery: false
+      requires:
+        - build_ios_bayern
+  - build_ios:
+      name: build_ios_nuernberg
+      buildConfig: "nuernberg"
+      flutterFlavor: "Nuernberg"
+      requires:
+        - bump_version
+        - check_frontend
+      context:
+        - tuerantuer-apple
+        - fastlane-match
+  - deliver_ios:
+      name: deliver_nuernberg_ios
+      buildConfig: nuernberg
+      context:
+        - tuerantuer-apple
+      production_delivery: false
+      requires:
+        - build_ios_nuernberg
+  - notify_release:
+      production_delivery: false
+      context:
+        - deliverino
+      requires:
+        - deliver_android_bayern
+        - deliver_android_nuernberg
+        - deliver_ios_bayern
+        - deliver_ios_nuernberg
+  - check_administration
+  - build_administration:
+      requires:
+        - check_administration
+        - bump_version
+  - pack_administration:
+      requires:
+        - build_administration
+  - build_martin
+  - check_backend
+  - build_backend:
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - build_backend
+        - bump_version
+  - check_health_backend:
+      requires:
+        - pack_backend
+  - pack_martin:
+      requires:
+        - build_martin
+        - bump_version
+  - pack_meta:
+      requires:
+        - bump_version
+  - deliver_to_server:
+      name: deliver_administration_staging
+      production: false
+      bundle: administration
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - pack_administration
+        - check_health_backend
+        - pack_martin
+        - pack_meta
+  - deliver_to_server:
+      name: deliver_backend_staging
+      production: false
+      bundle: backend
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - pack_administration
+        - check_health_backend
+        - pack_martin
+        - pack_meta

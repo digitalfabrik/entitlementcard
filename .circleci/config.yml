@@ -391,7 +391,7 @@ jobs:
         working_directory: ~/project/backend
     build_ios:
         macos:
-            xcode: 14.3.1
+            xcode: 15.2.0
         parameters:
             buildConfig:
                 description: Name of the build config to use
@@ -438,7 +438,7 @@ jobs:
             - notify
     build_martin:
         docker:
-            - image: rust:bullseye
+            - image: rust:bookworm
         steps:
             - checkout:
                 path: ~/project
@@ -650,7 +650,7 @@ jobs:
             - notify
     check_health_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
             - environment:
                 - POSTGRES_DB=ehrenamtskarte
                 - POSTGRES_USER=postgres
@@ -717,7 +717,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.0.1
+            xcode: 15.2.0
         parameters:
             buildConfig:
                 enum:
@@ -805,9 +805,32 @@ jobs:
                         command: |
                             curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
                         name: Install package via webhook
+            - notify
+    notify_release:
+        docker:
+            - image: cimg/node:19.1.0
+        parameters:
+            production_delivery:
+                description: Whether builds are delivered to the production or beta lane of the play store.
+                type: boolean
+        resource_class: small
+        steps:
+            - prepare_workspace
+            - restore_environment_variables
+            - install_app_toolbelt
+            - run:
+                command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
+                name: Create github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload android apks to github release
+            - notify:
+                allow-all-branches: false
+                channel: releases
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -829,7 +852,7 @@ jobs:
             - notify
     pack_backend:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -851,7 +874,7 @@ jobs:
         working_directory: ~/project/backend
     pack_martin:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -882,7 +905,7 @@ jobs:
         working_directory: ~/project/map-tiles/martin
     pack_meta:
         docker:
-            - image: debian:11
+            - image: debian:12
         steps:
             - checkout:
                 path: ~/project
@@ -926,12 +949,35 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
+        macos:
+            xcode: 15.2.0
+        parameters:
+            build_config_name:
+                default: bayern
+                enum:
+                    - bayern
+                    - nuernberg
+                type: enum
+        shell: /bin/bash --login -o pipefail
+        steps:
+            - checkout
+            - restore_ruby_cache:
+                directory: ~/project/frontend/ios
+            - install_app_toolbelt
+            - run:
+                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
+                name: '[FL] Appstore Connect Store Promotion'
+                working_directory: frontend/ios
     promote_to_server:
         docker:
             - image: cimg/base:2022.09
         steps:
             - checkout:
                 path: ~/project
+            - run: sudo apt update -y && sudo apt install -y nodejs npm
             - install_app_toolbelt
             - run:
                 command: |
@@ -966,12 +1012,19 @@ parameters:
         default: true
         type: boolean
     run_commit_main:
-        default: true
-        type: boolean
+        default: run_if_on_main
+        enum:
+            - run_if_on_main
+            - run
+            - skip
+        type: enum
     run_deliver_beta_backend_administration:
         default: false
         type: boolean
     run_deliver_production_backend_administration:
+        default: false
+        type: boolean
+    run_delivery_beta_all:
         default: false
         type: boolean
     run_delivery_beta_native:
@@ -1058,11 +1111,158 @@ workflows:
                     - bump_version
                     - check_frontend
         when:
-            and:
-                - << pipeline.parameters.run_commit_main >>
+            or:
                 - equal:
-                    - main
-                    - << pipeline.git.branch >>
+                    - << pipeline.parameters.run_commit_main >>
+                    - run
+                - and:
+                    - equal:
+                        - << pipeline.parameters.run_commit_main >>
+                        - run_if_on_main
+                    - equal:
+                        - main
+                        - << pipeline.git.branch >>
+    deliver_beta_all:
+        jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: true
+            - check
+            - check_frontend:
+                requires:
+                    - check
+            - build_android:
+                buildConfig: bayern
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Bayern
+                name: build_android_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_bayern
+                production_delivery: false
+                requires:
+                    - build_android_bayern
+            - build_android:
+                buildConfig: nuernberg
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                flutterFlavor: Nuernberg
+                name: build_android_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_nuernberg
+                production_delivery: false
+                requires:
+                    - build_android_nuernberg
+            - build_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Bayern
+                name: build_ios_bayern
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: bayern
+                context:
+                    - tuerantuer-apple
+                name: deliver_bayern_ios
+                production_delivery: false
+                requires:
+                    - build_ios_bayern
+            - build_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                flutterFlavor: Nuernberg
+                name: build_ios_nuernberg
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: nuernberg
+                context:
+                    - tuerantuer-apple
+                name: deliver_nuernberg_ios
+                production_delivery: false
+                requires:
+                    - build_ios_nuernberg
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
+                    - deliver_ios_bayern
+                    - deliver_ios_nuernberg
+            - check_administration
+            - build_administration:
+                requires:
+                    - check_administration
+                    - bump_version
+            - pack_administration:
+                requires:
+                    - build_administration
+            - build_martin
+            - check_backend
+            - build_backend:
+                requires:
+                    - check_backend
+            - pack_backend:
+                requires:
+                    - build_backend
+                    - bump_version
+            - check_health_backend:
+                requires:
+                    - pack_backend
+            - pack_martin:
+                requires:
+                    - build_martin
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
+            - deliver_to_server:
+                bundle: administration
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_administration_staging
+                production: false
+                requires:
+                    - pack_administration
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+            - deliver_to_server:
+                bundle: backend
+                context:
+                    - credentials-ehrenamtskarte
+                name: deliver_backend_staging
+                production: false
+                requires:
+                    - pack_administration
+                    - check_health_backend
+                    - pack_martin
+                    - pack_meta
+        when: << pipeline.parameters.run_delivery_beta_all >>
     deliver_beta_backend_administration:
         jobs:
             - bump_version:
@@ -1235,7 +1435,7 @@ workflows:
                 buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_bayern_ios
+                name: deliver_ios_bayern
                 production_delivery: false
                 requires:
                     - build_ios_bayern
@@ -1253,10 +1453,19 @@ workflows:
                 buildConfig: nuernberg
                 context:
                     - tuerantuer-apple
-                name: deliver_nuernberg_ios
+                name: deliver_ios_nuernberg
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
+                    - deliver_ios_bayern
+                    - deliver_ios_nuernberg
         when: << pipeline.parameters.run_delivery_beta_native >>
     delivery_production_native:
         jobs:
@@ -1393,5 +1602,17 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
         when: << pipeline.parameters.run_promote_native >>
 

@@ -28,6 +28,9 @@ const config: ProjectConfig = {
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
     elements: bayern.pdf.elements,
   },
+  csvExport: {
+    enabled: false,
+  },
 }
 
 export default config

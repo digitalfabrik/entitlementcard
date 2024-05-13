@@ -102,7 +102,7 @@ export class CardBlueprint {
   setExpirationDate(value: string) {
     if (value.length === 0) return
     try {
-      this.expirationDate = PlainDate.fromCustomFormat(value, 'dd.MM.yyyy')
+      this.expirationDate = PlainDate.fromCustomFormat(value)
     } catch (error) {
       console.error(`Could not parse date from string '${value}' with format dd.MM.yyyy.`, error)
     }

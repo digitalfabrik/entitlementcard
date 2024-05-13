@@ -67,6 +67,10 @@ platform :android do
       raise "'nil' passed as parameter! Aborting..."
     end
 
+    if build_config_name != flavor.downcase
+      raise "flavor and build config not matching! Aborting..."
+    end
+
     gradle_system_properties = {
       # 2GB Gradle + 1GB dex + 2-2.5GB RN < 6GB of circleci resource class medium+
       :"org.gradle.jvmargs" => "-Xms512m -Xmx2024m",

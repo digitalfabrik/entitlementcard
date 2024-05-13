@@ -72,6 +72,9 @@ const config: ProjectConfig = {
   },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
+  csvExport: {
+    enabled: false,
+  },
 }
 
 export default config
