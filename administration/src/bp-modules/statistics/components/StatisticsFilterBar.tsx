@@ -39,7 +39,7 @@ const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
   if (!isValidDateString(dateStart) || !isValidDateString(dateEnd)) {
     return false
   }
-  return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) === -1
+  return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) <= 0
 }
 
 const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): ReactElement => {
@@ -83,7 +83,9 @@ const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): React
         </StyledFormGroup>
         <Tooltip
           disabled={IsValidDateTimePeriod(dateStart, dateEnd)}
-          content={'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Startdatum muss vor dem Enddatum liegen.'}>
+          content={
+            'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.'
+          }>
           <Button
             icon='tick'
             text='Filter anwenden'
