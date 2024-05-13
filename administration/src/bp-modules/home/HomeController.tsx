@@ -41,6 +41,9 @@ const HomeController = () => {
           <NavLink to={'/users'}>
             <StyledButton icon='people' text='Benutzer verwalten' />
           </NavLink>
+          <NavLink to={'/statistics'}>
+            <StyledButton icon='stacked-chart' text='Statistiken' />
+          </NavLink>
         </>
       ) : null}
       {role === Role.RegionAdmin && applicationFeature ? (
