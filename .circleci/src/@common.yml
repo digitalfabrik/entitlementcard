@@ -33,3 +33,6 @@ parameters:
   run_promote_backend_administration:
     default: false
     type: boolean
+  run_delivery_beta_all:
+    default: false
+    type: boolean
