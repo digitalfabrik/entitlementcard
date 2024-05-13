@@ -60,7 +60,7 @@ describe('StatisticFilterBar', () => {
       jest.advanceTimersByTime(100)
     })
     expect(
-      getByText('Bitte geben Sie ein gültiges Start- und Enddatum an. Das Startdatum muss vor dem Enddatum liegen.')
+      getByText('Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.')
     ).toBeTruthy()
     expect(onApplyFilter).not.toHaveBeenCalled()
   })

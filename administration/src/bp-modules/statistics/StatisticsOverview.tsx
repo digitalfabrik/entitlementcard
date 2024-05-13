@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
-import { CardStatisticsResultModel } from '../../generated/graphql'
+import { WhoAmIContext } from '../../WhoAmIProvider'
+import { CardStatisticsResultModel, Role } from '../../generated/graphql'
 import StatisticsBarChart from './components/StatisticsBarChart'
 import StatisticsFilterBar from './components/StatisticsFilterBar'
+import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
 
 type StatisticsOverviewProps = {
   statistics: CardStatisticsResultModel[]
@@ -10,8 +12,10 @@ type StatisticsOverviewProps = {
 }
 
 const StatisticsOverview = ({ statistics, onApplyFilter }: StatisticsOverviewProps): ReactElement => {
+  const { role } = useContext(WhoAmIContext).me!
   return (
     <>
+      {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
       <StatisticsBarChart statistics={statistics} />
       <StatisticsFilterBar onApplyFilter={onApplyFilter} />
     </>
