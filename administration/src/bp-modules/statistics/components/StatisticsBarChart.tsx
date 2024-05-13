@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import StatisticsBarTooltip from './StatisticsBarTooltip'
 
 const BarContainer = styled.div<{ height: number }>`
   height: ${props => props.height}px;
@@ -14,6 +15,10 @@ type StatisticsBarChartProps = {
   statistics: CardStatisticsResultModel[]
 }
 
+export const statisticKeyLabels = new Map<string, string>([
+  ['cardsCreated', 'Erstellte Karten'],
+  ['cardsActivated', 'Davon aktiviert'],
+])
 const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const barHeight = 50
@@ -29,13 +34,15 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
     )
   }
 
-  const statisticKeys = Object.keys(statistics[0])
+  const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
+
   return (
     <BarContainer height={statistics.length * barHeight + axisHeight}>
       <ResponsiveBar
         /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
         data={[...statistics].reverse()}
-        keys={[statisticKeys[1], statisticKeys[2]]}
+        tooltip={StatisticsBarTooltip}
+        keys={[statisticKeys[0], statisticKeys[1]]}
         indexBy='region'
         margin={{ top: 20, right: 300, bottom: 50, left: 300 }}
         innerPadding={2.0}
@@ -50,13 +57,6 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
           legendPosition: 'middle',
           legendOffset: 44,
         }}
-        axisLeft={{
-          tickSize: 10,
-          tickPadding: 5,
-          legend: 'Region',
-          legendOffset: -180,
-          legendPosition: 'middle',
-        }}
         theme={{
           axis: { legend: { text: { fontSize: 14, fontWeight: 700 } } },
           text: { fontSize: 14 },
@@ -65,10 +65,17 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
         legends={[
           {
             dataFrom: 'keys',
-            anchor: 'bottom-right',
+            data: statisticKeys.map((item, index) => {
+              return {
+                color: [cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight][index],
+                id: item,
+                label: statisticKeyLabels.get(item)!,
+              }
+            }),
+            anchor: 'top-right',
             direction: 'column',
             translateX: 140,
-            translateY: 54,
+            translateY: 20,
             itemsSpacing: 2,
             itemWidth: 100,
             itemHeight: 30,

@@ -21,6 +21,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.intLiteral
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.select
 import java.sql.Timestamp
 import java.time.Instant
@@ -79,12 +80,12 @@ object CardRepository {
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
         val allCards = (Regions leftJoin Cards leftJoin Projects)
             .slice(Regions.id, numAlias)
-            .select { Cards.issueDate.greaterEq(dateStart) and Cards.issueDate.lessEq(dateEnd) }
+            .select { Cards.issueDate.date().between(dateStart, dateEnd) }
             .groupBy(Regions.id)
             .alias("AllCards")
         val activeCards = (Regions leftJoin Cards)
             .slice(Regions.id, numAlias)
-            .select { Cards.firstActivationDate.isNotNull() and Cards.issueDate.greaterEq(dateStart) and Cards.issueDate.lessEq(dateEnd) }
+            .select { Cards.firstActivationDate.isNotNull() and Cards.issueDate.date().between(dateStart, dateEnd) }
             .groupBy(Regions.id)
             .alias("ActiveCards")
         val query =
