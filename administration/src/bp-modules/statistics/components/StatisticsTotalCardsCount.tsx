@@ -6,16 +6,16 @@ import { CardStatisticsResultModel } from '../../../generated/graphql'
 
 const Headline = styled(H4)`
   text-align: center;
-    margin: 0;
+  margin: 0;
 `
 
 const Container = styled.div`
-display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    margin-top: 12px;
-    white-space: pre;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  margin-top: 12px;
+  white-space: pre;
 `
 
 type StatisticsTotalCountProps = {
@@ -34,8 +34,9 @@ const sumTotalAmounts = (statistics: CardStatisticsResultModel[]): TotalAmountRe
 const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): ReactElement => {
   return (
     <Container>
-        <Headline>Alle Regionen:</Headline><span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated}</span> erstellte Karten /{' '}
-        <span data-testid='totalCardsActivated'>{sumTotalAmounts(statistics).totalCardsActivated}</span> davon aktiviert
+      <Headline>Alle Regionen:</Headline>
+      <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated}</span> erstellte Karten /{' '}
+      <span data-testid='totalCardsActivated'>{sumTotalAmounts(statistics).totalCardsActivated}</span> davon aktiviert
     </Container>
   )
 }
