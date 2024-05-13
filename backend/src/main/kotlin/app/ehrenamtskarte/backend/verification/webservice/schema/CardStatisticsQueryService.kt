@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -19,7 +20,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class CardStatisticsQueryService {
 
-    @GraphQLDescription("Returns card statistics for project. `dateStart` is inclusive, `dateEnd` exclusive.")
+    @GraphQLDescription("Returns card statistics for project. Start and end dates are inclusive.")
     fun getCardStatisticsInProject(
         project: String,
         dateStart: String,
@@ -42,13 +43,13 @@ class CardStatisticsQueryService {
             CardRepository.getCardStatisticsByProjectAndRegion(
                 projectId,
                 dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
-                dateStringToStartOfDayInstant(dateEnd, projectConfig.timezone),
+                dateStringToEndOfDayInstant(dateEnd, projectConfig.timezone),
                 null
             )
         }
     }
 
-    @GraphQLDescription("Returns card statistics for region")
+    @GraphQLDescription("Returns card statistics for region. Start and end dates are inclusive.")
     fun getCardStatisticsInRegion(
         project: String,
         regionId: Int,
@@ -73,7 +74,7 @@ class CardStatisticsQueryService {
             CardRepository.getCardStatisticsByProjectAndRegion(
                 projectEntity.id.value,
                 dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
-                dateStringToStartOfDayInstant(dateEnd, projectConfig.timezone),
+                dateStringToEndOfDayInstant(dateEnd, projectConfig.timezone),
                 regionId
             )
         }
