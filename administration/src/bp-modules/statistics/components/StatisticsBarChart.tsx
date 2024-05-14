@@ -24,6 +24,8 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
   const barHeight = 50
   const axisHeight = 90
 
+  console.log(statistics)
+
   if (statistics.length === 0 || !cardStatistics.enabled) {
     return (
       <NonIdealState
