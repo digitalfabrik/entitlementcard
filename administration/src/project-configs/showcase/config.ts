@@ -32,6 +32,7 @@ const config: ProjectConfig = {
   csvExport: {
     enabled: false,
   },
+  cardStatistics: { enabled: false },
 }
 
 export default config

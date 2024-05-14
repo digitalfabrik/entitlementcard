@@ -78,6 +78,14 @@ const config: ProjectConfig = {
   csvExport: {
     enabled: false,
   },
+  cardStatistics: {
+    enabled: true,
+    theme: {
+      primaryColor: '#8377A9',
+      // https://a.atmos.washington.edu/~ovens/javascript/colorpicker.html - 80% lighter than primaryColor
+      primaryColorLight: '#c6c0d8',
+    },
+  },
 }
 
 export default config

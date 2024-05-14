@@ -7,12 +7,19 @@ import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.verification.database.CardEntity
 import app.ehrenamtskarte.backend.verification.database.Cards
 import app.ehrenamtskarte.backend.verification.database.CodeType
+import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardStatisticsResultModel
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.Coalesce
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.intLiteral
 import org.jetbrains.exposed.sql.select
 import java.time.Instant
 
@@ -64,5 +71,50 @@ object CardRepository {
         if (card.firstActivationDate == null) {
             card.firstActivationDate = Instant.now()
         }
+    }
+
+    fun getCardStatisticsByProjectAndRegion(
+        projectId: Int,
+        from: Instant,
+        until: Instant,
+        regionId: Int?
+    ): List<CardStatisticsResultModel> {
+        val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
+        val cardsCreated = (Regions leftJoin Cards leftJoin Projects)
+            .slice(Regions.id, numAlias)
+            .select { Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until) }
+            .groupBy(Regions.id)
+            .alias("AllCards")
+        val activeCards = (Regions leftJoin Cards)
+            .slice(Regions.id, numAlias)
+            .select {
+                Cards.firstActivationDate.isNotNull() and
+                    Cards.issueDate.greaterEq(from) and
+                    Cards.issueDate.less(until)
+            }
+            .groupBy(Regions.id)
+            .alias("ActiveCards")
+        val query = Regions
+            .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
+            .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
+            .slice(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
+            .select(
+                if (regionId == null) {
+                    Regions.projectId eq projectId
+                } else {
+                    Regions.id eq regionId
+                }
+            )
+            .orderBy(Regions.name, SortOrder.DESC)
+            .orderBy(Regions.prefix, SortOrder.DESC)
+        return query
+            .map {
+                CardStatisticsResultModel(
+                    region = it[Regions.prefix] + ' ' + it[Regions.name],
+                    cardsCreated = (it.getOrNull(cardsCreated[numAlias]) ?: 0).toInt(),
+                    cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt()
+                )
+            }
+            .toList()
     }
 }

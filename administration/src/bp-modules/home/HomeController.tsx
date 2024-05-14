@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const HomeController = () => {
-  const { applicationFeature } = useContext(ProjectConfigContext)
+  const { applicationFeature, cardStatistics } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -41,6 +41,11 @@ const HomeController = () => {
           <NavLink to={'/users'}>
             <StyledButton icon='people' text='Benutzer verwalten' />
           </NavLink>
+          {cardStatistics.enabled ? (
+            <NavLink to={'/statistics'}>
+              <StyledButton icon='stacked-chart' text='Statistiken' />
+            </NavLink>
+          ) : null}
         </>
       ) : null}
       {role === Role.RegionAdmin && applicationFeature ? (
