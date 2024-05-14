@@ -458,10 +458,8 @@ jobs:
                     - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
             - prepare_workspace
             - run:
-                command: |
-                    apt update
-                    apt install -y openssl libssl-dev
-                name: Install OpenSSL
+                command: cargo update openssl --precise 0.10.64
+                name: Update OpenSSL library due to failed compilation
             - run:
                 command: |
                     cargo build --release --target x86_64-unknown-linux-gnu
