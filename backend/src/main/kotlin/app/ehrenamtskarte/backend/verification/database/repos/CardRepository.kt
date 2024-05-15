@@ -11,7 +11,6 @@ import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardStati
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
@@ -21,9 +20,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.intLiteral
-import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.select
-import java.sql.Timestamp
 import java.time.Instant
 
 object CardRepository {
@@ -76,36 +73,48 @@ object CardRepository {
         }
     }
 
-    fun getCardStatisticsByProjectAndRegion(project: String, dateStart: Timestamp, dateEnd: Timestamp, regionId: Int?): List<CardStatisticsResultModel> {
+    fun getCardStatisticsByProjectAndRegion(
+        projectId: Int,
+        from: Instant,
+        until: Instant,
+        regionId: Int?
+    ): List<CardStatisticsResultModel> {
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
-        val allCards = (Regions leftJoin Cards leftJoin Projects)
+        val cardsCreated = (Regions leftJoin Cards leftJoin Projects)
             .slice(Regions.id, numAlias)
-            .select { Cards.issueDate.date().between(dateStart, dateEnd) }
+            .select { Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until) }
             .groupBy(Regions.id)
             .alias("AllCards")
         val activeCards = (Regions leftJoin Cards)
             .slice(Regions.id, numAlias)
-            .select { Cards.firstActivationDate.isNotNull() and Cards.issueDate.date().between(dateStart, dateEnd) }
+            .select {
+                Cards.firstActivationDate.isNotNull() and
+                    Cards.issueDate.greaterEq(from) and
+                    Cards.issueDate.less(until)
+            }
             .groupBy(Regions.id)
             .alias("ActiveCards")
-        val query =
-            Regions
-                .join(allCards, JoinType.LEFT, Regions.id, allCards[Regions.id])
-                .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
-                .join(Projects, JoinType.LEFT, Projects.id, Regions.projectId)
-                .slice(Regions.name, Regions.prefix, allCards[numAlias], activeCards[numAlias])
-                .select(Projects.project eq project)
-        if (regionId !== null) {
-            query.adjustWhere { Op.build { Regions.id eq regionId } }
-        } else {
-            query.adjustWhere { Op.build { Projects.project eq project } }
-        }
+        val query = Regions
+            .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
+            .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
+            .slice(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
+            .select(
+                if (regionId == null) {
+                    Regions.projectId eq projectId
+                } else {
+                    Regions.id eq regionId
+                }
+            )
             .orderBy(Regions.name, SortOrder.ASC)
             .orderBy(Regions.prefix, SortOrder.ASC)
-        val result = query
-            .map { CardStatisticsResultModel(region = it[Regions.prefix] + ' ' + it[Regions.name], cardsCreated = (it[allCards[numAlias]] ?: 0).toInt(), cardsActivated = (it[activeCards[numAlias]] ?: 0).toInt()) }
+        return query
+            .map {
+                CardStatisticsResultModel(
+                    region = it[Regions.prefix] + ' ' + it[Regions.name],
+                    cardsCreated = (it.getOrNull(cardsCreated[numAlias]) ?: 0).toInt(),
+                    cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt()
+                )
+            }
             .toList()
-
-        return result
     }
 }

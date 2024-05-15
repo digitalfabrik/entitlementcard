@@ -1,5 +1,5 @@
 docker:
-  - image: rust:bullseye
+  - image: rust:bookworm
 working_directory: ~/martin
 steps:
   - checkout:
@@ -20,10 +20,8 @@ steps:
         - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
   - prepare_workspace
   - run:
-      name: "Install OpenSSL"
-      command: |
-        apt update
-        apt install -y openssl libssl-dev
+      name: "Update OpenSSL library due to failed compilation"
+      command: cargo update openssl --precise 0.10.64
   - run:
       name: "Build"
       command: |

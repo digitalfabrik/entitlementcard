@@ -184,9 +184,9 @@ type Query {
   getApplicationVerification(accessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
-  "Returns card statistics for project"
+  "Returns card statistics for project. Start and end dates are inclusive."
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
-  "Returns card statistics for region"
+  "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!

@@ -9,7 +9,6 @@ import {
   useGetCardStatisticsInRegionQuery,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import PlainDate from '../../util/PlainDate'
 import getQueryResult from '../util/getQueryResult'
 import StatisticsOverview from './StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
@@ -34,7 +33,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
     variables: {
       projectId,
-      dateEnd: PlainDate.fromLocalDate(new Date()).toString(),
+      dateEnd: defaultEndDate,
       dateStart: defaultStartDate,
       regionId: region.id,
     },
