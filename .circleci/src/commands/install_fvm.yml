@@ -7,13 +7,13 @@ steps:
         export PATH="$PATH":"$HOME/.pub-cache/bin"
   - restore_cache:
       keys:
-        - fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+        - fvm-1-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
   - run:
       name: Install Flutter
       command: fvm install
       working_directory: ~/project/frontend/
   - save_cache:
-      key: fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+      key: fvm-1-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
       paths:
         - .fvm
         - ~/fvm/

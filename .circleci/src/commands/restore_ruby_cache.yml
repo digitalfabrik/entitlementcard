@@ -10,13 +10,13 @@ steps:
       working_directory: ~/project/frontend/android
   - restore_cache:
       keys:
-        - 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-        - 2-gems-{{ arch }}-
+        - 3-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+        - 3-gems-{{ arch }}-
   - run:
       name: '[FL] install'
       command: sudo bundle check || sudo bundle install
       working_directory: << parameters.directory >>
   - save_cache:
-      key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+      key: 3-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
       paths:
         - << parameters.directory >>/vendor/bundle

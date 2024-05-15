@@ -47,7 +47,7 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - brew-dart-4
+                    - brew-dart-5
             - run:
                 command: |
                     brew tap dart-lang/dart
@@ -55,7 +55,7 @@ commands:
                     brew link dart
                 name: Install Dart
             - save_cache:
-                key: brew-dart-4
+                key: brew-dart-5
                 paths:
                     - /usr/local/Cellar/dart/
                     - /usr/local/Homebrew/Library/Taps/dart-lang/homebrew-dart
@@ -70,13 +70,13 @@ commands:
                 name: Install FVM
             - restore_cache:
                 keys:
-                    - fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+                    - fvm-1-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
             - run:
                 command: fvm install
                 name: Install Flutter
                 working_directory: ~/project/frontend/
             - save_cache:
-                key: fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+                key: fvm-1-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
                 paths:
                     - .fvm
                     - ~/fvm/
@@ -110,7 +110,7 @@ commands:
         steps:
             - run:
                 command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-osx-x86_64.zip"
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
@@ -210,7 +210,7 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                    - 2-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
                 name: Restore CocoaPods Cache
             - run:
                 command: |
@@ -219,7 +219,7 @@ commands:
                 name: '[CP] Install CocoaPods'
                 working_directory: frontend/ios
             - save_cache:
-                key: 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
+                key: 2-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
                 name: Save CocoaPods Cache
                 paths:
                     - ~/Library/Caches/CocoaPods/
@@ -236,14 +236,14 @@ commands:
                 working_directory: ~/project/frontend/android
             - restore_cache:
                 keys:
-                    - 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - 2-gems-{{ arch }}-
+                    - 3-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                    - 3-gems-{{ arch }}-
             - run:
                 command: sudo bundle check || sudo bundle install
                 name: '[FL] install'
                 working_directory: << parameters.directory >>
             - save_cache:
-                key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                key: 3-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
                 paths:
                     - << parameters.directory >>/vendor/bundle
     setup_npm_global:

@@ -1,7 +1,7 @@
 steps:
   - restore_cache:
       keys:
-        - brew-dart-4
+        - brew-dart-5
   - run:
       name: Install Dart
       command: |
@@ -9,7 +9,7 @@ steps:
         brew install dart
         brew link dart
   - save_cache:
-      key: brew-dart-4
+      key: brew-dart-5
       paths:
         - /usr/local/Cellar/dart/
         - /usr/local/Homebrew/Library/Taps/dart-lang/homebrew-dart
