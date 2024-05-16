@@ -28,6 +28,17 @@ steps:
       working_directory: frontend/
   - restore_pods
   - run:
+      name: "Fix: Delete flutter cache"
+      command: cd ~/fvm/versions/3.19.3/bin && rm -rf cache/ && cd ~/project/frontend/ios/
+  - run:
+      name: "Fix: Flutter doctor"
+      command: fvm flutter doctor
+      working_directory: frontend/ios
+  - run:
+      name: "Fix: Flutter doctor + clean"
+      command: fvm flutter doctor && fvm flutter clean
+      working_directory: frontend/ios
+  - run:
       name: '[FL] Build'
       command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
       working_directory: frontend/ios
