@@ -31,12 +31,12 @@ steps:
       name: "Fix: Delete flutter cache"
       command: cd ~/fvm/versions/3.19.3/bin && rm -rf cache/ && cd ~/project/frontend/ios/
   - run:
-      name: "Fix: Flutter doctor"
-      command: fvm flutter doctor
-      working_directory: frontend/ios
-  - run:
       name: "Fix: Flutter doctor + clean"
       command: fvm flutter doctor && fvm flutter clean
+      working_directory: frontend/ios
+  - run:
+      name: "Fix: Flutter build runner outside fastlane"
+      command: fvm flutter pub run build_runner build --define df_build_config=name=<< parameters.buildConfig >>
       working_directory: frontend/ios
   - run:
       name: '[FL] Build'

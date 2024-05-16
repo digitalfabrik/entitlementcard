@@ -429,12 +429,12 @@ jobs:
                 command: cd ~/fvm/versions/3.19.3/bin && rm -rf cache/ && cd ~/project/frontend/ios/
                 name: 'Fix: Delete flutter cache'
             - run:
-                command: fvm flutter doctor
-                name: 'Fix: Flutter doctor'
-                working_directory: frontend/ios
-            - run:
                 command: fvm flutter doctor && fvm flutter clean
                 name: 'Fix: Flutter doctor + clean'
+                working_directory: frontend/ios
+            - run:
+                command: fvm flutter pub run build_runner build --define df_build_config=name=<< parameters.buildConfig >>
+                name: 'Fix: Flutter build runner outside fastlane'
                 working_directory: frontend/ios
             - run:
                 command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
