@@ -88,7 +88,7 @@ platform :ios do
     ENV["BUILD_CONFIG_NAME"] = build_config_name
     # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
 
-    sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
+    sh("cd ~/fvm/versions/3.19.3/bin && rm -rf cache/ && cd ~/project/frontend/ios/ && fvm flutter doctor && fvm flutter clean && fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
      # use base64 encoded variable "environment=production" directly, because shell result does not work for gym as it does for gradle (android/Fastfile)
     env_prod_base64 = "ZW52aXJvbm1lbnQ9cHJvZHVjdGlvbg=="
 
