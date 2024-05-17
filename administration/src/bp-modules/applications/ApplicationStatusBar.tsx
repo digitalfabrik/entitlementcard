@@ -35,12 +35,12 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-type FilterItem = {
+export type ApplicationStatusBarItemType = {
   title: string
   status?: ApplicationStatus
 }
 
-const items: FilterItem[] = [
+const barItems: ApplicationStatusBarItemType[] = [
   {
     title: 'Alle Anträge',
     status: undefined,
@@ -79,23 +79,21 @@ const getApplicationCount = (applications: Application[], status?: ApplicationSt
 }
 
 const ApplicationStatusBar = ({ applications, filterApplications }: ApplicationStatusBarProps): ReactElement => {
-  const [active, setActive] = useState<string | null>(items[0].title)
-
-  const setActiveButton = (title: string) => setActive(title)
+  const defaultActiveBarItem = barItems[0]
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(defaultActiveBarItem)
 
   return (
     <Container>
       <Title>Status</Title>
       <ApplicationStatusHelpButton />
       <BarItemContainer>
-        {items.map(el => (
+        {barItems.map(item => (
           <ApplicationStatusBarItem
-            count={getApplicationCount(applications, el.status)}
-            title={el.title}
+            count={getApplicationCount(applications, item.status)}
+            item={item}
             filterApplications={filterApplications}
-            setActiveButton={setActiveButton}
-            active={el.title === active}
-            status={el.status}
+            setActiveBarItem={setActiveBarItem}
+            active={item === activeBarItem}
           />
         ))}
       </BarItemContainer>

@@ -39,8 +39,6 @@ export class ApplicationViewComponent extends React.Component<React.ComponentPro
   }
 }
 
-// TODO fix note function, check the onChange fkt
-
 const sortByStatus = (a: number, b: number): number => a - b
 const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
 
@@ -84,10 +82,14 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
                 printApplicationById={printApplicationById}
                 key={application.id}
                 application={application}
-                onDelete={() => setUpdatedApplications(filteredApplications.filter(a => a !== application))}
-                onChange={application =>
+                onDelete={() => {
+                  setFilteredApplications(filteredApplications.filter(a => a !== application))
+                  setUpdatedApplications(filteredApplications.filter(a => a !== application))
+                }}
+                onChange={application => {
+                  setFilteredApplications(filteredApplications.map(a => (a.id === application.id ? application : a)))
                   setUpdatedApplications(filteredApplications.map(a => (a.id === application.id ? application : a)))
-                }
+                }}
               />
             ))}
           </ApplicationList>
