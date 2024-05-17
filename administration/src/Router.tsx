@@ -17,6 +17,7 @@ import HomeController from './bp-modules/home/HomeController'
 import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
+import StatisticsController from './bp-modules/statistics/StatisticsController'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
 import ActivationPage from './mui-modules/activation/ActivationPage'
@@ -78,6 +79,7 @@ const Router = () => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
+          ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
           { path: 'cards', element: <CreateCardsController /> },
           { path: 'cards/add', element: <AddCardsController /> },
           { path: 'cards/import', element: <ImportCardsController /> },

@@ -61,6 +61,20 @@ export type CsvExport =
       enabled: false
     }
 
+export type StatisticsTheme = {
+  primaryColor: string
+  primaryColorLight: string
+}
+
+type CardStatistics =
+  | {
+      enabled: true
+      theme: StatisticsTheme
+    }
+  | {
+      enabled: false
+    }
+
 export interface ProjectConfig {
   name: string
   projectId: string
@@ -78,6 +92,7 @@ export interface ProjectConfig {
     downloadLink: string
   }
   csvExport: CsvExport
+  cardStatistics: CardStatistics
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
