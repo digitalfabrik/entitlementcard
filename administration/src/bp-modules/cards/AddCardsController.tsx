@@ -27,8 +27,16 @@ const AddCardsController = () => {
 
 const InnerAddCardsController = ({ region }: { region: Region }) => {
   const navigate = useNavigate()
-  const { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints } =
-    useCardGenerator(region)
+  const {
+    state,
+    setState,
+    generateCardsPdf,
+    generateCardsCsv,
+    setCardBlueprints,
+    cardBlueprints,
+    applicationId,
+    setApplicationId,
+  } = useCardGenerator(region)
 
   useBlockNavigation({
     when: cardBlueprints.length > 0,
@@ -48,12 +56,17 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 
   return (
     <>
-      <AddCardsForm region={region} cardBlueprints={cardBlueprints} setCardBlueprints={setCardBlueprints} />
+      <AddCardsForm
+        region={region}
+        cardBlueprints={cardBlueprints}
+        setCardBlueprints={setCardBlueprints}
+        setApplicationId={setApplicationId}
+      />
       <CreateCardsButtonBar
         cardBlueprints={cardBlueprints}
         goBack={() => navigate('/cards')}
-        generateCardsPdf={generateCardsPdf}
-        generateCardsCsv={generateCardsCsv}
+        generateCardsPdf={() => generateCardsPdf(applicationId)}
+        generateCardsCsv={() => generateCardsCsv(applicationId)}
       />
     </>
   )

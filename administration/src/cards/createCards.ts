@@ -23,12 +23,13 @@ async function createCards(
   client: ApolloClient<object>,
   projectId: string,
   cardInfos: CardInfo[],
-  generateStaticCodes: boolean
+  generateStaticCodes: boolean,
+  applicationId?: number
 ): Promise<CreateCardsResult[]> {
   const encodedCardInfos = cardInfos.map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
   const result = await client.mutate<CreateCardsMutation, CreateCardsMutationVariables>({
     mutation: CreateCardsDocument,
-    variables: { project: projectId, encodedCardInfos, generateStaticCodes },
+    variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationId },
   })
 
   if (result.errors) {

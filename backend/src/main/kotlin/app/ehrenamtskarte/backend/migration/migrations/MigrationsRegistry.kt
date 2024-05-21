@@ -11,6 +11,7 @@ object MigrationsRegistry {
         V0007_AddStartDay(),
         V0008_IncreaseAdministratorEmailLength(),
         V0009_HashPasswordResetKey(),
-        V0010_ApplicationNote()
+        V0010_ApplicationNote(),
+        V0011_AddApplicationCardCreated()
     )
 }

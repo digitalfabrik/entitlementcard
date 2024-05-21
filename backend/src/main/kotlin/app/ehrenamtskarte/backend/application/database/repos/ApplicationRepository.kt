@@ -203,4 +203,16 @@ object ApplicationRepository {
             }
         }
     }
+
+    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean {
+        return transaction {
+            val application = ApplicationEntity.findById(applicationId)
+            if (application != null) {
+                application.cardCreated = cardCreated
+                true
+            } else {
+                false
+            }
+        }
+    }
 }
