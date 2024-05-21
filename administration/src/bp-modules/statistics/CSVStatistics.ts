@@ -11,8 +11,8 @@ export class CsvStatisticsError extends Error {
   }
 }
 
-export const getCsvFileName = (date: string, region?: Region): string =>
-  region ? `${region.prefix}${region.name}_CardStatistics_${date}.csv` : `CardStatistics_${date}.csv`
+export const getCsvFileName = (dateRange: string, region?: Region): string =>
+  region ? `${region.prefix}${region.name}_CardStatistics_${dateRange}.csv` : `CardStatistics_${dateRange}.csv`
 
 export const generateCsv = (statistics: CardStatisticsResultModel[], cardStatistics: CardStatistics): Blob => {
   if (!cardStatistics.enabled) {

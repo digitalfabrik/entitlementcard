@@ -53,13 +53,6 @@ const HomeController = () => {
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
       ) : null}
-      {role === Role.ProjectAdmin || (role === Role.RegionAdmin && cardStatistics.enabled) ? (
-        <>
-          <NavLink to={'/statistics'}>
-            <StyledButton icon='stacked-chart' text='Statistiken aufrufen' />
-          </NavLink>
-        </>
-      ) : null}
     </Container>
   )
 }
