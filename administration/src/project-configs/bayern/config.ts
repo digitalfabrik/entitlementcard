@@ -2,7 +2,6 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { isDevMode, isStagingMode } from '../../util/helper'
 import { ProjectConfig } from '../getProjectConfig'
 import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -73,8 +72,6 @@ const config: ProjectConfig = {
   },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
-  // TODO Wait for bavarian confirmation until we enable it on production
-  cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
   csvExport: {
     enabled: false,
   },

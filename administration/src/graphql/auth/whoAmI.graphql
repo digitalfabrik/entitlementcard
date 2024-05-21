@@ -8,6 +8,7 @@ query whoAmI($project: String!) {
       name
       prefix
       activatedForApplication
+      activatedForCardConfirmationMail
     }
   }
 }

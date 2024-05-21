@@ -9,8 +9,11 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForCardConfirmationMailException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.verification.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.verification.database.CodeType
 import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
@@ -229,15 +232,24 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Sends a confirmation mail to the user when the card creation was successful")
-    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
+    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, regionId: Int, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
-        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        val projectConfig =
-            context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
-        Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
+        transaction {
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            val region = user.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+            if (region != null && !region.activatedForCardConfirmationMail) {
+                throw RegionNotActivatedForCardConfirmationMailException()
+            }
+            if (!Authorizer.maySendMailsInRegion(user, regionId)) {
+                throw ForbiddenException()
+            }
+            val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+            val projectConfig =
+                context.backendConfiguration.projects.find { it.id == project }
+                    ?: throw ProjectNotFoundException(project)
+            Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
+        }
         return true
     }
 }
