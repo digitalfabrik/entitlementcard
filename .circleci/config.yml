@@ -51,8 +51,8 @@ commands:
             - run:
                 command: |
                     brew tap dart-lang/dart
-                    brew install dart
-                    brew link dart
+                    brew install dart@3.3.1
+                    brew link dart@3.3.1
                 name: Install Dart
             - save_cache:
                 key: brew-dart-4
