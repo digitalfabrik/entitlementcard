@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { ApplicationStatusBarItemType } from './ApplicationStatusBar'
-import { ApplicationStatus } from './constants'
+import { ApplicationStatusBarItemType } from './constants'
 
 const ItemContainer = styled.button<{ $active: boolean }>`
   display: flex;
@@ -23,26 +22,20 @@ const ItemContainer = styled.button<{ $active: boolean }>`
 type ApplicationStatusBarItemProps = {
   item: ApplicationStatusBarItemType
   setActiveBarItem: (item: ApplicationStatusBarItemType) => void
-  filterApplications: (status?: ApplicationStatus) => void
   active: boolean
   count: number
 }
 
 const ApplicationStatusBarItem = ({
   item,
-  filterApplications,
   setActiveBarItem,
   active,
   count,
 }: ApplicationStatusBarItemProps): ReactElement => {
-  const { title, status } = item
-  const onClickFilterButton = () => {
-    setActiveBarItem(item)
-    filterApplications(status)
-  }
+  const { title } = item
 
   return (
-    <ItemContainer onClick={() => onClickFilterButton()} id={title} $active={active}>
+    <ItemContainer onClick={() => setActiveBarItem(item)} id={title} $active={active}>
       {`${title}(${count})`}
     </ItemContainer>
   )

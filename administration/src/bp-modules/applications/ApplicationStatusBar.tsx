@@ -1,11 +1,11 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
 import { Application } from './ApplicationsOverview'
 import { getStatus } from './VerificationsView'
-import { ApplicationStatus } from './constants'
+import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
 import { getApplicationStatus } from './utils'
 
 const Container = styled.div`
@@ -35,37 +35,11 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-export type ApplicationStatusBarItemType = {
-  title: string
-  status?: ApplicationStatus
-}
-
-const barItems: ApplicationStatusBarItemType[] = [
-  {
-    title: 'Alle Anträge',
-    status: undefined,
-  },
-  {
-    title: 'Offen',
-    status: ApplicationStatus.ambiguous,
-  },
-  {
-    title: 'Akzeptiert',
-    status: ApplicationStatus.fullyVerified,
-  },
-  {
-    title: 'Abgelehnt',
-    status: ApplicationStatus.fullyRejected,
-  },
-  {
-    title: 'Zurückgezogen',
-    status: ApplicationStatus.withdrawed,
-  },
-]
-
 type ApplicationStatusBarProps = {
   applications: Application[]
-  filterApplications: (status?: ApplicationStatus) => void
+  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
+  activeBarItem: ApplicationStatusBarItemType
+  barItems: ApplicationStatusBarItemType[]
 }
 
 const getApplicationCount = (applications: Application[], status?: ApplicationStatus): number => {
@@ -78,10 +52,12 @@ const getApplicationCount = (applications: Application[], status?: ApplicationSt
   ).length
 }
 
-const ApplicationStatusBar = ({ applications, filterApplications }: ApplicationStatusBarProps): ReactElement => {
-  const defaultActiveBarItem = barItems[0]
-  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(defaultActiveBarItem)
-
+const ApplicationStatusBar = ({
+  applications,
+  activeBarItem,
+  barItems,
+  setActiveBarItem,
+}: ApplicationStatusBarProps): ReactElement => {
   return (
     <Container>
       <Title>Status</Title>
@@ -91,7 +67,6 @@ const ApplicationStatusBar = ({ applications, filterApplications }: ApplicationS
           <ApplicationStatusBarItem
             count={getApplicationCount(applications, item.status)}
             item={item}
-            filterApplications={filterApplications}
             setActiveBarItem={setActiveBarItem}
             active={item === activeBarItem}
           />

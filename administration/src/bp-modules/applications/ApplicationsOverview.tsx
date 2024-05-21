@@ -8,7 +8,7 @@ import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import { getStatus } from './VerificationsView'
-import { ApplicationStatus } from './constants'
+import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
 import { getApplicationStatus } from './utils'
 
@@ -54,41 +54,42 @@ const sortApplications = (applications: Application[]): Application[] =>
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
-  const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
-  const [filteredApplications, setFilteredApplications] = useState<Application[]>(sortedApplications)
-
-  const filterApplications = (status?: ApplicationStatus): void => {
-    if (status === undefined) {
-      setFilteredApplications(sortedApplications)
-      return
-    }
-    setFilteredApplications(
-      sortedApplications.filter(
-        application =>
-          getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) === status
-      )
-    )
-  }
+  const defaultActiveBarItem = barItems[0]
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(defaultActiveBarItem)
+  const sortedAndFilteredApplications: Application[] = useMemo(
+    () =>
+      sortApplications(updatedApplications).filter(application => {
+        if (activeBarItem.status === undefined) return application
+        return (
+          getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) ===
+          activeBarItem.status
+        )
+      }),
+    [updatedApplications, activeBarItem]
+  )
 
   return (
     <>
-      <ApplicationStatusBar applications={updatedApplications} filterApplications={filterApplications} />
-      {filteredApplications.length > 0 ? (
+      <ApplicationStatusBar
+        applications={updatedApplications}
+        activeBarItem={activeBarItem}
+        setActiveBarItem={setActiveBarItem}
+        barItems={barItems}
+      />
+      {sortedAndFilteredApplications.length > 0 ? (
         <>
           <ApplicationList>
-            {filteredApplications.map(application => (
+            {sortedAndFilteredApplications.map(application => (
               <ApplicationViewComponent
                 isSelectedForPrint={application.id === applicationIdForPrint}
                 printApplicationById={printApplicationById}
                 key={application.id}
                 application={application}
                 onDelete={() => {
-                  setFilteredApplications(filteredApplications.filter(a => a !== application))
-                  setUpdatedApplications(filteredApplications.filter(a => a !== application))
+                  setUpdatedApplications(updatedApplications.filter(a => a !== application))
                 }}
                 onChange={application => {
-                  setFilteredApplications(filteredApplications.map(a => (a.id === application.id ? application : a)))
-                  setUpdatedApplications(filteredApplications.map(a => (a.id === application.id ? application : a)))
+                  setUpdatedApplications(updatedApplications.map(a => (a.id === application.id ? application : a)))
                 }}
               />
             ))}
