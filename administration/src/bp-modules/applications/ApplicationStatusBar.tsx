@@ -15,6 +15,9 @@ const Container = styled.div`
   max-width: 90%;
   width: 1000px;
   align-self: center;
+  @media print {
+    display: none;
+  }
 `
 const BarItemContainer = styled.div`
   display: flex;
@@ -65,6 +68,7 @@ const ApplicationStatusBar = ({
       <BarItemContainer>
         {barItems.map(item => (
           <ApplicationStatusBarItem
+            key={item.title}
             count={getApplicationCount(applications, item.status)}
             item={item}
             setActiveBarItem={setActiveBarItem}

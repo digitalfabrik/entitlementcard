@@ -42,7 +42,7 @@ export class ApplicationViewComponent extends React.Component<React.ComponentPro
 const sortByStatus = (a: number, b: number): number => a - b
 const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
 
-// Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date asc
+// Applications will be sorted by status f.e. fullyVerified/fullyRejected/withdrawed/ambiguous and within this status by creation date asc
 const sortApplications = (applications: Application[]): Application[] =>
   applications
     .map(application => ({
@@ -54,18 +54,18 @@ const sortApplications = (applications: Application[]): Application[] =>
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
-  const defaultActiveBarItem = barItems[0]
-  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(defaultActiveBarItem)
-  const sortedAndFilteredApplications: Application[] = useMemo(
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
+  const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
+  const filteredApplications: Application[] = useMemo(
     () =>
-      sortApplications(updatedApplications).filter(application => {
+      sortedApplications.filter(application => {
         if (activeBarItem.status === undefined) return application
         return (
           getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) ===
           activeBarItem.status
         )
       }),
-    [updatedApplications, activeBarItem]
+    [activeBarItem, sortedApplications]
   )
 
   return (
@@ -76,21 +76,19 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
         setActiveBarItem={setActiveBarItem}
         barItems={barItems}
       />
-      {sortedAndFilteredApplications.length > 0 ? (
+      {filteredApplications.length > 0 ? (
         <>
           <ApplicationList>
-            {sortedAndFilteredApplications.map(application => (
+            {filteredApplications.map(application => (
               <ApplicationViewComponent
                 isSelectedForPrint={application.id === applicationIdForPrint}
                 printApplicationById={printApplicationById}
                 key={application.id}
                 application={application}
-                onDelete={() => {
-                  setUpdatedApplications(updatedApplications.filter(a => a !== application))
-                }}
-                onChange={application => {
-                  setUpdatedApplications(updatedApplications.map(a => (a.id === application.id ? application : a)))
-                }}
+                onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
+                onChange={application =>
+                  setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
+                }
               />
             ))}
           </ApplicationList>

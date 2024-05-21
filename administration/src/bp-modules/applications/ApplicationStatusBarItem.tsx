@@ -36,7 +36,7 @@ const ApplicationStatusBarItem = ({
 
   return (
     <ItemContainer onClick={() => setActiveBarItem(item)} id={title} $active={active}>
-      {`${title}(${count})`}
+      {title}(<span data-testid={`status-${title}-count`}>{count}</span>)
     </ItemContainer>
   )
 }
