@@ -1,0 +1,31 @@
+docker:
+  - image: cimg/base:2022.09
+parameters:
+  production:
+    description: Whether builds are delivered to production or beta.
+    type: boolean
+steps:
+  - checkout:
+      path: ~/project
+  - run:
+      name: Install Curl, node and npm
+      command: |
+        sudo apt update
+        sudo apt install -y curl nodejs npm
+  - install_app_toolbelt
+  - prepare_workspace
+  - when:
+      condition: << parameters.production >>
+      steps:
+        - run:
+            name: Install packages via webhook
+            command: |
+              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+  - unless:
+      condition: << parameters.production >>
+      steps:
+        - run:
+            name: Install packages via webhook
+            command: |
+              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+  - notify

@@ -32,8 +32,8 @@ jobs:
   - pack_meta:
       requires:
         - bump_version
-  - deliver_to_server:
-      name: deliver_administration_production
+  - upload_packages_to_server:
+      name: upload_administration_packages_to_server_production
       production: true
       bundle: administration
       context:
@@ -43,8 +43,8 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
-  - deliver_to_server:
-      name: deliver_backend_production
+  - upload_packages_to_server:
+      name: upload_backend_packages_to_server_production
       production: true
       bundle: backend
       context:
@@ -54,4 +54,12 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
+  - install_packages_to_server:
+      name: install_packages_to_server_production
+      production: true
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - upload_administration_packages_to_server_staging
+        - upload_backend_packages_to_server_staging
 
