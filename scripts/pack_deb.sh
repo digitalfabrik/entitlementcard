@@ -62,6 +62,14 @@ if [[ -n "$tarfile" ]]; then
     echo "Copying $tarfile …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/backend"
     tar -xf "$tarfile" -C "${debworkdir}/opt/ehrenamtskarte"
+
+    # create postinst for db migration to ensure that after every package upgrade a database migration runs
+    postinstfile="${debworkdir}/DEBIAN/postinst"
+    echo "Creating postinst file in $postinstfile ..."
+    touch "$postinstfile"
+    chmod 0755 "$postinstfile"
+    echo "useradd -r backend" >> "$postinstfile"
+    echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
 fi
 if [[ -n "$servicefile" ]]; then
     echo "Copying $servicefile …"
@@ -73,13 +81,6 @@ if [[ -n "$adminfolder" ]]; then
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
     cp -r "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
 
-    # create postinst for db migration
-    postinstfile="${debworkdir}/DEBIAN/postinst"
-    echo "Creating postinst file in $postinstfile ..."
-    touch "$postinstfile"
-    chmod 0755 "$postinstfile"
-    echo "useradd -r backend" >> "$postinstfile"
-    echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
 fi
 if [[ -n "$martinfolder" ]]; then
     echo "Copying $martinfolder …"
