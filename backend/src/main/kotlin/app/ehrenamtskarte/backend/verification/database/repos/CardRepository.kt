@@ -105,8 +105,8 @@ object CardRepository {
                     Regions.id eq regionId
                 }
             )
-            .orderBy(Regions.name, SortOrder.DESC)
-            .orderBy(Regions.prefix, SortOrder.DESC)
+            .orderBy(Regions.name, SortOrder.ASC)
+            .orderBy(Regions.prefix, SortOrder.ASC)
         return query
             .map {
                 CardStatisticsResultModel(

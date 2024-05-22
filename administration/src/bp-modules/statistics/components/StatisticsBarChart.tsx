@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { statisticKeyLabels } from '../constants'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
 const BarContainer = styled.div<{ height: number }>`
@@ -15,10 +16,6 @@ type StatisticsBarChartProps = {
   statistics: CardStatisticsResultModel[]
 }
 
-export const statisticKeyLabels = new Map<string, string>([
-  ['cardsCreated', 'Erstellte Karten'],
-  ['cardsActivated', 'Davon aktiviert'],
-])
 const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const barHeight = 50
@@ -41,7 +38,8 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
   return (
     <BarContainer height={statistics.length * barHeight + axisHeight}>
       <ResponsiveBar
-        data={statistics}
+        /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
+        data={[...statistics].reverse()}
         tooltip={StatisticsBarTooltip}
         keys={[statisticKeys[0], statisticKeys[1]]}
         indexBy='region'
