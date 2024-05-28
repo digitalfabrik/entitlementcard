@@ -29,6 +29,7 @@ describe('ImportCardsInput', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const renderAndSubmitCardsInput = async (

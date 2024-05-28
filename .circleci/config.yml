@@ -51,8 +51,8 @@ commands:
             - run:
                 command: |
                     brew tap dart-lang/dart
-                    brew install dart
-                    brew link dart
+                    brew install dart@3.3.1
+                    brew link dart@3.3.1
                 name: Install Dart
             - save_cache:
                 key: brew-dart-4
@@ -822,6 +822,12 @@ jobs:
             - run:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload android apks to github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload administration debian package to github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload backend debian packages to github release
             - notify:
                 allow-all-branches: false
                 channel: releases

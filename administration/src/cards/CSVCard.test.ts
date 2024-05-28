@@ -10,6 +10,7 @@ describe('CSVCard', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const cardConfig = {

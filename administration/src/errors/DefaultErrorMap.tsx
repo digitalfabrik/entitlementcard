@@ -103,6 +103,11 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title:
           'Für diese Region kann der zentrale Beantragungsprozess noch nicht genutzt werden, kontaktieren Sie bitte Ihre zuständige Behörde direkt.',
       }
+    case GraphQlExceptionCode.RegionNotActivatedCardConfirmationMail:
+      return {
+        title:
+          'Für diese Region ist das Senden von Bestätigungsmails gesperrt. Dies kann in den regionsspezifischen Einstellungen geändert werden.',
+      }
   }
 }
 

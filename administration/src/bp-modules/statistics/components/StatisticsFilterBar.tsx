@@ -21,6 +21,8 @@ const InputContainer = styled.div`
 `
 type StatisticsFilterBarProps = {
   onApplyFilter: (dateStart: string, dateEnd: string) => void
+  isDataAvailable: boolean
+  onExportCsv: (dateStart: string, dateEnd: string) => void
 }
 
 const isValidDateString = (value: string): boolean => {
@@ -42,7 +44,11 @@ const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
   return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) <= 0
 }
 
-const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): ReactElement => {
+const StatisticsFilterBar = ({
+  onApplyFilter,
+  isDataAvailable,
+  onExportCsv,
+}: StatisticsFilterBarProps): ReactElement => {
   const [dateStart, setDateStart] = useState(defaultStartDate)
   const [dateEnd, setDateEnd] = useState(defaultEndDate)
 
@@ -95,8 +101,15 @@ const StatisticsFilterBar = ({ onApplyFilter }: StatisticsFilterBarProps): React
           />
         </Tooltip>
       </InputContainer>
-      {/* TODO 1409 Statistics created cards csv export }
-      {/*<Button icon='floppy-disk' text='CSV Export' intent='primary' onClick={undefined} disabled={false} />*/}
+      <Tooltip disabled={isDataAvailable} content={'Es sind keine Daten zum Export verfügbar.'}>
+        <Button
+          icon='floppy-disk'
+          text='CSV Export'
+          intent='primary'
+          onClick={() => onExportCsv(dateStart, dateEnd)}
+          disabled={!isDataAvailable}
+        />
+      </Tooltip>
     </StickyBottomBar>
   )
 }
