@@ -9,12 +9,20 @@ const Description = styled.ul`
   margin: 4px 0;
 `
 
+const Headline = styled(H4)`
+  text-align: center;
+`
+
+const PopoverContent = styled.div`
+  padding: 10px;
+`
+
 const ApplicationStatusHelpButton = () => {
   return (
     <Popover
       content={
-        <div style={{ padding: '10px' }}>
-          <H4 style={{ textAlign: 'center' }}>Welcher Status hat welche Bedeutung?</H4>
+        <PopoverContent>
+          <Headline>Welcher Status hat welche Bedeutung?</Headline>
           <Description>
             <li>
               <b>Offen:</b>
@@ -49,7 +57,7 @@ const ApplicationStatusHelpButton = () => {
               </Description>
             </li>
           </Description>
-        </div>
+        </PopoverContent>
       }>
       <HelpButton icon='help' minimal />
     </Popover>
