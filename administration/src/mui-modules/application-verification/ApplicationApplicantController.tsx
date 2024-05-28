@@ -13,7 +13,7 @@ const CenteredMessage = styled(Alert)`
 `
 
 const ApplicationApplicantController = (props: { providedKey: string }) => {
-  const [withdrawed, setWithdrawed] = useState<boolean>(false)
+  const [isWithdrawed, setIsWithdrawed] = useState<boolean>(false)
   const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
   })
@@ -22,12 +22,12 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
   const application = applicationQueryHandler.data.application
 
   if (application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
-  if (withdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
+  if (isWithdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
   else {
     return (
       <ApplicationApplicantView
         application={application}
-        gotWithdrawed={() => setWithdrawed(true)}
+        gotWithdrawed={() => setIsWithdrawed(true)}
         providedKey={props.providedKey}
       />
     )

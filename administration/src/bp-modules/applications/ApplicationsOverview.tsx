@@ -6,8 +6,11 @@ import styled from 'styled-components'
 import { GetApplicationsQuery } from '../../generated/graphql'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
-import { VerificationStatus, getStatus } from './VerificationsView'
+import ApplicationStatusBar from './ApplicationStatusBar'
+import { getStatus } from './VerificationsView'
+import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
+import { getApplicationStatus } from './utils'
 
 const ApplicationListCard = styled.li`
   display: flex;
@@ -36,40 +39,47 @@ export class ApplicationViewComponent extends React.Component<React.ComponentPro
   }
 }
 
-enum ApplicationStatus {
-  fullyVerified,
-  fullyRejected,
-  ambiguous,
-}
-
 const sortByStatus = (a: number, b: number): number => a - b
 const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
-const getApplicationStatus = (status: number[]): ApplicationStatus => {
-  if (status.every(val => val === VerificationStatus.Verified)) return ApplicationStatus.fullyVerified
-  if (status.every(val => val === VerificationStatus.Rejected)) return ApplicationStatus.fullyRejected
-  return ApplicationStatus.ambiguous
-}
 
-// Applications will be sorted by unique status which means fully verified/rejected and within this status by creation date asc
+// Applications will be sorted by status f.e. fullyVerified/fullyRejected/withdrawed/ambiguous and within this status by creation date asc
 const sortApplications = (applications: Application[]): Application[] =>
   applications
     .map(application => ({
       ...application,
-      status: getApplicationStatus(application.verifications.map(getStatus)),
+      status: getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate),
     }))
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
-  const sortedApplications = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
+  const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
+  const filteredApplications: Application[] = useMemo(
+    () =>
+      sortedApplications.filter(application => {
+        if (activeBarItem.status === undefined) return application
+        return (
+          getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) ===
+          activeBarItem.status
+        )
+      }),
+    [activeBarItem, sortedApplications]
+  )
 
   return (
     <>
-      {updatedApplications.length > 0 ? (
+      <ApplicationStatusBar
+        applications={updatedApplications}
+        activeBarItem={activeBarItem}
+        setActiveBarItem={setActiveBarItem}
+        barItems={barItems}
+      />
+      {filteredApplications.length > 0 ? (
         <>
           <ApplicationList>
-            {sortedApplications.map(application => (
+            {filteredApplications.map(application => (
               <ApplicationViewComponent
                 isSelectedForPrint={application.id === applicationIdForPrint}
                 printApplicationById={printApplicationById}
