@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Adds cardCreated column to application table
  */
 @Suppress("ClassName")
-internal class V0011_AddApplicationCardCreated : Migration() {
+internal class V0012_AddApplicationCardCreated : Migration() {
     override val migrate: Statement = {
         exec(
             """

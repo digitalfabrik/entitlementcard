@@ -12,6 +12,7 @@ object MigrationsRegistry {
         V0008_IncreaseAdministratorEmailLength(),
         V0009_HashPasswordResetKey(),
         V0010_ApplicationNote(),
-        V0011_AddApplicationCardCreated()
+        V0011_AddRegionCardConfirmationMailActivation(),
+        V0012_AddApplicationCardCreated()
     )
 }

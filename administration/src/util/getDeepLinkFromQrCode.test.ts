@@ -25,6 +25,7 @@ describe('DeepLink generation', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const cardConfigBayern = {

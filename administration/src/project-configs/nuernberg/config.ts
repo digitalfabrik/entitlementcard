@@ -37,7 +37,6 @@ const config: ProjectConfig = {
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
-  cardCreationConfirmationMailEnabled: false,
   csvExport: {
     enabled: true,
     csvHeader: [

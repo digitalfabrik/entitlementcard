@@ -66,7 +66,7 @@ export type StatisticsTheme = {
   primaryColorLight: string
 }
 
-type CardStatistics =
+export type CardStatistics =
   | {
       enabled: true
       theme: StatisticsTheme
@@ -91,7 +91,6 @@ export interface ProjectConfig {
     activationText: (applicationName: string, downloadLink: string) => ReactElement
     downloadLink: string
   }
-  cardCreationConfirmationMailEnabled: boolean
   csvExport: CsvExport
   cardStatistics: CardStatistics
 }
