@@ -187,6 +187,8 @@
   },
   "favorites": {
     "title": "Favorites",
-    "noFavoritesFound": "You have not added any acceptance points to your favorites yet."
+    "noFavoritesFound": "You have not added any acceptance points to your favorites yet.",
+    "favoriteHasBeenAdded": "The acceptance point has been added to the favorites.",
+    "favoriteHasBeenRemoved": "The acceptance point has been removed from the favorites."
   }
 }

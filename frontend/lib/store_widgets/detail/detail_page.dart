@@ -49,12 +49,13 @@ class DetailPage extends StatelessWidget {
             children: [
               DetailAppBar(matchingStore),
               Expanded(
-                child: DetailContent(
+                  child: Scaffold(
+                body: DetailContent(
                   matchingStore,
                   showOnMap: showOnMap,
                   accentColor: accentColor,
                 ),
-              )
+              )),
             ],
           );
         } else {
