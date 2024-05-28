@@ -109,8 +109,14 @@ class DetailAppBar extends StatelessWidget {
             icon: favoritesProvider.favoriteStoreIds.contains(matchingStore.id)
                 ? Icon(Icons.favorite)
                 : Icon(Icons.favorite_border_outlined),
-            onPressed: () {
-              favoritesProvider.toggleFavorites(matchingStore.id);
+            onPressed: () async {
+              bool flagOn = await favoritesProvider.toggleFavorites(matchingStore.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: backgroundColor,
+                  content: Text(flagOn ? t.favorites.favoriteHasBeenAdded : t.favorites.favoriteHasBeenRemoved),
+                ),
+              );
             },
             color: foregroundColor),
       ],
