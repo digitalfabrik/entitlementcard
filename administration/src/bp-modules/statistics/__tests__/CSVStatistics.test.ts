@@ -16,6 +16,7 @@ describe('CSVStatistics', () => {
     name: 'Augsburg',
     prefix: 'Stadt',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
   const dateString = '2023-02-01_2024-03-01'
 
