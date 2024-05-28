@@ -25,25 +25,17 @@ const ApplicationStatusHelpButton = () => {
           <Headline>Welcher Status hat welche Bedeutung?</Headline>
           <Description>
             <li>
-              <b>Offen:</b>
-              <Description>
-                Alle Anträge, die weder von allen Organisation abgelehnt noch akzeptiert wurden.
-                <br />
-                Der Antrag kann i.d.R. nicht bearbeitet werden.
-              </Description>
-            </li>
-            <li>
               <b>Akzeptiert:</b>
               <Description>
-                Alle Organisationen haben den Antrag verifiziert.
+                Der Antrag wurden von allen Organisationen geprüft und genehmigt.
                 <br />
-                Der Antrag kann bearbeitet werden.
+                Die Karte kann erstellt werden.
               </Description>
             </li>
             <li>
               <b>Abgelehnt:</b>
               <Description>
-                Alle Organisationen haben den Antrag abgelehnt.
+                Der Antrag wurde von allen Organisationen abgelehnt.
                 <br />
                 Der Antrag kann gelöscht werden.
               </Description>
@@ -54,6 +46,14 @@ const ApplicationStatusHelpButton = () => {
                 Der Antragssteller hat den Antrag zurückgezogen.
                 <br />
                 Der Antrag kann gelöscht werden.
+              </Description>
+            </li>
+            <li>
+              <b>Offen:</b>
+              <Description>
+                Der Antrag wurde noch nicht von allen Organisationen geprüft.
+                <br />
+                Die Karte sollte noch nicht erstellt werden.
               </Description>
             </li>
           </Description>
