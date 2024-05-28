@@ -48,7 +48,7 @@ const useCardGenerator = (region: Region) => {
   })
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const [state, setState] = useState(CardActivationState.input)
-  const [applicationId, setApplicationId] = useState<number>()
+  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
@@ -117,7 +117,7 @@ const useCardGenerator = (region: Region) => {
     async (
       generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob> | Blob,
       filename: string,
-      applicationId?: number
+      applicationIdToMarkAsProcessed?: number
     ) => {
       let codes: CreateCardsResult[] | undefined
       setState(CardActivationState.loading)
@@ -129,7 +129,7 @@ const useCardGenerator = (region: Region) => {
           projectConfig.projectId,
           cardInfos,
           projectConfig.staticQrCodesEnabled,
-          applicationId
+          applicationIdToMarkAsProcessed
         )
 
         const dataUri = await generateFunction(codes, cardBlueprints)
@@ -151,24 +151,24 @@ const useCardGenerator = (region: Region) => {
   )
 
   const generateCardsPdf = useCallback(
-    async (applicationId?: number) => {
+    async (applicationIdToMarkAsProcessed?: number) => {
       generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
           generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
         'berechtigungskarten.pdf',
-        applicationId
+        applicationIdToMarkAsProcessed
       )
     },
     [projectConfig, region, generateCards]
   )
 
   const generateCardsCsv = useCallback(
-    async (applicationId?: number) => {
+    async (applicationIdToMarkAsProcessed?: number) => {
       generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
           generateCsv(codes, cardBlueprints, projectConfig.csvExport),
         getCSVFilename(cardBlueprints),
-        applicationId
+        applicationIdToMarkAsProcessed
       )
     },
     [cardBlueprints, generateCards]
@@ -181,8 +181,8 @@ const useCardGenerator = (region: Region) => {
     generateCardsCsv,
     setCardBlueprints,
     cardBlueprints,
-    setApplicationId,
-    applicationId,
+    setApplicationIdToMarkAsProcessed,
+    applicationIdToMarkAsProcessed,
   }
 }
 

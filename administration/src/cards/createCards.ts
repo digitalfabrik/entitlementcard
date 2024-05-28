@@ -24,12 +24,12 @@ async function createCards(
   projectId: string,
   cardInfos: CardInfo[],
   generateStaticCodes: boolean,
-  applicationId?: number
+  applicationIdToMarkAsProcessed?: number
 ): Promise<CreateCardsResult[]> {
   const encodedCardInfos = cardInfos.map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
   const result = await client.mutate<CreateCardsMutation, CreateCardsMutationVariables>({
     mutation: CreateCardsDocument,
-    variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationId },
+    variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
   })
 
   if (result.errors) {

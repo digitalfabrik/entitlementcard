@@ -118,7 +118,7 @@ class CardMutationService {
         project: String,
         encodedCardInfos: List<String>,
         generateStaticCodes: Boolean,
-        applicationId: Int? = null
+        applicationIdToMarkAsProcessed: Int? = null
     ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig =
@@ -154,8 +154,8 @@ class CardMutationService {
             )
         }
 
-        if (applicationId != null) {
-            ApplicationRepository.updateCardCreated(applicationId, true)
+        if (applicationIdToMarkAsProcessed != null) {
+            ApplicationRepository.updateCardCreated(applicationIdToMarkAsProcessed, true)
         }
         return activationCodes
     }

@@ -2,13 +2,13 @@ mutation createCards(
   $project: String!
   $encodedCardInfos: [String!]!
   $generateStaticCodes: Boolean!
-  $applicationId: Int
+  $applicationIdToMarkAsProcessed: Int
 ) {
   cards: createCardsByCardInfos(
     project: $project
     encodedCardInfos: $encodedCardInfos
     generateStaticCodes: $generateStaticCodes
-    applicationId: $applicationId
+    applicationIdToMarkAsProcessed: $applicationIdToMarkAsProcessed
   ) {
     dynamicActivationCode {
       cardInfoHashBase64

@@ -34,8 +34,8 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     generateCardsCsv,
     setCardBlueprints,
     cardBlueprints,
-    applicationId,
-    setApplicationId,
+    applicationIdToMarkAsProcessed,
+    setApplicationIdToMarkAsProcessed,
   } = useCardGenerator(region)
 
   useBlockNavigation({
@@ -60,13 +60,13 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
         region={region}
         cardBlueprints={cardBlueprints}
         setCardBlueprints={setCardBlueprints}
-        setApplicationId={setApplicationId}
+        setApplicationIdToMarkAsProcessed={setApplicationIdToMarkAsProcessed}
       />
       <CreateCardsButtonBar
         cardBlueprints={cardBlueprints}
         goBack={() => navigate('/cards')}
-        generateCardsPdf={() => generateCardsPdf(applicationId)}
-        generateCardsCsv={() => generateCardsCsv(applicationId)}
+        generateCardsPdf={() => generateCardsPdf(applicationIdToMarkAsProcessed)}
+        generateCardsCsv={() => generateCardsCsv(applicationIdToMarkAsProcessed)}
       />
     </>
   )

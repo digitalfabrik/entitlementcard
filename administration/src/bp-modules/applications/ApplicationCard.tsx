@@ -133,7 +133,7 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationId=${id}`,
+    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
     [config.applicationFeature, jsonField, id]
   )
 
