@@ -1033,7 +1033,6 @@ jobs:
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
-            - notify
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
@@ -1243,6 +1242,7 @@ workflows:
                     - deliver_android_nuernberg
                     - deliver_ios_bayern
                     - deliver_ios_nuernberg
+                    - install_packages_to_server_staging
             - check_administration
             - build_administration:
                 requires:

@@ -89,6 +89,7 @@ jobs:
         - deliver_android_nuernberg
         - deliver_ios_bayern
         - deliver_ios_nuernberg
+        - install_packages_to_server_staging
   - check_administration
   - build_administration:
       requires:

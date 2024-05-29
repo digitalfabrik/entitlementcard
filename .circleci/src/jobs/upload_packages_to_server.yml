@@ -48,4 +48,5 @@ steps:
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-  - notify
+# https://github.com/digitalfabrik/entitlementcard/issues/1467
+#  - notify
