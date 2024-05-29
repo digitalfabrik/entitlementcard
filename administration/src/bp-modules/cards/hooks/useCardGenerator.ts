@@ -49,6 +49,7 @@ const useCardGenerator = (region: Region) => {
   })
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const [state, setState] = useState(CardActivationState.input)
+  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
@@ -117,14 +118,21 @@ const useCardGenerator = (region: Region) => {
   const generateCards = useCallback(
     async (
       generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob> | Blob,
-      filename: string
+      filename: string,
+      applicationIdToMarkAsProcessed?: number
     ) => {
       let codes: CreateCardsResult[] | undefined
       setState(CardActivationState.loading)
 
       try {
         const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
-        codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
+        codes = await createCards(
+          client,
+          projectConfig.projectId,
+          cardInfos,
+          projectConfig.staticQrCodesEnabled,
+          applicationIdToMarkAsProcessed
+        )
 
         const dataUri = await generateFunction(codes, cardBlueprints)
 
@@ -141,26 +149,43 @@ const useCardGenerator = (region: Region) => {
         setCardBlueprints([])
       }
     },
-    [cardBlueprints, client, projectConfig, handleError]
+    [cardBlueprints, client, projectConfig, handleError, sendCardConfirmationMails, projectConfig.csvExport]
   )
 
-  const generateCardsPdf = useCallback(async () => {
-    generateCards(
-      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-        generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
-      'berechtigungskarten.pdf'
-    )
-  }, [projectConfig, region, generateCards])
+  const generateCardsPdf = useCallback(
+    async (applicationIdToMarkAsProcessed?: number) => {
+      generateCards(
+        (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+          generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
+        'berechtigungskarten.pdf',
+        applicationIdToMarkAsProcessed
+      )
+    },
+    [projectConfig, region, generateCards]
+  )
 
-  const generateCardsCsv = useCallback(async () => {
-    generateCards(
-      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-        generateCsv(codes, cardBlueprints, projectConfig.csvExport),
-      getCSVFilename(cardBlueprints)
-    )
-  }, [cardBlueprints, generateCards])
+  const generateCardsCsv = useCallback(
+    async (applicationIdToMarkAsProcessed?: number) => {
+      generateCards(
+        (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+          generateCsv(codes, cardBlueprints, projectConfig.csvExport),
+        getCSVFilename(cardBlueprints),
+        applicationIdToMarkAsProcessed
+      )
+    },
+    [cardBlueprints, generateCards]
+  )
 
-  return { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints }
+  return {
+    state,
+    setState,
+    generateCardsPdf,
+    generateCardsCsv,
+    setCardBlueprints,
+    cardBlueprints,
+    setApplicationIdToMarkAsProcessed,
+    applicationIdToMarkAsProcessed,
+  }
 }
 
 export default useCardGenerator

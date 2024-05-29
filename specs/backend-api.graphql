@@ -63,6 +63,7 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
+  cardCreated: Boolean
   createdDate: String!
   id: Int!
   jsonValue: String!
@@ -126,7 +127,7 @@ type Mutation {
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"

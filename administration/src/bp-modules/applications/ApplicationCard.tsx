@@ -110,7 +110,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
+  const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
@@ -133,8 +133,8 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField),
-    [config.applicationFeature, jsonField]
+    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
+    [config.applicationFeature, jsonField, id]
   )
 
   const personalData = useMemo(
@@ -213,7 +213,7 @@ const ApplicationCard = ({
               href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
               icon='id-number'
               intent='primary'>
-              Karte erstellen
+              {cardCreated ? 'Karte erneut erstellen' : 'Karte erstellen'}
             </PrintAwareAnchorButton>
           </Tooltip>
           <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>

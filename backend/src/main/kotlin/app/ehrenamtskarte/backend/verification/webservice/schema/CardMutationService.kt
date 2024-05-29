@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
 import Card
+import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -119,7 +120,8 @@ class CardMutationService {
         dfe: DataFetchingEnvironment,
         project: String,
         encodedCardInfos: List<String>,
-        generateStaticCodes: Boolean
+        generateStaticCodes: Boolean,
+        applicationIdToMarkAsProcessed: Int? = null
     ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig =
@@ -153,6 +155,10 @@ class CardMutationService {
                 numberOfDynamicCards = encodedCardInfos.size,
                 numberOfStaticCards = if (generateStaticCodes) encodedCardInfos.size else 0
             )
+        }
+
+        if (applicationIdToMarkAsProcessed != null) {
+            ApplicationRepository.updateCardCreated(applicationIdToMarkAsProcessed, true)
         }
         return activationCodes
     }
