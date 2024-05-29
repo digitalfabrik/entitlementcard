@@ -805,10 +805,6 @@ jobs:
             - run:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload backend debian packages to github release
-            - notify:
-                allow-all-branches: false
-                channel: releases
-                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
             - image: debian:12
@@ -820,7 +816,6 @@ jobs:
             - prepare_workspace
             - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
-            - install_app_toolbelt
             - run: |
                 mkdir -p ~/attached_workspace/debs/administration
                 mv *.deb ~/attached_workspace/debs/administration
