@@ -659,7 +659,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
-            - run: apt update -y && apt install -y nodejs npm curl
+            - run: apt update -y && apt install -y nodejs npm curl sudo
             - install_app_toolbelt
             - run:
                 command: apt install ca-certificates-java -y
