@@ -43,8 +43,8 @@ const ApplicationApplicantView = ({
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
-      if (withdrawed) gotWithdrawed()
+    onCompleted: ({ isWithdrawed }: { isWithdrawed: boolean }) => {
+      if (isWithdrawed) gotWithdrawed()
       else {
         console.error('Withdraw operation returned false.')
         enqueueSnackbar('Der Antrag wurde bereits zurückgezogen.', { variant: 'error' })
