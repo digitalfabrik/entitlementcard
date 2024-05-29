@@ -1212,7 +1212,7 @@ workflows:
                 buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_bayern_ios
+                name: deliver_ios_bayern
                 production_delivery: false
                 requires:
                     - build_ios_bayern
@@ -1230,7 +1230,7 @@ workflows:
                 buildConfig: nuernberg
                 context:
                     - tuerantuer-apple
-                name: deliver_nuernberg_ios
+                name: deliver_ios_nuernberg
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg

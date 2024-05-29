@@ -55,7 +55,7 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_bayern_ios
+      name: deliver_ios_bayern
       buildConfig: bayern
       context:
         - tuerantuer-apple
@@ -73,7 +73,7 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_nuernberg_ios
+      name: deliver_ios_nuernberg
       buildConfig: nuernberg
       context:
         - tuerantuer-apple
