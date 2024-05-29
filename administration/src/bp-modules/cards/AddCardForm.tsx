@@ -57,7 +57,6 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
         <FormGroup label='Ablaufdatum'>
           <TextField
             fullWidth
-            disabled={cardBlueprint.hasInfiniteLifetime()}
             type='date'
             required
             size='small'
