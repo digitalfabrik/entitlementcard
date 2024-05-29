@@ -4,7 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 abstract class MapController {
   Future<void> bringCameraToLocation(LatLng location, {double zoomLevel});
 
-  Future<void> setSymbol(LatLng location, int categoryId);
+  Future<void> setSymbol(LatLng location, int symbolId);
 
   Future<void> removeSymbol();
 

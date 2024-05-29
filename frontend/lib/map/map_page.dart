@@ -8,8 +8,9 @@ class PhysicalStoreFeatureData {
   final int? id;
   final LatLng? coordinates;
   final int? categoryId;
+  final bool? isFavorite;
 
-  PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId);
+  PhysicalStoreFeatureData(this.id, this.coordinates, this.categoryId, this.isFavorite);
 }
 
 typedef OnMapCreatedCallback = void Function(MapPageController controller);
@@ -63,9 +64,14 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
     final coordinates = data.coordinates;
     if (coordinates != null) {
-      final categoryId = data.categoryId;
-      if (categoryId != null) {
-        await controller.setSymbol(coordinates, categoryId);
+      final isFavorite = data.isFavorite;
+      if (isFavorite != null && isFavorite) {
+        await controller.setSymbol(coordinates, 9); //TODO favorite icon id
+      } else {
+        final categoryId = data.categoryId;
+        if (categoryId != null) {
+          await controller.setSymbol(coordinates, categoryId);
+        }
       }
       if (selectedAcceptingStoreInMap) {
         await controller.bringCameraToLocation(coordinates);
@@ -99,8 +105,11 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       _getIntOrNull(properties['id']),
       _getLatLngOrNull(geometry['coordinates']),
       _getIntOrNull(properties['categoryId']),
+      _getBoolOrNull(properties['isFavorite'])
     );
   }
+
+  bool? _getBoolOrNull(dynamic maybeBool) => (maybeBool is bool) ? maybeBool : null;
 
   int? _getIntOrNull(dynamic maybeInt) => (maybeInt is int) ? maybeInt : null;
 

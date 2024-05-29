@@ -148,10 +148,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   }
 
   @override
-  Future<void> setSymbol(LatLng location, int categoryId) async {
+  Future<void> setSymbol(LatLng location, int symbolId) async {
     removeSymbol();
     _symbol = await _controller
-        ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+        ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: symbolId.toString()));
   }
 
   Future<void> _onMapClick(math.Point<double> point, clickCoordinates) async {

@@ -143,6 +143,7 @@ class DetailContent extends StatelessWidget {
         acceptingStore.id,
         LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),
         acceptingStore.store.category.id,
+        true //TODO isFavorite?
       ),
     );
   }
