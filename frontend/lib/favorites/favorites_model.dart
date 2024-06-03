@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 import 'package:ehrenamtskarte/favorites/favorites_store.dart';
@@ -10,9 +12,18 @@ class FavoritesModel extends ChangeNotifier {
     if (_isInitialized) {
       return;
     }
-    _favoriteStoreIds = await FavoritesStore().getFavorites();
-    _isInitialized = true;
-    notifyListeners();
+    try {
+      _favoriteStoreIds = await FavoritesStore().getFavorites();
+      _isInitialized = true;
+    } catch (error) {
+      log('Failed to load favorites from secure storage', error: error);
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  bool get isInitialized {
+    return _isInitialized;
   }
 
   List<int> get favoriteStoreIds {

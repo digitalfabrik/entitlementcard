@@ -189,6 +189,8 @@
     "title": "Favoriten",
     "noFavoritesFound": "Sie haben noch keine Akzeptanzstellen zu Ihren Favoriten hinzugefügt.",
     "favoriteHasBeenAdded": "Die Akzeptanzstelle wurde zu den Favoriten hinzugefügt.",
-    "favoriteHasBeenRemoved": "Die Akzeptanzstelle wurde aus den Favoriten entfernt."
+    "favoriteHasBeenRemoved": "Die Akzeptanzstelle wurde aus den Favoriten entfernt.",
+    "loadingFailed": "Fehler beim Laden der Favoriten.",
+    "updateFailed": "Fehler bei der Aktualisierung der Favoriten."
   }
 }

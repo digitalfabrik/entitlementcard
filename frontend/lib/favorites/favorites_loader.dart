@@ -49,18 +49,30 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
+  @override
+  void didUpdateWidget(FavoritesLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _pagingController.refresh();
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     final projectId = Configuration.of(context).projectId;
-    final favorites = _favoritesModel.favoriteStoreIds;
-
-    if (favorites.isEmpty || pageKey >= favorites.length) {
-      _pagingController.appendLastPage(List<AcceptingStoreById$Query$PhysicalStore>.empty());
-      return;
-    }
-
-    final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
 
     try {
+      final favoritesModel = _favoritesModel;
+      if (!favoritesModel.isInitialized) {
+        throw Exception('Failed to load favorites');
+      }
+
+      final favorites = favoritesModel.favoriteStoreIds;
+
+      if (favorites.isEmpty || pageKey >= favorites.length) {
+        _pagingController.appendLastPage(List<AcceptingStoreById$Query$PhysicalStore>.empty());
+        return;
+      }
+
+      final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
+
       final query = AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: fetchIds));
 
       final client = _client;
@@ -111,8 +123,8 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
         noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
         firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
         newPageErrorIndicatorBuilder: _buildErrorWithRetry,
-        newPageProgressIndicatorBuilder: _buildProgressIndicator,
         firstPageProgressIndicatorBuilder: _buildProgressIndicator,
+        newPageProgressIndicatorBuilder: _buildProgressIndicator,
       ),
       separatorBuilder: (context, index) => const Divider(height: 0),
     );
@@ -128,7 +140,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.warning, size: 60, color: Colors.orange),
-          Text(t.common.checkConnection),
+          Text(t.favorites.loadingFailed),
           OutlinedButton(
             onPressed: _pagingController.retryLastFailedRequest,
             child: Text(t.common.tryAgain),

@@ -174,7 +174,7 @@
     "title": "Search"
   },
   "store": {
-    "acceptingStore": "Acceptance points",
+    "acceptingStore": "Acceptance point",
     "acceptingStoreNotFound": "Acceptance point not found.",
     "address": "Address",
     "email": "E-Mail",
@@ -189,6 +189,8 @@
     "title": "Favorites",
     "noFavoritesFound": "You have not added any acceptance points to your favorites yet.",
     "favoriteHasBeenAdded": "The acceptance point has been added to the favorites.",
-    "favoriteHasBeenRemoved": "The acceptance point has been removed from the favorites."
+    "favoriteHasBeenRemoved": "The acceptance point has been removed from the favorites.",
+    "loadingFailed": "Failed to load favorites.",
+    "updateFailed": "Failed to update favorites."
   }
 }

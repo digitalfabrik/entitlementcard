@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
@@ -89,11 +91,12 @@ class DetailAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final favoritesProvider = Provider.of<FavoritesModel>(context, listen: true);
+    final favoritesProvider = Provider.of<FavoritesModel>(context);
 
     final title = matchingStore.store.name ?? t.store.acceptingStore;
     final categoryId = matchingStore.store.category.id;
     final category = categoryAssets(context)[categoryId];
+    final isFavorite = favoritesProvider.favoriteStoreIds.contains(matchingStore.id);
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
     final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
@@ -106,19 +109,11 @@ class DetailAppBar extends StatelessWidget {
       color: accentColor,
       actions: [
         IconButton(
-            icon: favoritesProvider.favoriteStoreIds.contains(matchingStore.id)
-                ? Icon(Icons.favorite)
-                : Icon(Icons.favorite_border_outlined),
+            color: foregroundColor,
+            icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
             onPressed: () async {
-              bool flagOn = await favoritesProvider.toggleFavorites(matchingStore.id);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: backgroundColor,
-                  content: Text(flagOn ? t.favorites.favoriteHasBeenAdded : t.favorites.favoriteHasBeenRemoved),
-                ),
-              );
-            },
-            color: foregroundColor),
+              await _toggleFavorites(favoritesProvider, context, backgroundColor);
+            }),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(bottomSize),
@@ -137,5 +132,25 @@ class DetailAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _toggleFavorites(FavoritesModel model, BuildContext context, Color backgroundColor) async {
+    try {
+      final isFavorite = await model.toggleFavorites(matchingStore.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: backgroundColor,
+          content: Text(isFavorite ? t.favorites.favoriteHasBeenAdded : t.favorites.favoriteHasBeenRemoved),
+        ),
+      );
+    } catch (error) {
+      log('Failed to update favorites', error: error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(t.favorites.updateFailed),
+        ),
+      );
+    }
   }
 }
