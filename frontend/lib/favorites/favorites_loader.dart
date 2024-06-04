@@ -91,7 +91,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
         throw Exception('Fetched data is null');
       }
 
-      final newItems = query.parse(newData).physicalStoresByIdInProject.cast<AcceptingStoreById$Query$PhysicalStore>();
+      final newItems = query.parse(newData).physicalStoresByIdInProject.whereType<AcceptingStoreById$Query$PhysicalStore>().toList();
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
