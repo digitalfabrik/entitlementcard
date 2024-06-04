@@ -51,6 +51,10 @@ const sortApplications = (applications: Application[]): Application[] =>
     }))
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
+const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType): string => {
+  return activeBarItem.status ? `${activeBarItem.title.toLowerCase()}en` : ''
+}
+
 const ApplicationsOverview = (props: { applications: Application[] }) => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
@@ -96,9 +100,11 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
       ) : (
         <StandaloneCenter>
           <NonIdealState
-            title='Keine Anträge vorhanden'
+            title={`Keine ${getEmptyApplicationsListStatusDescription(activeBarItem)} Anträge vorhanden`}
             icon='clean'
-            description='Aktuell liegen keine eingehenden Anträge vor. Schauen Sie später wieder vorbei.'
+            description={`Aktuell liegen keine ${getEmptyApplicationsListStatusDescription(
+              activeBarItem
+            )} Anträge vor. Schauen Sie später wieder vorbei.`}
           />
         </StandaloneCenter>
       )}
