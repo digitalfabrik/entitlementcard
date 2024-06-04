@@ -257,7 +257,7 @@ commands:
 jobs:
     build_administration:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
@@ -484,7 +484,7 @@ jobs:
         working_directory: ~/martin
     bump_version:
         docker:
-            - image: cimg/node:18.14.1
+            - image: cimg/node:20.13.1
         parameters:
             prepare_delivery:
                 default: false
@@ -523,7 +523,7 @@ jobs:
             - notify
     check:
         docker:
-            - image: cimg/node:19.1.0-browsers
+            - image: cimg/node:20.13.1-browsers
         environment:
             TOTAL_CPUS: 1
             TZ: Europe/Berlin
@@ -537,12 +537,13 @@ jobs:
             - notify
     check_administration:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
             - install_dart_linux
             - install_protobuf_linux
+            - install_app_toolbelt
             - prepare_workspace
             - restore_npm_cache
             - run:
@@ -565,6 +566,7 @@ jobs:
                 command: npm run ts:check
                 name: Typescript
                 working_directory: ~/project/administration
+            - notify
         working_directory: ~/project
     check_backend:
         docker:
@@ -578,6 +580,7 @@ jobs:
             - run: git submodule sync
             - run: git submodule update --init
             - install_protobuf_linux
+            - install_app_toolbelt
             - prepare_workspace
             - restore_cache:
                 key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -603,10 +606,11 @@ jobs:
                 key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
+            - notify
         working_directory: ~/project/backend
     check_frontend:
         docker:
-            - image: cimg/node:19.1.0-browsers
+            - image: cimg/node:20.13.1-browsers
         resource_class: small
         steps:
             - checkout:
@@ -751,7 +755,7 @@ jobs:
             - notify
     install_packages_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: cimg/node:20.13.1
         parameters:
             production:
                 description: Whether builds are delivered to production or beta.
@@ -759,11 +763,6 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install -y curl nodejs npm
-                name: Install Curl, node and npm
             - install_app_toolbelt
             - prepare_workspace
             - when:
@@ -783,7 +782,7 @@ jobs:
             - notify
     notify_release:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         parameters:
             production_delivery:
                 description: Whether builds are delivered to the production or beta lane of the play store.
@@ -805,6 +804,10 @@ jobs:
             - run:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload backend debian packages to github release
+            - notify:
+                allow-all-branches: false
+                channel: releases
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
             - image: debian:12
@@ -947,17 +950,13 @@ jobs:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Appstore Connect Store Promotion'
                 working_directory: frontend/ios
+            - notify
     promote_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install -y curl nodejs npm
-                name: Install Curl, node and npm
             - install_app_toolbelt
             - prepare_workspace
             - add_ssh_keys:
@@ -977,7 +976,7 @@ jobs:
             - notify
     upload_packages_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: cimg/node:20.13.1
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.
@@ -991,11 +990,6 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install -y nodejs npm
-                name: Install node and npm
             - install_app_toolbelt
             - prepare_workspace
             - add_ssh_keys:
@@ -1028,6 +1022,7 @@ jobs:
                             echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
+            - notify
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0

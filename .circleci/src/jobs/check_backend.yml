@@ -10,6 +10,7 @@ steps:
   - run: git submodule sync
   - run: git submodule update --init
   - install_protobuf_linux
+  - install_app_toolbelt
   - prepare_workspace
   - restore_cache:
       key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -35,3 +36,4 @@ steps:
       paths:
         - ~/.gradle/caches
       key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+  - notify

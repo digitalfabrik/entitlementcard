@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:19.1.0
+  - image: cimg/node:20.13.1
 working_directory: ~/project
 steps:
   - checkout:

@@ -18,3 +18,4 @@ steps:
       name: '[FL] Appstore Connect Store Promotion'
       command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
       working_directory: frontend/ios
+  - notify

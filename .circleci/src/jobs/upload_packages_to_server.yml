@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: cimg/node:20.13.1
 parameters:
   production:
     description: Whether builds are delivered to production or beta.
@@ -11,11 +11,6 @@ parameters:
 steps:
   - checkout:
       path: ~/project
-  - run:
-      name: Install node and npm
-      command: |
-        sudo apt update
-        sudo apt install -y nodejs npm
   - install_app_toolbelt
   - prepare_workspace
   - add_ssh_keys:
@@ -48,5 +43,4 @@ steps:
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-# https://github.com/digitalfabrik/entitlementcard/issues/1453
-#  - notify
+  - notify
