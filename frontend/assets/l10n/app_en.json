@@ -176,6 +176,7 @@
   "store": {
     "acceptingStore": "Acceptance point",
     "acceptingStoreNotFound": "Acceptance point not found.",
+    "acceptingStoreNotAvailable": "Acceptance point is no longer available",
     "address": "Address",
     "email": "E-Mail",
     "loadingDataFailed": "Error loading the data.",
@@ -183,7 +184,9 @@
     "phone": "Phone",
     "showOnMap": "Show on map",
     "unknownCategory": "Unknown category",
-    "website": "Website"
+    "website": "Website",
+    "removeButtonText": "Remove",
+    "removeDescription": "Would you like to remove it from your favorites?"
   },
   "favorites": {
     "title": "Favorites",

@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 
-import 'package:ehrenamtskarte/favorites/favorites_store.dart';
+import 'package:ehrenamtskarte/favorites/favorites_storage.dart';
+import 'package:ehrenamtskarte/favorites/favorite_store.dart';
 
 class FavoritesModel extends ChangeNotifier {
-  List<int> _favoriteStoreIds = [];
+  List<FavoriteStore> _favoriteStores = [];
   bool _isInitialized = false;
 
   Future<void> initialize() async {
@@ -13,7 +14,7 @@ class FavoritesModel extends ChangeNotifier {
       return;
     }
     try {
-      _favoriteStoreIds = await FavoritesStore().getFavorites();
+      _favoriteStores = await FavoritesStorage().readFavorites();
       _isInitialized = true;
     } catch (error) {
       log('Failed to load favorites from secure storage', error: error);
@@ -26,23 +27,39 @@ class FavoritesModel extends ChangeNotifier {
     return _isInitialized;
   }
 
-  List<int> get favoriteStoreIds {
-    return _favoriteStoreIds;
+  List<FavoriteStore> get favoriteStores {
+    return _favoriteStores;
   }
 
-  Future<bool> toggleFavorites(int storeId) async {
-    final isFavorite = _favoriteStoreIds.contains(storeId);
-    final favoritesStore = FavoritesStore();
+  List<int> getFavoriteIds() {
+    return _favoriteStores.map((item) => item.storeId).toList();
+  }
 
-    if (isFavorite) {
-      await favoritesStore.removeFavorite(storeId);
-      _favoriteStoreIds.remove(storeId);
-    } else {
-      await favoritesStore.addFavorite(storeId);
-      _favoriteStoreIds.add(storeId);
+  FavoriteStore getFavoriteStore(int storeId) {
+    return _favoriteStores.where((item) => item.storeId == storeId).first;
+  }
+
+  bool isFavorite(int storeId) {
+    return getFavoriteIds().contains(storeId);
+  }
+
+  Future<void> saveFavorite(FavoriteStore newFavoriteStore) async {
+    if (isFavorite(newFavoriteStore.storeId)) {
+      return;
     }
-
+    final favoriteStores = [..._favoriteStores, newFavoriteStore];
+    await FavoritesStorage().writeFavorites(favoriteStores);
+    _favoriteStores = favoriteStores;
     notifyListeners();
-    return !isFavorite;
+  }
+
+  Future<void> removeFavorite(int storeId) async {
+    if (!isFavorite(storeId)) {
+      return;
+    }
+    final favoriteStores = [..._favoriteStores]..removeWhere((item) => item.storeId == storeId);
+    await FavoritesStorage().writeFavorites(favoriteStores);
+    _favoriteStores = favoriteStores;
+    notifyListeners();
   }
 }

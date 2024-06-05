@@ -47,7 +47,12 @@ class DetailPage extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DetailAppBar(matchingStore),
+              DetailAppBar(
+                storeId: matchingStore.id,
+                storeName: matchingStore.store.name ?? t.store.acceptingStore,
+                categoryId: matchingStore.store.category.id,
+                showFavoriteButton: true,
+              ),
               Expanded(
                   child: Scaffold(
                 body: DetailContent(

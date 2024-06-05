@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
+import 'package:ehrenamtskarte/favorites/favorite_store.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
+import 'package:ehrenamtskarte/util/messenger_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -84,19 +84,25 @@ class DetailAppBarBottom extends StatelessWidget {
 }
 
 class DetailAppBar extends StatelessWidget {
-  final AcceptingStoreById$Query$PhysicalStore matchingStore;
+  final int storeId;
+  final String storeName;
+  final int categoryId;
+  final bool showFavoriteButton;
 
-  const DetailAppBar(this.matchingStore, {super.key});
+  const DetailAppBar({
+    super.key,
+    required this.storeId,
+    required this.storeName,
+    required this.categoryId,
+    required this.showFavoriteButton,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     final favoritesProvider = Provider.of<FavoritesModel>(context);
 
-    final title = matchingStore.store.name ?? t.store.acceptingStore;
-    final categoryId = matchingStore.store.category.id;
     final category = categoryAssets(context)[categoryId];
-    final isFavorite = favoritesProvider.favoriteStoreIds.contains(matchingStore.id);
+    final isFavorite = favoritesProvider.isFavorite(storeId);
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
     final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
@@ -108,12 +114,13 @@ class DetailAppBar extends StatelessWidget {
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
       actions: [
-        IconButton(
-            color: foregroundColor,
-            icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
-            onPressed: () async {
-              await _toggleFavorites(favoritesProvider, context, backgroundColor);
-            }),
+        if (showFavoriteButton)
+          IconButton(
+              color: foregroundColor,
+              icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
+              onPressed: () async {
+                await _toggleFavorites(context, favoritesProvider);
+              }),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(bottomSize),
@@ -122,7 +129,7 @@ class DetailAppBar extends StatelessWidget {
         child: SizedBox(
           height: bottomSize,
           child: DetailAppBarBottom(
-            title: title,
+            title: storeName,
             categoryId: categoryId,
             categoryName: category.name,
             accentColor: accentColor,
@@ -134,23 +141,21 @@ class DetailAppBar extends StatelessWidget {
     );
   }
 
-  Future<void> _toggleFavorites(FavoritesModel model, BuildContext context, Color backgroundColor) async {
+  Future<void> _toggleFavorites(BuildContext context, FavoritesModel model) async {
+    final categoryColor = getDarkenedColorForCategory(context, categoryId);
+    final errorColor = Theme.of(context).colorScheme.error;
+
     try {
-      final isFavorite = await model.toggleFavorites(matchingStore.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: backgroundColor,
-          content: Text(isFavorite ? t.favorites.favoriteHasBeenAdded : t.favorites.favoriteHasBeenRemoved),
-        ),
-      );
+      if (model.isFavorite(storeId)) {
+        await model.removeFavorite(storeId);
+        showSnackBar(context, t.favorites.favoriteHasBeenRemoved, categoryColor);
+      } else {
+        await model.saveFavorite(FavoriteStore(storeId, storeName, categoryId));
+        showSnackBar(context, t.favorites.favoriteHasBeenAdded, categoryColor);
+      }
     } catch (error) {
       log('Failed to update favorites', error: error);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(t.favorites.updateFailed),
-        ),
-      );
+      showSnackBar(context, t.favorites.updateFailed, errorColor);
     }
   }
 }

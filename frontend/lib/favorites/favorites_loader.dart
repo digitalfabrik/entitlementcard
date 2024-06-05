@@ -7,8 +7,10 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
+import 'package:ehrenamtskarte/favorites/favorite_store.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +29,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
   late FavoritesModel _favoritesModel;
 
-  final PagingController<int, AcceptingStoreById$Query$PhysicalStore> _pagingController =
-      PagingController(firstPageKey: 0);
+  final PagingController<int, FavoriteStore> _pagingController = PagingController(firstPageKey: 0);
 
   @override
   void initState() {
@@ -56,42 +57,23 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final projectId = Configuration.of(context).projectId;
-
     try {
       final favoritesModel = _favoritesModel;
       if (!favoritesModel.isInitialized) {
         throw Exception('Failed to load favorites');
       }
 
-      final favorites = favoritesModel.favoriteStoreIds;
+      final favorites = favoritesModel.getFavoriteIds();
 
       if (favorites.isEmpty || pageKey >= favorites.length) {
-        _pagingController.appendLastPage(List<AcceptingStoreById$Query$PhysicalStore>.empty());
+        _pagingController.appendLastPage(List.empty());
         return;
       }
 
       final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
 
-      final query = AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: fetchIds));
-
-      final client = _client;
-      if (client == null) {
-        throw Exception('GraphQL client is not yet initialized!');
-      }
-
-      final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
-      final exception = result.exception;
-      if (result.hasException && exception != null) {
-        throw exception;
-      }
-
-      final newData = result.data;
-      if (newData == null) {
-        throw Exception('Fetched data is null');
-      }
-
-      final newItems = query.parse(newData).physicalStoresByIdInProject.whereType<AcceptingStoreById$Query$PhysicalStore>().toList();
+      final newItems = await Future.wait(fetchIds
+          .map((id) async => favoritesModel.getFavoriteStore(id)..physicalStore = await _fetchPhysicalStore(id)));
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -105,21 +87,35 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
+  Future<AcceptingStoreById$Query$PhysicalStore?> _fetchPhysicalStore(int storeId) async {
+    final projectId = Configuration.of(context).projectId;
+
+    final query = AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: [storeId]));
+
+    final client = _client;
+    if (client == null) {
+      throw Exception('GraphQL client is not yet initialized!');
+    }
+
+    final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
+    final exception = result.exception;
+    if (result.hasException && exception != null) {
+      throw exception;
+    }
+
+    final data = result.data;
+    if (data == null) {
+      throw Exception('Fetched data is null');
+    }
+    return query.parse(data).physicalStoresByIdInProject.firstOrNull;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int, AcceptingStoreById$Query$PhysicalStore>.separated(
+    return PagedSliverList<int, FavoriteStore>.separated(
       pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<AcceptingStoreById$Query$PhysicalStore>(
-        itemBuilder: (context, item, index) {
-          return IntrinsicHeight(
-            child: AcceptingStoreSummary(
-              key: ValueKey(item.id),
-              store: AcceptingStoreSummaryModel(
-                  item.id, item.store.name, item.store.description, item.store.category.id, null, null),
-              showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
-            ),
-          );
-        },
+      builderDelegate: PagedChildBuilderDelegate<FavoriteStore>(
+        itemBuilder: _buildItem,
         noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
         firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
         newPageErrorIndicatorBuilder: _buildErrorWithRetry,
@@ -128,6 +124,34 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       ),
       separatorBuilder: (context, index) => const Divider(height: 0),
     );
+  }
+
+  Widget _buildItem(BuildContext context, FavoriteStore item, index) {
+    final physicalStore = item.physicalStore;
+    if (physicalStore != null) {
+      return IntrinsicHeight(
+        child: AcceptingStoreSummary(
+          key: ValueKey(physicalStore.id),
+          store: AcceptingStoreSummaryModel(
+            physicalStore.id,
+            physicalStore.store.name,
+            physicalStore.store.description,
+            physicalStore.store.category.id,
+            null,
+            null,
+          ),
+          showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
+        ),
+      );
+    } else {
+      return IntrinsicHeight(
+        child: RemovedStoreSummary(
+          storeId: item.storeId,
+          storeName: item.storeName,
+          categoryId: item.categoryId,
+        ),
+      );
+    }
   }
 
   Widget _buildProgressIndicator(BuildContext context) =>
