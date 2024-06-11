@@ -261,9 +261,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_linux
             - install_protobuf_linux
-            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
             - restore_npm_cache
@@ -314,10 +314,10 @@ jobs:
             - add_ssh_keys:
                 fingerprints:
                     - 24:1d:3b:b7:b3:49:69:d7:54:c3:93:a5:a2:d1:71:db
+            - install_app_toolbelt
             - prepare_workspace
             - install_dart_linux
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_linux:
                 dart_plugin: true
             - restore_environment_variables
@@ -410,9 +410,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_mac
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
@@ -541,9 +541,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_linux
             - install_protobuf_linux
-            - install_app_toolbelt
             - prepare_workspace
             - restore_npm_cache
             - run:
@@ -579,8 +579,8 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
-            - install_protobuf_linux
             - install_app_toolbelt
+            - install_protobuf_linux
             - prepare_workspace
             - restore_cache:
                 key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -615,10 +615,10 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - browser-tools/install-chrome
             - install_dart_linux
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_linux:
                 dart_plugin: true
             - run:
@@ -733,9 +733,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
-            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/ios
             - when:
@@ -789,9 +789,9 @@ jobs:
                 type: boolean
         resource_class: small
         steps:
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
-            - install_app_toolbelt
             - run:
                 command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
@@ -835,10 +835,10 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - prepare_workspace
-            - restore_environment_variables
             - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
+            - prepare_workspace
+            - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
                 mkdir -p ~/attached_workspace/debs/backend
@@ -888,11 +888,11 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - run: apt update -y && apt install -y nodejs npm
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
             - run: |
                 mkdir -p ~/attached_workspace/debs/backend
                 cp *.deb ~/attached_workspace/debs/backend
@@ -920,9 +920,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
-            - install_app_toolbelt
             - run:
                 command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Play Store Promotion'
@@ -943,9 +943,9 @@ jobs:
         shell: /bin/bash --login -o pipefail
         steps:
             - checkout
+            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/ios
-            - install_app_toolbelt
             - run:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Appstore Connect Store Promotion'

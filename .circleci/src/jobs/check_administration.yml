@@ -4,9 +4,9 @@ working_directory: ~/project
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - install_dart_linux
   - install_protobuf_linux
-  - install_app_toolbelt
   - prepare_workspace
   - restore_npm_cache
   - run:

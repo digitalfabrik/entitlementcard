@@ -4,10 +4,10 @@ resource_class: small
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - browser-tools/install-chrome
   - install_dart_linux
   - install_fvm
-  - install_app_toolbelt
   - install_protobuf_linux:
       dart_plugin: true
   - run:

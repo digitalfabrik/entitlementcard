@@ -11,9 +11,9 @@ environment:
 shell: /bin/bash --login -o pipefail
 steps:
   - checkout
+  - install_app_toolbelt
   - restore_ruby_cache:
       directory: ~/project/frontend/ios
-  - install_app_toolbelt
   - run:
       name: '[FL] Appstore Connect Store Promotion'
       command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
