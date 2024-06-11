@@ -52,7 +52,7 @@ const sortApplications = (applications: Application[]): Application[] =>
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType): string => {
-  return activeBarItem.status ? `${activeBarItem.title.toLowerCase()}en` : ''
+  return activeBarItem.status !== undefined ? `${activeBarItem.title.toLowerCase()}en` : ''
 }
 
 const ApplicationsOverview = (props: { applications: Application[] }) => {
