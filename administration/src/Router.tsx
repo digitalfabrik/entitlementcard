@@ -90,7 +90,7 @@ const Router = () => {
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [authData, projectConfig.applicationFeature, signIn, signOut])
+  }, [authData, projectConfig.applicationFeature, signIn, signOut, projectConfig.cardStatistics])
 
   return <RouterProvider router={router} />
 }
