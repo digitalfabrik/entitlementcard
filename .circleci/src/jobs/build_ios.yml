@@ -12,9 +12,9 @@ parameters:
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - install_dart_mac
   - install_fvm
-  - install_app_toolbelt
   - install_protobuf_mac
   - prepare_workspace
   - restore_environment_variables
