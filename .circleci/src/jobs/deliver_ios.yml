@@ -14,9 +14,9 @@ shell: /bin/bash --login -o pipefail
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - prepare_workspace
   - restore_environment_variables
-  - install_app_toolbelt
   - restore_ruby_cache:
       directory:  ~/project/frontend/ios
   - when:

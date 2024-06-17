@@ -92,8 +92,8 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       <CreateCardsButtonBar
         cardBlueprints={cardBlueprints}
         goBack={goBack}
-        generateCardsPdf={generateCardsPdf}
-        generateCardsCsv={generateCardsCsv}
+        generateCardsPdf={() => generateCardsPdf()}
+        generateCardsCsv={() => generateCardsCsv()}
       />
     </>
   )

@@ -144,17 +144,25 @@ const useCardGenerator = (region: Region) => {
         }
         setState(CardActivationState.finished)
       } catch (error) {
-        handleError(error, codes)
+        await handleError(error, codes)
       } finally {
         setCardBlueprints([])
       }
     },
-    [cardBlueprints, client, projectConfig, handleError, sendCardConfirmationMails, projectConfig.csvExport]
+    [
+      cardBlueprints,
+      client,
+      projectConfig,
+      handleError,
+      sendCardConfirmationMails,
+      projectConfig.csvExport,
+      region.activatedForCardConfirmationMail,
+    ]
   )
 
   const generateCardsPdf = useCallback(
     async (applicationIdToMarkAsProcessed?: number) => {
-      generateCards(
+      await generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
           generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
         'berechtigungskarten.pdf',
@@ -166,14 +174,14 @@ const useCardGenerator = (region: Region) => {
 
   const generateCardsCsv = useCallback(
     async (applicationIdToMarkAsProcessed?: number) => {
-      generateCards(
+      await generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
           generateCsv(codes, cardBlueprints, projectConfig.csvExport),
         getCSVFilename(cardBlueprints),
         applicationIdToMarkAsProcessed
       )
     },
-    [cardBlueprints, generateCards]
+    [cardBlueprints, generateCards, projectConfig.csvExport]
   )
 
   return {

@@ -88,7 +88,7 @@ export interface ProjectConfig {
   timezone: string
   activityLogConfig?: ActivityLogConfig
   activation?: {
-    activationText: (applicationName: string, downloadLink: string) => ReactElement
+    activationText: (applicationName: string, downloadLink: string, deepLink: string) => ReactElement
     downloadLink: string
   }
   csvExport: CsvExport
