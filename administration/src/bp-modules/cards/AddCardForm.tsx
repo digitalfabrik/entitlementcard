@@ -53,33 +53,34 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           }}
         />
       </FormGroup>
-      <FormGroup label='Ablaufdatum'>
-        <TextField
-          fullWidth
-          disabled={cardBlueprint.hasInfiniteLifetime()}
-          type='date'
-          required
-          size='small'
-          error={!cardBlueprint.isExpirationDateValid()}
-          value={cardBlueprint.expirationDate ? cardBlueprint.expirationDate.toString() : null}
-          sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-          inputProps={{
-            style: { fontSize: 14, padding: '6px 10px' },
-            min: today.toString(),
-            max: today.add(maxCardValidity).toString(),
-          }}
-          onChange={e => {
-            if (e.target.value !== null) {
-              try {
-                cardBlueprint.expirationDate = PlainDate.from(e.target.value)
-                onUpdate()
-              } catch (error) {
-                console.error(`Could not parse date from string '${e.target.value}'.`, error)
+      {!cardBlueprint.hasInfiniteLifetime() && (
+        <FormGroup label='Ablaufdatum'>
+          <TextField
+            fullWidth
+            type='date'
+            required
+            size='small'
+            error={!cardBlueprint.isExpirationDateValid()}
+            value={cardBlueprint.expirationDate ? cardBlueprint.expirationDate.toString() : null}
+            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
+            inputProps={{
+              style: { fontSize: 14, padding: '6px 10px' },
+              min: today.toString(),
+              max: today.add(maxCardValidity).toString(),
+            }}
+            onChange={e => {
+              if (e.target.value !== null) {
+                try {
+                  cardBlueprint.expirationDate = PlainDate.from(e.target.value)
+                  onUpdate()
+                } catch (error) {
+                  console.error(`Could not parse date from string '${e.target.value}'.`, error)
+                }
               }
-            }
-          }}
-        />
-      </FormGroup>
+            }}
+          />
+        </FormGroup>
+      )}
       {cardBlueprint.extensions.map((ext, i) => (
         <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} />
       ))}

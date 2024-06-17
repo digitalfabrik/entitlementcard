@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: cimg/node:20.13.1
 parameters:
   production:
     description: Whether builds are delivered to production or beta.
@@ -11,11 +11,6 @@ parameters:
 steps:
   - checkout:
       path: ~/project
-  - run:
-      name: Install Curl, node and npm
-      command: |
-        sudo apt update
-        sudo apt install -y curl nodejs npm
   - install_app_toolbelt
   - prepare_workspace
   - add_ssh_keys:
@@ -32,9 +27,12 @@ steps:
               echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
         - run:
-            name: Install package via webhook
+            name: SFTP upload package
             command: |
-              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
+              mkdir -p /home/circleci/.ssh
+              echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+              echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
   - unless:
       condition: << parameters.production >>
       steps:
@@ -45,8 +43,4 @@ steps:
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
               sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-        - run:
-            name: Install package via webhook
-            command: |
-              curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
   - notify

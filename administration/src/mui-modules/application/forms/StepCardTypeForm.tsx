@@ -98,7 +98,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
           Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können
           Sie{' '}
           <a
-            href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/'
+            href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/index.php#sec3'
             target='_blank'
             rel='noreferrer'>
             hier einsehen

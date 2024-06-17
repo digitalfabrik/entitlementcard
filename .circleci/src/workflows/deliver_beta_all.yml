@@ -55,7 +55,7 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_bayern_ios
+      name: deliver_ios_bayern
       buildConfig: bayern
       context:
         - tuerantuer-apple
@@ -73,7 +73,7 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_nuernberg_ios
+      name: deliver_ios_nuernberg
       buildConfig: nuernberg
       context:
         - tuerantuer-apple
@@ -89,6 +89,7 @@ jobs:
         - deliver_android_nuernberg
         - deliver_ios_bayern
         - deliver_ios_nuernberg
+        - install_packages_to_server_staging
   - check_administration
   - build_administration:
       requires:
@@ -116,8 +117,8 @@ jobs:
   - pack_meta:
       requires:
         - bump_version
-  - deliver_to_server:
-      name: deliver_administration_staging
+  - upload_packages_to_server:
+      name: upload_administration_packages_to_server_staging
       production: false
       bundle: administration
       context:
@@ -127,8 +128,8 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
-  - deliver_to_server:
-      name: deliver_backend_staging
+  - upload_packages_to_server:
+      name: upload_backend_packages_to_server_staging
       production: false
       bundle: backend
       context:
@@ -138,3 +139,11 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
+  - install_packages_to_server:
+      name: install_packages_to_server_staging
+      production: false
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - upload_administration_packages_to_server_staging
+        - upload_backend_packages_to_server_staging
