@@ -176,7 +176,7 @@
   "store": {
     "acceptingStore": "Akzeptanzstelle",
     "acceptingStoreNotFound": "Akzeptanzstelle nicht gefunden.",
-    "acceptingStoreNotAvailable": "Akzeptanzstelle ist nicht mehr verfügbar",
+    "acceptingStoreNotAvailable": "Diese Akzeptanzstelle ist nicht mehr verfügbar.",
     "address": "Adresse",
     "email": "E-Mail",
     "loadingDataFailed": "Fehler beim Laden der Daten.",

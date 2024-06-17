@@ -176,7 +176,7 @@
   "store": {
     "acceptingStore": "Acceptance point",
     "acceptingStoreNotFound": "Acceptance point not found.",
-    "acceptingStoreNotAvailable": "Acceptance point is no longer available",
+    "acceptingStoreNotAvailable": "This acceptance point is no longer available.",
     "address": "Address",
     "email": "E-Mail",
     "loadingDataFailed": "Error loading the data.",

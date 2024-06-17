@@ -118,6 +118,7 @@ class DetailAppBar extends StatelessWidget {
           IconButton(
               color: foregroundColor,
               icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
+              iconSize: 36,
               onPressed: () async {
                 await _toggleFavorites(context, favoritesProvider);
               }),
