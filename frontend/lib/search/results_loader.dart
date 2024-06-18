@@ -102,7 +102,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
         // Params are outdated.
         // If we're still at the first key, we must manually retrigger fetching.
         if (pageKey == _pagingController.firstPageKey) {
-          return _fetchPage(pageKey);
+          return await _fetchPage(pageKey);
         }
       }
       _pagingController.error = error;
