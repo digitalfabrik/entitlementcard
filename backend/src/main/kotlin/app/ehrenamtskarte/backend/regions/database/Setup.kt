@@ -1,18 +1,45 @@
 package app.ehrenamtskarte.backend.regions.database
 
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
+import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun insertOrUpdateRegions() {
-    transaction {
-        val projects = ProjectEntity.all()
-        val dbRegions = RegionEntity.all()
+    val projects = ProjectEntity.all()
+    val dbRegions = RegionEntity.all()
 
+    fun createOrUpdateRegion(
+        regionProjectId: String,
+        regionName: String,
+        regionPrefix: String,
+        regionWebsite: String
+    ) {
+        val project =
+            projects.firstOrNull { it.project == regionProjectId }
+                ?: throw Error("Required project '$regionProjectId' not found!")
+        val region = dbRegions.singleOrNull { it.projectId == project.id }
+        if (region == null) {
+            RegionEntity.new {
+                projectId = project.id
+                name = regionName
+                prefix = regionPrefix
+                regionIdentifier = null
+                website = regionWebsite
+            }
+        } else {
+            region.name = regionName
+            region.prefix = regionPrefix
+            region.website = regionWebsite
+        }
+    }
+
+    transaction {
         // Create or update eak regions in database
-        val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
-            ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
+        val eakProject =
+            projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
+                ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         EAK_BAYERN_REGIONS.forEach { eakRegion ->
             val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] && it.projectId == eakProject.id }
             if (dbRegion == null) {
@@ -30,22 +57,7 @@ fun insertOrUpdateRegions() {
             }
         }
 
-        // Create or update nuernberg region in database
-        val nuernbergPassProject = projects.firstOrNull { it.project == NUERNBERG_PASS_PROJECT }
-            ?: throw Error("Required project '$NUERNBERG_PASS_PROJECT' not found!")
-        val nuernbergRegion = dbRegions.singleOrNull { it.projectId == nuernbergPassProject.id }
-        if (nuernbergRegion == null) {
-            RegionEntity.new {
-                projectId = nuernbergPassProject.id
-                name = "Nürnberg"
-                prefix = "Stadt"
-                regionIdentifier = null
-                website = "https://nuernberg.de"
-            }
-        } else {
-            nuernbergRegion.name = "Nürnberg"
-            nuernbergRegion.prefix = "Stadt"
-            nuernbergRegion.website = "https://nuernberg.de"
-        }
+        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "https://nuernberg.de")
+        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "https://koblenz.de/")
     }
 }

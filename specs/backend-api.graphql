@@ -128,6 +128,8 @@ type Mutation {
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  "Creates a new digital koblenz card and returns it"
+  createCardsByUserData(encodedCardInfo: String!, project: String!): Boolean!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"

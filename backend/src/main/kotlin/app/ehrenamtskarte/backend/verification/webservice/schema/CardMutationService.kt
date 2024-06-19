@@ -1,11 +1,14 @@
 package app.ehrenamtskarte.backend.verification.webservice.schema
 
+import Argon2IdHasher
 import Card
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotKoblenzProjectException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
@@ -161,6 +164,25 @@ class CardMutationService {
             ApplicationRepository.updateCardCreated(applicationIdToMarkAsProcessed, true)
         }
         return activationCodes
+    }
+
+    @GraphQLDescription("Creates a new digital koblenz card and returns it")
+    fun createCardsByUserData(
+        dfe: DataFetchingEnvironment,
+        project: String,
+        encodedCardInfo: String
+    ): Boolean { // CardCreationResultModel {
+        val context = dfe.getContext<GraphQLContext>()
+        val projectConfig =
+            context.backendConfiguration.projects.find { it.id == project }
+                ?: throw ProjectNotFoundException(project)
+        if (project != KOBLENZ_PASS_PROJECT) {
+            throw NotKoblenzProjectException()
+        }
+        val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
+        val cardInfo = Card.CardInfo.parseFrom(cardInfoBytes)
+        val hashedUserData = Argon2IdHasher.hashUserData(cardInfo)
+        return false // Will be done in #1421
     }
 
     @GraphQLDescription("Activate a dynamic entitlement card")

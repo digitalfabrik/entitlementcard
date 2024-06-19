@@ -53,6 +53,8 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
+    testImplementation("io.mockk:mockk:1.13.11")
+
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
@@ -69,10 +71,13 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
     implementation("de.grundid.opendatalab:geojson-jackson:1.14")
+    implementation("commons-codec:commons-codec:1.17.0")
 
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
+
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.76")
 
     implementation("com.google.zxing:core:3.5.2") // QR-Codes
 }
