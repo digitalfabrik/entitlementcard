@@ -10,7 +10,7 @@ import {
   SectionCard,
   Tooltip,
 } from '@blueprintjs/core'
-import { memo, useContext, useMemo, useState } from 'react'
+import { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -94,6 +94,13 @@ const SectionCardHeader = styled.div`
   flex-direction: row-reverse;
 `
 
+const RightElementContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+`
+
 type ApplicationCardProps = {
   application: Application
   onDelete: () => void
@@ -148,6 +155,19 @@ const ApplicationCard = ({
     return !!blueCardJuleicaEntitlement
   }
 
+  const RightElement = (): ReactElement => {
+    return (
+      <RightElementContainer>
+        {application.note && <Icon icon='annotation' intent='none' />}
+        {isJuleicaEntitlementType() ? (
+          <JuleicaVerificationQuickIndicator />
+        ) : (
+          <VerificationsQuickIndicator verifications={application.verifications} />
+        )}
+      </RightElementContainer>
+    )
+  }
+
   return (
     <ApplicationViewCard
       title={
@@ -160,13 +180,7 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={
-        isJuleicaEntitlementType() ? (
-          <JuleicaVerificationQuickIndicator />
-        ) : (
-          <VerificationsQuickIndicator verifications={application.verifications} />
-        )
-      }
+      rightElement={<RightElement />}
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
