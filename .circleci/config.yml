@@ -964,7 +964,7 @@ jobs:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - run:
                 command: |
-                    mkdir /home/circleci/.ssh
+                    mkdir -p /home/circleci/.ssh
                     echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
                     echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
                     scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
