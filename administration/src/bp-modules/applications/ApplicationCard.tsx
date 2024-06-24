@@ -158,7 +158,7 @@ const ApplicationCard = ({
   const RightElement = (): ReactElement => {
     return (
       <RightElementContainer>
-        {application.note && <Icon icon='annotation' intent='none' />}
+        {application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
         {isJuleicaEntitlementType() ? (
           <JuleicaVerificationQuickIndicator />
         ) : (
