@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ehrenamtskarte/about/about_page.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
@@ -13,10 +15,12 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import 'package:ehrenamtskarte/routing.dart';
+
 const mapTabIndex = 0;
 const identityTabIndex = 2;
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget with WidgetsBindingObserver {
   final int? initialTabIndex;
   const HomePage({super.key, this.initialTabIndex});
 
@@ -24,7 +28,7 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late List<AppFlow> appFlows;
   int _currentTabIndex = mapTabIndex;
 
@@ -34,6 +38,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _currentTabIndex = widget.initialTabIndex ?? mapTabIndex;
     appFlows = [
       AppFlow(
@@ -61,6 +66,24 @@ class HomePageState extends State<HomePage> {
       AppFlow(const AboutPage(), buildConfig.appLocales.length > 1 ? Icons.menu : Icons.info_outline,
           (BuildContext context) => t.about.title, GlobalKey<NavigatorState>(debugLabel: 'About tab key')),
     ];
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Reload map on android devices to solve this issue https://github.com/maplibre/flutter-maplibre-gl/issues/327
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _currentTabIndex == mapTabIndex && Platform.isAndroid) {
+      Navigator.of(context, rootNavigator: true).push(
+        AppRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    }
   }
 
   @override

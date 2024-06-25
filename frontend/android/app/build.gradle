@@ -64,6 +64,10 @@ ext.setupVariant = { variant, buildConfigName ->
 android {
     compileSdkVersion 34
 
+    kotlinOptions {
+        jvmTarget=JavaVersion.VERSION_1_8
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }

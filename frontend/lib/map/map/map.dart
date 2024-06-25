@@ -46,8 +46,8 @@ class MapContainer extends StatefulWidget {
 
 const mapboxColor = Color(0xFF979897);
 
-class _MapContainerState extends State<MapContainer> implements MapController {
-  MaplibreMapController? _controller;
+class _MapContainerState extends State<MapContainer> with WidgetsBindingObserver implements MapController {
+  MapLibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
   bool _isMapInitialized = false;
@@ -65,7 +65,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
     final compassMargin = Platform.isIOS ? statusBarHeight / pixelRatio : statusBarHeight * pixelRatio;
-
     final userLocation = widget.userLocation;
     final cameraPosition = userLocation != null
         ? CameraPosition(target: userLocation, zoom: MapContainer.zoomLevelUserLocation)
@@ -73,7 +72,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     final mapLibreView = Stack(
       children: [
-        MaplibreMap(
+        MapLibreMap(
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
@@ -121,7 +120,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         : mapLibreView;
   }
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(MapLibreMapController controller) {
     _controller = controller;
 
     setState(() {
