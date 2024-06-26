@@ -61,5 +61,11 @@ jobs:
       requires:
         - upload_administration_packages_to_server_staging
         - upload_backend_packages_to_server_staging
+  - notify_release:
+      production_delivery: false
+      context:
+        - deliverino
+      requires:
+        - install_packages_to_server_staging
 
 
