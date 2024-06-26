@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.koblenz.users.database
+package app.ehrenamtskarte.backend.userdata.database
 
 import app.ehrenamtskarte.backend.projects.database.Projects
 import org.jetbrains.exposed.dao.IntEntity
@@ -15,6 +15,10 @@ object UserEntitlements : IntIdTable() {
     val revoked = bool("revoked")
     val projectId = reference("projectId", Projects)
     val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())
+
+    init {
+        uniqueIndex("unique_userHash_projectId", userHash, projectId)
+    }
 }
 
 class UserEntitlementsEntity(id: EntityID<Int>) : IntEntity(id) {

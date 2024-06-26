@@ -31,6 +31,8 @@ internal class V0013_CreateUserEntitlementsTable : Migration() {
             
             ALTER TABLE ONLY userentitlements
                 ADD CONSTRAINT fk_userentitlements_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+                
+            ALTER TABLE userentitlements ADD CONSTRAINT unique_userHash_projectId UNIQUE ("userHash", "projectId");
             """.trimIndent()
         )
     }
