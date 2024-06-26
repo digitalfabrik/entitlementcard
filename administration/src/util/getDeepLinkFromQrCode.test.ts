@@ -25,6 +25,7 @@ describe('DeepLink generation', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const cardConfigBayern = {
@@ -59,21 +60,21 @@ describe('DeepLink generation', () => {
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, BAYERN_STAGING_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
+      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}/`
     )
   })
   it('should generate a correct link for staging', () => {
     overrideHostname(BAYERN_STAGING_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
+      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}/`
     )
   })
   it('should generate a correct link for production', () => {
     overrideHostname(BAYERN_PRODUCTION_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.production
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}${encodedActivationCodeBase64}/`
+      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}/`
     )
   })
 })

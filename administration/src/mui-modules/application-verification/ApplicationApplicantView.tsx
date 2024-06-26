@@ -15,9 +15,20 @@ import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
 
 const ApplicationViewCard = styled(Card)`
-  max-width: 800px;
+  @media screen and (min-width: 600px) {
+    width: 60vw;
+  }
   margin: 10px;
   align-self: center;
+`
+
+const ApplicationViewCardContent = styled('div')`
+  overflow: visible;
+  padding: 20px;
+`
+
+const StyledDivider = styled(Divider)`
+  margin: 24px 0;
 `
 
 type ApplicationApplicantViewProps = {
@@ -43,8 +54,8 @@ const ApplicationApplicantView = ({
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: ({ withdrawed }: { withdrawed: boolean }) => {
-      if (withdrawed) gotWithdrawed()
+    onCompleted: ({ isWithdrawed }: { isWithdrawed: boolean }) => {
+      if (isWithdrawed) gotWithdrawed()
       else {
         console.error('Withdraw operation returned false.')
         enqueueSnackbar('Der Antrag wurde bereits zurückgezogen.', { variant: 'error' })
@@ -64,7 +75,7 @@ const ApplicationApplicantView = ({
 
   return (
     <ApplicationViewCard elevation={2}>
-      <div style={{ overflow: 'visible', padding: '20px' }}>
+      <ApplicationViewCardContent>
         <Typography mb='8px' variant='h6'>
           Ihr Antrag auf die Ehrenamtskarte Bayern vom {formatDateWithTimezone(createdDateString, config.timezone)}
         </Typography>
@@ -76,11 +87,11 @@ const ApplicationApplicantView = ({
           attachmentAccessible={false}
           expandedRoot={false}
         />
-        <Divider style={{ margin: '24px 0px' }} />
+        <StyledDivider />
         <VerificationsView verifications={application.verifications} />
         {!application.withdrawalDate && (
           <>
-            <Divider style={{ margin: '24px 0px' }} />
+            <StyledDivider />
             <Typography mt='8px' mb='16px' variant='body2'>
               Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.
             </Typography>
@@ -96,7 +107,7 @@ const ApplicationApplicantView = ({
             />
           </>
         )}
-      </div>
+      </ApplicationViewCardContent>
     </ApplicationViewCard>
   )
 }

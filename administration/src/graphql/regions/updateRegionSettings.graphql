@@ -1,0 +1,11 @@
+mutation updateRegionSettings(
+  $regionId: Int!
+  $activatedForApplication: Boolean!
+  $activatedForConfirmationMail: Boolean!
+) {
+  result: updateRegionSettings(
+    regionId: $regionId
+    activatedForApplication: $activatedForApplication
+    activatedForConfirmationMail: $activatedForConfirmationMail
+  )
+}

@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/favorites/favorites_model.dart';
+import 'package:ehrenamtskarte/favorites/favorite_store.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
+import 'package:ehrenamtskarte/util/messenger_utils.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:provider/provider.dart';
 
 const double bottomSize = 100;
 
@@ -80,19 +84,28 @@ class DetailAppBarBottom extends StatelessWidget {
 }
 
 class DetailAppBar extends StatelessWidget {
-  final AcceptingStoreById$Query$PhysicalStore matchingStore;
+  final int storeId;
+  final String storeName;
+  final int categoryId;
+  final bool showFavoriteButton;
 
-  const DetailAppBar(this.matchingStore, {super.key});
+  const DetailAppBar({
+    super.key,
+    required this.storeId,
+    required this.storeName,
+    required this.categoryId,
+    required this.showFavoriteButton,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
-    final categoryId = matchingStore.store.category.id;
+    final favoritesProvider = Provider.of<FavoritesModel>(context);
+
     final category = categoryAssets(context)[categoryId];
+    final isFavorite = favoritesProvider.isFavorite(storeId);
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
-    final title = matchingStore.store.name ?? t.store.acceptingStore;
-
+    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
     final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
@@ -100,6 +113,16 @@ class DetailAppBar extends StatelessWidget {
     return AppBarWithBottom(
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
+      actions: [
+        if (showFavoriteButton)
+          IconButton(
+              color: foregroundColor,
+              icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
+              iconSize: 36,
+              onPressed: () async {
+                await _toggleFavorites(context, favoritesProvider);
+              }),
+      ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(bottomSize),
         // The SizedBox makes sure that the text does not move above the
@@ -107,7 +130,7 @@ class DetailAppBar extends StatelessWidget {
         child: SizedBox(
           height: bottomSize,
           child: DetailAppBarBottom(
-            title: title,
+            title: storeName,
             categoryId: categoryId,
             categoryName: category.name,
             accentColor: accentColor,
@@ -117,5 +140,23 @@ class DetailAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _toggleFavorites(BuildContext context, FavoritesModel model) async {
+    final categoryColor = getDarkenedColorForCategory(context, categoryId);
+    final errorColor = Theme.of(context).colorScheme.error;
+
+    try {
+      if (model.isFavorite(storeId)) {
+        await model.removeFavorite(storeId);
+        showSnackBar(context, t.favorites.favoriteHasBeenRemoved, categoryColor);
+      } else {
+        await model.saveFavorite(FavoriteStore(storeId, storeName, categoryId));
+        showSnackBar(context, t.favorites.favoriteHasBeenAdded, categoryColor);
+      }
+    } catch (error) {
+      log('Failed to update favorites', error: error);
+      showSnackBar(context, t.favorites.updateFailed, errorColor);
+    }
   }
 }

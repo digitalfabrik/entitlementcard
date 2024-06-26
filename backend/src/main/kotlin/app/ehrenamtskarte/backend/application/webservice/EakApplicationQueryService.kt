@@ -29,7 +29,7 @@ class EakApplicationQueryService {
                 throw ForbiddenException()
             }
 
-            ApplicationRepository.getApplications(regionId)
+            ApplicationRepository.getApplicationsByAdmin(regionId)
         }
     }
 

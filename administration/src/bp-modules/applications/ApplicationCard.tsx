@@ -10,7 +10,7 @@ import {
   SectionCard,
   Tooltip,
 } from '@blueprintjs/core'
-import { memo, useContext, useMemo, useState } from 'react'
+import { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -94,6 +94,13 @@ const SectionCardHeader = styled.div`
   flex-direction: row-reverse;
 `
 
+const RightElementContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+`
+
 type ApplicationCardProps = {
   application: Application
   onDelete: () => void
@@ -110,7 +117,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
+  const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
@@ -133,8 +140,8 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField),
-    [config.applicationFeature, jsonField]
+    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
+    [config.applicationFeature, jsonField, id]
   )
 
   const personalData = useMemo(
@@ -146,6 +153,19 @@ const ApplicationCard = ({
     const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
     const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
     return !!blueCardJuleicaEntitlement
+  }
+
+  const RightElement = (): ReactElement => {
+    return (
+      <RightElementContainer>
+        {application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
+        {isJuleicaEntitlementType() ? (
+          <JuleicaVerificationQuickIndicator />
+        ) : (
+          <VerificationsQuickIndicator verifications={application.verifications} />
+        )}
+      </RightElementContainer>
+    )
   }
 
   return (
@@ -160,13 +180,7 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={
-        isJuleicaEntitlementType() ? (
-          <JuleicaVerificationQuickIndicator />
-        ) : (
-          <VerificationsQuickIndicator verifications={application.verifications} />
-        )
-      }
+      rightElement={<RightElement />}
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
@@ -213,7 +227,7 @@ const ApplicationCard = ({
               href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
               icon='id-number'
               intent='primary'>
-              Karte erstellen
+              {cardCreated ? 'Karte erneut erstellen' : 'Karte erstellen'}
             </PrintAwareAnchorButton>
           </Tooltip>
           <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>

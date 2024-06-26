@@ -63,6 +63,7 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
+  cardCreated: Boolean
   createdDate: String!
   id: Int!
   jsonValue: String!
@@ -126,7 +127,7 @@ type Mutation {
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
@@ -138,19 +139,19 @@ type Mutation {
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!): Boolean!
+  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
-  "Updates the activation state of a region for the application process"
-  updateActivatedForApplication(activated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
+  "Updates the region specific settings"
+  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
   "Verifies or rejects an application verification"
   verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
   "Withdraws the application"
@@ -228,6 +229,7 @@ type Query {
 
 type Region {
   activatedForApplication: Boolean!
+  activatedForCardConfirmationMail: Boolean!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -297,6 +299,7 @@ enum GraphQLExceptionCode {
   INVALID_ROLE
   MAIL_NOT_SENT
   PASSWORD_RESET_KEY_EXPIRED
+  REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
 }

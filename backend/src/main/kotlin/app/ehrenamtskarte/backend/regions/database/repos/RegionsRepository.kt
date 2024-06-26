@@ -45,8 +45,9 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
-    fun updateActivatedForApplication(region: RegionEntity, activated: Boolean) {
-        region.activatedForApplication = activated
+    fun updateRegionSettings(region: RegionEntity, activatedForApplication: Boolean, activatedForConfirmationMail: Boolean) {
+        region.activatedForApplication = activatedForApplication
+        region.activatedForCardConfirmationMail = activatedForConfirmationMail
     }
 
     fun findRegionByRegionIdentifier(

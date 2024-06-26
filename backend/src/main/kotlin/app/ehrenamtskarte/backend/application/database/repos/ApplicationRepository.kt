@@ -89,11 +89,11 @@ object ApplicationRepository {
         return mapper.writeValueAsString(obj)
     }
 
-    fun getApplications(regionId: Int): List<ApplicationView> {
+    fun getApplicationsByAdmin(regionId: Int): List<ApplicationView> {
         return transaction {
             ApplicationEntity.find { Applications.regionId eq regionId }
                 .orderBy(Applications.createdDate to SortOrder.ASC)
-                .map { ApplicationView.fromDbEntity(it) }
+                .map { ApplicationView.fromDbEntity(it, true) }
         }
     }
 
@@ -197,6 +197,18 @@ object ApplicationRepository {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
                 application.note = note
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean {
+        return transaction {
+            val application = ApplicationEntity.findById(applicationId)
+            if (application != null) {
+                application.cardCreated = cardCreated
                 true
             } else {
                 false

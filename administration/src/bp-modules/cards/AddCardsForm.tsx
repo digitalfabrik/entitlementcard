@@ -40,9 +40,15 @@ type CreateCardsFormProps = {
   region: Region
   cardBlueprints: CardBlueprint[]
   setCardBlueprints: (blueprints: CardBlueprint[]) => void
+  setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
-const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCardsFormProps) => {
+const CreateCardsForm = ({
+  region,
+  cardBlueprints,
+  setCardBlueprints,
+  setApplicationIdToMarkAsProcessed,
+}: CreateCardsFormProps) => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -58,9 +64,23 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
         cardBlueprint.setValue(header, value)
       })
       setCardBlueprints([cardBlueprint])
+
+      const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
+      setApplicationIdToMarkAsProcessed(
+        applicationIdToMarkAsProcessed == null ? undefined : +applicationIdToMarkAsProcessed
+      )
+
       setSearchParams(undefined, { replace: true })
     }
-  }, [cardBlueprints.length, projectConfig, region, searchParams, setCardBlueprints, setSearchParams])
+  }, [
+    cardBlueprints.length,
+    projectConfig,
+    region,
+    searchParams,
+    setCardBlueprints,
+    setSearchParams,
+    setApplicationIdToMarkAsProcessed,
+  ])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {

@@ -32,8 +32,8 @@ class RegionsMutationService {
         return true
     }
 
-    @GraphQLDescription("Updates the activation state of a region for the application process")
-    fun updateActivatedForApplication(dfe: DataFetchingEnvironment, regionId: Int, activated: Boolean): Boolean {
+    @GraphQLDescription("Updates the region specific settings")
+    fun updateRegionSettings(dfe: DataFetchingEnvironment, regionId: Int, activatedForApplication: Boolean, activatedForConfirmationMail: Boolean): Boolean {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
@@ -41,7 +41,7 @@ class RegionsMutationService {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)
-            RegionsRepository.updateActivatedForApplication(region, activated)
+            RegionsRepository.updateRegionSettings(region, activatedForApplication, activatedForConfirmationMail)
         }
         return true
     }

@@ -1,15 +1,9 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: cimg/node:20.13.1
 steps:
   - checkout:
       path: ~/project
-  - run: sudo apt update -y && sudo apt install -y nodejs npm
   - install_app_toolbelt
-  - run:
-      name: Install Curl
-      command: |
-        sudo apt update
-        sudo apt install curl -y
   - prepare_workspace
   - add_ssh_keys:
       fingerprints:
@@ -22,11 +16,7 @@ steps:
               echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
               scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
   - run:
-      name: Install administration package via webhook
+      name: Install administration & backend packages via webhook
       command: |
-              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-administration-$EAK_WEBHOOK
-  - run:
-      name: Install backend packages via webhook
-      command: |
-              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
+              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
   - notify

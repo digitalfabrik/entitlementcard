@@ -2,6 +2,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { ReactElement } from 'react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
+import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -94,11 +95,12 @@ describe('CreateCardsButtonBar', () => {
   it('Should generate valid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const region = {
+    const region: Region = {
       id: 0,
       name: 'augsburg',
       prefix: 'a',
       activatedForApplication: true,
+      activatedForCardConfirmationMail: true,
     }
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(

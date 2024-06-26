@@ -38,6 +38,7 @@ const useCardGenerator = (region: Region) => {
       appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
     },
     onError: error => {
+      console.log(error.message)
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
@@ -48,6 +49,7 @@ const useCardGenerator = (region: Region) => {
   })
   const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
   const [state, setState] = useState(CardActivationState.input)
+  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
@@ -59,10 +61,10 @@ const useCardGenerator = (region: Region) => {
     for (let k = 0; k < codes.length; k++) {
       const cardBlueprint = cardBlueprints[k]
       const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
-      if (!mailNotificationExtension?.state) {
+      const dynamicCode = codes[k].dynamicActivationCode
+      if (!mailNotificationExtension?.state || !dynamicCode.info?.extensions?.extensionRegion?.regionId) {
         return
       }
-      const dynamicCode = codes[k].dynamicActivationCode
       const deepLink = getDeepLinkFromQrCode({
         case: 'dynamicActivationCode',
         value: dynamicCode,
@@ -70,6 +72,7 @@ const useCardGenerator = (region: Region) => {
       await sendMail({
         variables: {
           project: projectId,
+          regionId: dynamicCode.info?.extensions?.extensionRegion?.regionId,
           recipientAddress: mailNotificationExtension.state,
           recipientName: cardBlueprint.fullName,
           deepLink,
@@ -115,50 +118,82 @@ const useCardGenerator = (region: Region) => {
   const generateCards = useCallback(
     async (
       generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob> | Blob,
-      filename: string
+      filename: string,
+      applicationIdToMarkAsProcessed?: number
     ) => {
       let codes: CreateCardsResult[] | undefined
       setState(CardActivationState.loading)
 
       try {
         const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
-        codes = await createCards(client, projectConfig.projectId, cardInfos, projectConfig.staticQrCodesEnabled)
+        codes = await createCards(
+          client,
+          projectConfig.projectId,
+          cardInfos,
+          projectConfig.staticQrCodesEnabled,
+          applicationIdToMarkAsProcessed
+        )
 
         const dataUri = await generateFunction(codes, cardBlueprints)
 
         cardBlueprints.forEach(cardBlueprint => new ActivityLog(cardBlueprint).saveToSessionStorage())
 
         downloadDataUri(dataUri, filename)
-        if (projectConfig.cardCreationConfirmationMailEnabled) {
+        if (region.activatedForCardConfirmationMail) {
           await sendCardConfirmationMails(codes, cardBlueprints, projectConfig.projectId)
         }
         setState(CardActivationState.finished)
       } catch (error) {
-        handleError(error, codes)
+        await handleError(error, codes)
       } finally {
         setCardBlueprints([])
       }
     },
-    [cardBlueprints, client, projectConfig, handleError]
+    [
+      cardBlueprints,
+      client,
+      projectConfig,
+      handleError,
+      sendCardConfirmationMails,
+      projectConfig.csvExport,
+      region.activatedForCardConfirmationMail,
+    ]
   )
 
-  const generateCardsPdf = useCallback(async () => {
-    generateCards(
-      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-        generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
-      'berechtigungskarten.pdf'
-    )
-  }, [projectConfig, region, generateCards])
+  const generateCardsPdf = useCallback(
+    async (applicationIdToMarkAsProcessed?: number) => {
+      await generateCards(
+        (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+          generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
+        'berechtigungskarten.pdf',
+        applicationIdToMarkAsProcessed
+      )
+    },
+    [projectConfig, region, generateCards]
+  )
 
-  const generateCardsCsv = useCallback(async () => {
-    generateCards(
-      (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-        generateCsv(codes, cardBlueprints, projectConfig.csvExport),
-      getCSVFilename(cardBlueprints)
-    )
-  }, [cardBlueprints, generateCards])
+  const generateCardsCsv = useCallback(
+    async (applicationIdToMarkAsProcessed?: number) => {
+      await generateCards(
+        (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
+          generateCsv(codes, cardBlueprints, projectConfig.csvExport),
+        getCSVFilename(cardBlueprints),
+        applicationIdToMarkAsProcessed
+      )
+    },
+    [cardBlueprints, generateCards, projectConfig.csvExport]
+  )
 
-  return { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints }
+  return {
+    state,
+    setState,
+    generateCardsPdf,
+    generateCardsCsv,
+    setCardBlueprints,
+    cardBlueprints,
+    setApplicationIdToMarkAsProcessed,
+    applicationIdToMarkAsProcessed,
+  }
 }
 
 export default useCardGenerator

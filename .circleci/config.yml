@@ -51,8 +51,8 @@ commands:
             - run:
                 command: |
                     brew tap dart-lang/dart
-                    brew install dart
-                    brew link dart
+                    brew install dart@3.3.1
+                    brew link dart@3.3.1
                 name: Install Dart
             - save_cache:
                 key: brew-dart-4
@@ -110,7 +110,7 @@ commands:
         steps:
             - run:
                 command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-universal_binary.zip"
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
@@ -257,13 +257,13 @@ commands:
 jobs:
     build_administration:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_linux
             - install_protobuf_linux
-            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
             - restore_npm_cache
@@ -314,10 +314,10 @@ jobs:
             - add_ssh_keys:
                 fingerprints:
                     - 24:1d:3b:b7:b3:49:69:d7:54:c3:93:a5:a2:d1:71:db
+            - install_app_toolbelt
             - prepare_workspace
             - install_dart_linux
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_linux:
                 dart_plugin: true
             - restore_environment_variables
@@ -410,12 +410,15 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_mac
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
+            - run:
+                command: softwareupdate --install-rosetta --agree-to-license
+                name: Install rosetta
             - restore_ruby_cache:
                 directory: frontend/ios
             - run:
@@ -484,7 +487,7 @@ jobs:
         working_directory: ~/martin
     bump_version:
         docker:
-            - image: cimg/node:18.14.1
+            - image: cimg/node:20.13.1
         parameters:
             prepare_delivery:
                 default: false
@@ -523,7 +526,7 @@ jobs:
             - notify
     check:
         docker:
-            - image: cimg/node:19.1.0-browsers
+            - image: cimg/node:20.13.1-browsers
         environment:
             TOTAL_CPUS: 1
             TZ: Europe/Berlin
@@ -537,10 +540,11 @@ jobs:
             - notify
     check_administration:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - install_dart_linux
             - install_protobuf_linux
             - prepare_workspace
@@ -565,6 +569,7 @@ jobs:
                 command: npm run ts:check
                 name: Typescript
                 working_directory: ~/project/administration
+            - notify
         working_directory: ~/project
     check_backend:
         docker:
@@ -577,6 +582,7 @@ jobs:
                 path: ~/project
             - run: git submodule sync
             - run: git submodule update --init
+            - install_app_toolbelt
             - install_protobuf_linux
             - prepare_workspace
             - restore_cache:
@@ -603,18 +609,19 @@ jobs:
                 key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
+            - notify
         working_directory: ~/project/backend
     check_frontend:
         docker:
-            - image: cimg/node:19.1.0-browsers
+            - image: cimg/node:20.13.1-browsers
         resource_class: small
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - browser-tools/install-chrome
             - install_dart_linux
             - install_fvm
-            - install_app_toolbelt
             - install_protobuf_linux:
                 dart_plugin: true
             - run:
@@ -659,7 +666,7 @@ jobs:
                 path: ~/project
             - attach_workspace:
                 at: /tmp/workspace
-            - run: apt update -y && apt install -y nodejs npm curl
+            - run: apt update -y && apt install -y nodejs npm curl sudo
             - install_app_toolbelt
             - run:
                 command: apt install ca-certificates-java -y
@@ -729,9 +736,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
-            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/ios
             - when:
@@ -749,79 +756,57 @@ jobs:
                         name: '[FL] TestFlight Upload'
                         working_directory: frontend/ios
             - notify
-    deliver_to_server:
+    install_packages_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: cimg/node:20.13.1
         parameters:
-            bundle:
-                description: Defines which bundle should be deployed to the server.
-                enum:
-                    - administration
-                    - backend
-                type: enum
             production:
                 description: Whether builds are delivered to production or beta.
                 type: boolean
         steps:
             - checkout:
                 path: ~/project
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install -y curl nodejs npm
-                name: Install Curl, node and npm
             - install_app_toolbelt
             - prepare_workspace
-            - add_ssh_keys:
-                fingerprints:
-                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - when:
                 condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
-                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-                        name: SFTP upload package
-                    - run:
-                        command: |
-                            curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
-                        name: Install package via webhook
+                            curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+                        name: Install packages via webhook
             - unless:
                 condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
-                            echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-                        name: SFTP upload package
-                    - run:
-                        command: |
-                            curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-<< parameters.bundle >>-$EAK_WEBHOOK
-                        name: Install package via webhook
+                            curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+                        name: Install packages via webhook
             - notify
     notify_release:
         docker:
-            - image: cimg/node:19.1.0
+            - image: cimg/node:20.13.1
         parameters:
             production_delivery:
                 description: Whether builds are delivered to the production or beta lane of the play store.
                 type: boolean
         resource_class: small
         steps:
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
-            - install_app_toolbelt
             - run:
                 command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
             - run:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload android apks to github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload administration debian package to github release
+            - run:
+                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Upload backend debian packages to github release
             - notify:
                 allow-all-branches: false
                 channel: releases
@@ -837,7 +822,6 @@ jobs:
             - prepare_workspace
             - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
-            - install_app_toolbelt
             - run: |
                 mkdir -p ~/attached_workspace/debs/administration
                 mv *.deb ~/attached_workspace/debs/administration
@@ -854,10 +838,10 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
-            - prepare_workspace
-            - restore_environment_variables
             - run: apt update -y && apt install -y nodejs npm
             - install_app_toolbelt
+            - prepare_workspace
+            - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
             - run: |
                 mkdir -p ~/attached_workspace/debs/backend
@@ -907,11 +891,11 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - run: apt update -y && apt install -y nodejs npm
+            - install_app_toolbelt
             - prepare_workspace
             - restore_environment_variables
             - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
             - run: |
                 mkdir -p ~/attached_workspace/debs/backend
                 cp *.deb ~/attached_workspace/debs/backend
@@ -939,9 +923,9 @@ jobs:
         steps:
             - checkout:
                 path: ~/project
+            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
-            - install_app_toolbelt
             - run:
                 command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Play Store Promotion'
@@ -962,26 +946,21 @@ jobs:
         shell: /bin/bash --login -o pipefail
         steps:
             - checkout
+            - install_app_toolbelt
             - restore_ruby_cache:
                 directory: ~/project/frontend/ios
-            - install_app_toolbelt
             - run:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Appstore Connect Store Promotion'
                 working_directory: frontend/ios
+            - notify
     promote_to_server:
         docker:
-            - image: cimg/base:2022.09
+            - image: cimg/node:20.13.1
         steps:
             - checkout:
                 path: ~/project
-            - run: sudo apt update -y && sudo apt install -y nodejs npm
             - install_app_toolbelt
-            - run:
-                command: |
-                    sudo apt update
-                    sudo apt install curl -y
-                name: Install Curl
             - prepare_workspace
             - add_ssh_keys:
                 fingerprints:
@@ -995,12 +974,57 @@ jobs:
                 name: Transfer artifacts to production
             - run:
                 command: |
-                    curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-administration-$EAK_WEBHOOK
-                name: Install administration package via webhook
-            - run:
-                command: |
-                    curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-$EAK_WEBHOOK
-                name: Install backend packages via webhook
+                    curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+                name: Install administration & backend packages via webhook
+            - notify
+    upload_packages_to_server:
+        docker:
+            - image: cimg/node:20.13.1
+        parameters:
+            bundle:
+                description: Defines which bundle should be deployed to the server.
+                enum:
+                    - administration
+                    - backend
+                type: enum
+            production:
+                description: Whether builds are delivered to production or beta.
+                type: boolean
+        steps:
+            - checkout:
+                path: ~/project
+            - install_app_toolbelt
+            - prepare_workspace
+            - add_ssh_keys:
+                fingerprints:
+                    - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+            - when:
+                condition: << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            mkdir -p /home/circleci/.ssh
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                        name: SFTP upload package
+                    - run:
+                        command: |
+                            mkdir -p /home/circleci/.ssh
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                        name: SFTP upload package
+            - unless:
+                condition: << parameters.production >>
+                steps:
+                    - run:
+                        command: |
+                            mkdir -p /home/circleci/.ssh
+                            echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
+                            echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                            sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                        name: SFTP upload package
             - notify
 orbs:
     browser-tools: circleci/browser-tools@1.4.1
@@ -1180,7 +1204,7 @@ workflows:
                 buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_bayern_ios
+                name: deliver_ios_bayern
                 production_delivery: false
                 requires:
                     - build_ios_bayern
@@ -1198,7 +1222,7 @@ workflows:
                 buildConfig: nuernberg
                 context:
                     - tuerantuer-apple
-                name: deliver_nuernberg_ios
+                name: deliver_ios_nuernberg
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg
@@ -1211,6 +1235,7 @@ workflows:
                     - deliver_android_nuernberg
                     - deliver_ios_bayern
                     - deliver_ios_nuernberg
+                    - install_packages_to_server_staging
             - check_administration
             - build_administration:
                 requires:
@@ -1238,28 +1263,36 @@ workflows:
             - pack_meta:
                 requires:
                     - bump_version
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_administration_staging
+                name: upload_administration_packages_to_server_staging
                 production: false
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: backend
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_backend_staging
+                name: upload_backend_packages_to_server_staging
                 production: false
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
+            - install_packages_to_server:
+                context:
+                    - credentials-ehrenamtskarte
+                name: install_packages_to_server_staging
+                production: false
+                requires:
+                    - upload_administration_packages_to_server_staging
+                    - upload_backend_packages_to_server_staging
         when: << pipeline.parameters.run_delivery_beta_all >>
     deliver_beta_backend_administration:
         jobs:
@@ -1294,28 +1327,36 @@ workflows:
             - pack_meta:
                 requires:
                     - bump_version
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_administration_staging
+                name: upload_administration_packages_to_server_staging
                 production: false
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: backend
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_backend_staging
+                name: upload_backend_packages_to_server_staging
                 production: false
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
+            - install_packages_to_server:
+                context:
+                    - credentials-ehrenamtskarte
+                name: install_packages_to_server_staging
+                production: false
+                requires:
+                    - upload_administration_packages_to_server_staging
+                    - upload_backend_packages_to_server_staging
         when: << pipeline.parameters.run_deliver_beta_backend_administration >>
     deliver_production_backend_administration:
         jobs:
@@ -1350,28 +1391,36 @@ workflows:
             - pack_meta:
                 requires:
                     - bump_version
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_administration_production
+                name: upload_administration_packages_to_server_production
                 production: true
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
-            - deliver_to_server:
+            - upload_packages_to_server:
                 bundle: backend
                 context:
                     - credentials-ehrenamtskarte
-                name: deliver_backend_production
+                name: upload_backend_packages_to_server_production
                 production: true
                 requires:
                     - pack_administration
                     - check_health_backend
                     - pack_martin
                     - pack_meta
+            - install_packages_to_server:
+                context:
+                    - credentials-ehrenamtskarte
+                name: install_packages_to_server_production
+                production: true
+                requires:
+                    - upload_administration_packages_to_server_staging
+                    - upload_backend_packages_to_server_staging
         when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:

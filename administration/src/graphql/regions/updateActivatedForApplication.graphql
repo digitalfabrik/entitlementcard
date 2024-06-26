@@ -1,3 +1,0 @@
-mutation updateActivatedForApplication($regionId: Int!, $activated: Boolean!) {
-  result: updateActivatedForApplication(regionId: $regionId, activated: $activated)
-}
