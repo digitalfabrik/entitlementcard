@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
-gem "fastlane", ">= 2.214.0"
-gem "cocoapods", "~> 1.13.0"
+# https://github.com/fastlane/fastlane/issues/21794
+gem "rb-readline"
+gem "fastlane", ">= 2.221.1"
+gem "cocoapods", "~> 1.15.2"
 
