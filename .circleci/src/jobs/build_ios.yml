@@ -18,6 +18,10 @@ steps:
   - install_protobuf_mac
   - prepare_workspace
   - restore_environment_variables
+  # needed for circle ci mac m1 images
+  - run:
+      name: Install rosetta
+      command: softwareupdate --install-rosetta --agree-to-license
   - restore_ruby_cache:
       directory: frontend/ios
   - run:
