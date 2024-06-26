@@ -13,6 +13,7 @@ object MigrationsRegistry {
         V0009_HashPasswordResetKey(),
         V0010_ApplicationNote(),
         V0011_AddRegionCardConfirmationMailActivation(),
-        V0012_AddApplicationCardCreated()
+        V0012_AddApplicationCardCreated(),
+        V0013_CreateUserEntitlementsTable()
     )
 }
