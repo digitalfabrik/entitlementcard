@@ -70,7 +70,7 @@ class CardMutationService {
             CardRepository.insert(
                 hashedCardInfo,
                 activationSecretHash,
-                cardInfo.expirationDay.toLong(),
+                expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
                 cardInfo.extensions.extensionRegion.regionId,
                 userId,
                 CodeType.DYNAMIC,
@@ -101,11 +101,11 @@ class CardMutationService {
             CardRepository.insert(
                 hashedCardInfo,
                 null,
-                cardInfo.expirationDay.toLong(),
+                expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
                 cardInfo.extensions.extensionRegion.regionId,
                 userId,
                 CodeType.STATIC,
-                cardInfo.extensions.extensionStartDay.startDay.toLong()
+                cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
             )
 
             StaticVerificationCodeResult(
