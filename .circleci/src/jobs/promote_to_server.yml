@@ -1,13 +1,8 @@
 docker:
-  - image: cimg/base:2022.09
+  - image: cimg/node:20.13.1
 steps:
   - checkout:
       path: ~/project
-  - run:
-      name: Install Curl, node and npm
-      command: |
-        sudo apt update
-        sudo apt install -y curl nodejs npm
   - install_app_toolbelt
   - prepare_workspace
   - add_ssh_keys:

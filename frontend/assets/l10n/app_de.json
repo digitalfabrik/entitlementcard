@@ -176,6 +176,7 @@
   "store": {
     "acceptingStore": "Akzeptanzstelle",
     "acceptingStoreNotFound": "Akzeptanzstelle nicht gefunden.",
+    "acceptingStoreNotAvailable": "Diese Akzeptanzstelle ist nicht mehr verfügbar.",
     "address": "Adresse",
     "email": "E-Mail",
     "loadingDataFailed": "Fehler beim Laden der Daten.",
@@ -183,6 +184,16 @@
     "phone": "Telefon",
     "showOnMap": "Auf Karte zeigen",
     "unknownCategory": "Unbekannte Kategorie",
-    "website": "Website"
+    "website": "Website",
+    "removeButtonText": "Entfernen",
+    "removeDescription": "Möchten Sie sie aus Ihren Favoriten entfernen?"
+  },
+  "favorites": {
+    "title": "Favoriten",
+    "noFavoritesFound": "Sie haben noch keine Akzeptanzstellen zu Ihren Favoriten hinzugefügt.",
+    "favoriteHasBeenAdded": "Die Akzeptanzstelle wurde zu den Favoriten hinzugefügt.",
+    "favoriteHasBeenRemoved": "Die Akzeptanzstelle wurde aus den Favoriten entfernt.",
+    "loadingFailed": "Fehler beim Laden der Favoriten.",
+    "updateFailed": "Fehler bei der Aktualisierung der Favoriten."
   }
 }

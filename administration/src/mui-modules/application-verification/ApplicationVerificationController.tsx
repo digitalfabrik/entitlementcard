@@ -41,7 +41,7 @@ type ApplicationVerificationProps = {
 }
 
 const ApplicationVerification = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
-  const [verificationFinised, setVerificationFinished] = useState(false)
+  const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
@@ -82,14 +82,14 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
   if (application.withdrawalDate)
     return (
-      <CenteredMessage
-        title={`Der Antrag wurde vom Antragsteller am ${formatDateWithTimezone(
+      <CenteredMessage>
+        {`Der Antrag wurde vom Antragsteller am ${formatDateWithTimezone(
           application.withdrawalDate,
           config.timezone
         )} zurückgezogen.`}
-      />
+      </CenteredMessage>
     )
-  if (verificationFinised)
+  if (verificationFinished)
     return (
       <CenteredMessage>
         <AlertTitle>Ihre Eingaben wurden erfolgreich gespeichert.</AlertTitle>

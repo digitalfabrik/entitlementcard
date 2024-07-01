@@ -12,12 +12,16 @@ parameters:
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - install_dart_mac
   - install_fvm
-  - install_app_toolbelt
   - install_protobuf_mac
   - prepare_workspace
   - restore_environment_variables
+  # needed for circle ci mac m1 images
+  - run:
+      name: Install rosetta
+      command: softwareupdate --install-rosetta --agree-to-license
   - restore_ruby_cache:
       directory: frontend/ios
   - run:

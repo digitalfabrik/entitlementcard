@@ -149,7 +149,15 @@ const useCardGenerator = (region: Region) => {
         setCardBlueprints([])
       }
     },
-    [cardBlueprints, client, projectConfig, handleError, sendCardConfirmationMails, projectConfig.csvExport]
+    [
+      cardBlueprints,
+      client,
+      projectConfig,
+      handleError,
+      sendCardConfirmationMails,
+      projectConfig.csvExport,
+      region.activatedForCardConfirmationMail,
+    ]
   )
 
   const generateCardsPdf = useCallback(
@@ -173,7 +181,7 @@ const useCardGenerator = (region: Region) => {
         applicationIdToMarkAsProcessed
       )
     },
-    [cardBlueprints, generateCards]
+    [cardBlueprints, generateCards, projectConfig.csvExport]
   )
 
   return {
