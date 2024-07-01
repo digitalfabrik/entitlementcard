@@ -29,6 +29,7 @@ object CardVerifier {
     }
 
     public fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
+        if (expirationDay == 0L) return false
         return expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
     }
 
