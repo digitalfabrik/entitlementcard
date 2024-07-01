@@ -1419,8 +1419,8 @@ workflows:
                 name: install_packages_to_server_production
                 production: true
                 requires:
-                    - upload_administration_packages_to_server_staging
-                    - upload_backend_packages_to_server_staging
+                    - upload_administration_packages_to_server_production
+                    - upload_backend_packages_to_server_production
         when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:
