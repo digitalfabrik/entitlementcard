@@ -12,3 +12,13 @@ Future<bool> certificateIsRequired() async {
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
   return androidInfo.version.sdkInt < 25;
 }
+
+Future<bool> isDeviceWithCameraIssues() async {
+  if (!Platform.isAndroid) {
+    return false;
+  }
+  List<String> devicesWithoutQRCodeDetection = ['SM-A236B'];
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  return devicesWithoutQRCodeDetection.contains(androidInfo.model);
+}

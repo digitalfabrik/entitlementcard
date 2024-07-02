@@ -8,6 +8,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import 'package:ehrenamtskarte/util/android_utils.dart';
+
 typedef OnCodeScannedCallback = Future<void> Function(Uint8List code);
 
 class QrCodeScanner extends StatefulWidget {
@@ -20,12 +22,29 @@ class QrCodeScanner extends StatefulWidget {
 }
 
 class _QRViewState extends State<QrCodeScanner> {
+  bool _hasCameraIssues = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Workaround for https://github.com/juliansteenbakker/mobile_scanner/issues/698
+    // Check once the qr code scanner was initialized if the device has camera issues
+    // Depending on that set a controller with predefined camera solution to fix that qr code reading issues
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      setState(() async {
+        _hasCameraIssues = await isDeviceWithCameraIssues();
+      });
+    });
+  }
+
   final MobileScannerController _controller = MobileScannerController(
-    torchEnabled: false,
-    detectionSpeed: DetectionSpeed.normal,
-    formats: [BarcodeFormat.qrCode],
-    returnImage: false,
-  );
+      torchEnabled: false, detectionSpeed: DetectionSpeed.normal, formats: [BarcodeFormat.qrCode], returnImage: false);
+  final MobileScannerController _controllerPredefinedCameraResolution = MobileScannerController(
+      torchEnabled: false,
+      detectionSpeed: DetectionSpeed.normal,
+      formats: [BarcodeFormat.qrCode],
+      returnImage: false,
+      cameraResolution: const Size(640, 480));
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   // Determines whether a code is currently processed by the onCodeScanned callback
@@ -37,7 +56,7 @@ class _QRViewState extends State<QrCodeScanner> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final controller = _controller;
+    final controller = _hasCameraIssues ? _controllerPredefinedCameraResolution : _controller;
     return Stack(
       children: [
         Column(
