@@ -48,7 +48,7 @@ void main() {
       );
     }
 
-    testWidgets('Favorite store is available', (WidgetTester tester) async {
+    testWidgets('shows store in favorites if the store is available', (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
