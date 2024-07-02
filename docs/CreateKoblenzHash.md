@@ -14,17 +14,10 @@ The example data is
 ### 1. Collect all data and merge it into an object
 ```agsl
 //Example:
-full_name: "Karla Koblenz"
-extensions {
-  extension_region {
-    regionId: 95
-  }
-  extension_birthday {
+{
+    full_name: "Karla Koblenz"
     birthday: 12213
-  }
-  extension_koblenz_pass_id {
-    pass_id: "123K"
-  }
+    referenceNumber: "123K"
 }
 ```
 
@@ -32,14 +25,13 @@ extensions {
 e.g. `Karla Koblenz` will match neither with `Karla Lisa Koblenz` nor with `Karlá Koblenz`.
 - The birthday is defined in our protobuf [card.proto](../frontend/card.proto) file: It counts the days since the birthday (calculated from 1970-01-01).
   All values of this field are valid, including the 0, which indicates that the birthday is on 1970-01-01. Birthdays before 1970-01-01 have negative values.
-- extension_region is always 95 for Koblenz
-- extension_koblenz_pass_id is set to the "Aktenzeichen"
+- referenceNumber is set to the "Aktenzeichen"
 
 
 ### 2. Convert this object to a Canonical Json
  Result should be:
  ```
- {"1":"Karla Koblenz","3":{"1":{"1":"95"},"2":{"1":"12213"},"6":{"1":"123K"}}}
+ {"1":"Karla Koblenz","2":12213,"3":"123K"}
  ```
 
 ### 3. Hash it with Argon2id
@@ -52,13 +44,14 @@ Hash with Argon2id with the following parameters:
 | Iterations   | 2                                                                              | 
 | Parallellism | 1                                                                              | 
 | Memory       | 16                                                                             | 
+| HashLength   | 32                                                                             | 
 | Salt         | Secret Salt will be shared with Koblenz<br/>for the example use `123456789ABC` | 
 
 
 ### 4. The result...
 ...for the example data and example salt must be:
 
-`$argon2id$v=19$m=16,t=2,p=1$MTIzNDU2Nzg5QUJD$KStr3PVblyAh2bIleugv796G+p4pvRNiAON0MHVufVY`
+`$argon2id$v=19$m=16,t=2,p=1$MTIzNDU2Nzg5QUJD$UIOJZIsSL8vXcuCB82xZ5E8tpH6sQd3d4U0uC02DP40`
 
 
 ## Additional Information

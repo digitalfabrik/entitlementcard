@@ -3,6 +3,8 @@ package app.ehrenamtskarte.backend.verification
 import Card
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
+import app.ehrenamtskarte.backend.helper.koblenzTestUser
+import app.ehrenamtskarte.backend.verification.CanonicalJson.Companion.koblenzUserToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -97,20 +99,9 @@ internal class CanonicalJsonTest {
     }
 
     @Test
-    fun mapCardInfoForKoblenzPass() {
-        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.KoblenzPass)
-        assertEquals(
-            CanonicalJson.messageToMap(cardInfo),
-            mapOf(
-                "1" to "Karla Koblenz",
-                "3" to
-                    mapOf(
-                        "1" to mapOf("1" to "95"), // Koblenz Region
-                        "2" to mapOf("1" to "12213"), // extensionBirthday
-                        "6" to mapOf("1" to "123K") // extensionKoblenzPassId
-                    )
-            )
-        )
+    fun mapUserInfoForKoblenzPass() {
+        val expected = koblenzUserToString(koblenzTestUser)
+        assertEquals("{\"1\":\"Karla Koblenz\",\"2\":12213,\"3\":\"123K\"}", expected)
     }
 
     @Test

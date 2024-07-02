@@ -1,5 +1,7 @@
+
 import app.ehrenamtskarte.backend.common.utils.Environment
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
+import app.ehrenamtskarte.backend.user.KoblenzUser
 import app.ehrenamtskarte.backend.verification.CanonicalJson
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator
 import org.bouncycastle.crypto.params.Argon2Parameters
@@ -48,12 +50,9 @@ class Argon2IdHasher {
             return stringBuilder.toString()
         }
 
-        fun hashUserData(cardInfo: Card.CardInfo): String? {
-            val canonicalJson = CanonicalJson.messageToMap(cardInfo)
+        fun hashKoblenzUserData(userData: KoblenzUser): String? {
+            val canonicalJson = CanonicalJson.koblenzUserToString(userData)
             val hashLength = 32
-            if (!isCanonicalJsonValid(canonicalJson)) {
-                throw Exception("Invalid Json input for hashing")
-            }
 
             val pepper = Environment.getVariable(KOBLENZ_PEPPER_SYS_ENV) // TODO handle if Null
             val pepperByteArray = pepper?.toByteArray(StandardCharsets.UTF_8)
@@ -70,16 +69,8 @@ class Argon2IdHasher {
             val generator = Argon2BytesGenerator()
             generator.init(params)
             val result = ByteArray(hashLength)
-            generator.generateBytes(CanonicalJson.serializeToString(canonicalJson).toCharArray(), result)
+            generator.generateBytes(canonicalJson.toCharArray(), result)
             return encode(result, params)
-        }
-
-        private fun isCanonicalJsonValid(canonicalJson: Map<String, Any>): Boolean {
-            val hasName = canonicalJson.get("1") != null
-            val hasExtensions = canonicalJson.get("3") as? Map<String, Any>
-            val hasKoblenzPassExtension = hasExtensions?.get("6") as? Map<String, String>
-            val hasKoblenzPassId = hasKoblenzPassExtension?.get("1") != null
-            return hasName && hasKoblenzPassId
         }
     }
 }

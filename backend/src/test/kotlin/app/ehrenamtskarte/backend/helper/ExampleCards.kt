@@ -33,7 +33,7 @@ object ExampleCardInfo {
             Card.CardInfo.getDefaultInstance(),
             fullName = "Karla Koblenz",
             regionId = 95,
-            koblenzPassId = "123K",
+            koblenzReferenceNumber = "123K",
             birthDay = 12213 // 10.06.2003
         )
 
@@ -46,7 +46,7 @@ object ExampleCardInfo {
         birthDay: Int? = null,
         nuernbergPassId: Int? = null,
         nuernbergPassIdIdentifier: Card.NuernergPassIdentifier? = null,
-        koblenzPassId: String? = null,
+        koblenzReferenceNumber: String? = null,
         startDay: Int? = null
     ): Card.CardInfo {
         val cardInfo = Card.CardInfo.newBuilder(base)
@@ -62,7 +62,7 @@ object ExampleCardInfo {
                 nuernbergPassIdIdentifier
             )
         }
-        if (koblenzPassId != null) extensions.extensionKoblenzPassIdBuilder.setPassId(koblenzPassId)
+        if (koblenzReferenceNumber != null) extensions.extensionKoblenzReferenceNumberBuilder.setReferenceNumber(koblenzReferenceNumber)
         if (startDay != null) extensions.extensionStartDayBuilder.setStartDay(startDay)
         return cardInfo.buildPartial()
     }
