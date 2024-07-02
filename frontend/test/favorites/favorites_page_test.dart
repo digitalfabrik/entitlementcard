@@ -88,7 +88,8 @@ void main() {
       expect(find.descendant(of: acceptingStoreSummary, matching: find.text('Test description')), findsOneWidget);
     });
 
-    testWidgets('shows a hint to the user if the store is not available anymore and offers the ability to remove it', (WidgetTester tester) async {
+    testWidgets('shows a hint to the user if the store is not available anymore and offers the ability to remove it',
+        (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
@@ -143,7 +144,7 @@ void main() {
       expect(find.text(t.favorites.noFavoritesFound), findsOneWidget);
     });
 
-    testWidgets('No favorites found', (WidgetTester tester) async {
+    testWidgets('shows a message if the favorites list is empty', (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({});
 
       await tester.pumpWidget(createTestWidget());
@@ -153,7 +154,7 @@ void main() {
       expect(find.text(t.favorites.noFavoritesFound), findsOneWidget);
     });
 
-    testWidgets('Failed to load favorites', (WidgetTester tester) async {
+    testWidgets('shows an error message when favorites loading failed', (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(<String, String>{'favorites': 'incorrect data'});
 
       await tester.pumpWidget(createTestWidget());
