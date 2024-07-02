@@ -17,12 +17,14 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.LoggerFactory
 import java.time.Instant
 
 @Suppress("unused")
 class ResetPasswordMutationService {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         val projectConfig = backendConfig.projects.find { it.id == project }
             ?: throw ProjectNotFoundException(project)
@@ -34,6 +36,10 @@ class ResetPasswordMutationService {
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
                 Mailer.sendResetPasswordMail(backendConfig, projectConfig, key, email)
+            }
+            if (user == null) {
+                val context = dfe.getContext<GraphQLContext>()
+                logger.info("${context.remoteIp} $email failed to request password reset mail")
             }
         }
         return true
@@ -47,6 +53,7 @@ class ResetPasswordMutationService {
         passwordResetKey: String,
         newPassword: String
     ): Boolean {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
         transaction {
@@ -57,6 +64,8 @@ class ResetPasswordMutationService {
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
+                val context = dfe.getContext<GraphQLContext>()
+                logger.info("${context.remoteIp} $email failed to reset password")
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
