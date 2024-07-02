@@ -17,7 +17,22 @@ Future<bool> isDeviceWithCameraIssues() async {
   if (!Platform.isAndroid) {
     return false;
   }
-  List<String> devicesWithoutQRCodeDetection = ['SM-A236B'];
+  // All models of Galaxy A23
+  List<String> devicesWithoutQRCodeDetection = [
+    'SM-A235F',
+    'SM-A235M',
+    'SM-A235N',
+    'SM-A233C',
+    'SM-A2360',
+    'SM-A236B',
+    'SM-A236E',
+    'SM-A236M',
+    'SM-A236U',
+    'SM-A236U1',
+    'SM-S236DL',
+    'SM-S237VL',
+    'SM-A236V'
+  ];
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
   return devicesWithoutQRCodeDetection.contains(androidInfo.model);
