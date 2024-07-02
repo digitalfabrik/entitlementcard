@@ -88,7 +88,7 @@ void main() {
       expect(find.descendant(of: acceptingStoreSummary, matching: find.text('Test description')), findsOneWidget);
     });
 
-    testWidgets('Favorite store is no longer available', (WidgetTester tester) async {
+    testWidgets('shows a hint to the user if the store is not available anymore and offers the ability to remove it', (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
