@@ -13,18 +13,19 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-
-    return Stack(
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(t.favorites.title),
-            ),
-            FavoritesLoader()
-          ],
-        ),
-      ],
+    return Material(
+      child: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: Text(t.favorites.title),
+              ),
+              FavoritesLoader()
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

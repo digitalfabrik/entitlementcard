@@ -68,6 +68,7 @@ dev_dependencies:
   json_serializable: ^6.3.1
   lints: ^3.0.0
   test: '>=1.0.0'
+  mocktail: ^1.0.4
 
   # graphQL type generation
   artemis: '>=6.0.0' # only if you're using ArtemisClient!
