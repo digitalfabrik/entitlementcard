@@ -53,7 +53,9 @@ class ResetPasswordMutationService {
         passwordResetKey: String,
         newPassword: String
     ): Boolean {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+        val context = dfe.getContext<GraphQLContext>()
         if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
@@ -63,11 +65,14 @@ class ResetPasswordMutationService {
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
+                logger.info("${context.remoteIp} $email failed to reset password unknown user")
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
+                logger.info("${context.remoteIp} $email failed to reset password expired reset key")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
+                logger.info("${context.remoteIp} $email failed to reset password invalid reset key")
                 throw InvalidLinkException()
             }
 
