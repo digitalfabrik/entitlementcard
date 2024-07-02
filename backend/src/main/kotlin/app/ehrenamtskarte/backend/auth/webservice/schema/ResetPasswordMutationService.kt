@@ -53,6 +53,7 @@ class ResetPasswordMutationService {
         passwordResetKey: String,
         newPassword: String
     ): Boolean {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
         transaction {
@@ -63,6 +64,8 @@ class ResetPasswordMutationService {
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
+                val context = dfe.getContext<GraphQLContext>()
+                logger.info("${context.remoteIp} $email failed to reset password")
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
