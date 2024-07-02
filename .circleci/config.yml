@@ -110,7 +110,7 @@ commands:
         steps:
             - run:
                 command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-universal_binary.zip"
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
@@ -416,6 +416,9 @@ jobs:
             - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
+            - run:
+                command: softwareupdate --install-rosetta --agree-to-license
+                name: Install rosetta
             - restore_ruby_cache:
                 directory: frontend/ios
             - run:
@@ -1416,8 +1419,8 @@ workflows:
                 name: install_packages_to_server_production
                 production: true
                 requires:
-                    - upload_administration_packages_to_server_staging
-                    - upload_backend_packages_to_server_staging
+                    - upload_administration_packages_to_server_production
+                    - upload_backend_packages_to_server_production
         when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:
