@@ -1,7 +1,7 @@
+import { ACTIVATION_PATH, CUSTOM_SCHEME, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
-import {ACTIVATION_PATH, CUSTOM_SCHEME, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID} from "../constants";
 
 const ANDROID_APPLICATION_ID = "app.entitlementcard.nuernberg"
 const IOS_BUNDLE_IDENTIFIER = "app.sozialpass.nuernberg"
@@ -68,6 +68,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     ],
     featureFlags: {
         verification: true,
+        favorites: false,
     },
     applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
     publisherAddress:
@@ -89,9 +90,9 @@ export const nuernbergCommon: CommonBuildConfigType = {
         ios: {
             appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
             path: `/${ACTIVATION_PATH}/*`,
-            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
+            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`,
         },
-    }
+    },
 }
 
 let nuernberg: BuildConfigType = {
