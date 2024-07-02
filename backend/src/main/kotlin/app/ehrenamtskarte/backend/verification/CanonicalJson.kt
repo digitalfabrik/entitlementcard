@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.verification
 
+import app.ehrenamtskarte.backend.user.KoblenzUser
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.GeneratedMessageV3
@@ -87,6 +89,10 @@ class CanonicalJson {
                     else -> throw Error("Field ${it.key.name} has an unsupported type of ${it.key.type}")
                 }
             }
+        }
+
+        fun koblenzUserToString(koblenzUser: KoblenzUser): String {
+            return ObjectMapper().writeValueAsString(koblenzUser)
         }
 
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
