@@ -69,7 +69,7 @@ class ResetPasswordMutationService {
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
-                logger.info("${context.remoteIp} $email failed to reset password expired reset key")
+                logger.info("${context.remoteIp} $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
                 logger.info("${context.remoteIp} $email failed to reset password invalid reset key")
