@@ -72,7 +72,7 @@ class ResetPasswordMutationService {
                 logger.info("${context.remoteIp} $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
-                logger.info("${context.remoteIp} $email failed to reset password invalid reset key")
+                logger.info("${context.remoteIp} $email failed to reset password (invalid reset key)")
                 throw InvalidLinkException()
             }
 
