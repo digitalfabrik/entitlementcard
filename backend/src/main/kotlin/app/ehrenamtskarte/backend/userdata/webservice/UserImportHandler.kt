@@ -63,7 +63,7 @@ class UserImportHandler {
         }
 
         transaction {
-            // TODO replace with koblenz.pass.app after #1428
+            // TODO determine the project based on the auth token after #1491
             val project = ProjectEntity.find { Projects.project eq "showcase.entitlementcard.app" }.single()
 
             for (entry in csvParser) {

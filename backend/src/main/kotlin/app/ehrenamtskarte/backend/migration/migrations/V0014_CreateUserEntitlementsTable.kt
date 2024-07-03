@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Creates userentitlements table to store koblenz user data
  */
 @Suppress("ClassName")
-internal class V0013_CreateUserEntitlementsTable : Migration() {
+internal class V0014_CreateUserEntitlementsTable : Migration() {
     override val migrate: Statement = {
         exec(
             """
