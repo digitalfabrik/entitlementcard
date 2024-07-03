@@ -65,7 +65,7 @@ class ResetPasswordMutationService {
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
-                logger.info("${context.remoteIp} $email failed to reset password unknown user")
+                logger.info("${context.remoteIp} $email failed to reset password (unknown user or no reset mail sent)")
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
