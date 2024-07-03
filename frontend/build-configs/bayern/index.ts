@@ -1,11 +1,7 @@
+import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID, CUSTOM_SCHEME } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
-import {
-    ACTIVATION_PATH,
-    BAYERN_PRODUCTION_ID,
-    BAYERN_STAGING_ID, CUSTOM_SCHEME,
-} from "../constants";
 
 const ANDROID_APPLICATION_ID = "de.nrw.it.giz.ehrensache.bayern.android"
 const IOS_BUNDLE_IDENTIFIER = "de.nrw.it.ehrensachebayern"
@@ -50,8 +46,8 @@ export const bayernCommon: CommonBuildConfigType = {
         headerLogo: "assets/bayern/header-logo.png",
         headerLogoPadding: 4,
         headerLogoWidth: 60,
-        headerContainerPadding: {top: 0, right: 4, bottom: 0, left: 8},
-        bodyContainerPadding: {top: 8, right: 8, bottom: 8, left: 8},
+        headerContainerPadding: { top: 0, right: 4, bottom: 0, left: 8 },
+        bodyContainerPadding: { top: 8, right: 8, bottom: 8, left: 8 },
         bodyLogo: "assets/bayern/body-logo.png",
         bodyLogoPosition: "center",
         bodyLogoWidth: 125,
@@ -72,6 +68,7 @@ export const bayernCommon: CommonBuildConfigType = {
     ],
     featureFlags: {
         verification: true,
+        favorites: false,
     },
     applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
@@ -93,9 +90,9 @@ export const bayernCommon: CommonBuildConfigType = {
         ios: {
             appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
             path: `/${ACTIVATION_PATH}/*`,
-            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
+            pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`,
         },
-    }
+    },
 }
 
 let bayern: BuildConfigType = {
