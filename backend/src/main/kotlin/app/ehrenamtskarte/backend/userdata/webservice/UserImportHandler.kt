@@ -23,6 +23,9 @@ class UserImportHandler {
 
     fun handle(ctx: Context) {
         try {
+            // TODO as part of #1417:
+            // validate auth token, check to which project it belongs, check if this project is allowed to send user data
+            // (should be added as a flag in config.yml), save projectId into val for the later use, else return an error
             val files = ctx.uploadedFiles("file")
             when {
                 files.isEmpty() -> throw UserImportException("No file uploaded")
@@ -63,7 +66,7 @@ class UserImportHandler {
         }
 
         transaction {
-            // TODO determine the project based on the auth token after #1491
+            // TODO as part of #1417: use projectId defined from the auth token
             val project = ProjectEntity.find { Projects.project eq "showcase.entitlementcard.app" }.single()
 
             for (entry in csvParser) {
@@ -101,7 +104,6 @@ class UserImportHandler {
     }
 
     private fun parseDate(dateString: String): Instant {
-        // TODO use timezone from Koblenz config after #1428
         try {
             return dateStringToStartOfDayInstant(dateString, "dd.MM.yyyy", ZoneId.systemDefault())
         } catch (exception: DateTimeParseException) {
