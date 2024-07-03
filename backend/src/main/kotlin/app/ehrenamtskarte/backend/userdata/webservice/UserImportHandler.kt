@@ -67,6 +67,10 @@ class UserImportHandler {
             val project = ProjectEntity.find { Projects.project eq "showcase.entitlementcard.app" }.single()
 
             for (entry in csvParser) {
+                if (entry.toMap().size != csvParser.headerMap.size) {
+                    throw UserImportException("The entry [${entry.joinToString(",")}] has missing data")
+                }
+
                 val userHash = entry.get("userHash").toByteArray()
                 if (!isValidUserHash(userHash)) {
                     throw UserImportException("Invalid userHash format: ${userHash.joinToString(",")}")
