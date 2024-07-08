@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
-import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
@@ -13,8 +12,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 class UserImportHandler {
@@ -103,9 +102,9 @@ class UserImportHandler {
         return true
     }
 
-    private fun parseDate(dateString: String): Instant {
+    private fun parseDate(dateString: String): LocalDate {
         try {
-            return dateStringToStartOfDayInstant(dateString, "dd.MM.yyyy", ZoneId.systemDefault())
+            return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         } catch (exception: DateTimeParseException) {
             throw UserImportException("Failed to parse date [$dateString]. Expected format: dd.MM.yyyy")
         }

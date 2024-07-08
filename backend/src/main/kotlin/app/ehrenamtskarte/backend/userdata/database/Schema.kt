@@ -6,12 +6,13 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.timestamp
 
 object UserEntitlements : IntIdTable() {
     val userHash = binary("userHash")
-    val startDate = timestamp("startDate")
-    val endDate = timestamp("endDate")
+    val startDate = date("startDate")
+    val endDate = date("endDate")
     val revoked = bool("revoked")
     val projectId = reference("projectId", Projects)
     val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())

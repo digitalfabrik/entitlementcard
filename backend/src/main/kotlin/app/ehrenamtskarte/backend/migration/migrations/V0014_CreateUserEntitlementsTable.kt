@@ -14,8 +14,8 @@ internal class V0014_CreateUserEntitlementsTable : Migration() {
             CREATE TABLE userentitlements (
                 id integer NOT NULL,
                 "userHash" bytea NOT NULL,
-                "startDate" timestamp without time zone NOT NULL,
-                "endDate" timestamp without time zone NOT NULL,
+                "startDate" date NOT NULL,
+                "endDate" date NOT NULL,
                 "revoked" boolean NOT NULL,
                 "projectId" integer NOT NULL,
                 "lastUpdated" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
