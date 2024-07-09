@@ -69,7 +69,7 @@ class Argon2IdHasher {
             val generator = Argon2BytesGenerator()
             generator.init(params)
             val result = ByteArray(hashLength)
-            generator.generateBytes(canonicalJson.toCharArray(), result)
+            generator.generateBytes(canonicalJson.toByteArray(), result)
             return encode(result, params)
         }
     }

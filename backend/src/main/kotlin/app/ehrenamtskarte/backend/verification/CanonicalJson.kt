@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.verification
 
 import app.ehrenamtskarte.backend.user.KoblenzUser
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
@@ -92,7 +93,8 @@ class CanonicalJson {
         }
 
         fun koblenzUserToString(koblenzUser: KoblenzUser): String {
-            return ObjectMapper().writeValueAsString(koblenzUser)
+            val map = ObjectMapper().convertValue(koblenzUser, object : TypeReference<Map<String, Any>>() {})
+            return serializeToString(map)
         }
 
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
