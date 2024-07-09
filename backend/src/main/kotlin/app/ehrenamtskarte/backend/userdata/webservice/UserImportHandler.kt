@@ -39,7 +39,7 @@ class UserImportHandler {
             }
             ctx.status(200).result("Import successfully completed")
         } catch (exception: UserImportException) {
-            ctx.status(400).result(exception.message ?: "Invalid input provided")
+            ctx.status(400).result(exception.message ?: "Import failed")
         } catch (exception: Exception) {
             logger.error("Failed to perform user import", exception)
             ctx.status(500).result("Internal error occurred")
@@ -70,18 +70,18 @@ class UserImportHandler {
 
             for (entry in csvParser) {
                 if (entry.toMap().size != csvParser.headerMap.size) {
-                    throw UserImportException("The entry [${entry.joinToString(",")}] has missing data")
+                    throw UserImportException(entry.recordNumber, "Missing data")
                 }
 
                 val userHash = entry.get("userHash").toByteArray()
                 if (!isValidUserHash(userHash)) {
-                    throw UserImportException("Invalid userHash format: ${userHash.joinToString(",")}")
+                    throw UserImportException(entry.recordNumber, "Failed to validate userHash")
                 }
 
-                val startDate = parseDate(entry.get("startDate"))
-                val endDate = parseDate(entry.get("endDate"))
+                val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
+                val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
                 if (startDate.isAfter(endDate)) {
-                    throw UserImportException("Start date [$startDate] cannot be after end date [$endDate]")
+                    throw UserImportException(entry.recordNumber, "Start date cannot be after end date")
                 }
 
                 val revoked = entry.get("revoked").toBoolean()
@@ -102,11 +102,11 @@ class UserImportHandler {
         return true
     }
 
-    private fun parseDate(dateString: String): LocalDate {
+    private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
         try {
             return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         } catch (exception: DateTimeParseException) {
-            throw UserImportException("Failed to parse date [$dateString]. Expected format: dd.MM.yyyy")
+            throw UserImportException(lineNumber, "Failed to parse date [$dateString]. Expected format: dd.MM.yyyy")
         }
     }
 }
