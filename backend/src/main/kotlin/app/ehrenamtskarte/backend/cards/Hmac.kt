@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification
+package app.ehrenamtskarte.backend.cards
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
