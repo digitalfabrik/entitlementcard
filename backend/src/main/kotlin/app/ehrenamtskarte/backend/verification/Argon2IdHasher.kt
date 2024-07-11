@@ -11,7 +11,7 @@ import java.util.Base64
 class Argon2IdHasher {
     companion object {
         /**
-         * Copied from spring-security Argon2EncodingUtils.java licenced under Apache 2.0
+         * Copied from spring-security Argon2EncodingUtils.java licenced under Apache 2.0, removed the salt from the result
          *
          * Encodes a raw Argon2-hash and its parameters into the standard Argon2-hash-string
          * as specified in the reference implementation
@@ -43,9 +43,6 @@ class Argon2IdHasher {
                 .append(parameters.iterations)
                 .append(",p=")
                 .append(parameters.lanes)
-            if (parameters.salt != null) {
-                stringBuilder.append("$").append(b64encoder.encodeToString(parameters.salt))
-            }
             stringBuilder.append("$").append(b64encoder.encodeToString(hash))
             return stringBuilder.toString()
         }

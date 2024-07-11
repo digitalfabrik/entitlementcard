@@ -71,7 +71,6 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
     implementation("de.grundid.opendatalab:geojson-jackson:1.14")
-    implementation("commons-codec:commons-codec:1.17.0")
 
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
