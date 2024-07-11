@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.webservice
 import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParams
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
+import app.ehrenamtskarte.backend.cards.webservice.cardsGraphQlParams
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
@@ -11,7 +12,6 @@ import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
-import app.ehrenamtskarte.backend.verification.webservice.verificationGraphQlParams
 import com.auth0.jwt.exceptions.AlgorithmMismatchException
 import com.auth0.jwt.exceptions.InvalidClaimException
 import com.auth0.jwt.exceptions.JWTDecodeException
@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException
 class GraphQLHandler(
     private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
-        storesGraphQlParams stitch verificationGraphQlParams
+        storesGraphQlParams stitch cardsGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
     private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
 ) {

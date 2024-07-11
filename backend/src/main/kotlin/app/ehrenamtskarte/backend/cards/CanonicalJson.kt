@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification
+package app.ehrenamtskarte.backend.cards
 
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type

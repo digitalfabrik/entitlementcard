@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification.webservice
+package app.ehrenamtskarte.backend.cards.webservice
 
 import Card
 import com.google.zxing.common.BitArray

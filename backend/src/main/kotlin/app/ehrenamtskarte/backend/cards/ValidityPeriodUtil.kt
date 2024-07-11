@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification
+package app.ehrenamtskarte.backend.cards
 
 import java.time.Clock
 import java.time.LocalDate

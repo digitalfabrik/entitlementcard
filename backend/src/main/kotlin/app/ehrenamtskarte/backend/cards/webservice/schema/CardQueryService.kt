@@ -1,12 +1,12 @@
-package app.ehrenamtskarte.backend.verification.webservice.schema
+package app.ehrenamtskarte.backend.cards.webservice.schema
 
+import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.cards.service.CardVerifier
+import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationModel
+import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.matomo.Matomo
-import app.ehrenamtskarte.backend.verification.database.CodeType
-import app.ehrenamtskarte.backend.verification.service.CardVerifier
-import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationModel
-import app.ehrenamtskarte.backend.verification.webservice.schema.types.CardVerificationResultModel
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import java.util.Base64
