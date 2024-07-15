@@ -21,7 +21,7 @@ The example data is
 }
 ```
 
-- The full_name must be `FirstnameSpaceLastname`. Every char must exaclty match the user input, as otherwise there is not possiblity to match the data Koblenz transfers with the input the user makes.
+- The full_name must be `FirstnameSpaceLastname`. Every char must exactly match the user input, as otherwise there is not possibility to match the data Koblenz transfers with the input the user makes.
 e.g. `Karla Koblenz` will match neither with `Karla Lisa Koblenz` nor with `Karlá Koblenz`.
 - The birthday is defined in our protobuf [card.proto](../frontend/card.proto) file: It counts the days since the birthday (calculated from 1970-01-01).
   All values of this field are valid, including the 0, which indicates that the birthday is on 1970-01-01. Birthdays before 1970-01-01 have negative values.
