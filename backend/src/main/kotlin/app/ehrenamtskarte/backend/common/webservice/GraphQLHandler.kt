@@ -50,7 +50,7 @@ class GraphQLHandler(
         graphQLParams.subscriptions
     )
     private val graphQL = GraphQL.newGraphQL(graphQLSchema)
-        .defaultDataFetcherExceptionHandler(GraphQLExceptionHandler()).build()!!
+        .defaultDataFetcherExceptionHandler(CustomDataFetcherExceptionHandler()).build()!!
 
     private val mapper = jacksonObjectMapper()
 
@@ -87,7 +87,7 @@ class GraphQLHandler(
         }
     }
 
-    private fun getIpAdress(context: Context): String {
+    private fun getIpAddress(context: Context): String {
         val xRealIp = context.header("X-Real-IP")
         val xForwardedFor = context.header("X-Forwarded-For")
         val remoteAddress = context.req().remoteAddr
@@ -97,32 +97,26 @@ class GraphQLHandler(
 
     /**
      * Get any errors and data from [executionResult].
+     *
+     * If there is an unknown exception it was wrapped by the exception handler in an ExceptionWhileDataFetching.
+     * In this case, we rethrow it. The server will return either a 40x or 50x status with empty body (see [handle])
      */
     private fun getResult(executionResult: ExecutionResult): MutableMap<String, Any> {
         val result = mutableMapOf<String, Any>()
 
         if (executionResult.errors.isNotEmpty()) {
-            // if we encounter duplicate errors while data fetching, only include one copy
-            result["errors"] = executionResult.errors.distinctBy {
+            executionResult.errors.forEach {
                 if (it is ExceptionWhileDataFetching) {
-                    it.exception
-                } else {
-                    it
+                    throw it.exception
                 }
             }
-            // if we encounter an UnauthorizedException, rethrow it
-            executionResult.errors
-                .filterIsInstance<ExceptionWhileDataFetching>()
-                .map { it.exception }
-                .firstOrNull { it is UnauthorizedException }
-                ?.let { throw it }
+
+            result["errors"] = executionResult.errors
         }
 
         try {
-            // if data is null, get data will fail exceptionally
-            result["data"] = executionResult.getData<Any>()
-        } catch (_: Exception) {
-        }
+            result["data"] = executionResult.getData<Any?>()
+        } catch (_: NullPointerException) {}
 
         return result
     }
@@ -163,7 +157,7 @@ class GraphQLHandler(
         // Execute the query against the schema
         try {
             val (payload, files) = getPayload(context)
-            val remoteIp = getIpAdress(context)
+            val remoteIp = getIpAddress(context)
             val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData)
 
             val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
