@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification.webservice.schema.types
+package app.ehrenamtskarte.backend.cards.webservice.schema.types
 
 data class CardStatisticsResultModel(
     val region: String,

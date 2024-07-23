@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.verification.database
+package app.ehrenamtskarte.backend.cards.database
 
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.regions.database.Regions

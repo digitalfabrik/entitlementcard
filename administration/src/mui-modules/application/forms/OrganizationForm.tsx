@@ -100,7 +100,8 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       </Typography>
       {applicantName === state.contactName.shortText && (
         <WarningContactPersonSamePerson severity='warning'>
-          Die Kontaktperson in der Organisation darf nicht der Antragssteller sein.
+          Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. Bitte beachten
+          Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.
         </WarningContactPersonSamePerson>
       )}
       <ShortTextForm.Component

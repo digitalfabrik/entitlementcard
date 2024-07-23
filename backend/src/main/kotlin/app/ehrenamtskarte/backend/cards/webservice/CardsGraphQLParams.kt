@@ -1,15 +1,15 @@
-package app.ehrenamtskarte.backend.verification.webservice
+package app.ehrenamtskarte.backend.cards.webservice
 
+import app.ehrenamtskarte.backend.cards.webservice.schema.CardMutationService
+import app.ehrenamtskarte.backend.cards.webservice.schema.CardQueryService
+import app.ehrenamtskarte.backend.cards.webservice.schema.CardStatisticsQueryService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
-import app.ehrenamtskarte.backend.verification.webservice.schema.CardMutationService
-import app.ehrenamtskarte.backend.verification.webservice.schema.CardQueryService
-import app.ehrenamtskarte.backend.verification.webservice.schema.CardStatisticsQueryService
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
-val verificationGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.verification.webservice.schema")),
+val cardsGraphQlParams = GraphQLParams(
+    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.cards.webservice.schema")),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(
         TopLevelObject(CardQueryService()),

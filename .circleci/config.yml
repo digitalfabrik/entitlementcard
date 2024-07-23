@@ -931,6 +931,15 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_github_release:
+        docker:
+            - image: cimg/node:20.13.1
+        steps:
+            - install_app_toolbelt
+            - run:
+                command: app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Remove prerelease flag from github release
+            - notify
     promote_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -1056,6 +1065,9 @@ parameters:
         default: false
         type: boolean
     run_frontend:
+        default: false
+        type: boolean
+    run_promote_all:
         default: false
         type: boolean
     run_promote_backend_administration:
@@ -1628,6 +1640,40 @@ workflows:
                 requires:
                     - check_frontend
         when: << pipeline.parameters.run_frontend >>
+    promote_all:
+        jobs:
+            - promote_android:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_bayern_android
+            - promote_android:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
+            - promote_to_server:
+                context:
+                    - credentials-ehrenamtskarte
+                name: promote_backend_administration
+            - promote_github_release:
+                context:
+                    - deliverino
+        when: << pipeline.parameters.run_promote_all >>
     promote_backend_administration:
         jobs:
             - promote_to_server:

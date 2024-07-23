@@ -86,17 +86,17 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
+        <SubForms.hasAcceptedEmailUsage.Component
+          label='Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf.'
+          state={state.hasAcceptedEmailUsage}
+          setState={setHasAcceptedEmailUsage}
+          options={hasAcceptedEmailUsageOptions}
+        />
         <SubForms.givenInformationIsCorrectAndComplete.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
-        />
-        <SubForms.hasAcceptedEmailUsage.Component
-          label='Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden.'
-          state={state.hasAcceptedEmailUsage}
-          setState={setHasAcceptedEmailUsage}
-          options={hasAcceptedEmailUsageOptions}
         />
         <BasicDialog
           open={openPrivacyPolicy}
