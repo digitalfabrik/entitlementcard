@@ -32,6 +32,7 @@ const config: ProjectConfig = {
     enabled: false,
   },
   cardStatistics: { enabled: false },
+  freinetCSVImportEnabled: true,
 }
 
 export default config

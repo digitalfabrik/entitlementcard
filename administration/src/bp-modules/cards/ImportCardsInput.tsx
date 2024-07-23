@@ -30,9 +30,10 @@ type ImportCardsInputProps = {
   headers: string[]
   setCardBlueprints: (cardBlueprints: CSVCard[]) => void
   lineToBlueprint: (line: string[], csvHeader: string[]) => CSVCard
+  isFreinetFormat: boolean
 }
 
-const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: ImportCardsInputProps) => {
+const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFreinetFormat }: ImportCardsInputProps) => {
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
@@ -53,7 +54,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       const lines = content
         .split('\n')
         .filter(line => line.trim().length)
-        .map(line => line.split(',').map(cell => cell.trim()))
+        .map(line => line.split(/,|;/).map(cell => cell.trim()))
 
       const numberOfColumns = lines[0]?.length
 
@@ -120,7 +121,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     <InputContainer
       title='Wählen Sie eine Datei'
       icon={StateIcon}
-      description={<ImportCardsRequirementsText header={headers} />}
+      description={<ImportCardsRequirementsText header={headers} isFreinetFormat={isFreinetFormat} />}
       action={
         <CardImportInputContainer>
           <input
