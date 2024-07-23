@@ -43,15 +43,15 @@ Hash with Argon2id with the following parameters:
 | Version      | 19                                                                             | 
 | Iterations   | 2                                                                              | 
 | Parallellism | 1                                                                              | 
-| Memory       | 16                                                                             | 
+| Memory       | 19                                                                             | 
 | HashLength   | 32                                                                             | 
 | Salt         | Secret Salt will be shared with Koblenz<br/>for the example use `123456789ABC` | 
 
 
 ### 4. The result...
-...for the example data and example salt must be:
+...for the example data and example salt must be (output in encoded form with salt removed):
 
-`$argon2id$v=19$m=16,t=2,p=1$MTIzNDU2Nzg5QUJD$UIOJZIsSL8vXcuCB82xZ5E8tpH6sQd3d4U0uC02DP40`
+`$argon2id$v=19$m=16,t=2,p=1$UIOJZIsSL8vXcuCB82xZ5E8tpH6sQd3d4U0uC02DP40`
 
 
 ## Additional Information

@@ -20,7 +20,7 @@ class Argon2IdHasher {
          * {@code $argon2<T>[$v=<num>]$m=<num>,t=<num>,p=<num>$<bin>$<bin>}
          **/
         @Throws(IllegalArgumentException::class)
-        fun encode(
+        private fun encodeWithoutSalt(
             hash: ByteArray?,
             parameters: Argon2Parameters
         ): String? {
@@ -60,14 +60,14 @@ class Argon2IdHasher {
                     .withIterations(2)
                     .withSalt(pepperByteArray)
                     .withParallelism(1)
-                    .withMemoryAsKB(16)
+                    .withMemoryAsKB(19)
                     .build()
 
             val generator = Argon2BytesGenerator()
             generator.init(params)
             val result = ByteArray(hashLength)
             generator.generateBytes(canonicalJson.toByteArray(), result)
-            return encode(result, params)
+            return encodeWithoutSalt(result, params)
         }
     }
 }
