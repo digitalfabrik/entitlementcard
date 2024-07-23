@@ -5,7 +5,7 @@
 # ln -s ../../.github/hooks/pre-commit .git/hooks/pre-commit
 #
 
-REACT_FILES=$(git diff --cached --name-only administration/)
+REACT_FILES=$(git diff --cached --name-only administration/ | sed 's| |\\ |g')
 
 if [ ! -z "$REACT_FILES" ]; then
   cd administration && yarn lint && cd ..
