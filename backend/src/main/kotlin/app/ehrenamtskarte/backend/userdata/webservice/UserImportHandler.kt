@@ -92,7 +92,8 @@ class UserImportHandler {
                     throw UserImportException(entry.recordNumber, "Start date cannot be after end date")
                 }
 
-                val revoked = entry.get("revoked").toBoolean()
+                val revoked = entry.get("revoked").toBooleanStrictOrNull()
+                    ?: throw UserImportException(entry.recordNumber, "Revoked must be a boolean value")
 
                 UserEntitlementsRepository.insertOrUpdateUserData(
                     userHash,
