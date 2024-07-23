@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.userdata.database
 
-import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -14,11 +13,11 @@ object UserEntitlements : IntIdTable() {
     val startDate = date("startDate")
     val endDate = date("endDate")
     val revoked = bool("revoked")
-    val regionId = reference("regionId", Regions)
+    val regionKey = char("regionKey", 5)
     val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())
 
     init {
-        uniqueIndex("unique_userHash_regionId", userHash, regionId)
+        uniqueIndex("unique_userHash_regionKey", userHash, regionKey)
     }
 }
 
@@ -29,6 +28,6 @@ class UserEntitlementsEntity(id: EntityID<Int>) : IntEntity(id) {
     var startDate by UserEntitlements.startDate
     var endDate by UserEntitlements.endDate
     var revoked by UserEntitlements.revoked
-    var regionId by UserEntitlements.regionId
+    var regionKey by UserEntitlements.regionKey
     var lastUpdated by UserEntitlements.lastUpdated
 }
