@@ -86,16 +86,16 @@ data class ApplicationDetails(
                     hasAcceptedPrivacyPolicy
                 ),
                 JsonField(
+                    "hasAcceptedEmailUsage",
+                    mapOf("de" to "Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf"),
+                    Type.Boolean,
+                    hasAcceptedEmailUsage
+                ),
+                JsonField(
                     "givenInformationIsCorrectAndComplete",
                     mapOf("de" to "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind"),
                     Type.Boolean,
                     givenInformationIsCorrectAndComplete
-                ),
-                JsonField(
-                    "hasAcceptedEmailUsage",
-                    mapOf("de" to "Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden."),
-                    Type.Boolean,
-                    hasAcceptedEmailUsage
                 )
             )
         )

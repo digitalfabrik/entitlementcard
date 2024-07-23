@@ -11,7 +11,7 @@ steps:
   - run:
       name: Transfer artifacts to production
       command: |
-              mkdir /home/circleci/.ssh
+              mkdir -p /home/circleci/.ssh
               echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
               echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
               scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/

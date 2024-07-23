@@ -1,12 +1,32 @@
 package app.ehrenamtskarte.backend.exception
 
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
-import graphql.GraphqlErrorException
+import graphql.ErrorType
+import graphql.GraphQLError
+import graphql.execution.ResultPath
+import graphql.language.SourceLocation
 
-open class GraphQLBaseException(val code: GraphQLExceptionCode) : GraphqlErrorException(
-    newErrorException().extensions(
-        mapOf(
-            Pair("code", code)
-        )
-    )
-)
+/**
+ * If an instance of this class is thrown inside the GraphQL endpoints and/or data fetching, it is converted to an
+ * GraphQLError in [app.ehrenamtskarte.backend.common.webservice.CustomDataFetcherExceptionHandler].
+ * It is not logged as it's an "expected error".
+ */
+open class GraphQLBaseException(
+    val code: GraphQLExceptionCode,
+    extraExtensions: Map<String, Any> = emptyMap()
+) : Exception() {
+
+    override val message: String? = "Exception for GraphQL error $code was thrown."
+
+    val extensions: Map<String, Any> = extraExtensions.plus("code" to code)
+
+    fun toError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError {
+        return GraphQLError.newError()
+            .errorType(ErrorType.DataFetchingException)
+            .message("Error $code occurred.")
+            .extensions(extensions)
+            .path(path)
+            .location(location)
+            .build()
+    }
+}

@@ -110,7 +110,7 @@ commands:
         steps:
             - run:
                 command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-x86_64.zip"
+                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-universal_binary.zip"
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
@@ -416,6 +416,9 @@ jobs:
             - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
+            - run:
+                command: softwareupdate --install-rosetta --agree-to-license
+                name: Install rosetta
             - restore_ruby_cache:
                 directory: frontend/ios
             - run:
@@ -928,6 +931,15 @@ jobs:
                 name: '[FL] Play Store Promotion'
                 working_directory: frontend/android
             - notify
+    promote_github_release:
+        docker:
+            - image: cimg/node:20.13.1
+        steps:
+            - install_app_toolbelt
+            - run:
+                command: app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Remove prerelease flag from github release
+            - notify
     promote_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -964,7 +976,7 @@ jobs:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - run:
                 command: |
-                    mkdir /home/circleci/.ssh
+                    mkdir -p /home/circleci/.ssh
                     echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
                     echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
                     scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
@@ -1053,6 +1065,9 @@ parameters:
         default: false
         type: boolean
     run_frontend:
+        default: false
+        type: boolean
+    run_promote_all:
         default: false
         type: boolean
     run_promote_backend_administration:
@@ -1416,8 +1431,8 @@ workflows:
                 name: install_packages_to_server_production
                 production: true
                 requires:
-                    - upload_administration_packages_to_server_staging
-                    - upload_backend_packages_to_server_staging
+                    - upload_administration_packages_to_server_production
+                    - upload_backend_packages_to_server_production
         when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:
@@ -1625,6 +1640,40 @@ workflows:
                 requires:
                     - check_frontend
         when: << pipeline.parameters.run_frontend >>
+    promote_all:
+        jobs:
+            - promote_android:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_bayern_android
+            - promote_android:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_nuernberg_android
+            - promote_ios:
+                build_config_name: bayern
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_bayern_ios
+            - promote_ios:
+                build_config_name: nuernberg
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_nuernberg_ios
+            - promote_to_server:
+                context:
+                    - credentials-ehrenamtskarte
+                name: promote_backend_administration
+            - promote_github_release:
+                context:
+                    - deliverino
+        when: << pipeline.parameters.run_promote_all >>
     promote_backend_administration:
         jobs:
             - promote_to_server:
