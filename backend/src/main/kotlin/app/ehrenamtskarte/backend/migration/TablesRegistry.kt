@@ -13,7 +13,6 @@ import app.ehrenamtskarte.backend.stores.database.Categories
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import app.ehrenamtskarte.backend.verification.database.Cards
 
 object TablesRegistry {
     fun getAllTables() = arrayOf(

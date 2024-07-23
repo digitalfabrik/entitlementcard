@@ -17,7 +17,7 @@ internal class V0014_CreateUserEntitlementsTable : Migration() {
                 "startDate" date NOT NULL,
                 "endDate" date NOT NULL,
                 "revoked" boolean NOT NULL,
-                "projectId" integer NOT NULL,
+                "regionId" integer NOT NULL,
                 "lastUpdated" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
             );            
             
@@ -30,9 +30,9 @@ internal class V0014_CreateUserEntitlementsTable : Migration() {
             ALTER TABLE ONLY userentitlements ADD CONSTRAINT userentitlements_pkey PRIMARY KEY (id);
             
             ALTER TABLE ONLY userentitlements
-                ADD CONSTRAINT fk_userentitlements_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+                ADD CONSTRAINT fk_userentitlements_regionId__id FOREIGN KEY ("regionId") REFERENCES regions(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
                 
-            ALTER TABLE userentitlements ADD CONSTRAINT unique_userHash_projectId UNIQUE ("userHash", "projectId");
+            ALTER TABLE userentitlements ADD CONSTRAINT unique_userHash_regionId UNIQUE ("userHash", "regionId");
             """.trimIndent()
         )
     }

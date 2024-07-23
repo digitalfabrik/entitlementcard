@@ -2,11 +2,13 @@ package app.ehrenamtskarte.backend.userdata.webservice
 
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.userdata.exception.UserImportException
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -59,18 +61,24 @@ class UserImportHandler {
 
     private fun importData(csvParser: CSVParser) {
         val headers = csvParser.headerMap.keys
-        val requiredColumns = setOf("userHash", "startDate", "endDate", "revoked")
+        val requiredColumns = setOf("regionId", "userHash", "startDate", "endDate", "revoked")
         if (!headers.containsAll(requiredColumns)) {
             throw UserImportException("Missing required columns: ${requiredColumns - headers}")
         }
 
         transaction {
-            // TODO as part of #1417: use projectId defined from the auth token
-            val project = ProjectEntity.find { Projects.project eq "showcase.entitlementcard.app" }.single()
+            // TODO as part of #1417: define the project by auth token
+            val project = ProjectEntity.find { Projects.project eq "bayern.ehrenamtskarte.app" }.single()
+            val regionsByProject = Regions.select { Regions.projectId eq project.id }.map { it[Regions.id].value }
 
             for (entry in csvParser) {
                 if (entry.toMap().size != csvParser.headerMap.size) {
                     throw UserImportException(entry.recordNumber, "Missing data")
+                }
+
+                val regionId = entry.get("regionId").toInt()
+                if (!regionsByProject.contains(regionId)) {
+                    throw UserImportException(entry.recordNumber, "Specified region not found for the current project")
                 }
 
                 val userHash = entry.get("userHash").toByteArray()
@@ -91,7 +99,7 @@ class UserImportHandler {
                     startDate,
                     endDate,
                     revoked,
-                    project.id.value
+                    regionId
                 )
             }
         }
