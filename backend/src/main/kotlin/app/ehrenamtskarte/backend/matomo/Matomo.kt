@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.matomo
 
+import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.config.MatomoConfig
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.stores.webservice.schema.SearchParams
-import app.ehrenamtskarte.backend.verification.database.CodeType
-import app.ehrenamtskarte.backend.verification.database.repos.CardRepository
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/favorites/favorite_store.dart';
@@ -114,7 +115,7 @@ class DetailAppBar extends StatelessWidget {
       flexibleSpace: DetailAppBarHeaderImage(categoryId: categoryId),
       color: accentColor,
       actions: [
-        if (showFavoriteButton)
+        if (buildConfig.featureFlags.favorites && showFavoriteButton)
           IconButton(
               color: foregroundColor,
               icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),

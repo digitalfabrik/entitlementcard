@@ -53,12 +53,13 @@ class HomePageState extends State<HomePage> {
         (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
-      AppFlow(
-        const FavoritesPage(),
-        Icons.favorite_border_outlined,
-        (BuildContext context) => t.favorites.title,
-        GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
-      ),
+      if (buildConfig.featureFlags.favorites)
+        AppFlow(
+          const FavoritesPage(),
+          Icons.favorite_border_outlined,
+          (BuildContext context) => t.favorites.title,
+          GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
+        ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
           IdentificationPage(),
