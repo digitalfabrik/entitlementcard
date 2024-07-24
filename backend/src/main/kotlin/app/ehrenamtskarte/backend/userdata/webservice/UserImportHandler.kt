@@ -61,7 +61,7 @@ class UserImportHandler {
 
     private fun importData(csvParser: CSVParser) {
         val headers = csvParser.headerMap.keys
-        val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
+        val requiredColumns = setOf("regionId", "userHash", "startDate", "endDate", "revoked")
         if (!headers.containsAll(requiredColumns)) {
             throw UserImportException("Missing required columns: ${requiredColumns - headers}")
         }
@@ -69,15 +69,15 @@ class UserImportHandler {
         transaction {
             // TODO as part of #1417: define the project by auth token
             val project = ProjectEntity.find { Projects.project eq "bayern.ehrenamtskarte.app" }.single()
-            val regionsByProject = Regions.select { Regions.projectId eq project.id }.map { it[Regions.regionIdentifier] }
+            val regionsByProject = Regions.select { Regions.projectId eq project.id }.map { it[Regions.id].value }
 
             for (entry in csvParser) {
                 if (entry.toMap().size != csvParser.headerMap.size) {
                     throw UserImportException(entry.recordNumber, "Missing data")
                 }
 
-                val regionKey = entry.get("regionKey")
-                if (!regionsByProject.contains(regionKey)) {
+                val regionId = entry.get("regionId").toInt()
+                if (!regionsByProject.contains(regionId)) {
                     throw UserImportException(entry.recordNumber, "Specified region not found for the current project")
                 }
 
@@ -100,7 +100,7 @@ class UserImportHandler {
                     startDate,
                     endDate,
                     revoked,
-                    regionKey
+                    regionId
                 )
             }
         }

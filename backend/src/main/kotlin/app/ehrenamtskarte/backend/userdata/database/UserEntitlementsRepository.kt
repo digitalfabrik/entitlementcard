@@ -9,10 +9,10 @@ import java.time.LocalDate
 
 object UserEntitlementsRepository {
 
-    fun insertOrUpdateUserData(userHash: ByteArray, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionKey: String) {
+    fun insertOrUpdateUserData(userHash: ByteArray, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionId: Int) {
         UserEntitlements.upsert(
             UserEntitlements.userHash,
-            UserEntitlements.regionKey,
+            UserEntitlements.regionId,
             onUpdate = listOf(
                 UserEntitlements.startDate to dateLiteral(startDate),
                 UserEntitlements.endDate to dateLiteral(endDate),
@@ -24,7 +24,7 @@ object UserEntitlementsRepository {
             it[UserEntitlements.startDate] = startDate
             it[UserEntitlements.endDate] = endDate
             it[UserEntitlements.revoked] = revoked
-            it[UserEntitlements.regionKey] = regionKey
+            it[UserEntitlements.regionId] = regionId
         }
     }
 }
