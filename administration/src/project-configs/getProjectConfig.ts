@@ -93,6 +93,7 @@ export interface ProjectConfig {
   }
   csvExport: CsvExport
   cardStatistics: CardStatistics
+  freinetCSVImportEnabled: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

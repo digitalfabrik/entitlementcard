@@ -9,15 +9,20 @@ const RequirementsList = styled.ul`
 
 type ImportCardsRequirementsProps = {
   header: string[]
+  isFreinetFormat: boolean | undefined
 }
 
-const ImportCardsRequirementsText = ({ header }: ImportCardsRequirementsProps) => {
+const ImportCardsRequirementsText = ({ header, isFreinetFormat = false }: ImportCardsRequirementsProps) => {
   return (
     <RequirementsList>
       <li>Maximale Dateigröße: {FILE_SIZE_LIMIT_MEGA_BYTES}MB</li>
       <li>Dateiformat: CSV</li>
       <li>Maximalanzahl an Einträgen: {ENTRY_LIMIT}</li>
-      <li>Spaltenformat: {header.join(', ')}</li>
+      <li>
+        {isFreinetFormat
+          ? 'Es müssen mindestens die Spalten "vorname", "nachname" und "eak_datum" vorhanden sein'
+          : `Spaltenformat:  ${header.join(', ')}`}
+      </li>
       <li>Gültiges Datumsformat: tt.mm.jjjj (Beispiel: 01.01.1970)</li>
     </RequirementsList>
   )
