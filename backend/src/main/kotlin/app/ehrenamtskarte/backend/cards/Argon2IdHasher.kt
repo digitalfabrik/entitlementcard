@@ -60,7 +60,7 @@ class Argon2IdHasher {
                     .withIterations(2)
                     .withSalt(pepperByteArray)
                     .withParallelism(1)
-                    .withMemoryAsKB(19)
+                    .withMemoryAsKB(19456)
                     .build()
 
             val generator = Argon2BytesGenerator()
