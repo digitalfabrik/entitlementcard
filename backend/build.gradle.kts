@@ -28,6 +28,7 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
     implementation("io.javalin:javalin:6.1.3")
+    testImplementation("io.javalin:javalin-testtools:6.1.3")
     // jetty version 11.0.20 causes memory leaks, should be removed with next javalin update using higher jetty version https://github.com/jetty/jetty.project/pull/11780
     constraints {
         implementation("org.eclipse.jetty:jetty-server:11.0.21")
