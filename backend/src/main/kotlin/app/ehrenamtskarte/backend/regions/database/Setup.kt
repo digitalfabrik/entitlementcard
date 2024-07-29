@@ -14,6 +14,7 @@ fun insertOrUpdateRegions() {
         regionProjectId: String,
         regionName: String,
         regionPrefix: String,
+        regionKey: String?,
         regionWebsite: String
     ) {
         val project =
@@ -25,13 +26,14 @@ fun insertOrUpdateRegions() {
                 projectId = project.id
                 name = regionName
                 prefix = regionPrefix
-                regionIdentifier = null
+                regionIdentifier = regionKey
                 website = regionWebsite
             }
         } else {
             region.name = regionName
             region.prefix = regionPrefix
             region.website = regionWebsite
+            region.regionIdentifier = regionKey
         }
     }
 
@@ -56,8 +58,8 @@ fun insertOrUpdateRegions() {
                 dbRegion.website = eakRegion[3]
             }
         }
-
-        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "https://nuernberg.de")
-        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "https://koblenz.de/")
+        // TODO #1551: Adjust regionidentifier_unique constraint
+        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", null, "https://nuernberg.de")
+        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/")
     }
 }
