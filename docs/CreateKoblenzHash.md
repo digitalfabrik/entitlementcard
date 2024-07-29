@@ -51,7 +51,7 @@ Hash with Argon2id with the following parameters:
 ### 4. The result...
 ...for the example data and example salt must be (output in encoded form with salt removed):
 
-`$argon2id$v=19$m=16,t=2,p=1$UIOJZIsSL8vXcuCB82xZ5E8tpH6sQd3d4U0uC02DP40`
+`$argon2id$v=19$m=19,t=2,p=1$78SNlzz8llqPwetRlp8Lnag/WZGPc5XbimYbShpwVMQ`
 
 
 ## Additional Information

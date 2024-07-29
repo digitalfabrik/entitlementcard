@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.cards
 
 import Card
+import app.ehrenamtskarte.backend.cards.CanonicalJson.Companion.koblenzUserToString
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.koblenzTestUser
-import app.ehrenamtskarte.backend.verification.CanonicalJson.Companion.koblenzUserToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
