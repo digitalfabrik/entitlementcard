@@ -71,7 +71,7 @@ class EakApplicationMutationService {
                 val applicantName = "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
                 Mailer.sendApplicationVerificationMail(backendConfig, applicantName, projectConfig, applicationVerification)
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception)
+                dataFetcherResultBuilder.error(exception.toError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)

@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.Categories
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 
 object TablesRegistry {
     fun getAllTables() = arrayOf(
@@ -26,6 +27,7 @@ object TablesRegistry {
         AcceptingStores,
         Addresses,
         Contacts,
-        Categories
+        Categories,
+        UserEntitlements
     )
 }

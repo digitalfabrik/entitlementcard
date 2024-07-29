@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHa
 import app.ehrenamtskarte.backend.application.webservice.HealthHandler
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
+import app.ehrenamtskarte.backend.userdata.webservice.UserImportHandler
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File
@@ -51,6 +52,7 @@ class WebService {
         val mapStyleHandler = MapStyleHandler(config)
         val applicationHandler = ApplicationAttachmentHandler(applicationData)
         val healthHandler = HealthHandler(config)
+        val userImportHandler = UserImportHandler()
 
         app.post("/") { ctx ->
             if (!production) {
@@ -73,6 +75,11 @@ class WebService {
         }
 
         app.get("/health") { ctx -> healthHandler.handle(ctx) }
+
+        if (!production) {
+            // TODO disable for production until the Koblenz project is ready to go live
+            app.post("/users/import") { ctx -> userImportHandler.handle(ctx) }
+        }
 
         app.start(host, port)
         println("Server is running at http://$host:$port")
