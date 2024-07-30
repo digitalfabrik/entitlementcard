@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.user
+package app.ehrenamtskarte.backend.userdata
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder

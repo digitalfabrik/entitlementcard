@@ -2,7 +2,7 @@
 import app.ehrenamtskarte.backend.cards.CanonicalJson
 import app.ehrenamtskarte.backend.common.utils.Environment
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
-import app.ehrenamtskarte.backend.user.KoblenzUser
+import app.ehrenamtskarte.backend.userdata.KoblenzUser
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator
 import org.bouncycastle.crypto.params.Argon2Parameters
 import java.nio.charset.StandardCharsets
