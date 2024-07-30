@@ -489,6 +489,10 @@ jobs:
         docker:
             - image: cimg/node:20.13.1
         parameters:
+            platforms:
+                default: all
+                description: Set one or multiple platforms for git tag f.e. "web" or "web/native"
+                type: string
             prepare_delivery:
                 default: false
                 description: Whether to prepare for a delivery. If true, the version bump is committed.
@@ -508,7 +512,7 @@ jobs:
                 condition: << parameters.prepare_delivery >>
                 steps:
                     - run:
-                        command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
+                        command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
                         name: Bump git version
             - when:
                 condition:
@@ -1311,6 +1315,7 @@ workflows:
             - bump_version:
                 context:
                     - deliverino
+                platforms: web
                 prepare_delivery: true
             - check_administration
             - build_administration:
@@ -1375,6 +1380,7 @@ workflows:
             - bump_version:
                 context:
                     - deliverino
+                platforms: web
                 prepare_delivery: true
             - check_administration
             - build_administration:
@@ -1439,6 +1445,7 @@ workflows:
             - bump_version:
                 context:
                     - deliverino
+                platforms: native
                 prepare_delivery: true
             - check
             - check_frontend:
@@ -1531,6 +1538,7 @@ workflows:
             - bump_version:
                 context:
                     - deliverino
+                platforms: native
                 prepare_delivery: true
             - check_frontend
             - build_android:
