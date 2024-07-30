@@ -7,7 +7,6 @@ import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
-import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordMutationService
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
