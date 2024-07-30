@@ -116,7 +116,7 @@ object ApplicationRepository {
     }
 
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
-        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
+        val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
         val context = dfe.getContext<GraphQLContext>()
         return transaction {
             val application = (Applications innerJoin ApplicationVerifications)
