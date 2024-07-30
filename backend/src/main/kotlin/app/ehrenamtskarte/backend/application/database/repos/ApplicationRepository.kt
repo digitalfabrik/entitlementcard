@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
+import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordMutationService
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
@@ -15,6 +16,7 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import graphql.schema.DataFetchingEnvironment
 import io.javalin.util.FileUtil
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
@@ -23,6 +25,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Paths
 import java.security.SecureRandom
@@ -97,29 +100,43 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplicationByApplicant(accessKey: String): ApplicationView {
+    fun getApplicationByApplicant(accessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
+        val context = dfe.getContext<GraphQLContext>()
         return transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
                 .singleOrNull()
-            application?.let { ApplicationView.fromDbEntity(it) } ?: throw InvalidLinkException()
+            if (application == null) {
+                logger.info("applicant with ${context.remoteIp} and accessKey:$accessKey failed to open application")
+                throw InvalidLinkException()
+            } else {
+                application.let { ApplicationView.fromDbEntity(it) }
+            }
         }
     }
 
-    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView {
+    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
+        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
+        val context = dfe.getContext<GraphQLContext>()
         return transaction {
             val application = (Applications innerJoin ApplicationVerifications)
                 .slice(Applications.columns)
                 .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
                 .singleOrNull()
-            application?.let {
-                ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
-            } ?: throw InvalidLinkException()
+            if (application == null) {
+                logger.info("verifier with ${context.remoteIp} and accessKey:$applicationVerificationAccessKey failed to open application")
+                throw InvalidLinkException()
+            } else {
+                application.let {
+                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
+                }
+            }
         }
     }
 
-    fun getApplicationVerification(accessKey: String): ApplicationVerificationEntity {
+    fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationEntity {
         return transaction {
-            ApplicationVerificationEntity.find { ApplicationVerifications.accessKey eq accessKey }
+            ApplicationVerificationEntity.find { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
                 .singleOrNull() ?: throw InvalidLinkException()
         }
     }
