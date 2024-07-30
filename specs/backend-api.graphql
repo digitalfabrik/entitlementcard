@@ -179,10 +179,10 @@ type Query {
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
-  "Queries an application by application accessKey"
+  "Queries an application by application verification accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationView!
-  "Queries an application verification by application accessKey"
-  getApplicationVerification(accessKey: String!): ApplicationVerificationView!
+  "Queries an application verification by application verification accessKey"
+  getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns card statistics for project. Start and end dates are inclusive."
