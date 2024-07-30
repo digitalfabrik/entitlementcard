@@ -96,6 +96,7 @@ export interface ProjectConfig {
   }
   csvExport: CsvExport
   cardStatistics: CardStatistics
+  cardCreation: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

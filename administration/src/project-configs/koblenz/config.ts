@@ -24,6 +24,7 @@ const config: ProjectConfig = {
     enabled: false,
   },
   cardStatistics: { enabled: false },
+  cardCreation: false,
 }
 
 export default config

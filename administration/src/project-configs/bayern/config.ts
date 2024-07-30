@@ -83,6 +83,7 @@ const config: ProjectConfig = {
       primaryColorLight: '#c6c0d8',
     },
   },
+  cardCreation: true,
 }
 
 export default config

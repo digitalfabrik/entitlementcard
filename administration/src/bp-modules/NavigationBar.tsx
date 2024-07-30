@@ -43,9 +43,11 @@ const Navigation = (props: Props) => {
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
             ) : null}
-            <NavLink to={'/cards'}>
-              <Button minimal icon='id-number' text='Karten erstellen' />
-            </NavLink>
+            {config.cardCreation ? (
+              <NavLink to={'/cards'}>
+                <Button minimal icon='id-number' text='Karten erstellen' />
+              </NavLink>
+            ) : null}
           </>
         ) : null}
         {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (

@@ -55,6 +55,7 @@ const config: ProjectConfig = {
     buildCsvLine: buildCsvLine,
   },
   cardStatistics: { enabled: false },
+  cardCreation: true,
 }
 
 export default config
