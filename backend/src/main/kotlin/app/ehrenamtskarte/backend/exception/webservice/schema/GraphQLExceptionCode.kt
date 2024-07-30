@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.exception.webservice.schema
 
 enum class GraphQLExceptionCode {
     EMAIL_ALREADY_EXISTS,
+    INVALID_INPUT,
     INVALID_CARD_HASH,
     INVALID_CODE_TYPE,
     INVALID_CREDENTIALS,
@@ -15,6 +16,7 @@ enum class GraphQLExceptionCode {
     INVALID_PASSWORD_RESET_LINK,
     INVALID_QR_CODE_SIZE,
     INVALID_ROLE,
+    INVALID_USER_ENTITLEMENTS,
     MAIL_NOT_SENT,
     PASSWORD_RESET_KEY_EXPIRED,
     REGION_NOT_FOUND,
