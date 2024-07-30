@@ -101,7 +101,7 @@ object ApplicationRepository {
     }
 
     fun getApplicationByApplicant(accessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
-        val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
+        val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
         val context = dfe.getContext<GraphQLContext>()
         return transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
