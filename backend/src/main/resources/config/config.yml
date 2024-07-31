@@ -38,6 +38,17 @@ projects:
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: koblenz.sozialpass.app
+    importUrl: ""
+    pipelineName: SozialpassKoblenz
+    administrationBaseUrl: https://koblenz.sozialpass.app
+    administrationName: Koblenz-Pass-Verwaltung
+    timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
     pipelineName: BerechtigungskarteShowcase

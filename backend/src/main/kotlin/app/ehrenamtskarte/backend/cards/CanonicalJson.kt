@@ -1,5 +1,8 @@
 package app.ehrenamtskarte.backend.cards
 
+import app.ehrenamtskarte.backend.userdata.KoblenzUser
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.GeneratedMessageV3
@@ -87,6 +90,11 @@ class CanonicalJson {
                     else -> throw Error("Field ${it.key.name} has an unsupported type of ${it.key.type}")
                 }
             }
+        }
+
+        fun koblenzUserToString(koblenzUser: KoblenzUser): String {
+            val map = ObjectMapper().convertValue(koblenzUser, object : TypeReference<Map<String, Any>>() {})
+            return serializeToString(map)
         }
 
         fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
