@@ -48,6 +48,11 @@ class Database {
 
         fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = setupWithoutMigrationCheck(config)
+            setupInitialData(config)
+            return database
+        }
+
+        fun setupInitialData(config: BackendConfiguration) {
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
@@ -55,7 +60,6 @@ class Database {
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }
-            return database
         }
 
         fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {

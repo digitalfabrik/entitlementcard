@@ -84,6 +84,12 @@ dependencies {
     implementation("org.bouncycastle:bcpkix-jdk18on:1.76")
 
     implementation("com.google.zxing:core:3.5.2") // QR-Codes
+
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.19.8"))
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:postgresql")
+    // Replace the library version used in testcontainers to avoid vulnerability
+    testImplementation("org.apache.commons:commons-compress:1.26.2")
 }
 
 ktlint {
