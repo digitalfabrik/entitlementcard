@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:3.25.2")
+    implementation("com.google.protobuf:protobuf-kotlin:4.27.2")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
     implementation("io.javalin:javalin:6.1.3")

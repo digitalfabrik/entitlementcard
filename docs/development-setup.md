@@ -79,6 +79,7 @@ To do that it is recommended to use the docker desktop client.
 
 # Administration
 
+0. Create directory `administration/src/generated` (might be optional)
 1. Run `npm install`
 2. Run `Start Administration` from Intellij run configurations
 
