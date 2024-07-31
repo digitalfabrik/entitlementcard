@@ -171,6 +171,25 @@ internal class UserImportTest : IntegrationTest() {
     }
 
     @Test
+    fun `POST returns an error response when startDate is after endDate`() = JavalinTest.test(app) { _, client ->
+        val csvFile = generateCsvFile(
+            TEST_CSV_FILE_PATH,
+            listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
+            listOf("09771", "UIOJZIsSL8vXcu", "01.01.2025", "01.01.2024", "false")
+        )
+
+        val request = buildUserImportRequest(client, csvFile)
+        val response = client.request(request)
+
+        assertEquals(400, response.code)
+        assertEquals("Error at line 1: Start date cannot be after end date", response.body?.string())
+
+        transaction {
+            assertEquals(0, UserEntitlements.selectAll().count())
+        }
+    }
+
+    @Test
     fun `POST returns an error response when revoked is not boolean`() = JavalinTest.test(app) { _, client ->
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
