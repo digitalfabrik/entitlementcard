@@ -1,5 +1,6 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
+import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,8 +10,11 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class LocationButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
+  final void Function(SortingMode sortingMode) setSortingMode;
+  final SortingMode sortingMode;
 
-  const LocationButton({super.key, required this.setCoordinates});
+  const LocationButton(
+      {super.key, required this.setCoordinates, required this.setSortingMode, required this.sortingMode});
 
   @override
   State<StatefulWidget> createState() => _LocationButtonState();
@@ -19,7 +23,7 @@ class LocationButton extends StatefulWidget {
 enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
 
 class _LocationButtonState extends State<LocationButton> {
-  LocationRequestStatus _locationStatus = LocationRequestStatus.requesting;
+  LocationRequestStatus _locationStatus = LocationRequestStatus.requestSuccessful;
 
   @override
   void initState() {
@@ -32,12 +36,9 @@ class _LocationButtonState extends State<LocationButton> {
 
   @override
   Widget build(BuildContext context) {
-    if (_locationStatus == LocationRequestStatus.requestSuccessful) {
-      return Container();
-    }
     final settings = Provider.of<SettingsModel>(context);
     final t = context.t;
-    if (settings.locationFeatureEnabled) {
+    if (widget.sortingMode == SortingMode.alphabetically) {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
@@ -45,8 +46,7 @@ class _LocationButtonState extends State<LocationButton> {
           heroTag: 'fab_search_view',
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           elevation: 1,
-          onPressed:
-              _locationStatus == LocationRequestStatus.requesting ? null : () => _determinePosition(true, settings),
+          onPressed: () => _sortByDistance(settings),
           icon: AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
             child: _locationStatus == LocationRequestStatus.requesting
@@ -64,8 +64,46 @@ class _LocationButtonState extends State<LocationButton> {
         ),
       );
     } else {
-      return Container();
+      return Container(
+        alignment: Alignment.bottomCenter,
+        padding: const EdgeInsets.all(10),
+        child: FloatingActionButton.extended(
+          heroTag: 'fab_search_view',
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          elevation: 1,
+          onPressed: () => _sortAlphabetically(settings),
+          label: Text(
+            t.search.findAlphabetically,
+            style: TextStyle(color: Theme.of(context).hintColor),
+          ),
+        ),
+      );
     }
+  }
+
+  Future<void> _showFeatureDisabled() async {
+    final messengerState = ScaffoldMessenger.of(context);
+    final t = context.t;
+    messengerState.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(t.location.locationAccessDeactivated),
+        action: SnackBarAction(
+          label: t.common.settings,
+          onPressed: () async {
+            await openSettingsToGrantPermissions(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sortAlphabetically(SettingsModel settings) async {
+    widget.setSortingMode(SortingMode.alphabetically);
+  }
+
+  Future<void> _sortByDistance(SettingsModel settings) async {
+    await _determinePosition(true, settings);
   }
 
   Future<void> _determinePosition(bool userInteract, SettingsModel settings) async {
@@ -74,18 +112,17 @@ class _LocationButtonState extends State<LocationButton> {
         ? await determinePosition(
             context,
             requestIfNotGranted: true,
-            onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
-            onEnableFeature: () async {
-              await settings.setLocationFeatureEnabled(enabled: true);
+            onDisableFeature: () async {
+              settings.setLocationFeatureEnabled(enabled: false);
+              _showFeatureDisabled();
             },
+            onEnableFeature: () async => settings.setLocationFeatureEnabled(enabled: true),
           )
         : await determinePosition(
             context,
             requestIfNotGranted: false,
             onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
-            onEnableFeature: () async {
-              await settings.setLocationFeatureEnabled(enabled: true);
-            },
+            onEnableFeature: () async => settings.setLocationFeatureEnabled(enabled: true),
           ).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
 
     final position = requiredPosition.position;

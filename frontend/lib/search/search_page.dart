@@ -5,7 +5,11 @@ import 'package:ehrenamtskarte/search/location_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:provider/provider.dart';
+
+enum SortingMode { alphabetically, byDistance }
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -18,11 +22,25 @@ class _SearchPageState extends State<SearchPage> {
   String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
   CoordinatesInput? _coordinates;
+  SortingMode? _sortingMode;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final settings = context.read<SettingsModel>();
+      setState(() => _sortingMode = settings.locationFeatureEnabled && _coordinates != null
+          ? SortingMode.byDistance
+          : SortingMode.alphabetically);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final currentCoordinatesInput = _coordinates;
+    if (_sortingMode == null) {
+      return Container();
+    }
     return Stack(
       children: [
         CustomScrollView(
@@ -39,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     Text(
-                      t.search.searchResults.toUpperCase(),
+                      '${t.search.searchResults.toUpperCase()} ${_sortingMode == SortingMode.byDistance ? t.search.nearby : t.search.alphabetically}',
                       style: const TextStyle(color: Colors.grey),
                     ),
                     const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))
@@ -50,14 +68,22 @@ class _SearchPageState extends State<SearchPage> {
             ResultsLoader(
               searchText: searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
-              coordinates: currentCoordinatesInput,
+              coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
             )
           ],
         ),
         LocationButton(
-          setCoordinates: (position) =>
-              setState(() => _coordinates = CoordinatesInput(lat: position.latitude, lng: position.longitude)),
-        )
+          setCoordinates: (position) => setState(() {
+            _coordinates = CoordinatesInput(lat: position.latitude, lng: position.longitude);
+            _sortingMode = SortingMode.byDistance;
+          }),
+          setSortingMode: (sortingMode) {
+            if (sortingMode == SortingMode.alphabetically || _coordinates != null) {
+              setState(() => _sortingMode = sortingMode);
+            }
+          },
+          sortingMode: _sortingMode!,
+        ),
       ],
     );
   }
