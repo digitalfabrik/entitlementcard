@@ -19,6 +19,7 @@
     "types": ["node", "jest"]
   },
   "include": [
+    "@types",
     "src",
     "scripts",
     "jest.config.ts",
