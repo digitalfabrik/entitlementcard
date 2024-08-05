@@ -72,7 +72,7 @@ class _SearchPageState extends State<SearchPage> {
             )
           ],
         ),
-        LocationButton(
+        SortingButton(
           setCoordinates: (position) => setState(() {
             _coordinates = CoordinatesInput(lat: position.latitude, lng: position.longitude);
             _sortingMode = SortingMode.byDistance;

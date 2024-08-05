@@ -8,21 +8,21 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-class LocationButton extends StatefulWidget {
+class SortingButton extends StatefulWidget {
   final void Function(Position position) setCoordinates;
   final void Function(SortingMode sortingMode) setSortingMode;
   final SortingMode sortingMode;
 
-  const LocationButton(
+  const SortingButton(
       {super.key, required this.setCoordinates, required this.setSortingMode, required this.sortingMode});
 
   @override
-  State<StatefulWidget> createState() => _LocationButtonState();
+  State<StatefulWidget> createState() => _SortingButtonState();
 }
 
 enum LocationRequestStatus { requesting, requestSuccessful, requestFailed }
 
-class _LocationButtonState extends State<LocationButton> {
+class _SortingButtonState extends State<SortingButton> {
   LocationRequestStatus _locationStatus = LocationRequestStatus.requestSuccessful;
 
   @override
