@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
-import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
+import 'package:ehrenamtskarte/widgets/extended_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -42,40 +42,21 @@ class _SortingButtonState extends State<SortingButton> {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
-        child: FloatingActionButton.extended(
-          heroTag: 'fab_search_view',
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-          elevation: 1,
+        child: ExtendedFloatingActionButton(
           onPressed: () => _sortByDistance(settings),
-          icon: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: _locationStatus == LocationRequestStatus.requesting
-                ? const SmallButtonSpinner()
-                : Icon(
-                    Icons.my_location,
-                    size: 24,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-          ),
-          label: Text(
-            t.search.findCloseBy,
-            style: TextStyle(color: Theme.of(context).hintColor),
-          ),
+          icon: Icons.my_location,
+          loading: _locationStatus == LocationRequestStatus.requesting,
+          label: t.search.findCloseBy,
         ),
       );
     } else {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
-        child: FloatingActionButton.extended(
-          heroTag: 'fab_search_view',
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-          elevation: 1,
+        child: ExtendedFloatingActionButton(
           onPressed: () => _sortAlphabetically(settings),
-          label: Text(
-            t.search.findAlphabetically,
-            style: TextStyle(color: Theme.of(context).hintColor),
-          ),
+          label: t.search.findAlphabetically,
+          icon: Icons.sort_by_alpha,
         ),
       );
     }
@@ -98,7 +79,7 @@ class _SortingButtonState extends State<SortingButton> {
     );
   }
 
-  Future<void> _sortAlphabetically(SettingsModel settings) async {
+  void _sortAlphabetically(SettingsModel settings) async {
     widget.setSortingMode(SortingMode.alphabetically);
   }
 
