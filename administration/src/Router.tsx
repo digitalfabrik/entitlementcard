@@ -80,9 +80,13 @@ const Router = () => {
               ]
             : []),
           ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
-          { path: 'cards', element: <CreateCardsController /> },
-          { path: 'cards/add', element: <AddCardsController /> },
-          { path: 'cards/import', element: <ImportCardsController /> },
+          ...(projectConfig.cardCreation
+            ? [
+                { path: 'cards', element: <CreateCardsController /> },
+                { path: 'cards/add', element: <AddCardsController /> },
+                { path: 'cards/import', element: <ImportCardsController /> },
+              ]
+            : []),
           { path: 'users', element: <ManageUsersController /> },
           { path: 'user-settings', element: <UserSettingsController /> },
           { path: '*', element: <HomeController /> },

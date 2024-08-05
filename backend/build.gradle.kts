@@ -28,6 +28,7 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
     implementation("io.javalin:javalin:6.1.3")
+    testImplementation("io.javalin:javalin-testtools:6.1.3")
     // jetty version 11.0.20 causes memory leaks, should be removed with next javalin update using higher jetty version https://github.com/jetty/jetty.project/pull/11780
     constraints {
         implementation("org.eclipse.jetty:jetty-server:11.0.21")
@@ -58,6 +59,8 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
+    testImplementation("io.mockk:mockk:1.13.11")
+
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
@@ -78,6 +81,8 @@ dependencies {
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
+
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.76")
 
     implementation("com.google.zxing:core:3.5.2") // QR-Codes
 

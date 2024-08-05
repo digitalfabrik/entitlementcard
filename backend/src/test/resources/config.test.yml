@@ -37,3 +37,14 @@ projects:
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: koblenz.sozialpass.app
+    importUrl: dummy
+    pipelineName: dummy
+    administrationBaseUrl: dummy
+    administrationName: dummy
+    timezone: "Europe/Berlin"
+    smtp:
+      host: dummy
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG

@@ -1,14 +1,15 @@
 package app.ehrenamtskarte.backend.cards
 
 import Card
+import app.ehrenamtskarte.backend.cards.CanonicalJson.Companion.koblenzUserToString
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
+import app.ehrenamtskarte.backend.helper.koblenzTestUser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 internal class CanonicalJsonTest {
-
     @Test
     fun mapEmptyCardInfo() {
         val cardInfo = Card.CardInfo.newBuilder().build()
@@ -18,7 +19,11 @@ internal class CanonicalJsonTest {
     @Test
     fun mapCardInfoWithFullName() {
         val wildName = "Biene Maja ßäЦЧШܐܳܠܰܦ"
-        val cardInfo = Card.CardInfo.newBuilder().setFullName(wildName).build()
+        val cardInfo =
+            Card.CardInfo
+                .newBuilder()
+                .setFullName(wildName)
+                .build()
         assertEquals(CanonicalJson.messageToMap(cardInfo), mapOf("1" to wildName))
     }
 
@@ -31,10 +36,11 @@ internal class CanonicalJsonTest {
             mapOf(
                 "1" to "Max Mustermann",
                 "2" to "14600",
-                "3" to mapOf(
-                    "1" to mapOf("1" to "16"), // extensionRegion
-                    "4" to mapOf("1" to "0") // extensionBavariaCardType
-                )
+                "3" to
+                    mapOf(
+                        "1" to mapOf("1" to "16"), // extensionRegion
+                        "4" to mapOf("1" to "0") // extensionBavariaCardType
+                    )
             )
         )
     }
@@ -46,10 +52,11 @@ internal class CanonicalJsonTest {
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
                 "1" to "Max Mustermann",
-                "3" to mapOf(
-                    "1" to mapOf("1" to "16"), // extensionRegion
-                    "4" to mapOf("1" to "1") // extensionBavariaCardType
-                )
+                "3" to
+                    mapOf(
+                        "1" to mapOf("1" to "16"), // extensionRegion
+                        "4" to mapOf("1" to "1") // extensionBavariaCardType
+                    )
             )
         )
     }
@@ -62,11 +69,12 @@ internal class CanonicalJsonTest {
             mapOf(
                 "1" to "Max Mustermann",
                 "2" to "14600",
-                "3" to mapOf(
-                    "1" to mapOf("1" to "93"), // extensionRegion
-                    "2" to mapOf("1" to "-3650"), // extensionBirthday
-                    "3" to mapOf("1" to "99999999") // extensionNuernbergPassId
-                )
+                "3" to
+                    mapOf(
+                        "1" to mapOf("1" to "93"), // extensionRegion
+                        "2" to mapOf("1" to "-3650"), // extensionBirthday
+                        "3" to mapOf("1" to "99999999") // extensionNuernbergPassId
+                    )
             )
         )
     }
@@ -79,14 +87,21 @@ internal class CanonicalJsonTest {
             mapOf(
                 "1" to "Max Mustermann",
                 "2" to "14600",
-                "3" to mapOf(
-                    "1" to mapOf("1" to "93"), // extensionRegion
-                    "2" to mapOf("1" to "-3650"), // extensionBirthday
-                    "3" to mapOf("1" to "99999999"), // extensionNuernbergPassId
-                    "5" to mapOf("1" to "730") // extensionStartDay
-                )
+                "3" to
+                    mapOf(
+                        "1" to mapOf("1" to "93"), // extensionRegion
+                        "2" to mapOf("1" to "-3650"), // extensionBirthday
+                        "3" to mapOf("1" to "99999999"), // extensionNuernbergPassId
+                        "5" to mapOf("1" to "730") // extensionStartDay
+                    )
             )
         )
+    }
+
+    @Test
+    fun mapUserInfoForKoblenzPass() {
+        val expected = koblenzUserToString(koblenzTestUser)
+        assertEquals("{\"1\":\"Karla Koblenz\",\"2\":12213,\"3\":\"123K\"}", expected)
     }
 
     @Test
@@ -180,16 +195,18 @@ internal class CanonicalJsonTest {
     @Test
     fun sortsAndEscapesProperly() {
         // taken from the rfc: https://www.rfc-editor.org/rfc/rfc8785#section-3.2.3
-        val input = mapOf(
-            "\u20ac" to "Euro Sign",
-            "\r" to "Carriage Return",
-            "\ufb33" to "Hebrew Letter Dalet With Dagesh",
-            "1" to "One",
-            "\ud83d\ude00" to "Emoji to Grinning Face",
-            "\u0080" to "Control",
-            "\u00f6" to "Latin Small Letter O With Diaeresis"
-        )
-        val expected = """{
+        val input =
+            mapOf(
+                "\u20ac" to "Euro Sign",
+                "\r" to "Carriage Return",
+                "\ufb33" to "Hebrew Letter Dalet With Dagesh",
+                "1" to "One",
+                "\ud83d\ude00" to "Emoji to Grinning Face",
+                "\u0080" to "Control",
+                "\u00f6" to "Latin Small Letter O With Diaeresis"
+            )
+        val expected =
+            """{
             "\r":"Carriage Return",
             "1":"One",
             "${"\u0080"}":"Control",
@@ -197,7 +214,9 @@ internal class CanonicalJsonTest {
             "${"\u20ac"}":"Euro Sign",
             "${"\ud83d\ude00"}":"Emoji to Grinning Face",
             "${"\ufb33"}":"Hebrew Letter Dalet With Dagesh"
-        }""".split("\n").joinToString(separator = "") { it.trim() }
+        }""".split("\n").joinToString(separator = "") {
+                it.trim()
+            }
         val actual = CanonicalJson.serializeToString(input)
 
         assertEquals(expected, actual)
