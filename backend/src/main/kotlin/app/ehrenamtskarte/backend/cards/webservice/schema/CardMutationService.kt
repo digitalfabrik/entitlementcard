@@ -148,6 +148,7 @@ class CardMutationService {
         val regionId = user.regionId?.value
         if (regionId != null) {
             Matomo.trackCreateCards(
+                context.backendConfiguration,
                 projectConfig,
                 context.request,
                 dfe.field.name,
@@ -212,6 +213,7 @@ class CardMutationService {
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
         Matomo.trackActivation(
+            context.backendConfiguration,
             projectConfig,
             context.request,
             dfe.field.name,
