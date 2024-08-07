@@ -91,15 +91,13 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _currentTabIndex == mapTabIndex
-          ? FloatingActionMapBar(
-              bringCameraToUser: (position) async {
-                await mapPageController?.bringCameraToUser(position);
-              },
-              selectedAcceptingStoreId: selectedAcceptingStoreId,
-            )
-          // Returning a Container() instead of null avoids animations
-          : Container(),
+      floatingActionButton: FloatingActionMapBar(
+        bringCameraToUser: (position) async {
+          await mapPageController?.bringCameraToUser(position);
+        },
+        selectedAcceptingStoreId: selectedAcceptingStoreId,
+        currentTabIndex: _currentTabIndex,
+      ),
       bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
