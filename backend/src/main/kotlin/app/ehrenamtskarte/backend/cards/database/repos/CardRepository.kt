@@ -46,7 +46,7 @@ object CardRepository {
         activationSecretHash: ByteArray?,
         expirationDay: Long?,
         regionId: Int,
-        issuerId: Int,
+        issuerId: Int?,
         codeType: CodeType,
         startDay: Long?
     ) =
@@ -57,7 +57,7 @@ object CardRepository {
             this.expirationDay = expirationDay
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
-            this.issuerId = EntityID(issuerId, Administrators)
+            this.issuerId = if (issuerId != null) EntityID(issuerId, Administrators) else null
             this.revoked = false
             this.codeType = codeType
             this.startDay = startDay

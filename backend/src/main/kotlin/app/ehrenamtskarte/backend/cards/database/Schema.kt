@@ -32,7 +32,7 @@ object Cards : IntIdTable() {
     val issueDate = timestamp("issueDate").defaultExpression(CurrentTimestamp())
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
-    val issuerId = reference("issuerId", Administrators)
+    val issuerId = reference("issuerId", Administrators).nullable()
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
     val codeType = enumeration("codeType", CodeType::class)
     val firstActivationDate = timestamp("firstActivationDate").nullable()

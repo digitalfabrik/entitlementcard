@@ -27,11 +27,11 @@ object RegionsRepository {
     }
 
     fun findByIdInProject(project: String, id: Int): RegionEntity? {
-        val query = (Projects innerJoin Regions)
+        return (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project and (Regions.id eq id) }
-            .single()
-        return RegionEntity.wrapRow(query)
+            .singleOrNull()
+            ?.let { RegionEntity.wrapRow(it) }
     }
 
     fun findByIds(ids: List<Int>) =
