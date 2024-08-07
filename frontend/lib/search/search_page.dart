@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/search/filter_bar.dart';
-import 'package:ehrenamtskarte/search/location_button.dart';
+import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
   CoordinatesInput? _coordinates;
-  SortingMode? _sortingMode;
+  SortingMode _sortingMode = SortingMode.alphabetically;
 
   @override
   void initState() {
@@ -38,9 +38,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    if (_sortingMode == null) {
-      return Container();
-    }
     return Stack(
       children: [
         CustomScrollView(
@@ -82,7 +79,7 @@ class _SearchPageState extends State<SearchPage> {
               setState(() => _sortingMode = sortingMode);
             }
           },
-          sortingMode: _sortingMode!,
+          sortingMode: _sortingMode,
         ),
       ],
     );

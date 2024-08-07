@@ -8,11 +8,7 @@ class ExtendedFloatingActionButton extends StatelessWidget {
   final void Function() onPressed;
 
   const ExtendedFloatingActionButton(
-      {super.key,
-      required this.label,
-      required this.onPressed,
-      this.loading = false,
-      required this.icon});
+      {super.key, required this.label, required this.onPressed, this.loading = false, required this.icon});
 
   @override
   Widget build(BuildContext context) {
