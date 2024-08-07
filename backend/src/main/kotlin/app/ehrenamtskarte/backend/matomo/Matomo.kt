@@ -22,8 +22,8 @@ import java.net.URI
 import java.util.concurrent.ExecutionException
 
 object Matomo {
-    val logger = LoggerFactory.getLogger(Matomo::class.java)
-    var tracker: MatomoTracker? = null
+    private val logger = LoggerFactory.getLogger(Matomo::class.java)
+    private var tracker: MatomoTracker? = null
 
     private fun getTracker(config: BackendConfiguration): MatomoTracker {
         val tracker = tracker
