@@ -18,7 +18,7 @@ object UserEntitlements : IntIdTable() {
     val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())
 
     init {
-        uniqueIndex("unique_userHash_regionId", userHash, regionId)
+        uniqueIndex("unique_userhash_regionid", userHash, regionId)
     }
 }
 
