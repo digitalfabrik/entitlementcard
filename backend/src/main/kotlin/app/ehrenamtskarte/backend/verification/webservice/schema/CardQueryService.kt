@@ -26,7 +26,7 @@ class CardQueryService {
         } else if (card.codeType == CodeType.DYNAMIC) {
             verificationResult = card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
-        Matomo.trackVerification(projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult)
+        Matomo.trackVerification(context.backendConfiguration, projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult)
         return false
     }
 
@@ -42,7 +42,7 @@ class CardQueryService {
         } else if (card.codeType == CodeType.DYNAMIC) {
             verificationResult = CardVerificationResultModel(card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone))
         }
-        Matomo.trackVerification(projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult.valid)
+        Matomo.trackVerification(context.backendConfiguration, projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult.valid)
         return verificationResult
     }
 }
