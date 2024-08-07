@@ -66,6 +66,10 @@ data class BackendConfiguration(
             .registerModule(
                 KotlinModule.Builder().build()
             ).registerModule(JavaTimeModule())
+            // Allows unknown (potentially future) config options.
+            // Without this parsing a config fails if a property is defined that is missing
+            // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
+            // for future features, therefore we want to allow unknown properties.
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
