@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.matomo
 
 import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.MatomoConfig
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.stores.webservice.schema.SearchParams
@@ -21,13 +22,20 @@ import java.net.URI
 import java.util.concurrent.ExecutionException
 
 object Matomo {
-    val logger = LoggerFactory.getLogger(Matomo::class.java)
+    private val logger = LoggerFactory.getLogger(Matomo::class.java)
+    private var tracker: MatomoTracker? = null
 
-    private fun sendTrackingRequest(matomoConfig: MatomoConfig, requestBuilder: MatomoRequestBuilder) {
+    private fun getTracker(config: BackendConfiguration): MatomoTracker {
+        val tracker = tracker
+            ?: return MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(config.matomoUrl)).build())
+
+        return tracker
+    }
+
+    private fun sendTrackingRequest(config: BackendConfiguration, matomoConfig: MatomoConfig, requestBuilder: MatomoRequestBuilder) {
         CoroutineScope(Dispatchers.IO).launch {
             val siteId = matomoConfig.siteId
-            val url = matomoConfig.url
-            val tracker = MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(url)).build())
+            val tracker = getTracker(config)
 
             val matomoRequest = requestBuilder
                 .siteId(siteId)
@@ -47,11 +55,10 @@ object Matomo {
         }
     }
 
-    private fun sendBulkTrackingRequest(matomoConfig: MatomoConfig, requestBuilder: Iterable<MatomoRequestBuilder>) {
+    private fun sendBulkTrackingRequest(config: BackendConfiguration, matomoConfig: MatomoConfig, requestBuilder: Iterable<MatomoRequestBuilder>) {
         CoroutineScope(Dispatchers.IO).launch {
             val siteId = matomoConfig.siteId
-            val url = matomoConfig.url
-            val tracker = MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(url)).build())
+            val tracker = getTracker(config)
             val matomoRequests = requestBuilder.map {
                 it.siteId(siteId)
                 it.authToken(matomoConfig.accessToken)
@@ -88,11 +95,12 @@ object Matomo {
             .also { attachRequestInformation(it, request) }
     }
 
-    fun trackCreateCards(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, numberOfDynamicCards: Int, numberOfStaticCards: Int) {
+    fun trackCreateCards(config: BackendConfiguration, projectConfig: ProjectConfig, request: HttpServletRequest, query: String, regionId: Int, numberOfDynamicCards: Int, numberOfStaticCards: Int) {
         if (projectConfig.matomo == null) return
 
         if (numberOfDynamicCards > 0 && numberOfStaticCards > 0) {
             sendBulkTrackingRequest(
+                config,
                 projectConfig.matomo,
                 listOf(
                     buildCardsTrackingRequest(request, regionId, query, CodeType.STATIC, numberOfStaticCards),
@@ -101,6 +109,7 @@ object Matomo {
             )
         } else if (numberOfDynamicCards > 0) {
             sendTrackingRequest(
+                config,
                 projectConfig.matomo,
                 buildCardsTrackingRequest(
                     request,
@@ -113,10 +122,11 @@ object Matomo {
         }
     }
 
-    fun trackVerification(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, codeType: CodeType, successful: Boolean) {
+    fun trackVerification(config: BackendConfiguration, projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, codeType: CodeType, successful: Boolean) {
         if (projectConfig.matomo === null) return
         val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
         sendTrackingRequest(
+            config,
             projectConfig.matomo,
             MatomoRequest.request()
                 .eventAction(query)
@@ -127,10 +137,11 @@ object Matomo {
         )
     }
 
-    fun trackActivation(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, successful: Boolean) {
+    fun trackActivation(config: BackendConfiguration, projectConfig: ProjectConfig, request: HttpServletRequest, query: String, cardHash: ByteArray, successful: Boolean) {
         if (projectConfig.matomo === null) return
         val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
         sendTrackingRequest(
+            config,
             projectConfig.matomo,
             MatomoRequest.request()
                 .eventAction(query)
@@ -140,10 +151,11 @@ object Matomo {
         )
     }
 
-    fun trackSearch(projectConfig: ProjectConfig, request: HttpServletRequest, query: String, params: SearchParams, numResults: Int) {
+    fun trackSearch(config: BackendConfiguration, projectConfig: ProjectConfig, request: HttpServletRequest, query: String, params: SearchParams, numResults: Int) {
         if (projectConfig.matomo === null) return
         if (params.searchText === null && params.categoryIds === null) return
         sendTrackingRequest(
+            config,
             projectConfig.matomo,
             MatomoRequest.request()
                 .actionName(query)
