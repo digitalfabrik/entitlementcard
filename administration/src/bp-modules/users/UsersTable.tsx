@@ -121,7 +121,7 @@ export const roleToText = (role: Role): string => {
     case Role.ProjectAdmin:
       return 'Administrator'
     case Role.ProjectStoreManager:
-      return 'Akzeptanzpartnerverwalter'
+      return 'Verwaltung Akzeptanzpartner'
     case Role.RegionAdmin:
       return 'Regionsadministrator'
     case Role.RegionManager:
