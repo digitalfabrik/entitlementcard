@@ -16,6 +16,7 @@ const ProjectSwitcher = (): ReactElement | null => {
   }
   return (
     <>
+      <Button onClick={() => switchProject('koblenz.sozialpass.app')}>Switch to Koblenz</Button>
       <Button onClick={() => switchProject('nuernberg.sozialpass.app')}>Switch to Nürnberg</Button>
       <Button onClick={() => switchProject('bayern.ehrenamtskarte.app')}>Switch to Ehrenamtskarte Bayern</Button>
     </>

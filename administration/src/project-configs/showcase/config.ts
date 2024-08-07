@@ -32,6 +32,7 @@ const config: ProjectConfig = {
     enabled: false,
   },
   cardStatistics: { enabled: false },
+  cardCreation: true,
 }
 
 export default config
