@@ -41,7 +41,15 @@ class Database {
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
-                val testRegionId = if (role != Role.PROJECT_ADMIN) RegionsRepository.findAllInProject(project).first().id.value else null
+                val testRegionId = if (role in setOf(
+                        Role.REGION_MANAGER,
+                        Role.REGION_ADMIN
+                    )
+                ) {
+                    RegionsRepository.findAllInProject(project).first().id.value
+                } else {
+                    null
+                }
                 AdministratorsRepository.insert(project, email, password, role, testRegionId)
             }
         }

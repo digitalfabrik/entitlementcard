@@ -26,7 +26,7 @@ object Administrators : IntIdTable() {
     val deleted = bool("deleted")
 
     init {
-        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS)
+        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS, Role.PROJECT_STORE_MANAGER)
         val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
         check("roleRegionCombinationConstraint") {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or

@@ -55,6 +55,11 @@ const HomeController = () => {
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
       ) : null}
+      {role === Role.ProjectStoreManager ? (
+        <NavLink to={'/stores'}>
+          <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
+        </NavLink>
+      ) : null}
     </Container>
   )
 }

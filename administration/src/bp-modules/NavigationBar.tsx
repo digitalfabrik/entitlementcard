@@ -67,6 +67,11 @@ const Navigation = (props: Props) => {
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
+        {role === Role.ProjectStoreManager ? (
+          <NavLink to={'/stores'}>
+            <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
+          </NavLink>
+        ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <UserMenu onSignOut={props.onSignOut} />
