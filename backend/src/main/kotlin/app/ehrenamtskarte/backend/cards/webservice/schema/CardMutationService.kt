@@ -141,8 +141,6 @@ class CardMutationService {
         }
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
-        val regionId = cardInfo.extensions.extensionRegion.regionId
-        transaction { RegionsRepository.findByIdInProject(project, regionId) } ?: throw RegionNotFoundException()
 
         val user = KoblenzUser(
             cardInfo.fullName,
@@ -152,20 +150,21 @@ class CardMutationService {
 
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
-        val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray(), regionId) }
+        val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
         if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
             throw InvalidUserEntitlementsException()
         }
 
-        val cardInfoWithExpDayAndStartDay = enrichCardInfoWithExpDayAndStartDay(
+        val updatedCardInfo = enrichCardInfo(
             cardInfo,
             userEntitlements.endDate.toEpochDay().toInt(),
-            userEntitlements.startDate.toEpochDay().toInt()
+            userEntitlements.startDate.toEpochDay().toInt(),
+            userEntitlements.regionId.value
         )
 
         val activationCode = CardCreationResultModel(
-            createDynamicActivationCode(cardInfoWithExpDayAndStartDay, userId = null),
-            if (generateStaticCode) createStaticVerificationCode(cardInfoWithExpDayAndStartDay, userId = null) else null
+            createDynamicActivationCode(updatedCardInfo, userId = null),
+            if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, userId = null) else null
         )
 
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
@@ -175,7 +174,7 @@ class CardMutationService {
             projectConfig,
             context.request,
             dfe.field.name,
-            regionId,
+            userEntitlements.regionId.value,
             numberOfDynamicCards = 1,
             numberOfStaticCards = if (generateStaticCode) 1 else 0
         )
@@ -183,7 +182,7 @@ class CardMutationService {
         return activationCode
     }
 
-    private fun enrichCardInfoWithExpDayAndStartDay(cardInfo: Card.CardInfo, expirationDay: Int, startDay: Int): Card.CardInfo {
+    private fun enrichCardInfo(cardInfo: Card.CardInfo, expirationDay: Int, startDay: Int, regionId: Int): Card.CardInfo {
         return cardInfo.toBuilder()
             .setExpirationDay(expirationDay)
             .setExtensions(
@@ -191,6 +190,11 @@ class CardMutationService {
                     .setExtensionStartDay(
                         cardInfo.extensions.extensionStartDay.toBuilder()
                             .setStartDay(startDay)
+                            .build()
+                    )
+                    .setExtensionRegion(
+                        cardInfo.extensions.extensionRegion.toBuilder()
+                            .setRegionId(regionId)
                             .build()
                     )
                     .build()

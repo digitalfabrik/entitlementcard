@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.userdata.database
 
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.booleanLiteral
 import org.jetbrains.exposed.sql.intLiteral
 import org.jetbrains.exposed.sql.javatime.dateLiteral
@@ -30,7 +29,7 @@ object UserEntitlementsRepository {
         }
     }
 
-    fun findUserEntitlements(userHash: ByteArray, regionId: Int): UserEntitlementsEntity? {
-        return UserEntitlementsEntity.find { UserEntitlements.userHash eq userHash and (UserEntitlements.regionId eq regionId) }.firstOrNull()
+    fun findUserEntitlements(userHash: ByteArray): UserEntitlementsEntity? {
+        return UserEntitlementsEntity.find { UserEntitlements.userHash eq userHash }.firstOrNull()
     }
 }
