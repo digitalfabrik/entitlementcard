@@ -131,7 +131,7 @@ class CardMutationService {
         encodedCardInfo: String,
         generateStaticCode: Boolean
     ): CardCreationResultModel {
-        // TODO disable for production until the Koblenz project is ready to go live
+        // TODO remove the condition once the Koblenz project is ready to go live
         val context = dfe.getContext<GraphQLContext>()
         if (context.backendConfiguration.production) {
             throw ForbiddenException()
@@ -171,6 +171,7 @@ class CardMutationService {
         val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
 
         Matomo.trackCreateCards(
+            context.backendConfiguration,
             projectConfig,
             context.request,
             dfe.field.name,
