@@ -50,6 +50,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: 'Dieser Dateityp wird nicht unterstützt.',
       }
+    case GraphQlExceptionCode.InvalidInput:
+      return {
+        title: 'Die Anfrage enthält ungültige Eingaben.',
+      }
     case GraphQlExceptionCode.InvalidFileSize:
       return {
         title: 'Die Datei ist zu groß.',
@@ -84,6 +88,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
     case GraphQlExceptionCode.InvalidRole:
       return {
         title: 'Diese Rolle kann nicht zugewiesen werden.',
+      }
+    case GraphQlExceptionCode.InvalidUserEntitlements:
+      return {
+        title: 'Die Benutzerberechtigungen sind ungültig.',
       }
     case GraphQlExceptionCode.MailNotSent:
       return {
