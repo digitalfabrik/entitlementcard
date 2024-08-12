@@ -23,7 +23,7 @@ data class MapConfig(val baseUrl: String)
 data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class CsvWriterConfig(val enabled: Boolean)
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
-data class MatomoConfig(val siteId: Int, val url: String, val accessToken: String)
+data class MatomoConfig(val siteId: Int, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
@@ -44,13 +44,14 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val csvWriter: CsvWriterConfig
+    val csvWriter: CsvWriterConfig,
+    val matomoUrl: String
 ) {
 
     fun sanityCheckMatomoConfig(): BackendConfiguration {
         val matomoConfig = projects.mapNotNull { it.matomo }
-        if (matomoConfig.size != matomoConfig.distinctBy { Pair(it.siteId, it.url) }.count()) {
-            throw Error("There are at least two matomo configs with the same siteId and url. This seems to be a copy/paste error.")
+        if (matomoConfig.size != matomoConfig.distinctBy { it.siteId }.count()) {
+            throw Error("There are at least two matomo configs with the same siteId. This seems to be a copy/paste error.")
         }
         return this
     }

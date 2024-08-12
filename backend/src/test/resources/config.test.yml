@@ -1,0 +1,51 @@
+production: false
+postgres:
+  url: dummy
+  user: test
+  password: test
+map:
+  baseUrl: dummy
+geocoding:
+  enabled: false
+  host: dummy
+csvWriter:
+  enabled: false
+server:
+  host: 0.0.0.0
+  port: 8000
+  dataDirectory: ./data
+matomoUrl: http://localhost:5003/matomo.php
+projects:
+  - id: bayern.ehrenamtskarte.app
+    importUrl: dummy
+    pipelineName: dummy
+    administrationBaseUrl: dummy
+    administrationName: dummy
+    timezone: "Europe/Berlin"
+    smtp:
+      host: dummy
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: nuernberg.sozialpass.app
+    importUrl: dummy
+    pipelineName: dummy
+    administrationBaseUrl: dummy
+    administrationName: dummy
+    timezone: "Europe/Berlin"
+    smtp:
+      host: dummy
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: koblenz.sozialpass.app
+    importUrl: dummy
+    pipelineName: dummy
+    administrationBaseUrl: dummy
+    administrationName: dummy
+    timezone: "Europe/Berlin"
+    smtp:
+      host: dummy
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG

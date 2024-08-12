@@ -134,4 +134,8 @@ object Authorizer {
         }
         return false
     }
+
+    fun mayUpdateStoresInProject(user: AdministratorEntity, projectId: Int): Boolean {
+        return user.projectId.value == projectId && user.role == Role.PROJECT_STORE_MANAGER.db_value
+    }
 }

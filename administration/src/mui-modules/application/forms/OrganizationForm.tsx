@@ -1,6 +1,7 @@
 import { Alert, Typography, styled } from '@mui/material'
 
 import { OrganizationInput } from '../../../generated/graphql'
+import { normalizeName } from '../../../util/normalizeString'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import EmailForm from '../primitive-inputs/EmailForm'
@@ -98,7 +99,7 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       <Typography>
         Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
       </Typography>
-      {applicantName === state.contactName.shortText && (
+      {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
         <WarningContactPersonSamePerson severity='warning'>
           Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. Bitte beachten
           Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.

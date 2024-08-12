@@ -32,7 +32,7 @@ internal class V0014_CreateUserEntitlementsTable : Migration() {
             ALTER TABLE ONLY userentitlements
                 ADD CONSTRAINT fk_userentitlements_regionId__id FOREIGN KEY ("regionId") REFERENCES regions(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
                 
-            ALTER TABLE userentitlements ADD CONSTRAINT unique_userHash_regionId UNIQUE ("userHash", "regionId");
+            ALTER TABLE userentitlements ADD CONSTRAINT unique_userhash_regionid UNIQUE ("userHash", "regionId");
             """.trimIndent()
         )
     }

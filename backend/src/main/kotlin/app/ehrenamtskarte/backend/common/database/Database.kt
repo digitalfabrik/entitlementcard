@@ -41,13 +41,26 @@ class Database {
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
-                val testRegionId = if (role != Role.PROJECT_ADMIN) RegionsRepository.findAllInProject(project).first().id.value else null
+                val testRegionId = if (role in setOf(
+                        Role.REGION_MANAGER,
+                        Role.REGION_ADMIN
+                    )
+                ) {
+                    RegionsRepository.findAllInProject(project).first().id.value
+                } else {
+                    null
+                }
                 AdministratorsRepository.insert(project, email, password, role, testRegionId)
             }
         }
 
         fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = setupWithoutMigrationCheck(config)
+            setupInitialData(config)
+            return database
+        }
+
+        fun setupInitialData(config: BackendConfiguration) {
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
@@ -55,7 +68,6 @@ class Database {
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }
-            return database
         }
 
         fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {

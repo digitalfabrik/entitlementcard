@@ -18,6 +18,7 @@ import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
 import StatisticsController from './bp-modules/statistics/StatisticsController'
+import StoresController from './bp-modules/stores/StoresController'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
 import ActivationPage from './mui-modules/activation/ActivationPage'
@@ -80,11 +81,16 @@ const Router = () => {
               ]
             : []),
           ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
-          { path: 'cards', element: <CreateCardsController /> },
-          { path: 'cards/add', element: <AddCardsController /> },
-          { path: 'cards/import', element: <ImportCardsController /> },
+          ...(projectConfig.cardCreation
+            ? [
+                { path: 'cards', element: <CreateCardsController /> },
+                { path: 'cards/add', element: <AddCardsController /> },
+                { path: 'cards/import', element: <ImportCardsController /> },
+              ]
+            : []),
           { path: 'users', element: <ManageUsersController /> },
           { path: 'user-settings', element: <UserSettingsController /> },
+          { path: 'stores', element: <StoresController /> },
           { path: '*', element: <HomeController /> },
         ],
       },

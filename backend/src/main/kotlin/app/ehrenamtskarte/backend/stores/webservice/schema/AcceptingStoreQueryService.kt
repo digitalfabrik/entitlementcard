@@ -63,7 +63,7 @@ class AcceptingStoreQueryService {
                 AcceptingStore(it.id.value, it.name, it.description, it.contactId.value, it.categoryId.value)
             }
         }
-        Matomo.trackSearch(projectConfig, context.request, dfe.field.name, params, filteredStores.size)
+        Matomo.trackSearch(context.backendConfiguration, projectConfig, context.request, dfe.field.name, params, filteredStores.size)
         return filteredStores
     }
 

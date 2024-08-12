@@ -57,8 +57,8 @@ adb reverse tcp:8000 tcp:8000
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 7. Clone the submodule inside `backend/ehrenamtskarte-maplibre-style`
 8. Initialize all submodules by running `git submodule update --init --recursive` in the root directory 
-9. Run the backend migration: `run --args "migrate"`
-10. Run the backend: `cd backend && ./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows 
+9. Run the backend migration: `cd backend && ./gradlew run --args "migrate"`
+10. Run the backend: `./gradlew run --args="execute"` or `.\backend\gradlew.bat run --args="execute"` on Windows 
 11. Create an admin account using `./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
 12. Take a look at the martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!
 13. Take a look at the style by viewing the test map: [http://localhost:5002/map.html](http://localhost:5002)
@@ -79,6 +79,7 @@ To do that it is recommended to use the docker desktop client.
 
 # Administration
 
+0. Create directory `administration/src/generated` (might be optional)
 1. Run `npm install`
 2. Run `Start Administration` from Intellij run configurations
 
