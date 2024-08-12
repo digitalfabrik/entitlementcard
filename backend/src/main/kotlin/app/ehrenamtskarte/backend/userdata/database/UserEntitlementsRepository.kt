@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.userdata.database
 
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.booleanLiteral
+import org.jetbrains.exposed.sql.intLiteral
 import org.jetbrains.exposed.sql.javatime.dateLiteral
 import org.jetbrains.exposed.sql.javatime.timestampLiteral
 import org.jetbrains.exposed.sql.upsert
@@ -13,11 +14,11 @@ object UserEntitlementsRepository {
     fun insertOrUpdateUserData(userHash: ByteArray, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionId: Int) {
         UserEntitlements.upsert(
             UserEntitlements.userHash,
-            UserEntitlements.regionId,
             onUpdate = listOf(
                 UserEntitlements.startDate to dateLiteral(startDate),
                 UserEntitlements.endDate to dateLiteral(endDate),
                 UserEntitlements.revoked to booleanLiteral(revoked),
+                UserEntitlements.regionId to intLiteral(regionId),
                 UserEntitlements.lastUpdated to timestampLiteral(Instant.now())
             )
         ) {
