@@ -18,9 +18,8 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationResu
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.NotKoblenzProjectException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
@@ -131,23 +130,18 @@ class CardMutationService {
         encodedCardInfo: String,
         generateStaticCode: Boolean
     ): CardCreationResultModel {
-        // TODO remove the condition once the Koblenz project is ready to go live
         val context = dfe.getContext<GraphQLContext>()
-        if (context.backendConfiguration.production) {
-            throw ForbiddenException()
-        }
-        if (project != KOBLENZ_PASS_PROJECT) {
-            throw NotKoblenzProjectException()
+        val config = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+        if (!config.selfServiceEnabled) {
+            throw NotFoundException()
         }
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
-
         val user = KoblenzUser(
             cardInfo.fullName,
             cardInfo.extensions.extensionBirthday.birthday,
             cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
         )
-
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
         val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
@@ -167,11 +161,9 @@ class CardMutationService {
             if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, userId = null) else null
         )
 
-        val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
-
         Matomo.trackCreateCards(
             context.backendConfiguration,
-            projectConfig,
+            config,
             context.request,
             dfe.field.name,
             userEntitlements.regionId.value,

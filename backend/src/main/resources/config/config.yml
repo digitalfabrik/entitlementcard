@@ -23,6 +23,7 @@ projects:
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.ehrenamtskarte.app
       port: 587
@@ -34,6 +35,7 @@ projects:
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.sozialpass.app
       port: 587
@@ -45,6 +47,7 @@ projects:
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.sozialpass.app
       port: 587
@@ -56,6 +59,7 @@ projects:
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.sozialpass.app
       port: 587
