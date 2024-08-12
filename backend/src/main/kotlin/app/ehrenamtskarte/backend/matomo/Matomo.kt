@@ -27,7 +27,11 @@ object Matomo {
 
     private fun getTracker(config: BackendConfiguration): MatomoTracker {
         val tracker = tracker
-            ?: return MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(config.matomoUrl)).build())
+        if (tracker == null) {
+            val newTracker = MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(config.matomoUrl)).build())
+            Matomo.tracker = newTracker
+            return newTracker
+        }
 
         return tracker
     }
