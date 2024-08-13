@@ -136,6 +136,8 @@ type Mutation {
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  "Import accepting stores via csv"
+  importAcceptingStores(stores: [CSVAcceptingStoreInput!]!): Boolean!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -392,6 +394,22 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CSVAcceptingStoreInput {
+  categoryId: String
+  discountDE: String
+  discountEN: String
+  email: String
+  homepage: String
+  houseNumber: String
+  latitude: String
+  location: String
+  longitude: String
+  name: String
+  postalCode: String
+  street: String
+  telephone: String
 }
 
 input CardVerificationModelInput {

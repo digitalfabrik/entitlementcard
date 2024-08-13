@@ -77,6 +77,19 @@ export type CardStatistics =
   | {
       enabled: false
     }
+export type StoreFieldConfig = {
+  name: string
+  mandatory: boolean
+}
+
+export type StoresManagement =
+  | {
+      enabled: true
+      fields: StoreFieldConfig[]
+    }
+  | {
+      enabled: false
+    }
 
 export interface ProjectConfig {
   name: string
@@ -97,6 +110,7 @@ export interface ProjectConfig {
   csvExport: CsvExport
   cardStatistics: CardStatistics
   cardCreation: boolean
+  storeManagement: StoresManagement
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

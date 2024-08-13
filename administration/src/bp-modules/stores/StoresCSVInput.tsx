@@ -1,13 +1,17 @@
 import { NonIdealState } from '@blueprintjs/core'
-import { ChangeEventHandler, useCallback, useRef, useState } from 'react'
+import { parse } from 'csv-parse/browser/esm/sync'
+import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import CSVCard from '../../cards/CSVCard'
+import { CsvAcceptingStoreInput } from '../../generated/graphql'
+import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
-import FileInputStateIcon from '../FileInputStateIcon'
-import ImportCardsRequirementsText from './ImportCardsRequirementsText'
+import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
+import { ENTRY_LIMIT } from '../cards/ImportCardsInput'
+import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import StoresRequirementsText from './StoresRequirementsText'
 
-const CardImportInputContainer = styled.div`
+const StoreImportInputContainer = styled.div`
   display: flex;
   align-items: center;
 `
@@ -18,25 +22,32 @@ const InputContainer = styled(NonIdealState)`
   flex-grow: 1;
   justify-content: center;
 `
-
-const defaultExtensionsByMIMEType = {
-  'text/csv': '.csv',
+type StoresCsvInputProps = {
+  acceptingStores: AcceptingStoreEntry[]
+  setAcceptingStores: (store: AcceptingStoreEntry[]) => void
+  fields: StoreFieldConfig[]
 }
 
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
+const defaultExtensionsByMIMEType = {
+  'text/csv': '.csv',
+}
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
-export const ENTRY_LIMIT = 300
 
-type ImportCardsInputProps = {
-  headers: string[]
-  setCardBlueprints: (cardBlueprints: CSVCard[]) => void
-  lineToBlueprint: (line: string[], csvHeader: string[]) => CSVCard
+const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
+  let store: CsvAcceptingStoreInput = {}
+  line.forEach((entry, index) => {
+    const columnName = headers[index]
+    store = { ...store, [columnName]: entry }
+  })
+  return new AcceptingStoreEntry(store, fields)
 }
 
-const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: ImportCardsInputProps) => {
-  const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
+const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
+  const [inputState, setInputState] = useState<FileInputStateType>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
+  const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
     (message: string) => {
@@ -51,11 +62,11 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
   const onLoadend = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
-      const lines = content
-        .split('\n')
-        .filter(line => line.trim().length)
-        .map(line => line.split(',').map(cell => cell.trim()))
 
+      const lines = parse(content, {
+        delimiter: ',',
+        encoding: 'utf-8',
+      })
       const numberOfColumns = lines[0]?.length
 
       if (!numberOfColumns) {
@@ -68,8 +79,13 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
         return
       }
 
-      if (!lines.every(line => line.length === numberOfColumns)) {
+      if (!lines.every((line: string[]) => line.length === numberOfColumns)) {
         showInputError('Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Elemente.')
+        return
+      }
+
+      if (lines.length < 2) {
+        showInputError('Die Datei muss mindestens einen Eintrag enthalten.')
         return
       }
 
@@ -79,12 +95,18 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       }
 
       const csvHeader = lines.shift() ?? []
-      const blueprints = lines.map(line => lineToBlueprint(line, csvHeader))
 
-      setCardBlueprints(blueprints)
+      if (csvHeader.toString() !== headers.toString()) {
+        showInputError(`Das Spaltenformat ist nicht korrekt.`)
+        return
+      }
+
+      const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
+
+      setAcceptingStores(acceptingStores)
       setInputState('idle')
     },
-    [lineToBlueprint, setCardBlueprints, showInputError]
+    [showInputError, setAcceptingStores, setInputState]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
@@ -112,9 +134,9 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     <InputContainer
       title='Wählen Sie eine Datei'
       icon={<FileInputStateIcon inputState={inputState} />}
-      description={<ImportCardsRequirementsText header={headers} />}
+      description={<StoresRequirementsText header={headers} />}
       action={
-        <CardImportInputContainer>
+        <StoreImportInputContainer>
           <input
             data-testid='file-upload'
             ref={fileInput}
@@ -122,10 +144,10 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
             type='file'
             onInput={onInputChange}
           />
-        </CardImportInputContainer>
+        </StoreImportInputContainer>
       }
     />
   )
 }
 
-export default ImportCardsInput
+export default StoresCsvInput

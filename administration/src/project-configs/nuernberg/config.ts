@@ -56,6 +56,24 @@ const config: ProjectConfig = {
   },
   cardStatistics: { enabled: false },
   cardCreation: true,
+  storeManagement: {
+    enabled: true,
+    fields: [
+      { name: 'name', mandatory: true },
+      { name: 'street', mandatory: true },
+      { name: 'houseNumber', mandatory: true },
+      { name: 'postalCode', mandatory: true },
+      { name: 'location', mandatory: true },
+      { name: 'latitude', mandatory: true },
+      { name: 'longitude', mandatory: true },
+      { name: 'telephone', mandatory: false },
+      { name: 'email', mandatory: false },
+      { name: 'homepage', mandatory: false },
+      { name: 'discountDE', mandatory: false },
+      { name: 'discountEN', mandatory: false },
+      { name: 'categoryId', mandatory: true },
+    ],
+  },
 }
 
 export default config
