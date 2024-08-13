@@ -3,12 +3,11 @@ import { parse } from 'csv-parse/browser/esm/sync'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { CsvAcceptingStoreInput } from '../../generated/graphql'
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
-import { ENTRY_LIMIT } from '../cards/ImportCardsInput'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { StoreData } from './StoresImportController'
 import StoresRequirementsText from './StoresRequirementsText'
 
 const StoreImportInputContainer = styled.div`
@@ -23,7 +22,6 @@ const InputContainer = styled(NonIdealState)`
   justify-content: center;
 `
 type StoresCsvInputProps = {
-  acceptingStores: AcceptingStoreEntry[]
   setAcceptingStores: (store: AcceptingStoreEntry[]) => void
   fields: StoreFieldConfig[]
 }
@@ -35,12 +33,13 @@ const defaultExtensionsByMIMEType = {
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
 const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
-  let store: CsvAcceptingStoreInput = {}
+  let storeData: StoreData = {}
   line.forEach((entry, index) => {
     const columnName = headers[index]
-    store = { ...store, [columnName]: entry }
+    // TODO 1570 get geodata if no coordinates available
+    storeData = { ...storeData, [columnName]: entry }
   })
-  return new AcceptingStoreEntry(store, fields)
+  return new AcceptingStoreEntry(storeData, fields)
 }
 
 const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
@@ -84,16 +83,6 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         return
       }
 
-      if (lines.length < 2) {
-        showInputError('Die Datei muss mindestens einen Eintrag enthalten.')
-        return
-      }
-
-      if (lines.length > ENTRY_LIMIT + 1) {
-        showInputError(`Die Datei hat mehr als ${ENTRY_LIMIT} Einträge.`)
-        return
-      }
-
       const csvHeader = lines.shift() ?? []
 
       if (csvHeader.toString() !== headers.toString()) {
@@ -106,7 +95,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       setAcceptingStores(acceptingStores)
       setInputState('idle')
     },
-    [showInputError, setAcceptingStores, setInputState]
+    [showInputError, setAcceptingStores, setInputState, headers]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
@@ -138,7 +127,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       action={
         <StoreImportInputContainer>
           <input
-            data-testid='file-upload'
+            data-testid='store-file-upload'
             ref={fileInput}
             accept='.csv, text/csv'
             type='file'

@@ -29,10 +29,8 @@ const StoreTable = ({ fields, acceptingStores }: CardImportTableProps) => {
     (rowIndex: number, columnIndex: number) => {
       const acceptingStore = acceptingStores[rowIndex]
       const header = headers[columnIndex]
-      // @ts-expect-error GraphQL interface properties can't be accessed dynamically
       const value = acceptingStore.data[header]
-      // improve single value error handling
-      const valid = acceptingStore.isValueValid(header) && !(fields[columnIndex].mandatory && value?.length === 0)
+      const valid = fields[columnIndex].isValid(value)
 
       return (
         <StyledCell
@@ -46,14 +44,14 @@ const StoreTable = ({ fields, acceptingStores }: CardImportTableProps) => {
         </StyledCell>
       )
     },
-    [acceptingStores, fields]
+    [acceptingStores, fields, headers]
   )
 
   return (
     <TableContainer>
-      <Table2 numRows={acceptingStores.length} minRowHeight={12} enableGhostCells>
+      <Table2 numRows={acceptingStores.length} minRowHeight={12} enableGhostCells >
         {fields.map((field, idx) => (
-          <Column key={idx} name={`${field.name}${field.mandatory ? '*' : ''}`} cellRenderer={cellRenderer} />
+          <Column key={idx} name={`${field.name}${field.isMandatory ? '*' : ''}`} cellRenderer={cellRenderer} />
         ))}
       </Table2>
     </TableContainer>

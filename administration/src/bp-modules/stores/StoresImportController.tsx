@@ -32,6 +32,10 @@ const StoresImportController = (): ReactElement => {
 type StoreImportProps = {
   fields: StoreFieldConfig[]
 }
+
+export type StoreData = {
+  [key: string]: string
+}
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const navigate = useNavigate()
   const appToaster = useAppToaster()
@@ -60,11 +64,16 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   return (
     <>
       {acceptingStores.length === 0 ? (
-        <StoresCSVInput acceptingStores={acceptingStores} setAcceptingStores={setAcceptingStores} fields={fields} />
+        <StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />
       ) : (
         <StoreTable fields={fields} acceptingStores={acceptingStores} />
       )}
-      <UploadStoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} />
+      <UploadStoresButtonBar
+        goBack={goBack}
+        acceptingStores={acceptingStores}
+        importStores={onImportStores}
+        fields={fields}
+      />
     </>
   )
 }

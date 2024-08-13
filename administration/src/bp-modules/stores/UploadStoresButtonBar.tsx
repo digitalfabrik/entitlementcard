@@ -2,20 +2,20 @@ import { Button, Tooltip } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 
 import ButtonBar from '../ButtonBar'
-import { Store } from './AcceptingStoreEntry'
+import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 
 type UploadStoresButtonBarProps = {
   goBack: () => void
-  acceptingStores: Store[]
+  acceptingStores: AcceptingStoreEntry[]
   importStores: () => void
 }
 
 const getToolTipMessage = (hasAcceptanceStores: boolean, hasValidStores: boolean): string => {
   if (!hasAcceptanceStores) {
-    return 'Lade eine Datei mit Akzeptanzpartnern hoch.'
+    return 'Laden sie bitte eine Datei mit Akzeptanzpartnern hoch.'
   }
   if (!hasValidStores) {
-    return 'Fehlerhafte Einträge. Bitte prüfe die rot markierten Felder'
+    return 'Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.'
   }
   return 'Importiere Akzeptanzpartner'
 }

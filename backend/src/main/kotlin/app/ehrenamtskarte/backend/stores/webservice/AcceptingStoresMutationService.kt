@@ -11,6 +11,7 @@ class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
     fun importAcceptingStores(stores: List<CSVAcceptingStore>): Boolean {
         transaction {
+            // TODO #1571 store the store data in the database
             print(stores)
         }
         return true

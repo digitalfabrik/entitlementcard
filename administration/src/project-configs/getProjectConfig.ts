@@ -79,7 +79,8 @@ export type CardStatistics =
     }
 export type StoreFieldConfig = {
   name: string
-  mandatory: boolean
+  isMandatory: boolean
+  isValid: (value: string) => boolean
 }
 
 export type StoresManagement =
