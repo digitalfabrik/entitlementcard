@@ -9,9 +9,9 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
-import StoreTable from './StoreTable'
+import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
-import UploadStoresButtonBar from './UploadStoresButtonBar'
+import StoresTable from './StoresTable'
 
 const StoresImportController = (): ReactElement => {
   const { role } = useContext(WhoAmIContext).me!
@@ -66,14 +66,9 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       {acceptingStores.length === 0 ? (
         <StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />
       ) : (
-        <StoreTable fields={fields} acceptingStores={acceptingStores} />
+        <StoresTable fields={fields} acceptingStores={acceptingStores} />
       )}
-      <UploadStoresButtonBar
-        goBack={goBack}
-        acceptingStores={acceptingStores}
-        importStores={onImportStores}
-        fields={fields}
-      />
+      <StoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} />
     </>
   )
 }

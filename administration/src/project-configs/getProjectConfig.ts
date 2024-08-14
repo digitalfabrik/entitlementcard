@@ -81,6 +81,7 @@ export type StoreFieldConfig = {
   name: string
   isMandatory: boolean
   isValid: (value: string) => boolean
+  columnWidth: number
 }
 
 export type StoresManagement =

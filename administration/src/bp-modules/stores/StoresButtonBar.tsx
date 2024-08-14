@@ -20,9 +20,11 @@ const getToolTipMessage = (hasAcceptanceStores: boolean, hasValidStores: boolean
   return 'Importiere Akzeptanzpartner'
 }
 
-const UploadStoresButtonBar = ({ goBack, acceptingStores, importStores }: UploadStoresButtonBarProps): ReactElement => {
+const StoresButtonBar = ({ goBack, acceptingStores, importStores }: UploadStoresButtonBarProps): ReactElement => {
   const allStoresAreValid = acceptingStores.every(store => store.isValid())
   const hasAcceptanceStores = acceptingStores.length !== 0
+
+  console.log(acceptingStores[0])
 
   return (
     <ButtonBar>
@@ -30,7 +32,7 @@ const UploadStoresButtonBar = ({ goBack, acceptingStores, importStores }: Upload
       <Tooltip placement='top' content={getToolTipMessage(hasAcceptanceStores, allStoresAreValid)} disabled={false}>
         <Button
           icon='upload'
-          text='Upload Stores'
+          text='Import Stores'
           intent='success'
           onClick={importStores}
           disabled={!hasAcceptanceStores || !allStoresAreValid}
@@ -40,4 +42,4 @@ const UploadStoresButtonBar = ({ goBack, acceptingStores, importStores }: Upload
   )
 }
 
-export default UploadStoresButtonBar
+export default StoresButtonBar

@@ -23,7 +23,7 @@ type CardImportTableProps = {
   acceptingStores: AcceptingStoreEntry[]
 }
 
-const StoreTable = ({ fields, acceptingStores }: CardImportTableProps) => {
+const StoresTable = ({ fields, acceptingStores }: CardImportTableProps) => {
   const headers = fields.map(field => field.name)
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
@@ -47,9 +47,14 @@ const StoreTable = ({ fields, acceptingStores }: CardImportTableProps) => {
     [acceptingStores, fields, headers]
   )
 
+  // TODO set column width in config
   return (
     <TableContainer>
-      <Table2 numRows={acceptingStores.length} minRowHeight={12} enableGhostCells >
+      <Table2
+        numRows={acceptingStores.length}
+        minRowHeight={12}
+        enableGhostCells
+        columnWidths={fields.map(field => field.columnWidth)}>
         {fields.map((field, idx) => (
           <Column key={idx} name={`${field.name}${field.isMandatory ? '*' : ''}`} cellRenderer={cellRenderer} />
         ))}
@@ -58,4 +63,4 @@ const StoreTable = ({ fields, acceptingStores }: CardImportTableProps) => {
   )
 }
 
-export default StoreTable
+export default StoresTable
