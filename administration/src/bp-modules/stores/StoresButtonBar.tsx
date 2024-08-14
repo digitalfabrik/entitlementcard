@@ -24,8 +24,6 @@ const StoresButtonBar = ({ goBack, acceptingStores, importStores }: UploadStores
   const allStoresAreValid = acceptingStores.every(store => store.isValid())
   const hasAcceptanceStores = acceptingStores.length !== 0
 
-  console.log(acceptingStores[0])
-
   return (
     <ButtonBar>
       <Button icon='arrow-left' text='Zurück zur Auswahl' onClick={goBack} />
