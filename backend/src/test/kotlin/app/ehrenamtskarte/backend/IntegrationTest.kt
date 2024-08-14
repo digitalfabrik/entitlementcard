@@ -21,9 +21,7 @@ open class IntegrationTest {
         @BeforeClass
         fun setupDatabase() {
             postgisContainer.start()
-            val resource = ClassLoader.getSystemResource("config.test.yml")
-                ?: throw Exception("Configuration file 'config.test.yml' not found")
-            val config = BackendConfiguration.load(resource)
+            val config = loadTestConfig()
                 .copy(postgres = PostgresConfig(postgisContainer.jdbcUrl, postgisContainer.username, postgisContainer.password))
             val database = Database.setupWithoutMigrationCheck(config)
             MigrationUtils.applyRequiredMigrations(database)
@@ -34,6 +32,12 @@ open class IntegrationTest {
         @AfterClass
         fun tearDownDatabase() {
             postgisContainer.stop()
+        }
+
+        fun loadTestConfig(): BackendConfiguration {
+            val resource = ClassLoader.getSystemResource("config.test.yml")
+                ?: throw Exception("Configuration file 'config.test.yml' not found")
+            return BackendConfiguration.load(resource)
         }
     }
 }

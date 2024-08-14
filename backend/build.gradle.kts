@@ -141,3 +141,7 @@ tasks.register<Copy>("copyStyle") {
 tasks.named("classes") {
     dependsOn(tasks.named("copyStyle"))
 }
+
+tasks.withType<Test> {
+    environment("KOBLENZ_PEPPER", "123456789ABC")
+}
