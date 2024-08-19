@@ -1,8 +1,11 @@
 package app.ehrenamtskarte.backend.cards
 
+import app.ehrenamtskarte.backend.userdata.KoblenzUser
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
-import com.google.protobuf.GeneratedMessageV3
+import com.google.protobuf.GeneratedMessage
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
@@ -13,13 +16,13 @@ import kotlin.math.pow
 class CanonicalJson {
     companion object {
 
-        private fun GeneratedMessageV3.assertOnlyKnownFields() {
+        private fun GeneratedMessage.assertOnlyKnownFields() {
             if (this.unknownFields.serializedSize > 0) {
                 throw Error("Message has unknown fields. You might be running on an outdated proto definition.")
             }
         }
 
-        private fun GeneratedMessageV3.assertOnlyOptionalFields() {
+        private fun GeneratedMessage.assertOnlyOptionalFields() {
             this.allFields.forEach {
                 if (!it.key.isOptional) {
                     throw Error(
@@ -34,7 +37,7 @@ class CanonicalJson {
             }
         }
 
-        private fun GeneratedMessageV3.assertNoRepeatedFields() {
+        private fun GeneratedMessage.assertNoRepeatedFields() {
             this.allFields.forEach {
                 if (it.key.isRepeated) {
                     // If we want to support repeated fields in the future, we should probably do the following to avoid breaking
@@ -46,7 +49,7 @@ class CanonicalJson {
             }
         }
 
-        private fun GeneratedMessageV3.assertMessageIsValid() {
+        private fun GeneratedMessage.assertMessageIsValid() {
             assertOnlyKnownFields()
             assertOnlyOptionalFields()
             assertNoRepeatedFields()
@@ -58,7 +61,7 @@ class CanonicalJson {
          * field, and the value is the appropriately encoded JSON value.
          * Note, that we encode integers as strings because JSON-Number does not allow the full range of uint64 integers.
          */
-        fun messageToMap(message: GeneratedMessageV3): Map<String, Any> {
+        fun messageToMap(message: GeneratedMessage): Map<String, Any> {
             message.assertMessageIsValid()
 
             return message.allFields.entries.filter { it.value != null }.associate {
@@ -78,7 +81,7 @@ class CanonicalJson {
 
                     Type.MESSAGE -> {
                         val subMessage = it.value
-                        if (subMessage !is GeneratedMessageV3) {
+                        if (subMessage !is GeneratedMessage) {
                             throw Error("Field ${it.key.name} is not an instance of Message despite its kind is 'message'.")
                         }
                         Pair(it.key.number.toString(), messageToMap(subMessage))
@@ -89,7 +92,12 @@ class CanonicalJson {
             }
         }
 
-        fun serializeToString(message: GeneratedMessageV3) = serializeToString(messageToMap(message))
+        fun koblenzUserToString(koblenzUser: KoblenzUser): String {
+            val map = ObjectMapper().convertValue(koblenzUser, object : TypeReference<Map<String, Any>>() {})
+            return serializeToString(map)
+        }
+
+        fun serializeToString(message: GeneratedMessage) = serializeToString(messageToMap(message))
 
         /**
          * Kotlin's implementation of JavaScript [Number.isSafeInteger()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger)

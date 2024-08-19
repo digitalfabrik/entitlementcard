@@ -56,6 +56,7 @@ const config: ProjectConfig = {
   },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
+  cardCreation: true,
 }
 
 export default config

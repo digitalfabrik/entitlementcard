@@ -43,9 +43,11 @@ const Navigation = (props: Props) => {
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
             ) : null}
-            <NavLink to={'/cards'}>
-              <Button minimal icon='id-number' text='Karten erstellen' />
-            </NavLink>
+            {config.cardCreation ? (
+              <NavLink to={'/cards'}>
+                <Button minimal icon='id-number' text='Karten erstellen' />
+              </NavLink>
+            ) : null}
           </>
         ) : null}
         {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
@@ -63,6 +65,11 @@ const Navigation = (props: Props) => {
         {role === Role.RegionAdmin && config.applicationFeature ? (
           <NavLink to={'/region'}>
             <Button minimal icon='path-search' text='Region verwalten' />
+          </NavLink>
+        ) : null}
+        {role === Role.ProjectStoreManager ? (
+          <NavLink to={'/stores'}>
+            <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
           </NavLink>
         ) : null}
       </Navbar.Group>

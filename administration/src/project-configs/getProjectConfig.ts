@@ -1,6 +1,8 @@
 import {
   BAYERN_PRODUCTION_ID,
   BAYERN_STAGING_ID,
+  KOBLENZ_PRODUCTION_ID,
+  KOBLENZ_STAGING_ID,
   NUERNBERG_PRODUCTION_ID,
   NUERNBERG_STAGING_ID,
 } from 'build-configs/constants'
@@ -17,6 +19,7 @@ import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
+import koblenzConfig from './koblenz/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
@@ -94,6 +97,7 @@ export interface ProjectConfig {
   csvExport: CsvExport
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
+  cardCreation: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {
@@ -108,6 +112,9 @@ const getProjectConfig = (hostname: string): ProjectConfig => {
     case NUERNBERG_PRODUCTION_ID:
     case NUERNBERG_STAGING_ID:
       return nuernbergConfig
+    case KOBLENZ_PRODUCTION_ID:
+    case KOBLENZ_STAGING_ID:
+      return koblenzConfig
     default:
       console.debug('Falling back to showcase.')
       return showcaseConfig

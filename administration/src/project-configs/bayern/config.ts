@@ -84,6 +84,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
+  cardCreation: true,
 }
 
 export default config

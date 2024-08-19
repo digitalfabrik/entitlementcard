@@ -15,6 +15,7 @@ server:
   host: 0.0.0.0
   port: 8000
   dataDirectory: ./data
+matomoUrl: http://localhost:5003/matomo.php
 projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
@@ -32,6 +33,17 @@ projects:
     pipelineName: SozialpassNuernberg
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
+    timezone: "Europe/Berlin"
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: koblenz.sozialpass.app
+    importUrl: ""
+    pipelineName: SozialpassKoblenz
+    administrationBaseUrl: https://koblenz.sozialpass.app
+    administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
     smtp:
       host: mail.sozialpass.app

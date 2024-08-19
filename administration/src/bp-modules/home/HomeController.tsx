@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const HomeController = () => {
-  const { applicationFeature, cardStatistics } = useContext(ProjectConfigContext)
+  const { applicationFeature, cardStatistics, cardCreation } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -31,9 +31,11 @@ const HomeController = () => {
               <StyledButton icon='form' text='Eingehende Anträge' />
             </NavLink>
           ) : null}
-          <NavLink to={'/cards'}>
-            <StyledButton icon='id-number' text='Karten erstellen' />
-          </NavLink>
+          {cardCreation ? (
+            <NavLink to={'/cards'}>
+              <StyledButton icon='id-number' text='Karten erstellen' />
+            </NavLink>
+          ) : null}
         </>
       ) : null}
       {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
@@ -51,6 +53,11 @@ const HomeController = () => {
       {role === Role.RegionAdmin && applicationFeature ? (
         <NavLink to={'/region'}>
           <StyledButton icon='path-search' text='Region verwalten' />
+        </NavLink>
+      ) : null}
+      {role === Role.ProjectStoreManager ? (
+        <NavLink to={'/stores'}>
+          <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
         </NavLink>
       ) : null}
     </Container>

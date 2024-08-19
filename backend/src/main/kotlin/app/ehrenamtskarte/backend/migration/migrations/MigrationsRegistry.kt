@@ -14,6 +14,8 @@ object MigrationsRegistry {
         V0010_ApplicationNote(),
         V0011_AddRegionCardConfirmationMailActivation(),
         V0012_AddApplicationCardCreated(),
-        V0013_FixExpirationDateGoldCard()
+        V0013_FixExpirationDateGoldCard(),
+        V0014_CreateUserEntitlementsTable(),
+        V0015_UpdateRoleRegionCombinationConstraint()
     )
 }
