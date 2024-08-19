@@ -6,16 +6,16 @@ const FREINET_FIRSTNAME_COLUMN_HEADER = 'vorname'
 const FREINET_LASTNAME_COLUMN_HEADER = 'nachname'
 const FREINET_CARDTYPE_COLUMN_HEADER = 'inhaber_ehrenamtskarte'
 
-const mergeFirstAndLastnameIntoNewColumn = (line: string[], csvHeader: string[], nameCoulmnName: string) => {
-  const columnNameDoesNotExist = csvHeader.indexOf(nameCoulmnName) == -1
+const mergeFirstAndLastnameIntoNewColumn = (line: string[], csvHeader: string[], nameColumnName: string) => {
+  const columnNameDoesNotExist = csvHeader.indexOf(nameColumnName) == -1
   if (columnNameDoesNotExist) {
-    csvHeader[csvHeader.length] = nameCoulmnName
+    csvHeader[csvHeader.length] = nameColumnName
   }
 
   const indexVorname = csvHeader.indexOf(FREINET_FIRSTNAME_COLUMN_HEADER)
   const indexNachname = csvHeader.indexOf(FREINET_LASTNAME_COLUMN_HEADER)
-  const fullname = `${line[indexVorname]} ${line[indexNachname]}`
-  line[csvHeader.indexOf('Name')] = fullname.trim()
+  const fullname = `${line[indexVorname] ?? ''} ${line[indexNachname] ?? ''}`
+  line[csvHeader.indexOf(nameColumnName)] = fullname.trim()
 }
 
 const renameExpirationDateHeader = (csvHeader: string[], expiryColumnName: string) => {
@@ -26,14 +26,13 @@ const renameExpirationDateHeader = (csvHeader: string[], expiryColumnName: strin
 }
 
 const getCardTypeByFreinetValue = (line: string[], indexCardTypeFreinet: number): string =>
-  line[indexCardTypeFreinet].includes('Gold') || line[indexCardTypeFreinet].includes('gold')
-    ? BAVARIA_CARD_TYPE_GOLD
-    : BAVARIA_CARD_TYPE_STANDARD
+  line[indexCardTypeFreinet].toLowerCase().includes('blau') ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
 
-const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: number): string =>
-  !!line[indexOfExpirationDate] ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
+const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: number): string => {
+  return !!line[indexOfExpirationDate] ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
+}
 
-const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: string) => {
+const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: string, expiryColumnName: string) => {
   const indexCardTypeFreinet = csvHeader.indexOf(FREINET_CARDTYPE_COLUMN_HEADER)
 
   const hasValidCardTypeColumn = csvHeader.indexOf(cardTypeColumnName) != -1
@@ -45,7 +44,7 @@ const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: st
 
   line[indexCardType] = hasFreinetCardType
     ? getCardTypeByFreinetValue(line, indexCardTypeFreinet)
-    : (line[indexCardTypeFreinet] = getCardTypeByExpirationDate(line, csvHeader.indexOf(cardTypeColumnName)))
+    : (line[indexCardTypeFreinet] = getCardTypeByExpirationDate(line, csvHeader.indexOf(expiryColumnName)))
 }
 
 /***
@@ -62,6 +61,6 @@ export const convertFreinetImport = (line: string[], csvHeader: string[], projec
   mergeFirstAndLastnameIntoNewColumn(line, csvHeader, projectConfig.card.nameColumnName)
   renameExpirationDateHeader(csvHeader, projectConfig.card.expiryColumnName)
   if (projectConfig.card.extensionColumnNames[0]) {
-    setCardType(line, csvHeader, projectConfig.card.extensionColumnNames[0])
+    setCardType(line, csvHeader, projectConfig.card.extensionColumnNames[0], projectConfig.card.expiryColumnName)
   }
 }
