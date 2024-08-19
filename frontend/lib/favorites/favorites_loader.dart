@@ -28,6 +28,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
   GraphQLClient? _client;
 
   late FavoritesModel _favoritesModel;
+  late VoidCallback _favoritesListener;
 
   final PagingController<int, FavoriteStore> _pagingController = PagingController(firstPageKey: 0);
 
@@ -36,9 +37,10 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     super.initState();
     _pagingController.addPageRequestListener(_fetchPage);
     _favoritesModel = Provider.of<FavoritesModel>(context, listen: false);
-    _favoritesModel.addListener(() {
-      _pagingController.refresh();
-    });
+    _favoritesListener = () {
+      if (mounted) _pagingController.refresh();
+    };
+    _favoritesModel.addListener(_favoritesListener);
   }
 
   @override
@@ -75,15 +77,19 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       final newItems = await Future.wait(fetchIds
           .map((id) async => favoritesModel.getFavoriteStore(id)..physicalStore = await _fetchPhysicalStore(id)));
 
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
+      if (mounted) {
+        final isLastPage = newItems.length < _pageSize;
+        if (isLastPage) {
+          _pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + newItems.length;
+          _pagingController.appendPage(newItems, nextPageKey);
+        }
       }
     } catch (error) {
-      _pagingController.error = error;
+      if (mounted) {
+        _pagingController.error = error;
+      }
     }
   }
 
@@ -195,9 +201,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
   @override
   void dispose() {
-    _favoritesModel.removeListener(() {
-      _pagingController.refresh();
-    });
+    _favoritesModel.removeListener(_favoritesListener);
     _pagingController.dispose();
     super.dispose();
   }
