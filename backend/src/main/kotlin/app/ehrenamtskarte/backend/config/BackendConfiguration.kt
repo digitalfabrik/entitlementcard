@@ -31,6 +31,7 @@ data class ProjectConfig(
     val administrationBaseUrl: String,
     val administrationName: String,
     val timezone: ZoneId,
+    val selfServiceEnabled: Boolean,
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?
 )

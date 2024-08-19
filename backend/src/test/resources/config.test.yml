@@ -22,6 +22,7 @@ projects:
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: dummy
       port: 587
@@ -33,6 +34,7 @@ projects:
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: dummy
       port: 587
@@ -44,6 +46,7 @@ projects:
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: dummy
       port: 587

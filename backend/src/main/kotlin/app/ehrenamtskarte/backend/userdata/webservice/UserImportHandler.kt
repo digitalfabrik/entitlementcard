@@ -68,7 +68,7 @@ class UserImportHandler {
 
         transaction {
             // TODO as part of #1417: define the project by auth token
-            val project = ProjectEntity.find { Projects.project eq "bayern.ehrenamtskarte.app" }.single()
+            val project = ProjectEntity.find { Projects.project eq "koblenz.sozialpass.app" }.single()
             val regionsByProject = Regions.select { Regions.projectId eq project.id }
                 .associate { it[Regions.regionIdentifier] to it[Regions.id].value }
 

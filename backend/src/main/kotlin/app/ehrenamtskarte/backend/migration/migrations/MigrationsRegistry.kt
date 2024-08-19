@@ -16,6 +16,8 @@ object MigrationsRegistry {
         V0012_AddApplicationCardCreated(),
         V0013_FixExpirationDateGoldCard(),
         V0014_CreateUserEntitlementsTable(),
-        V0015_UpdateRoleRegionCombinationConstraint()
+        V0015_UpdateRoleRegionCombinationConstraint(),
+        V0016_MakeCardIssuerIdColumnNullable(),
+        V0017_AlterUserEntitlementsUserHashConstraint()
     )
 }
