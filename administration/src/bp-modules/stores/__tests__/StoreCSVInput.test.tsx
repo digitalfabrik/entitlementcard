@@ -136,7 +136,7 @@ describe('StoreCSVInput', () => {
   })
 
   it(`should fail if the column amount is not correct`, async () => {
-    const error = `Die CSV enthält eine ungültige Anzahl an Spalten. Es sind maximal ${fieldNames.length} Spalten erlaubt.`
+    const error = `Die CSV enthält eine ungültige Anzahl an Spalten.`
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([

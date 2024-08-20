@@ -1,12 +1,12 @@
 import { buildConfigNuernberg } from 'build-configs'
 
+import { StoresManagement } from '../getProjectConfig'
 import {
   hasMandatoryValue,
   hasValidCategoryId,
   isCoordinate,
   noValidationRequired,
-} from '../common/storeFieldValidation'
-import { StoresManagement } from '../getProjectConfig'
+} from '../helper/storeFieldValidation'
 
 export const storeConfig: StoresManagement = {
   enabled: true,
