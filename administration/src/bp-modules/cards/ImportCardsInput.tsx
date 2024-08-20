@@ -48,7 +48,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     [appToaster]
   )
 
-  const onLoadend = useCallback(
+  const onLoadEnd = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
       const lines = content
@@ -92,7 +92,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       return
     }
     const reader = new FileReader()
-    reader.onloadend = onLoadend
+    reader.onloadend = onLoadEnd
 
     const file = event.currentTarget.files[0]
     if (!(file.type in defaultExtensionsByMIMEType)) {

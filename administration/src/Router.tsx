@@ -19,7 +19,6 @@ import DataPrivacyController from './bp-modules/regions/data-privacy-policy/Data
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
 import StatisticsController from './bp-modules/statistics/StatisticsController'
 import StoresController from './bp-modules/stores/StoresController'
-import StoresCreateController from './bp-modules/stores/StoresCreateController'
 import StoresImportController from './bp-modules/stores/StoresImportController'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
@@ -94,7 +93,6 @@ const Router = () => {
           { path: 'user-settings', element: <UserSettingsController /> },
           { path: 'stores', element: <StoresController /> },
           { path: 'stores/import', element: <StoresImportController /> },
-          { path: 'stores/add', element: <StoresCreateController /> },
           { path: '*', element: <HomeController /> },
         ],
       },

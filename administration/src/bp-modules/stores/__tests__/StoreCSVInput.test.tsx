@@ -136,7 +136,7 @@ describe('StoreCSVInput', () => {
   })
 
   it(`should fail if the column format is not correct`, async () => {
-    const error = 'Das Spaltenformat ist nicht korrekt.'
+    const error = 'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([

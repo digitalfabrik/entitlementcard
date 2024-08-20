@@ -58,14 +58,19 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
     [appToaster]
   )
 
-  const onLoadend = useCallback(
+  const onLoadEnd = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
-
-      const lines = parse(content, {
-        delimiter: ',',
-        encoding: 'utf-8',
-      })
+      let lines: [][] = []
+      try {
+        lines = parse(content, {
+          delimiter: ',',
+          encoding: 'utf-8',
+        })
+      } catch {
+        showInputError('Die Datei hat ein ungültiges Spaltenformat und kann nicht gelesen werden.')
+        return
+      }
       const numberOfColumns = lines[0]?.length
 
       if (!numberOfColumns) {
@@ -78,6 +83,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         return
       }
 
+
       if (!lines.every((line: string[]) => line.length === numberOfColumns)) {
         showInputError('Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Elemente.')
         return
@@ -86,10 +92,9 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       const csvHeader = lines.shift() ?? []
 
       if (csvHeader.toString() !== headers.toString()) {
-        showInputError(`Das Spaltenformat ist nicht korrekt.`)
+        showInputError(`Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.`)
         return
       }
-
       const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
 
       setAcceptingStores(acceptingStores)
@@ -103,7 +108,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       return
     }
     const reader = new FileReader()
-    reader.onloadend = onLoadend
+    reader.onloadend = onLoadEnd
 
     const file = event.currentTarget.files[0]
     if (!(file.type in defaultExtensionsByMIMEType)) {

@@ -16,7 +16,7 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps) => {
     <RequirementsList>
       <li>Maximale Dateigröße: {FILE_SIZE_LIMIT_MEGA_BYTES}MB</li>
       <li>Dateiformat: CSV</li>
-      <li>Spaltenformat: {header.join(', ')}</li>
+      <li>Erforderliche Spalten: {header.join(', ')}</li>
     </RequirementsList>
   )
 }

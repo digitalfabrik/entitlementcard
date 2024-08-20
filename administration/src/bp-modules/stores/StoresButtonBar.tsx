@@ -10,30 +10,30 @@ type UploadStoresButtonBarProps = {
   importStores: () => void
 }
 
-const getToolTipMessage = (hasAcceptanceStores: boolean, hasValidStores: boolean): string => {
-  if (!hasAcceptanceStores) {
+const getToolTipMessage = (hasNoAcceptanceStores: boolean, hasInvalidStores: boolean): string => {
+  if (hasNoAcceptanceStores) {
     return 'Laden sie bitte eine Datei mit Akzeptanzpartnern hoch.'
   }
-  if (!hasValidStores) {
+  if (hasInvalidStores) {
     return 'Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.'
   }
   return 'Importiere Akzeptanzpartner'
 }
 
 const StoresButtonBar = ({ goBack, acceptingStores, importStores }: UploadStoresButtonBarProps): ReactElement => {
-  const allStoresAreValid = acceptingStores.every(store => store.isValid())
-  const hasAcceptanceStores = acceptingStores.length !== 0
+  const hasInvalidStores = !acceptingStores.every(store => store.isValid())
+  const hasNoAcceptanceStores = acceptingStores.length === 0
 
   return (
     <ButtonBar>
       <Button icon='arrow-left' text='Zurück zur Auswahl' onClick={goBack} />
-      <Tooltip placement='top' content={getToolTipMessage(hasAcceptanceStores, allStoresAreValid)} disabled={false}>
+      <Tooltip placement='top' content={getToolTipMessage(hasNoAcceptanceStores, hasInvalidStores)} disabled={false}>
         <Button
           icon='upload'
           text='Import Stores'
           intent='success'
           onClick={importStores}
-          disabled={!hasAcceptanceStores || !allStoresAreValid}
+          disabled={hasNoAcceptanceStores || hasInvalidStores}
         />
       </Tooltip>
     </ButtonBar>
