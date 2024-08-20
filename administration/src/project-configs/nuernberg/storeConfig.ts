@@ -1,17 +1,13 @@
 import { buildConfigNuernberg } from 'build-configs'
 
+import {
+  hasMandatoryValue,
+  hasValidCategoryId,
+  isCoordinate,
+  noValidationRequired,
+} from '../common/storeFieldValidation'
 import { StoresManagement } from '../getProjectConfig'
 
-const hasMandatoryValue = (value: string): boolean => value.length > 0
-const isCoordinate = (coordinate: string) => !isNaN(parseFloat(coordinate))
-const noValidationRequired = () => true
-const hasValidCategoryId = (categoryId: string) => {
-  const category = parseInt(categoryId)
-  if (isNaN(category)) {
-    return false
-  }
-  return buildConfigNuernberg.common.categories.includes(category)
-}
 export const storeConfig: StoresManagement = {
   enabled: true,
   fields: [
@@ -27,6 +23,11 @@ export const storeConfig: StoresManagement = {
     { name: 'homepage', isMandatory: false, isValid: noValidationRequired, columnWidth: 400 },
     { name: 'discountDE', isMandatory: false, isValid: noValidationRequired, columnWidth: 500 },
     { name: 'discountEN', isMandatory: false, isValid: noValidationRequired, columnWidth: 500 },
-    { name: 'categoryId', isMandatory: true, isValid: hasValidCategoryId, columnWidth: 100 },
+    {
+      name: 'categoryId',
+      isMandatory: true,
+      isValid: category => hasValidCategoryId(category, buildConfigNuernberg.common.categories),
+      columnWidth: 100,
+    },
   ],
 }

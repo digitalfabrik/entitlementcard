@@ -47,7 +47,6 @@ const StoresTable = ({ fields, acceptingStores }: CardImportTableProps) => {
     [acceptingStores, fields, headers]
   )
 
-  // TODO set column width in config
   return (
     <TableContainer>
       <Table2

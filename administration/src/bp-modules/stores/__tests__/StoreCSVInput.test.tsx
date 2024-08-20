@@ -94,47 +94,6 @@ describe('StoreCSVInput', () => {
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
-  it(`should fail if rows contain different amount of columns`, async () => {
-    const error = 'Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Elemente.'
-    const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
-    mocked(parse).mockReturnValueOnce([
-      fieldNames,
-      [
-        'Test store',
-        'Teststr.',
-        '10',
-        '90408',
-        'Nürnberg',
-        '12.700',
-        '11.0765467',
-        '0911/123456',
-        'info@test.de',
-        'https://www.test.de/kontakt/',
-        '20% Ermäßigung für Erwachsene',
-        '20% discount for adults',
-        '17',
-      ],
-      [
-        'Test store2',
-        'Teststr.',
-        '12',
-        '90408',
-        'Nürnberg',
-        '12.100',
-        '11.365467',
-        '0911/87654',
-        'info@test.de',
-        'https://www.test2.de/kontakt/',
-        '20% Ermäßigung für Erwachsene',
-        '20% discount for adults',
-      ],
-    ])
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
-    expect(setAcceptingStores).not.toHaveBeenCalled()
-  })
-
   it(`should fail if the column format is not correct`, async () => {
     const error = 'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
     const csv = ''
@@ -169,6 +128,49 @@ describe('StoreCSVInput', () => {
         '20% Ermäßigung für Erwachsene',
         '20% discount for adults',
         '17',
+      ],
+    ])
+    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(setAcceptingStores).not.toHaveBeenCalled()
+  })
+
+  it(`should fail if the column amount is not correct`, async () => {
+    const error = `Die CSV enthält eine ungültige Anzahl an Spalten. Es sind maximal ${fieldNames.length} Spalten erlaubt.`
+    const csv = ''
+    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
+    mocked(parse).mockReturnValueOnce([
+      [
+        'name',
+        'street',
+        'houseNr',
+        'postalCode',
+        'location',
+        'latitude',
+        'longitude',
+        'telephone',
+        'email',
+        'homepage',
+        'discountDE',
+        'discountEN',
+        'categoryId',
+        'test3',
+      ],
+      [
+        'Test store',
+        'Teststr.',
+        '10',
+        '90408',
+        'Nürnberg',
+        '12.700',
+        '11.0765467',
+        '0911/123456',
+        'info@test.de',
+        'https://www.test.de/kontakt/',
+        '20% Ermäßigung für Erwachsene',
+        '20% discount for adults',
+        '17',
+        'test',
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))

@@ -67,8 +67,12 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
           delimiter: ',',
           encoding: 'utf-8',
         })
-      } catch {
-        showInputError('Die Datei hat ein ungültiges Spaltenformat und kann nicht gelesen werden.')
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('Invalid Record Length')) {
+          showInputError('Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Spalten.')
+          return
+        }
+        showInputError('Beim Verarbeiten der Datei ist ein unbekannter Fehler aufgetreten')
         return
       }
       const numberOfColumns = lines[0]?.length
@@ -83,9 +87,10 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         return
       }
 
-
-      if (!lines.every((line: string[]) => line.length === numberOfColumns)) {
-        showInputError('Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Elemente.')
+      if (lines.some((line: string[]) => line.length !== headers.length)) {
+        showInputError(
+          `Die CSV enthält eine ungültige Anzahl an Spalten. Es sind maximal ${headers.length} Spalten erlaubt.`
+        )
         return
       }
 

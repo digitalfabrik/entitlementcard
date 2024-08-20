@@ -26,7 +26,7 @@ const StyledButton = styled(Button)`
   }
 `
 
-const CardFormButton = ({ text, icon, onClick, disabled= false }: Props) => (
+const CardFormButton = ({ text, icon, onClick, disabled = false }: Props) => (
   <StyledButton icon={<Icon style={{ margin: 10 }} icon={icon} iconSize={20} />} onClick={onClick} disabled={disabled}>
     {text}
   </StyledButton>
