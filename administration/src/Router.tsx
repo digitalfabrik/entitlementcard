@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { Suspense, useContext, useMemo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -6,26 +6,35 @@ import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
 import WhoAmIProvider from './WhoAmIProvider'
 import Navigation from './bp-modules/NavigationBar'
-import ApplicationsController from './bp-modules/applications/ApplicationsController'
-import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
-import Login from './bp-modules/auth/Login'
-import ResetPasswordController from './bp-modules/auth/ResetPasswordController'
-import AddCardsController from './bp-modules/cards/AddCardsController'
-import CreateCardsController from './bp-modules/cards/CreateCardsController'
-import ImportCardsController from './bp-modules/cards/ImportCardsController'
-import HomeController from './bp-modules/home/HomeController'
-import RegionsController from './bp-modules/regions/RegionController'
-import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
-import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
-import StatisticsController from './bp-modules/statistics/StatisticsController'
-import StoresController from './bp-modules/stores/StoresController'
-import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
-import ManageUsersController from './bp-modules/users/ManageUsersController'
-import ActivationPage from './mui-modules/activation/ActivationPage'
-import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
-import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
-import ApplyController from './mui-modules/application/ApplyController'
+import LoadingSpinner from './mui-modules/components/LoadingSpinner'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import lazyWithRetry from './util/retryImport'
+
+const ActivationPage = lazyWithRetry(() => import('./mui-modules/activation/ActivationPage'))
+const ApplicationsController = lazyWithRetry(() => import('./bp-modules/applications/ApplicationsController'))
+const DataPrivacyController = lazyWithRetry(
+  () => import('./bp-modules/regions/data-privacy-policy/DataPrivacyController')
+)
+const ForgotPasswordController = lazyWithRetry(() => import('./bp-modules/auth/ForgotPasswordController'))
+const ResetPasswordController = lazyWithRetry(() => import('./bp-modules/auth/ResetPasswordController'))
+const ApplyController = lazyWithRetry(() => import('./mui-modules/application/ApplyController'))
+const ApplicationVerificationController = lazyWithRetry(
+  () => import('./mui-modules/application-verification/ApplicationVerificationController')
+)
+const ApplicationApplicantController = lazyWithRetry(
+  () => import('./mui-modules/application-verification/ApplicationApplicantController')
+)
+const StatisticsController = lazyWithRetry(() => import('./bp-modules/statistics/StatisticsController'))
+const AddCardsController = lazyWithRetry(() => import('./bp-modules/cards/AddCardsController'))
+const CreateCardsController = lazyWithRetry(() => import('./bp-modules/cards/CreateCardsController'))
+const ImportCardsController = lazyWithRetry(() => import('./bp-modules/cards/ImportCardsController'))
+const HomeController = lazyWithRetry(() => import('./bp-modules/home/HomeController'))
+const RegionsController = lazyWithRetry(() => import('./bp-modules/regions/RegionController'))
+const DataPrivacyPolicy = lazyWithRetry(() => import('./bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'))
+const StoresController = lazyWithRetry(() => import('./bp-modules/stores/StoresController'))
+const UserSettingsController = lazyWithRetry(() => import('./bp-modules/user-settings/UserSettingsController'))
+const ManageUsersController = lazyWithRetry(() => import('./bp-modules/users/ManageUsersController'))
+const Login = lazyWithRetry(() => import('./bp-modules/auth/Login'))
 
 const Main = styled.div`
   flex-grow: 1;
@@ -98,7 +107,11 @@ const Router = () => {
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
   }, [authData, projectConfig.applicationFeature, signIn, signOut, projectConfig.cardStatistics])
 
-  return <RouterProvider router={router} />
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  )
 }
 
 export default Router

@@ -1,15 +1,9 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
-import { CircularProgress, styled } from '@mui/material'
 import { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import ErrorHandler from '../ErrorHandler'
-
-const LoadingSpinner = styled(CircularProgress)`
-  position: fixed;
-  z-index: 999;
-  top: 50%;
-`
+import LoadingSpinner from '../components/LoadingSpinner'
 
 type QueryHandlerResult<Data> =
   | {
