@@ -56,6 +56,7 @@ const config: ProjectConfig = {
     buildCsvLine: buildCsvLine,
   },
   cardStatistics: { enabled: false },
+  freinetCSVImportEnabled: false,
   cardCreation: true,
   storeManagement: storeConfig,
 }

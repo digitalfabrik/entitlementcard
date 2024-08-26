@@ -111,6 +111,7 @@ export interface ProjectConfig {
   }
   csvExport: CsvExport
   cardStatistics: CardStatistics
+  freinetCSVImportEnabled: boolean
   cardCreation: boolean
   storeManagement: StoresManagement
 }
