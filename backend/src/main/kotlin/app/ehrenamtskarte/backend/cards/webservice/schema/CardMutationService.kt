@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
+import Argon2IdHasher
 import Card
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
@@ -18,17 +19,23 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.DynamicActivatio
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidUserEntitlementsException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.userdata.KoblenzUser
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
+import com.google.protobuf.InvalidProtocolBufferException
 import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
 import io.ktor.util.decodeBase64Bytes
@@ -37,13 +44,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
+import java.time.LocalDate
 import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
     private val activationSecretLength = 20
 
-    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int): DynamicActivationCodeResult {
+    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int?): DynamicActivationCodeResult {
         val secureRandom = SecureRandom.getInstanceStrong()
         val pepper = ByteArray(PEPPER_LENGTH)
         secureRandom.nextBytes(pepper)
@@ -84,7 +92,7 @@ class CardMutationService {
         }
     }
 
-    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int): StaticVerificationCodeResult {
+    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int?): StaticVerificationCodeResult {
         val pepper = ByteArray(PEPPER_LENGTH)
         SecureRandom.getInstanceStrong().nextBytes(pepper)
 
@@ -115,6 +123,86 @@ class CardMutationService {
         }
     }
 
+    @GraphQLDescription("Creates a new digital entitlementcard from self-service portal")
+    fun createCardFromSelfService(
+        dfe: DataFetchingEnvironment,
+        project: String,
+        encodedCardInfo: String,
+        generateStaticCode: Boolean
+    ): CardCreationResultModel {
+        val context = dfe.getContext<GraphQLContext>()
+        val config = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+        if (!config.selfServiceEnabled) {
+            throw NotFoundException()
+        }
+
+        val cardInfo = parseEncodedCardInfo(encodedCardInfo)
+        val user = KoblenzUser(
+            cardInfo.fullName,
+            cardInfo.extensions.extensionBirthday.birthday,
+            cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
+        )
+        val userHash = Argon2IdHasher.hashKoblenzUserData(user)
+
+        val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
+        if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
+            throw InvalidUserEntitlementsException()
+        }
+
+        val updatedCardInfo = enrichCardInfo(
+            cardInfo,
+            userEntitlements.endDate.toEpochDay().toInt(),
+            userEntitlements.startDate.toEpochDay().toInt(),
+            userEntitlements.regionId.value
+        )
+
+        val activationCode = CardCreationResultModel(
+            createDynamicActivationCode(updatedCardInfo, userId = null),
+            if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, userId = null) else null
+        )
+
+        Matomo.trackCreateCards(
+            context.backendConfiguration,
+            config,
+            context.request,
+            dfe.field.name,
+            userEntitlements.regionId.value,
+            numberOfDynamicCards = 1,
+            numberOfStaticCards = if (generateStaticCode) 1 else 0
+        )
+
+        return activationCode
+    }
+
+    private fun enrichCardInfo(cardInfo: Card.CardInfo, expirationDay: Int, startDay: Int, regionId: Int): Card.CardInfo {
+        return cardInfo.toBuilder()
+            .setExpirationDay(expirationDay)
+            .setExtensions(
+                cardInfo.extensions.toBuilder()
+                    .setExtensionStartDay(
+                        cardInfo.extensions.extensionStartDay.toBuilder()
+                            .setStartDay(startDay)
+                            .build()
+                    )
+                    .setExtensionRegion(
+                        cardInfo.extensions.extensionRegion.toBuilder()
+                            .setRegionId(regionId)
+                            .build()
+                    )
+                    .build()
+            )
+            .build()
+    }
+
+    private fun parseEncodedCardInfo(encodedCardInfo: String): Card.CardInfo {
+        val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
+        try {
+            return Card.CardInfo.parseFrom(cardInfoBytes)
+        } catch (e: InvalidProtocolBufferException) {
+            throw InvalidInputException("Failed to parse encodedCardInfo")
+        }
+    }
+
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
     fun createCardsByCardInfos(
         dfe: DataFetchingEnvironment,
@@ -131,8 +219,7 @@ class CardMutationService {
         val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
-                val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
-                val cardInfo = Card.CardInfo.parseFrom(cardInfoBytes)
+                val cardInfo = parseEncodedCardInfo(encodedCardInfo)
 
                 if (!Authorizer.mayCreateCardInRegion(user, cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()

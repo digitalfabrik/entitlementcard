@@ -76,8 +76,8 @@ class WebService {
 
         app.get("/health") { ctx -> healthHandler.handle(ctx) }
 
+        // TODO remove the condition once the Koblenz project is ready to go live
         if (!production) {
-            // TODO disable for production until the Koblenz project is ready to go live
             app.post("/users/import") { ctx -> userImportHandler.handle(ctx) }
         }
 

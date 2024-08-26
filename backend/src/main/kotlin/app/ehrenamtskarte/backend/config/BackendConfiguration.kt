@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.config
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -31,6 +32,7 @@ data class ProjectConfig(
     val administrationBaseUrl: String,
     val administrationName: String,
     val timezone: ZoneId,
+    val selfServiceEnabled: Boolean,
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?
 )
@@ -65,6 +67,12 @@ data class BackendConfiguration(
             .registerModule(
                 KotlinModule.Builder().build()
             ).registerModule(JavaTimeModule())
+            // Allows unknown (potentially future) config options.
+            // Without this parsing a config fails if a property is defined that is missing
+            // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
+            // for future features, therefore we want to allow unknown properties.
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
         private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
 
         fun load(configFile: URL?): BackendConfiguration {

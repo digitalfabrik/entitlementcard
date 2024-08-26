@@ -10,16 +10,12 @@ import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.timestamp
 
 object UserEntitlements : IntIdTable() {
-    val userHash = binary("userHash")
+    val userHash = binary("userHash").uniqueIndex()
     val startDate = date("startDate")
     val endDate = date("endDate")
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
     val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())
-
-    init {
-        uniqueIndex("unique_userhash_regionid", userHash, regionId)
-    }
 }
 
 class UserEntitlementsEntity(id: EntityID<Int>) : IntEntity(id) {

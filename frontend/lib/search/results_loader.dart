@@ -90,12 +90,15 @@ class ResultsLoaderState extends State<ResultsLoader> {
       }
 
       final newItems = query.parse(newData).searchAcceptingStoresInProject;
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
+
+      if (mounted) {
+        final isLastPage = newItems.length < _pageSize;
+        if (isLastPage) {
+          _pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + newItems.length;
+          _pagingController.appendPage(newItems, nextPageKey);
+        }
       }
     } on Exception catch (error) {
       if (widget != oldWidget) {
@@ -105,7 +108,9 @@ class ResultsLoaderState extends State<ResultsLoader> {
           return await _fetchPage(pageKey);
         }
       }
-      _pagingController.error = error;
+      if (mounted) {
+        _pagingController.error = error;
+      }
     }
   }
 
