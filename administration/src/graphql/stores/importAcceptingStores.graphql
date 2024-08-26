@@ -1,0 +1,3 @@
+mutation importAcceptingStores($stores: [CSVAcceptingStoreInput!]!) {
+  success: importAcceptingStores(stores: $stores)
+}

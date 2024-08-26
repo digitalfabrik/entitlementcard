@@ -126,6 +126,8 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new digital entitlementcard from self-service portal"
+  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
@@ -136,6 +138,8 @@ type Mutation {
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  "Import accepting stores via csv"
+  importAcceptingStores(stores: [CSVAcceptingStoreInput!]!): Boolean!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -290,6 +294,7 @@ enum GraphQLExceptionCode {
   INVALID_DATA_POLICY_SIZE
   INVALID_FILE_SIZE
   INVALID_FILE_TYPE
+  INVALID_INPUT
   INVALID_JSON
   INVALID_LINK
   INVALID_NOTE_SIZE
@@ -297,6 +302,7 @@ enum GraphQLExceptionCode {
   INVALID_PASSWORD_RESET_LINK
   INVALID_QR_CODE_SIZE
   INVALID_ROLE
+  INVALID_USER_ENTITLEMENTS
   MAIL_NOT_SENT
   PASSWORD_RESET_KEY_EXPIRED
   REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
@@ -392,6 +398,22 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CSVAcceptingStoreInput {
+  categoryId: String
+  discountDE: String
+  discountEN: String
+  email: String
+  homepage: String
+  houseNumber: String
+  latitude: String
+  location: String
+  longitude: String
+  name: String
+  postalCode: String
+  street: String
+  telephone: String
 }
 
 input CardVerificationModelInput {

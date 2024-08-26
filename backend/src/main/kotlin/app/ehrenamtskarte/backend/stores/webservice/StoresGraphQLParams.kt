@@ -26,5 +26,8 @@ val storesGraphQlParams = GraphQLParams(
     queries = listOf(
         TopLevelObject(AcceptingStoreQueryService()),
         TopLevelObject(CategoriesQueryService())
+    ),
+    mutations = listOf(
+        TopLevelObject(AcceptingStoresMutationService())
     )
 )

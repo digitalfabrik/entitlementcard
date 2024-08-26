@@ -4,6 +4,7 @@
       <option name="env">
         <map>
           <entry key="JWT_SECRET" value="HelloWorld" />
+          <entry key="KOBLENZ_PEPPER" value="123456789ABC" />
         </map>
       </option>
       <option name="executionName" />

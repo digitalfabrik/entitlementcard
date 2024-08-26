@@ -131,7 +131,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "2024-01-01", "01.01.2025", "false")
+            listOf("07111", "UIOJZIsSL8vXcu", "2024-01-01", "01.01.2025", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -153,7 +153,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "01.01.2024", "2025-01-01", "false")
+            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "2025-01-01", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -175,7 +175,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "01.01.2025", "01.01.2024", "false")
+            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2025", "01.01.2024", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -194,7 +194,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "12345")
+            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "12345")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -213,7 +213,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "false")
+            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -228,7 +228,7 @@ internal class UserImportTest : IntegrationTest() {
                 assertEquals("UIOJZIsSL8vXcu", it[UserEntitlements.userHash].decodeToString())
                 assertEquals(LocalDate.of(2024, 1, 1), it[UserEntitlements.startDate])
                 assertEquals(LocalDate.of(2025, 1, 1), it[UserEntitlements.endDate])
-                assertEquals(1, it[UserEntitlements.regionId].value)
+                assertEquals(95, it[UserEntitlements.regionId].value)
                 assertEquals(false, it[UserEntitlements.revoked])
                 assertNotNull(it[UserEntitlements.lastUpdated])
             }
@@ -251,7 +251,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("09771", "UIOJZIsSL8vXcu", "01.02.2024", "01.02.2025", "true")
+            listOf("07111", "UIOJZIsSL8vXcu", "01.02.2024", "01.02.2025", "true")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -266,7 +266,7 @@ internal class UserImportTest : IntegrationTest() {
                 assertEquals("UIOJZIsSL8vXcu", it[UserEntitlements.userHash].decodeToString())
                 assertEquals(LocalDate.of(2024, 2, 1), it[UserEntitlements.startDate])
                 assertEquals(LocalDate.of(2025, 2, 1), it[UserEntitlements.endDate])
-                assertEquals(1, it[UserEntitlements.regionId].value)
+                assertEquals(95, it[UserEntitlements.regionId].value)
                 assertEquals(true, it[UserEntitlements.revoked])
                 assertNotNull(it[UserEntitlements.lastUpdated])
             }

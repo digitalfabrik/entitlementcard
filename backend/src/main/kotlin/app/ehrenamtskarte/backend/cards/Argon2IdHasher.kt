@@ -23,7 +23,7 @@ class Argon2IdHasher {
         private fun encodeWithoutSalt(
             hash: ByteArray?,
             parameters: Argon2Parameters
-        ): String? {
+        ): String {
             val b64encoder: Base64.Encoder = Base64.getEncoder().withoutPadding()
             val stringBuilder = StringBuilder()
             val type =
@@ -47,7 +47,7 @@ class Argon2IdHasher {
             return stringBuilder.toString()
         }
 
-        fun hashKoblenzUserData(userData: KoblenzUser): String? {
+        fun hashKoblenzUserData(userData: KoblenzUser): String {
             val canonicalJson = CanonicalJson.koblenzUserToString(userData)
             val hashLength = 32
 

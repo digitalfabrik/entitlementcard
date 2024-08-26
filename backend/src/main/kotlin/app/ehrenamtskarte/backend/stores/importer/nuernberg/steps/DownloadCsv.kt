@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.stores.importer.nuernberg.steps
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
-import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.slf4j.Logger

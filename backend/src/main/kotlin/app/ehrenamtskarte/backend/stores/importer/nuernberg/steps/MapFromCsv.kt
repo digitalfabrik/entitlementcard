@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.constants.categoryMapping
-import app.ehrenamtskarte.backend.stores.importer.nuernberg.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.replaceNa
+import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import org.slf4j.Logger
 
 /**
