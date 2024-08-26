@@ -15,8 +15,8 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -30,7 +30,7 @@ internal class UserImportTest : IntegrationTest() {
 
     private val app = Javalin.create().post(USER_IMPORT_PATH) { ctx -> UserImportHandler().handle(ctx) }
 
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             UserEntitlements.deleteAll()
