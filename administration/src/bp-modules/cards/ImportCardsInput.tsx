@@ -1,9 +1,10 @@
-import { Icon, NonIdealState, NonIdealStateIconSize, Spinner } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
 import { ChangeEventHandler, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'
 import { useAppToaster } from '../AppToaster'
+import FileInputStateIcon from '../FileInputStateIcon'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 
 const CardImportInputContainer = styled.div`
@@ -47,7 +48,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     [appToaster]
   )
 
-  const onLoadend = useCallback(
+  const onLoadEnd = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
       const lines = content
@@ -91,7 +92,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       return
     }
     const reader = new FileReader()
-    reader.onloadend = onLoadend
+    reader.onloadend = onLoadEnd
 
     const file = event.currentTarget.files[0]
     if (!(file.type in defaultExtensionsByMIMEType)) {
@@ -107,19 +108,10 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     reader.readAsText(file)
   }
 
-  const StateIcon =
-    inputState === 'error' ? (
-      <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon={'error'} />
-    ) : inputState === 'loading' ? (
-      <Spinner intent='primary' />
-    ) : (
-      'upload'
-    )
-
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={StateIcon}
+      icon={<FileInputStateIcon inputState={inputState} />}
       description={<ImportCardsRequirementsText header={headers} />}
       action={
         <CardImportInputContainer>

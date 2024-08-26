@@ -84,6 +84,9 @@ const config: ProjectConfig = {
     },
   },
   cardCreation: true,
+  storeManagement: {
+    enabled: false,
+  },
 }
 
 export default config

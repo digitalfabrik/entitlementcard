@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.importer.nuernberg.types
+package app.ehrenamtskarte.backend.stores.webservice.schema.types
 
 data class CSVAcceptingStore(
     var name: String?,
