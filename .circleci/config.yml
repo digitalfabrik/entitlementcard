@@ -1378,6 +1378,12 @@ workflows:
                 requires:
                     - upload_administration_packages_to_server_staging
                     - upload_backend_packages_to_server_staging
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - install_packages_to_server_staging
         when: << pipeline.parameters.run_deliver_beta_backend_administration >>
     deliver_production_backend_administration:
         jobs:
@@ -1443,6 +1449,12 @@ workflows:
                 requires:
                     - upload_administration_packages_to_server_production
                     - upload_backend_packages_to_server_production
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: true
+                requires:
+                    - install_packages_to_server_production
         when: << pipeline.parameters.run_deliver_production_backend_administration >>
     delivery_beta_native:
         jobs:
@@ -1617,6 +1629,15 @@ workflows:
                 production_delivery: true
                 requires:
                     - build_ios_nuernberg
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: true
+                requires:
+                    - deliver_bayern_ios
+                    - deliver_nuernberg_ios
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
         when: << pipeline.parameters.run_delivery_production_native >>
     frontend:
         jobs:
