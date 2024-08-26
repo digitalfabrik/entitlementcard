@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.helper
 
+import java.util.Base64
+
 enum class CardInfoTestSample {
     BavarianStandard,
     BavarianGold,
@@ -108,4 +110,9 @@ object ExampleCardInfo {
                     koblenzBase
                 )
         }
+
+    fun getEncoded(cardInfoTestSample: CardInfoTestSample): String {
+        val cardInfo = get(cardInfoTestSample)
+        return Base64.getEncoder().encodeToString(cardInfo.toByteArray())
+    }
 }
