@@ -44,7 +44,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
 
-  const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) == 'true'
+  const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
 
   useBlockNavigation({
     when: cardBlueprints.length > 0,
