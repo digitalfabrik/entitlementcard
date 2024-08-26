@@ -25,14 +25,14 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
             )
             val parser = CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true).build().parse(inputCSV)
 
-            return getCSVAcceptingStores(parser)
+            return getCSVAcceptingStoreDeprecateds(parser)
         } catch (e: Exception) {
             logger.error("Unknown exception while downloading data from csv", e)
             throw e
         }
     }
 
-    private fun getCSVAcceptingStores(parser: CSVParser): List<CSVAcceptingStore> {
+    private fun getCSVAcceptingStoreDeprecateds(parser: CSVParser): List<CSVAcceptingStore> {
         val stores: MutableList<CSVAcceptingStore> = arrayListOf()
         parser.records.forEach { record ->
             val name = record.get("Name")

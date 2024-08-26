@@ -177,4 +177,46 @@ describe('StoreCSVInput', () => {
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
+
+  it(`should fail if the csv includes duplicated stores`, async () => {
+    const error = `Die CSV enthält doppelte Einträge.`
+    const csv = ''
+    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
+    mocked(parse).mockReturnValueOnce([
+      fieldNames,
+      [
+        'Test store',
+        'Teststr.',
+        '10',
+        '90408',
+        'Nürnberg',
+        '12.700',
+        '11.0765467',
+        '0911/123456',
+        'info@test.de',
+        'https://www.test.de/kontakt/',
+        '20% Ermäßigung für Erwachsene',
+        '20% discount for adults',
+        '17',
+      ],
+      [
+        'Test store',
+        'Teststr.',
+        '10',
+        '90408',
+        'Nürnberg',
+        '12.700',
+        '11.0765467',
+        '0911/123456',
+        'info@test.de',
+        'https://www.test.de/kontakt/',
+        '20% Ermäßigung für Erwachsene',
+        '20% discount for adults',
+        '17',
+      ],
+    ])
+    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(setAcceptingStores).not.toHaveBeenCalled()
+  })
 })

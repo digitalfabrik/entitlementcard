@@ -2,13 +2,20 @@ package app.ehrenamtskarte.backend.stores.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
+import app.ehrenamtskarte.backend.stores.database.AddressEntity
 import app.ehrenamtskarte.backend.stores.database.Addresses
+import app.ehrenamtskarte.backend.stores.database.Categories
+import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.Contacts
+import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import net.postgis.jdbc.geometry.Point
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp
 import org.jetbrains.exposed.sql.CustomFunction
 import org.jetbrains.exposed.sql.DoubleColumnType
@@ -74,6 +81,39 @@ object AcceptingStoresRepository {
             .orderBy(sortExpression)
             .let { AcceptingStoreEntity.wrapRows(it) }
             .limit(limit, offset)
+    }
+
+    fun deleteAllStoresByProject(projectId: Int) {
+        // TODO
+    }
+
+    fun createStores(acceptingStores: List<AcceptingStore>, project: EntityID<Int>) {
+        for (acceptingStore in acceptingStores) {
+            val address = AddressEntity.new {
+                street = acceptingStore.streetWithHouseNumber
+                postalCode = acceptingStore.postalCode!!
+                location = acceptingStore.location
+                countryCode = COUNTRY_CODE
+            }
+            val contact = ContactEntity.new {
+                email = acceptingStore.email
+                telephone = acceptingStore.telephone
+                website = acceptingStore.website
+            }
+            val storeEntity = AcceptingStoreEntity.new {
+                name = acceptingStore.name
+                description = acceptingStore.discount
+                contactId = contact.id
+                categoryId = EntityID(acceptingStore.categoryId, Categories)
+                regionId = null // TODO #538: For now the region is always null
+                projectId = project
+            }
+            PhysicalStoreEntity.new {
+                storeId = storeEntity.id
+                addressId = address.id
+                coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
+            }
+        }
     }
 
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {

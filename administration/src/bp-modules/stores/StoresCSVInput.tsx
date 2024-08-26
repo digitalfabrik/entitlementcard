@@ -7,6 +7,7 @@ import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { StoreData } from './StoresImportController'
 import StoresRequirementsText from './StoresRequirementsText'
 
 const StoreImportInputContainer = styled.div`
@@ -38,6 +39,16 @@ const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldC
     return { ...acc, [columnName]: entry }
   }, {})
   return new AcceptingStoreEntry(storeData, fields)
+}
+
+const hasStoreDuplicates = (stores: AcceptingStoreEntry[]) => {
+  return (
+    new Set(
+      stores.map(({ data }: { data: StoreData }) =>
+        JSON.stringify([data['name'], data['street'], data['houseNumber'], data['postalCode'], data['location']])
+      )
+    ).size < stores.length
+  )
 }
 
 const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
@@ -101,6 +112,11 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         return
       }
       const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
+
+      if (hasStoreDuplicates(acceptingStores)) {
+        showInputError(`Die CSV enthält doppelte Einträge.`)
+        return
+      }
 
       setAcceptingStores(acceptingStores)
       setInputState('idle')
