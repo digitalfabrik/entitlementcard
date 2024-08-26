@@ -83,7 +83,11 @@ const config: ProjectConfig = {
       primaryColorLight: '#c6c0d8',
     },
   },
+  freinetCSVImportEnabled: true,
   cardCreation: true,
+  storeManagement: {
+    enabled: false,
+  },
 }
 
 export default config

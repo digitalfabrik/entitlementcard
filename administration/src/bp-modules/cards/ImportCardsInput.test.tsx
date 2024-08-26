@@ -17,6 +17,8 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: jest.fn(),
 }))
 
+jest.mock('../../Router', () => ({}))
+
 const wrapper = ({ children }: { children: ReactElement }) => (
   <AppToasterProvider>
     <ProjectConfigProvider>{children}</ProjectConfigProvider>
@@ -53,6 +55,7 @@ describe('ImportCardsInput', () => {
         headers={getHeaders(projectConfig)}
         lineToBlueprint={lineToBlueprint}
         setCardBlueprints={setCardBlueprints}
+        isFreinetFormat={false}
       />,
       { wrapper }
     )

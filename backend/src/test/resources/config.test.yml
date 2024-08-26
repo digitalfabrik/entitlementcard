@@ -46,7 +46,7 @@ projects:
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"
-    selfServiceEnabled: false
+    selfServiceEnabled: true
     smtp:
       host: dummy
       port: 587

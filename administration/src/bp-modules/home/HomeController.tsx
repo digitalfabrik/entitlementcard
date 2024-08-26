@@ -57,7 +57,7 @@ const HomeController = () => {
       ) : null}
       {role === Role.ProjectStoreManager ? (
         <NavLink to={'/stores'}>
-          <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
+          <StyledButton icon='shop' text='Akzeptanzpartner verwalten' />
         </NavLink>
       ) : null}
     </Container>
