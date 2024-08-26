@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
+import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
@@ -80,8 +81,8 @@ class UserImportHandler {
                 val regionId = regionsByProject[entry.get("regionKey")]
                     ?: throw UserImportException(entry.recordNumber, "Specified region not found for the current project")
 
-                val userHash = entry.get("userHash").toByteArray()
-                if (!isValidUserHash(userHash)) {
+                val userHash = entry.get("userHash")
+                if (!Argon2IdHasher.isValidUserHash(userHash)) {
                     throw UserImportException(entry.recordNumber, "Failed to validate userHash")
                 }
 
@@ -95,7 +96,7 @@ class UserImportHandler {
                     ?: throw UserImportException(entry.recordNumber, "Revoked must be a boolean value")
 
                 UserEntitlementsRepository.insertOrUpdateUserData(
-                    userHash,
+                    userHash.toByteArray(),
                     startDate,
                     endDate,
                     revoked,
@@ -103,11 +104,6 @@ class UserImportHandler {
                 )
             }
         }
-    }
-
-    private fun isValidUserHash(userHash: ByteArray): Boolean {
-        // TODO implement userHash validation after #1433
-        return true
     }
 
     private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
