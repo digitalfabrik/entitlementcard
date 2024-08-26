@@ -14,7 +14,8 @@ const mergeFirstAndLastnameIntoNewColumn = (line: string[], csvHeader: string[],
 
   const indexFirstName = csvHeader.indexOf(FREINET_FIRSTNAME_COLUMN_HEADER)
   const indexLastName = csvHeader.indexOf(FREINET_LASTNAME_COLUMN_HEADER)
-  const fullname = `${line[indexFirstName] ?? ''} ${line[indexLastName] ?? ''}`
+  const fullname =
+    !!line[indexFirstName] && !!line[indexLastName] ? `${line[indexFirstName]} ${line[indexLastName]}` : ''
   line[csvHeader.indexOf(nameColumnName)] = fullname.trim()
 }
 
@@ -35,17 +36,17 @@ const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: numb
 const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: string, expiryColumnName: string) => {
   const indexCardTypeFreinet = csvHeader.indexOf(FREINET_CARDTYPE_COLUMN_HEADER)
 
-  const indexCardType = csvHeader.indexOf(cardTypeColumnName)
-  const hasValidCardTypeColumn = indexCardType != -1
+  const hasValidCardTypeColumn = csvHeader.indexOf(cardTypeColumnName) != -1
   if (!hasValidCardTypeColumn) {
     csvHeader[csvHeader.length] = cardTypeColumnName
   }
+  const indexCardType = csvHeader.indexOf(cardTypeColumnName)
 
   const hasFreinetCardType = indexCardTypeFreinet != -1
 
   line[indexCardType] = hasFreinetCardType
     ? getCardTypeByFreinetValue(line, indexCardTypeFreinet)
-    : (line[indexCardTypeFreinet] = getCardTypeByExpirationDate(line, csvHeader.indexOf(expiryColumnName)))
+    : getCardTypeByExpirationDate(line, csvHeader.indexOf(expiryColumnName))
 }
 
 /***
