@@ -6,8 +6,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class AcceptingStoresMutationService {
-
-// TODO handling stores in different task
     @GraphQLDescription("Import accepting stores via csv")
     fun importAcceptingStores(stores: List<CSVAcceptingStore>): Boolean {
         transaction {

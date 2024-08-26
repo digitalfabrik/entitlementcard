@@ -1,4 +1,4 @@
-import { Cell, Column, Table2, TruncatedFormat2 } from '@blueprintjs/table'
+import { Cell, Column, Table2, TruncatedFormat } from '@blueprintjs/table'
 import '@blueprintjs/table/lib/css/table.css'
 import { useCallback } from 'react'
 import styled from 'styled-components'
@@ -36,11 +36,11 @@ const StoresTable = ({ fields, acceptingStores }: CardImportTableProps) => {
         <StyledCell
           wrapText
           key={`${rowIndex}-${columnIndex}`}
-          tooltip={!valid ? 'Validierungsfehler' : undefined}
-          intent={!valid ? 'danger' : 'none'}>
-          <TruncatedFormat2 detectTruncation preformatted>
-            {!!value ? value : '-'}
-          </TruncatedFormat2>
+          tooltip={valid ? undefined : 'Validierungsfehler'}
+          intent={valid ? 'none' : 'danger'}>
+          <TruncatedFormat detectTruncation preformatted>
+            {value ?? '-'}
+          </TruncatedFormat>
         </StyledCell>
       )
     },

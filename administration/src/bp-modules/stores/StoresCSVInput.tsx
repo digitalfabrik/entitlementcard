@@ -7,7 +7,6 @@ import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
-import { StoreData } from './StoresImportController'
 import StoresRequirementsText from './StoresRequirementsText'
 
 const StoreImportInputContainer = styled.div`
@@ -33,12 +32,11 @@ const defaultExtensionsByMIMEType = {
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
 const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
-  let storeData: StoreData = {}
-  line.forEach((entry, index) => {
+  const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
     // TODO 1570 get geodata if no coordinates available
-    storeData = { ...storeData, [columnName]: entry }
-  })
+    return { ...acc, [columnName]: entry }
+  }, {})
   return new AcceptingStoreEntry(storeData, fields)
 }
 
