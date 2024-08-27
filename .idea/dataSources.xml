@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="ehrenamtskarte@localhost" uuid="d83188d7-bad5-4b46-b4d7-13cabcdaf7c7">
+    <data-source source="LOCAL" name="ehrenamtskarte@db-postgis" uuid="d83188d7-bad5-4b46-b4d7-13cabcdaf7c7">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

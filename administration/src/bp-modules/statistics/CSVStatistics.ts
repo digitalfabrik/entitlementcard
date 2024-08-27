@@ -29,7 +29,7 @@ export const generateCsv = (statistics: CardStatisticsResultModel[], cardStatist
     )
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {
-    if (error instanceof Error) throw new CsvStatisticsError(error.message)
+    if (error instanceof Error) {throw new CsvStatisticsError(error.message)}
     throw error
   }
 }

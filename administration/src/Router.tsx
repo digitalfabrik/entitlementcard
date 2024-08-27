@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -40,7 +40,7 @@ const Main = styled.div`
 
 export const FREINET_PARAM = 'freinet'
 
-const Router = () => {
+const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
   const router = useMemo(() => {

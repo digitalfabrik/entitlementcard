@@ -28,7 +28,7 @@ export function generateCsv(
     }
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {
-    if (error instanceof Error) throw new CsvError(error.message)
+    if (error instanceof Error) {throw new CsvError(error.message)}
     throw error
   }
 }

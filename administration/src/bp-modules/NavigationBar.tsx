@@ -1,5 +1,5 @@
 import { Alignment, Button, Navbar } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,11 +14,11 @@ const PrintAwareNavbar = styled(Navbar)`
   }
 `
 
-interface Props {
+type Props = {
   onSignOut: () => void
 }
 
-const Navigation = (props: Props) => {
+const Navigation = (props: Props): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
 

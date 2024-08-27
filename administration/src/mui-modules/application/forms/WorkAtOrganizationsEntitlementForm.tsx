@@ -91,7 +91,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
     )
 
     const deleteByKey = useMemo(() => {
-      if (state.length <= 1) return undefined
+      if (state.length <= 1) {return undefined}
       return (key: number) =>
         setState(state =>
           removeAt(

@@ -64,7 +64,7 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const compoundResult = getValidatedCompoundInput(state)
-    if (compoundResult.type === 'error') return compoundResult
+    if (compoundResult.type === 'error') {return compoundResult}
     return {
       type: 'valid',
       value: {

@@ -23,7 +23,7 @@ import koblenzConfig from './koblenz/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
-export interface PdfConfig {
+export type PdfConfig = {
   title: string
   templatePath: string | null
   issuer: string
@@ -36,12 +36,12 @@ export interface PdfConfig {
   }
 }
 
-export interface ActivityLogConfig {
+export type ActivityLogConfig = {
   columnNames: string[]
   renderLogEntry: (logEntry: ActivityLog) => ReactNode
 }
 
-export interface CardConfig {
+export type CardConfig = {
   nameColumnName: string
   expiryColumnName: string
   extensionColumnNames: (string | null)[]
@@ -49,7 +49,7 @@ export interface CardConfig {
   extensions: ExtensionClass[]
 }
 
-export interface ApplicationFeature {
+export type ApplicationFeature = {
   applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
@@ -93,7 +93,7 @@ export type StoresManagement =
       enabled: false
     }
 
-export interface ProjectConfig {
+export type ProjectConfig = {
   name: string
   projectId: string
   applicationFeature?: ApplicationFeature
@@ -116,7 +116,7 @@ export interface ProjectConfig {
   storeManagement: StoresManagement
 }
 
-export const setProjectConfigOverride = (hostname: string) => {
+export const setProjectConfigOverride = (hostname: string): void => {
   window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
 }
 

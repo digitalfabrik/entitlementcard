@@ -1,4 +1,5 @@
 import { HTMLSelect } from '@blueprintjs/core'
+import { ReactElement } from 'react'
 
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
@@ -11,7 +12,7 @@ const RoleSelector = ({
   role: Role | null
   onChange: (role: Role | null) => void
   hideProjectAdmin: boolean
-}) => {
+}): ReactElement => {
   return (
     <HTMLSelect fill onChange={e => onChange((e.target.value as Role | null) ?? null)} value={role ?? ''} required>
       <option value='' disabled>

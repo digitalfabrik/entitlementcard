@@ -31,7 +31,7 @@ const ImportCardsController = (): ReactElement => {
   return <InnerImportCardsController region={region} />
 }
 
-export const getHeaders = (projectConfig: ProjectConfig) => [
+export const getHeaders = (projectConfig: ProjectConfig): string[] => [
   projectConfig.card.nameColumnName,
   projectConfig.card.expiryColumnName,
   ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
@@ -78,8 +78,10 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     [headers, projectConfig.card, region]
   )
 
-  if (state === CardActivationState.loading) return <Spinner />
-  if (state === CardActivationState.finished)
+  if (state === CardActivationState.loading) {
+    return <Spinner />
+  }
+  if (state === CardActivationState.finished) {
     return (
       <GenerationFinished
         reset={() => {
@@ -88,6 +90,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
         }}
       />
     )
+  }
 
   return (
     <>

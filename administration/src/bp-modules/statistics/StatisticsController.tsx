@@ -24,7 +24,7 @@ const ViewProjectStatistics = () => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart })
   }
 
-  if (!cardStatisticsQueryResult.successful) return cardStatisticsQueryResult.component
+  if (!cardStatisticsQueryResult.successful) {return cardStatisticsQueryResult.component}
   return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
 }
 
@@ -44,7 +44,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart, regionId: region.id })
   }
 
-  if (!cardStatisticsQueryResult.successful) return cardStatisticsQueryResult.component
+  if (!cardStatisticsQueryResult.successful) {return cardStatisticsQueryResult.component}
   return (
     <StatisticsOverview
       onApplyFilter={applyFilter}

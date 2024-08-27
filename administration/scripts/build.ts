@@ -107,7 +107,7 @@ checkBrowsers(paths.appPath, isInteractive)
       const buildFolder = path.relative(process.cwd(), paths.appBuild)
       printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn)
     },
-    (err: any) => {
+    (err: Error) => {
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true'
       if (tscCompileOnError) {
         console.log(

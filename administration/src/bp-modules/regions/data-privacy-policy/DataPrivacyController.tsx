@@ -12,7 +12,7 @@ const DataPrivacyController = ({ regionId }: { regionId: number }) => {
     onError: error => console.error(error),
   })
   const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
-  if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
+  if (!dataPolicyQueryResult.successful) {return dataPolicyQueryResult.component}
 
   const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''
 

@@ -1,3 +1,5 @@
+import { ReactElement } from 'react'
+
 export const dataPrivacyBaseHeadline =
   'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass'
 
@@ -38,7 +40,7 @@ r.substr(0, r.search("<p")) + r.substr(r.search("</p>") + 4)
 Copy the resulting string into the htmltojsx converter.
 */
 
-export const DataPrivacyBaseText = () => (
+export const DataPrivacyBaseText = (): ReactElement => (
   <div>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen des digitalen

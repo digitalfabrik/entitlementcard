@@ -2,7 +2,7 @@ import { ReactNode, createContext, useMemo, useState } from 'react'
 
 import { SignInPayload } from './generated/graphql'
 
-export interface TokenPayload {
+export type TokenPayload = {
   token: string
   expiry: Date
   adminId: number

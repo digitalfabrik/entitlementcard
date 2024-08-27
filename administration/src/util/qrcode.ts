@@ -184,10 +184,6 @@ const createQRCode = (
 
   const input = code.getMatrix()
 
-  if (input === null) {
-    throw new IllegalStateException()
-  }
-
   const inputWidth = input.getWidth()
   const inputHeight = input.getHeight()
 
@@ -222,7 +218,7 @@ export const drawQRCode = (
   size: number,
   pdfDocument: PDFPage,
   border = true
-) => {
+): void => {
   createQRCode(
     content,
     (rectX: number, rectY: number, rectSize: number) => {

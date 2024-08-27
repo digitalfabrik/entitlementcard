@@ -17,7 +17,7 @@ export const findExtension = <E extends ExtensionClass>(
   return array.find(e => e instanceof extension) as InstanceType<E> | undefined
 }
 
-export interface JSONExtension<T> {
+export type JSONExtension<T> = {
   name: string
   state: T | null
 }
@@ -25,7 +25,7 @@ export interface JSONExtension<T> {
 export abstract class Extension<T, R> implements JSONExtension<T> {
   public abstract readonly name: string
   public state: T | null = null
-  abstract setInitialState(args: R, ...xargs: any[]): void
+  abstract setInitialState(args: R, ...xargs: unknown[]): void
   abstract isValid(): boolean
   abstract createForm(onChange: () => void): ReactElement | null
   abstract causesInfiniteLifetime(): boolean

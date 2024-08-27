@@ -68,7 +68,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
         wantsDigitalCard: wantsDigitalCardOptions,
       }
     )(state)
-    if (partialValidationResult.type === 'error') return { type: 'error' }
+    if (partialValidationResult.type === 'error') {return { type: 'error' }}
     // Application type must not be null if and only if card type is blue
     if (partialValidationResult.value.cardType !== BavariaCardType.Blue) {
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
@@ -77,7 +77,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       return { type: 'error', message: 'Es muss mindestens ein Kartentyp ausgewählt sein.' }
     }
     const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
-    if (applicationTypeResult.type === 'error') return { type: 'error' }
+    if (applicationTypeResult.type === 'error') {return { type: 'error' }}
     return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
   },
   Component: ({ state, setState }) => {

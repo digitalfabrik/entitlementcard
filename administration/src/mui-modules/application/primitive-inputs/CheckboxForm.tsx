@@ -12,7 +12,7 @@ const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
   validate: ({ checked }, options) => {
-    if (options.required && !checked) return { type: 'error', message: options.notCheckedErrorMessage }
+    if (options.required && !checked) {return { type: 'error', message: options.notCheckedErrorMessage }}
     return { type: 'valid', value: checked }
   },
   Component: ({ state, setState, label, options }) => {

@@ -96,11 +96,11 @@ function useVersionedLocallyStoredState<T>(
   }, [locallyStoredVersion, version, locallyStoredStatus, initialState, setLocallyStoredState])
   const setState: SetState<T> = useUpdateStateCallback(setLocallyStoredState, 'value')
   if (locallyStoredStatus === 'loading' || locallyStoredVersion !== version)
-    return {
+    {return {
       status: 'loading',
       state: initialState,
       setState,
-    }
+    }}
   return { status: 'ready', state: locallyStoredState.value, setState }
 }
 

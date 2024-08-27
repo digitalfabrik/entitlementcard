@@ -1,5 +1,5 @@
 import { ButtonGroup, NonIdealState } from '@blueprintjs/core'
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -13,7 +13,7 @@ const Buttons = styled(ButtonGroup)`
   width: 400px;
 `
 
-const CreateCardsController = () => {
+const CreateCardsController = (): ReactElement => {
   const { region } = useContext(WhoAmIContext).me!
   const { freinetCSVImportEnabled } = useContext(ProjectConfigContext)
 

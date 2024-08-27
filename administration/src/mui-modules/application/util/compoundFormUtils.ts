@@ -86,7 +86,9 @@ export function createCompoundValidate<Forms extends SubForms>(
       return { type: 'error' }
     }
     const value = mapValues<typeof results, CompoundValidatedInput<Forms>>(results, result => {
-      if (result.type === 'error') throw Error('Found error type despite previous check.')
+      if (result.type === 'error') {
+        throw Error('Found error type despite previous check.')
+      }
       return result.value
     })
     return { type: 'valid', value }

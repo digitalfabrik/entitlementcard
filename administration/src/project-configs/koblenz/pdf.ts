@@ -3,9 +3,9 @@ import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
-const renderPdfDetails = ({ info }: InfoParams) => {
+const renderPdfDetails = ({ info }: InfoParams): string => {
   const expirationDay = info.expirationDay
-  if (!expirationDay) {
+  if (expirationDay === undefined) {
     throw new Error('expirationDay must be defined for Koblenz')
   }
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
@@ -16,7 +16,7 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams) => {
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
   return cardInfoHash
 }
 
