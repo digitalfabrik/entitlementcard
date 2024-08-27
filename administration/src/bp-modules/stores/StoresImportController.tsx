@@ -11,6 +11,7 @@ import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
+import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
 
 const StoresImportController = (): ReactElement => {
@@ -41,9 +42,19 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
-  const [importStores] = useImportAcceptingStoresMutation({
-    onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Ihre Akzeptanzpartner wurden importiert.' })
+  const [importStores,{loading}] = useImportAcceptingStoresMutation({
+    onCompleted: ({ result }) => {
+      appToaster?.show({
+        intent: 'none',
+        timeout: 0,
+        message: (
+          <StoresImportResult
+            storesUntouched={result.storesUntouched}
+            storesDeleted={result.storesDeleted}
+            storesCreated={result.storesCreated}
+          />
+        ),
+      })
       setAcceptingStores([])
     },
     onError: error => {
@@ -70,7 +81,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       ) : (
         <StoresTable fields={fields} acceptingStores={acceptingStores} />
       )}
-      <StoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} />
+      <StoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} loading={loading}/>
     </>
   )
 }

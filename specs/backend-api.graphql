@@ -139,7 +139,7 @@ type Mutation {
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(project: String!, stores: [CSVAcceptingStoreInput!]!): Boolean!
+  importAcceptingStores(project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -248,6 +248,12 @@ type SignInPayload {
 type StaticVerificationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
+}
+
+type StoreImportResultModel {
+  storesCreated: Int!
+  storesDeleted: Int!
+  storesUntouched: Int!
 }
 
 enum ActivationState {

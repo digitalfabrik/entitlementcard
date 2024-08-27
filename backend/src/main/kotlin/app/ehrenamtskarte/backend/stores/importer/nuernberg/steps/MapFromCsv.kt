@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.nuernberg.constants.categoryMapping
-import app.ehrenamtskarte.backend.stores.importer.replaceNa
+import app.ehrenamtskarte.backend.stores.utils.clean
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import org.slf4j.Logger
 
@@ -52,13 +52,5 @@ class MapFromCsv(config: ImportConfig, private val logger: Logger) :
             logger.error("Exception occurred while mapping $it", e)
             null
         }
-    }
-
-    private fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-        val trimmed = this?.replaceNa()?.trim()
-        if (removeSubsequentWhitespaces) {
-            return trimmed?.replace(Regex("""\s{2,}"""), " ")
-        }
-        return trimmed
     }
 }

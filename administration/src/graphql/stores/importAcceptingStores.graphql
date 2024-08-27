@@ -1,3 +1,7 @@
 mutation importAcceptingStores($stores: [CSVAcceptingStoreInput!]!, $project: String!) {
-  success: importAcceptingStores(stores: $stores, project: $project)
+  result: importAcceptingStores(stores: $stores, project: $project) {
+    storesCreated
+    storesDeleted
+    storesUntouched
+  }
 }
