@@ -168,9 +168,12 @@
   "search": {
     "filterByCategories": "Filter by categories",
     "findCloseBy": "Search near me",
+    "findAlphabetically": "Alphabetically",
     "noAcceptingStoresFound": "No acceptance points found matching this search.",
     "searchHint": "Tap to search …",
     "searchResults": "Search results",
+    "alphabetically": "(A-Z)",
+    "nearby": "(nearby)",
     "title": "Search"
   },
   "store": {
