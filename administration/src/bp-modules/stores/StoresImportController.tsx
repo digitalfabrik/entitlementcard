@@ -1,6 +1,7 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { NonIdealState, Spinner } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -30,6 +31,13 @@ const StoresImportController = (): ReactElement => {
   return <StoresImport fields={storeManagement.fields} />
 }
 
+const CenteredSpinner = styled(Spinner)`
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+`
+
 type StoreImportProps = {
   fields: StoreFieldConfig[]
 }
@@ -43,7 +51,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
-  const [importStores, { loading }] = useImportAcceptingStoresMutation({
+  const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
     onCompleted: ({ result }) => {
       appToaster?.show({
         intent: 'none',
@@ -78,6 +86,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
   return (
     <>
+      {isApplyingStoreTransaction && <CenteredSpinner intent='primary' />}
       {acceptingStores.length === 0 ? (
         <StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />
       ) : (
@@ -87,7 +96,6 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
         goBack={goBack}
         acceptingStores={acceptingStores}
         importStores={onImportStores}
-        loading={loading}
         dryRun={dryRun}
         setDryRun={setDryRun}
       />

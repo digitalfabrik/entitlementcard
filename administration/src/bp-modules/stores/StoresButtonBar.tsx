@@ -9,7 +9,6 @@ type UploadStoresButtonBarProps = {
   goBack: () => void
   acceptingStores: AcceptingStoreEntry[]
   importStores: () => void
-  loading: boolean
   dryRun: boolean
   setDryRun: (value: boolean) => void
 }
@@ -28,7 +27,6 @@ const StoresButtonBar = ({
   goBack,
   acceptingStores,
   importStores,
-  loading,
   dryRun,
   setDryRun,
 }: UploadStoresButtonBarProps): ReactElement => {
@@ -62,7 +60,6 @@ const StoresButtonBar = ({
         icon='upload'
         intent='warning'
         isOpen={importDialogIsOpen}
-        loading={loading}
         onCancel={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}>
         <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} />

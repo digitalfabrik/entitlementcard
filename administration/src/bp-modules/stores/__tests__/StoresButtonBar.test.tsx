@@ -18,14 +18,7 @@ const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProv
 describe('StoresButtonBar', () => {
   it('Should goBack when clicking back', async () => {
     const { getByText } = render(
-      <StoresButtonBar
-        dryRun
-        loading={false}
-        setDryRun={setDryRun}
-        goBack={goBack}
-        acceptingStores={[]}
-        importStores={importStores}
-      />,
+      <StoresButtonBar dryRun setDryRun={setDryRun} goBack={goBack} acceptingStores={[]} importStores={importStores} />,
       {
         wrapper,
       }
@@ -42,14 +35,7 @@ describe('StoresButtonBar', () => {
 
   it('Should disable import button for no stores', async () => {
     const { getByText } = render(
-      <StoresButtonBar
-        dryRun
-        loading={false}
-        setDryRun={setDryRun}
-        goBack={goBack}
-        acceptingStores={[]}
-        importStores={importStores}
-      />,
+      <StoresButtonBar dryRun setDryRun={setDryRun} goBack={goBack} acceptingStores={[]} importStores={importStores} />,
       {
         wrapper,
       }
@@ -58,7 +44,6 @@ describe('StoresButtonBar', () => {
     const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
     expect(importButton).toBeTruthy()
     expect(importButton.disabled).toBeTruthy()
-
     fireEvent.mouseOver(importButton)
     fireEvent.click(importButton)
     await act(async () => {
@@ -75,7 +60,6 @@ describe('StoresButtonBar', () => {
     const { getByText } = render(
       <StoresButtonBar
         dryRun
-        loading={false}
         setDryRun={setDryRun}
         goBack={goBack}
         acceptingStores={stores}
@@ -86,7 +70,6 @@ describe('StoresButtonBar', () => {
 
     const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
     expect(importButton).toBeTruthy()
-
     fireEvent.mouseOver(importButton)
     fireEvent.click(importButton)
 
@@ -105,7 +88,6 @@ describe('StoresButtonBar', () => {
     const { getByText } = render(
       <StoresButtonBar
         dryRun
-        loading={false}
         setDryRun={setDryRun}
         goBack={goBack}
         acceptingStores={stores}
@@ -116,7 +98,6 @@ describe('StoresButtonBar', () => {
 
     const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
     expect(importButton).toBeTruthy()
-
     fireEvent.click(importButton)
     const importConfirmationButton = getByText('Stores importieren').closest('button') as HTMLButtonElement
     fireEvent.click(importConfirmationButton)
