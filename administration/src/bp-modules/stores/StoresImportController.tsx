@@ -42,13 +42,15 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
-  const [importStores,{loading}] = useImportAcceptingStoresMutation({
+  const [dryRun, setDryRun] = useState<boolean>(false)
+  const [importStores, { loading }] = useImportAcceptingStoresMutation({
     onCompleted: ({ result }) => {
       appToaster?.show({
         intent: 'none',
         timeout: 0,
         message: (
           <StoresImportResult
+            dryRun={dryRun}
             storesUntouched={result.storesUntouched}
             storesDeleted={result.storesDeleted}
             storesCreated={result.storesCreated}
@@ -72,7 +74,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   }
 
   const onImportStores = () =>
-    importStores({ variables: { stores: acceptingStores.map(store => store.data), project: projectId } })
+    importStores({ variables: { stores: acceptingStores.map(store => store.data), project: projectId, dryRun } })
 
   return (
     <>
@@ -81,7 +83,14 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       ) : (
         <StoresTable fields={fields} acceptingStores={acceptingStores} />
       )}
-      <StoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} loading={loading}/>
+      <StoresButtonBar
+        goBack={goBack}
+        acceptingStores={acceptingStores}
+        importStores={onImportStores}
+        loading={loading}
+        dryRun={dryRun}
+        setDryRun={setDryRun}
+      />
     </>
   )
 }

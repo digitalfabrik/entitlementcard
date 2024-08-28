@@ -10,9 +10,6 @@ import { AppToasterProvider } from '../../AppToaster'
 import StoresCSVInput from '../StoresCSVInput'
 
 // TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
 
 const fieldNames = nuernbergConfig.storeManagement.enabled
   ? nuernbergConfig.storeManagement.fields.map(field => field.name)

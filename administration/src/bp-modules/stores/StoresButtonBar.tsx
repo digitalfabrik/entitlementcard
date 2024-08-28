@@ -1,14 +1,17 @@
-import {Alert, Button, Tooltip } from '@blueprintjs/core'
-import React, {ReactElement, useState} from 'react'
+import { Alert, Button, Tooltip } from '@blueprintjs/core'
+import React, { ReactElement, useState } from 'react'
 
 import ButtonBar from '../ButtonBar'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import StoresImportAlert from './StoresImportAlert'
 
 type UploadStoresButtonBarProps = {
   goBack: () => void
   acceptingStores: AcceptingStoreEntry[]
   importStores: () => void
   loading: boolean
+  dryRun: boolean
+  setDryRun: (value: boolean) => void
 }
 
 const getToolTipMessage = (hasNoAcceptingStores: boolean, hasInvalidStores: boolean): string => {
@@ -21,11 +24,17 @@ const getToolTipMessage = (hasNoAcceptingStores: boolean, hasInvalidStores: bool
   return 'Importiere Akzeptanzpartner'
 }
 
-const StoresButtonBar = ({ goBack, acceptingStores, importStores, loading }: UploadStoresButtonBarProps): ReactElement => {
+const StoresButtonBar = ({
+  goBack,
+  acceptingStores,
+  importStores,
+  loading,
+  dryRun,
+  setDryRun,
+}: UploadStoresButtonBarProps): ReactElement => {
   const hasInvalidStores = !acceptingStores.every(store => store.isValid())
   const hasNoAcceptingStores = acceptingStores.length === 0
   const [uploadDialog, setUploadDialog] = useState(false)
-
   const confirmImportDialog = () => {
     importStores()
     setUploadDialog(false)
@@ -34,7 +43,11 @@ const StoresButtonBar = ({ goBack, acceptingStores, importStores, loading }: Upl
   return (
     <ButtonBar>
       <Button icon='arrow-left' text='Zurück zur Auswahl' onClick={goBack} />
-      <Tooltip placement='top' content={getToolTipMessage(hasNoAcceptingStores, hasInvalidStores)} disabled={false}>
+      <Tooltip
+        placement='top'
+        content={getToolTipMessage(hasNoAcceptingStores, hasInvalidStores)}
+        disabled={false}
+        openOnTargetFocus={false}>
         <Button
           icon='upload'
           text='Import Stores'
@@ -43,17 +56,17 @@ const StoresButtonBar = ({ goBack, acceptingStores, importStores, loading }: Upl
           disabled={hasNoAcceptingStores || hasInvalidStores}
         />
       </Tooltip>
-        <Alert
-            cancelButtonText='Abbrechen'
-            confirmButtonText='Stores importieren'
-            icon='upload'
-            intent='warning'
-            isOpen={uploadDialog}
-            loading={loading}
-            onCancel={() => setUploadDialog(false)}
-            onConfirm={confirmImportDialog}>
-          <p><b>Achtung:</b> Akzeptanzpartner, welche aktuell in der Datenbank gespeichert, aber nicht in der Tabelle vorhanden sind, werden gelöscht!</p>
-        </Alert>
+      <Alert
+        cancelButtonText='Abbrechen'
+        confirmButtonText='Stores importieren'
+        icon='upload'
+        intent='warning'
+        isOpen={uploadDialog}
+        loading={loading}
+        onCancel={() => setUploadDialog(false)}
+        onConfirm={confirmImportDialog}>
+        <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} />
+      </Alert>
     </ButtonBar>
   )
 }

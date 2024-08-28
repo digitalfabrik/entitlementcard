@@ -8,9 +8,8 @@ import StoresButtonBar from '../StoresButtonBar'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
 
 jest.useFakeTimers()
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
+
+const setDryRun = jest.fn()
 
 const goBack = jest.fn()
 const importStores = jest.fn()
@@ -18,9 +17,19 @@ const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProv
 
 describe('StoresButtonBar', () => {
   it('Should goBack when clicking back', async () => {
-    const { getByText } = render(<StoresButtonBar goBack={goBack} acceptingStores={[]} importStores={importStores} />, {
-      wrapper,
-    })
+    const { getByText } = render(
+      <StoresButtonBar
+        dryRun
+        loading={false}
+        setDryRun={setDryRun}
+        goBack={goBack}
+        acceptingStores={[]}
+        importStores={importStores}
+      />,
+      {
+        wrapper,
+      }
+    )
 
     const backButton = getByText('Zurück zur Auswahl')
     expect(backButton).toBeTruthy()
@@ -32,9 +41,19 @@ describe('StoresButtonBar', () => {
   })
 
   it('Should disable import button for no stores', async () => {
-    const { getByText } = render(<StoresButtonBar goBack={goBack} acceptingStores={[]} importStores={importStores} />, {
-      wrapper,
-    })
+    const { getByText } = render(
+      <StoresButtonBar
+        dryRun
+        loading={false}
+        setDryRun={setDryRun}
+        goBack={goBack}
+        acceptingStores={[]}
+        importStores={importStores}
+      />,
+      {
+        wrapper,
+      }
+    )
 
     const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
     expect(importButton).toBeTruthy()
@@ -54,7 +73,14 @@ describe('StoresButtonBar', () => {
     const fields = nuernbergConfig.storeManagement.enabled ? nuernbergConfig.storeManagement.fields : []
     const stores = [new AcceptingStoreEntry(invalidStoreData, fields)]
     const { getByText } = render(
-      <StoresButtonBar goBack={goBack} acceptingStores={stores} importStores={importStores} />,
+      <StoresButtonBar
+        dryRun
+        loading={false}
+        setDryRun={setDryRun}
+        goBack={goBack}
+        acceptingStores={stores}
+        importStores={importStores}
+      />,
       { wrapper }
     )
 
@@ -77,7 +103,14 @@ describe('StoresButtonBar', () => {
     const fields = nuernbergConfig.storeManagement.enabled ? nuernbergConfig.storeManagement.fields : []
     const stores = [new AcceptingStoreEntry(validStoreData, fields)]
     const { getByText } = render(
-      <StoresButtonBar goBack={goBack} acceptingStores={stores} importStores={importStores} />,
+      <StoresButtonBar
+        dryRun
+        loading={false}
+        setDryRun={setDryRun}
+        goBack={goBack}
+        acceptingStores={stores}
+        importStores={importStores}
+      />,
       { wrapper }
     )
 
@@ -85,6 +118,8 @@ describe('StoresButtonBar', () => {
     expect(importButton).toBeTruthy()
 
     fireEvent.click(importButton)
+    const importConfirmationButton = getByText('Stores importieren').closest('button') as HTMLButtonElement
+    fireEvent.click(importConfirmationButton)
     await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(importStores).toHaveBeenCalled()
