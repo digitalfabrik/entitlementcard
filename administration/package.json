@@ -95,7 +95,7 @@
     "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); ts-node scripts/build.ts",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "lint": "NODE_ENV=test eslint . --fix && prettier . --check",
+    "lint": "NODE_ENV=test eslint . && prettier . --check",
     "ts:check": "tsc --build",
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
