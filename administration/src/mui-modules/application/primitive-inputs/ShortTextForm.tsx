@@ -50,12 +50,15 @@ const ShortTextForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { shortText: '' },
   getArrayBufferKeys: () => [],
   validate: ({ shortText }) => {
-    if (shortText.length === 0) {return { type: 'error', message: 'Feld ist erforderlich.' }}
-    if (shortText.length > MAX_SHORT_TEXT_LENGTH)
-      {return {
+    if (shortText.length === 0) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (shortText.length > MAX_SHORT_TEXT_LENGTH) {
+      return {
         type: 'error',
         message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
-      }}
+      }
+    }
     return { type: 'valid', value: { shortText } }
   },
   Component: props => Component({ ...props, validate: ShortTextForm.validate, required: true }),
@@ -65,7 +68,9 @@ export const OptionalShortTextForm: Form<State, Options, ValidatedInput | null, 
   initialState: ShortTextForm.initialState,
   getArrayBufferKeys: ShortTextForm.getArrayBufferKeys,
   validate: state => {
-    if (state.shortText.length === 0) {return { type: 'valid', value: null }}
+    if (state.shortText.length === 0) {
+      return { type: 'valid', value: null }
+    }
     return ShortTextForm.validate(state)
   },
   Component: props => Component({ ...props, validate: OptionalShortTextForm.validate, required: false }),

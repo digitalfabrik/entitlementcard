@@ -83,7 +83,7 @@ const Router = (): ReactElement => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
-          ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
+          ...(projectConfig.cardStatistics.enabled ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
           ...(projectConfig.cardCreation
             ? [
                 { path: 'cards', element: <CreateCardsController /> },
@@ -100,14 +100,7 @@ const Router = (): ReactElement => {
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [
-    authData,
-    projectConfig.applicationFeature,
-    signIn,
-    signOut,
-    projectConfig.cardStatistics,
-    projectConfig.cardCreation,
-  ])
+  }, [authData, signIn, signOut, projectConfig])
 
   return <RouterProvider router={router} />
 }

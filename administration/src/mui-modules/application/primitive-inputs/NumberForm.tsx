@@ -13,9 +13,11 @@ const NumberForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
     const number = parseFloat(value)
-    if (isNaN(number)) {return { type: 'error', message: 'Eingabe ist keine Zahl.' }}
-    else if (number < options.min || number > options.max)
-      {return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }}
+    if (isNaN(number)) {
+      return { type: 'error', message: 'Eingabe ist keine Zahl.' }
+    } else if (number < options.min || number > options.max) {
+      return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }
+    }
     return { type: 'valid', value: number }
   },
   Component: ({ state, setState, label, options, minWidth = 100 }) => {

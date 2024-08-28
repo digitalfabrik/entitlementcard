@@ -123,8 +123,12 @@ const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   validate: state => {
-    if (state === null) {return { type: 'error', message: 'Feld ist erforderlich.' }}
-    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {return { type: 'error' }}
+    if (state === null) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
+      return { type: 'error' }
+    }
     const arrayBuffer = globalArrayBuffersManager.getArrayBufferByKey(state.arrayBufferKey)
     return {
       type: 'valid',
@@ -140,7 +144,9 @@ export const OptionalFileInputForm: Form<State, Options, ValidatedInput | null, 
   initialState: FileInputForm.initialState,
   getArrayBufferKeys: FileInputForm.getArrayBufferKeys,
   validate: state => {
-    if (state === null) {return { type: 'valid', value: null }}
+    if (state === null) {
+      return { type: 'valid', value: null }
+    }
     return FileInputForm.validate(state)
   },
   Component: ({ state, setState }) =>

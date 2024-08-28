@@ -23,12 +23,16 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
     switch (options.cardType) {
       case BavariaCardType.Blue: {
         const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
-        if (blueCardEntitlement.type === 'error') {return { type: 'error' }}
+        if (blueCardEntitlement.type === 'error') {
+          return { type: 'error' }
+        }
         return { type: 'valid', value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value } }
       }
       case BavariaCardType.Golden: {
         const goldenCardEntitlement = GoldenCardEntitlementForm.validate(state.goldenCardEntitlement)
-        if (goldenCardEntitlement.type === 'error') {return { type: 'error' }}
+        if (goldenCardEntitlement.type === 'error') {
+          return { type: 'error' }
+        }
         return { type: 'valid', value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value } }
       }
       default:

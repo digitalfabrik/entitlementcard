@@ -14,7 +14,9 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
-    if (value === '') {return { type: 'error', message: 'Feld ist erforderlich.' }}
+    if (value === '') {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
     const date = parseISO(value)
     if (isNaN(date.valueOf())) {
       return { type: 'error', message: 'Eingabe ist kein gültiges Datum.' }

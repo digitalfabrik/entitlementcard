@@ -7,8 +7,8 @@ import path from 'path'
 import getPaths from './getPaths'
 
 function getClientEnvironment(publicUrl: string): {
-  raw: Record<string, unknown>
-  stringified: Record<string, unknown>
+  raw: Record<string, string | boolean | undefined>
+  stringified: { 'process.env': Record<string, string> }
 } {
   const paths = getPaths()
   const NODE_ENV = process.env.NODE_ENV
@@ -64,7 +64,7 @@ function getClientEnvironment(publicUrl: string): {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
     .reduce(
-      (env: Record<string, unknown>, key: keyof typeof process.env) => {
+      (env: Record<string, string | boolean | undefined>, key: keyof typeof process.env) => {
         env[key] = process.env[key]
         return env
       },
@@ -92,7 +92,7 @@ function getClientEnvironment(publicUrl: string): {
     )
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {
-    'process.env': Object.keys(raw).reduce((env: Record<string, unknown>, key) => {
+    'process.env': Object.keys(raw).reduce((env: Record<string, string>, key) => {
       env[key] = JSON.stringify(raw[key])
       return env
     }, {}),

@@ -123,8 +123,8 @@ checkBrowsers(paths.appPath, isInteractive)
       }
     }
   )
-  .catch((err: any) => {
-    if (err && err.message) {
+  .catch((err: unknown) => {
+    if (err instanceof Error) {
       console.log(err.message)
     }
     process.exit(1)
@@ -196,7 +196,7 @@ function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
         return bfj
           .write(`${paths.appBuild}/bundle-stats.json`, stats.toJson())
           .then(() => resolve(resolveArgs))
-          .catch((error: any) => reject(new Error(error)))
+          .catch(reject)
       }
 
       return resolve(resolveArgs)

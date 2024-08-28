@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, ValidationResult } from './FormType'
 
 function mapValues<VPre extends { [k in keyof VPre]: unknown }, VPost extends { [k in keyof VPre]: unknown }>(
