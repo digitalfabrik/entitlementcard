@@ -66,7 +66,7 @@ const StatisticsController = (): ReactElement => {
   }
   if (role === Role.ProjectAdmin && cardStatistics.enabled) {
     return <ViewProjectStatistics />
-  } else {
+  } 
     return (
       <NonIdealState
         icon='cross'
@@ -74,6 +74,6 @@ const StatisticsController = (): ReactElement => {
         description='Sie sind nicht berechtigt, Statistiken einzusehen.'
       />
     )
-  }
+  
 }
 export default StatisticsController

@@ -59,7 +59,7 @@ async function fillContentAreas(
       form,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region: region,
+      region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
     })
@@ -70,7 +70,7 @@ async function fillContentAreas(
       page: templatePage,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region: region,
+      region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
     })
@@ -99,7 +99,7 @@ export async function generatePdf(
 
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
-      const page = doc.addPage(templatePage ? templatePage : undefined)
+      const page = doc.addPage(templatePage || undefined)
       const dynamicPdfQrCode: PdfQrCode = {
         case: 'dynamicActivationCode',
         value: dynamicCode,

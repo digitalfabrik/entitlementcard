@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 import { ActivityLog } from '../../bp-modules/user-settings/ActivityLog'
 import { JSONCardBlueprint } from '../../cards/CardBlueprint'

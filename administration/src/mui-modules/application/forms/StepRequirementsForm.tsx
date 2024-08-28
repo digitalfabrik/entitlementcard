@@ -1,7 +1,9 @@
+import React from 'react'
+
 import { BavariaCardType, BlueCardEntitlementInput, GoldenCardEntitlementInput } from '../../../generated/graphql'
 import SwitchComponent from '../SwitchComponent'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import BlueCardEntitlementForm from './BlueCardEntitlementForm'
 import GoldenCardEntitlementForm from './GoldenCardEntitlementForm'
@@ -10,6 +12,7 @@ const SubForms = {
   blueCardEntitlement: BlueCardEntitlementForm,
   goldenCardEntitlement: GoldenCardEntitlementForm,
 }
+type State = CompoundState<typeof SubForms>
 export type StepRequirementsFormState = CompoundState<typeof SubForms>
 type ValidatedInput =
   | { type: BavariaCardType.Blue; value: BlueCardEntitlementInput }
@@ -39,7 +42,7 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
         return { type: 'error' }
     }
   },
-  Component: ({ state, setState, options, applicantName }) => (
+  Component: ({ state, setState, options, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => (
     <SwitchComponent value={options.cardType}>
       {{
         [BavariaCardType.Blue]: (

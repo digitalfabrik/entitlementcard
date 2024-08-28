@@ -1,8 +1,10 @@
+import React from 'react'
+
 import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../generated/graphql'
 import SwitchComponent from '../SwitchComponent'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -50,7 +52,7 @@ const GoldenCardEntitlementForm: Form<State, Options, ValidatedInput, Additional
     MILITARY_RESERVE: 'militaryReserveEntitlement',
     HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
   }),
-  Component: ({ state, setState, applicantName }) => (
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => (
     <>
       <SubForms.entitlementType.Component
         state={state.entitlementType}

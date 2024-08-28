@@ -2,7 +2,7 @@ import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
 import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import CardBlueprint from '../../../cards/CardBlueprint'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
@@ -16,15 +16,13 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
-const wrapper = ({ children }: { children: ReactElement }) => {
-  return (
+const wrapper = ({ children }: { children: ReactElement }) => (
     <AppToasterProvider>
       <ApolloProvider>
         <ProjectConfigProvider>{children}</ProjectConfigProvider>
       </ApolloProvider>
     </AppToasterProvider>
   )
-}
 
 jest.mock('../../../cards/PdfFactory', () => ({
   ...jest.requireActual('../../../cards/PdfFactory'),
@@ -89,7 +87,7 @@ describe('useCardGenerator', () => {
       throw new CreateCardsError('error')
     })
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
+    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
     act(() => result.current.setCardBlueprints(cards))
 
@@ -112,7 +110,7 @@ describe('useCardGenerator', () => {
     })
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
+    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
     act(() => result.current.setCardBlueprints(cards))
 

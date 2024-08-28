@@ -39,7 +39,7 @@ export function createCompoundInitialState<Forms extends SubForms>(subForms: For
 
 /**
  * Creates a getArrayBufferKeys function that returns all keys of all sub forms.
- **/
+ * */
 export function createCompoundGetArrayBufferKeys<Forms extends SubForms>(subForms: Forms) {
   return (state: CompoundState<Forms>): number[] =>
     Object.entries(subForms)
@@ -65,9 +65,9 @@ function validateKey<Forms extends SubForms, K extends keyof Forms>(
   if (key in subFormsOptions) {
     const optionsKey = key as unknown as KeyWithOptions<Forms>
     return subForms[key].validate(state[key], subFormsOptions[optionsKey]) as InferValidationResult<Forms[K]>
-  } else {
+  } 
     return subForms[key].validate(state[key]) as InferValidationResult<Forms[K]>
-  }
+  
 }
 
 /**

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { ENTRY_LIMIT, FILE_SIZE_LIMIT_MEGA_BYTES } from './ImportCardsInput'
@@ -16,8 +16,7 @@ type ImportCardsRequirementsProps = {
 const ImportCardsRequirementsText = ({
   header,
   isFreinetFormat = false,
-}: ImportCardsRequirementsProps): ReactElement => {
-  return (
+}: ImportCardsRequirementsProps): ReactElement => (
     <RequirementsList>
       <li>Maximale Dateigröße: {FILE_SIZE_LIMIT_MEGA_BYTES}MB</li>
       <li>Dateiformat: CSV</li>
@@ -30,6 +29,5 @@ const ImportCardsRequirementsText = ({
       <li>Gültiges Datumsformat: tt.mm.jjjj (Beispiel: 01.01.1970)</li>
     </RequirementsList>
   )
-}
 
 export default ImportCardsRequirementsText

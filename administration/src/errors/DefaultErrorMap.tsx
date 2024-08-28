@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
@@ -23,10 +23,10 @@ type ErrorExtensions = {
 const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
-  if (!extensions || !extensions['code']) {
+  if (!extensions || !extensions.code) {
     return defaultError
   }
-  switch (extensions['code']) {
+  switch (extensions.code) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
         title: 'Die Email-Adresse wird bereits verwendet.',
@@ -97,7 +97,7 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.MailNotSent:
       return {
-        title: `Email konnte nicht an ${extensions['recipient']} gesendet werden.`,
+        title: `Email konnte nicht an ${extensions.recipient} gesendet werden.`,
       }
     case GraphQlExceptionCode.PasswordResetKeyExpired:
       return {

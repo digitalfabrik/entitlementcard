@@ -64,10 +64,10 @@ function getClientEnvironment(publicUrl: string): {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
     .reduce(
-      (env: Record<string, string | boolean | undefined>, key: keyof typeof process.env) => {
-        env[key] = process.env[key]
-        return env
-      },
+      (env: Record<string, string | boolean | undefined>, key: keyof typeof process.env) => ({
+        ...env,
+        [key]: process.env[key],
+      }),
       {
         // Useful for determining whether we’re running in production mode.
         // Most importantly, it switches React into the correct mode.
@@ -92,10 +92,13 @@ function getClientEnvironment(publicUrl: string): {
     )
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {
-    'process.env': Object.keys(raw).reduce((env: Record<string, string>, key) => {
-      env[key] = JSON.stringify(raw[key])
-      return env
-    }, {}),
+    'process.env': Object.keys(raw).reduce(
+      (env: Record<string, string>, key) => ({
+        ...env,
+        [key]: JSON.stringify(raw[key]),
+      }),
+      {}
+    ),
   }
 
   return { raw, stringified }

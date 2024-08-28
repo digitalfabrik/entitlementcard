@@ -53,7 +53,7 @@ const config: ProjectConfig = {
       'ActivationCode',
       'StaticUserCode',
     ],
-    buildCsvLine: buildCsvLine,
+    buildCsvLine,
   },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,

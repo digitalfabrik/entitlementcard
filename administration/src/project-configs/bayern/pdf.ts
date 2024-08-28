@@ -16,9 +16,7 @@ Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format()}
 von ${region.prefix} ${region.name}`
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
-  return cardInfoHash
-}
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
 const pdfConfiguration: PdfConfig = {
   title: 'Ehrenamtskarten',

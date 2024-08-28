@@ -13,9 +13,7 @@ import StartDayExtension from './StartDayExtension'
 export const findExtension = <E extends ExtensionClass>(
   array: ExtensionInstance[],
   extension: E
-): InstanceType<E> | undefined => {
-  return array.find(e => e instanceof extension) as InstanceType<E> | undefined
-}
+): InstanceType<E> | undefined => array.find(e => e instanceof extension) as InstanceType<E> | undefined
 
 export type JSONExtension<T> = {
   name: string

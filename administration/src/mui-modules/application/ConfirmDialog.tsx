@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 const ConfirmDialog = ({
   open,
@@ -15,8 +15,7 @@ const ConfirmDialog = ({
   content: string
   onConfirm: () => void
   confirmButtonText?: string
-}): ReactElement => {
-  return (
+}): ReactElement => (
     <Dialog open={open} onClick={() => onUpdateOpen(false)}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
@@ -34,6 +33,5 @@ const ConfirmDialog = ({
       </DialogActions>
     </Dialog>
   )
-}
 
 export default ConfirmDialog

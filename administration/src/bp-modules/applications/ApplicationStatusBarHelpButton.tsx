@@ -1,5 +1,5 @@
 import { Button, H4, Popover } from '@blueprintjs/core'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 const HelpButton = styled(Button)`
@@ -18,8 +18,7 @@ const PopoverContent = styled.div`
   padding: 10px;
 `
 
-const ApplicationStatusHelpButton = (): ReactElement => {
-  return (
+const ApplicationStatusHelpButton = (): ReactElement => (
     <Popover
       content={
         <PopoverContent>
@@ -63,6 +62,5 @@ const ApplicationStatusHelpButton = (): ReactElement => {
       <HelpButton icon='help' minimal />
     </Popover>
   )
-}
 
 export default ApplicationStatusHelpButton

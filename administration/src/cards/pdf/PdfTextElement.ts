@@ -60,7 +60,7 @@ const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProp
     wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
     color,
-    rotate: { angle: angle, type: RotationTypes.Degrees },
+    rotate: { angle, type: RotationTypes.Degrees },
     size: fontSize,
   })
 }

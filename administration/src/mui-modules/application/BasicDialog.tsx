@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Breakpoint, Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import { ReactElement, ReactNode } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components'
 
 const StyledDialogTitle = styled(DialogTitle)`
@@ -28,8 +28,7 @@ const BasicDialog = ({
   title: string
   content: ReactNode
   maxWidth?: Breakpoint | false
-}): ReactElement => {
-  return (
+}): ReactElement => (
     <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
       <StyledDialogTitle>
         {title}
@@ -40,6 +39,5 @@ const BasicDialog = ({
       </DialogContent>
     </Dialog>
   )
-}
 
 export default BasicDialog

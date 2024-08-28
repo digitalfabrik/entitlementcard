@@ -1,7 +1,9 @@
+import React from 'react'
+
 import { ApplicationInput, BavariaCardType, Region } from '../../../generated/graphql'
 import SteppedSubForms, { useFormAsStep } from '../SteppedSubForms'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
-import { Form, ValidationResult } from '../util/FormType'
+import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
@@ -67,7 +69,7 @@ const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       ],
     }
   },
-  Component: ({ state, setState, options, onSubmit, loading }) => {
+  Component: ({ state, setState, options, onSubmit, loading }: FormComponentProps<State, AdditionalProps, Options>) => {
     const personalDataStep = useFormAsStep(
       'Persönliche Angaben',
       PersonalDataForm,

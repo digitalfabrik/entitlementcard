@@ -19,6 +19,7 @@ class RegionExtension extends Extension<RegionState, Region> {
     return null
   }
   setProtobufData(message: PartialMessage<CardExtensions>): void {
+    // eslint-disable-next-line no-param-reassign
     message.extensionRegion = {
       regionId: this.state?.regionId,
     }

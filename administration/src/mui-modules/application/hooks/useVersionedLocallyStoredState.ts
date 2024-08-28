@@ -43,7 +43,7 @@ function useLocallyStoredState<T>(
   useEffect(() => {
     // Auto-save every 2 seconds unless we're still loading the state.
     if (status === 'loading') {
-      return
+      return () => undefined
     }
     let lastState: T | null = null
     const interval = setInterval(() => {

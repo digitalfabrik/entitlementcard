@@ -1,11 +1,10 @@
 import { Button, H4, Popover } from '@blueprintjs/core'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
 
-const RoleHelpButton = (): ReactElement => {
-  return (
+const RoleHelpButton = (): ReactElement => (
     <Popover
       content={
         <div style={{ padding: '10px' }}>
@@ -43,6 +42,5 @@ const RoleHelpButton = (): ReactElement => {
       <Button icon='help' minimal />
     </Popover>
   )
-}
 
 export default RoleHelpButton

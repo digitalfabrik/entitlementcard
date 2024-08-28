@@ -1,4 +1,5 @@
 import { sub } from 'date-fns'
+import React from 'react'
 
 import { PersonalDataInput, Region } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
@@ -6,7 +7,7 @@ import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import DateForm from '../primitive-inputs/DateForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -40,7 +41,7 @@ const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) =>
     createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: options })(state),
-  Component: ({ state, setState, options }) => (
+  Component: ({ state, setState, options }: FormComponentProps<State, AdditionalProps, Options>) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '1', minWidth: '200px' }}>

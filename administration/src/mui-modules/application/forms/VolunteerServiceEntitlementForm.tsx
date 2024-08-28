@@ -1,9 +1,11 @@
+import React from 'react'
+
 import { BlueCardVolunteerServiceEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -24,7 +26,7 @@ const VolunteerServiceEntitlementForm: Form<State, Options, ValidatedInput, Addi
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState }: FormComponentProps<State, AdditionalProps, Options>) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
       <ShortTextForm.Component

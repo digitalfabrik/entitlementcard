@@ -53,6 +53,17 @@ function willFit(
   return numDataBytes >= totalInputBytes
 }
 
+// The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
+// Basically it applies four rules and summate all penalties.
+function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
+  return (
+    MaskUtil.applyMaskPenaltyRule1(matrix) +
+    MaskUtil.applyMaskPenaltyRule2(matrix) +
+    MaskUtil.applyMaskPenaltyRule3(matrix) +
+    MaskUtil.applyMaskPenaltyRule4(matrix)
+  )
+}
+
 function chooseMaskPattern(
   bits: BitArray,
   ecLevel: QRCodeDecoderErrorCorrectionLevel,
@@ -71,17 +82,6 @@ function chooseMaskPattern(
     }
   }
   return bestMaskPattern
-}
-
-// The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
-// Basically it applies four rules and summate all penalties.
-function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
-  return (
-    MaskUtil.applyMaskPenaltyRule1(matrix) +
-    MaskUtil.applyMaskPenaltyRule2(matrix) +
-    MaskUtil.applyMaskPenaltyRule3(matrix) +
-    MaskUtil.applyMaskPenaltyRule4(matrix)
-  )
 }
 
 function createHeader(mode: QRCodeMode) {

@@ -16,8 +16,7 @@ const ErrorHandler = ({
   refetch,
   title = 'Ein Fehler ist aufgetreten.',
   description,
-}: ErrorHandlerProps): ReactElement => {
-  return (
+}: ErrorHandlerProps): ReactElement => (
     <ErrorContainer>
       <Typography variant='h6'>{title}</Typography>
       <Typography my='8px' variant='body1' component='div'>
@@ -28,6 +27,5 @@ const ErrorHandler = ({
       </Button>
     </ErrorContainer>
   )
-}
 
 export default ErrorHandler

@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -66,6 +66,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   setProtobufData(message: PartialMessage<CardExtensions>): void {
+    // eslint-disable-next-line no-param-reassign
     message.extensionBirthday = {
       birthday: this.state?.birthday,
     }

@@ -27,11 +27,10 @@ type CreateCardsFormProps = {
 }
 
 export const maxCardValidity = { years: 99 }
-const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
-  return extension.createForm(() => {
+const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) =>
+  extension.createForm(() => {
     onUpdate()
   })
-}
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -44,7 +43,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
         <InputGroup
           placeholder='Erika Mustermann'
           autoFocus
-          //If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
+          // If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
           intent={cardBlueprint.isFullNameValid() ? undefined : Intent.DANGER}
           value={cardBlueprint.fullName}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -79,8 +78,8 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           />
         </FormGroup>
       )}
-      {cardBlueprint.extensions.map((ext, i) => (
-        <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} />
+      {cardBlueprint.extensions.map(extension => (
+        <ExtensionForm key={extension.name} extension={extension} onUpdate={onUpdate} />
       ))}
     </Card>
   )

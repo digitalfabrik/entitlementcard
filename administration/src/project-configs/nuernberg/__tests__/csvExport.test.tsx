@@ -2,7 +2,6 @@ import CardBlueprint from '../../../cards/CardBlueprint'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
 import nuernbergConfig from '../config'
-import config from '../config'
 import { buildCsvLine } from '../csvExport'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
@@ -22,7 +21,7 @@ describe('csvExport', () => {
       },
     ]
 
-    const csvConfig = config.csvExport
+    const csvConfig = nuernbergConfig.csvExport
     expect(csvConfig.enabled).toBeTruthy()
     if (!csvConfig.enabled) {
       throw new Error('Tested failed')

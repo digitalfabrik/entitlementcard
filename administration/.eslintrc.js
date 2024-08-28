@@ -1,12 +1,15 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'jest', 'jsx-a11y', 'jsx-expressions', 'prefer-arrow', 'react', 'react-hooks'],
   extends: [
+    'airbnb',
+    'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
-    'react-app',
-    'react-app/jest',
-    'eslint-config-prettier',
-    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+    // 'plugin:jest/recommended',
+    // 'plugin:jest/style',
   ],
   ignorePatterns: ['src/generated/**', 'src/coverage/**', 'build/**'],
   rules: {
@@ -27,6 +30,8 @@ module.exports = {
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'jest/no-mocks-import': 'off',
+    'no-console': 'off',
 
     // Unwanted
     'lines-between-class-members': 'off',
@@ -105,6 +110,14 @@ module.exports = {
         'jsx-a11y/click-events-have-key-events': 'off',
         'jsx-a11y/no-static-element-interactions': 'off',
         'react/jsx-no-constructed-context-values': 'off',
+      },
+    },
+    {
+      files: ['**/scripts/**', '**/config/**'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+        'import/no-dynamic-require': 'off',
+        'global-require': 'off',
       },
     },
   ],

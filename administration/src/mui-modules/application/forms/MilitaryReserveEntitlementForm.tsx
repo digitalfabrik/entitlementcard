@@ -1,8 +1,10 @@
+import React from 'react'
+
 import { BlueCardMilitaryReserveEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -22,7 +24,7 @@ const MilitaryReserveEntitlementForm: Form<State, Options, ValidatedInput, Addit
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState }: FormComponentProps<State, AdditionalProps, Options>) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
       <h4>Tätigkeitsnachweis</h4>

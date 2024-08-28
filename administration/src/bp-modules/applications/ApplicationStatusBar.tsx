@@ -60,8 +60,7 @@ const ApplicationStatusBar = ({
   activeBarItem,
   barItems,
   setActiveBarItem,
-}: ApplicationStatusBarProps): ReactElement => {
-  return (
+}: ApplicationStatusBarProps): ReactElement => (
     <Container>
       <Title>Status</Title>
       <ApplicationStatusHelpButton />
@@ -78,6 +77,5 @@ const ApplicationStatusBar = ({
       </BarItemContainer>
     </Container>
   )
-}
 
 export default ApplicationStatusBar

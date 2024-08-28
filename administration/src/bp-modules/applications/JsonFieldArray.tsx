@@ -1,5 +1,6 @@
 import { Classes, Collapse, H6, Icon } from '@blueprintjs/core'
-import { memo, useState } from 'react'
+import { json } from 'node:stream/consumers'
+import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 
 import { printAwareCss } from './ApplicationCard'
@@ -53,11 +54,11 @@ const JsonFieldArray = ({
   expandedRoot,
 }: JsonFieldViewProps<JsonField<'Array'>>) => {
   const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1 || expandedRoot)
-  const children = jsonField.value.map((jsonField, index: number) => (
+  const children = jsonField.value.map(jsonField => (
     <JsonFieldView
       jsonField={jsonField}
       baseUrl={baseUrl}
-      key={index}
+      key={jsonField.name}
       hierarchyIndex={hierarchyIndex + 1}
       attachmentAccessible={attachmentAccessible}
       expandedRoot={expandedRoot}

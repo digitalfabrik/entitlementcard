@@ -1,5 +1,5 @@
 import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
-import { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'

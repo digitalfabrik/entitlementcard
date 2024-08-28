@@ -10,7 +10,7 @@ class CSVCard extends CardBlueprint {
       const columnName = cardConfig.extensionColumnNames[idx]
       if (!columnName) {
         extension.setInitialState(region)
-        return
+        
       }
     })
   }

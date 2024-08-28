@@ -1,8 +1,8 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { FormContext } from '../SteppedSubForms'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 
 type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
@@ -13,14 +13,21 @@ const NumberForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
     const number = parseFloat(value)
-    if (isNaN(number)) {
+    if (Number.isNaN(number)) {
       return { type: 'error', message: 'Eingabe ist keine Zahl.' }
-    } else if (number < options.min || number > options.max) {
+    }
+    if (number < options.min || number > options.max) {
       return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }
     }
     return { type: 'valid', value: number }
   },
-  Component: ({ state, setState, label, options, minWidth = 100 }) => {
+  Component: ({
+    state,
+    setState,
+    label,
+    options,
+    minWidth = 100,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = NumberForm.validate(state, options)

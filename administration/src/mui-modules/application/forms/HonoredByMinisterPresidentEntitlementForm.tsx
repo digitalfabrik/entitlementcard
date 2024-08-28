@@ -1,8 +1,10 @@
+import React from 'react'
+
 import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -20,7 +22,7 @@ const HonoredByMinisterPresidentEntitlementForm: Form<State, Options, ValidatedI
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState }: FormComponentProps<State, AdditionalProps, Options>) => (
     <>
       <CustomDivider label='Angaben zum Ehrenzeichen' />
       <h4>Urkunde</h4>

@@ -1,10 +1,10 @@
 import { Alert, Button } from '@mui/material'
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { SetState } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import { InferState } from '../util/compoundFormUtils'
 import WorkAtOrganizationForm from './WorkAtOrganizationForm'
 
@@ -74,7 +74,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
       },
     }
   },
-  Component: ({ state, setState, applicantName }) => {
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1

@@ -1,6 +1,6 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions, NuernergPassIdentifier } from '../../generated/card_pb'
 import { Extension } from './extensions'
@@ -30,9 +30,9 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
               return
             }
 
-            const parsedNumber = Number.parseInt(value)
+            const parsedNumber = Number.parseInt(value, 10)
 
-            if (isNaN(parsedNumber)) {
+            if (Number.isNaN(parsedNumber)) {
               this.state = null
               onUpdate()
               return
@@ -52,6 +52,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
     return false
   }
   setProtobufData(message: PartialMessage<CardExtensions>): void {
+    // eslint-disable-next-line no-param-reassign
     message.extensionNuernbergPassId = {
       identifier: NuernergPassIdentifier.passId,
       passId: this.state?.passId,
@@ -64,7 +65,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
 
   fromString(state: string): void {
     const passId = parseInt(state, 10)
-    this.state = !isNaN(passId) ? { passId } : null
+    this.state = !Number.isNaN(passId) ? { passId } : null
   }
 
   toString(): string {

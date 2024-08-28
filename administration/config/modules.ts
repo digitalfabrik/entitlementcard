@@ -52,17 +52,14 @@ function getAdditionalModulePaths(paths: ReturnType<typeof getPaths>, options: {
 function getWebpackAliases(paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) {
   const baseUrl = options.baseUrl
 
-  if (!baseUrl) {
-    return {}
-  }
+  const baseUrlResolved = baseUrl ? path.resolve(paths.appPath, baseUrl) : null
 
-  const baseUrlResolved = path.resolve(paths.appPath, baseUrl)
-
-  if (path.relative(paths.appPath, baseUrlResolved) === '') {
+  if (baseUrlResolved && path.relative(paths.appPath, baseUrlResolved) === '') {
     return {
       src: paths.appSrc,
     }
   }
+  return {}
 }
 
 function getModules() {
@@ -76,7 +73,7 @@ function getModules() {
   const additionalModulePaths = getAdditionalModulePaths(options)
 
   return {
-    additionalModulePaths: additionalModulePaths,
+    additionalModulePaths,
     webpackAliases: getWebpackAliases(options),
     jestAliases: {},
     hasTsConfig: true,

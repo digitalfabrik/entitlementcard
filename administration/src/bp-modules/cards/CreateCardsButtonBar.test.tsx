@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'

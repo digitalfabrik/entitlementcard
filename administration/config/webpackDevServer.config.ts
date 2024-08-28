@@ -32,6 +32,7 @@ function createWebpackDevServerConfig(proxy: Configuration['proxy'], allowedHost
     // really know what you're doing with a special environment variable.
     // Note: ["localhost", ".localhost"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
+    // eslint-disable-next-line no-nested-ternary
     allowedHosts: disableFirewall ? 'all' : allowedHost ? [allowedHost] : undefined,
     headers: {
       'Access-Control-Allow-Origin': '*',
