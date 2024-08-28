@@ -34,10 +34,10 @@ const StoresButtonBar = ({
 }: UploadStoresButtonBarProps): ReactElement => {
   const hasInvalidStores = !acceptingStores.every(store => store.isValid())
   const hasNoAcceptingStores = acceptingStores.length === 0
-  const [uploadDialog, setUploadDialog] = useState(false)
+  const [importDialogIsOpen, setImportDialogIsOpen] = useState(false)
   const confirmImportDialog = () => {
     importStores()
-    setUploadDialog(false)
+    setImportDialogIsOpen(false)
   }
 
   return (
@@ -52,7 +52,7 @@ const StoresButtonBar = ({
           icon='upload'
           text='Import Stores'
           intent='success'
-          onClick={() => setUploadDialog(true)}
+          onClick={() => setImportDialogIsOpen(true)}
           disabled={hasNoAcceptingStores || hasInvalidStores}
         />
       </Tooltip>
@@ -61,9 +61,9 @@ const StoresButtonBar = ({
         confirmButtonText='Stores importieren'
         icon='upload'
         intent='warning'
-        isOpen={uploadDialog}
+        isOpen={importDialogIsOpen}
         loading={loading}
-        onCancel={() => setUploadDialog(false)}
+        onCancel={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}>
         <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} />
       </Alert>
