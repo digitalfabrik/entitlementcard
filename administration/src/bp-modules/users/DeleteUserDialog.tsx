@@ -57,7 +57,7 @@ const DeleteUserDialog = ({
           })
         }}>
         <div className={Classes.DIALOG_BODY}>
-          Möchten Sie den Benutzer '{selectedUser?.email}' unwiderruflich löschen?
+          Möchten Sie den Benutzer &apos;{selectedUser?.email}&apos; unwiderruflich löschen?
           {selectedUser?.id !== actingAdminId ? null : (
             <Callout intent='danger' style={{ marginTop: '16px' }}>
               <b>Sie löschen Ihr eigenes Konto.</b> Sie werden ausgeloggt und können sich nicht mehr einloggen.

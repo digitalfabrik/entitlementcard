@@ -32,6 +32,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'jest/no-mocks-import': 'off',
     'no-console': 'off',
+    'no-plusplus': 'off',
 
     // Unwanted
     'lines-between-class-members': 'off',
@@ -44,6 +45,7 @@ module.exports = {
     'jest/expect-expect': 'off',
 
     // Disabling since better @typescript-eslint rules available or they make no sense for ts projects
+    'consistent-return': 'off',
     'default-case': 'off',
     'no-use-before-define': 'off',
     'import/no-unresolved': 'off',
@@ -118,6 +120,12 @@ module.exports = {
         'import/no-extraneous-dependencies': 'off',
         'import/no-dynamic-require': 'off',
         'global-require': 'off',
+      },
+    },
+    {
+      files: ['**/src/mui-modules/application/forms/**'],
+      rules: {
+        'react/jsx-pascal-case': 'off',
       },
     },
   ],

@@ -17,12 +17,12 @@ import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
 const wrapper = ({ children }: { children: ReactElement }) => (
-    <AppToasterProvider>
-      <ApolloProvider>
-        <ProjectConfigProvider>{children}</ProjectConfigProvider>
-      </ApolloProvider>
-    </AppToasterProvider>
-  )
+  <AppToasterProvider>
+    <ApolloProvider>
+      <ProjectConfigProvider>{children}</ProjectConfigProvider>
+    </ApolloProvider>
+  </AppToasterProvider>
+)
 
 jest.mock('../../../cards/PdfFactory', () => ({
   ...jest.requireActual('../../../cards/PdfFactory'),

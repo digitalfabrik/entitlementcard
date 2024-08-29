@@ -32,11 +32,11 @@ const sumTotalAmounts = (statistics: CardStatisticsResultModel[]): TotalAmountRe
   totalCardsActivated: statistics.reduce((sum, current) => sum + current.cardsActivated, 0),
 })
 const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): ReactElement => (
-    <Container>
-      <Headline>Alle Regionen:</Headline>
-      <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated}</span> erstellte Karten /{' '}
-      <span data-testid='totalCardsActivated'>{sumTotalAmounts(statistics).totalCardsActivated}</span> davon aktiviert
-    </Container>
-  )
+  <Container>
+    <Headline>Alle Regionen:</Headline>
+    <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated}</span> erstellte Karten /{' '}
+    <span data-testid='totalCardsActivated'>{sumTotalAmounts(statistics).totalCardsActivated}</span> davon aktiviert
+  </Container>
+)
 
 export default StatisticsTotalCardsCount

@@ -1,4 +1,4 @@
-// eslint-disable max-classes-per-file
+/* eslint-disable max-classes-per-file */
 import { Extension } from './extensions'
 
 abstract class BaseAddressExtension extends Extension<string, null> {

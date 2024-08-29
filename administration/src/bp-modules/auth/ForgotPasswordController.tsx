@@ -47,7 +47,7 @@ const ForgotPasswordController = (): ReactElement => {
             </p>
             <p>Bitte prüfen Sie Ihren Spam-Ordner.</p>
             <p>
-              <Link to="/">Zum Login</Link>
+              <Link to='/'>Zum Login</Link>
             </p>
           </>
         ) : (

@@ -12,7 +12,6 @@ const SubForms = {
   blueCardEntitlement: BlueCardEntitlementForm,
   goldenCardEntitlement: GoldenCardEntitlementForm,
 }
-type State = CompoundState<typeof SubForms>
 export type StepRequirementsFormState = CompoundState<typeof SubForms>
 type ValidatedInput =
   | { type: BavariaCardType.Blue; value: BlueCardEntitlementInput }
@@ -42,7 +41,12 @@ const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedIn
         return { type: 'error' }
     }
   },
-  Component: ({ state, setState, options, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => (
+  Component: ({
+    state,
+    setState,
+    options,
+    applicantName,
+  }: FormComponentProps<StepRequirementsFormState, AdditionalProps, Options>) => (
     <SwitchComponent value={options.cardType}>
       {{
         [BavariaCardType.Blue]: (

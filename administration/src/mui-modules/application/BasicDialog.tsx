@@ -29,15 +29,15 @@ const BasicDialog = ({
   content: ReactNode
   maxWidth?: Breakpoint | false
 }): ReactElement => (
-    <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
-      <StyledDialogTitle>
-        {title}
-        <StyledCloseIcon onClick={() => onUpdateOpen(false)} />
-      </StyledDialogTitle>
-      <DialogContent>
-        <StyledDialogText>{content}</StyledDialogText>
-      </DialogContent>
-    </Dialog>
-  )
+  <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
+    <StyledDialogTitle>
+      {title}
+      <StyledCloseIcon onClick={() => onUpdateOpen(false)} />
+    </StyledDialogTitle>
+    <DialogContent>
+      <StyledDialogText>{content}</StyledDialogText>
+    </DialogContent>
+  </Dialog>
+)
 
 export default BasicDialog

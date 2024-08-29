@@ -26,6 +26,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   if (!extensions || !extensions.code) {
     return defaultError
   }
+
+  const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
+  const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
+
   switch (extensions.code) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
@@ -82,8 +86,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         description: <InvalidPasswordResetLink />,
       }
     case GraphQlExceptionCode.InvalidQrCodeSize:
-      const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
-      const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
       return {
         title: `Der ${codeTypeText} für ${cardInfo.fullName} kann nicht generiert werden, da er zu viele Daten enthält.`,
       }

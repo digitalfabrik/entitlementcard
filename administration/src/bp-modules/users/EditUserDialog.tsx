@@ -65,9 +65,8 @@ const EditUserDialog = ({
   const getRegionId = () => {
     if (regionIdOverride !== null) {
       return regionIdOverride
-    } 
-      return role !== null && rolesWithRegion.includes(role) ? regionId : null
-    
+    }
+    return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
   return (

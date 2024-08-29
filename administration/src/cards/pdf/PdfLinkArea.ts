@@ -13,7 +13,8 @@ type PdfLinkAreaRendererProps = {
   url: string
 }
 
-const createPageLinkAnnotation = (url: string, x: number, y: number, size: number, doc: PDFDocument): PDFRef => doc.context.register(
+const createPageLinkAnnotation = (url: string, x: number, y: number, size: number, doc: PDFDocument): PDFRef =>
+  doc.context.register(
     doc.context.obj({
       Type: 'Annot',
       Subtype: 'Link',

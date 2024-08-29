@@ -69,7 +69,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
           value={dataPrivacyText}
           large
           rows={20}
-          placeholder="Fügen Sie hier Ihre Datenschutzerklärung ein..."
+          placeholder='Fügen Sie hier Ihre Datenschutzerklärung ein...'
         />
         <CharCounter $hasError={maxCharsExceeded}>
           {dataPrivacyText.length}/{MAX_CHARS}

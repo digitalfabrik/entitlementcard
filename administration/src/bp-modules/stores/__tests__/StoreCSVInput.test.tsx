@@ -76,7 +76,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
 
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(toaster).not.toHaveBeenCalled()
     expect(setAcceptingStores).toHaveBeenCalledTimes(1)
   })
@@ -86,7 +86,7 @@ describe('StoreCSVInput', () => {
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([])
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -96,7 +96,7 @@ describe('StoreCSVInput', () => {
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([fieldNames])
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -137,7 +137,7 @@ describe('StoreCSVInput', () => {
         '17',
       ],
     ])
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -180,7 +180,7 @@ describe('StoreCSVInput', () => {
         'test',
       ],
     ])
-    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })

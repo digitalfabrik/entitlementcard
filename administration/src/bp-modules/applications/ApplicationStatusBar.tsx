@@ -61,21 +61,21 @@ const ApplicationStatusBar = ({
   barItems,
   setActiveBarItem,
 }: ApplicationStatusBarProps): ReactElement => (
-    <Container>
-      <Title>Status</Title>
-      <ApplicationStatusHelpButton />
-      <BarItemContainer>
-        {barItems.map(item => (
-          <ApplicationStatusBarItem
-            key={item.title}
-            count={getApplicationCount(applications, item.status)}
-            item={item}
-            setActiveBarItem={setActiveBarItem}
-            active={item === activeBarItem}
-          />
-        ))}
-      </BarItemContainer>
-    </Container>
-  )
+  <Container>
+    <Title>Status</Title>
+    <ApplicationStatusHelpButton />
+    <BarItemContainer>
+      {barItems.map(item => (
+        <ApplicationStatusBarItem
+          key={item.title}
+          count={getApplicationCount(applications, item.status)}
+          item={item}
+          setActiveBarItem={setActiveBarItem}
+          active={item === activeBarItem}
+        />
+      ))}
+    </BarItemContainer>
+  </Container>
+)
 
 export default ApplicationStatusBar

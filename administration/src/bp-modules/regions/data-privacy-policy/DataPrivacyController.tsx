@@ -31,9 +31,8 @@ const DataPrivacyWithRegion = (): ReactElement => {
         description='Sie sind nicht berechtigt, Änderungen an der Datenschutzerklärung der Region vorzunehmen.'
       />
     )
-  } 
-    return <DataPrivacyController regionId={region.id} />
-  
+  }
+  return <DataPrivacyController regionId={region.id} />
 }
 
 export default DataPrivacyWithRegion

@@ -6,14 +6,17 @@ function mapValues<VPre extends { [k in keyof VPre]: unknown }, VPost extends { 
   map: <k extends keyof VPre>(value: VPre[k], key: k) => VPost[k]
 ): { [k in keyof VPre]: VPost[k] } {
   const result: Partial<VPost> = {}
-  for (const [key, value] of Object.entries(object)) {
+  Object.entries(object).reduce((result: Partial<VPost>, [key, value]) => {
     // We assume that `key` is in VPre. We would need a typescript feature (exact types) to remove this assumption.
     // The lodash mapValues types suffer from the same problems.
     // (see https://github.com/microsoft/TypeScript/issues/12936)
     const validKey = key as keyof VPre
     const validValue = value as VPre[typeof validKey]
-    result[validKey] = map(validValue, validKey)
-  }
+    return {
+      ...result,
+      [validKey]: map(validValue, validKey),
+    }
+  }, {})
   return result as VPost
 }
 
@@ -65,9 +68,8 @@ function validateKey<Forms extends SubForms, K extends keyof Forms>(
   if (key in subFormsOptions) {
     const optionsKey = key as unknown as KeyWithOptions<Forms>
     return subForms[key].validate(state[key], subFormsOptions[optionsKey]) as InferValidationResult<Forms[K]>
-  } 
-    return subForms[key].validate(state[key]) as InferValidationResult<Forms[K]>
-  
+  }
+  return subForms[key].validate(state[key]) as InferValidationResult<Forms[K]>
 }
 
 /**

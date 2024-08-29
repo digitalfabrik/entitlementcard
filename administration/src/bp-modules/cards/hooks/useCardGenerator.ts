@@ -79,6 +79,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
           case: 'dynamicActivationCode',
           value: dynamicCode,
         })
+        // eslint-disable-next-line no-await-in-loop
         await sendMail({
           variables: {
             project: projectId,

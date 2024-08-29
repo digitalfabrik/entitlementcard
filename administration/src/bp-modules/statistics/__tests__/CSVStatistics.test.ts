@@ -50,7 +50,10 @@ describe('CSVStatistics', () => {
   it('should create a correct csv blob', async () => {
     jest
       .spyOn(global, 'Blob')
-      .mockImplementationOnce((blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob => TEST_BLOB_CONSTRUCTOR(blobParts, options))
+      .mockImplementationOnce(
+        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
+          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+      )
 
     generateCsv(statisticsData, bayernConfig.cardStatistics)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(

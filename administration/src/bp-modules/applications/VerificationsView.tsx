@@ -78,7 +78,7 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
   <>
     <H5>Bestätigung(en) durch Organisationen</H5>
     <VerificationContainer>
-      {verifications.map((verification, index) => {
+      {verifications.map(verification => {
         const status = getStatus(verification)
         const unverifiedText = verification.rejectedDate
           ? `Widersprochen am ${new Date(verification.rejectedDate).toLocaleString('de')}`
@@ -86,12 +86,11 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
         const text = verification.verifiedDate
           ? `Bestätigt am ${new Date(verification.verifiedDate).toLocaleString('de')}`
           : unverifiedText
+        const unverifiedColor = verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
+        const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
+        const key = verification.organizationName + verification.contactEmailAddress
         return (
-          <VerificationListItem
-            key={index}
-            $color={
-              verification.verifiedDate ? Colors.GREEN2 : verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
-            }>
+          <VerificationListItem key={key} $color={color}>
             <table cellPadding='2px'>
               <tbody>
                 <tr>

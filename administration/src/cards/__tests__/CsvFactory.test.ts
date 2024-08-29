@@ -55,7 +55,10 @@ describe('CsvFactory', () => {
   it('should return only header csv for empty input', async () => {
     jest
       .spyOn(global, 'Blob')
-      .mockImplementationOnce((blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob => TEST_BLOB_CONSTRUCTOR(blobParts, options))
+      .mockImplementationOnce(
+        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
+          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+      )
 
     if (!nuernbergConfig.csvExport.enabled) {
       throw Error('test failed')

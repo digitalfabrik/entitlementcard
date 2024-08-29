@@ -74,7 +74,7 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
           label='Antragsverifizierungen'
         />
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text="Speichern" intent="primary" type='submit' loading={loading} />
+          <Button text='Speichern' intent='primary' type='submit' loading={loading} />
         </div>
       </form>
     </SettingsCard>

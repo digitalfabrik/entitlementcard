@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'

@@ -15,13 +15,13 @@ import getQueryResult from '../util/getQueryResult'
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
-    <StandaloneCenter>
-      <Card style={{ maxWidth: '1200px', margin: '16px' }}>
-        <H3 style={{ textAlign: 'center' }}>{title}</H3>
-        {children}
-      </Card>
-    </StandaloneCenter>
-  )
+  <StandaloneCenter>
+    <Card style={{ maxWidth: '1200px', margin: '16px' }}>
+      <H3 style={{ textAlign: 'center' }}>{title}</H3>
+      {children}
+    </Card>
+  </StandaloneCenter>
+)
 
 const ManageProjectUsers = () => {
   const { projectId, name: projectName } = useContext(ProjectConfigContext)
@@ -77,17 +77,17 @@ const ManageUsersController = (): ReactElement => {
   const { role, region } = useContext(WhoAmIContext).me!
   if (role === Role.RegionAdmin && region) {
     return <ManageRegionUsers region={region} />
-  } if (role === Role.ProjectAdmin) {
+  }
+  if (role === Role.ProjectAdmin) {
     return <ManageProjectUsers />
-  } 
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Benutzer zu verwalten.'
-      />
-    )
-  
+  }
+  return (
+    <NonIdealState
+      icon='cross'
+      title='Fehlende Berechtigung'
+      description='Sie sind nicht berechtigt, Benutzer zu verwalten.'
+    />
+  )
 }
 
 export default ManageUsersController

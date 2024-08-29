@@ -97,6 +97,7 @@ export async function generatePdf(
       const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
       const cardBlueprint = cardBlueprints[k]
 
+      // eslint-disable-next-line no-await-in-loop
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
       const page = doc.addPage(templatePage || undefined)
@@ -105,6 +106,7 @@ export async function generatePdf(
         value: dynamicCode,
       }
 
+      // eslint-disable-next-line no-await-in-loop
       await fillContentAreas(
         doc,
         page,

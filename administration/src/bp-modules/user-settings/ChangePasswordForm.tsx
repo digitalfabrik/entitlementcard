@@ -68,7 +68,7 @@ const ChangePasswordForm = (): ReactElement => {
         <PasswordInput label='Neues Passwort bestätigen' value={repeatNewPassword} setValue={setRepeatNewPassword} />
         {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text="Passwort ändern" intent='primary' type='submit' disabled={!valid} loading={loading} />
+          <Button text='Passwort ändern' intent='primary' type='submit' disabled={!valid} loading={loading} />
         </div>
       </form>
     </SettingsCard>

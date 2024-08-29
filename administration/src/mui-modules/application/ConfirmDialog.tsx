@@ -16,22 +16,22 @@ const ConfirmDialog = ({
   onConfirm: () => void
   confirmButtonText?: string
 }): ReactElement => (
-    <Dialog open={open} onClick={() => onUpdateOpen(false)}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{content}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => onUpdateOpen(false)}>Abbrechen</Button>
-        <Button
-          onClick={() => {
-            onUpdateOpen(false)
-            onConfirm()
-          }}>
-          {confirmButtonText}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )
+  <Dialog open={open} onClick={() => onUpdateOpen(false)}>
+    <DialogTitle>{title}</DialogTitle>
+    <DialogContent>
+      <DialogContentText>{content}</DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => onUpdateOpen(false)}>Abbrechen</Button>
+      <Button
+        onClick={() => {
+          onUpdateOpen(false)
+          onConfirm()
+        }}>
+        {confirmButtonText}
+      </Button>
+    </DialogActions>
+  </Dialog>
+)
 
 export default ConfirmDialog
