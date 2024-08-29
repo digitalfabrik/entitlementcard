@@ -7,6 +7,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import ActivityLogCard from './ActivityLogCard'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
+import UserUploadApiTokenSettings from './UserUploadApiTokenSettings'
 
 const UserSettingsContainer = styled.div`
   display: flex;
@@ -17,11 +18,12 @@ const UserSettingsContainer = styled.div`
 `
 
 const UserSettingsController = () => {
-  const { applicationFeature, activityLogConfig, projectId } = useContext(ProjectConfigContext)
+  const { applicationFeature, activityLogConfig, projectId, userUploadApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
+      {userUploadApiEnabled && role == Role.ProjectAdmin && <UserUploadApiTokenSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>

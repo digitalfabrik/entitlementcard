@@ -130,12 +130,16 @@ type Mutation {
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  "Creates a new api token for user upload endpoint"
+  createUserUploadApiToken(expiresIn: Int!): String!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
+  "Deletes a selected API token"
+  deleteUserUploadApiToken(id: Int!): Int!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
@@ -195,6 +199,8 @@ type Query {
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!
+  "Gets metadata of all api tokes for a project"
+  getUserUploadApiTokenMetaData: [UserUploadApiTokenMetaData!]!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
   getUsersInProject(project: String!): [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
@@ -248,6 +254,12 @@ type SignInPayload {
 type StaticVerificationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
+}
+
+type UserUploadApiTokenMetaData {
+  creatorEmail: String!
+  expirationDate: String!
+  id: Int!
 }
 
 enum ActivationState {

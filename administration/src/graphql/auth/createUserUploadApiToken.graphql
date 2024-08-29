@@ -1,0 +1,3 @@
+mutation createUserUploadApiToken($expiresIn: Int!) {
+  createUserUploadApiTokenPayload: createUserUploadApiToken(expiresIn: $expiresIn)
+}

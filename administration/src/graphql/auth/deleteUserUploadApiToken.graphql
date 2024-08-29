@@ -1,0 +1,3 @@
+mutation deleteUserUploadApiToken($id: Int!) {
+  deleteUserUploadApiToken(id: $id)
+}
