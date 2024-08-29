@@ -38,7 +38,7 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsCsv = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -66,7 +66,7 @@ describe('CreateCardsButtonBar', () => {
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -102,7 +102,7 @@ describe('CreateCardsButtonBar', () => {
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}

@@ -115,7 +115,7 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
 
   return (
     <RightElementContainer>
-      {application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
+      {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
       {isJuleicaEntitlementType() ? (
         <JuleicaVerificationQuickIndicator />
       ) : (
@@ -178,7 +178,7 @@ const ApplicationCard = ({
       title={
         <div>
           <Title>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;</Title>{' '}
-          {personalData && personalData.forenames && personalData.surname && (
+          {personalData && personalData.forenames !== undefined && personalData.surname !== undefined && (
             <CardContentHint>
               Name: {personalData.surname}, {personalData.forenames}
             </CardContentHint>
@@ -200,7 +200,7 @@ const ApplicationCard = ({
             onChange={onChange}
           />
 
-          {withdrawalDate && (
+          {!!withdrawalDate && (
             <WithdrawAlert intent='warning'>
               Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
               zurückgezogen. <br />

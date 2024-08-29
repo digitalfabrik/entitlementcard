@@ -11,7 +11,7 @@ export const WhoAmIContext = createContext<{
   refetch: () => void
 }>({
   me: null,
-  refetch: () => {},
+  refetch: () => undefined,
 })
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {

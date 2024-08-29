@@ -72,6 +72,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'error',
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unnecessary-condition': 'error',
     '@typescript-eslint/no-unused-vars': [
@@ -95,6 +96,9 @@ module.exports = {
 
     'jest/consistent-test-it': 'error',
     'jest/no-alias-methods': 'error',
+
+    'jsx-expressions/strict-logical-expressions': 'error',
+    // 'prefer-arrow/prefer-arrow-functions': 'error',
   },
   parserOptions: {
     project: true,

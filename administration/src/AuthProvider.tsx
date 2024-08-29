@@ -8,7 +8,7 @@ export type TokenPayload = {
   adminId: number
 }
 
-const noop = () => {}
+const noop = () => undefined
 
 export const AuthContext = createContext<{
   data: TokenPayload | null

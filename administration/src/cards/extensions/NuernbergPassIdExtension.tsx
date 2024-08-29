@@ -11,7 +11,9 @@ const nuernbergPassIdLength = 10
 class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   public readonly name = NuernbergPassIdExtension.name
 
-  setInitialState(): void {}
+  setInitialState(): void {
+    return undefined
+  }
   createForm(onUpdate: () => void): ReactElement {
     return (
       <FormGroup
