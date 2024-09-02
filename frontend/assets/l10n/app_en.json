@@ -99,7 +99,7 @@
     "codeExpired": "The scanned code has already expired on {{expirationDate}}.",
     "codeInvalid": "The content of the scanned code cannot be understood. It is probably a QR code that was not generated for this app.",
     "codeInvalidMissing": "The content of the scanned code is incomplete. (Error code: {{missing}}Missing)",
-    "codeInvalidType": "The scanned code is not valid for this operation. (Scanned: {{qrCodeType}})",
+    "codeInvalidType": "The scanned code is not intended for activation in the app. Please use the QR code shown as activation code.",
     "codeUnknownType": "The scanned code is not valid for this application.",
     "codeVerificationFailed": "The scanned code could not be verified by the server.",
     "codeActivationFailedConnection": "The scanned code could not be activated. Please make sure you have an internet connection and try again.",
