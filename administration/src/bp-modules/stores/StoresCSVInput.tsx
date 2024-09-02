@@ -4,6 +4,15 @@ import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState 
 import styled from 'styled-components'
 
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import {
+  FIELD_HOUSE_NUMBER,
+  FIELD_LATITUDE,
+  FIELD_LOCATION,
+  FIELD_LONGITUDE,
+  FIELD_NAME,
+  FIELD_POSTAL_CODE,
+  FIELD_STREET,
+} from '../../project-configs/nuernberg/storeConfig'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
@@ -35,7 +44,6 @@ const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
-    // TODO 1570 get geodata if no coordinates available
     return { ...acc, [columnName]: entry }
   }, {})
   return new AcceptingStoreEntry(storeData, fields)
@@ -45,11 +53,44 @@ const hasStoreDuplicates = (stores: AcceptingStoreEntry[]) => {
   return (
     new Set(
       stores.map(({ data }: { data: StoreData }) =>
-        JSON.stringify([data['name'], data['street'], data['houseNumber'], data['postalCode'], data['location']])
+        JSON.stringify([
+          data[FIELD_NAME],
+          data[FIELD_STREET],
+          data[FIELD_HOUSE_NUMBER],
+          data[FIELD_POSTAL_CODE],
+          data[FIELD_LOCATION],
+        ])
       )
     ).size < stores.length
   )
 }
+
+// example request https://nominatim.maps.tuerantuer.org/nominatim/search?format=geojson&addressdetails=1&countrycodes=de&state=Bayern&city=N%C3%BCrnberg&street=187+F%C3%BCrther+Str.
+const getStoreCoordinates = (
+  stores: AcceptingStoreEntry[],
+  showInputError: (message: string) => void
+): (AcceptingStoreEntry | Promise<AcceptingStoreEntry>)[] =>
+  stores.map((store, index) => {
+    if (store.hasValidCoordinates()) return store
+    // type res as FeatureCollection, type feature as feature
+    // create proper url with params
+    // implement loading spinner
+    return fetch(
+      `https://nominatim.maps.tuerantuer.org/nominatim/search?format=geojson&addressdetails=1&countrycodes=de&city=${store.data[FIELD_LOCATION]}&street=${store.data[FIELD_HOUSE_NUMBER]}+${store.data[FIELD_STREET]}`
+    ).then(response =>
+      response.json().then(res => {
+        if (res.ok && res.features.length === 0) {
+          showInputError(`Keine Koordinaten für Eintrag ${index + 1} gefunden!`)
+          return store
+        }
+        const feature = res.features[0]
+        const updatedStore = store
+        updatedStore.data[FIELD_LONGITUDE] = feature.geometry.coordinates[0].toString()
+        updatedStore.data[FIELD_LATITUDE] = feature.geometry.coordinates[1].toString()
+        return updatedStore
+      })
+    )
+  })
 
 const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
   const [inputState, setInputState] = useState<FileInputStateType>('idle')
@@ -117,11 +158,15 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         showInputError(`Die CSV enthält doppelte Einträge.`)
         return
       }
-
-      setAcceptingStores(acceptingStores)
+      Promise.all(getStoreCoordinates(acceptingStores, showInputError))
+        .then(updatedStores => setAcceptingStores(updatedStores))
+        .catch(() => {
+          showInputError('Fehler beim Abrufen der fehlenden Koordinaten!')
+          setAcceptingStores(acceptingStores)
+        })
       setInputState('idle')
     },
-    [showInputError, setAcceptingStores, setInputState, headers]
+    [showInputError, setAcceptingStores, setInputState, headers, fields]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
