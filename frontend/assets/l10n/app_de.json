@@ -99,7 +99,7 @@
     "codeExpired": "Der eingescannte Code ist bereits am {{expirationDate}} abgelaufen.",
     "codeInvalid": "Der Inhalt des eingescannten Codes kann nicht verstanden werden. Vermutlich handelt es sich um einen QR-Code, der nicht für diese App generiert wurde.",
     "codeInvalidMissing": "Der Inhalt des eingescannten Codes ist unvollständig. (Fehlercode: {{missing}}Missing)",
-    "codeInvalidType": "Der eingescannte Code ist nicht für die Aktivierung in der App vorgesehen. (Eingescannt: {{qrCodeType}}). Bitte verwenden Sie den als Aktivierungscode ausgewiesenen QR-Code.",
+    "codeInvalidType": "Der eingescannte Code ist nicht für die Aktivierung in der App vorgesehen. Bitte verwenden Sie den als Aktivierungscode ausgewiesenen QR-Code.",
     "codeUnknownType": "Der eingescannte Code ist für diese Anwendung nicht gültig.",
     "codeVerificationFailed": "Der eingescannte Code konnte vom Server nicht verifiziert werden.",
     "codeActivationFailedConnection": "Der eingescannte Code konnte nicht aktiviert werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
