@@ -7,7 +7,7 @@ import React, { ReactElement } from 'react'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { AppToasterProvider } from '../../AppToaster'
-import StoresCSVInput from '../StoresCSVInput'
+import StoresCSVInput, { DEFAULT_ERROR_TIMEOUT } from '../StoresCSVInput'
 
 // TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
 
@@ -85,7 +85,7 @@ describe('StoreCSVInput', () => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -95,7 +95,7 @@ describe('StoreCSVInput', () => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([fieldNames])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -136,7 +136,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -179,7 +179,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -221,7 +221,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 })
