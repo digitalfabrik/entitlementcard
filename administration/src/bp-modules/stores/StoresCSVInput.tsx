@@ -1,9 +1,9 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { Icon, NonIdealState, NonIdealStateIconSize } from '@blueprintjs/core'
 import { parse } from 'csv-parse/browser/esm/sync'
-import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
+import { FeatureCollection, GeoJSON, Point } from 'geojson'
+import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
-import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import {
   FIELD_HOUSE_NUMBER,
   FIELD_LATITUDE,
@@ -12,9 +12,10 @@ import {
   FIELD_NAME,
   FIELD_POSTAL_CODE,
   FIELD_STREET,
-} from '../../project-configs/nuernberg/storeConfig'
+} from '../../project-configs/constants'
+import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import geoDataUrlWithParams from '../../project-configs/helper/getGeoDataUrlWithParams'
 import { useAppToaster } from '../AppToaster'
-import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 import { StoreData } from './StoresImportController'
 import StoresRequirementsText from './StoresRequirementsText'
@@ -33,6 +34,7 @@ const InputContainer = styled(NonIdealState)`
 type StoresCsvInputProps = {
   setAcceptingStores: (store: AcceptingStoreEntry[]) => void
   fields: StoreFieldConfig[]
+  setIsLoadingCoordinates: (value: boolean) => void
 }
 
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
@@ -65,22 +67,18 @@ const hasStoreDuplicates = (stores: AcceptingStoreEntry[]) => {
   )
 }
 
-// example request https://nominatim.maps.tuerantuer.org/nominatim/search?format=geojson&addressdetails=1&countrycodes=de&state=Bayern&city=N%C3%BCrnberg&street=187+F%C3%BCrther+Str.
 const getStoreCoordinates = (
   stores: AcceptingStoreEntry[],
   showInputError: (message: string) => void
 ): (AcceptingStoreEntry | Promise<AcceptingStoreEntry>)[] =>
   stores.map((store, index) => {
     if (store.hasValidCoordinates()) return store
-    // type res as FeatureCollection, type feature as feature
-    // create proper url with params
-    // implement loading spinner
     return fetch(
-      `https://nominatim.maps.tuerantuer.org/nominatim/search?format=geojson&addressdetails=1&countrycodes=de&city=${store.data[FIELD_LOCATION]}&street=${store.data[FIELD_HOUSE_NUMBER]}+${store.data[FIELD_STREET]}`
+      geoDataUrlWithParams(store.data[FIELD_LOCATION], store.data[FIELD_STREET], store.data[FIELD_HOUSE_NUMBER]).href
     ).then(response =>
-      response.json().then(res => {
-        if (res.ok && res.features.length === 0) {
-          showInputError(`Keine Koordinaten für Eintrag ${index + 1} gefunden!`)
+      response.json().then((res: FeatureCollection<Point, GeoJSON>) => {
+        if (res.features.length === 0) {
+          showInputError(`Keine Koordinaten für Eintrag ${index + 1} gefunden! Bitte prüfen sie die Adresse.`)
           return store
         }
         const feature = res.features[0]
@@ -92,8 +90,7 @@ const getStoreCoordinates = (
     )
   })
 
-const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
-  const [inputState, setInputState] = useState<FileInputStateType>('idle')
+const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
   const headers = fields.map(field => field.name)
@@ -101,7 +98,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
   const showInputError = useCallback(
     (message: string) => {
       appToaster?.show({ intent: 'danger', message })
-      setInputState('error')
+
       if (!fileInput.current) return
       fileInput.current.value = ''
     },
@@ -158,15 +155,18 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         showInputError(`Die CSV enthält doppelte Einträge.`)
         return
       }
+      setIsLoadingCoordinates(true)
       Promise.all(getStoreCoordinates(acceptingStores, showInputError))
-        .then(updatedStores => setAcceptingStores(updatedStores))
+        .then(updatedStores => {
+          setAcceptingStores(updatedStores)
+        })
         .catch(() => {
           showInputError('Fehler beim Abrufen der fehlenden Koordinaten!')
           setAcceptingStores(acceptingStores)
         })
-      setInputState('idle')
+        .finally(() => setIsLoadingCoordinates(false))
     },
-    [showInputError, setAcceptingStores, setInputState, headers, fields]
+    [showInputError, setAcceptingStores, headers, fields]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
@@ -186,14 +186,13 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       showInputError('Die ausgewählete Datei ist zu groß.')
       return
     }
-    setInputState('loading')
     reader.readAsText(file)
   }
 
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={<FileInputStateIcon inputState={inputState} />}
+      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon={'upload'} />}
       description={<StoresRequirementsText header={headers} />}
       action={
         <StoreImportInputContainer>

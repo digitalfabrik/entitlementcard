@@ -1,5 +1,14 @@
 import { buildConfigNuernberg } from 'build-configs'
 
+import {
+  FIELD_HOUSE_NUMBER,
+  FIELD_LATITUDE,
+  FIELD_LOCATION,
+  FIELD_LONGITUDE,
+  FIELD_NAME,
+  FIELD_POSTAL_CODE,
+  FIELD_STREET,
+} from '../constants'
 import { StoresManagement } from '../getProjectConfig'
 import {
   hasMandatoryValue,
@@ -7,14 +16,6 @@ import {
   isCoordinate,
   noValidationRequired,
 } from '../helper/storeFieldValidation'
-
-export const FIELD_NAME = 'name'
-export const FIELD_STREET = 'street'
-export const FIELD_HOUSE_NUMBER = 'houseNumber'
-export const FIELD_POSTAL_CODE = 'postalCode'
-export const FIELD_LOCATION = 'location'
-export const FIELD_LATITUDE = 'latitude'
-export const FIELD_LONGITUDE = 'longitude'
 
 export const storeConfig: StoresManagement = {
   enabled: true,

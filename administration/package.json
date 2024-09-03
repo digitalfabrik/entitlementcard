@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
     "@nivo/bar": "^0.85.1",
+    "@types/geojson": "^7946.0.14",
     "@zxing/library": "^0.20.0",
     "apollo-upload-client": "^17.0.0",
     "buffer": "^5.7.1",

@@ -23,6 +23,7 @@ const wrapper = ({ children }: { children: ReactElement }) => (
   </AppToasterProvider>
 )
 const setAcceptingStores = jest.fn()
+const setIsLoadingCoordinates = jest.fn()
 describe('StoreCSVInput', () => {
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
@@ -33,9 +34,16 @@ describe('StoreCSVInput', () => {
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
     const fields = nuernbergConfig.storeManagement.enabled ? nuernbergConfig.storeManagement.fields : []
-    const { getByTestId } = render(<StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />, {
-      wrapper,
-    })
+    const { getByTestId } = render(
+      <StoresCSVInput
+        setAcceptingStores={setAcceptingStores}
+        fields={fields}
+        setIsLoadingCoordinates={setIsLoadingCoordinates}
+      />,
+      {
+        wrapper,
+      }
+    )
 
     const fileInput = getByTestId('store-file-upload') as HTMLInputElement
     fireEvent.change(fileInput, { target: { files: [file] } })
