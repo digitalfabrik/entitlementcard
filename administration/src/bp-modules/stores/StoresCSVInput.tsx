@@ -37,6 +37,8 @@ type StoresCsvInputProps = {
   setIsLoadingCoordinates: (value: boolean) => void
 }
 
+const DEFAULT_ERROR_TIMEOUT = 3000
+const LONG_ERROR_TIMEOUT = 10000
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const defaultExtensionsByMIMEType = {
   'text/csv': '.csv',
@@ -69,16 +71,32 @@ const hasStoreDuplicates = (stores: AcceptingStoreEntry[]) => {
 
 const getStoreCoordinates = (
   stores: AcceptingStoreEntry[],
-  showInputError: (message: string) => void
+  showInputError: (message: string, timeout?: number) => void
 ): (AcceptingStoreEntry | Promise<AcceptingStoreEntry>)[] =>
   stores.map((store, index) => {
     if (store.hasValidCoordinates()) return store
+    const isMissingLocationInformation =
+      store.data[FIELD_LOCATION].length === 0 ||
+      store.data[FIELD_STREET].length === 0 ||
+      store.data[FIELD_HOUSE_NUMBER].length === 0
+    if (isMissingLocationInformation) {
+      showInputError(
+        `Eintrag ${
+          index + 1
+        }: Es sind nicht alle notwendigen Adressdaten vorhanden, um die notwendigen Geodaten abzurufen`,
+        LONG_ERROR_TIMEOUT
+      )
+      return store
+    }
     return fetch(
       geoDataUrlWithParams(store.data[FIELD_LOCATION], store.data[FIELD_STREET], store.data[FIELD_HOUSE_NUMBER]).href
     ).then(response =>
       response.json().then((res: FeatureCollection<Point, GeoJSON>) => {
         if (res.features.length === 0) {
-          showInputError(`Keine Koordinaten für Eintrag ${index + 1} gefunden! Bitte prüfen sie die Adresse.`)
+          showInputError(
+            `Eintrag ${index + 1}: Keine passenden Geodatengefunden gefunden! Bitte prüfen sie die Adresse.`,
+            LONG_ERROR_TIMEOUT
+          )
           return store
         }
         const feature = res.features[0]
@@ -96,8 +114,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
-    (message: string) => {
-      appToaster?.show({ intent: 'danger', message })
+    (message: string, timeout = DEFAULT_ERROR_TIMEOUT) => {
+      appToaster?.show({ intent: 'danger', message, timeout })
 
       if (!fileInput.current) return
       fileInput.current.value = ''
@@ -119,7 +137,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
           showInputError(
             `Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Spalten. (Fehler in Zeile ${error.message
               .split('line')[1]
-              .trim()})`
+              .trim()})`,
+            LONG_ERROR_TIMEOUT
           )
           return
         }
