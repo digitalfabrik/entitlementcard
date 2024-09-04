@@ -143,5 +143,6 @@ tasks.named("classes") {
 }
 
 tasks.withType<Test> {
+    environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
 }
