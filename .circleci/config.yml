@@ -609,6 +609,8 @@ jobs:
                 command: |
                     ./gradlew test
                 name: Test
+            - store_test_results:
+                path: ./build/test-results
             - save_cache:
                 key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
                 paths:
