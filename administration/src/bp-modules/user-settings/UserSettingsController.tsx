@@ -5,9 +5,9 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivityLogCard from './ActivityLogCard'
+import ApiTokenSettings from './ApiTokenSettings'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
-import UserUploadApiTokenSettings from './UserUploadApiTokenSettings'
 
 const UserSettingsContainer = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const UserSettingsController = () => {
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userUploadApiEnabled && role == Role.ProjectAdmin && <UserUploadApiTokenSettings />}
+      {userUploadApiEnabled && role == Role.ProjectAdmin && <ApiTokenSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>

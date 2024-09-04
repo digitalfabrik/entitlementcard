@@ -5,10 +5,10 @@ import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
-  UserUploadApiTokenMetaData,
-  useCreateUserUploadApiTokenMutation,
-  useDeleteUserUploadApiTokenMutation,
-  useGetUserUploadApiTokenMetaDataQuery,
+  ApiTokenMetaData,
+  useCreateApiTokenMutation,
+  useDeleteApiTokenMutation,
+  useGetApiTokenMetaDataQuery,
 } from '../../generated/graphql'
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
@@ -40,12 +40,12 @@ const NewTokenText = styled.p`
   word-break: break-all;
 `
 
-const UserUploadApiTokenSetting = () => {
-  const metaDataQuery = useGetUserUploadApiTokenMetaDataQuery({})
+const ApiTokenSetting = () => {
+  const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
 
-  const [tokenMetaData, setTokenMetadata] = useState<Array<UserUploadApiTokenMetaData>>([])
+  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [createdToken, setCreatedToken] = useState<string>('')
   const [expiresIn, setExpiresIn] = useState<number>(1)
 
@@ -57,10 +57,10 @@ const UserUploadApiTokenSetting = () => {
     }
   }, [metaDataQuery, tokenMetaData])
 
-  const [createToken] = useCreateUserUploadApiTokenMutation({
+  const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
       appToaster?.show({ intent: 'success', message: 'Token wurde erfolgreich erzeugt.' })
-      setCreatedToken(result.createUserUploadApiTokenPayload)
+      setCreatedToken(result.createApiTokenPayload)
       metaDataQuery.refetch()
     },
     onError: error => {
@@ -72,7 +72,7 @@ const UserUploadApiTokenSetting = () => {
     },
   })
 
-  const [deleteToken] = useDeleteUserUploadApiTokenMutation({
+  const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: result => {
       appToaster?.show({ intent: 'success', message: 'Token wurde erfolgreich gelöscht.' })
       metaDataQuery.refetch()
@@ -139,4 +139,4 @@ const UserUploadApiTokenSetting = () => {
   )
 }
 
-export default UserUploadApiTokenSetting
+export default ApiTokenSetting

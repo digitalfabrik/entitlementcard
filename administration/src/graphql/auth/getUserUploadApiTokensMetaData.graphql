@@ -1,7 +1,0 @@
-query getUserUploadApiTokenMetaData {
-  tokenMetaData: getUserUploadApiTokenMetaData {
-    id
-    creatorEmail
-    expirationDate
-  }
-}

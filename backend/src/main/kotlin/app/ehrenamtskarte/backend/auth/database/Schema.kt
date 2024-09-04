@@ -58,18 +58,18 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 
 val TOKEN_LENGTH = 60
 
-object UserUploadApiTokens : IntIdTable() {
+object ApiTokens : IntIdTable() {
     val token = binary("token")
     val creatorId = reference("creatorId", Administrators)
     val projectId = reference("projectId", Projects)
     val expirationDate = date("expirationDate")
 }
 
-class UserUploadApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<UserUploadApiTokenEntity>(UserUploadApiTokens)
+class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ApiTokenEntity>(ApiTokens)
 
-    var token by UserUploadApiTokens.token
-    var creator by UserUploadApiTokens.creatorId
-    var projectId by UserUploadApiTokens.projectId
-    var expirationDate by UserUploadApiTokens.expirationDate
+    var token by ApiTokens.token
+    var creator by ApiTokens.creatorId
+    var projectId by ApiTokens.projectId
+    var expirationDate by ApiTokens.expirationDate
 }

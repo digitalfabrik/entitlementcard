@@ -37,7 +37,7 @@ const config: ProjectConfig = {
   storeManagement: {
     enabled: false,
   },
-  apiUpload: false,
+  userUploadApiEnabled: false,
 }
 
 export default config
