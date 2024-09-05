@@ -26,7 +26,7 @@ describe('StoresButtonBar', () => {
     expect(backButton).toBeTruthy()
 
     fireEvent.click(backButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(goBack).toHaveBeenCalled()
   })
@@ -85,7 +85,7 @@ describe('StoresButtonBar', () => {
     expect(importButton).toBeTruthy()
 
     fireEvent.click(importButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(importStores).toHaveBeenCalled()
   })

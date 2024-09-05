@@ -60,7 +60,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   }
 
   const lineToBlueprint = useCallback(
-    (line: string[], csvHeader: string[], normalizeImport = false): CSVCard => {
+    (line: string[], csvHeader: string[]): CSVCard => {
       if (isFreinetFormat) {
         convertFreinetImport(line, csvHeader, projectConfig)
       }
@@ -75,7 +75,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       })
       return cardBlueprint
     },
-    [headers, projectConfig.card, region]
+    [headers, projectConfig, region, isFreinetFormat]
   )
 
   if (state === CardActivationState.loading) {

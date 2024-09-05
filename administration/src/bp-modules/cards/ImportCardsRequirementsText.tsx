@@ -13,7 +13,10 @@ type ImportCardsRequirementsProps = {
   isFreinetFormat: boolean | undefined
 }
 
-const ImportCardsRequirementsText = ({ header, isFreinetFormat = false }: ImportCardsRequirementsProps): ReactElement => {
+const ImportCardsRequirementsText = ({
+  header,
+  isFreinetFormat = false,
+}: ImportCardsRequirementsProps): ReactElement => {
   return (
     <RequirementsList>
       <li>Maximale Dateigröße: {FILE_SIZE_LIMIT_MEGA_BYTES}MB</li>

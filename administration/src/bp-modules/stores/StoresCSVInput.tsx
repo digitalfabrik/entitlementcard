@@ -50,7 +50,9 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
     (message: string) => {
       appToaster?.show({ intent: 'danger', message })
       setInputState('error')
-      if (!fileInput.current) return
+      if (!fileInput.current) {
+        return
+      }
       fileInput.current.value = ''
     },
     [appToaster]
@@ -79,6 +81,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       }
       const numberOfColumns = lines[0]?.length
 
+      /* This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig  */
+      /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
       if (!numberOfColumns) {
         showInputError('Die gewählte Datei ist leer.')
         return
@@ -105,11 +109,11 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       setAcceptingStores(acceptingStores)
       setInputState('idle')
     },
-    [showInputError, setAcceptingStores, setInputState, headers]
+    [showInputError, setAcceptingStores, setInputState, headers, fields]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
-    if (!event.currentTarget?.files) {
+    if (!event.currentTarget.files) {
       return
     }
     const reader = new FileReader()

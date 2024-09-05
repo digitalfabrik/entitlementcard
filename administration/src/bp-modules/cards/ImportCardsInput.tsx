@@ -34,7 +34,12 @@ type ImportCardsInputProps = {
   isFreinetFormat: boolean
 }
 
-const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFreinetFormat }: ImportCardsInputProps): ReactElement => {
+const ImportCardsInput = ({
+  setCardBlueprints,
+  lineToBlueprint,
+  headers,
+  isFreinetFormat,
+}: ImportCardsInputProps): ReactElement => {
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
