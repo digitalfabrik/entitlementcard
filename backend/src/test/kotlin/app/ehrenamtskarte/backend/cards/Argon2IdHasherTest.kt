@@ -1,5 +1,4 @@
-package app.ehrenamtskarte.backend.verification
-import Argon2IdHasher
+package app.ehrenamtskarte.backend.cards
 import app.ehrenamtskarte.backend.common.utils.Environment
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
