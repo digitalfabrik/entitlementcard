@@ -13,8 +13,8 @@ import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -27,7 +27,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     private val projectAdmin = TestAdministrators.EAK_PROJECT_ADMIN
     private val regionAdmin = TestAdministrators.EAK_REGION_ADMIN
 
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()

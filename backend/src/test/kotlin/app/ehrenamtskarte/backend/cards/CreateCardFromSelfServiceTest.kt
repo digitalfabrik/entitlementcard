@@ -13,8 +13,8 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -25,7 +25,7 @@ import kotlin.test.fail
 
 internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             UserEntitlements.deleteAll()
