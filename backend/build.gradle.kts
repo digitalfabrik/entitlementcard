@@ -142,5 +142,6 @@ tasks.named("classes") {
 
 tasks.test {
     useJUnitPlatform()
+    environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
 }

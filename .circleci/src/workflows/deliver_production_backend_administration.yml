@@ -63,4 +63,10 @@ jobs:
       requires:
         - upload_administration_packages_to_server_production
         - upload_backend_packages_to_server_production
+  - notify_release:
+      production_delivery: true
+      context:
+        - deliverino
+      requires:
+        - install_packages_to_server_production
 
