@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.cards.CanonicalJson.Companion.koblenzUserToStr
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.koblenzTestUser
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
