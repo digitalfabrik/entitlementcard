@@ -1,9 +1,10 @@
-import { Icon, NonIdealState, NonIdealStateIconSize, Spinner } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
 import { ChangeEventHandler, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'
 import { useAppToaster } from '../AppToaster'
+import FileInputStateIcon from '../FileInputStateIcon'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 
 const CardImportInputContainer = styled.div`
@@ -30,9 +31,10 @@ type ImportCardsInputProps = {
   headers: string[]
   setCardBlueprints: (cardBlueprints: CSVCard[]) => void
   lineToBlueprint: (line: string[], csvHeader: string[]) => CSVCard
+  isFreinetFormat: boolean
 }
 
-const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: ImportCardsInputProps) => {
+const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFreinetFormat }: ImportCardsInputProps) => {
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
@@ -47,13 +49,13 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     [appToaster]
   )
 
-  const onLoadend = useCallback(
+  const onLoadEnd = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
       const lines = content
         .split('\n')
         .filter(line => line.trim().length)
-        .map(line => line.split(',').map(cell => cell.trim()))
+        .map(line => line.split(/,|;/).map(cell => cell.trim()))
 
       const numberOfColumns = lines[0]?.length
 
@@ -91,7 +93,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
       return
     }
     const reader = new FileReader()
-    reader.onloadend = onLoadend
+    reader.onloadend = onLoadEnd
 
     const file = event.currentTarget.files[0]
     if (!(file.type in defaultExtensionsByMIMEType)) {
@@ -107,20 +109,11 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers }: Impor
     reader.readAsText(file)
   }
 
-  const StateIcon =
-    inputState === 'error' ? (
-      <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon={'error'} />
-    ) : inputState === 'loading' ? (
-      <Spinner intent='primary' />
-    ) : (
-      'upload'
-    )
-
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={StateIcon}
-      description={<ImportCardsRequirementsText header={headers} />}
+      icon={<FileInputStateIcon inputState={inputState} />}
+      description={<ImportCardsRequirementsText header={headers} isFreinetFormat={isFreinetFormat} />}
       action={
         <CardImportInputContainer>
           <input

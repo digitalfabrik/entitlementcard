@@ -8,6 +8,7 @@ import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
+import { storeConfig } from './storeConfig'
 
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
@@ -55,7 +56,9 @@ const config: ProjectConfig = {
     buildCsvLine: buildCsvLine,
   },
   cardStatistics: { enabled: false },
+  freinetCSVImportEnabled: false,
   cardCreation: true,
+  storeManagement: storeConfig,
 }
 
 export default config

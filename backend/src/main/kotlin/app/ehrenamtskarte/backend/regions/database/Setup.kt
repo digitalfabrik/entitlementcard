@@ -15,7 +15,8 @@ fun insertOrUpdateRegions() {
         regionName: String,
         regionPrefix: String,
         regionKey: String,
-        regionWebsite: String
+        regionWebsite: String,
+        regionActivatedForApplication: Boolean
     ) {
         val project =
             projects.firstOrNull { it.project == regionProjectId }
@@ -28,12 +29,14 @@ fun insertOrUpdateRegions() {
                 prefix = regionPrefix
                 regionIdentifier = regionKey
                 website = regionWebsite
+                activatedForApplication = regionActivatedForApplication
             }
         } else {
             region.name = regionName
             region.prefix = regionPrefix
             region.website = regionWebsite
             region.regionIdentifier = regionKey
+            region.activatedForApplication = regionActivatedForApplication
         }
     }
 
@@ -58,7 +61,7 @@ fun insertOrUpdateRegions() {
                 dbRegion.website = eakRegion[3]
             }
         }
-        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "09564", "https://nuernberg.de")
-        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/")
+        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "09564", "https://nuernberg.de", false)
+        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/", false)
     }
 }
