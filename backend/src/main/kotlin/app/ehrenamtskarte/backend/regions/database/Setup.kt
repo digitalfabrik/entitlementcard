@@ -14,7 +14,7 @@ fun insertOrUpdateRegions() {
         regionProjectId: String,
         regionName: String,
         regionPrefix: String,
-        regionKey: String?,
+        regionKey: String,
         regionWebsite: String,
         regionActivatedForApplication: Boolean
     ) {
@@ -61,8 +61,7 @@ fun insertOrUpdateRegions() {
                 dbRegion.website = eakRegion[3]
             }
         }
-        // TODO #1551: Adjust regionidentifier_unique constraint
-        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", null, "https://nuernberg.de", false)
+        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "09564", "https://nuernberg.de", false)
         createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/", false)
     }
 }
