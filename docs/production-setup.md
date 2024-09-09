@@ -88,6 +88,12 @@ fvm flutter build ipa --flavor Bayern --release --dart-define=environment=produc
 
 
 ### Backend and Administration
+
+#### Important: 
+- any updates in the backend `config.yml` have to added/adjusted in salt before deployment!
+- Example: https://git.tuerantuer.org/DF/salt/src/branch/master/pillars/entitlementcard/production/bayern.sls
+
+
 - creating release branch triggers `backend` job with `deploy-production` and creates new bundles on the `entitlementcard.app` server.
 - connect via ssh `ssh <username>@entitlementcard.app`
 - switch to root user `sudo -i`
