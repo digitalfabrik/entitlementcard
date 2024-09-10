@@ -28,8 +28,8 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @AfterEach
     fun cleanUp() {
         transaction {
-            UserEntitlements.deleteAll()
             Cards.deleteAll()
+            UserEntitlements.deleteAll()
         }
     }
 
