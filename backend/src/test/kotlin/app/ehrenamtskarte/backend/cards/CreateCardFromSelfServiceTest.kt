@@ -99,7 +99,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     fun `POST returns an error when user entitlements expired`() = JavalinTest.test(app) { _, client ->
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = LocalDate.now().minusYears(1L)
                 it[endDate] = LocalDate.now().minusDays(1L)
                 it[revoked] = false
@@ -129,7 +129,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     fun `POST returns an error when user entitlements revoked`() = JavalinTest.test(app) { _, client ->
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = LocalDate.now().minusDays(1L)
                 it[endDate] = LocalDate.now().plusYears(1L)
                 it[revoked] = true
@@ -163,7 +163,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = cardStartDay
                 it[endDate] = cardExpirationDay
                 it[revoked] = false
