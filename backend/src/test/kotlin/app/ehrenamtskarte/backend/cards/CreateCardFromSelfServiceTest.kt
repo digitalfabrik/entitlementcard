@@ -11,6 +11,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
@@ -160,9 +161,8 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val cardStartDay = LocalDate.now().minusDays(1L)
         val cardExpirationDay = LocalDate.now().plusYears(1L)
         val userRegionId = 95
-
-        transaction {
-            UserEntitlements.insert {
+        val entitlementsId = transaction {
+            UserEntitlements.insertAndGetId {
                 it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
                 it[startDate] = cardStartDay
                 it[endDate] = cardExpirationDay
@@ -199,6 +199,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
             assertNotNull(dynamicCard.cardInfoHash)
             assertNull(dynamicCard.firstActivationDate)
             assertEquals(cardStartDay.toEpochDay(), dynamicCard.startDay)
+            assertEquals(entitlementsId, dynamicCard.entitlementsId)
 
             val staticCard = CardEntity.find { Cards.codeType eq CodeType.STATIC }.single()
 
@@ -211,6 +212,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
             assertNotNull(staticCard.cardInfoHash)
             assertNull(staticCard.firstActivationDate)
             assertEquals(cardStartDay.toEpochDay(), staticCard.startDay)
+            assertEquals(entitlementsId, staticCard.entitlementsId)
         }
     }
 

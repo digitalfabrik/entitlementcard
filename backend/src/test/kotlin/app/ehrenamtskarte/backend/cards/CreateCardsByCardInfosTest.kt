@@ -109,6 +109,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
             assertNotNull(dynamicCard.cardInfoHash)
             assertNull(dynamicCard.firstActivationDate)
             assertNull(dynamicCard.startDay)
+            assertNull(dynamicCard.entitlementsId)
 
             val staticCard = CardEntity.find { Cards.codeType eq CodeType.STATIC }.single()
 
@@ -121,6 +122,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
             assertNotNull(staticCard.cardInfoHash)
             assertNull(staticCard.firstActivationDate)
             assertNull(staticCard.startDay)
+            assertNull(staticCard.entitlementsId)
         }
     }
 

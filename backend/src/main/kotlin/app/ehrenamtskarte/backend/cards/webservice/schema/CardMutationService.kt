@@ -41,6 +41,7 @@ import graphql.schema.DataFetchingEnvironment
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
@@ -49,9 +50,11 @@ import java.util.Base64
 
 @Suppress("unused")
 class CardMutationService {
+    private val logger: Logger = LoggerFactory.getLogger(CardMutationService::class.java)
+
     private val activationSecretLength = 20
 
-    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int?): DynamicActivationCodeResult {
+    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementsId: Int? = null): DynamicActivationCodeResult {
         val secureRandom = SecureRandom.getInstanceStrong()
         val pepper = ByteArray(PEPPER_LENGTH)
         secureRandom.nextBytes(pepper)
@@ -74,25 +77,25 @@ class CardMutationService {
         if (!cardInfo.extensions.hasExtensionRegion()) {
             throw InvalidCardHashException()
         }
-        return transaction {
-            CardRepository.insert(
-                hashedCardInfo,
-                activationSecretHash,
-                expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
-                cardInfo.extensions.extensionRegion.regionId,
-                userId,
-                CodeType.DYNAMIC,
-                cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
-            )
 
-            DynamicActivationCodeResult(
-                cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-                codeBase64 = dynamicActivationCode.toByteArray().encodeBase64()
-            )
-        }
+        CardRepository.insert(
+            hashedCardInfo,
+            activationSecretHash,
+            expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
+            cardInfo.extensions.extensionRegion.regionId,
+            userId,
+            entitlementsId,
+            CodeType.DYNAMIC,
+            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
+        )
+
+        return DynamicActivationCodeResult(
+            cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
+            codeBase64 = dynamicActivationCode.toByteArray().encodeBase64()
+        )
     }
 
-    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int?): StaticVerificationCodeResult {
+    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementsId: Int? = null): StaticVerificationCodeResult {
         val pepper = ByteArray(PEPPER_LENGTH)
         SecureRandom.getInstanceStrong().nextBytes(pepper)
 
@@ -105,22 +108,22 @@ class CardMutationService {
         if (!QRCodeUtil.isContentLengthValid(staticVerificationCode)) {
             throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.STATIC)
         }
-        return transaction {
-            CardRepository.insert(
-                hashedCardInfo,
-                null,
-                expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
-                cardInfo.extensions.extensionRegion.regionId,
-                userId,
-                CodeType.STATIC,
-                cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
-            )
 
-            StaticVerificationCodeResult(
-                cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-                codeBase64 = staticVerificationCode.toByteArray().encodeBase64()
-            )
-        }
+        CardRepository.insert(
+            hashedCardInfo,
+            null,
+            expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
+            cardInfo.extensions.extensionRegion.regionId,
+            userId,
+            entitlementsId,
+            CodeType.STATIC,
+            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
+        )
+
+        return StaticVerificationCodeResult(
+            cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
+            codeBase64 = staticVerificationCode.toByteArray().encodeBase64()
+        )
     }
 
     @GraphQLDescription("Creates a new digital entitlementcard from self-service portal")
@@ -156,10 +159,16 @@ class CardMutationService {
             userEntitlements.regionId.value
         )
 
-        val activationCode = CardCreationResultModel(
-            createDynamicActivationCode(updatedCardInfo, userId = null),
-            if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, userId = null) else null
-        )
+        val activationCode = transaction {
+            val revokedCount = CardRepository.revokeByEntitlementsId(userEntitlements.id.value)
+            if (revokedCount > 0) {
+                logger.info("Revoked {} cards associated with the user entitlements {}", revokedCount, userEntitlements.id.value)
+            }
+            CardCreationResultModel(
+                createDynamicActivationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value),
+                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value) else null
+            )
+        }
 
         Matomo.trackCreateCards(
             context.backendConfiguration,
@@ -226,8 +235,8 @@ class CardMutationService {
                 }
 
                 return@map CardCreationResultModel(
-                    createDynamicActivationCode(cardInfo, user.id.value),
-                    if (generateStaticCodes) createStaticVerificationCode(cardInfo, user.id.value) else null
+                    createDynamicActivationCode(cardInfo, userId = user.id.value),
+                    if (generateStaticCodes) createStaticVerificationCode(cardInfo, userId = user.id.value) else null
                 )
             }
         }
