@@ -45,12 +45,18 @@ const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
   return Object.values(
     stores.reduce((acc, entry, index) => {
       const { data } = entry
-      const groupKey = `${data['name']},${data['street']},${data['houseNumber']},${data['postalCode']},${data['location']}`
+      const groupKey = JSON.stringify([
+        data['name'],
+        data['street'],
+        data['houseNumber'],
+        data['postalCode'],
+        data['location'],
+      ])
       const entryNumber = index + 1
       if (acc[groupKey] === undefined) {
         return { ...acc, [groupKey]: [entryNumber] }
       }
-      return { ...acc, [groupKey]: [entryNumber, ...acc[groupKey]] }
+      return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
     }, {} as { [key: string]: number[] })
   ).filter(entryNumber => entryNumber.length > 1)
 }

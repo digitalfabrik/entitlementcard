@@ -14,6 +14,7 @@ const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): React
       {entries.map((entry, index) => (
         <span key={index}>Eintrag {entry.join(' und ')} sind identisch.</span>
       ))}
+      Bitte löschen Sie die doppelten Einträge.
     </Container>
   )
 }

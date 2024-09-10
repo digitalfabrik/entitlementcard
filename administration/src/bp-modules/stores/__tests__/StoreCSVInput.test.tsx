@@ -177,7 +177,7 @@ describe('StoreCSVInput', () => {
   })
 
   it(`should fail if the csv includes duplicated stores`, async () => {
-    const error = <StoresImportDuplicates entries={[[2, 1]]} />
+    const error = <StoresImportDuplicates entries={[[1, 2]]} />
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([
