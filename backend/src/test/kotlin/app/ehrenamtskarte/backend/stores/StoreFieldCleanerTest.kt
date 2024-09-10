@@ -16,4 +16,10 @@ internal class StoreFieldCleanerTest {
         val testString = " TestString mit   vielen   Leerzeichen "
         assertEquals(testString.clean(), "TestString mit vielen Leerzeichen")
     }
+
+    @Test
+    fun trimEmptryStringShouldReturnNull() {
+        val testString = ""
+        assertEquals(testString.clean(), null)
+    }
 }

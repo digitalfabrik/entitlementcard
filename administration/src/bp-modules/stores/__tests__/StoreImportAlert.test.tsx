@@ -15,7 +15,7 @@ describe('StoreImportAlert', () => {
     const infoSpanElement = getByTestId('dry-run-alert')
     expect(infoSpanElement).toBeTruthy()
     expect(infoSpanElement.textContent).toBe(
-      'Testlauf: In diesem Testlauf wird nur simuliert, wie viele Stores geupdated oder gelöscht werden würden. Es werden keine Daten in die Datenbank geschrieben.'
+      'Testlauf: In diesem Testlauf wird nur simuliert, wie viele Stores geändert oder gelöscht werden würden. Es werden keine Daten in die Datenbank geschrieben.'
     )
   })
 

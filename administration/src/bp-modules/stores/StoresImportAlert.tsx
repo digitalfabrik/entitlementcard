@@ -22,8 +22,8 @@ const StoresImportAlert = ({ dryRun, setDryRun }: StoreImportAlertProps): ReactE
     <>
       {dryRun ? (
         <span data-testid='dry-run-alert'>
-          <b>Testlauf:</b> In diesem Testlauf wird nur simuliert, wie viele Stores geupdated oder gelöscht werden
-          würden. Es werden keine Daten in die Datenbank geschrieben.
+          <b>Testlauf:</b> In diesem Testlauf wird nur simuliert, wie viele Stores geändert oder gelöscht werden würden.
+          Es werden keine Daten in die Datenbank geschrieben.
         </span>
       ) : (
         <span data-testid='prod-run-alert'>

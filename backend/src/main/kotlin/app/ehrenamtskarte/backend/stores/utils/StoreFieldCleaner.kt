@@ -4,11 +4,12 @@ package app.ehrenamtskarte.backend.stores.utils
  * Removes subsequent whitespaces
  * */
 fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-    val trimmed = this?.trim()
+    if (this.isNullOrEmpty()) {
+        return null
+    }
+    val trimmed = this.trim()
     if (removeSubsequentWhitespaces) {
-        if (trimmed != null) {
-            return trimmed.replace(Regex("""\s{2,}"""), " ")
-        }
+        return trimmed.replace(Regex("""\s{2,}"""), " ")
     }
     return trimmed
 }

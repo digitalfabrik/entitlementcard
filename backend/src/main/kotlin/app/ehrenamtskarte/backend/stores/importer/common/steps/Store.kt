@@ -33,14 +33,14 @@ class Store(config: ImportConfig, private val logger: Logger) :
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
                     val idInDb: Int? =
-                        AcceptingStoresRepository.determineRemovableAcceptingStoreId(acceptingStore, project)
+                        AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id)
                     if (idInDb != null) {
                         acceptingStoreIdsToRemove.remove(idInDb)
                         numStoresUntouched += 1
                         continue
                     }
 
-                    AcceptingStoresRepository.createStore(acceptingStore, project)
+                    AcceptingStoresRepository.createStore(acceptingStore, project.id)
                     numStoresCreated += 1
                 }
 

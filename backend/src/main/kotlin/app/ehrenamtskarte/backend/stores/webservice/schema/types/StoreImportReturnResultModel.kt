@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema.types
 
-data class StoreImportResultModel(
+data class StoreImportReturnResultModel(
     val storesCreated: Int,
-    val storesToDelete: MutableSet<Int>,
+    val storesDeleted: Int,
     val storesUntouched: Int
 )

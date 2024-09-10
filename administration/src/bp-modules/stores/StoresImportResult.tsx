@@ -28,7 +28,7 @@ const StoresImportResult = ({
       <span>
         {dryRun
           ? 'Folgende Änderungen würden sich ergeben:'
-          : 'Folgende Änderungen in der Datenbank wurden vorgenommen'}
+          : 'Folgende Änderungen in der Datenbank wurden vorgenommen:'}
       </span>
       <br />
       <div>
