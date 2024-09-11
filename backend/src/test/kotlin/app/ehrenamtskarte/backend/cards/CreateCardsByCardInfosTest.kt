@@ -98,31 +98,31 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         transaction {
             assertEquals(2, Cards.selectAll().count())
 
-            val dynamicCard = CardEntity.find { Cards.codeType eq CodeType.DYNAMIC }.single()
+            CardEntity.find { Cards.codeType eq CodeType.DYNAMIC }.single().let {
+                assertNotNull(it.activationSecretHash)
+                assertNull(it.totpSecret)
+                assertEquals(365 * 40, it.expirationDay)
+                assertFalse(it.revoked)
+                assertEquals(regionAdmin.regionId, it.regionId.value)
+                assertEquals(1, it.issuerId!!.value)
+                assertNotNull(it.cardInfoHash)
+                assertNull(it.firstActivationDate)
+                assertNull(it.startDay)
+                assertNull(it.entitlementsId)
+            }
 
-            assertNotNull(dynamicCard.activationSecretHash)
-            assertNull(dynamicCard.totpSecret)
-            assertEquals(365 * 40, dynamicCard.expirationDay)
-            assertFalse(dynamicCard.revoked)
-            assertEquals(regionAdmin.regionId, dynamicCard.regionId.value)
-            assertEquals(1, dynamicCard.issuerId!!.value)
-            assertNotNull(dynamicCard.cardInfoHash)
-            assertNull(dynamicCard.firstActivationDate)
-            assertNull(dynamicCard.startDay)
-            assertNull(dynamicCard.entitlementsId)
-
-            val staticCard = CardEntity.find { Cards.codeType eq CodeType.STATIC }.single()
-
-            assertNull(staticCard.activationSecretHash)
-            assertNull(staticCard.totpSecret)
-            assertEquals(365 * 40, staticCard.expirationDay)
-            assertFalse(staticCard.revoked)
-            assertEquals(regionAdmin.regionId, staticCard.regionId.value)
-            assertEquals(1, staticCard.issuerId!!.value)
-            assertNotNull(staticCard.cardInfoHash)
-            assertNull(staticCard.firstActivationDate)
-            assertNull(staticCard.startDay)
-            assertNull(staticCard.entitlementsId)
+            CardEntity.find { Cards.codeType eq CodeType.STATIC }.single().let {
+                assertNull(it.activationSecretHash)
+                assertNull(it.totpSecret)
+                assertEquals(365 * 40, it.expirationDay)
+                assertFalse(it.revoked)
+                assertEquals(regionAdmin.regionId, it.regionId.value)
+                assertEquals(1, it.issuerId!!.value)
+                assertNotNull(it.cardInfoHash)
+                assertNull(it.firstActivationDate)
+                assertNull(it.startDay)
+                assertNull(it.entitlementsId)
+            }
         }
     }
 
