@@ -101,7 +101,7 @@ internal class CanonicalJsonTest {
     @Test
     fun mapUserInfoForKoblenzPass() {
         val expected = koblenzUserToString(koblenzTestUser)
-        assertEquals("{\"1\":\"Karla Koblenz\",\"2\":12213,\"3\":\"123K\"}", expected)
+        assertEquals("{\"1\":12213,\"2\":\"123K\"}", expected)
     }
 
     @Test
