@@ -12,12 +12,19 @@ const CheckboxContainer = styled.div`
   display: flex;
 `
 
+const DurationContainer = styled.div`
+  margin-top: 12px;
+`
+
 type StoreImportAlertProps = {
   dryRun: boolean
   setDryRun: (value: boolean) => void
+  storesCount: number
 }
 
-const StoresImportAlert = ({ dryRun, setDryRun }: StoreImportAlertProps): ReactElement => {
+const STORES_COUNT_NOTE_THRESHOLD = 500
+const STORES_IMPORT_PER_SECOND = 100
+const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertProps): ReactElement => {
   return (
     <>
       {dryRun ? (
@@ -26,10 +33,20 @@ const StoresImportAlert = ({ dryRun, setDryRun }: StoreImportAlertProps): ReactE
           Es werden keine Daten in die Datenbank geschrieben.
         </span>
       ) : (
-        <span data-testid='prod-run-alert'>
-          <b>Achtung:</b> Akzeptanzpartner, welche aktuell in der Datenbank gespeichert, aber nicht in der Tabelle
-          vorhanden sind, werden gelöscht!
-        </span>
+        <>
+          <span data-testid='prod-run-alert'>
+            <b>Achtung:</b> Akzeptanzpartner, welche aktuell in der Datenbank gespeichert, aber nicht in der Tabelle
+            vorhanden sind, werden gelöscht!
+          </span>
+          <br />
+          {storesCount > STORES_COUNT_NOTE_THRESHOLD && (
+            <DurationContainer data-testid={'duration-alert'}>
+              <b>Geschätzte Dauer des Imports:</b> {Math.ceil(storesCount / STORES_IMPORT_PER_SECOND / 60)} Minuten.{' '}
+              <br />
+              Bitte schließen sie das Browserfenster nicht!
+            </DurationContainer>
+          )}
+        </>
       )}
       <CheckboxContainer>
         <StyledCheckbox checked={dryRun} onChange={e => setDryRun(e.currentTarget.checked)} label='Testlauf' />
