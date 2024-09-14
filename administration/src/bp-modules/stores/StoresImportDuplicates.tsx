@@ -12,7 +12,7 @@ const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): React
     <Container>
       Die CSV enthält doppelte Einträge:
       {entries.map((entry, index) => (
-        <span key={index}>Eintrag {entry.join(' und ')} sind identisch.</span>
+        <span key={index}>Eintrag {entry.join(', ')} sind identisch.</span>
       ))}
       Bitte löschen Sie die doppelten Einträge.
     </Container>
