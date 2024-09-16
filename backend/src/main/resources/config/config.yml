@@ -46,7 +46,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: koblenz.sozialpass.app
     importUrl: ""
-    pipelineName: SozialpassKoblenz
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
