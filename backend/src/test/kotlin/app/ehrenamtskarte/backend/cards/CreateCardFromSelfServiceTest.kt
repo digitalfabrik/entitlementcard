@@ -1,23 +1,20 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.IntegrationTest
+import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
-import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.javalin.Javalin
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
-import java.io.File
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -26,16 +23,9 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-internal class CreateCardFromSelfServiceTest : IntegrationTest() {
+internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
-    private val app = Javalin.create().apply {
-        val backendConfiguration = loadTestConfig()
-        post("/") { ctx ->
-            GraphQLHandler(backendConfiguration).handle(ctx, applicationData = File("dummy"))
-        }
-    }
-
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             UserEntitlements.deleteAll()
@@ -49,7 +39,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
             project = "non-existent.sozialpass.app",
             encodedCardInfo = "qwerty"
         )
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(404, response.code)
     }
@@ -60,7 +50,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
             project = "bayern.ehrenamtskarte.app",
             encodedCardInfo = "qwerty"
         )
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(404, response.code)
     }
@@ -68,7 +58,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     @Test
     fun `POST returns an error when encoded card info can't be parsed`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(encodedCardInfo = "qwerty")
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(200, response.code)
 
@@ -89,7 +79,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     fun `POST returns an error when user entitlements not found in the db`() = JavalinTest.test(app) { _, client ->
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(200, response.code)
 
@@ -109,7 +99,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     fun `POST returns an error when user entitlements expired`() = JavalinTest.test(app) { _, client ->
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = LocalDate.now().minusYears(1L)
                 it[endDate] = LocalDate.now().minusDays(1L)
                 it[revoked] = false
@@ -119,7 +109,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(200, response.code)
 
@@ -139,7 +129,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     fun `POST returns an error when user entitlements revoked`() = JavalinTest.test(app) { _, client ->
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = LocalDate.now().minusDays(1L)
                 it[endDate] = LocalDate.now().plusYears(1L)
                 it[revoked] = true
@@ -149,7 +139,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(200, response.code)
 
@@ -173,7 +163,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         transaction {
             UserEntitlements.insert {
-                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w".toByteArray()
+                it[userHash] = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY".toByteArray()
                 it[startDate] = cardStartDay
                 it[endDate] = cardExpirationDay
                 it[revoked] = false
@@ -183,7 +173,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-        val response = client.post("/", mutation)
+        val response = post(client, mutation)
 
         assertEquals(200, response.code)
 
@@ -225,7 +215,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     }
 
     private fun createMutation(project: String = "koblenz.sozialpass.app", encodedCardInfo: String, generateStaticCode: Boolean = true): String {
-        val query = """
+        return """
         mutation {
             createCardFromSelfService(
                 project: "$project"
@@ -243,7 +233,5 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
             }
         }
         """.trimIndent()
-        val requestBody = mutableMapOf<String, Any>("query" to query)
-        return jacksonObjectMapper().writeValueAsString(requestBody)
     }
 }

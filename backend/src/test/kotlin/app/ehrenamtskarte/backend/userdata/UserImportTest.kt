@@ -15,8 +15,8 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -24,12 +24,13 @@ import kotlin.test.assertNotNull
 
 private const val USER_IMPORT_PATH = "/users/import"
 private const val TEST_CSV_FILE_PATH = "build/tmp/test.csv"
+private const val TEST_USER_HASH = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w"
 
 internal class UserImportTest : IntegrationTest() {
 
     private val app = Javalin.create().post(USER_IMPORT_PATH) { ctx -> UserImportHandler().handle(ctx) }
 
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             UserEntitlements.deleteAll()
@@ -112,7 +113,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("12345", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "false")
+            listOf("12345", "\"$TEST_USER_HASH\"", "01.01.2024", "01.01.2025", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -127,11 +128,30 @@ internal class UserImportTest : IntegrationTest() {
     }
 
     @Test
+    fun `POST returns an error response when userHash is not valid`() = JavalinTest.test(app) { _, client ->
+        val csvFile = generateCsvFile(
+            TEST_CSV_FILE_PATH,
+            listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
+            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "false")
+        )
+
+        val request = buildUserImportRequest(client, csvFile)
+        val response = client.request(request)
+
+        assertEquals(400, response.code)
+        assertEquals("Error at line 1: Failed to validate userHash", response.body?.string())
+
+        transaction {
+            assertEquals(0, UserEntitlements.selectAll().count())
+        }
+    }
+
+    @Test
     fun `POST returns an error response when startDate has incorrect format`() = JavalinTest.test(app) { _, client ->
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "2024-01-01", "01.01.2025", "false")
+            listOf("07111", "\"$TEST_USER_HASH\"", "2024-01-01", "01.01.2025", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -153,7 +173,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "2025-01-01", "false")
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.01.2024", "2025-01-01", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -175,7 +195,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2025", "01.01.2024", "false")
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.01.2025", "01.01.2024", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -194,7 +214,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "12345")
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.01.2024", "01.01.2025", "12345")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -213,7 +233,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "01.01.2024", "01.01.2025", "false")
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.01.2024", "01.01.2025", "false")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -225,7 +245,7 @@ internal class UserImportTest : IntegrationTest() {
         transaction {
             assertEquals(1, UserEntitlements.selectAll().count())
             UserEntitlements.selectAll().single().let {
-                assertEquals("UIOJZIsSL8vXcu", it[UserEntitlements.userHash].decodeToString())
+                assertEquals(TEST_USER_HASH, it[UserEntitlements.userHash].decodeToString())
                 assertEquals(LocalDate.of(2024, 1, 1), it[UserEntitlements.startDate])
                 assertEquals(LocalDate.of(2025, 1, 1), it[UserEntitlements.endDate])
                 assertEquals(95, it[UserEntitlements.regionId].value)
@@ -240,7 +260,7 @@ internal class UserImportTest : IntegrationTest() {
         transaction {
             // prepare initial test data
             UserEntitlements.insert {
-                it[userHash] = "UIOJZIsSL8vXcu".toByteArray()
+                it[userHash] = TEST_USER_HASH.toByteArray()
                 it[startDate] = LocalDate.of(2024, 1, 1)
                 it[endDate] = LocalDate.of(2025, 1, 1)
                 it[revoked] = false
@@ -251,7 +271,7 @@ internal class UserImportTest : IntegrationTest() {
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
             listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "UIOJZIsSL8vXcu", "01.02.2024", "01.02.2025", "true")
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.02.2024", "01.02.2025", "true")
         )
 
         val request = buildUserImportRequest(client, csvFile)
@@ -263,7 +283,7 @@ internal class UserImportTest : IntegrationTest() {
         transaction {
             assertEquals(1, UserEntitlements.selectAll().count())
             UserEntitlements.selectAll().single().let {
-                assertEquals("UIOJZIsSL8vXcu", it[UserEntitlements.userHash].decodeToString())
+                assertEquals(TEST_USER_HASH, it[UserEntitlements.userHash].decodeToString())
                 assertEquals(LocalDate.of(2024, 2, 1), it[UserEntitlements.startDate])
                 assertEquals(LocalDate.of(2025, 2, 1), it[UserEntitlements.endDate])
                 assertEquals(95, it[UserEntitlements.regionId].value)

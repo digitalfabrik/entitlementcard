@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
-import Argon2IdHasher
 import Card
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
@@ -138,7 +138,6 @@ class CardMutationService {
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
         val user = KoblenzUser(
-            cardInfo.fullName,
             cardInfo.extensions.extensionBirthday.birthday,
             cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
         )
