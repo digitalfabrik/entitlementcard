@@ -32,9 +32,8 @@ const Row = styled.div`
 
 const NewTokenText = styled.p`
   font-size: 18px;
-  color: #007bff;
-  background: #e9f7ff;
   padding: 10px;
+  border: 1px solid black;
   border-radius: 6px;
   margin-top: 15px;
   word-break: break-all;
@@ -55,7 +54,7 @@ const ApiTokenSetting = () => {
       const { tokenMetaData } = metaDataQueryResult.data
       setTokenMetadata(tokenMetaData)
     }
-  }, [metaDataQuery, tokenMetaData])
+  }, [metaDataQuery])
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
@@ -73,7 +72,7 @@ const ApiTokenSetting = () => {
   })
 
   const [deleteToken] = useDeleteApiTokenMutation({
-    onCompleted: result => {
+    onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Token wurde erfolgreich gelöscht.' })
       metaDataQuery.refetch()
     },
@@ -89,10 +88,12 @@ const ApiTokenSetting = () => {
   return (
     <SettingsCard>
       <H2>Api Token</H2>
-
       <Container>
         <H4>Neues Token erstellen</H4>
-        <p>Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden.</p>
+        <p>
+          Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte
+          speichern sie dieses Token an einem sicheren Ort.
+        </p>
         <Row>
           <label htmlFor='expiresIn'>Gültigkeitsdauer:</label>
           <HTMLSelect
@@ -105,12 +106,16 @@ const ApiTokenSetting = () => {
             <option value='12'>1 Jahr</option>
             <option value='36'>3 Jahre</option>
           </HTMLSelect>
-
-          <Button intent='primary' onClick={() => createToken({ variables: { expiresIn: expiresIn } })}>
+          <Button intent='primary' onClick={() => createToken({ variables: { expiresIn } })}>
             Erstellen
           </Button>
         </Row>
-        {createdToken && <NewTokenText>New Token: {createdToken}</NewTokenText>}
+        {createdToken && (
+          <>
+            <p>Neues Token:</p>
+            <NewTokenText> {createdToken}</NewTokenText>
+          </>
+        )}
       </Container>
 
       {tokenMetaData.length > 0 && (
@@ -123,8 +128,8 @@ const ApiTokenSetting = () => {
             </tr>
           </thead>
           <tbody>
-            {tokenMetaData.map((item, index) => (
-              <tr key={index}>
+            {tokenMetaData.map(item => (
+              <tr key={item.id}>
                 <td>{item.creatorEmail}</td>
                 <td>{formatDate(item.expirationDate)}</td>
                 <td>
