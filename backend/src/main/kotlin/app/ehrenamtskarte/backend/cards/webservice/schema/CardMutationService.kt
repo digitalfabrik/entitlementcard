@@ -141,7 +141,6 @@ class CardMutationService {
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
         val user = KoblenzUser(
-            cardInfo.fullName,
             cardInfo.extensions.extensionBirthday.birthday,
             cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
         )

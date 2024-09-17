@@ -98,7 +98,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns an error when user entitlements expired`() = JavalinTest.test(app) { _, client ->
         TestData.createUserEntitlements(
-            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w",
+            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             endDate = LocalDate.now().minusDays(1L),
             regionId = 95
         )
@@ -124,7 +124,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns an error when user entitlements revoked`() = JavalinTest.test(app) { _, client ->
         TestData.createUserEntitlements(
-            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w",
+            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             revoked = true,
             regionId = 95
         )
@@ -151,7 +151,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     fun `POST returns a successful response when cards are created`() = JavalinTest.test(app) { _, client ->
         val userRegionId = 95
         val userEntitlements = TestData.createUserEntitlements(
-            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w",
+            userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             regionId = userRegionId
         )
         val oldDynamicCard = TestData.createDynamicCard(regionId = userRegionId, entitlementsId = userEntitlements.id.value)
