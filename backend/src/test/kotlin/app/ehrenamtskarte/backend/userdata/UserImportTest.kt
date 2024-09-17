@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.userdata
 
 import app.ehrenamtskarte.backend.IntegrationTest
+import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import app.ehrenamtskarte.backend.userdata.webservice.UserImportHandler
 import app.ehrenamtskarte.backend.util.CsvGenerator.generateCsvFile
@@ -12,7 +13,6 @@ import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
@@ -257,16 +257,10 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response and user entitlements are updated in db`() = JavalinTest.test(app) { _, client ->
-        transaction {
-            // prepare initial test data
-            UserEntitlements.insert {
-                it[userHash] = TEST_USER_HASH.toByteArray()
-                it[startDate] = LocalDate.of(2024, 1, 1)
-                it[endDate] = LocalDate.of(2025, 1, 1)
-                it[revoked] = false
-                it[regionId] = 1
-            }
-        }
+        TestData.createUserEntitlements(
+            userHash = TEST_USER_HASH,
+            regionId = 1
+        )
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
