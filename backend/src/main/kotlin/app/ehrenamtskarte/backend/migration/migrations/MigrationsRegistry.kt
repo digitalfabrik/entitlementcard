@@ -19,7 +19,6 @@ object MigrationsRegistry {
         V0015_UpdateRoleRegionCombinationConstraint(),
         V0016_MakeCardIssuerIdColumnNullable(),
         V0017_AlterUserEntitlementsUserHashConstraint(),
-        V0017_AlterUserEntitlementsUserHashConstraint(),
         V0018_AlterRegionIdentifierConstraint(),
         V0019_AddApiTokenTable()
     )
