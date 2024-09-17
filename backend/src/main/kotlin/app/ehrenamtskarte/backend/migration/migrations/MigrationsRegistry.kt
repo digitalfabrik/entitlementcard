@@ -20,6 +20,6 @@ object MigrationsRegistry {
         V0016_MakeCardIssuerIdColumnNullable(),
         V0017_AlterUserEntitlementsUserHashConstraint(),
         V0018_AlterRegionIdentifierConstraint(),
-        V0019_AddEntitlementsIdColumnToCards()
+        V0019_AddEntitlementIdColumnToCards()
     )
 }
