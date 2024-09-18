@@ -84,6 +84,12 @@ type CardCreationResultModel {
   staticVerificationCode: StaticVerificationCodeResult
 }
 
+type CardCreationSelfServiceResultModel {
+  dynamicActivationCode: DynamicActivationCodeResult!
+  region: Region!
+  staticVerificationCode: StaticVerificationCodeResult
+}
+
 type CardStatisticsResultModel {
   cardsActivated: Int!
   cardsCreated: Int!
@@ -127,7 +133,7 @@ type Mutation {
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new digital entitlementcard from self-service portal"
-  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
+  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationSelfServiceResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"

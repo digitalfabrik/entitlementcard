@@ -15,7 +15,6 @@ const FormsWrapper = styled(FlipMove)`
   flex-grow: 1;
   flex-direction: row;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
 `
@@ -43,7 +42,7 @@ type CreateCardsFormProps = {
   setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
-const CreateCardsForm = ({
+const AddCardsForm = ({
   region,
   cardBlueprints,
   setCardBlueprints,
@@ -125,4 +124,4 @@ const CreateCardsForm = ({
   )
 }
 
-export default CreateCardsForm
+export default AddCardsForm

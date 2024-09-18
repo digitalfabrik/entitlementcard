@@ -6,6 +6,7 @@ import AddressExtensions from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import EMailNotificationExtension from './EMailNotificationExtension'
+import KoblenzReferenceNumberExtension from './KoblenzReferenceNumberExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import RegionExtension from './RegionExtension'
 import StartDayExtension from './StartDayExtension'
@@ -41,5 +42,6 @@ export type ExtensionClass =
   | typeof RegionExtension
   | typeof StartDayExtension
   | typeof EMailNotificationExtension
+  | typeof KoblenzReferenceNumberExtension
   | (typeof AddressExtensions)[number]
 export type ExtensionInstance = InstanceType<ExtensionClass>

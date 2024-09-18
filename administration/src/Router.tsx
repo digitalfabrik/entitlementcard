@@ -17,6 +17,7 @@ import HomeController from './bp-modules/home/HomeController'
 import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
+import CardSelfServiceForm from './bp-modules/self-service/CardSelfServiceForm'
 import StatisticsController from './bp-modules/statistics/StatisticsController'
 import StoresController from './bp-modules/stores/StoresController'
 import StoresImportController from './bp-modules/stores/StoresImportController'
@@ -60,6 +61,7 @@ const Router = () => {
             { path: '/antrag-einsehen/:accessKey', element: <ApplicationApplicantController /> },
           ]
         : []),
+      ...(projectConfig.selfServiceEnabled ? [{ path: '/erstellen', element: <CardSelfServiceForm /> }] : []),
       {
         path: '*',
         element: !isLoggedIn ? (

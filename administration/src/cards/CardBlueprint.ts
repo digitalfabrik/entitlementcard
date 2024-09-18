@@ -34,10 +34,10 @@ export class CardBlueprint {
   constructor(fullName: string, cardConfig: CardConfig, initParams?: Parameters<CardBlueprint['initialize']>) {
     this.cardConfig = cardConfig
     this.fullName = fullName
-    this.expirationDate =
-      cardConfig.defaultValidity && initParams
-        ? PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
-        : null
+    // TODO check side effects?
+    this.expirationDate = cardConfig.defaultValidity
+      ? PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
+      : null
     this.extensions = cardConfig.extensions.map(Extension => new Extension())
     this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
     if (initParams) {

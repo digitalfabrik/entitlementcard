@@ -27,7 +27,7 @@ interface CreateCardsFormProps {
 }
 
 export const maxCardValidity = { years: 99 }
-const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
+export const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
   return extension.createForm(() => {
     onUpdate()
   })
