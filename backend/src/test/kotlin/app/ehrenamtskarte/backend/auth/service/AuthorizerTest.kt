@@ -8,9 +8,9 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import kotlin.test.assertEquals
 
@@ -19,7 +19,7 @@ internal class AuthorizerTest : IntegrationTest() {
     private val emailProjectAdmin = "project-admin@test.de"
 
     // prepare user test data
-    @Before
+    @BeforeEach
     fun createTestUsers() {
         transaction {
             Administrators.insert {
@@ -50,7 +50,7 @@ internal class AuthorizerTest : IntegrationTest() {
         }
     }
 
-    @After
+    @AfterEach
     fun cleanUpUsers() {
         transaction {
             Administrators.deleteAll()

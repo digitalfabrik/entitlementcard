@@ -55,10 +55,8 @@ dependencies {
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     testImplementation("io.mockk:mockk:1.13.11")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
@@ -142,7 +140,8 @@ tasks.named("classes") {
     dependsOn(tasks.named("copyStyle"))
 }
 
-tasks.withType<Test> {
+tasks.test {
+    useJUnitPlatform()
     environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
 }

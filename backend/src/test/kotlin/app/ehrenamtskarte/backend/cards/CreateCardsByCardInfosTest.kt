@@ -13,8 +13,8 @@ import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -27,7 +27,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     private val projectAdmin = TestAdministrators.EAK_PROJECT_ADMIN
     private val regionAdmin = TestAdministrators.EAK_REGION_ADMIN
 
-    @After
+    @AfterEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()
@@ -98,29 +98,31 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         transaction {
             assertEquals(2, Cards.selectAll().count())
 
-            val dynamicCard = CardEntity.find { Cards.codeType eq CodeType.DYNAMIC }.single()
+            CardEntity.find { Cards.codeType eq CodeType.DYNAMIC }.single().let {
+                assertNotNull(it.activationSecretHash)
+                assertNull(it.totpSecret)
+                assertEquals(365 * 40, it.expirationDay)
+                assertFalse(it.revoked)
+                assertEquals(regionAdmin.regionId, it.regionId.value)
+                assertEquals(1, it.issuerId!!.value)
+                assertNotNull(it.cardInfoHash)
+                assertNull(it.firstActivationDate)
+                assertNull(it.startDay)
+                assertNull(it.entitlementId)
+            }
 
-            assertNotNull(dynamicCard.activationSecretHash)
-            assertNull(dynamicCard.totpSecret)
-            assertEquals(365 * 40, dynamicCard.expirationDay)
-            assertFalse(dynamicCard.revoked)
-            assertEquals(regionAdmin.regionId, dynamicCard.regionId.value)
-            assertEquals(1, dynamicCard.issuerId!!.value)
-            assertNotNull(dynamicCard.cardInfoHash)
-            assertNull(dynamicCard.firstActivationDate)
-            assertNull(dynamicCard.startDay)
-
-            val staticCard = CardEntity.find { Cards.codeType eq CodeType.STATIC }.single()
-
-            assertNull(staticCard.activationSecretHash)
-            assertNull(staticCard.totpSecret)
-            assertEquals(365 * 40, staticCard.expirationDay)
-            assertFalse(staticCard.revoked)
-            assertEquals(regionAdmin.regionId, staticCard.regionId.value)
-            assertEquals(1, staticCard.issuerId!!.value)
-            assertNotNull(staticCard.cardInfoHash)
-            assertNull(staticCard.firstActivationDate)
-            assertNull(staticCard.startDay)
+            CardEntity.find { Cards.codeType eq CodeType.STATIC }.single().let {
+                assertNull(it.activationSecretHash)
+                assertNull(it.totpSecret)
+                assertEquals(365 * 40, it.expirationDay)
+                assertFalse(it.revoked)
+                assertEquals(regionAdmin.regionId, it.regionId.value)
+                assertEquals(1, it.issuerId!!.value)
+                assertNotNull(it.cardInfoHash)
+                assertNull(it.firstActivationDate)
+                assertNull(it.startDay)
+                assertNull(it.entitlementId)
+            }
         }
     }
 
