@@ -25,10 +25,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
 
   if (!extensions || !extensions['code']) return defaultError
   switch (extensions['code']) {
-    case GraphQlExceptionCode.DatabaseIo:
-      return {
-        title: 'Es ist unbekannter Datenbankfehler aufgetreten.',
-      }
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
         title: 'Die Email-Adresse wird bereits verwendet.',

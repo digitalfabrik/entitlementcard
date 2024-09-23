@@ -9,7 +9,7 @@ const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProv
 const setDryRun = jest.fn()
 describe('StoreImportAlert', () => {
   it('should show the correct alert information for dry run', () => {
-    const { getByTestId, queryByTestId } = render(
+    const { getByTestId, queryByTestId, getByText } = render(
       <StoresImportAlert dryRun setDryRun={setDryRun} storesCount={100} />,
       {
         wrapper,
@@ -18,8 +18,14 @@ describe('StoreImportAlert', () => {
     const infoSpanElement = getByTestId('dry-run-alert')
     expect(infoSpanElement).toBeTruthy()
     expect(infoSpanElement.textContent).toBe(
-      'Testlauf: In diesem Testlauf wird nur simuliert, wie viele Stores geändert oder gelöscht werden würden. Es werden keine Daten in die Datenbank geschrieben.'
+      'Testlauf: In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.'
     )
+    expect(getByText('Testlauf:')).toBeTruthy()
+    expect(
+      getByText(
+        'In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.'
+      )
+    ).toBeTruthy()
     const durationSpanElement = queryByTestId('duration-alert')
     expect(durationSpanElement).toBeFalsy()
   })

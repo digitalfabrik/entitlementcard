@@ -29,8 +29,8 @@ const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertP
     <>
       {dryRun ? (
         <span data-testid='dry-run-alert'>
-          <b>Testlauf:</b> In diesem Testlauf wird nur simuliert, wie viele Stores geändert oder gelöscht werden würden.
-          Es werden keine Daten in die Datenbank geschrieben.
+          <b>Testlauf:</b> In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht
+          werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.
         </span>
       ) : (
         <>

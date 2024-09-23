@@ -16,7 +16,7 @@ import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportResultModel
+import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp
@@ -114,26 +114,29 @@ object AcceptingStoresRepository {
             }.firstOrNull()?.let { it[AcceptingStores.id].value }
     }
 
-    fun getAcceptingStoreImportResult(stores: List<CSVAcceptingStore>, projectId: EntityID<Int>, dryRun: Boolean): StoreImportResultModel {
+    fun importAcceptingStores(stores: List<CSVAcceptingStore>, projectId: EntityID<Int>, dryRun: Boolean): StoreImportReturnResultModel {
         var numStoresCreated = 0
         var numStoresUntouched = 0
         val acceptingStoreIdsToRemove =
             AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
                 .map { it[AcceptingStores.id].value }.toMutableSet()
-        for (acceptingStore in stores) {
-            val existingStoreId: Int? =
-                getIdIfExists(mapCsvToStore(acceptingStore), projectId)
-            if (existingStoreId != null) {
+        stores.map { mapCsvToStore(it) }.forEach {
+            val existingStoreId = getIdIfExists(it, projectId)
+            if (existingStoreId == null) {
+                if (!dryRun) {
+                    createStore(it, projectId)
+                }
+                numStoresCreated += 1
+            } else {
                 acceptingStoreIdsToRemove.remove(existingStoreId)
                 numStoresUntouched += 1
-                continue
             }
-            if (!dryRun) {
-                createStore(mapCsvToStore(acceptingStore), projectId)
-            }
-            numStoresCreated += 1
         }
-        return StoreImportResultModel(numStoresCreated, acceptingStoreIdsToRemove, numStoresUntouched)
+        if (!dryRun) {
+            deleteStores(acceptingStoreIdsToRemove)
+        }
+
+        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
     }
 
     fun createStore(acceptingStore: AcceptingStore, currentProjectId: EntityID<Int>) {

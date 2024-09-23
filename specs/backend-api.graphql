@@ -293,7 +293,6 @@ enum GoldenCardEntitlementType {
 }
 
 enum GraphQLExceptionCode {
-  DATABASE_IO
   EMAIL_ALREADY_EXISTS
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
