@@ -35,12 +35,10 @@ const useCardGeneratorSelfService = () => {
   const [code, setCode] = useState<CreateCardsResult | null>(null)
   const [region, setRegion] = useState<Region | null>(null)
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation({
-    onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Ihr Pass wurde erfolgreich erstellt.' })
-    },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'success', message: title })
+      setState(CardActivationState.input)
     },
   })
 
@@ -65,6 +63,7 @@ const useCardGeneratorSelfService = () => {
       })
 
       if (!result.data) {
+        // TODO catch this exception
         throw new CreateCardsError('Beim erstellen der Karte(n) ist ein Fehler aufgetreten.')
       }
       const cardResult = result.data.card
@@ -94,9 +93,9 @@ const useCardGeneratorSelfService = () => {
     }
   }, [cardBlueprint, projectConfig])
 
-  const downloadPdf = async (code: CreateCardsResult, region: Region) => {
+  const downloadPdf = async (code: CreateCardsResult, region: Region, fileName: string) => {
     const blob = await generatePdf([code], cardBlueprint, region, projectConfig.pdf)
-    downloadDataUri(blob, 'test.pdf')
+    downloadDataUri(blob, fileName)
   }
 
   return {
