@@ -47,8 +47,8 @@ class ActivationCodeScannerPage extends StatelessWidget {
       await showError(t.identification.cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {
       await showError(t.identification.codeInvalidMissing(missing: e.missingFieldName), null);
-    } on QrCodeWrongTypeException catch (e) {
-      await showError(t.identification.codeInvalidType(qrCodeType: e.qrCodeType), null);
+    } on QrCodeWrongTypeException catch (_) {
+      await QrParsingErrorDialog.showErrorDialog(context, t.identification.codeInvalidType);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await showError(t.identification.codeExpired(expirationDate: expirationDate), null);

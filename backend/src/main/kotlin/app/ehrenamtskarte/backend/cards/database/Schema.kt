@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.cards.database
 
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -36,6 +37,7 @@ object Cards : IntIdTable() {
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
     val codeType = enumeration("codeType", CodeType::class)
     val firstActivationDate = timestamp("firstActivationDate").nullable()
+    val entitlementId = reference("entitlementId", UserEntitlements).nullable()
 
     // startDay describes the first day on which the card is valid.
     // If this field is null, the card is valid until `expirationDay` without explicitly stating when the validity period started.
@@ -50,6 +52,12 @@ object Cards : IntIdTable() {
                     (codeType eq CodeType.STATIC)
                 ) or
                 ((activationSecretHash neq null) and (codeType eq CodeType.DYNAMIC))
+        }
+        check("issuerid_or_entitlementid_not_null") {
+            (
+                ((issuerId neq null) and (entitlementId eq null))
+                    or ((issuerId eq null) and (entitlementId neq null))
+                )
         }
     }
 }
@@ -67,5 +75,6 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var issuerId by Cards.issuerId
     var codeType by Cards.codeType
     var firstActivationDate by Cards.firstActivationDate
+    var entitlementId by Cards.entitlementId
     var startDay by Cards.startDay
 }

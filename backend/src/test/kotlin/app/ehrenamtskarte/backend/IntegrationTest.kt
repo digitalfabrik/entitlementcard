@@ -4,8 +4,8 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.PostgresConfig
 import app.ehrenamtskarte.backend.migration.MigrationUtils
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -18,7 +18,7 @@ open class IntegrationTest {
         private var postgisContainer = PostgreSQLContainer(postgisImage.asCompatibleSubstituteFor("postgres"))
 
         @JvmStatic
-        @BeforeClass
+        @BeforeAll
         fun setupDatabase() {
             postgisContainer.start()
             val config = loadTestConfig()
@@ -29,7 +29,7 @@ open class IntegrationTest {
         }
 
         @JvmStatic
-        @AfterClass
+        @AfterAll
         fun tearDownDatabase() {
             postgisContainer.stop()
         }
