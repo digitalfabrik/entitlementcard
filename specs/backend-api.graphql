@@ -132,7 +132,7 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
-  "Creates a new api token for user upload endpoint"
+  "Creates a new api token for user import endpoint"
   createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
@@ -191,7 +191,7 @@ type Query {
   categories: [Category!]!
   "Verify password reset link"
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
-  "Gets metadata of all api tokes for a project"
+  "Gets metadata of all api tokens for a project"
   getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
