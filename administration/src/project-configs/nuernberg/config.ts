@@ -59,7 +59,7 @@ const config: ProjectConfig = {
   freinetCSVImportEnabled: false,
   cardCreation: true,
   storeManagement: storeConfig,
-  userUploadApiEnabled: false,
+  userImportApiEnabled: false,
 }
 
 export default config

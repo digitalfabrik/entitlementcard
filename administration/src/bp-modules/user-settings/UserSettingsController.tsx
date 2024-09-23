@@ -1,3 +1,4 @@
+import { Button, Dialog, DialogFooter, TextArea, Tooltip } from '@blueprintjs/core'
 import { useContext } from 'react'
 import styled from 'styled-components'
 
@@ -18,12 +19,12 @@ const UserSettingsContainer = styled.div`
 `
 
 const UserSettingsController = () => {
-  const { applicationFeature, activityLogConfig, projectId, userUploadApiEnabled } = useContext(ProjectConfigContext)
+  const { applicationFeature, activityLogConfig, projectId, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userUploadApiEnabled && role == Role.ProjectAdmin && <ApiTokenSettings />}
+      {userImportApiEnabled && role == Role.ProjectAdmin && <ApiTokenSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>

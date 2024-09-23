@@ -29,7 +29,7 @@ class ApiTokenService {
     fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val admin = AdministratorEntity.findById(jwtPayload.adminId)
+        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId)  }
         admin?.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
 
         val random = SecureRandom()
@@ -52,7 +52,7 @@ class ApiTokenService {
     fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val admin = AdministratorEntity.findById(jwtPayload.adminId)
+        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
         admin?.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
 
         transaction {
@@ -71,7 +71,7 @@ class ApiTokenQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
 
-        val admin = AdministratorEntity.findById(jwtPayload.adminId)
+        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
         admin?.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
 
         return transaction {

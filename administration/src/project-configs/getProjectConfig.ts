@@ -114,7 +114,7 @@ export interface ProjectConfig {
   freinetCSVImportEnabled: boolean
   cardCreation: boolean
   storeManagement: StoresManagement
-  userUploadApiEnabled: boolean
+  userImportApiEnabled: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

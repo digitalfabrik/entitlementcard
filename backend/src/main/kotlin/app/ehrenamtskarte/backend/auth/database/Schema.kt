@@ -56,7 +56,7 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var deleted by Administrators.deleted
 }
 
-val TOKEN_LENGTH = 60
+const val TOKEN_LENGTH = 60
 
 object ApiTokens : IntIdTable() {
     val token = binary("token")

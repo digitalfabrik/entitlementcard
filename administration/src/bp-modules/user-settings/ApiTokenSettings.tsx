@@ -1,4 +1,4 @@
-import { Button, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
+import { Alert, Button, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import Delete from '@mui/icons-material/Delete'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -39,6 +39,14 @@ const NewTokenText = styled.p`
   word-break: break-all;
 `
 
+const TableData = styled.td`
+  vertical-align: middle !important;
+`
+
+const DeleteIcon = styled(Delete)`
+  display: block !important;
+`
+
 const ApiTokenSetting = () => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
@@ -47,6 +55,9 @@ const ApiTokenSetting = () => {
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [createdToken, setCreatedToken] = useState<string>('')
   const [expiresIn, setExpiresIn] = useState<number>(1)
+
+  //const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = useState<boolean>(false)
+  const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
 
   useEffect(() => {
     const metaDataQueryResult = getQueryResult(metaDataQuery)
@@ -86,61 +97,78 @@ const ApiTokenSetting = () => {
   })
 
   return (
-    <SettingsCard>
-      <H2>Api Token</H2>
-      <Container>
-        <H4>Neues Token erstellen</H4>
-        <p>
-          Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte
-          speichern sie dieses Token an einem sicheren Ort.
-        </p>
-        <Row>
-          <label htmlFor='expiresIn'>Gültigkeitsdauer:</label>
-          <HTMLSelect
-            name='expiresIn'
-            id='expiresIn'
-            value={expiresIn}
-            onChange={e => setExpiresIn(parseInt(e.target.value))}>
-            <option value='1'>1 Monat</option>
-            <option value='3'>3 Monate</option>
-            <option value='12'>1 Jahr</option>
-            <option value='36'>3 Jahre</option>
-          </HTMLSelect>
-          <Button intent='primary' onClick={() => createToken({ variables: { expiresIn } })}>
-            Erstellen
-          </Button>
-        </Row>
-        {createdToken && (
-          <>
-            <p>Neues Token:</p>
-            <NewTokenText> {createdToken}</NewTokenText>
-          </>
-        )}
-      </Container>
+    <>
+      <Alert
+        cancelButtonText='Abbrechen'
+        confirmButtonText='Token löschen'
+        icon='trash'
+        intent='danger'
+        isOpen={tokenToDelete !== null}
+        onCancel={() => setTokenToDelete(null)}
+        onConfirm={() => {
+          if (tokenToDelete != null) {
+            deleteToken({ variables: { id: tokenToDelete } })
+            setTokenToDelete(null)
+          }
+        }}>
+        <p>Möchten Sie das Token unwiderruflich löschen?</p>
+      </Alert>
+      <SettingsCard>
+        <H2>Api Token</H2>
+        <Container>
+          <H4>Neues Token erstellen</H4>
+          <p>
+            Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte
+            speichern sie dieses Token an einem sicheren Ort.
+          </p>
+          <Row>
+            <label htmlFor='expiresIn'>Gültigkeitsdauer:</label>
+            <HTMLSelect
+              name='expiresIn'
+              id='expiresIn'
+              value={expiresIn}
+              onChange={e => setExpiresIn(parseInt(e.target.value))}>
+              <option value='1'>1 Monat</option>
+              <option value='3'>3 Monate</option>
+              <option value='12'>1 Jahr</option>
+              <option value='36'>3 Jahre</option>
+            </HTMLSelect>
+            <Button intent='primary' onClick={() => createToken({ variables: { expiresIn } })}>
+              Erstellen
+            </Button>
+          </Row>
+          {createdToken && (
+            <>
+              <p>Neues Token:</p>
+              <NewTokenText> {createdToken}</NewTokenText>
+            </>
+          )}
+        </Container>
 
-      {tokenMetaData.length > 0 && (
-        <HTMLTable>
-          <thead>
-            <tr>
-              <th>E-Mail des Erstellers</th>
-              <th>Ablaufdatum</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tokenMetaData.map(item => (
-              <tr key={item.id}>
-                <td>{item.creatorEmail}</td>
-                <td>{formatDate(item.expirationDate)}</td>
-                <td>
-                  <Delete color='error' onClick={() => deleteToken({ variables: { id: item.id } })} />
-                </td>
+        {tokenMetaData.length > 0 && (
+          <HTMLTable>
+            <thead>
+              <tr>
+                <th>E-Mail des Erstellers</th>
+                <th>Ablaufdatum</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </HTMLTable>
-      )}
-    </SettingsCard>
+            </thead>
+            <tbody>
+              {tokenMetaData.map(item => (
+                <tr key={item.id}>
+                  <TableData>{item.creatorEmail}</TableData>
+                  <TableData>{formatDate(item.expirationDate)}</TableData>
+                  <TableData>
+                    <DeleteIcon color='error' onClick={() => setTokenToDelete(item.id)} />
+                  </TableData>
+                </tr>
+              ))}
+            </tbody>
+          </HTMLTable>
+        )}
+      </SettingsCard>
+    </>
   )
 }
 

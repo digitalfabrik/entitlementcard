@@ -142,7 +142,7 @@ object Authorizer {
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
 
-    fun mayViewApiMetadataInpProject(user: AdministratorEntity): Boolean =
+    fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
 
     fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
