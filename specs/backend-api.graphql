@@ -54,6 +54,12 @@ type Administrator {
   role: Role!
 }
 
+type ApiTokenMetaData {
+  creatorEmail: String!
+  expirationDate: String!
+  id: Int!
+}
+
 type ApplicationVerificationView {
   contactEmailAddress: String!
   contactName: String!
@@ -126,12 +132,16 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new api token for user import endpoint"
+  createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
+  "Deletes a selected API token"
+  deleteApiToken(id: Int!): Int!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
@@ -181,6 +191,8 @@ type Query {
   categories: [Category!]!
   "Verify password reset link"
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
+  "Gets metadata of all api tokens for a project"
+  getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
   "Queries an application by application verification accessKey"

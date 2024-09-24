@@ -138,4 +138,13 @@ object Authorizer {
     fun mayUpdateStoresInProject(user: AdministratorEntity, projectId: Int): Boolean {
         return user.projectId.value == projectId && user.role == Role.PROJECT_STORE_MANAGER.db_value
     }
+
+    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean =
+        user.role == Role.PROJECT_ADMIN.db_value
+
+    fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
+        user.role == Role.PROJECT_ADMIN.db_value
+
+    fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
+        user.role == Role.PROJECT_ADMIN.db_value
 }
