@@ -4,11 +4,11 @@ import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 're
 import styled from 'styled-components'
 
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
-import { getStoresWithCoordinates } from '../../project-configs/helper/storeGeoDataService'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
+import { getStoresWithCoordinates } from './util/storeGeoDataService'
 
 const StoreImportInputContainer = styled.div`
   display: flex;

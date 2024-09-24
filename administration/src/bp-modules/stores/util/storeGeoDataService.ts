@@ -1,7 +1,7 @@
 import { FeatureCollection, GeoJSON, Point } from 'geojson'
 
-import { AcceptingStoreEntry } from '../../bp-modules/stores/AcceptingStoreEntry'
-import { LONG_ERROR_TIMEOUT } from '../../bp-modules/stores/StoresCSVInput'
+import { AcceptingStoreEntry } from '../AcceptingStoreEntry'
+import { LONG_ERROR_TIMEOUT } from '../StoresCSVInput'
 
 const GEO_SERVICE_URL = 'https://nominatim.maps.tuerantuer.org/nominatim/search'
 
