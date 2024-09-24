@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.cards.webservice.cardsGraphQlParams
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
@@ -176,6 +177,8 @@ class GraphQLHandler(
             context.json(result)
         } catch (e: IOException) {
             context.res().sendError(500)
+        } catch (e: NotImplementedException) {
+            context.res().sendError(501, e.message)
         } catch (e: UnauthorizedException) {
             context.res().sendError(401)
         } catch (e: ForbiddenException) {

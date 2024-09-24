@@ -8,6 +8,7 @@ import ActivityLogCard from './ActivityLogCard'
 import ApiTokenSettings from './ApiTokenSettings'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
+import PepperSettings from './PepperSettings'
 
 const UserSettingsContainer = styled.div`
   display: flex;

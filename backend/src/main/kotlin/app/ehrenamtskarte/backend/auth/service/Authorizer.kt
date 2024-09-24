@@ -2,7 +2,11 @@ package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {
 
@@ -147,4 +151,12 @@ object Authorizer {
 
     fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
+
+    fun maySeeHashingPepper(user: AdministratorEntity?): Boolean {
+        return transaction {
+            ProjectEntity.find { Projects.project eq "koblenz.sozialpass.app" }
+                .single().id.value == user?.projectId?.value &&
+                user.role == Role.PROJECT_ADMIN.db_value
+        }
+    }
 }

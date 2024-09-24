@@ -13,6 +13,7 @@ import {
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
 import getQueryResult from '../util/getQueryResult'
+import PepperSettings from './PepperSettings'
 import SettingsCard from './SettingsCard'
 
 const Container = styled.div`
@@ -115,6 +116,7 @@ const ApiTokenSetting = () => {
       </Alert>
       <SettingsCard>
         <H2>Api Token</H2>
+        <PepperSettings />
         <Container>
           <H4>Neues Token erstellen</H4>
           <p>
