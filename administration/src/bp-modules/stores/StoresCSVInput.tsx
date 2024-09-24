@@ -17,7 +17,7 @@ import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import geoDataUrlWithParams from '../../project-configs/helper/getGeoDataUrlWithParams'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
-import { StoreData } from './StoresImportController'
+import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 
 const StoreImportInputContainer = styled.div`
@@ -48,25 +48,23 @@ const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
-    return { ...acc, [columnName]: entry }
+    return { ...acc, [columnName]: entry.trim() }
   }, {})
   return new AcceptingStoreEntry(storeData, fields)
 }
 
-const hasStoreDuplicates = (stores: AcceptingStoreEntry[]) => {
-  return (
-    new Set(
-      stores.map(({ data }: { data: StoreData }) =>
-        JSON.stringify([
-          data[FIELD_NAME],
-          data[FIELD_STREET],
-          data[FIELD_HOUSE_NUMBER],
-          data[FIELD_POSTAL_CODE],
-          data[FIELD_LOCATION],
-        ])
-      )
-    ).size < stores.length
-  )
+const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
+  return Object.values(
+    stores.reduce((acc: Record<string, number[]>, entry, index) => {
+      const { data } = entry
+      const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
+      const entryNumber = index + 1
+      if (acc[groupKey] === undefined) {
+        return { ...acc, [groupKey]: [entryNumber] }
+      }
+      return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
+    }, {})
+  ).filter(entryNumber => entryNumber.length > 1)
 }
 
 const getStoreCoordinates = (
@@ -117,7 +115,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   const showInputError = useCallback(
     (message: string, timeout = DEFAULT_ERROR_TIMEOUT) => {
       appToaster?.show({ intent: 'danger', message, timeout })
-
+      setInputState('error')
       if (!fileInput.current) return
       fileInput.current.value = ''
     },
@@ -171,8 +169,10 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       }
       const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
 
-      if (hasStoreDuplicates(acceptingStores)) {
-        showInputError(`Die CSV enthält doppelte Einträge.`)
+      const duplicatedStoreEntries = getStoreDuplicates(acceptingStores)
+      if (duplicatedStoreEntries.length > 0) {
+        const message = <StoresImportDuplicates entries={duplicatedStoreEntries} />
+        showInputError(message, 0)
         return
       }
       setIsLoadingCoordinates(true)

@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.stores.utils.clean
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class StoreFieldCleanerTest {
@@ -15,5 +15,11 @@ internal class StoreFieldCleanerTest {
     fun trimStringAndSubsequentWhitespacesProperly() {
         val testString = " TestString mit   vielen   Leerzeichen "
         assertEquals(testString.clean(), "TestString mit vielen Leerzeichen")
+    }
+
+    @Test
+    fun trimEmptryStringShouldReturnNull() {
+        val testString = ""
+        assertEquals(testString.clean(), null)
     }
 }

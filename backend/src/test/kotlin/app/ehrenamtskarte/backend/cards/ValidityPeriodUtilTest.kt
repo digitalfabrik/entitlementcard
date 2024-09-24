@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.LocalDateTime
 import java.time.ZoneId

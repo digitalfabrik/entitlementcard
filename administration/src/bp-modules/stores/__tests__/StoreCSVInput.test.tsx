@@ -8,6 +8,7 @@ import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigCon
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { AppToasterProvider } from '../../AppToaster'
 import StoresCSVInput, { DEFAULT_ERROR_TIMEOUT } from '../StoresCSVInput'
+import StoresImportDuplicates from '../StoresImportDuplicates'
 
 // TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
 
@@ -184,7 +185,7 @@ describe('StoreCSVInput', () => {
   })
 
   it(`should fail if the csv includes duplicated stores`, async () => {
-    const error = `Die CSV enthält doppelte Einträge.`
+    const error = <StoresImportDuplicates entries={[[1, 2]]} />
     const csv = ''
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([

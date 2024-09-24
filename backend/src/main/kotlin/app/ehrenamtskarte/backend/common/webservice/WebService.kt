@@ -41,6 +41,7 @@ class WebService {
                 cfg.bundledPlugins.enableDevLogging()
                 cfg.bundledPlugins.enableCors { cors -> cors.addRule { it.anyHost() } }
             }
+            cfg.http.maxRequestSize = 5000000
             cfg.staticFiles.add {
                 it.directory = "/graphiql"
                 it.hostedPath = "/graphiql"

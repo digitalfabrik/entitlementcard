@@ -62,7 +62,7 @@ const StoresButtonBar = ({
         isOpen={importDialogIsOpen}
         onCancel={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}>
-        <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} />
+        <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} storesCount={acceptingStores.length} />
       </Alert>
     </ButtonBar>
   )

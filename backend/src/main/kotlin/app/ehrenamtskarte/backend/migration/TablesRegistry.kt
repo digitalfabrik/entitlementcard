@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.migration
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -28,6 +29,7 @@ object TablesRegistry {
         Addresses,
         Contacts,
         Categories,
-        UserEntitlements
+        UserEntitlements,
+        ApiTokens
     )
 }

@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class CardInfoExtensionsTest {

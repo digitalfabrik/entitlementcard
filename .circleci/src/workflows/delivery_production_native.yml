@@ -78,3 +78,12 @@ jobs:
       production_delivery: true
       requires:
         - build_ios_nuernberg
+  - notify_release:
+      production_delivery: true
+      context:
+        - deliverino
+      requires:
+        - deliver_bayern_ios
+        - deliver_nuernberg_ios
+        - deliver_android_bayern
+        - deliver_android_nuernberg

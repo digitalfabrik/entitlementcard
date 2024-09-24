@@ -1,6 +1,4 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema.types
-
-// TODO 1591 remove this class
 data class CSVAcceptingStore(
     var name: String?,
     var street: String?,

@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.cards.CanonicalJson.Companion.koblenzUserToStr
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.koblenzTestUser
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -101,7 +101,7 @@ internal class CanonicalJsonTest {
     @Test
     fun mapUserInfoForKoblenzPass() {
         val expected = koblenzUserToString(koblenzTestUser)
-        assertEquals("{\"1\":\"Karla Koblenz\",\"2\":12213,\"3\":\"123K\"}", expected)
+        assertEquals("{\"1\":12213,\"2\":\"123K\"}", expected)
     }
 
     @Test

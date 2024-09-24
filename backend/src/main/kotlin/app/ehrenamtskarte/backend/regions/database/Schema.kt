@@ -10,13 +10,17 @@ const val PRIVACY_POLICY_MAX_CHARS = 20000
 
 object Regions : IntIdTable() {
     val projectId = reference("projectId", Projects)
-    val regionIdentifier = char("regionIdentifier", 5).uniqueIndex().nullable() // 5-stelliger Kreisschlüssel
+    val regionIdentifier = char("regionIdentifier", 5) // 5-stelliger Kreisschlüssel
     val website = varchar("website", 400)
     val name = varchar("name", 100)
     val prefix = varchar("prefix", 30) // Usually "Stadt" or "Landkreis"
     val dataPrivacyPolicy = varchar("dataPrivacyPolicy", PRIVACY_POLICY_MAX_CHARS).nullable()
     val activatedForApplication = bool("activatedForApplication").default(true)
     val activatedForCardConfirmationMail = bool("activatedForCardConfirmationMail").default(false)
+
+    init {
+        uniqueIndex("unique_projectid_regionidentifier", projectId, regionIdentifier)
+    }
 }
 
 class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
