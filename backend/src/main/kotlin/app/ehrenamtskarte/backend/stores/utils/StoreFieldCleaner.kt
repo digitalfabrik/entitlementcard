@@ -6,11 +6,10 @@ import app.ehrenamtskarte.backend.stores.importer.replaceNa
  * Removes subsequent whitespaces
  * */
 fun String?.clean(removeSubsequentWhitespaces: Boolean = true): String? {
-    if (this.isNullOrEmpty()) {
+    val trimmed = this?.replaceNa()?.trim()
+    if (trimmed.isNullOrEmpty()) {
         return null
     }
-    this.replaceNa()
-    val trimmed = this.trim()
     if (removeSubsequentWhitespaces) {
         return trimmed.replace(Regex("""\s{2,}"""), " ")
     }

@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.stores
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class MapCsvToStoreTest {
