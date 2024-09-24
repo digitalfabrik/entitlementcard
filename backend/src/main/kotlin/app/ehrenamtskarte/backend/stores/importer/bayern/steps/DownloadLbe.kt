@@ -30,6 +30,7 @@ class DownloadLbe(config: ImportConfig, private val logger: Logger, private val 
             val xmlMapper = XmlMapper()
             xmlMapper.registerModule(KotlinModule.Builder().build())
             xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+            xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             val lbeData = xmlMapper.readValue(response, LbeData::class.java)
 
             return lbeData.acceptingStores
