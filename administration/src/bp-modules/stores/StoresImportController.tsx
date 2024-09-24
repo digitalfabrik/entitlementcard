@@ -87,7 +87,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
   return (
     <>
-      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner intent='primary' />)}
+      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner intent='primary' />}
       {acceptingStores.length === 0 ? (
         <StoresCSVInput
           setAcceptingStores={setAcceptingStores}

@@ -9,8 +9,6 @@ import {
   FIELD_LATITUDE,
   FIELD_LOCATION,
   FIELD_LONGITUDE,
-  FIELD_NAME,
-  FIELD_POSTAL_CODE,
   FIELD_STREET,
 } from '../../project-configs/constants'
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
@@ -91,20 +89,19 @@ const getStoreCoordinates = (
     )
       .then(response => response.json())
       .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
-        if (res.features.length === 0) {
+        if (features.length === 0) {
           showInputError(
             `Eintrag ${index + 1}: Keine passenden Geodaten gefunden! Bitte prüfen sie die Adresse.`,
             LONG_ERROR_TIMEOUT
           )
           return store
         }
-        const feature = res.features[0]
+        const feature = features[0]
         const updatedStore = store
         updatedStore.data[FIELD_LONGITUDE] = feature.geometry.coordinates[0].toString()
         updatedStore.data[FIELD_LATITUDE] = feature.geometry.coordinates[1].toString()
         return updatedStore
       })
-    )
   })
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
@@ -113,9 +110,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
-    (message: string, timeout = DEFAULT_ERROR_TIMEOUT) => {
+    (message: string | ReactElement, timeout = DEFAULT_ERROR_TIMEOUT) => {
       appToaster?.show({ intent: 'danger', message, timeout })
-      setInputState('error')
       if (!fileInput.current) return
       fileInput.current.value = ''
     },
