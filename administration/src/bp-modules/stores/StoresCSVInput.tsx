@@ -95,7 +95,7 @@ const getStoreCoordinates = (
       .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
         if (res.features.length === 0) {
           showInputError(
-            `Eintrag ${index + 1}: Keine passenden Geodatengefunden gefunden! Bitte prüfen sie die Adresse.`,
+            `Eintrag ${index + 1}: Keine passenden Geodaten gefunden! Bitte prüfen sie die Adresse.`,
             LONG_ERROR_TIMEOUT
           )
           return store
