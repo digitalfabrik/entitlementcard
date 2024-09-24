@@ -45,6 +45,7 @@ const TableData = styled.td`
 
 const DeleteIcon = styled(Delete)`
   display: block !important;
+  cursor: pointer;
 `
 
 const ApiTokenSetting = () => {
@@ -56,7 +57,6 @@ const ApiTokenSetting = () => {
   const [createdToken, setCreatedToken] = useState<string>('')
   const [expiresIn, setExpiresIn] = useState<number>(1)
 
-  //const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = useState<boolean>(false)
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const ApiTokenSetting = () => {
         isOpen={tokenToDelete !== null}
         onCancel={() => setTokenToDelete(null)}
         onConfirm={() => {
-          if (tokenToDelete != null) {
+          if (tokenToDelete !== null) {
             deleteToken({ variables: { id: tokenToDelete } })
             setTokenToDelete(null)
           }
@@ -119,7 +119,7 @@ const ApiTokenSetting = () => {
           <H4>Neues Token erstellen</H4>
           <p>
             Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte
-            speichern sie dieses Token an einem sicheren Ort.
+            speichern Sie dieses Token an einem sicheren Ort.
           </p>
           <Row>
             <label htmlFor='expiresIn'>Gültigkeitsdauer:</label>
