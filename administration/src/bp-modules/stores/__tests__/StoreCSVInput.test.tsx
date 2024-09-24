@@ -222,7 +222,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: 0 })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 })

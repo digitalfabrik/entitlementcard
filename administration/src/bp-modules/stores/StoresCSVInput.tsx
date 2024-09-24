@@ -1,18 +1,10 @@
 import { Icon, NonIdealState, NonIdealStateIconSize } from '@blueprintjs/core'
 import { parse } from 'csv-parse/browser/esm/sync'
-import { FeatureCollection, GeoJSON, Point } from 'geojson'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
-import {
-  FIELD_HOUSE_NUMBER,
-  FIELD_LATITUDE,
-  FIELD_LOCATION,
-  FIELD_LONGITUDE,
-  FIELD_STREET,
-} from '../../project-configs/constants'
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
-import geoDataUrlWithParams from '../../project-configs/helper/getGeoDataUrlWithParams'
+import { getStoresWithCoordinates } from '../../project-configs/helper/storeGeoDataService'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
@@ -64,45 +56,6 @@ const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
     }, {})
   ).filter(entryNumber => entryNumber.length > 1)
 }
-
-const getStoreCoordinates = (
-  stores: AcceptingStoreEntry[],
-  showInputError: (message: string, timeout?: number) => void
-): (AcceptingStoreEntry | Promise<AcceptingStoreEntry>)[] =>
-  stores.map((store, index) => {
-    if (store.hasValidCoordinates()) return store
-    const isMissingLocationInformation =
-      store.data[FIELD_LOCATION].length === 0 ||
-      store.data[FIELD_STREET].length === 0 ||
-      store.data[FIELD_HOUSE_NUMBER].length === 0
-    if (isMissingLocationInformation) {
-      showInputError(
-        `Eintrag ${
-          index + 1
-        }: Es sind nicht alle notwendigen Adressdaten vorhanden, um die notwendigen Geodaten abzurufen`,
-        LONG_ERROR_TIMEOUT
-      )
-      return store
-    }
-    return fetch(
-      geoDataUrlWithParams(store.data[FIELD_LOCATION], store.data[FIELD_STREET], store.data[FIELD_HOUSE_NUMBER]).href
-    )
-      .then(response => response.json())
-      .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
-        if (features.length === 0) {
-          showInputError(
-            `Eintrag ${index + 1}: Keine passenden Geodaten gefunden! Bitte prüfen sie die Adresse.`,
-            LONG_ERROR_TIMEOUT
-          )
-          return store
-        }
-        const feature = features[0]
-        const updatedStore = store
-        updatedStore.data[FIELD_LONGITUDE] = feature.geometry.coordinates[0].toString()
-        updatedStore.data[FIELD_LATITUDE] = feature.geometry.coordinates[1].toString()
-        return updatedStore
-      })
-  })
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
@@ -172,7 +125,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
         return
       }
       setIsLoadingCoordinates(true)
-      Promise.all(getStoreCoordinates(acceptingStores, showInputError))
+      Promise.all(getStoresWithCoordinates(acceptingStores, showInputError))
         .then(updatedStores => setAcceptingStores(updatedStores))
         .catch(() => {
           showInputError('Fehler beim Abrufen der fehlenden Koordinaten!')
