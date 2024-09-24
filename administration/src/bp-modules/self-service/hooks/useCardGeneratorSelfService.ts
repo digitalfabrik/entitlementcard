@@ -1,59 +1,71 @@
+import { ApolloError } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
-import CardBlueprint from '../../../cards/CardBlueprint'
 import { generatePdf } from '../../../cards/PdfFactory'
+import SelfServiceCard from '../../../cards/SelfServiceCard'
 import { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
-import { Region, useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
+import { useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
-import { getHeaders } from '../ImportCardsController'
-import { CardActivationState } from './useCardGenerator'
+import { getHeaders } from '../../cards/ImportCardsController'
+import { CardActivationState } from '../../cards/hooks/useCardGenerator'
 
-const initializeCardBlueprintForProject = (projectConfig: ProjectConfig): CardBlueprint => {
+const initializeCardBlueprintForProject = (projectConfig: ProjectConfig): SelfServiceCard => {
   const headers = getHeaders(projectConfig)
-  const cardBlueprint = new CardBlueprint('', projectConfig.card)
+  const selfServiceCard = new SelfServiceCard('', projectConfig.card)
   headers.forEach(header => {
-    cardBlueprint.setValue(header, '')
+    selfServiceCard.setValue(header, '')
   })
-  return cardBlueprint
+  return selfServiceCard
 }
 
 const useCardGeneratorSelfService = () => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [cardBlueprint, setCardBlueprint] = useState<CardBlueprint[]>([
+  const [selfServiceCards, setSelfServiceCards] = useState<SelfServiceCard[]>([
     initializeCardBlueprintForProject(projectConfig),
   ])
-  const [state, setState] = useState(CardActivationState.input)
+  const [activationState, setActivationState] = useState(CardActivationState.input)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
-  const [region, setRegion] = useState<Region | null>(null)
-  const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'success', message: title })
-      setState(CardActivationState.input)
-    },
-  })
+  const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
 
-  const getDeepLink = (code: CreateCardsResult): string => {
-    return getCustomDeepLinkFromQrCode({
-      case: 'dynamicActivationCode',
-      value: code.dynamicActivationCode,
-    })
-  }
+  const handleErrors = useCallback(
+    (error: unknown) => {
+      if (error instanceof CreateCardsError) {
+        appToaster?.show({
+          message: error.message,
+          intent: 'danger',
+        })
+      }
+      if (error instanceof ApolloError) {
+        const { title } = getMessageFromApolloError(error)
+        appToaster?.show({
+          message: title,
+          intent: 'danger',
+        })
+      } else {
+        appToaster?.show({
+          message: 'Unbekannter Fehler: Etwas ist schiefgegangen.',
+          intent: 'danger',
+        })
+      }
+      setActivationState(CardActivationState.input)
+    },
+    [appToaster]
+  )
 
   const generateCards = useCallback(async () => {
-    setState(CardActivationState.loading)
+    setActivationState(CardActivationState.loading)
 
     try {
-      const cardInfo = cardBlueprint[0].generateCardInfo()
+      const cardInfo = selfServiceCards[0].generateCardInfo()
       const result = await createCardsSelfService({
         variables: {
           project: projectConfig.projectId,
@@ -62,9 +74,12 @@ const useCardGeneratorSelfService = () => {
         },
       })
 
+      if (result.errors) {
+        const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
+        throw new CreateCardsError(title)
+      }
       if (!result.data) {
-        // TODO catch this exception
-        throw new CreateCardsError('Beim erstellen der Karte(n) ist ein Fehler aufgetreten.')
+        throw new CreateCardsError('Beim Erstellen der Karte(n) ist ein Fehler aufgetreten.')
       }
       const cardResult = result.data.card
       const dynamicActivationCode = DynamicActivationCode.fromBinary(
@@ -80,34 +95,32 @@ const useCardGeneratorSelfService = () => {
         dynamicCardInfoHashBase64: cardResult.dynamicActivationCode.cardInfoHashBase64,
       }
       setCode(code)
-      setRegion(result.data.card.region)
-      if (code) {
-        setDeepLink(getDeepLink(code))
-      }
+      setDeepLink(
+        getCustomDeepLinkFromQrCode({
+          case: 'dynamicActivationCode',
+          value: code.dynamicActivationCode,
+        })
+      )
 
-      setState(CardActivationState.finished)
+      setActivationState(CardActivationState.finished)
     } catch (error) {
-      console.log(error)
-    } finally {
-      // whatever
+      handleErrors(error)
     }
-  }, [cardBlueprint, projectConfig])
+  }, [selfServiceCards, projectConfig])
 
-  const downloadPdf = async (code: CreateCardsResult, region: Region, fileName: string) => {
-    const blob = await generatePdf([code], cardBlueprint, region, projectConfig.pdf)
+  const downloadPdf = async (code: CreateCardsResult, fileName: string) => {
+    const blob = await generatePdf([code], selfServiceCards, projectConfig.pdf)
     downloadDataUri(blob, fileName)
   }
 
   return {
-    state,
-    setState,
+    activationState,
     deepLink,
     code,
-    cardBlueprint,
-    setCardBlueprint,
+    selfServiceCards,
+    setSelfServiceCards,
     generateCards,
     downloadPdf,
-    region,
   }
 }
 export default useCardGeneratorSelfService

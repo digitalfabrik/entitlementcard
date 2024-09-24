@@ -95,6 +95,7 @@ const useCardGenerator = (region: Region) => {
           intent: 'danger',
         })
       } else if (error instanceof PdfError) {
+        console.log(error)
         appToaster?.show({
           message: 'Etwas ist schiefgegangen beim Erstellen der PDF.',
           intent: 'danger',
@@ -164,7 +165,7 @@ const useCardGenerator = (region: Region) => {
     async (applicationIdToMarkAsProcessed?: number) => {
       await generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-          generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
+          generatePdf(codes, cardBlueprints, projectConfig.pdf, region),
         'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )

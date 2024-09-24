@@ -15,7 +15,6 @@ import app.ehrenamtskarte.backend.cards.webservice.QRCodeUtil
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.ActivationState
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationResultModel
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationSelfServiceResultModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -32,7 +31,6 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFound
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -134,7 +132,7 @@ class CardMutationService {
         project: String,
         encodedCardInfo: String,
         generateStaticCode: Boolean
-    ): CardCreationSelfServiceResultModel {
+    ): CardCreationResultModel {
         val context = dfe.getContext<GraphQLContext>()
         val config = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
         if (!config.selfServiceEnabled) {
@@ -161,24 +159,14 @@ class CardMutationService {
             userEntitlements.regionId.value
         )
 
-        val regionEntity = transaction { RegionsRepository.findRegionById(userEntitlements.regionId.value) }
         val activationCode = transaction {
             val revokedCount = CardRepository.revokeByEntitlementsId(userEntitlements.id.value)
             if (revokedCount > 0) {
                 logger.info("Revoked {} cards associated with the user entitlements {}", revokedCount, userEntitlements.id.value)
             }
-            CardCreationSelfServiceResultModel(
+            CardCreationResultModel(
                 createDynamicActivationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value),
-                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value) else null,
-                Region(
-                    regionEntity.id.value,
-                    regionEntity.prefix,
-                    regionEntity.name,
-                    regionEntity.regionIdentifier,
-                    regionEntity.dataPrivacyPolicy,
-                    regionEntity.activatedForApplication,
-                    regionEntity.activatedForCardConfirmationMail
-                )
+                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value) else null
             )
         }
 

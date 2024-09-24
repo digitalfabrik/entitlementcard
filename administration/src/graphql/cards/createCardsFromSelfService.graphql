@@ -12,13 +12,5 @@ mutation createCardsFromSelfService($project: String!, $encodedCardInfo: String!
       cardInfoHashBase64
       codeBase64
     }
-    region {
-      id
-      prefix
-      name
-      regionIdentifier
-      activatedForApplication
-      activatedForCardConfirmationMail
-    }
   }
 }

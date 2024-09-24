@@ -5,10 +5,10 @@ import styled from 'styled-components'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { CardActivationState } from '../cards/hooks/useCardGenerator'
-import useCardGeneratorSelfService from '../cards/hooks/useCardGeneratorSelfService'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceButtonBar from './CardSelfServiceButtonBar'
 import CardSelfServiceForm from './CardSelfServiceForm'
+import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -27,27 +27,26 @@ const CenteredSpinner = styled(Spinner)`
   left: 50%;
 `
 
-// TODO convert array to object, cleanup useCardGenerator, add tests, add proper error handling
+// TODO convert array to object, add tests
 const CardSelfServiceController = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const [dataPrivacyAccepted, setDataPrivacyAccepted] = useState<boolean>(false)
-  const { state, generateCards, setCardBlueprint, cardBlueprint, deepLink, code, region, downloadPdf } =
+  const { activationState, generateCards, setSelfServiceCards, selfServiceCards, deepLink, code, downloadPdf } =
     useCardGeneratorSelfService()
 
   const notifyUpdate = () => {
-    // TODO fix reassigning functions when using object instead array
-    setCardBlueprint([...cardBlueprint])
+    setSelfServiceCards([...selfServiceCards])
   }
 
-  const card = cardBlueprint[0]
+  const card = selfServiceCards[0]
 
   const onDownloadPdf = async () => {
-    if (code && region) {
-      await downloadPdf(code, region, projectConfig.name)
+    if (code) {
+      await downloadPdf(code, projectConfig.name)
     }
   }
 
-  if (state === CardActivationState.loading) {
+  if (activationState === CardActivationState.loading) {
     return <CenteredSpinner />
   }
 
@@ -55,9 +54,9 @@ const CardSelfServiceController = (): ReactElement => {
     <Container>
       <StyledCard>
         <Typography variant='h5' mb={3}>
-          {projectConfig.name} {state === CardActivationState.input ? 'Beantragung' : 'Aktivierung'}
+          {projectConfig.name} {activationState === CardActivationState.input ? 'Beantragung' : 'Aktivierung'}
         </Typography>
-        {state === CardActivationState.input && (
+        {activationState === CardActivationState.input && (
           <CardSelfServiceForm
             card={card}
             dataPrivacyAccepted={dataPrivacyAccepted}
@@ -65,14 +64,14 @@ const CardSelfServiceController = (): ReactElement => {
             notifyUpdate={notifyUpdate}
           />
         )}
-        {state === CardActivationState.finished && <CardSelfServiceActivation />}
+        {activationState === CardActivationState.finished && <CardSelfServiceActivation />}
         <CardSelfServiceButtonBar
           downloadPdf={onDownloadPdf}
           generateCards={generateCards}
           cardBlueprint={card}
           dataPrivacyAccepted={dataPrivacyAccepted}
           deepLink={deepLink}
-          activationState={state}
+          activationState={activationState}
         />
       </StyledCard>
     </Container>
