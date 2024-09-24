@@ -176,9 +176,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       }
       setIsLoadingCoordinates(true)
       Promise.all(getStoreCoordinates(acceptingStores, showInputError))
-        .then(updatedStores => {
-          setAcceptingStores(updatedStores)
-        })
+        .then(updatedStores => setAcceptingStores(updatedStores))
         .catch(() => {
           showInputError('Fehler beim Abrufen der fehlenden Koordinaten!')
           setAcceptingStores(acceptingStores)
