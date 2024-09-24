@@ -90,8 +90,9 @@ const getStoreCoordinates = (
     }
     return fetch(
       geoDataUrlWithParams(store.data[FIELD_LOCATION], store.data[FIELD_STREET], store.data[FIELD_HOUSE_NUMBER]).href
-    ).then(response =>
-      response.json().then((res: FeatureCollection<Point, GeoJSON>) => {
+    )
+      .then(response => response.json())
+      .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
         if (res.features.length === 0) {
           showInputError(
             `Eintrag ${index + 1}: Keine passenden Geodatengefunden gefunden! Bitte prüfen sie die Adresse.`,
