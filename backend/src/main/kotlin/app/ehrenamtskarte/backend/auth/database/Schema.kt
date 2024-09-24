@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
@@ -53,4 +54,22 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var notificationOnApplication by Administrators.notificationOnApplication
     var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
+}
+
+const val TOKEN_LENGTH = 60
+
+object ApiTokens : IntIdTable() {
+    val token = binary("token")
+    val creatorId = reference("creatorId", Administrators)
+    val projectId = reference("projectId", Projects)
+    val expirationDate = date("expirationDate")
+}
+
+class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ApiTokenEntity>(ApiTokens)
+
+    var token by ApiTokens.token
+    var creator by ApiTokens.creatorId
+    var projectId by ApiTokens.projectId
+    var expirationDate by ApiTokens.expirationDate
 }

@@ -28,7 +28,7 @@ data class MatomoConfig(val siteId: Int, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
-    val pipelineName: String,
+    val pipelineName: String?,
     val administrationBaseUrl: String,
     val administrationName: String,
     val timezone: ZoneId,

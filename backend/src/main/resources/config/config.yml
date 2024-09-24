@@ -46,7 +46,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: koblenz.sozialpass.app
     importUrl: ""
-    pipelineName: SozialpassKoblenz
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
@@ -58,7 +57,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
-    pipelineName: BerechtigungskarteShowcase
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
     timezone: "Europe/Berlin"
