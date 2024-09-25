@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { ExtensionInstance } from '../../cards/extensions/extensions'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 import PlainDate from '../../util/PlainDate'
 
 const CardHeader = styled.div`
@@ -18,6 +19,7 @@ const CardHeader = styled.div`
 interface ExtensionFormProps {
   extension: ExtensionInstance
   onUpdate: () => void
+  viewportSmall: boolean
 }
 
 interface CreateCardsFormProps {
@@ -27,13 +29,14 @@ interface CreateCardsFormProps {
 }
 
 export const maxCardValidity = { years: 99 }
-export const ExtensionForm = ({ extension, onUpdate }: ExtensionFormProps) => {
+export const ExtensionForm = ({ extension, onUpdate, viewportSmall }: ExtensionFormProps) => {
   return extension.createForm(() => {
     onUpdate()
-  })
+  }, viewportSmall)
 }
 
 const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
+  const { viewportSmall } = useWindowDimensions()
   const today = PlainDate.fromLocalDate(new Date())
   return (
     <Card>
@@ -82,7 +85,7 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
         </FormGroup>
       )}
       {cardBlueprint.extensions.map((ext, i) => (
-        <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} />
+        <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} viewportSmall={viewportSmall} />
       ))}
     </Card>
   )

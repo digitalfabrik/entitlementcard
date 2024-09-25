@@ -28,7 +28,7 @@ export abstract class Extension<T, R> implements JSONExtension<T> {
   public state: T | null = null
   abstract setInitialState(args: R, ...xargs: any[]): void
   abstract isValid(): boolean
-  abstract createForm(onChange: () => void): ReactElement | null
+  abstract createForm(onChange: () => void, viewportSmall?: boolean): ReactElement | null
   abstract causesInfiniteLifetime(): boolean
   setProtobufData?(message: PartialMessage<CardExtensions>): void
   abstract fromString(state: string): void

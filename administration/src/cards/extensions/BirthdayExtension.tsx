@@ -27,7 +27,9 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
     return !date.isBefore(minBirthday) && !date.isAfter(today)
   }
 
-  createForm(onUpdate: () => void) {
+  createForm(onUpdate: () => void, viewportSmall: boolean) {
+    const formStyle = viewportSmall ? { fontSize: 16, padding: '9px 10px' } : { fontSize: 14, padding: '6px 10px' }
+
     const birthdayDate =
       this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : initialBirthdayDate
 
@@ -37,14 +39,13 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
           fullWidth
           type='date'
           required
-          size='small'
           error={!this.isValid()}
           value={birthdayDate.toString()}
           sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
           inputProps={{
             max: PlainDate.fromLocalDate(new Date()).toString(),
             min: minBirthday.toString(),
-            style: { fontSize: 14, padding: '6px 10px' },
+            style: formStyle,
           }}
           onChange={e => {
             if (e.target.value !== null) {

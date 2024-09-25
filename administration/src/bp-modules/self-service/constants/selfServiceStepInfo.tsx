@@ -1,0 +1,42 @@
+import { ReactElement } from 'react'
+
+type SelfServiceStepInfo = {
+  headline: string
+  subHeadline: string
+  text: ReactElement
+}
+
+const selfServiceStepInfo: SelfServiceStepInfo[] = [
+  {
+    headline: 'Herzlich Willkommen!',
+    subHeadline: 'In wenigen Schritten zu Ihrem eigenen KoblenzPass.',
+    text: (
+      <span>
+        {' '}
+        Um Ihren Pass zu aktivieren bzw. Ihr Antrags-PDF herunterladen zu können, benötigen wir noch ein paar
+        Informationen von Ihnen.
+      </span>
+    ),
+  },
+  {
+    headline: 'Ihr KoblenzPass wurde erstellt.',
+    subHeadline: 'Nur noch ein paar Klicks, bis Sie alle Vorteile nutzen zu können.',
+    text: (
+      <span>
+        Haben Sie die App noch nicht? <b>Laden Sie sie jetzt herunter, um fortzufahren.</b>
+      </span>
+    ),
+  },
+  {
+    headline: 'Letzte Schritte',
+    subHeadline: 'AntragsPDF herunterladen und Pass aktivieren.',
+    text: (
+      <span>
+        Laden Sie Ihre Antrags-PDF herunter, um Ihren Pass <b>im Falle eines Verlusts erneut aktivieren</b> zu können.
+        Sie können den Pass so außerdem auch <b>in gedruckte Form nutzen</b>.
+      </span>
+    ),
+  },
+]
+
+export default selfServiceStepInfo
