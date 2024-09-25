@@ -34,6 +34,7 @@ const config: ProjectConfig = {
   storeManagement: {
     enabled: false,
   },
+  userImportApiEnabled: true,
 }
 
 export default config

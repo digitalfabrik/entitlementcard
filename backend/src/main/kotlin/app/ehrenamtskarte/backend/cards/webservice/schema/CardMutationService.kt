@@ -54,7 +54,7 @@ class CardMutationService {
 
     private val activationSecretLength = 20
 
-    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementsId: Int? = null): DynamicActivationCodeResult {
+    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementId: Int? = null): DynamicActivationCodeResult {
         val secureRandom = SecureRandom.getInstanceStrong()
         val pepper = ByteArray(PEPPER_LENGTH)
         secureRandom.nextBytes(pepper)
@@ -84,7 +84,7 @@ class CardMutationService {
             expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
             cardInfo.extensions.extensionRegion.regionId,
             userId,
-            entitlementsId,
+            entitlementId,
             CodeType.DYNAMIC,
             cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
         )
@@ -95,7 +95,7 @@ class CardMutationService {
         )
     }
 
-    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementsId: Int? = null): StaticVerificationCodeResult {
+    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementId: Int? = null): StaticVerificationCodeResult {
         val pepper = ByteArray(PEPPER_LENGTH)
         SecureRandom.getInstanceStrong().nextBytes(pepper)
 
@@ -115,7 +115,7 @@ class CardMutationService {
             expirationDay = if (cardInfo.hasExpirationDay()) cardInfo.expirationDay.toLong() else null,
             cardInfo.extensions.extensionRegion.regionId,
             userId,
-            entitlementsId,
+            entitlementId,
             CodeType.STATIC,
             cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
         )
@@ -141,7 +141,6 @@ class CardMutationService {
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
         val user = KoblenzUser(
-            cardInfo.fullName,
             cardInfo.extensions.extensionBirthday.birthday,
             cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
         )
@@ -160,13 +159,13 @@ class CardMutationService {
         )
 
         val activationCode = transaction {
-            val revokedCount = CardRepository.revokeByEntitlementsId(userEntitlements.id.value)
+            val revokedCount = CardRepository.revokeByEntitlementId(userEntitlements.id.value)
             if (revokedCount > 0) {
                 logger.info("Revoked {} cards associated with the user entitlements {}", revokedCount, userEntitlements.id.value)
             }
             CardCreationResultModel(
-                createDynamicActivationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value),
-                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementsId = userEntitlements.id.value) else null
+                createDynamicActivationCode(updatedCardInfo, entitlementId = userEntitlements.id.value),
+                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementId = userEntitlements.id.value) else null
             )
         }
 

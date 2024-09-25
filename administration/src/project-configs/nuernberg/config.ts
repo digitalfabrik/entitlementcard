@@ -60,6 +60,7 @@ const config: ProjectConfig = {
   cardCreation: true,
   selfServiceEnabled: false,
   storeManagement: storeConfig,
+  userImportApiEnabled: false,
 }
 
 export default config

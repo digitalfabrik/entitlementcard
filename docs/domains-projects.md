@@ -16,6 +16,7 @@ In the following the available environments and their domains are listed.
 The following project IDs exist:
 
 - `nuernberg.sozialpass.app` - Nürnberg project
+- `koblenz.sozialpass.app` - Koblenz project
 - `bayern.ehrenamtskarte.app` - Bayern project
 - `showcase.entitlementcard.app` - Project for showcasing and testing
 

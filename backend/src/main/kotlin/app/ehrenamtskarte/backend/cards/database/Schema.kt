@@ -37,7 +37,7 @@ object Cards : IntIdTable() {
     val cardInfoHash = binary("cardInfoHash", CARD_INFO_HASH_LENGTH).uniqueIndex()
     val codeType = enumeration("codeType", CodeType::class)
     val firstActivationDate = timestamp("firstActivationDate").nullable()
-    val entitlementsId = reference("entitlementsId", UserEntitlements).nullable()
+    val entitlementId = reference("entitlementId", UserEntitlements).nullable()
 
     // startDay describes the first day on which the card is valid.
     // If this field is null, the card is valid until `expirationDay` without explicitly stating when the validity period started.
@@ -53,10 +53,10 @@ object Cards : IntIdTable() {
                 ) or
                 ((activationSecretHash neq null) and (codeType eq CodeType.DYNAMIC))
         }
-        check("issuerid_or_entitlementsid_not_null") {
+        check("issuerid_or_entitlementid_not_null") {
             (
-                ((issuerId neq null) and (entitlementsId eq null))
-                    or ((issuerId eq null) and (entitlementsId neq null))
+                ((issuerId neq null) and (entitlementId eq null))
+                    or ((issuerId eq null) and (entitlementId neq null))
                 )
         }
     }
@@ -75,6 +75,6 @@ class CardEntity(id: EntityID<Int>) : IntEntity(id) {
     var issuerId by Cards.issuerId
     var codeType by Cards.codeType
     var firstActivationDate by Cards.firstActivationDate
-    var entitlementsId by Cards.entitlementsId
+    var entitlementId by Cards.entitlementId
     var startDay by Cards.startDay
 }

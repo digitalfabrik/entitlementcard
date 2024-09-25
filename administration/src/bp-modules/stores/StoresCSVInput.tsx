@@ -7,6 +7,7 @@ import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 
 const StoreImportInputContainer = styled.div`
@@ -35,9 +36,23 @@ const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldC
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
     // TODO 1570 get geodata if no coordinates available
-    return { ...acc, [columnName]: entry }
+    return { ...acc, [columnName]: entry.trim() }
   }, {})
   return new AcceptingStoreEntry(storeData, fields)
+}
+
+const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
+  return Object.values(
+    stores.reduce((acc: Record<string, number[]>, entry, index) => {
+      const { data } = entry
+      const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
+      const entryNumber = index + 1
+      if (acc[groupKey] === undefined) {
+        return { ...acc, [groupKey]: [entryNumber] }
+      }
+      return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
+    }, {})
+  ).filter(entryNumber => entryNumber.length > 1)
 }
 
 const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
@@ -47,8 +62,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
-    (message: string) => {
-      appToaster?.show({ intent: 'danger', message })
+    (message: string | ReactElement, timeout?: number) => {
+      appToaster?.show({ intent: 'danger', message, timeout })
       setInputState('error')
       if (!fileInput.current) return
       fileInput.current.value = ''
@@ -101,6 +116,13 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
         return
       }
       const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
+
+      const duplicatedStoreEntries = getStoreDuplicates(acceptingStores)
+      if (duplicatedStoreEntries.length > 0) {
+        const message = <StoresImportDuplicates entries={duplicatedStoreEntries} />
+        showInputError(message, 0)
+        return
+      }
 
       setAcceptingStores(acceptingStores)
       setInputState('idle')

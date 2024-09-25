@@ -4,13 +4,13 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import dimensions from '../constants/dimensions'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 
 const TableContainer = styled.div`
   width: 100vw;
-  height: 85vh;
+  height: calc(100vh - ${dimensions.navigationBarHeight + dimensions.bottomBarHeight}px);
   display: flex;
-  align-self: center;
 `
 
 const StyledCell = styled(Cell)`

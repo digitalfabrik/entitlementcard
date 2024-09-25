@@ -43,7 +43,7 @@ object TestData {
         regionId: Int,
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
-        entitlementsId: Int? = null,
+        entitlementId: Int? = null,
         startDay: Long? = null
     ): CardEntity {
         val fakeActivationSecretHash = Random.nextBytes(20)
@@ -57,7 +57,7 @@ object TestData {
             issuerId,
             CodeType.DYNAMIC,
             firstActivationDate,
-            entitlementsId,
+            entitlementId,
             startDay
         )
     }
@@ -69,7 +69,7 @@ object TestData {
         regionId: Int,
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
-        entitlementsId: Int? = null,
+        entitlementId: Int? = null,
         startDay: Long? = null
     ): CardEntity {
         return createCard(
@@ -82,7 +82,7 @@ object TestData {
             issuerId,
             CodeType.STATIC,
             firstActivationDate,
-            entitlementsId,
+            entitlementId,
             startDay
         )
     }
@@ -97,7 +97,7 @@ object TestData {
         issuerId: Int? = null,
         codeType: CodeType,
         firstActivationDate: Instant? = null,
-        entitlementsId: Int? = null,
+        entitlementId: Int? = null,
         startDay: Long? = null
     ): CardEntity {
         val fakeCardInfoHash = Random.nextBytes(20)
@@ -113,7 +113,7 @@ object TestData {
                 it[Cards.cardInfoHash] = fakeCardInfoHash
                 it[Cards.codeType] = codeType
                 it[Cards.firstActivationDate] = firstActivationDate
-                it[Cards.entitlementsId] = entitlementsId
+                it[Cards.entitlementId] = entitlementId
                 it[Cards.startDay] = startDay
             }.resultedValues!!.first()
             CardEntity.wrapRow(result)

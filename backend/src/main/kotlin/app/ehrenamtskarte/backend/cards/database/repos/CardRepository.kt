@@ -49,7 +49,7 @@ object CardRepository {
         expirationDay: Long?,
         regionId: Int,
         issuerId: Int?,
-        entitlementsId: Int?,
+        entitlementId: Int?,
         codeType: CodeType,
         startDay: Long?
     ) =
@@ -61,7 +61,7 @@ object CardRepository {
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
             this.issuerId = if (issuerId != null) EntityID(issuerId, Administrators) else null
-            this.entitlementsId = if (entitlementsId != null) EntityID(entitlementsId, UserEntitlements) else null
+            this.entitlementId = if (entitlementId != null) EntityID(entitlementId, UserEntitlements) else null
             this.revoked = false
             this.codeType = codeType
             this.startDay = startDay
@@ -122,8 +122,8 @@ object CardRepository {
             .toList()
     }
 
-    fun revokeByEntitlementsId(entitlementsId: Int): Int {
-        return Cards.update({ Cards.entitlementsId eq entitlementsId and (Cards.revoked eq false) }) {
+    fun revokeByEntitlementId(entitlementId: Int): Int {
+        return Cards.update({ Cards.entitlementId eq entitlementId and (Cards.revoked eq false) }) {
             it[revoked] = true
         }
     }

@@ -115,6 +115,7 @@ export interface ProjectConfig {
   cardCreation: boolean
   selfServiceEnabled: boolean
   storeManagement: StoresManagement
+  userImportApiEnabled: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string) => {

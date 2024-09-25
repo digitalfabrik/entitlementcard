@@ -7,11 +7,13 @@ import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import UserMenu from './UserMenu'
+import dimensions from './constants/dimensions'
 
 const PrintAwareNavbar = styled(Navbar)`
   @media print {
     display: none;
   }
+  height: ${dimensions.navigationBarHeight};
 `
 
 interface Props {
