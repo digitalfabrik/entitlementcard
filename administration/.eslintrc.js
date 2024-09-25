@@ -8,23 +8,25 @@ module.exports = {
     'eslint-config-prettier',
     'plugin:@typescript-eslint/recommended',
   ],
-  ignorePatterns: ['src/generated/**', 'build/**'],
+  ignorePatterns: ['src/generated/**', 'src/coverage/**', 'build/**'],
   rules: {
     'prefer-template': 'error',
     'testing-library/prefer-screen-queries': 'off',
     'testing-library/no-node-access': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-types': ['error', { extendDefaults: true, types: { '{}': false } }],
 
     // Overly strict rules (for now)
     'class-methods-use-this': 'off',
+    'no-console': 'off',
+    'no-magic-numbers': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'jest/no-mocks-import': 'off',
 
     // Unwanted
     'lines-between-class-members': 'off',
@@ -44,14 +46,6 @@ module.exports = {
 
     curly: ['error', 'all'],
     'func-names': 'error',
-    // 'no-console': 'error',
-    // 'no-magic-numbers': [
-    //   'error',
-    //   {
-    //     ignore: [-1, 0, 1, 2],
-    //     ignoreArrayIndexes: true,
-    //   },
-    // ],
     'prefer-destructuring': ['error', { array: false }],
     'prefer-object-spread': 'error',
 
@@ -71,7 +65,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'error',
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/explicit-module-boundary-types': 'error',
-    // '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unnecessary-condition': 'error',
     '@typescript-eslint/no-unused-vars': [
@@ -92,14 +85,9 @@ module.exports = {
       },
     ],
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
-    // '@typescript-eslint/no-non-null-assertion': 'error',
 
     'jest/consistent-test-it': 'error',
     'jest/no-alias-methods': 'error',
-
-    // 'jsx-expressions/strict-logical-expressions': 'error',
-    //
-    // 'prefer-arrow/prefer-arrow-functions': 'error',
   },
   parserOptions: {
     project: true,
@@ -117,13 +105,6 @@ module.exports = {
         'jsx-a11y/click-events-have-key-events': 'off',
         'jsx-a11y/no-static-element-interactions': 'off',
         'react/jsx-no-constructed-context-values': 'off',
-      },
-    },
-    {
-      files: ['**/tools/**', 'translations/**', 'e2e-tests/**', 'metro.config.js'],
-      rules: {
-        'no-console': 'off',
-        'import/no-extraneous-dependencies': 'off',
       },
     },
   ],
