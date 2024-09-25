@@ -12,7 +12,7 @@ const handleStoreWithMissingLocationInformation = (
   store: AcceptingStoreEntry,
   storeIndex: number,
   showInputError: (message: string, timeout?: number) => void
-) => {
+): AcceptingStoreEntry => {
   showInputError(
     `Eintrag ${
       storeIndex + 1
@@ -55,11 +55,11 @@ const getStoreCoordinatesFromGeoDataService = (
 export const getStoresWithCoordinates = (
   stores: AcceptingStoreEntry[],
   showInputError: (message: string, timeout?: number) => void
-): (AcceptingStoreEntry | Promise<AcceptingStoreEntry>)[] =>
+): Promise<AcceptingStoreEntry>[] =>
   stores.map((store, index) => {
-    if (store.hasValidCoordinates()) return store
+    if (store.hasValidCoordinates()) return Promise.resolve(store)
     if (isStoreMissingLocationInformation(store)) {
-      handleStoreWithMissingLocationInformation(store, index, showInputError)
+      return Promise.resolve(handleStoreWithMissingLocationInformation(store, index, showInputError))
     }
     return getStoreCoordinatesFromGeoDataService(store, index, showInputError)
   })
