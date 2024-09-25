@@ -95,6 +95,7 @@
     "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); ts-node scripts/start.ts",
     "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); ts-node scripts/build.ts",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll",
     "lint": "NODE_ENV=test eslint . && prettier . --check",
     "ts:check": "tsc --build",
