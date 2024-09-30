@@ -19,7 +19,7 @@ const getNumChars = (value: string, predicate: (char: string) => boolean): numbe
 }
 const minPasswordLength = 12
 
-const validateNewPasswordInput = (newPassword: string, repeatNewPassword: string) => {
+const validateNewPasswordInput = (newPassword: string, repeatNewPassword: string): string | null => {
   if (newPassword.length < minPasswordLength) {
     return `Ihr Passwort muss mindestens ${minPasswordLength} Zeichen lang sein (aktuell ${newPassword.length}).`
   } else if (getNumChars(newPassword, isLowerCase) < 1) {

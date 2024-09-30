@@ -31,7 +31,18 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
   })
 }
 
-const useCardGenerator = (region: Region) => {
+type UseCardGeneratorReturn = {
+  state: CardActivationState
+  setState: (state: CardActivationState) => void
+  generateCardsPdf: (applicationId?: number) => Promise<void>
+  generateCardsCsv: (applicationId?: number) => Promise<void>
+  setCardBlueprints: (cardBlueprints: CardBlueprint[]) => void
+  cardBlueprints: CardBlueprint[]
+  setApplicationIdToMarkAsProcessed: (applicationId: number | undefined) => void
+  applicationIdToMarkAsProcessed: number | undefined
+}
+
+const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [sendMail] = useSendCardCreationConfirmationMailMutation({
     onCompleted: () => {
@@ -53,33 +64,35 @@ const useCardGenerator = (region: Region) => {
   const client = useApolloClient()
   const appToaster = useAppToaster()
 
-  const sendCardConfirmationMails = async (
-    codes: CreateCardsResult[],
-    cardBlueprints: CardBlueprint[],
-    projectId: string
-  ): Promise<void> => {
-    for (let k = 0; k < codes.length; k++) {
-      const cardBlueprint = cardBlueprints[k]
-      const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
-      const dynamicCode = codes[k].dynamicActivationCode
-      if (!mailNotificationExtension?.state || !dynamicCode.info?.extensions?.extensionRegion?.regionId) {
-        return
+  const sendCardConfirmationMails = useCallback(
+    async (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[], projectId: string): Promise<void> => {
+      for (let k = 0; k < codes.length; k++) {
+        const cardBlueprint = cardBlueprints[k]
+        const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
+        const dynamicCode = codes[k].dynamicActivationCode
+        if (
+          !mailNotificationExtension?.state ||
+          dynamicCode.info?.extensions?.extensionRegion?.regionId === undefined
+        ) {
+          return
+        }
+        const deepLink = getDeepLinkFromQrCode({
+          case: 'dynamicActivationCode',
+          value: dynamicCode,
+        })
+        await sendMail({
+          variables: {
+            project: projectId,
+            regionId: dynamicCode.info.extensions.extensionRegion.regionId,
+            recipientAddress: mailNotificationExtension.state,
+            recipientName: cardBlueprint.fullName,
+            deepLink,
+          },
+        })
       }
-      const deepLink = getDeepLinkFromQrCode({
-        case: 'dynamicActivationCode',
-        value: dynamicCode,
-      })
-      await sendMail({
-        variables: {
-          project: projectId,
-          regionId: dynamicCode.info?.extensions?.extensionRegion?.regionId,
-          recipientAddress: mailNotificationExtension.state,
-          recipientName: cardBlueprint.fullName,
-          deepLink,
-        },
-      })
-    }
-  }
+    },
+    [sendMail]
+  )
 
   const handleError = useCallback(
     async (error: unknown, codes: CreateCardsResult[] | undefined) => {
@@ -120,7 +133,7 @@ const useCardGenerator = (region: Region) => {
       generateFunction: (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) => Promise<Blob> | Blob,
       filename: string,
       applicationIdToMarkAsProcessed?: number
-    ) => {
+    ): Promise<void> => {
       let codes: CreateCardsResult[] | undefined
       setState(CardActivationState.loading)
 
@@ -155,7 +168,6 @@ const useCardGenerator = (region: Region) => {
       projectConfig,
       handleError,
       sendCardConfirmationMails,
-      projectConfig.csvExport,
       region.activatedForCardConfirmationMail,
     ]
   )

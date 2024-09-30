@@ -1,4 +1,6 @@
-const InvalidPasswordResetLink = () => (
+import { ReactElement } from 'react'
+
+const InvalidPasswordResetLink = (): ReactElement => (
   <>
     <span>Der von Ihnen geöffnete Link ist ungültig. Mögliche Gründe:</span>
     <ul>

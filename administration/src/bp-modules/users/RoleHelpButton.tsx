@@ -1,9 +1,10 @@
 import { Button, H4, Popover } from '@blueprintjs/core'
+import { ReactElement } from 'react'
 
 import { Role } from '../../generated/graphql'
 import { roleToText } from './UsersTable'
 
-const RoleHelpButton = () => {
+const RoleHelpButton = (): ReactElement => {
   return (
     <Popover
       content={

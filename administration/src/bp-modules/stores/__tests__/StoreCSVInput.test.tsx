@@ -28,6 +28,7 @@ const setIsLoadingCoordinates = jest.fn()
 describe('StoreCSVInput', () => {
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
+      // eslint-disable-next-line func-names
       readAsText: jest.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),

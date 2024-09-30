@@ -1,5 +1,5 @@
 import { Button, H3 } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -17,7 +17,7 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const HomeController = () => {
+const HomeController = (): ReactElement => {
   const { applicationFeature, cardStatistics, cardCreation } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 

@@ -28,7 +28,7 @@ describe('CreateCardsButtonBar', () => {
     expect(backButton).toBeTruthy()
 
     fireEvent.click(backButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(goBack).toHaveBeenCalled()
   })
@@ -114,7 +114,7 @@ describe('CreateCardsButtonBar', () => {
     expect(generateButton).toBeTruthy()
 
     fireEvent.click(generateButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(generateCardsPdf).toHaveBeenCalled()
   })

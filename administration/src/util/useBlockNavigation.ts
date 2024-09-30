@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { unstable_usePrompt } from 'react-router-dom'
 
-const useBlockNavigation = ({ when, message }: { when: boolean; message: string }) => {
+const useBlockNavigation = ({ when, message }: { when: boolean; message: string }): void => {
   unstable_usePrompt({ when, message })
   useEffect(() => {
     if (when) {

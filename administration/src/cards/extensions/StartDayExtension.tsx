@@ -1,6 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
+import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -13,7 +14,7 @@ const minStartDay = new PlainDate(2020, 1, 1)
 class StartDayExtension extends Extension<StartDayState, null> {
   public readonly name = StartDayExtension.name
 
-  setInitialState() {
+  setInitialState(): void {
     const today = PlainDate.fromLocalDate(new Date())
     this.state = { startDay: today.toDaysSinceEpoch() }
   }
@@ -30,7 +31,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     return !date.isBefore(minStartDay)
   }
 
-  createForm(onUpdate: () => void) {
+  createForm(onUpdate: () => void): ReactElement {
     const startDayDate =
       this.state?.startDay !== undefined
         ? PlainDate.fromDaysSinceEpoch(this.state.startDay)
@@ -51,14 +52,12 @@ class StartDayExtension extends Extension<StartDayState, null> {
             style: { fontSize: 14, padding: '6px 10px' },
           }}
           onChange={e => {
-            if (e.target.value !== null) {
-              try {
-                const date = PlainDate.from(e.target.value)
-                this.state = { startDay: date.toDaysSinceEpoch() }
-                onUpdate()
-              } catch (error) {
-                console.error(`Could not parse date from string '${e.target.value}'.`, error)
-              }
+            try {
+              const date = PlainDate.from(e.target.value)
+              this.state = { startDay: date.toDaysSinceEpoch() }
+              onUpdate()
+            } catch (error) {
+              console.error(`Could not parse date from string '${e.target.value}'.`, error)
             }
           }}
         />
@@ -66,7 +65,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     )
   }
 
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
 
@@ -79,13 +78,13 @@ class StartDayExtension extends Extension<StartDayState, null> {
     return startDay
   }
 
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionStartDay = {
       startDay: this.getValidProtobufStartDay(),
     }
   }
 
-  isValid() {
+  isValid(): boolean {
     return this.state !== null && this.hasValidStartDayDate(this.state.startDay)
   }
 
@@ -94,7 +93,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
    * The expected format is dd.MM.yyyy
    * @param value The date formatted using dd.MM.yyyy
    */
-  fromString(value: string) {
+  fromString(value: string): void {
     try {
       const startDay = PlainDate.fromCustomFormat(value)
       this.state = { startDay: startDay.toDaysSinceEpoch() }
@@ -103,7 +102,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     }
   }
 
-  toString() {
+  toString(): string {
     return this.state ? PlainDate.fromDaysSinceEpoch(this.state.startDay).format() : ''
   }
 }

@@ -53,7 +53,7 @@ checkBrowsers(paths.appPath, isInteractive)
     // run on a different port. `choosePort()` Promise resolves to the next free port.
     return choosePort(HOST, DEFAULT_PORT)
   })
-  .then((port: any) => {
+  .then((port: number | null) => {
     if (port == null) {
       // We have not found a port.
       return
@@ -93,8 +93,8 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log(chalk.cyan('Starting the development server...\n'))
       openBrowser(urls.localUrlForBrowser)
     })
-    ;['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ;['SIGINT', 'SIGTERM'].forEach(sig => {
+      process.on(sig, () => {
         devServer.close()
         process.exit()
       })
@@ -102,14 +102,14 @@ checkBrowsers(paths.appPath, isInteractive)
 
     if (process.env.CI !== 'true') {
       // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
+      process.stdin.on('end', () => {
         devServer.close()
         process.exit()
       })
     }
   })
-  .catch((err: any) => {
-    if (err && err.message) {
+  .catch((err: unknown) => {
+    if (err instanceof Error) {
       console.log(err.message)
     }
     process.exit(1)

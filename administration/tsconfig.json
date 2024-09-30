@@ -25,7 +25,8 @@
     "jest.config.ts",
     "jest.setup.ts",
     "src/**/*.d.ts",
-    "src/graphql/customScalarTypes.d.ts"
+    "src/graphql/customScalarTypes.d.ts",
+    ".eslintrc.js"
   ],
   "references": [
     {

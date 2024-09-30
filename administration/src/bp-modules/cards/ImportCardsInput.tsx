@@ -1,5 +1,5 @@
 import { NonIdealState } from '@blueprintjs/core'
-import { ChangeEventHandler, useCallback, useRef, useState } from 'react'
+import { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'
@@ -34,7 +34,12 @@ type ImportCardsInputProps = {
   isFreinetFormat: boolean
 }
 
-const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFreinetFormat }: ImportCardsInputProps) => {
+const ImportCardsInput = ({
+  setCardBlueprints,
+  lineToBlueprint,
+  headers,
+  isFreinetFormat,
+}: ImportCardsInputProps): ReactElement => {
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
@@ -43,7 +48,9 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFrein
     (message: string) => {
       appToaster?.show({ intent: 'danger', message })
       setInputState('error')
-      if (!fileInput.current) return
+      if (!fileInput.current) {
+        return
+      }
       fileInput.current.value = ''
     },
     [appToaster]
@@ -89,7 +96,7 @@ const ImportCardsInput = ({ setCardBlueprints, lineToBlueprint, headers, isFrein
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
-    if (!event.currentTarget?.files) {
+    if (!event.currentTarget.files) {
       return
     }
     const reader = new FileReader()

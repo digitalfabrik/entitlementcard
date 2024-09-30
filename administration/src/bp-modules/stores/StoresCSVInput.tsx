@@ -49,6 +49,8 @@ const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
       const { data } = entry
       const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
       const entryNumber = index + 1
+      // This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (acc[groupKey] === undefined) {
         return { ...acc, [groupKey]: [entryNumber] }
       }
@@ -65,7 +67,9 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   const showInputError = useCallback(
     (message: string | ReactElement, timeout = DEFAULT_ERROR_TIMEOUT) => {
       appToaster?.show({ intent: 'danger', message, timeout })
-      if (!fileInput.current) return
+      if (!fileInput.current) {
+        return
+      }
       fileInput.current.value = ''
     },
     [appToaster]
@@ -95,6 +99,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       }
       const numberOfColumns = lines[0]?.length
 
+      /* This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig  */
+      /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
       if (!numberOfColumns) {
         showInputError('Die gewählte Datei ist leer.')
         return
@@ -133,11 +139,11 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
         })
         .finally(() => setIsLoadingCoordinates(false))
     },
-    [showInputError, setAcceptingStores, headers, fields]
+    [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
-    if (!event.currentTarget?.files) {
+    if (!event.currentTarget.files) {
       return
     }
     const reader = new FileReader()

@@ -56,7 +56,7 @@ class PlainDate {
    * @param format A custom format as used by date-fns
    * @example
    */
-  static fromCustomFormat(value: string, format: 'dd.MM.yyyy' = 'dd.MM.yyyy') {
+  static fromCustomFormat(value: string, format: 'dd.MM.yyyy' = 'dd.MM.yyyy'): PlainDate {
     const date = parse(value, format, new Date(0))
     return PlainDate.fromLocalDate(date)
   }

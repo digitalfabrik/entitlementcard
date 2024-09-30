@@ -1,5 +1,5 @@
 import { Button, Tooltip } from '@blueprintjs/core'
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -17,7 +17,7 @@ const CreateCardsButtonBar = ({
   generateCardsPdf,
   generateCardsCsv,
   goBack,
-}: CreateCardsButtonBarProps) => {
+}: CreateCardsButtonBarProps): ReactElement => {
   const allCardsValid = cardBlueprints.every(cardBlueprint => cardBlueprint.isValid())
   const { csvExport } = useContext(ProjectConfigContext)
 

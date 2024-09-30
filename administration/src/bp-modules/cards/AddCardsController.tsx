@@ -1,5 +1,5 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -10,7 +10,7 @@ import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
 
-const AddCardsController = () => {
+const AddCardsController = (): ReactElement => {
   const { region } = useContext(WhoAmIContext).me!
   if (!region) {
     return (
@@ -43,8 +43,10 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     message: 'Falls Sie fortfahren, werden alle Eingaben verworfen.',
   })
 
-  if (state === CardActivationState.loading) return <Spinner />
-  if (state === CardActivationState.finished)
+  if (state === CardActivationState.loading) {
+    return <Spinner />
+  }
+  if (state === CardActivationState.finished) {
     return (
       <GenerationFinished
         reset={() => {
@@ -53,6 +55,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
         }}
       />
     )
+  }
 
   return (
     <>

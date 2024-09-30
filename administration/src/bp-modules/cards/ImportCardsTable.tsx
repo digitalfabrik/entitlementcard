@@ -1,6 +1,6 @@
 import { Cell, Column, Table2, TruncatedFormat2 } from '@blueprintjs/table'
 import '@blueprintjs/table/lib/css/table.css'
-import { useCallback } from 'react'
+import { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'
@@ -24,7 +24,7 @@ const StyledCell = styled(Cell)`
   white-space: break-spaces;
 `
 
-const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps) => {
+const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps): ReactElement => {
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
       const cardBlueprint = cardBlueprints[rowIndex] as CSVCard

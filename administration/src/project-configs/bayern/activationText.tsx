@@ -1,5 +1,5 @@
 import { Button, Typography, styled } from '@mui/material'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 const ActivationButton = styled(Button)`
   margin-top: 12px;
@@ -8,7 +8,7 @@ const ActivationButton = styled(Button)`
   }
 `
 
-export const ActivationText = (applicationName: string, downloadLink: string, deepLink: string) => (
+export const ActivationText = (applicationName: string, downloadLink: string, deepLink: string): ReactElement => (
   <div>
     <Typography variant='h6' mb='8px'>
       Aktivierung nur in der App möglich
