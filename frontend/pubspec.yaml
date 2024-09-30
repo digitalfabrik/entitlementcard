@@ -100,6 +100,12 @@ flutter:
     - assets/nuernberg/background.png
     - assets/nuernberg/intro_slides/
     - assets/nuernberg/l10n/
+    - assets/koblenz/icon.png
+    - assets/koblenz/header-logo.svg
+    - assets/koblenz/body-logo.png
+    - assets/koblenz/background.png
+    - assets/koblenz/intro_slides/
+    - assets/koblenz/l10n/
     - assets/ca/
 
   # An image asset can refer to one or more resolution-specific 'variants', see
