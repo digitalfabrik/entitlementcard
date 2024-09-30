@@ -54,7 +54,7 @@ const ApiTokenSetting = (): ReactElement => {
   const appToaster = useAppToaster()
 
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
-  const [createdToken, setCreatedToken] = useState<string>('')
+  const [createdToken, setCreatedToken] = useState<string | null>(null)
   const [expiresIn, setExpiresIn] = useState<number>(1)
 
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
@@ -127,7 +127,7 @@ const ApiTokenSetting = (): ReactElement => {
               name='expiresIn'
               id='expiresIn'
               value={expiresIn}
-              onChange={e => setExpiresIn(parseInt(e.target.value))}>
+              onChange={e => setExpiresIn(parseInt(e.target.value, 10))}>
               <option value='1'>1 Monat</option>
               <option value='3'>3 Monate</option>
               <option value='12'>1 Jahr</option>
@@ -137,7 +137,7 @@ const ApiTokenSetting = (): ReactElement => {
               Erstellen
             </Button>
           </Row>
-          {createdToken && (
+          {createdToken !== null && (
             <>
               <p>Neues Token:</p>
               <NewTokenText> {createdToken}</NewTokenText>
@@ -151,7 +151,7 @@ const ApiTokenSetting = (): ReactElement => {
               <tr>
                 <th>E-Mail des Erstellers</th>
                 <th>Ablaufdatum</th>
-                <th></th>
+                <th aria-label='Delete' />
               </tr>
             </thead>
             <tbody>

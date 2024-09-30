@@ -23,16 +23,13 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-console': 'off',
     'no-magic-numbers': 'off',
+    'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'jest/no-mocks-import': 'off',
-    'no-console': 'off',
-    'no-plusplus': 'off',
 
     // Unwanted
     'lines-between-class-members': 'off',
@@ -43,6 +40,12 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/sort-comp': 'off',
     'jest/expect-expect': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        controlComponents: ['HTMLSelect'],
+      },
+    ],
 
     // Disabling since better @typescript-eslint rules available or they make no sense for ts projects
     'consistent-return': 'off',
