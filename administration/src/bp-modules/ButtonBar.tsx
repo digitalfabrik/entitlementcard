@@ -1,6 +1,8 @@
 import { Card } from '@blueprintjs/core'
 import styled from 'styled-components'
 
+import dimensions from './constants/dimensions'
+
 const ButtonBar = styled(Card)`
   width: 100%;
   padding: 15px;
@@ -12,6 +14,7 @@ const ButtonBar = styled(Card)`
   & button {
     margin: 5px;
   }
+  height: ${dimensions.bottomBarHeight}px;
 `
 
 export default ButtonBar

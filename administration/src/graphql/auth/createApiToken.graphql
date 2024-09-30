@@ -1,0 +1,3 @@
+mutation createApiToken($expiresIn: Int!) {
+  createApiTokenPayload: createApiToken(expiresIn: $expiresIn)
+}

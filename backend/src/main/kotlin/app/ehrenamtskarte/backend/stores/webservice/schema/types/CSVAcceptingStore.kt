@@ -1,5 +1,4 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema.types
-
 data class CSVAcceptingStore(
     var name: String?,
     var street: String?,

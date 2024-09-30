@@ -114,6 +114,7 @@ export type ProjectConfig = {
   freinetCSVImportEnabled: boolean
   cardCreation: boolean
   storeManagement: StoresManagement
+  userImportApiEnabled: boolean
 }
 
 export const setProjectConfigOverride = (hostname: string): void => {
