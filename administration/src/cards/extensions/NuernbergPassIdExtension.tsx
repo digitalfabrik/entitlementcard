@@ -1,5 +1,6 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
+import { ReactElement } from 'react'
 
 import { CardExtensions, NuernergPassIdentifier } from '../../generated/card_pb'
 import { Extension } from './extensions'
@@ -10,8 +11,8 @@ const nuernbergPassIdLength = 10
 class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   public readonly name = NuernbergPassIdExtension.name
 
-  setInitialState() {}
-  createForm(onUpdate: () => void) {
+  setInitialState(): void {}
+  createForm(onUpdate: () => void): ReactElement {
     return (
       <FormGroup
         label='Nürnberg-Pass-ID'
@@ -47,26 +48,26 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
     )
   }
 
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionNuernbergPassId = {
       identifier: NuernergPassIdentifier.passId,
       passId: this.state?.passId,
     }
   }
 
-  isValid() {
+  isValid(): boolean {
     return this.state !== null && this.state.passId > 0 && this.state.passId < 10 ** nuernbergPassIdLength
   }
 
-  fromString(state: string) {
+  fromString(state: string): void {
     const passId = parseInt(state, 10)
     this.state = !isNaN(passId) ? { passId } : null
   }
 
-  toString() {
+  toString(): string {
     return this.state ? `${this.state.passId}` : ''
   }
 }

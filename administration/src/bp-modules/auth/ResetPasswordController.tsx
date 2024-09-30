@@ -1,5 +1,5 @@
 import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -11,7 +11,7 @@ import StandaloneCenter from '../StandaloneCenter'
 import getQueryResult from '../util/getQueryResult'
 import validateNewPasswordInput from './validateNewPasswordInput'
 
-const ResetPasswordController = () => {
+const ResetPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [queryParams] = useSearchParams()
@@ -56,7 +56,9 @@ const ResetPasswordController = () => {
 
   const checkPasswordResetLinkQueryResult = getQueryResult(checkPasswordResetLinkQuery)
 
-  if (!checkPasswordResetLinkQueryResult.successful) return checkPasswordResetLinkQueryResult.component
+  if (!checkPasswordResetLinkQueryResult.successful) {
+    return checkPasswordResetLinkQueryResult.component
+  }
 
   return (
     <StandaloneCenter>

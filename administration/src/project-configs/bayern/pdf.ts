@@ -4,7 +4,7 @@ import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
-const renderPdfInfo = ({ info, region }: InfoParams) => {
+const renderPdfInfo = ({ info, region }: InfoParams): string => {
   const expirationDay = info.expirationDay ?? 0
   const expirationDate = expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
 
@@ -16,7 +16,7 @@ Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format()}
 von ${region.prefix} ${region.name}`
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams) => {
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
   return cardInfoHash
 }
 

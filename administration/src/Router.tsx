@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -40,7 +40,7 @@ const Main = styled.div`
 
 export const FREINET_PARAM = 'freinet'
 
-const Router = () => {
+const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
   const router = useMemo(() => {
@@ -83,7 +83,7 @@ const Router = () => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
-          ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
+          ...(projectConfig.cardStatistics.enabled ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
           ...(projectConfig.cardCreation
             ? [
                 { path: 'cards', element: <CreateCardsController /> },
@@ -100,14 +100,7 @@ const Router = () => {
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [
-    authData,
-    projectConfig.applicationFeature,
-    signIn,
-    signOut,
-    projectConfig.cardStatistics,
-    projectConfig.cardCreation,
-  ])
+  }, [authData, signIn, signOut, projectConfig])
 
   return <RouterProvider router={router} />
 }
