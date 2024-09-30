@@ -10,7 +10,7 @@ type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
 type RadioGroupForm<T extends string> = Form<State<T>, Options<T>, ValidatedInput<T>, AdditionalProps>
 
-export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
+export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
     if (selectedValue === null) {
       return { type: 'error', message: 'Feld ist erforderlich.' }

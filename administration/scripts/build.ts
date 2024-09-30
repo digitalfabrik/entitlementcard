@@ -27,7 +27,7 @@ process.on('unhandledRejection', err => {
 
 const paths = getPaths()
 
-function copyPublicFolder() {
+const copyPublicFolder = () => {
   fs.cpSync(paths.appPublic, paths.appBuild, {
     dereference: true,
     recursive: true,
@@ -57,11 +57,13 @@ const writeStatsJson = argv.indexOf('--stats') !== -1
 const config = configFactory('production')
 
 // Create the production build and print the deployment instructions.
-function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
+const build = (
+  previousFileSizes: FileSizeReporter.OpaqueFileSizes
+): Promise<{
   stats: webpack.Stats
   previousFileSizes: FileSizeReporter.OpaqueFileSizes
   warnings: string[]
-}> {
+}> => {
   console.log('Creating an optimized production build...')
 
   const compiler = webpack(config)

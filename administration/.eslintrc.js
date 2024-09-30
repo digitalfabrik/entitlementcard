@@ -101,7 +101,7 @@ module.exports = {
     'jest/no-alias-methods': 'error',
 
     'jsx-expressions/strict-logical-expressions': 'error',
-    // 'prefer-arrow/prefer-arrow-functions': 'error',
+    'prefer-arrow/prefer-arrow-functions': 'error',
   },
   parserOptions: {
     project: true,

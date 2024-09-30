@@ -8,7 +8,7 @@ import getPaths from './getPaths'
 /**
  * Get additional module paths based on the baseUrl of a compilerOptions object.
  */
-function getAdditionalModulePaths(paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) {
+const getAdditionalModulePaths = (paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) => {
   const baseUrl = options.baseUrl
 
   if (!baseUrl) {
@@ -49,7 +49,7 @@ function getAdditionalModulePaths(paths: ReturnType<typeof getPaths>, options: {
 /**
  * Get webpack aliases based on the baseUrl of a compilerOptions object.
  */
-function getWebpackAliases(paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) {
+const getWebpackAliases = (paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) => {
   const baseUrl = options.baseUrl
 
   const baseUrlResolved = baseUrl ? path.resolve(paths.appPath, baseUrl) : null
@@ -62,7 +62,7 @@ function getWebpackAliases(paths: ReturnType<typeof getPaths>, options: { baseUr
   return {}
 }
 
-function getModules() {
+const getModules = () => {
   const paths = getPaths()
   // Set up the config based on tsconfig.json
 

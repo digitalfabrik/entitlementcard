@@ -38,13 +38,13 @@ const WorkAtOrganizationFormHelper = ({
   )
 }
 
-function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
+const replaceAt = <T,>(array: T[], index: number, newItem: T): T[] => {
   const newArray = [...array]
   newArray[index] = newItem
   return newArray
 }
 
-function removeAt<T>(array: T[], index: number): T[] {
+const removeAt = <T,>(array: T[], index: number): T[] => {
   const newArray = [...array]
   newArray.splice(index, 1)
   return newArray

@@ -18,7 +18,7 @@ export class PdfError extends Error {
   }
 }
 
-async function fillContentAreas(
+const fillContentAreas = async (
   doc: PDFDocument,
   templatePage: PDFPage,
   cardInfoHashBase64: string,
@@ -28,7 +28,7 @@ async function fillContentAreas(
   cardBlueprint: CardBlueprint,
   pdfConfig: PdfConfig,
   deepLink: string
-): Promise<void> {
+): Promise<void> => {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
@@ -77,12 +77,12 @@ async function fillContentAreas(
   )
 }
 
-export async function generatePdf(
+export const generatePdf = async (
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
   region: Region,
   pdfConfig: PdfConfig
-): Promise<Blob> {
+): Promise<Blob> => {
   try {
     const doc = await PDFDocument.create()
 

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, ValidationResult } from './FormType'
 
-function mapValues<VPre extends { [k in keyof VPre]: unknown }, VPost extends { [k in keyof VPre]: unknown }>(
+const mapValues = <VPre extends { [k in keyof VPre]: unknown }, VPost extends { [k in keyof VPre]: unknown }>(
   object: { [k in keyof VPre]: VPre[k] },
   map: <k extends keyof VPre>(value: VPre[k], key: k) => VPost[k]
-): { [k in keyof VPre]: VPost[k] } {
+): { [k in keyof VPre]: VPost[k] } => {
   const result: Partial<VPost> = {}
   Object.entries(object).reduce((result: Partial<VPost>, [key, value]) => {
     // We assume that `key` is in VPre. We would need a typescript feature (exact types) to remove this assumption.
@@ -33,22 +33,21 @@ type CompoundValidatedInput<Forms extends SubForms> = {
   [key in keyof Forms]: InferValidatedInput<Forms[key]>
 }
 
-export function createCompoundInitialState<Forms extends SubForms>(subForms: Forms): CompoundState<Forms> {
-  return mapValues<Forms, CompoundState<Forms>>(
+export const createCompoundInitialState = <Forms extends SubForms>(subForms: Forms): CompoundState<Forms> =>
+  mapValues<Forms, CompoundState<Forms>>(
     subForms,
     <k extends keyof Forms>(form: Forms[k]) => form.initialState as InferState<Forms[k]>
   )
-}
 
 /**
  * Creates a getArrayBufferKeys function that returns all keys of all sub forms.
  * */
-export function createCompoundGetArrayBufferKeys<Forms extends SubForms>(subForms: Forms) {
-  return (state: CompoundState<Forms>): number[] =>
+export const createCompoundGetArrayBufferKeys =
+  <Forms extends SubForms>(subForms: Forms) =>
+  (state: CompoundState<Forms>): number[] =>
     Object.entries(subForms)
       .map(([key, form]) => form.getArrayBufferKeys(state[key]))
       .flat()
-}
 
 type KeyWithOptions<Forms extends SubForms> = {
   [key in keyof Forms]: {} extends InferOptions<Forms[key]> ? never : key
@@ -59,12 +58,12 @@ type SubFormsOptions<Forms extends SubForms> = {
 
 type InferValidationResult<T extends AnyForm> = ValidationResult<InferValidatedInput<T>>
 
-function validateKey<Forms extends SubForms, K extends keyof Forms>(
+const validateKey = <Forms extends SubForms, K extends keyof Forms>(
   subForms: Forms,
   subFormsOptions: SubFormsOptions<Forms>,
   key: K,
   state: CompoundState<Forms>
-): InferValidationResult<Forms[K]> {
+): InferValidationResult<Forms[K]> => {
   if (key in subFormsOptions) {
     const optionsKey = key as unknown as KeyWithOptions<Forms>
     return subForms[key].validate(state[key], subFormsOptions[optionsKey]) as InferValidationResult<Forms[K]>
@@ -76,11 +75,9 @@ function validateKey<Forms extends SubForms, K extends keyof Forms>(
  * Returns an error if the getValidatedInput function of one of the sub forms returns an error.
  * Otherwise, returns a valid result whose value maps a sub form key to its valid input value.
  */
-export function createCompoundValidate<Forms extends SubForms>(
-  subForms: Forms,
-  subFormsOptions: SubFormsOptions<Forms>
-) {
-  return (state: CompoundState<Forms>): ValidationResult<CompoundValidatedInput<Forms>> => {
+export const createCompoundValidate =
+  <Forms extends SubForms>(subForms: Forms, subFormsOptions: SubFormsOptions<Forms>) =>
+  (state: CompoundState<Forms>): ValidationResult<CompoundValidatedInput<Forms>> => {
     const results = mapValues<Forms, { [key in keyof Forms]: ValidationResult<InferValidatedInput<Forms[key]>> }>(
       subForms,
       (form, key) => validateKey(subForms, subFormsOptions, key, state)
@@ -96,7 +93,6 @@ export function createCompoundValidate<Forms extends SubForms>(
     })
     return { type: 'valid', value }
   }
-}
 
 type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
   [k in K]: InferValidatedInput<Forms[k]>
@@ -106,16 +102,14 @@ type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
 
 type FormWithStringValidatedInput = Form<any, any, string, any>
 
-export function createSwitchValidate<
-  K extends string,
-  Forms extends SubForms & { [k in K]: FormWithStringValidatedInput }
->(
-  subForms: Forms,
-  subFormsOptions: SubFormsOptions<Forms>,
-  switchBy: K,
-  selectedKeyByValue: { [v in InferValidatedInput<Forms[K]>]: keyof Forms }
-) {
-  return (state: CompoundState<Forms>): ValidationResult<SwitchValidationInput<Forms, K>> => {
+export const createSwitchValidate =
+  <K extends string, Forms extends SubForms & { [k in K]: FormWithStringValidatedInput }>(
+    subForms: Forms,
+    subFormsOptions: SubFormsOptions<Forms>,
+    switchBy: K,
+    selectedKeyByValue: { [v in InferValidatedInput<Forms[K]>]: keyof Forms }
+  ) =>
+  (state: CompoundState<Forms>): ValidationResult<SwitchValidationInput<Forms, K>> => {
     const keyResult = validateKey(subForms, subFormsOptions, switchBy, state)
     if (keyResult.type === 'error') {
       return { type: 'error' }
@@ -137,4 +131,3 @@ export function createSwitchValidate<
       } as SwitchValidationInput<Forms, K>,
     }
   }
-}

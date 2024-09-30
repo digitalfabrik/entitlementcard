@@ -91,7 +91,7 @@ const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) =>
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.Configuration {
+const createWebpackConfig = (webpackEnv: 'development' | 'production'): webpack.Configuration => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
