@@ -49,6 +49,8 @@ const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
       const { data } = entry
       const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
       const entryNumber = index + 1
+      // This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (acc[groupKey] === undefined) {
         return { ...acc, [groupKey]: [entryNumber] }
       }
@@ -137,7 +139,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
         })
         .finally(() => setIsLoadingCoordinates(false))
     },
-    [showInputError, setAcceptingStores, headers, fields]
+    [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {

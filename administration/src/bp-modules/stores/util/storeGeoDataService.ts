@@ -57,7 +57,9 @@ export const getStoresWithCoordinates = (
   showInputError: (message: string, timeout?: number) => void
 ): Promise<AcceptingStoreEntry>[] =>
   stores.map((store, index) => {
-    if (store.hasValidCoordinates()) return Promise.resolve(store)
+    if (store.hasValidCoordinates()) {
+      return Promise.resolve(store)
+    }
     if (isStoreMissingLocationInformation(store)) {
       return Promise.resolve(handleStoreWithMissingLocationInformation(store, index, showInputError))
     }

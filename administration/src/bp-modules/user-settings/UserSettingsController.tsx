@@ -23,7 +23,7 @@ const UserSettingsController = (): ReactElement => {
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userImportApiEnabled && role == Role.ProjectAdmin && <ApiTokenSettings />}
+      {userImportApiEnabled && role === Role.ProjectAdmin && <ApiTokenSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>
