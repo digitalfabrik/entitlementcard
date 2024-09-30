@@ -14,12 +14,15 @@ const EmailForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { email: '' },
   getArrayBufferKeys: () => [],
   validate: ({ email }) => {
-    if (email === '') return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (email.length > MAX_SHORT_TEXT_LENGTH)
+    if (email === '') {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (email.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
         message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
       }
+    }
     return { type: 'valid', value: { email } }
   },
   Component: ({ state, setState, label, minWidth = 100 }) => {

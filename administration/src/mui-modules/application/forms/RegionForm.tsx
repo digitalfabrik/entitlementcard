@@ -53,7 +53,9 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
         if (result.regions.length === 1) {
           const region = result.regions[0]
           setState(prevState => {
-            if (prevState.region.manuallySelected) return prevState
+            if (prevState.region.manuallySelected) {
+              return prevState
+            }
             return {
               region: { selectedValue: region.id.toString(), manuallySelected: false },
               postalCodeUsedForAutoSelect: postalCode,
@@ -114,8 +116,9 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
 }
 
 const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionsByPostalCodeQuery>) => {
-  if (state.region.manuallySelected) return null
-  else if (postalCode.length !== 5) {
+  if (state.region.manuallySelected) {
+    return null
+  } else if (postalCode.length !== 5) {
     return (
       <StyledAlert severity='error'>
         Bitte geben Sie oben eine 5-stellige Postleitzahl an, sodass die zuständige Behörde automatisch ermittelt werden
@@ -131,7 +134,7 @@ const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof 
         Bitte nutzen Sie das folgende Auswahlfeld, um Ihre zuständige Behörde auszuwählen.
       </StyledAlert>
     )
-  } else if (query.data && query.data.regions?.length > 1) {
+  } else if (query.data && query.data.regions.length > 1) {
     const regions = query.data.regions
     return (
       <StyledAlert severity='warning'>

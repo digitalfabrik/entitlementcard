@@ -71,7 +71,7 @@ function getModules() {
 
   const config = typescript.readConfigFile(paths.appTsConfig, typescript.sys.readFile).config
 
-  const options = config.compilerOptions || {}
+  const options = config.compilerOptions ?? {}
 
   const additionalModulePaths = getAdditionalModulePaths(options)
 

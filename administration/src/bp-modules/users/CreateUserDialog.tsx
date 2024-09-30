@@ -1,5 +1,5 @@
 import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -28,7 +28,7 @@ const CreateUserDialog = ({
   // If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator and RegionManager
   // roles are selectable.
   regionIdOverride: number | null
-}) => {
+}): ReactElement => {
   const appToaster = useAppToaster()
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)

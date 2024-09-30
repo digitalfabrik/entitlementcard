@@ -26,16 +26,13 @@ type StatisticsFilterBarProps = {
 }
 
 const isValidDateString = (value: string): boolean => {
-  if (value !== null) {
-    try {
-      PlainDate.from(value)
-      return true
-    } catch (error) {
-      console.error(`Could not parse date from string '${value}'.`, error)
-      return false
-    }
+  try {
+    PlainDate.from(value)
+    return true
+  } catch (error) {
+    console.error(`Could not parse date from string '${value}'.`, error)
+    return false
   }
-  return false
 }
 const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
   if (!isValidDateString(dateStart) || !isValidDateString(dateEnd)) {

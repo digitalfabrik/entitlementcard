@@ -1,8 +1,8 @@
-import { ReactNode, createContext, useMemo, useState } from 'react'
+import { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
 
 import { SignInPayload } from './generated/graphql'
 
-export interface TokenPayload {
+export type TokenPayload = {
   token: string
   expiry: Date
   adminId: number
@@ -48,7 +48,7 @@ const loadTokenPayload = (): TokenPayload | null => {
   return null
 }
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
+const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [tokenPayload, setTokenPayload] = useState<TokenPayload | null>(loadTokenPayload())
   const contextValue = useMemo(
     () => ({

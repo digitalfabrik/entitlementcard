@@ -1,6 +1,6 @@
 import { Button, Menu } from '@blueprintjs/core'
 import { Classes, ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
-import React, { useContext, useMemo } from 'react'
+import React, { ReactElement, useContext, useMemo } from 'react'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -34,7 +34,7 @@ const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) 
   )
 }
 
-const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId: number | null }) => {
+const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId: number | null }): ReactElement => {
   const projectId = useContext(ProjectConfigContext).projectId
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
@@ -49,9 +49,11 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
     [regionsQueryResult]
   )
 
-  if (!regionsQueryResult.successful) return regionsQueryResult.component
+  if (!regionsQueryResult.successful) {
+    return regionsQueryResult.component
+  }
 
-  const activeItem = regions?.find((other: Region) => props.selectedId === other.id)
+  const activeItem = regions.find((other: Region) => props.selectedId === other.id)
   return (
     <RegionSelect
       activeItem={activeItem}

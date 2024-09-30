@@ -1,6 +1,7 @@
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core'
 import { ItemRenderer, Select } from '@blueprintjs/select'
 import { PartialMessage } from '@bufbuild/protobuf'
+import { ReactElement } from 'react'
 
 import { BavariaCardType as BavariaCardTypeEnum, CardExtensions } from '../../generated/card_pb'
 import { Extension } from './extensions'
@@ -14,11 +15,11 @@ type BavariaCardTypeState = typeof BAVARIA_CARD_TYPE_STANDARD | typeof BAVARIA_C
 class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
   public readonly name = BavariaCardTypeExtension.name
 
-  setInitialState() {
+  setInitialState(): void {
     this.state = BAVARIA_CARD_TYPE_STANDARD
   }
 
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionBavariaCardType = {
       cardType: this.state === BAVARIA_CARD_TYPE_GOLD ? BavariaCardTypeEnum.GOLD : BavariaCardTypeEnum.STANDARD,
     }
@@ -28,7 +29,7 @@ class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
     return this.state === BAVARIA_CARD_TYPE_GOLD
   }
 
-  createForm(onUpdate: () => void) {
+  createForm(onUpdate: () => void): ReactElement {
     const CardTypeSelect = Select.ofType<BavariaCardTypeState>()
 
     const renderCardType: ItemRenderer<BavariaCardTypeState> = (cardType, { handleClick, modifiers }) => {
@@ -63,11 +64,11 @@ class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
     )
   }
 
-  isValid() {
+  isValid(): boolean {
     return this.state !== null
   }
 
-  fromString(state: string) {
+  fromString(state: string): void {
     if (state === BAVARIA_CARD_TYPE_STANDARD || state === BAVARIA_CARD_TYPE_STANDARD_LEGACY) {
       this.state = BAVARIA_CARD_TYPE_STANDARD
     } else if (state === BAVARIA_CARD_TYPE_GOLD || state === BAVARIA_CARD_TYPE_GOLD_LEGACY) {
@@ -76,7 +77,7 @@ class BavariaCardTypeExtension extends Extension<BavariaCardTypeState, null> {
       this.state = null
     }
   }
-  toString() {
+  toString(): string {
     return this.state ?? ''
   }
 }

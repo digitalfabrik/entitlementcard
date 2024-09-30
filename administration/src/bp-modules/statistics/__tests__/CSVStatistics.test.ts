@@ -5,7 +5,7 @@ import { CsvStatisticsError, generateCsv, getCsvFileName } from '../CSVStatistic
 import { statisticKeyLabels } from '../constants'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: (input: any[]) => input[0].join(','),
+  stringify: (input: string[][]) => input[0].join(','),
 }))
 
 jest.mock('../../../project-configs/showcase/config')
