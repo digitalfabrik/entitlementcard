@@ -72,7 +72,7 @@ class ApiTokenQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
-        admin?.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
+        admin?.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
 
         return transaction {
             (ApiTokens leftJoin Administrators)

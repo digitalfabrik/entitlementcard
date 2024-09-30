@@ -1,11 +1,17 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
+import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
+import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
+import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.userdata.exception.UserImportException
+import at.favre.lib.crypto.bcrypt.BCrypt
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -19,15 +25,21 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class UserImportHandler {
-
+class UserImportHandler(
+    private val backendConfiguration: BackendConfiguration
+) {
     private val logger: Logger = LoggerFactory.getLogger(UserImportHandler::class.java)
 
     fun handle(ctx: Context) {
         try {
-            // TODO as part of #1417:
-            // validate auth token, check to which project it belongs, check if this project is allowed to send user data
-            // (should be added as a flag in config.yml), save projectId into val for the later use, else return an error
+            val apiToken = authenticate(ctx)
+
+            val project = transaction { ProjectEntity[apiToken.projectId] }
+            val projectConfig = backendConfiguration.getProjectConfig(project.project)
+            if (!projectConfig.selfServiceEnabled) {
+                throw UserImportException("User import is not enabled in the project")
+            }
+
             val files = ctx.uploadedFiles("file")
             when {
                 files.isEmpty() -> throw UserImportException("No file uploaded")
@@ -37,15 +49,33 @@ class UserImportHandler {
 
             BufferedReader(InputStreamReader(file.content())).use { reader ->
                 getCSVParser(reader).use { csvParser ->
-                    importData(csvParser)
+                    importData(csvParser, project.id.value)
                 }
             }
-            ctx.status(200).result("Import successfully completed")
+            ctx.status(200).json(mapOf("message" to "Import successfully completed"))
         } catch (exception: UserImportException) {
-            ctx.status(400).result(exception.message ?: "Import failed")
+            ctx.status(400).json(mapOf("message" to exception.message))
+        } catch (exception: UnauthorizedException) {
+            ctx.status(401).json(mapOf("message" to exception.message))
+        } catch (exception: ForbiddenException) {
+            ctx.status(403).json(mapOf("message" to exception.message))
+        } catch (exception: ProjectNotFoundException) {
+            ctx.status(404).json(mapOf("message" to exception.message))
         } catch (exception: Exception) {
             logger.error("Failed to perform user import", exception)
-            ctx.status(500).result("Internal error occurred")
+            ctx.status(500).json(mapOf("message" to "Internal error occurred"))
+        }
+    }
+
+    private fun authenticate(ctx: Context): ApiTokenEntity {
+        val authHeader = ctx.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
+            ?: throw UnauthorizedException()
+        val token = authHeader.substring(7)
+
+        return transaction {
+            ApiTokenEntity.find { ApiTokens.expirationDate greater LocalDate.now() }
+                .firstOrNull { BCrypt.verifyer().verify(token.toCharArray(), it.token).verified }
+                ?: throw ForbiddenException()
         }
     }
 
@@ -60,7 +90,7 @@ class UserImportHandler {
         )
     }
 
-    private fun importData(csvParser: CSVParser) {
+    private fun importData(csvParser: CSVParser, projectId: Int) {
         val headers = csvParser.headerMap.keys
         val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
         if (!headers.containsAll(requiredColumns)) {
@@ -68,9 +98,7 @@ class UserImportHandler {
         }
 
         transaction {
-            // TODO as part of #1417: define the project by auth token
-            val project = ProjectEntity.find { Projects.project eq "koblenz.sozialpass.app" }.single()
-            val regionsByProject = Regions.select { Regions.projectId eq project.id }
+            val regionsByProject = Regions.select { Regions.projectId eq projectId }
                 .associate { it[Regions.regionIdentifier] to it[Regions.id].value }
 
             for (entry in csvParser) {

@@ -53,7 +53,7 @@ class WebService {
         val mapStyleHandler = MapStyleHandler(config)
         val applicationHandler = ApplicationAttachmentHandler(applicationData)
         val healthHandler = HealthHandler(config)
-        val userImportHandler = UserImportHandler()
+        val userImportHandler = UserImportHandler(config)
 
         app.post("/") { ctx ->
             if (!production) {
