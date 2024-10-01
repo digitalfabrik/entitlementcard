@@ -2,6 +2,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { ReactElement } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { AcceptingStoreEntry } from '../AcceptingStoreEntry'
 import StoresButtonBar from '../StoresButtonBar'
@@ -16,6 +17,7 @@ const importStores = jest.fn()
 const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('StoresButtonBar', () => {
+  localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, 'nuernberg.sozialpass.app')
   it('Should goBack when clicking back', async () => {
     const { getByText } = render(
       <StoresButtonBar dryRun setDryRun={setDryRun} goBack={goBack} acceptingStores={[]} importStores={importStores} />,

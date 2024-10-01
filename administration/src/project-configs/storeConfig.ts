@@ -1,5 +1,4 @@
-import { buildConfigNuernberg } from 'build-configs'
-
+import { getBuildConfig } from '../util/getBuildConfig'
 import {
   FIELD_HOUSE_NUMBER,
   FIELD_LATITUDE,
@@ -8,14 +7,14 @@ import {
   FIELD_NAME,
   FIELD_POSTAL_CODE,
   FIELD_STREET,
-} from '../constants'
-import { StoresManagement } from '../getProjectConfig'
+} from './constants'
+import { StoresManagement } from './getProjectConfig'
 import {
   hasMandatoryValue,
   hasValidCategoryId,
   isCoordinate,
   noValidationRequired,
-} from '../helper/storeFieldValidation'
+} from './helper/storeFieldValidation'
 
 export const storeConfig: StoresManagement = {
   enabled: true,
@@ -35,7 +34,7 @@ export const storeConfig: StoresManagement = {
     {
       name: 'categoryId',
       isMandatory: true,
-      isValid: category => hasValidCategoryId(category, buildConfigNuernberg.common.categories),
+      isValid: category => hasValidCategoryId(category, getBuildConfig(window.location.hostname).common.categories),
       columnWidth: 100,
     },
   ],
