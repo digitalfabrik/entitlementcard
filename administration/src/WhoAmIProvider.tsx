@@ -1,5 +1,5 @@
 import { Button, Spinner } from '@blueprintjs/core'
-import { ReactNode, createContext, useContext } from 'react'
+import { ReactElement, ReactNode, createContext, useContext } from 'react'
 
 import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
@@ -14,7 +14,7 @@ export const WhoAmIContext = createContext<{
   refetch: () => {},
 })
 
-const WhoAmIProvider = ({ children }: { children: ReactNode }) => {
+const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { projectId } = useContext(ProjectConfigContext)
   const { signOut } = useContext(AuthContext)
   const { loading, error, data, refetch, previousData } = useWhoAmIQuery({
@@ -22,13 +22,14 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }) => {
   })
   // Use the previous data (if existent) while potentially loading new data to prevent remounting
   const dataForContext = data ?? previousData
-  if (!dataForContext && loading)
+  if (!dataForContext && loading) {
     return (
       <StandaloneCenter>
         <Spinner />
       </StandaloneCenter>
     )
-  if (!dataForContext || error)
+  }
+  if (!dataForContext || error) {
     return (
       <StandaloneCenter>
         <p>Deine Konto-Informationen konnten nicht geladen werden.</p>
@@ -40,6 +41,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }) => {
         </Button>
       </StandaloneCenter>
     )
+  }
   return <WhoAmIContext.Provider value={{ me: dataForContext.me, refetch }}>{children}</WhoAmIContext.Provider>
 }
 

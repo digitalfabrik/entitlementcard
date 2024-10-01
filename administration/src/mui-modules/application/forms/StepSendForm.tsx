@@ -75,7 +75,9 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     )
 
     const policyQueryHandler = getQueryResult(policyQuery)
-    if (!policyQueryHandler.successful) return policyQueryHandler.component
+    if (!policyQueryHandler.successful) {
+      return policyQueryHandler.component
+    }
     const dataPrivacyPolicy = policyQueryHandler.data.dataPolicy.dataPrivacyPolicy
 
     return (

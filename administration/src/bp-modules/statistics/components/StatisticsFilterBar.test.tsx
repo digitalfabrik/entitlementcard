@@ -14,7 +14,7 @@ describe('StatisticFilterBar', () => {
     )
     const applyFilterButton = getByText('Filter anwenden')
     fireEvent.click(applyFilterButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
     expect(onApplyFilter).toHaveBeenCalled()
   })
 
@@ -82,7 +82,7 @@ describe('StatisticFilterBar', () => {
     )
     const csvExportButton = getByText('CSV Export')
     fireEvent.click(csvExportButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
     expect(onExportCsv).toHaveBeenCalled()
   })
 

@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 
-const useMetaTags = () => {
+const useMetaTags = (): void => {
   const config = useContext(ProjectConfigContext)
   useEffect(() => {
     document.title = `${config.name} Verwaltung`

@@ -14,7 +14,7 @@ const MAX_NAME_LENGTH = 30
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
 
-export interface JSONCardBlueprint<E = ExtensionInstance> {
+export type JSONCardBlueprint<E = ExtensionInstance> = {
   id: number
   fullName: string
   expirationDate: string | null
@@ -34,10 +34,7 @@ export class CardBlueprint {
   constructor(fullName: string, cardConfig: CardConfig, initParams?: Parameters<CardBlueprint['initialize']>) {
     this.cardConfig = cardConfig
     this.fullName = fullName
-    this.expirationDate =
-      cardConfig.defaultValidity && initParams
-        ? PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
-        : null
+    this.expirationDate = initParams ? PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity) : null
     this.extensions = cardConfig.extensions.map(Extension => new Extension())
     this.id = Math.floor(Math.random() * 1000000) // Assign some random ID
     if (initParams) {
@@ -62,10 +59,13 @@ export class CardBlueprint {
     }
   }
 
-  initialize(region: Region) {
+  initialize(region: Region): void {
     this.extensions.forEach(ext => {
-      if (ext instanceof RegionExtension) ext.setInitialState(region)
-      else ext.setInitialState()
+      if (ext instanceof RegionExtension) {
+        ext.setInitialState(region)
+      } else {
+        ext.setInitialState()
+      }
     })
   }
 
@@ -84,9 +84,9 @@ export class CardBlueprint {
 
   isStartDayBeforeExpirationDay = (expirationDate: PlainDate): boolean => {
     const startDayExtension = findExtension(this.extensions, StartDayExtension)
-    return startDayExtension?.state?.startDay
-      ? PlainDate.fromDaysSinceEpoch(startDayExtension.state.startDay).isBefore(expirationDate)
-      : true
+    return startDayExtension?.state?.startDay === undefined
+      ? true
+      : PlainDate.fromDaysSinceEpoch(startDayExtension.state.startDay).isBefore(expirationDate)
   }
 
   isExpirationDateValid(): boolean {
@@ -99,8 +99,10 @@ export class CardBlueprint {
     )
   }
 
-  setExpirationDate(value: string) {
-    if (value.length === 0) return
+  setExpirationDate(value: string): void {
+    if (value.length === 0) {
+      return
+    }
     try {
       this.expirationDate = PlainDate.fromCustomFormat(value)
     } catch (error) {

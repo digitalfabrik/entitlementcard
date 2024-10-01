@@ -1,6 +1,6 @@
 import { Alert } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -12,18 +12,23 @@ const CenteredMessage = styled(Alert)`
   margin: auto;
 `
 
-const ApplicationApplicantController = (props: { providedKey: string }) => {
+const ApplicationApplicantController = (props: { providedKey: string }): ReactElement => {
   const [isWithdrawed, setIsWithdrawed] = useState<boolean>(false)
   const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: props.providedKey },
   })
   const applicationQueryHandler = getQueryResult(applicationQuery)
-  if (!applicationQueryHandler.successful) return applicationQueryHandler.component
+  if (!applicationQueryHandler.successful) {
+    return applicationQueryHandler.component
+  }
   const application = applicationQueryHandler.data.application
 
-  if (application.withdrawalDate) return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
-  if (isWithdrawed) return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
-  else {
+  if (application.withdrawalDate) {
+    return <CenteredMessage>Ihr Antrag wurde bereits zurückgezogen.</CenteredMessage>
+  }
+  if (isWithdrawed) {
+    return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
+  } else {
     return (
       <ApplicationApplicantView
         application={application}
@@ -34,7 +39,7 @@ const ApplicationApplicantController = (props: { providedKey: string }) => {
   }
 }
 
-const ControllerWithAccessKey = () => {
+const ControllerWithAccessKey = (): ReactElement | null => {
   const { accessKey } = useParams()
 
   if (!accessKey) {

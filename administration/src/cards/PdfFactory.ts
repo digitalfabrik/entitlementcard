@@ -28,7 +28,7 @@ async function fillContentAreas(
   pdfConfig: PdfConfig,
   deepLink: string,
   region?: Region
-) {
+): Promise<void> {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
@@ -82,7 +82,7 @@ export async function generatePdf(
   cardBlueprints: CardBlueprint[],
   pdfConfig: PdfConfig,
   region?: Region
-) {
+):Promise<Blob> {
   try {
     const doc = await PDFDocument.create()
 
@@ -129,7 +129,9 @@ export async function generatePdf(
     const pdfBytes = await doc.save()
     return new Blob([pdfBytes], { type: 'application/pdf' })
   } catch (error) {
-    if (error instanceof Error) throw new PdfError(error.message)
+    if (error instanceof Error) {
+      throw new PdfError(error.message)
+    }
     throw error
   }
 }

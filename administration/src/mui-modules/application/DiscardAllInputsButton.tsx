@@ -1,10 +1,10 @@
 import { Delete } from '@mui/icons-material'
 import { Button } from '@mui/material'
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import ConfirmDialog from './ConfirmDialog'
 
-const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }) => {
+const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): ReactElement => {
   const [dialogOpen, setDialogOpen] = useState(false)
   return (
     <>

@@ -1,3 +1,5 @@
+import { ReactElement } from 'react'
+
 export const dataPrivacyBaseHeadline = 'Datenschutzerklärung für die Nutzung und Beantragung des digitalen KoblenzPass'
 
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
@@ -38,7 +40,7 @@ Copy the resulting string into the htmltojsx converter.
 */
 
 // TODO 1548 Provide data privacy text
-export const DataPrivacyBaseText = () => (
+export const DataPrivacyBaseText = (): ReactElement => (
   <div>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen des digitalen

@@ -1,6 +1,6 @@
 import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { TextField } from '@mui/material'
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
@@ -16,13 +16,13 @@ const CardHeader = styled.div`
   justify-content: right;
 `
 
-interface ExtensionFormProps {
+type ExtensionFormProps = {
   extension: ExtensionInstance
   onUpdate: () => void
   viewportSmall: boolean
 }
 
-interface CreateCardsFormProps {
+type CreateCardsFormProps = {
   cardBlueprint: CardBlueprint
   onUpdate: () => void
   onRemove: () => void
@@ -35,7 +35,7 @@ export const ExtensionForm = ({ extension, onUpdate, viewportSmall }: ExtensionF
   }, viewportSmall)
 }
 
-const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps) => {
+const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const today = PlainDate.fromLocalDate(new Date())
   return (
@@ -72,13 +72,11 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
               max: today.add(maxCardValidity).toString(),
             }}
             onChange={e => {
-              if (e.target.value !== null) {
-                try {
-                  cardBlueprint.expirationDate = PlainDate.from(e.target.value)
-                  onUpdate()
-                } catch (error) {
-                  console.error(`Could not parse date from string '${e.target.value}'.`, error)
-                }
+              try {
+                cardBlueprint.expirationDate = PlainDate.from(e.target.value)
+                onUpdate()
+              } catch (error) {
+                console.error(`Could not parse date from string '${e.target.value}'.`, error)
               }
             }}
           />

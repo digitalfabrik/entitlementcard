@@ -51,6 +51,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
+  const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
   const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
     onCompleted: ({ result }) => {
       appToaster?.show({
@@ -86,9 +87,13 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
   return (
     <>
-      {isApplyingStoreTransaction && <CenteredSpinner intent='primary' />}
+      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner intent='primary' />}
       {acceptingStores.length === 0 ? (
-        <StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />
+        <StoresCSVInput
+          setAcceptingStores={setAcceptingStores}
+          fields={fields}
+          setIsLoadingCoordinates={setIsLoadingCoordinates}
+        />
       ) : (
         <StoresTable fields={fields} acceptingStores={acceptingStores} />
       )}

@@ -23,6 +23,16 @@ enum class TestAdministrators(
         project = "bayern.ehrenamtskarte.app",
         email = "project-admin@bayern.ehrenamtskarte.app",
         role = Role.PROJECT_ADMIN
+    ),
+    NUERNBERG_PROJECT_STORE_MANAGER(
+        project = "nuernberg.sozialpass.app",
+        email = "project-store-manager@nuernberg.sozialpass.app",
+        role = Role.PROJECT_STORE_MANAGER
+    ),
+    NUERNBERG_PROJECT_ADMIN(
+        project = "nuernberg.sozialpass.app",
+        email = "project-admin@nuernberg.sozialpass.app",
+        role = Role.PROJECT_ADMIN
     );
 
     fun getJwtToken(): String {

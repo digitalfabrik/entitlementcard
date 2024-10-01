@@ -23,7 +23,9 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
   })
 
   const regionSettingsByIdQueryResult = getQueryResult(regionSettingsByIdQuery)
-  if (!regionSettingsByIdQueryResult.successful) return regionSettingsByIdQueryResult.component
+  if (!regionSettingsByIdQueryResult.successful) {
+    return regionSettingsByIdQueryResult.component
+  }
 
   const onSave = (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => {
     updateRegionSettings({

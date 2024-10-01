@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef } from 'react'
+import { ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
 import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -47,7 +47,7 @@ const AddCardsForm = ({
   cardBlueprints,
   setCardBlueprints,
   setApplicationIdToMarkAsProcessed,
-}: CreateCardsFormProps) => {
+}: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -83,7 +83,9 @@ const AddCardsForm = ({
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
-    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   const addForm = useCallback(() => {

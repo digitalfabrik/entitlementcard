@@ -1,5 +1,5 @@
 import { Button, Callout, H2 } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -10,7 +10,7 @@ import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
 import SettingsCard from './SettingsCard'
 
-const ChangePasswordForm = () => {
+const ChangePasswordForm = (): ReactElement => {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')

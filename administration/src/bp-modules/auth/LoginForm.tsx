@@ -1,10 +1,10 @@
 import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 
 import PasswordInput from '../PasswordInput'
 
-interface Props {
+type Props = {
   loading?: boolean
   email: string
   password: string
@@ -13,7 +13,7 @@ interface Props {
   onSubmit: () => void
 }
 
-const LoginForm = (props: Props) => {
+const LoginForm = (props: Props): ReactElement => {
   return (
     <div style={{ marginTop: '20px' }}>
       <form

@@ -1,5 +1,5 @@
 import { Button, InputGroup, InputGroupProps2, Label, Tooltip } from '@blueprintjs/core'
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 const ShowPasswordButton = (props: { hidden: boolean; onClick: () => void }) => {
   return (
@@ -22,7 +22,7 @@ const PasswordInput = ({
   label,
   setValue,
   ...otherProps
-}: InputGroupProps2 & { label: string; setValue: (value: string) => void }) => {
+}: InputGroupProps2 & { label: string; setValue: (value: string) => void }): ReactElement => {
   const [passwordHidden, setPasswordHidden] = useState(true)
   return (
     <Label>

@@ -1,6 +1,7 @@
 import { Colors, FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
+import {ReactElement} from "react";
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -26,7 +27,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
     return !date.isBefore(minBirthday) && !date.isAfter(today)
   }
 
-  createForm(onUpdate: () => void, viewportSmall: boolean) {
+  createForm(onUpdate: () => void, viewportSmall: boolean): ReactElement {
     const birthdayDate =
       this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : minBirthday
     const inputColor = this.state == null ? Colors.GRAY1 : Colors.BLACK
@@ -49,14 +50,12 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
             style: formStyle,
           }}
           onChange={e => {
-            if (e.target.value !== null) {
-              try {
-                const date = PlainDate.from(e.target.value)
-                this.state = { birthday: date.toDaysSinceEpoch() }
-                onUpdate()
-              } catch (error) {
-                console.error(`Could not parse date from string '${e.target.value}'.`, error)
-              }
+            try {
+              const date = PlainDate.from(e.target.value)
+              this.state = { birthday: date.toDaysSinceEpoch() }
+              onUpdate()
+            } catch (error) {
+              console.error(`Could not parse date from string '${e.target.value}'.`, error)
             }
           }}
         />
@@ -64,17 +63,17 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
     )
   }
 
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
 
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionBirthday = {
       birthday: this.state?.birthday,
     }
   }
 
-  isValid() {
+  isValid(): boolean {
     return this.state !== null && this.hasValidBirthdayDate(this.state.birthday)
   }
 
@@ -83,7 +82,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
    * The expected format is dd.MM.yyyy
    * @param value The date formatted using dd.MM.yyyy
    */
-  fromString(value: string) {
+  fromString(value: string): void {
     try {
       const birthday = PlainDate.fromCustomFormat(value)
       this.state = { birthday: birthday.toDaysSinceEpoch() }
@@ -92,7 +91,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
     }
   }
 
-  toString() {
+  toString(): string {
     return this.state ? PlainDate.fromDaysSinceEpoch(this.state.birthday).format() : ''
   }
 }
