@@ -36,7 +36,7 @@ const TextAreaDialog = ({
   maxChars,
 }: NoteProps): ReactElement => {
   const [text, setText] = useState<string>(defaultText ?? '')
-  const maxCharsExceeded = maxChars ? text.length > maxChars : false
+  const maxCharsExceeded = maxChars === undefined ? false : text.length > maxChars
   const { title: errorMessage } = defaultErrorMap({
     code: GraphQlExceptionCode.InvalidNoteSize,
     maxSize: maxChars,
@@ -70,7 +70,7 @@ const TextAreaDialog = ({
         placeholder={placeholder}
       />
       <DialogFooter actions={actions}>
-        {maxChars && (
+        {maxChars !== undefined && (
           <CharacterCounter $hasError={maxCharsExceeded} aria-label='Character Counter'>
             {text.length}/{maxChars}
           </CharacterCounter>

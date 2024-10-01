@@ -107,7 +107,7 @@ checkBrowsers(paths.appPath, isInteractive)
       const buildFolder = path.relative(process.cwd(), paths.appBuild)
       printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn)
     },
-    (err: any) => {
+    (err: Error) => {
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true'
       if (tscCompileOnError) {
         console.log(
@@ -123,8 +123,8 @@ checkBrowsers(paths.appPath, isInteractive)
       }
     }
   )
-  .catch((err: any) => {
-    if (err && err.message) {
+  .catch((err: unknown) => {
+    if (err instanceof Error) {
       console.log(err.message)
     }
     process.exit(1)
@@ -196,7 +196,7 @@ function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
         return bfj
           .write(`${paths.appBuild}/bundle-stats.json`, stats.toJson())
           .then(() => resolve(resolveArgs))
-          .catch((error: any) => reject(new Error(error)))
+          .catch(reject)
       }
 
       return resolve(resolveArgs)

@@ -1,6 +1,6 @@
 import { Alert, Button, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import Delete from '@mui/icons-material/Delete'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -49,7 +49,7 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-const UserEndpointSettings = () => {
+const UserEndpointSettings = (): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()

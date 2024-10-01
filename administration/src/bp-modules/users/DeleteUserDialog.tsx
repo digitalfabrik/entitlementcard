@@ -1,5 +1,5 @@
 import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -16,7 +16,7 @@ const DeleteUserDialog = ({
   onClose: () => void
   selectedUser: Administrator | null
   onSuccess: () => void
-}) => {
+}): ReactElement => {
   const appToaster = useAppToaster()
   const { signOut } = useContext(AuthContext)
   const actingAdminId = useContext(WhoAmIContext).me?.id

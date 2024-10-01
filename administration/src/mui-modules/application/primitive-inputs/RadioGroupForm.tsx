@@ -13,12 +13,15 @@ type RadioGroupForm<T extends string> = Form<State<T>, Options<T>, ValidatedInpu
 
 export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
-    if (selectedValue === null) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!Object.keys(options.labelByValue).includes(selectedValue))
+    if (selectedValue === null) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (!Object.keys(options.labelByValue).includes(selectedValue)) {
       return {
         type: 'error',
         message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
       }
+    }
     return { type: 'valid', value: selectedValue }
   }
   return {

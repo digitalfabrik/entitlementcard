@@ -1,5 +1,5 @@
 import { Callout } from '@blueprintjs/core'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { useGetHashingPepperQuery } from '../../generated/graphql'
@@ -10,7 +10,7 @@ const Container = styled.div`
   padding: 10px 0;
 `
 
-const PepperSettings = () => {
+const PepperSettings = (): ReactElement => {
   const errorComponent = (
     <Callout intent='danger'>
       Es ist kein Koblenz Pepper hinterlegt. Das Feature ist in dieser Umgebung aktuell nicht verfügbar!
@@ -18,7 +18,9 @@ const PepperSettings = () => {
   )
   const pepperQuery = useGetHashingPepperQuery()
   const result = getQueryResult(pepperQuery, errorComponent)
-  if (!result.successful) return result.component
+  if (!result.successful) {
+    return result.component
+  }
   return <PepperSettingsView pepper={result.data.pepper} />
 }
 

@@ -22,9 +22,12 @@ steps:
       command: npm run lint
       working_directory: ~/project/administration
   - run:
-      name: Test
-      command: npm run test -- --maxWorkers=2
+      name: Run tests and generate coverage report
+      command: npm run test:coverage -- --maxWorkers=2
       working_directory: ~/project/administration
+  - store_artifacts:
+      path: ~/project/administration/src/coverage
+      destination: ~/attached_workspace/coverage
   - run:
       name: Typescript
       command: npm run ts:check

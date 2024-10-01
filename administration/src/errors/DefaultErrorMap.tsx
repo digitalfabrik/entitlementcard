@@ -9,7 +9,7 @@ import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
 
 type GraphQLErrorMessage = {
   title: string
-  description?: string | ReactElement<{ extensions: Record<string, any> }>
+  description?: string | ReactElement<{ extensions: Record<string, unknown> }>
 }
 
 type ErrorExtensions = {
@@ -17,13 +17,15 @@ type ErrorExtensions = {
   maxSize?: number
   encodedCardInfoBase64?: string
   codeType?: CodeType
-  [key: string]: any
+  [key: string]: unknown
 }
 
 const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
-  if (!extensions || !extensions['code']) return defaultError
+  if (!extensions || !extensions['code']) {
+    return defaultError
+  }
   switch (extensions['code']) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {

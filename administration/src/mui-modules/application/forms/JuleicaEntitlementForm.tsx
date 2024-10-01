@@ -48,6 +48,7 @@ const JuleicaEntitlementForm: Form<State, Options, ValidatedInput, AdditionalPro
           state={state.copyOfJuleicaFront}
           setState={useUpdateStateCallback(setState, 'copyOfJuleicaFront')}
         />
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */}
         {(state.copyOfJuleicaFront || (!state.copyOfJuleicaFront && state.copyOfJuleicaBack)) && (
           <SubForms.copyOfJuleicaBack.Component state={state.copyOfJuleicaBack} setState={juleicaBackSetState} />
         )}

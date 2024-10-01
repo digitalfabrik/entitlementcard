@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -17,13 +17,13 @@ const UserSettingsContainer = styled.div`
   flex-direction: column;
 `
 
-const UserSettingsController = () => {
+const UserSettingsController = (): ReactElement => {
   const { applicationFeature, activityLogConfig, projectId, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userImportApiEnabled && role == Role.ProjectAdmin && <UserEndpointSettings />}
+      {userImportApiEnabled && role === Role.ProjectAdmin && <UserEndpointSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>

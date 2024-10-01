@@ -3,11 +3,11 @@ import { Extension } from './extensions'
 class EMailNotificationExtension extends Extension<string, null> {
   public readonly name = EMailNotificationExtension.name
 
-  setInitialState() {}
-  createForm() {
+  setInitialState(): void {}
+  createForm(): null {
     return null
   }
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
   fromString(state: string): void {
@@ -16,7 +16,7 @@ class EMailNotificationExtension extends Extension<string, null> {
   toString(): string {
     return this.state ?? ''
   }
-  isValid() {
+  isValid(): boolean {
     return true
   }
 }

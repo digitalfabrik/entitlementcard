@@ -13,10 +13,6 @@ import { AppToasterProvider } from '../AppToaster'
 import { getHeaders } from './ImportCardsController'
 import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
-
 jest.mock('../../Router', () => ({}))
 
 const wrapper = ({ children }: { children: ReactElement }) => (
@@ -41,6 +37,7 @@ describe('ImportCardsInput', () => {
     setCardBlueprints: () => void
   ) => {
     const fileReaderMock = {
+      // eslint-disable-next-line func-names
       readAsText: jest.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),

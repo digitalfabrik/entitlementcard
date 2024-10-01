@@ -1,6 +1,7 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { NonIdealState, Spinner } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -11,6 +12,7 @@ import { useAppToaster } from '../AppToaster'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
+import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
 
 const StoresImportController = (): ReactElement => {
@@ -29,6 +31,13 @@ const StoresImportController = (): ReactElement => {
   return <StoresImport fields={storeManagement.fields} />
 }
 
+const CenteredSpinner = styled(Spinner)`
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+`
+
 type StoreImportProps = {
   fields: StoreFieldConfig[]
 }
@@ -37,12 +46,26 @@ export type StoreData = {
   [key: string]: string
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
+  const { projectId } = useContext(ProjectConfigContext)
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
-  const [importStores] = useImportAcceptingStoresMutation({
-    onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Ihre Akzeptanzpartner wurden importiert.' })
+  const [dryRun, setDryRun] = useState<boolean>(false)
+  const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
+  const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
+    onCompleted: ({ result }) => {
+      appToaster?.show({
+        intent: 'none',
+        timeout: 0,
+        message: (
+          <StoresImportResult
+            dryRun={dryRun}
+            storesUntouched={result.storesUntouched}
+            storesDeleted={result.storesDeleted}
+            storesCreated={result.storesCreated}
+          />
+        ),
+      })
       setAcceptingStores([])
     },
     onError: error => {
@@ -59,16 +82,28 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     }
   }
 
-  const onImportStores = () => importStores({ variables: { stores: acceptingStores.map(store => store.data) } })
+  const onImportStores = () =>
+    importStores({ variables: { stores: acceptingStores.map(store => store.data), project: projectId, dryRun } })
 
   return (
     <>
+      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner intent='primary' />}
       {acceptingStores.length === 0 ? (
-        <StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />
+        <StoresCSVInput
+          setAcceptingStores={setAcceptingStores}
+          fields={fields}
+          setIsLoadingCoordinates={setIsLoadingCoordinates}
+        />
       ) : (
         <StoresTable fields={fields} acceptingStores={acceptingStores} />
       )}
-      <StoresButtonBar goBack={goBack} acceptingStores={acceptingStores} importStores={onImportStores} />
+      <StoresButtonBar
+        goBack={goBack}
+        acceptingStores={acceptingStores}
+        importStores={onImportStores}
+        dryRun={dryRun}
+        setDryRun={setDryRun}
+      />
     </>
   )
 }

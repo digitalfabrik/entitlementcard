@@ -1,5 +1,5 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
-import { ReactNode, useContext, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { TokenPayload } from './AuthProvider'
@@ -10,7 +10,7 @@ import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-interface Props {
+type Props = {
   authData: TokenPayload
   children: ReactNode
   onSignIn: (payload: SignInPayload) => void
@@ -19,7 +19,7 @@ interface Props {
 
 const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
-const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
+const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): ReactElement => {
   const navigate = useNavigate()
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useContext(WhoAmIContext).me!.email

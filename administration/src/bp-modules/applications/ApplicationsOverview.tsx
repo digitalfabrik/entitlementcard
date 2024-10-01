@@ -1,5 +1,5 @@
 import { NonIdealState } from '@blueprintjs/core'
-import React, { useMemo, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
 import styled from 'styled-components'
 
@@ -30,7 +30,7 @@ export type Application = GetApplicationsQuery['applications'][number]
 
 // Necessary for FlipMove, as it cannot handle functional components
 export class ApplicationViewComponent extends React.Component<React.ComponentProps<typeof ApplicationCard>> {
-  render() {
+  render(): ReactElement {
     return (
       <ApplicationListCard key={this.props.application.id}>
         <ApplicationCard {...this.props} />
@@ -55,7 +55,7 @@ const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationSta
   return activeBarItem.status !== undefined ? `${activeBarItem.title.toLowerCase()}en` : ''
 }
 
-const ApplicationsOverview = (props: { applications: Application[] }) => {
+const ApplicationsOverview = (props: { applications: Application[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(props.applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
@@ -63,7 +63,9 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
   const filteredApplications: Application[] = useMemo(
     () =>
       sortedApplications.filter(application => {
-        if (activeBarItem.status === undefined) return application
+        if (activeBarItem.status === undefined) {
+          return application
+        }
         return (
           getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) ===
           activeBarItem.status
@@ -81,22 +83,20 @@ const ApplicationsOverview = (props: { applications: Application[] }) => {
         barItems={barItems}
       />
       {filteredApplications.length > 0 ? (
-        <>
-          <ApplicationList>
-            {filteredApplications.map(application => (
-              <ApplicationViewComponent
-                isSelectedForPrint={application.id === applicationIdForPrint}
-                printApplicationById={printApplicationById}
-                key={application.id}
-                application={application}
-                onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
-                onChange={application =>
-                  setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
-                }
-              />
-            ))}
-          </ApplicationList>
-        </>
+        <ApplicationList>
+          {filteredApplications.map(application => (
+            <ApplicationViewComponent
+              isSelectedForPrint={application.id === applicationIdForPrint}
+              printApplicationById={printApplicationById}
+              key={application.id}
+              application={application}
+              onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
+              onChange={application =>
+                setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
+              }
+            />
+          ))}
+        </ApplicationList>
       ) : (
         <StandaloneCenter>
           <NonIdealState

@@ -26,12 +26,16 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
 
-  if (loading) return { successful: false, component: <LoadingSpinner /> }
+  if (loading) {
+    return { successful: false, component: <LoadingSpinner /> }
+  }
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
     return { successful: false, component: <ErrorHandler title={title} description={description} refetch={refetch} /> }
   }
-  if (!data) return { successful: false, component: <ErrorHandler refetch={refetch} /> }
+  if (data === undefined) {
+    return { successful: false, component: <ErrorHandler refetch={refetch} /> }
+  }
   return { successful: true, data: data }
 }
 

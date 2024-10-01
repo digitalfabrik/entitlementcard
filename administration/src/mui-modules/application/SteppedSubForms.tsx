@@ -1,7 +1,7 @@
 import { Send } from '@mui/icons-material'
 import { Button, ButtonBase, CircularProgress, Divider, Step, StepContent, StepLabel, Stepper } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
 import React from 'react'
 
 import { SetState, useUpdateStateCallback } from './hooks/useUpdateStateCallback'
@@ -19,7 +19,7 @@ const SteppedSubForms = ({
   loading: boolean
   subForms: { label: string; element: ReactNode; validate: () => ValidationResult<unknown> }[]
   onSubmit: () => void
-}) => {
+}): ReactElement => {
   const tryGoTo = (index: number) => {
     for (let i = 0; i < index; i++) {
       if (subForms[i].validate().type === 'error') {

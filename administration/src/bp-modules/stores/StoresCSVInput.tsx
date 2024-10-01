@@ -1,13 +1,14 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { Icon, NonIdealState, NonIdealStateIconSize } from '@blueprintjs/core'
 import { parse } from 'csv-parse/browser/esm/sync'
-import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
+import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
-import FileInputStateIcon, { FileInputStateType } from '../FileInputStateIcon'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
+import { getStoresWithCoordinates } from './util/storeGeoDataService'
 
 const StoreImportInputContainer = styled.div`
   display: flex;
@@ -23,8 +24,11 @@ const InputContainer = styled(NonIdealState)`
 type StoresCsvInputProps = {
   setAcceptingStores: (store: AcceptingStoreEntry[]) => void
   fields: StoreFieldConfig[]
+  setIsLoadingCoordinates: (value: boolean) => void
 }
 
+export const DEFAULT_ERROR_TIMEOUT = 3000
+export const LONG_ERROR_TIMEOUT = 10000
 export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const defaultExtensionsByMIMEType = {
   'text/csv': '.csv',
@@ -34,23 +38,38 @@ const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
-    // TODO 1570 get geodata if no coordinates available
-    return { ...acc, [columnName]: entry }
+    return { ...acc, [columnName]: entry.trim() }
   }, {})
   return new AcceptingStoreEntry(storeData, fields)
 }
 
-const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): ReactElement => {
-  const [inputState, setInputState] = useState<FileInputStateType>('idle')
+const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
+  return Object.values(
+    stores.reduce((acc: Record<string, number[]>, entry, index) => {
+      const { data } = entry
+      const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
+      const entryNumber = index + 1
+      // This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (acc[groupKey] === undefined) {
+        return { ...acc, [groupKey]: [entryNumber] }
+      }
+      return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
+    }, {})
+  ).filter(entryNumber => entryNumber.length > 1)
+}
+
+const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
-    (message: string) => {
-      appToaster?.show({ intent: 'danger', message })
-      setInputState('error')
-      if (!fileInput.current) return
+    (message: string | ReactElement, timeout = DEFAULT_ERROR_TIMEOUT) => {
+      appToaster?.show({ intent: 'danger', message, timeout })
+      if (!fileInput.current) {
+        return
+      }
       fileInput.current.value = ''
     },
     [appToaster]
@@ -70,7 +89,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
           showInputError(
             `Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Spalten. (Fehler in Zeile ${error.message
               .split('line')[1]
-              .trim()})`
+              .trim()})`,
+            LONG_ERROR_TIMEOUT
           )
           return
         }
@@ -79,6 +99,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       }
       const numberOfColumns = lines[0]?.length
 
+      /* This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig  */
+      /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
       if (!numberOfColumns) {
         showInputError('Die gewählte Datei ist leer.')
         return
@@ -102,14 +124,26 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       }
       const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
 
-      setAcceptingStores(acceptingStores)
-      setInputState('idle')
+      const duplicatedStoreEntries = getStoreDuplicates(acceptingStores)
+      if (duplicatedStoreEntries.length > 0) {
+        const message = <StoresImportDuplicates entries={duplicatedStoreEntries} />
+        showInputError(message, 0)
+        return
+      }
+      setIsLoadingCoordinates(true)
+      Promise.all(getStoresWithCoordinates(acceptingStores, showInputError))
+        .then(updatedStores => setAcceptingStores(updatedStores))
+        .catch(() => {
+          showInputError('Fehler beim Abrufen der fehlenden Koordinaten!')
+          setAcceptingStores(acceptingStores)
+        })
+        .finally(() => setIsLoadingCoordinates(false))
     },
-    [showInputError, setAcceptingStores, setInputState, headers]
+    [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
-    if (!event.currentTarget?.files) {
+    if (!event.currentTarget.files) {
       return
     }
     const reader = new FileReader()
@@ -125,14 +159,13 @@ const StoresCsvInput = ({ setAcceptingStores, fields }: StoresCsvInputProps): Re
       showInputError('Die ausgewählete Datei ist zu groß.')
       return
     }
-    setInputState('loading')
     reader.readAsText(file)
   }
 
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={<FileInputStateIcon inputState={inputState} />}
+      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon={'upload'} />}
       description={<StoresRequirementsText header={headers} />}
       action={
         <StoreImportInputContainer>

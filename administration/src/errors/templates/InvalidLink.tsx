@@ -1,4 +1,6 @@
-const InvalidLink = () => (
+import { ReactElement } from 'react'
+
+const InvalidLink = (): ReactElement => (
   <>
     <span>Der von Ihnen geöffnete Link ist ungültig. Mögliche Gründe:</span>
     <ul>
