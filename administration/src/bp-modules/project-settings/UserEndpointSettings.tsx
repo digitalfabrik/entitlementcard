@@ -12,9 +12,9 @@ import {
 } from '../../generated/graphql'
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
+import SettingsCard from '../user-settings/SettingsCard'
 import getQueryResult from '../util/getQueryResult'
 import PepperSettings from './PepperSettings'
-import SettingsCard from './SettingsCard'
 
 const Container = styled.div`
   background: ghostwhite;

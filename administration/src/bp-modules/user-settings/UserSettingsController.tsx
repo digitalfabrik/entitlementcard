@@ -7,7 +7,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import ActivityLogCard from './ActivityLogCard'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
-import UserEndpointSettings from './UserEndpointSettings'
 
 const UserSettingsContainer = styled.div`
   display: flex;
@@ -23,7 +22,6 @@ const UserSettingsController = (): ReactElement => {
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userImportApiEnabled && role === Role.ProjectAdmin && <UserEndpointSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>
