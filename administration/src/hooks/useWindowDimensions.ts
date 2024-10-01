@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 
 type WindowDimensionsType = { width: number; height: number; viewportSmall: boolean }
 
+const MEDIUM_BREAKPOINT = 768
 const getWindowDimensions = (): WindowDimensionsType => {
   const { innerWidth: width, innerHeight: height } = window
   return {
     width,
     height,
-    viewportSmall: width <= 768,
+    viewportSmall: width <= MEDIUM_BREAKPOINT,
   }
 }
 

@@ -1,4 +1,4 @@
-import { FormGroup } from '@blueprintjs/core'
+import { Colors, FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
 
@@ -8,14 +8,13 @@ import { Extension } from './extensions'
 
 type BirthdayState = { birthday: number }
 
-const initialBirthdayDate = new PlainDate(1980, 1, 1)
 const minBirthday = new PlainDate(1900, 1, 1)
 
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
   setInitialState() {
-    this.state = { birthday: initialBirthdayDate.toDaysSinceEpoch() }
+    this.state = { birthday: minBirthday.toDaysSinceEpoch() }
   }
 
   hasValidBirthdayDate(birthday?: number): boolean {
@@ -28,10 +27,12 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   createForm(onUpdate: () => void, viewportSmall: boolean) {
-    const formStyle = viewportSmall ? { fontSize: 16, padding: '9px 10px' } : { fontSize: 14, padding: '6px 10px' }
-
     const birthdayDate =
-      this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : initialBirthdayDate
+      this.state?.birthday !== undefined ? PlainDate.fromDaysSinceEpoch(this.state.birthday) : minBirthday
+    const inputColor = this.state == null ? Colors.GRAY1 : Colors.BLACK
+    const formStyle = viewportSmall
+      ? { fontSize: 16, padding: '9px 10px', color: inputColor }
+      : { fontSize: 14, padding: '6px 10px', color: inputColor }
 
     return (
       <FormGroup label='Geburtsdatum'>

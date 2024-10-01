@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 
 type SelfServiceStepInfo = {
+  stepNr: number
   headline: string
   subHeadline: string
   text: ReactElement
@@ -8,6 +9,7 @@ type SelfServiceStepInfo = {
 
 const selfServiceStepInfo: SelfServiceStepInfo[] = [
   {
+    stepNr: 1,
     headline: 'Herzlich Willkommen!',
     subHeadline: 'In wenigen Schritten zu Ihrem eigenen KoblenzPass.',
     text: (
@@ -19,6 +21,7 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
     ),
   },
   {
+    stepNr: 2,
     headline: 'Ihr KoblenzPass wurde erstellt.',
     subHeadline: 'Nur noch ein paar Klicks, bis Sie alle Vorteile nutzen zu können.',
     text: (
@@ -28,12 +31,13 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
     ),
   },
   {
+    stepNr: 3,
     headline: 'Letzte Schritte',
     subHeadline: 'AntragsPDF herunterladen und Pass aktivieren.',
     text: (
       <span>
         Laden Sie Ihre Antrags-PDF herunter, um Ihren Pass <b>im Falle eines Verlusts erneut aktivieren</b> zu können.
-        Sie können den Pass so außerdem auch <b>in gedruckte Form nutzen</b>.
+        Sie können den Pass so außerdem auch <b>in gedruckter Form nutzen</b>.
       </span>
     ),
   },

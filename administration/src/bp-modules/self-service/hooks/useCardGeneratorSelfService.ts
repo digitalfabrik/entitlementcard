@@ -14,8 +14,24 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
 import { getHeaders } from '../../cards/ImportCardsController'
-import { CardActivationState } from '../../cards/hooks/useCardGenerator'
 
+export enum CardSelfServiceStep {
+  form,
+  information,
+  activation,
+}
+
+type UseCardGeneratorSelfServiceReturn = {
+  selfServiceState: CardSelfServiceStep
+  setSelfServiceState: (step: CardSelfServiceStep) => void
+  isLoading: boolean
+  deepLink: string
+  code: CreateCardsResult | null
+  selfServiceCards: SelfServiceCard[]
+  setSelfServiceCards: (cards: SelfServiceCard[]) => void
+  generateCards: () => Promise<void>
+  downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
+}
 const initializeCardBlueprintForProject = (projectConfig: ProjectConfig): SelfServiceCard => {
   const headers = getHeaders(projectConfig)
   const selfServiceCard = new SelfServiceCard('', projectConfig.card)
@@ -25,13 +41,14 @@ const initializeCardBlueprintForProject = (projectConfig: ProjectConfig): SelfSe
   return selfServiceCard
 }
 
-const useCardGeneratorSelfService = () => {
+const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [selfServiceCards, setSelfServiceCards] = useState<SelfServiceCard[]>([
     initializeCardBlueprintForProject(projectConfig),
   ])
-  const [activationState, setActivationState] = useState(CardActivationState.input)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
@@ -56,13 +73,14 @@ const useCardGeneratorSelfService = () => {
           intent: 'danger',
         })
       }
-      setActivationState(CardActivationState.input)
+      setSelfServiceState(CardSelfServiceStep.form)
+      setIsLoading(false)
     },
-    [appToaster]
+    [appToaster, setSelfServiceState]
   )
 
   const generateCards = useCallback(async () => {
-    setActivationState(CardActivationState.loading)
+    setIsLoading(true)
 
     try {
       const cardInfo = selfServiceCards[0].generateCardInfo()
@@ -76,10 +94,10 @@ const useCardGeneratorSelfService = () => {
 
       if (result.errors) {
         const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
-        throw new CreateCardsError(title)
+        return Promise.reject(new CreateCardsError(title))
       }
       if (!result.data) {
-        throw new CreateCardsError('Beim Erstellen der Karte(n) ist ein Fehler aufgetreten.')
+        return Promise.reject(new CreateCardsError('Beim Erstellen der Karte(n) ist ein Fehler aufgetreten.'))
       }
       const cardResult = result.data.card
       const dynamicActivationCode = DynamicActivationCode.fromBinary(
@@ -102,11 +120,12 @@ const useCardGeneratorSelfService = () => {
         })
       )
 
-      setActivationState(CardActivationState.finished)
+      setIsLoading(false)
+      setSelfServiceState(CardSelfServiceStep.information)
     } catch (error) {
       handleErrors(error)
     }
-  }, [selfServiceCards, projectConfig])
+  }, [selfServiceCards, projectConfig, setIsLoading, setSelfServiceCards, setDeepLink, setCode])
 
   const downloadPdf = async (code: CreateCardsResult, fileName: string) => {
     const blob = await generatePdf([code], selfServiceCards, projectConfig.pdf)
@@ -114,7 +133,9 @@ const useCardGeneratorSelfService = () => {
   }
 
   return {
-    activationState,
+    selfServiceState,
+    setSelfServiceState,
+    isLoading,
     deepLink,
     code,
     selfServiceCards,

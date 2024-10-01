@@ -4,17 +4,16 @@ import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { CardActivationState } from '../cards/hooks/useCardGenerator'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
-import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
+import useCardGeneratorSelfService, { CardSelfServiceStep } from './hooks/useCardGeneratorSelfService'
 
 const CenteredSpinner = styled(Spinner)`
-  position: fixed;
-  top: 20%;
-  left: 50%;
+  position: absolute;
+  top: 45vh;
+  left: 45vw;
 `
 
 const Header = styled.div`
@@ -39,6 +38,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   border: 1px solid #f7f7f7;
+  font-family: Roboto Roboto, Helvetica, Arial, sans-serif;
 `
 
 const Step = styled.div`
@@ -69,19 +69,26 @@ const HeaderLogo = styled.img`
   height: 40px;
 `
 
-// TODO convert array to object, add tests, simplify status and steps, add android store icon, center spinner in mobile view, hilfe Icon oder, reuse styled components like StyledButton
+// TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const [dataPrivacyAccepted, setDataPrivacyAccepted] = useState<boolean>(false)
-  const { activationState, generateCards, setSelfServiceCards, selfServiceCards, deepLink, code, downloadPdf } =
-    useCardGeneratorSelfService()
-  const [stepNr, setStepNr] = useState<number>(0)
+  const {
+    selfServiceState,
+    setSelfServiceState,
+    isLoading,
+    generateCards,
+    setSelfServiceCards,
+    selfServiceCards,
+    deepLink,
+    code,
+    downloadPdf,
+  } = useCardGeneratorSelfService()
+  const card = selfServiceCards[0]
 
   const notifyUpdate = () => {
     setSelfServiceCards([...selfServiceCards])
   }
-
-  const card = selfServiceCards[0]
 
   const onDownloadPdf = async () => {
     if (code) {
@@ -91,14 +98,13 @@ const CardSelfServiceView = (): ReactElement => {
 
   const onGenerateCard = async () => {
     await generateCards()
-    setStepNr(1)
   }
 
   const goToActivation = () => {
-    setStepNr(2)
+    setSelfServiceState(CardSelfServiceStep.activation)
   }
 
-  if (activationState === CardActivationState.loading) {
+  if (isLoading) {
     return <CenteredSpinner />
   }
 
@@ -108,11 +114,11 @@ const CardSelfServiceView = (): ReactElement => {
         <HeaderLogo src={KoblenzLogo} />
       </Header>
       <Body>
-        <Step>{`Schritt ${stepNr + 1}/${selfServiceStepInfo.length}`}</Step>
-        <Headline>{selfServiceStepInfo[stepNr].headline}</Headline>
-        <SubHeadline>{selfServiceStepInfo[stepNr].subHeadline}</SubHeadline>
-        <Text>{selfServiceStepInfo[stepNr].text}</Text>
-        {activationState === CardActivationState.input && (
+        <Step>{`Schritt ${selfServiceStepInfo[selfServiceState].stepNr}/${selfServiceStepInfo.length}`}</Step>
+        <Headline>{selfServiceStepInfo[selfServiceState].headline}</Headline>
+        <SubHeadline>{selfServiceStepInfo[selfServiceState].subHeadline}</SubHeadline>
+        <Text>{selfServiceStepInfo[selfServiceState].text}</Text>
+        {selfServiceState === CardSelfServiceStep.form && (
           <CardSelfServiceForm
             card={card}
             dataPrivacyAccepted={dataPrivacyAccepted}
@@ -121,10 +127,10 @@ const CardSelfServiceView = (): ReactElement => {
             generateCards={onGenerateCard}
           />
         )}
-        {activationState === CardActivationState.finished && stepNr === 1 && (
+        {selfServiceState === CardSelfServiceStep.information && (
           <CardSelfServiceInformation goToActivation={goToActivation} />
         )}
-        {activationState === CardActivationState.finished && stepNr === 2 && (
+        {selfServiceState === CardSelfServiceStep.activation && (
           <CardSelfServiceActivation downloadPdf={onDownloadPdf} deepLink={deepLink} />
         )}
       </Body>

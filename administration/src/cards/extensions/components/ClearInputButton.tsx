@@ -2,7 +2,7 @@ import { Icon } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-const InputClearButton = styled.button<{ $viewportSmall: boolean }>`
+const StyledButton = styled.button<{ $viewportSmall: boolean }>`
   background-color: transparent;
   border: none;
   outline: none;
@@ -20,9 +20,9 @@ const ClearInputButton = ({ viewportSmall, onClick, input }: ClearInputButtonPro
     return null
   }
   return (
-    <InputClearButton $viewportSmall={viewportSmall} onClick={onClick}>
+    <StyledButton $viewportSmall={viewportSmall} onClick={onClick}>
       <Icon icon='cross' size={viewportSmall ? 18 : 14} />
-    </InputClearButton>
+    </StyledButton>
   )
 }
 

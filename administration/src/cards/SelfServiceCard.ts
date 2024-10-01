@@ -1,13 +1,9 @@
 import { CardBlueprint } from './CardBlueprint'
 
 class SelfServiceCard extends CardBlueprint {
+  // Override isValid() to remove expiration check
   isValid(): boolean {
-    return (
-      // Name valid
-      this.isFullNameValid() &&
-      // Extensions valid
-      this.extensions.every(ext => ext.isValid())
-    )
+    return this.isFullNameValid() && this.extensions.every(ext => ext.isValid())
   }
 }
 

@@ -1,5 +1,6 @@
-import { Checkbox, FormGroup, InputGroup, Intent, Tooltip } from '@blueprintjs/core'
-import { Button, styled } from '@mui/material'
+import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import InfoOutlined from '@mui/icons-material/InfoOutlined'
+import { Alert, styled } from '@mui/material'
 import React, { ChangeEvent, ReactElement, useContext, useState } from 'react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
@@ -8,9 +9,11 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ExtensionForm } from '../cards/AddCardForm'
+import { ActionButton } from './components/ActionButton'
+import { IconTextButton } from './components/IconTextButton'
 
 const PrivacyButton = styled('button')`
-  border: none !important;
+  border: none;
   background-color: transparent;
   color: blue;
   text-decoration: underline;
@@ -18,18 +21,18 @@ const PrivacyButton = styled('button')`
   cursor: pointer;
 `
 
-const StyledButton = styled(Button)`
-  background-color: #922224;
+const StyledCheckbox = styled(Checkbox)`
   margin-top: 24px;
-  :hover {
-    color: white;
-    background-color: #922224;
-  }
+  font-size: 16px;
+  margin-left: 4px;
 `
 
-const StyledCheckbox = styled(Checkbox)`
-  margin-top: 24px !important;
-  font-size: 16px;
+const StyledAlert = styled(Alert)`
+  margin-bottom: 24px;
+`
+
+const Container = styled('div')`
+  margin-bottom: 24px;
 `
 
 type CardSelfServiceFormProps = {
@@ -46,7 +49,7 @@ const getTooltipMessage = (cardsValid: boolean, dataPrivacyAccepted: boolean): s
     tooltipMessages.push('Mindestens eine Ihrer Angaben ist ungültig.')
   }
   if (!dataPrivacyAccepted) {
-    tooltipMessages.push('Bitte akzeptieren sie die Datenschutzerklärung.')
+    tooltipMessages.push('Bitte akzeptieren Sie die Datenschutzerklärung.')
   }
 
   return tooltipMessages.join(' ')
@@ -61,6 +64,7 @@ const CardSelfServiceForm = ({
   const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
+  const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = card.isValid()
   const cardCreationDisabled = !cardValid || !dataPrivacyAccepted
   const clearNameInput = () => {
@@ -70,7 +74,7 @@ const CardSelfServiceForm = ({
 
   return (
     <>
-      <div key={card.id}>
+      <Container key={card.id}>
         <FormGroup label='Name'>
           <InputGroup
             large={viewportSmall}
@@ -79,7 +83,6 @@ const CardSelfServiceForm = ({
             rightElement={
               <ClearInputButton viewportSmall={viewportSmall} onClick={clearNameInput} input={card.fullName} />
             }
-            //If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
             intent={card.isFullNameValid() ? undefined : Intent.DANGER}
             value={card.fullName}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -91,23 +94,33 @@ const CardSelfServiceForm = ({
         {card.extensions.map((ext, i) => (
           <ExtensionForm key={i} extension={ext} onUpdate={notifyUpdate} viewportSmall={viewportSmall} />
         ))}
+        <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
+          <InfoOutlined />
+          Informationen zur Referenznummer
+        </IconTextButton>
         <StyledCheckbox checked={dataPrivacyAccepted} onChange={() => setDataPrivacyAccepted(!dataPrivacyAccepted)}>
           Ich akzeptiere die{' '}
           <PrivacyButton onClick={() => setOpenDataPrivacy(true)}>Datenschutzerklärung</PrivacyButton>.
         </StyledCheckbox>
-      </div>
-      <Tooltip
-        placement='top'
-        content={getTooltipMessage(cardValid, dataPrivacyAccepted)}
-        disabled={!cardCreationDisabled}>
-        <StyledButton onClick={generateCards} variant='contained' disabled={cardCreationDisabled} size='large'>
-          Pass erstellen
-        </StyledButton>
-      </Tooltip>
-
+      </Container>
+      {cardCreationDisabled && (
+        <StyledAlert variant='outlined' severity='warning'>
+          {getTooltipMessage(cardValid, dataPrivacyAccepted)}
+        </StyledAlert>
+      )}
+      <ActionButton onClick={generateCards} variant='contained' disabled={cardCreationDisabled} size='large'>
+        Pass erstellen
+      </ActionButton>
+      <BasicDialog
+        open={openReferenceInformation}
+        maxWidth='lg'
+        onUpdateOpen={setOpenReferenceInformation}
+        title={'Informationen zur Referenznummer'}
+        content={<>Waiting for information...</>}
+      />
       <BasicDialog
         open={openDataPrivacy}
-        maxWidth='lg'
+        maxWidth='md'
         onUpdateOpen={setOpenDataPrivacy}
         title={projectConfig.dataPrivacyHeadline}
         content={

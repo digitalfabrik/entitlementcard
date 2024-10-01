@@ -1,5 +1,4 @@
-export const dataPrivacyBaseHeadline =
-  'Datenschutzerklärung für die Nutzung und Beantragung des digitalen KoblenzxwPass'
+export const dataPrivacyBaseHeadline = 'Datenschutzerklärung für die Nutzung und Beantragung des digitalen KoblenzPass'
 
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
 Instructions:
