@@ -17,7 +17,7 @@ const UserSettingsContainer = styled.div`
 `
 
 const UserSettingsController = (): ReactElement => {
-  const { applicationFeature, activityLogConfig, projectId, userImportApiEnabled } = useContext(ProjectConfigContext)
+  const { applicationFeature, activityLogConfig, projectId } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (
     <UserSettingsContainer>
