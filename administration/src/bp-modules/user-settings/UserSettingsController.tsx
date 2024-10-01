@@ -5,10 +5,9 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivityLogCard from './ActivityLogCard'
-import ApiTokenSettings from './ApiTokenSettings'
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
-import PepperSettings from './PepperSettings'
+import UserEndpointSettings from './UserEndpointSettings'
 
 const UserSettingsContainer = styled.div`
   display: flex;
@@ -24,7 +23,7 @@ const UserSettingsController = () => {
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
-      {userImportApiEnabled && role == Role.ProjectAdmin && <ApiTokenSettings />}
+      {userImportApiEnabled && role == Role.ProjectAdmin && <UserEndpointSettings />}
       <ChangePasswordForm />
       {activityLogConfig && <ActivityLogCard activityLogConfig={activityLogConfig} />}
     </UserSettingsContainer>
