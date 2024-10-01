@@ -29,6 +29,7 @@ const StyledCheckbox = styled(Checkbox)`
 
 const StyledAlert = styled(Alert)`
   margin-bottom: 24px;
+  white-space: pre-line;
 `
 
 const Container = styled('div')`
@@ -52,7 +53,7 @@ const getTooltipMessage = (cardsValid: boolean, dataPrivacyAccepted: boolean): s
     tooltipMessages.push('Bitte akzeptieren Sie die Datenschutzerklärung.')
   }
 
-  return tooltipMessages.join(' ')
+  return tooltipMessages.join('\n')
 }
 const CardSelfServiceForm = ({
   card,
@@ -123,11 +124,7 @@ const CardSelfServiceForm = ({
         maxWidth='md'
         onUpdateOpen={setOpenDataPrivacy}
         title={projectConfig.dataPrivacyHeadline}
-        content={
-          <>
-            <projectConfig.dataPrivacyContent />
-          </>
-        }
+        content={<projectConfig.dataPrivacyContent />}
       />
     </>
   )

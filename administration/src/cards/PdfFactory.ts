@@ -82,7 +82,7 @@ export async function generatePdf(
   cardBlueprints: CardBlueprint[],
   pdfConfig: PdfConfig,
   region?: Region
-):Promise<Blob> {
+): Promise<Blob> {
   try {
     const doc = await PDFDocument.create()
 

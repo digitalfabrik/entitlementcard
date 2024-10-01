@@ -79,7 +79,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
     [appToaster, setSelfServiceState]
   )
 
-  const generateCards = useCallback(async () => {
+  const generateCards = useCallback(async (): Promise<void> => {
     setIsLoading(true)
 
     try {
@@ -125,9 +125,9 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
     } catch (error) {
       handleErrors(error)
     }
-  }, [selfServiceCards, projectConfig, setIsLoading, setSelfServiceCards, setDeepLink, setCode])
+  }, [projectConfig, setIsLoading, setDeepLink, setCode, createCardsSelfService, handleErrors, selfServiceCards])
 
-  const downloadPdf = async (code: CreateCardsResult, fileName: string) => {
+  const downloadPdf = async (code: CreateCardsResult, fileName: string): Promise<void> => {
     const blob = await generatePdf([code], selfServiceCards, projectConfig.pdf)
     downloadDataUri(blob, fileName)
   }

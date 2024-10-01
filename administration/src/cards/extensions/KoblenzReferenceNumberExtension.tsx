@@ -1,5 +1,6 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
+import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import ClearInputButton from './components/ClearInputButton'
@@ -13,8 +14,8 @@ const KoblenzReferenceNumberMaxLength = 15
 class KoblenzReferenceNumberExtension extends Extension<KoblenzReferenceNumberState, null> {
   public readonly name = KoblenzReferenceNumberExtension.name
 
-  setInitialState() {}
-  createForm(onUpdate: () => void, viewportSmall = true) {
+  setInitialState(): void {}
+  createForm(onUpdate: () => void, viewportSmall = true): ReactElement {
     const clearInput = () => {
       this.state = { referenceNumber: '' }
       onUpdate()
@@ -53,16 +54,16 @@ class KoblenzReferenceNumberExtension extends Extension<KoblenzReferenceNumberSt
     )
   }
 
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionKoblenzReferenceNumber = {
       referenceNumber: this.state?.referenceNumber,
     }
   }
 
-  isValid() {
+  isValid(): boolean {
     return (
       this.state !== null &&
       this.state.referenceNumber.length >= KoblenzReferenceNumberMinLength &&
@@ -70,14 +71,11 @@ class KoblenzReferenceNumberExtension extends Extension<KoblenzReferenceNumberSt
     )
   }
 
-  fromString(state: string) {
-    if (state === null) {
-      this.state = null
-    }
+  fromString(state: string): void {
     this.state = { referenceNumber: state }
   }
 
-  toString() {
+  toString(): string {
     return this.state?.referenceNumber ?? ''
   }
 }

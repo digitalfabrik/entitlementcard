@@ -1,6 +1,6 @@
 import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { TextField } from '@mui/material'
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent, JSXElementConstructor, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
@@ -29,13 +29,17 @@ type CreateCardsFormProps = {
 }
 
 export const maxCardValidity = { years: 99 }
-export const ExtensionForm = ({ extension, onUpdate, viewportSmall }: ExtensionFormProps) => {
+export const ExtensionForm = ({
+  extension,
+  onUpdate,
+  viewportSmall,
+}: ExtensionFormProps): ReactElement<ExtensionInstance, string | JSXElementConstructor<ExtensionInstance>> | null => {
   return extension.createForm(() => {
     onUpdate()
   }, viewportSmall)
 }
 
-const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps): ReactElement => {
+const AddCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const today = PlainDate.fromLocalDate(new Date())
   return (
@@ -89,4 +93,4 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
   )
 }
 
-export default CreateCardForm
+export default AddCardForm

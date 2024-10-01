@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import CreateCardForm from './AddCardForm'
+import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 import { getHeaders } from './ImportCardsController'
 
@@ -110,7 +110,7 @@ const AddCardsForm = ({
         }}>
         {cardBlueprints.map(blueprint => (
           <FormColumn key={blueprint.id}>
-            <CreateCardForm
+            <AddCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}
               onUpdate={notifyUpdate}

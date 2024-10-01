@@ -1,7 +1,7 @@
 import { Colors, FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import {ReactElement} from "react";
+import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -14,7 +14,7 @@ const minBirthday = new PlainDate(1900, 1, 1)
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
-  setInitialState() {
+  setInitialState(): void {
     this.state = { birthday: minBirthday.toDaysSinceEpoch() }
   }
 
