@@ -98,7 +98,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     try {
       const startDay = PlainDate.fromCustomFormat(value)
       this.state = { startDay: startDay.toDaysSinceEpoch() }
-    } catch (e) {
+    } catch {
       this.state = null
     }
   }

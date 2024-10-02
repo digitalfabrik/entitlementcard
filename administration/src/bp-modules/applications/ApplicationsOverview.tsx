@@ -32,8 +32,10 @@ export type Application = GetApplicationsQuery['applications'][number]
 // eslint-disable-next-line react/prefer-stateless-function
 export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
   render(): ReactElement {
+    // eslint-disable-next-line react/prop-types
     const { application } = this.props
     return (
+      // eslint-disable-next-line react/prop-types
       <ApplicationListCard key={application.id}>
         <ApplicationCard {...this.props} />
       </ApplicationListCard>

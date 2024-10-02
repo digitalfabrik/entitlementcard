@@ -23,7 +23,7 @@ type ErrorExtensions = {
 const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
-  if (!extensions || !extensions.code) {
+  if (!extensions || extensions.code === undefined) {
     return defaultError
   }
 

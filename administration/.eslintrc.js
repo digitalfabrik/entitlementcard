@@ -20,7 +20,7 @@ module.exports = {
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/ban-types': ['error', { extendDefaults: true, types: { '{}': false } }],
+    '@typescript-eslint/no-empty-object-type': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
@@ -122,6 +122,7 @@ module.exports = {
       rules: {
         'global-require': 'off',
         '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
         'import/no-extraneous-dependencies': 'off',
         'import/no-dynamic-require': 'off',
       },
@@ -137,7 +138,7 @@ module.exports = {
     jest: {
       // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
       // https://github.com/digitalfabrik/entitlementcard/issues/1659
-      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
       version: require('jest/package.json').version,
     },
   },
