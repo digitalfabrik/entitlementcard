@@ -27,7 +27,7 @@ const PepperSettings = (): ReactElement => {
 const PepperSettingsView = ({ pepper }: { pepper: string }) => {
   return (
     <Container>
-      <p>Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehashet werden:</p>
+      <p>Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden:</p>
       <PasswordInput label='' value={pepper} setValue={() => {}} />
     </Container>
   )

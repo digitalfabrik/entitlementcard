@@ -1,4 +1,5 @@
-import { ReactElement, useContext } from 'react'
+import { NonIdealState } from '@blueprintjs/core'
+import React, { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -17,9 +18,19 @@ const ProjectSettingsContainer = styled.div`
 const ProjectSettingsController = (): ReactElement => {
   const { userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
+
+  if (role !== Role.ProjectAdmin || !userImportApiEnabled) {
+    return (
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description={'Sie sind für die Projekteinstellungen nicht berechtigt'}
+      />
+    )
+  }
   return (
     <ProjectSettingsContainer>
-      {userImportApiEnabled && role === Role.ProjectAdmin && <UserEndpointSettings />}
+      <UserEndpointSettings />
     </ProjectSettingsContainer>
   )
 }

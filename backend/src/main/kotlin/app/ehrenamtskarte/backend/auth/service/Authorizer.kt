@@ -144,8 +144,12 @@ object Authorizer {
         return user.projectId.value == projectId && user.role == Role.PROJECT_STORE_MANAGER.db_value
     }
 
-    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean =
-        user.role == Role.PROJECT_ADMIN.db_value
+    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
+        return transaction {
+            user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                .single().id.value == user.projectId.value
+        }
+    }
 
     fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
