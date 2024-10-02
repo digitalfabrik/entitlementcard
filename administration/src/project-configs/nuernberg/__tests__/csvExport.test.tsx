@@ -26,6 +26,6 @@ describe('csvExport', () => {
     if (!csvConfig.enabled) {
       throw new Error('Tested failed')
     }
-    expect(buildCsvLine(codes[0], cards[0]).split(',').length).toEqual(csvConfig.csvHeader.length)
+    expect(buildCsvLine(codes[0], cards[0]).split(',')).toHaveLength(csvConfig.csvHeader.length)
   })
 })

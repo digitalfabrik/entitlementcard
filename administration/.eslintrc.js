@@ -8,17 +8,11 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
-    // 'plugin:jest/recommended',
-    // 'plugin:jest/style',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
   ],
   ignorePatterns: ['src/generated/**', 'src/coverage/**', 'build/**'],
   rules: {
-    'prefer-template': 'error',
-    'testing-library/prefer-screen-queries': 'off',
-    'testing-library/no-node-access': 'off',
-    '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/ban-types': ['error', { extendDefaults: true, types: { '{}': false } }],
-
     // Overly strict rules (for now)
     'class-methods-use-this': 'off',
     'no-console': 'off',
@@ -26,6 +20,7 @@ module.exports = {
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
+    '@typescript-eslint/ban-types': ['error', { extendDefaults: true, types: { '{}': false } }],
     '@typescript-eslint/no-non-null-assertion': 'off',
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
@@ -101,6 +96,7 @@ module.exports = {
     'jest/no-alias-methods': 'error',
 
     'jsx-expressions/strict-logical-expressions': 'error',
+
     'prefer-arrow/prefer-arrow-functions': 'error',
   },
   parserOptions: {
@@ -124,9 +120,10 @@ module.exports = {
     {
       files: ['**/scripts/**', '**/config/**'],
       rules: {
+        'global-require': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
         'import/no-extraneous-dependencies': 'off',
         'import/no-dynamic-require': 'off',
-        'global-require': 'off',
       },
     },
     {
@@ -136,4 +133,12 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    jest: {
+      // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
+      // https://github.com/digitalfabrik/entitlementcard/issues/1659
+      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+      version: require('jest/package.json').version,
+    },
+  },
 }

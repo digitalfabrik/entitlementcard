@@ -25,7 +25,7 @@ describe('CsvFactory', () => {
     }
     passIdExtenstion.fromString(testPassId)
     const filename = getCSVFilename(cards)
-    expect(filename).toEqual(`${testPassId}.csv`)
+    expect(filename).toBe(`${testPassId}.csv`)
   })
 
   it('should use bulkname for multiple cards export', () => {
@@ -34,7 +34,7 @@ describe('CsvFactory', () => {
       new CardBlueprint('Theo Test', nuernbergConfig.card),
     ]
     const filename = getCSVFilename(cards)
-    expect(filename).toEqual('Pass-ID[0]mass.csv')
+    expect(filename).toBe('Pass-ID[0]mass.csv')
   })
 
   it('should throw error if csv export is disabled', () => {

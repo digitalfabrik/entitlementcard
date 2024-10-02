@@ -27,12 +27,12 @@ describe('CSVStatistics', () => {
 
   it('should create a proper filename for a single region', () => {
     const filename = getCsvFileName(dateString, region)
-    expect(filename).toEqual(`${region.prefix}${region.name}_CardStatistics_${dateString}.csv`)
+    expect(filename).toBe(`${region.prefix}${region.name}_CardStatistics_${dateString}.csv`)
   })
 
   it('should create a proper filename if no region was passed', () => {
     const filename = getCsvFileName(dateString)
-    expect(filename).toEqual(`CardStatistics_${dateString}.csv`)
+    expect(filename).toBe(`CardStatistics_${dateString}.csv`)
   })
 
   it('should throw an error if card statistics are not enabled', () => {
