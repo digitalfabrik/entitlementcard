@@ -26,6 +26,18 @@ class RemoveCardConfirmationDialog extends StatefulWidget {
 }
 
 class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDialog> {
+  void removeCard(BuildContext context) {
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    // ensures that the store will be reset to empty list
+    if (userCodeModel.userCodes.length == 1) {
+      userCodeModel.removeCodes();
+    } else {
+      userCodeModel.removeCode(widget.userCode);
+      widget.carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+    }
+    Navigator.of(context).pop(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
@@ -55,26 +67,8 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         ),
       ),
       actions: <Widget>[
-        TextButton(
-          child: const Text('Abbrechen'),
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-        ),
-        TextButton(
-          child: const Text('Löschen'),
-          onPressed: () {
-            final provider = Provider.of<UserCodeModel>(context, listen: false);
-            // ensures that the store will be reset to empty list
-            if (provider.userCodes.length == 1) {
-              provider.removeCodes();
-            } else {
-              provider.removeCode(widget.userCode);
-              widget.carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
-            }
-            Navigator.of(context).pop(true);
-          },
-        ),
+        TextButton(child: const Text('Abbrechen'), onPressed: () => Navigator.of(context).pop(false)),
+        TextButton(child: const Text('Löschen'), onPressed: () => removeCard(context)),
       ],
     );
   }
