@@ -13,19 +13,23 @@ class UserCodeModel extends ChangeNotifier {
   List<DynamicUserCode> _userCodes = [];
   _InitializationState _initState = _InitializationState.uninitialized;
 
-  List<DynamicUserCode> get userCodes {
-    if (!isInitialized) {
-      throw StateError('UserCodeModel not initialized!');
-    }
-    return UnmodifiableListView(_userCodes);
-  }
-
   bool get isInitialized {
     return _initState == _InitializationState.initialized;
   }
 
   bool get initializationFailed {
     return _initState == _InitializationState.failed;
+  }
+
+  void _requireInitialized() {
+    if (!isInitialized) {
+      throw StateError('UserCodeModel not initialized!');
+    }
+  }
+
+  List<DynamicUserCode> get userCodes {
+    _requireInitialized();
+    return UnmodifiableListView(_userCodes);
   }
 
   Future<void> initialize() async {
@@ -52,9 +56,7 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void insertCode(DynamicUserCode code) {
-    if (!isInitialized) {
-      throw StateError('UserCodeModel not initialized!');
-    }
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     if (isAlreadyInList(userCodes, code.info)) return;
     userCodes.add(code);
@@ -64,9 +66,7 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void updateCode(DynamicUserCode code) {
-    if (!isInitialized) {
-      throw StateError('UserCodeModel not initialized!');
-    }
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     if (isAlreadyInList(userCodes, code.info)) {
       userCodes = _updateUserCode(userCodes, code);
@@ -77,9 +77,7 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void removeCode(DynamicUserCode code) {
-    if (!isInitialized) {
-      throw StateError('UserCodeModel not initialized!');
-    }
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     userCodes.remove(code);
     const UserCodeStore().store(userCodes);
@@ -88,9 +86,7 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   Future<void> removeCodes() async {
-    if (!isInitialized) {
-      throw StateError('UserCodeModel not initialized!');
-    }
+    _requireInitialized();
     await const UserCodeStore().remove();
     _userCodes = [];
     notifyListeners();
