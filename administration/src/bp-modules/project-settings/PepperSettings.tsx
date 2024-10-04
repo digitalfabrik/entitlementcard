@@ -12,9 +12,11 @@ const Container = styled.div`
 
 const PepperSettings = (): ReactElement => {
   const errorComponent = (
-    <Callout intent='danger'>
-      Es ist kein Koblenz Pepper hinterlegt. Das Feature ist in dieser Umgebung aktuell nicht verfügbar!
-    </Callout>
+    <Container>
+      <Callout intent='danger'>
+        Es ist kein Koblenz Pepper hinterlegt. Das Feature ist in dieser Umgebung aktuell nicht verfügbar!
+      </Callout>
+    </Container>
   )
   const pepperQuery = useGetHashingPepperQuery()
   const result = getQueryResult(pepperQuery, errorComponent)
@@ -28,7 +30,7 @@ const PepperSettingsView = ({ pepper }: { pepper: string }) => {
   return (
     <Container>
       <p>Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden:</p>
-      <PasswordInput label='' value={pepper} setValue={() => {}} />
+      <PasswordInput label='' value={pepper} setValue={() => {}} readonly />
     </Container>
   )
 }

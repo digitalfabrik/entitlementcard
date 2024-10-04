@@ -21,8 +21,13 @@ const ShowPasswordButton = (props: { hidden: boolean; onClick: () => void }) => 
 const PasswordInput = ({
   label,
   setValue,
+  readonly = false,
   ...otherProps
-}: InputGroupProps2 & { label: string; setValue: (value: string) => void }): ReactElement => {
+}: InputGroupProps2 & {
+  label: string
+  setValue: (value: string) => void
+  readonly?: boolean
+}): ReactElement => {
   const [passwordHidden, setPasswordHidden] = useState(true)
   return (
     <Label>
@@ -32,6 +37,7 @@ const PasswordInput = ({
         {...otherProps}
         type={passwordHidden ? 'password' : 'text'}
         onChange={event => setValue(event.currentTarget.value)}
+        readOnly={readonly}
         rightElement={<ShowPasswordButton hidden={passwordHidden} onClick={() => setPasswordHidden(!passwordHidden)} />}
       />
     </Label>

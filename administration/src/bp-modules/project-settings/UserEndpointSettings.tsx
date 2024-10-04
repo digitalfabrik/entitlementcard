@@ -115,7 +115,7 @@ const UserEndpointSettings = (): ReactElement => {
         <p>Möchten Sie das Token unwiderruflich löschen?</p>
       </Alert>
       <SettingsCard>
-        <H2>User Upload Endpunkt</H2>
+        <H2>User Import Endpunkt</H2>
         <PepperSettings />
         <Container>
           <H4>Neues Token erstellen</H4>
