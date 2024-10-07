@@ -100,7 +100,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _resetEakData(BuildContext context, UserCodeModel userCodesModel) async {
-    userCodesModel.removeCodes();
+    await userCodesModel.removeCodes();
   }
 
   DynamicUserCode _determineUserCode(String projectId) {
