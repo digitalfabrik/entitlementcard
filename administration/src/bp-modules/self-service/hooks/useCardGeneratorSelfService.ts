@@ -66,6 +66,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
         appToaster?.show({
           message: title,
           intent: 'danger',
+          timeout: 0,
         })
       } else {
         appToaster?.show({

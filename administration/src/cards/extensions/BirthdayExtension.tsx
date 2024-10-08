@@ -9,7 +9,7 @@ import { Extension } from './extensions'
 
 type BirthdayState = { birthday: number }
 
-const minBirthday = new PlainDate(1900, 1, 1)
+const minBirthday = new PlainDate(1980, 1, 1)
 
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name

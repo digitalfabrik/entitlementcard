@@ -96,10 +96,6 @@ const CardSelfServiceView = (): ReactElement => {
     }
   }
 
-  const onGenerateCard = async () => {
-    await generateCards()
-  }
-
   const goToActivation = () => {
     setSelfServiceState(CardSelfServiceStep.activation)
   }
@@ -124,7 +120,7 @@ const CardSelfServiceView = (): ReactElement => {
             dataPrivacyAccepted={dataPrivacyAccepted}
             setDataPrivacyAccepted={setDataPrivacyAccepted}
             notifyUpdate={notifyUpdate}
-            generateCards={onGenerateCard}
+            generateCards={generateCards}
           />
         )}
         {selfServiceState === CardSelfServiceStep.information && (

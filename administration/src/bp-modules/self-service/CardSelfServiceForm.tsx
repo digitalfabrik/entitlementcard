@@ -11,15 +11,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { ExtensionForm } from '../cards/AddCardForm'
 import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
-
-const PrivacyButton = styled('button')`
-  border: none;
-  background-color: transparent;
-  color: blue;
-  text-decoration: underline;
-  padding: 0;
-  cursor: pointer;
-`
+import { UnderlineTextButton } from './components/UnderlineTextButton'
 
 const StyledCheckbox = styled(Checkbox)`
   margin-top: 24px;
@@ -76,10 +68,10 @@ const CardSelfServiceForm = ({
   return (
     <>
       <Container key={card.id}>
-        <FormGroup label='Name'>
+        <FormGroup label='Vorname Nachname'>
           <InputGroup
             large={viewportSmall}
-            placeholder='Erika Mustermann'
+            placeholder='Erika Musterfrau'
             autoFocus
             rightElement={
               <ClearInputButton viewportSmall={viewportSmall} onClick={clearNameInput} input={card.fullName} />
@@ -101,7 +93,7 @@ const CardSelfServiceForm = ({
         </IconTextButton>
         <StyledCheckbox checked={dataPrivacyAccepted} onChange={() => setDataPrivacyAccepted(!dataPrivacyAccepted)}>
           Ich akzeptiere die{' '}
-          <PrivacyButton onClick={() => setOpenDataPrivacy(true)}>Datenschutzerklärung</PrivacyButton>.
+          <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>Datenschutzerklärung</UnderlineTextButton>.
         </StyledCheckbox>
       </Container>
       {cardCreationDisabled && (
@@ -117,7 +109,7 @@ const CardSelfServiceForm = ({
         maxWidth='lg'
         onUpdateOpen={setOpenReferenceInformation}
         title={'Informationen zur Referenznummer'}
-        content={<>Waiting for information...</>}
+        content={<>Noch keine Informationen verfügtbar, bitte wenden Sie sich an den Support.</>}
       />
       <BasicDialog
         open={openDataPrivacy}

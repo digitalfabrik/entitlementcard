@@ -93,7 +93,7 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.InvalidUserEntitlements:
       return {
-        title: 'Sie sind nicht berechtigt einen KoblenzPass zu erstellen. Bitte prüfen Sie ihre Eingaben',
+        title: 'Sie sind scheinbar nicht berechtigt einen KoblenzPass zu erstellen. Bitte prüfen Sie Ihre Eingaben',
       }
     case GraphQlExceptionCode.MailNotSent:
       return {

@@ -16,7 +16,7 @@ const StyledButton = styled.button<{ $viewportSmall: boolean }>`
 type ClearInputButtonProps = { viewportSmall: boolean; onClick: () => void; input?: string }
 
 const ClearInputButton = ({ viewportSmall, onClick, input }: ClearInputButtonProps): ReactElement | null => {
-  if (input?.length === 0) {
+  if (!input || input.length === 0) {
     return null
   }
   return (
