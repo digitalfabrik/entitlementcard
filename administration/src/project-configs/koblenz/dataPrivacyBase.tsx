@@ -45,7 +45,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
     <b>Vorbemerkungen:</b>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen des digitalen
-      KoblenzPass einschließlich verbundener Dienste.
+      KoblenzPasses einschließlich verbundener Dienste.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Der digitale KoblenzPass wird im Auftrag der Stadt Koblenz durch die Tür an Tür – Digitalfabrik gGmbH,
@@ -157,7 +157,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </span>
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Zweck der Verarbeitung ist die Bereitstellung und spätere Nutzung eines beantragten digitalen KoblenzPass.
+      Zweck der Verarbeitung ist die Bereitstellung und spätere Nutzung eines beantragten digitalen KoblenzPasses.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Die Datenverarbeitungen im Zusammenhang mit der Bereitstellung und Nutzung des digitalen KoblenzPass sind
