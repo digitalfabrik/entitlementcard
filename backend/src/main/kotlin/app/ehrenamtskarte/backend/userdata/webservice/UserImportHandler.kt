@@ -1,17 +1,18 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
 import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
+import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.userdata.exception.UserImportException
-import at.favre.lib.crypto.bcrypt.BCrypt
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -34,8 +35,9 @@ class UserImportHandler(
         try {
             val apiToken = authenticate(ctx)
 
-            val project = transaction { ProjectEntity[apiToken.projectId] }
+            val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
             val projectConfig = backendConfiguration.getProjectConfig(project.project)
+
             if (!projectConfig.selfServiceEnabled) {
                 throw UserImportException("User import is not enabled in the project")
             }
@@ -70,11 +72,11 @@ class UserImportHandler(
     private fun authenticate(ctx: Context): ApiTokenEntity {
         val authHeader = ctx.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
             ?: throw UnauthorizedException()
-        val token = authHeader.substring(7)
+
+        val encryptedToken = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
 
         return transaction {
-            ApiTokenEntity.find { ApiTokens.expirationDate greater LocalDate.now() }
-                .firstOrNull { BCrypt.verifyer().verify(token.toCharArray(), it.token).verified }
+            ApiTokensRepository.findByToken(encryptedToken)?.takeIf { it.expirationDate > LocalDate.now() }
                 ?: throw ForbiddenException()
         }
     }

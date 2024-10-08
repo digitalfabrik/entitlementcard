@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
@@ -12,7 +13,6 @@ import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
-import at.favre.lib.crypto.bcrypt.BCrypt
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -31,7 +31,7 @@ object TestData {
         creatorId: Int,
         expirationDate: LocalDate = LocalDate.now().plusYears(1)
     ): Int {
-        val encryptedToken = BCrypt.withDefaults().hash(11, token.toCharArray())
+        val encryptedToken = PasswordCrypto.hashWithSHA256(token.toByteArray())
         return transaction {
             val admin = AdministratorEntity.findById(creatorId) ?: throw Exception("Test admin $creatorId not found")
             ApiTokens.insertAndGetId {

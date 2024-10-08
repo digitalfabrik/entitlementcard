@@ -67,7 +67,7 @@ enum class TestAdministrators(
                         it[Administrators.id] = admin.id
                         it[projectId] = project.id
                         it[email] = admin.email
-                        it[passwordHash] = PasswordCrypto.hashPasswort(admin.password)
+                        it[passwordHash] = PasswordCrypto.hashPassword(admin.password)
                         it[role] = admin.role.db_value
                         it[regionId] = admin.regionId
                         it[deleted] = false
