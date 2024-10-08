@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.helper
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
@@ -12,7 +11,6 @@ import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -92,16 +90,15 @@ object TestData {
         endDate: LocalDate = LocalDate.now().plusYears(1L),
         revoked: Boolean = false,
         regionId: Int
-    ): UserEntitlementsEntity {
+    ): Int {
         return transaction {
-            val result = UserEntitlements.insert {
+            UserEntitlements.insertAndGetId {
                 it[UserEntitlements.userHash] = userHash.toByteArray()
                 it[UserEntitlements.startDate] = startDate
                 it[UserEntitlements.endDate] = endDate
                 it[UserEntitlements.revoked] = revoked
                 it[UserEntitlements.regionId] = regionId
-            }.resultedValues!!.first()
-            UserEntitlementsEntity.wrapRow(result)
+            }.value
         }
     }
 
@@ -115,7 +112,7 @@ object TestData {
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
         startDay: Long? = null
-    ): CardEntity {
+    ): Int {
         val fakeActivationSecretHash = Random.nextBytes(20)
         return createCard(
             fakeActivationSecretHash,
@@ -141,7 +138,7 @@ object TestData {
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
         startDay: Long? = null
-    ): CardEntity {
+    ): Int {
         return createCard(
             activationSecretHash = null,
             totpSecret = null,
@@ -169,10 +166,10 @@ object TestData {
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
         startDay: Long? = null
-    ): CardEntity {
+    ): Int {
         val fakeCardInfoHash = Random.nextBytes(20)
         return transaction {
-            val result = Cards.insert {
+            Cards.insertAndGetId {
                 it[Cards.activationSecretHash] = activationSecretHash
                 it[Cards.totpSecret] = totpSecret
                 it[Cards.expirationDay] = expirationDay
@@ -185,8 +182,7 @@ object TestData {
                 it[Cards.firstActivationDate] = firstActivationDate
                 it[Cards.entitlementId] = entitlementId
                 it[Cards.startDay] = startDay
-            }.resultedValues!!.first()
-            CardEntity.wrapRow(result)
+            }.value
         }
     }
 }

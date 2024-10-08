@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
+import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -124,13 +125,16 @@ class UserImportHandler(
                 val revoked = entry.get("revoked").toBooleanStrictOrNull()
                     ?: throw UserImportException(entry.recordNumber, "Revoked must be a boolean value")
 
-                UserEntitlementsRepository.insertOrUpdateUserData(
-                    userHash.toByteArray(),
-                    startDate,
-                    endDate,
-                    revoked,
-                    regionId
-                )
+                val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
+
+                if (userEntitlement == null) {
+                    UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+                } else {
+                    UserEntitlementsRepository.update(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+                    if (revoked || endDate <= LocalDate.now()) {
+                        CardRepository.revokeByEntitlementId(userEntitlement.id.value)
+                    }
+                }
             }
         }
     }
