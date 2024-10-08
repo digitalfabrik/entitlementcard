@@ -1,18 +1,18 @@
 import { FeatureCollection, GeoJSON, Point } from 'geojson'
 
-import { AcceptingStoreEntry } from '../AcceptingStoreEntry'
+import { AcceptingStoresEntry } from '../AcceptingStoresEntry'
 import { LONG_ERROR_TIMEOUT } from '../StoresCSVInput'
 
 const GEO_SERVICE_URL = 'https://nominatim.maps.tuerantuer.org/nominatim/search'
 
-const isStoreMissingLocationInformation = (store: AcceptingStoreEntry): boolean =>
+const isStoreMissingLocationInformation = (store: AcceptingStoresEntry): boolean =>
   store.data.location.length === 0 || store.data.street.length === 0 || store.data.houseNumber.length === 0
 
 const handleStoreWithMissingLocationInformation = (
-  store: AcceptingStoreEntry,
+  store: AcceptingStoresEntry,
   storeIndex: number,
   showInputError: (message: string, timeout?: number) => void
-): AcceptingStoreEntry => {
+): AcceptingStoresEntry => {
   showInputError(
     `Eintrag ${
       storeIndex + 1
@@ -31,10 +31,10 @@ const getGeoDataUrlWithParams = (location: string, street: string, houseNr: stri
 }
 
 const getStoreCoordinatesFromGeoDataService = (
-  store: AcceptingStoreEntry,
+  store: AcceptingStoresEntry,
   storeIndex: number,
   showInputError: (message: string, timeout?: number) => void
-): Promise<AcceptingStoreEntry> =>
+): Promise<AcceptingStoresEntry> =>
   fetch(getGeoDataUrlWithParams(store.data.location, store.data.street, store.data.houseNumber).href)
     .then(response => response.json())
     .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
@@ -53,9 +53,9 @@ const getStoreCoordinatesFromGeoDataService = (
     })
 
 export const getStoresWithCoordinates = (
-  stores: AcceptingStoreEntry[],
+  stores: AcceptingStoresEntry[],
   showInputError: (message: string, timeout?: number) => void
-): Promise<AcceptingStoreEntry>[] =>
+): Promise<AcceptingStoresEntry>[] =>
   stores.map((store, index) => {
     if (store.hasValidCoordinates()) {
       return Promise.resolve(store)

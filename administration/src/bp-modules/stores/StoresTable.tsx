@@ -3,9 +3,9 @@ import '@blueprintjs/table/lib/css/table.css'
 import { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
-import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import dimensions from '../constants/dimensions'
-import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 
 const TableContainer = styled.div`
   width: 100vw;
@@ -19,8 +19,8 @@ const StyledCell = styled(Cell)`
 `
 
 type CardImportTableProps = {
-  fields: StoreFieldConfig[]
-  acceptingStores: AcceptingStoreEntry[]
+  fields: StoresFieldConfig[]
+  acceptingStores: AcceptingStoresEntry[]
 }
 
 const StoresTable = ({ fields, acceptingStores }: CardImportTableProps): ReactElement => {

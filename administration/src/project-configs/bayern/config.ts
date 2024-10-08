@@ -85,7 +85,7 @@ const config: ProjectConfig = {
   },
   freinetCSVImportEnabled: true,
   cardCreation: true,
-  storeManagement: {
+  storesManagement: {
     enabled: false,
   },
   userImportApiEnabled: false,

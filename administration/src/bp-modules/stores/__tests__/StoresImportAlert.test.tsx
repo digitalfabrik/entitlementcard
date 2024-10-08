@@ -7,7 +7,7 @@ import StoresImportAlert from '../StoresImportAlert'
 const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 const setDryRun = jest.fn()
-describe('StoreImportAlert', () => {
+describe('StoresImportAlert', () => {
   it('should show the correct alert information for dry run', () => {
     const { getByTestId, queryByTestId, getByText } = render(
       <StoresImportAlert dryRun setDryRun={setDryRun} storesCount={100} />,

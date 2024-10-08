@@ -5,7 +5,7 @@ import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigCon
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { AcceptingStoreEntry } from '../AcceptingStoreEntry'
+import { AcceptingStoresEntry } from '../AcceptingStoresEntry'
 import StoresButtonBar from '../StoresButtonBar'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
 
@@ -18,8 +18,9 @@ const importStores = jest.fn()
 const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('StoresButtonBar', () => {
-  it.each([{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }])(
-    `Should goBack when clicking back for $projectConfig.name`,
+  const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
+  it.each(projectConfigsWithStoreUpload)(
+    `should goBack when clicking back for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const { getByText } = render(
@@ -45,8 +46,8 @@ describe('StoresButtonBar', () => {
     }
   )
 
-  it.each([{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }])(
-    `Should disable import button for no stores for $projectConfig.name`,
+  it.each(projectConfigsWithStoreUpload)(
+    `should disable import button for no stores for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const { getByText } = render(
@@ -76,12 +77,12 @@ describe('StoresButtonBar', () => {
     }
   )
 
-  it.each([{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }])(
-    `Should disable import stores for invalid store entries for $projectConfig.name`,
+  it.each(projectConfigsWithStoreUpload)(
+    `should disable import stores for invalid store entries for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const fields = projectConfig.storeManagement.enabled ? projectConfig.storeManagement.fields : []
-      const stores = [new AcceptingStoreEntry(invalidStoreData, fields)]
+      const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
+      const stores = [new AcceptingStoresEntry(invalidStoreData, fields)]
       const { getByText } = render(
         <StoresButtonBar
           dryRun
@@ -108,12 +109,12 @@ describe('StoresButtonBar', () => {
     }
   )
 
-  it.each([{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }])(
-    `Should import valid stores for $projectConfig.name`,
+  it.each(projectConfigsWithStoreUpload)(
+    `should import valid stores for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const fields = projectConfig.storeManagement.enabled ? projectConfig.storeManagement.fields : []
-      const stores = [new AcceptingStoreEntry(validStoreData, fields)]
+      const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
+      const stores = [new AcceptingStoresEntry(validStoreData, fields)]
       const { getByText } = render(
         <StoresButtonBar
           dryRun

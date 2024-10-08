@@ -12,8 +12,8 @@ import StoresImportDuplicates from '../StoresImportDuplicates'
 
 // TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
 
-const fieldNames = nuernbergConfig.storeManagement.enabled
-  ? nuernbergConfig.storeManagement.fields.map(field => field.name)
+const fieldNames = nuernbergConfig.storesManagement.enabled
+  ? nuernbergConfig.storesManagement.fields.map(field => field.name)
   : []
 jest.mock('csv-parse/browser/esm/sync', () => ({
   parse: jest.fn(),
@@ -25,7 +25,7 @@ const wrapper = ({ children }: { children: ReactElement }) => (
 )
 const setAcceptingStores = jest.fn()
 const setIsLoadingCoordinates = jest.fn()
-describe('StoreCSVInput', () => {
+describe('StoresCSVInput', () => {
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names
@@ -35,7 +35,7 @@ describe('StoreCSVInput', () => {
     } as unknown as FileReader
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
-    const fields = nuernbergConfig.storeManagement.enabled ? nuernbergConfig.storeManagement.fields : []
+    const fields = nuernbergConfig.storesManagement.enabled ? nuernbergConfig.storesManagement.fields : []
     const { getByTestId } = render(
       <StoresCSVInput
         setAcceptingStores={setAcceptingStores}

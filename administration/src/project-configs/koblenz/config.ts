@@ -2,7 +2,7 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ProjectConfig } from '../getProjectConfig'
-import { storeConfig } from '../storeConfig'
+import { storesManagementConfig } from '../storesManagementConfig'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
@@ -27,7 +27,7 @@ const config: ProjectConfig = {
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
   cardCreation: false,
-  storeManagement: storeConfig,
+  storesManagement: storesManagementConfig,
   userImportApiEnabled: true,
 }
 
