@@ -14,6 +14,7 @@ import AddCardsController from './bp-modules/cards/AddCardsController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
 import ImportCardsController from './bp-modules/cards/ImportCardsController'
 import HomeController from './bp-modules/home/HomeController'
+import ProjectSettingsController from './bp-modules/project-settings/ProjectSettingsController'
 import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
@@ -95,6 +96,7 @@ const Router = (): ReactElement => {
           { path: 'user-settings', element: <UserSettingsController /> },
           { path: 'stores', element: <StoresController /> },
           { path: 'stores/import', element: <StoresImportController /> },
+          { path: 'project', element: <ProjectSettingsController /> },
           { path: '*', element: <HomeController /> },
         ],
       },

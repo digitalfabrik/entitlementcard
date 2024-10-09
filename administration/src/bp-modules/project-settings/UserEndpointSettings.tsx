@@ -12,8 +12,9 @@ import {
 } from '../../generated/graphql'
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
+import SettingsCard from '../user-settings/SettingsCard'
 import getQueryResult from '../util/getQueryResult'
-import SettingsCard from './SettingsCard'
+import PepperSettings from './PepperSettings'
 
 const Container = styled.div`
   background: ghostwhite;
@@ -48,7 +49,7 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-const ApiTokenSetting = (): ReactElement => {
+const UserEndpointSettings = (): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
@@ -114,7 +115,8 @@ const ApiTokenSetting = (): ReactElement => {
         <p>Möchten Sie das Token unwiderruflich löschen?</p>
       </Alert>
       <SettingsCard>
-        <H2>Api Token</H2>
+        <H2>User Import Endpunkt</H2>
+        <PepperSettings />
         <Container>
           <H4>Neues Token erstellen</H4>
           <p>
@@ -172,4 +174,4 @@ const ApiTokenSetting = (): ReactElement => {
   )
 }
 
-export default ApiTokenSetting
+export default UserEndpointSettings

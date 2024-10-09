@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const HomeController = (): ReactElement => {
-  const { applicationFeature, cardStatistics, cardCreation } = useContext(ProjectConfigContext)
+  const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -53,6 +53,11 @@ const HomeController = (): ReactElement => {
       {role === Role.RegionAdmin && applicationFeature ? (
         <NavLink to='/region'>
           <StyledButton icon='path-search' text='Region verwalten' />
+        </NavLink>
+      ) : null}
+      {role === Role.ProjectAdmin && userImportApiEnabled ? (
+        <NavLink to={'/project'}>
+          <StyledButton icon='projects' text='Projekt verwalten' />
         </NavLink>
       ) : null}
       {role === Role.ProjectStoreManager ? (
