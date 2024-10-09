@@ -26,10 +26,6 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   if (!extensions || extensions.code === undefined) {
     return defaultError
   }
-
-  const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
-  const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
-
   switch (extensions.code) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
@@ -85,10 +81,13 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: 'Ungültiger Link',
         description: <InvalidPasswordResetLink />,
       }
-    case GraphQlExceptionCode.InvalidQrCodeSize:
+    case GraphQlExceptionCode.InvalidQrCodeSize: {
+      const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
+      const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
       return {
         title: `Der ${codeTypeText} für ${cardInfo.fullName} kann nicht generiert werden, da er zu viele Daten enthält.`,
       }
+    }
     case GraphQlExceptionCode.InvalidRole:
       return {
         title: 'Diese Rolle kann nicht zugewiesen werden.',

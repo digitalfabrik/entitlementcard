@@ -66,7 +66,6 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
   }
 
   setProtobufData(message: PartialMessage<CardExtensions>): void {
-    // eslint-disable-next-line no-param-reassign
     message.extensionBirthday = {
       birthday: this.state?.birthday,
     }

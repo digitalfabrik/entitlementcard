@@ -54,7 +54,6 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
     return false
   }
   setProtobufData(message: PartialMessage<CardExtensions>): void {
-    // eslint-disable-next-line no-param-reassign
     message.extensionNuernbergPassId = {
       identifier: NuernergPassIdentifier.passId,
       passId: this.state?.passId,

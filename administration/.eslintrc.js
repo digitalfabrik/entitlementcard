@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'jest', 'jsx-a11y', 'jsx-expressions', 'prefer-arrow', 'react', 'react-hooks'],
   extends: [
@@ -17,6 +18,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-console': 'off',
     'no-magic-numbers': 'off',
+    'no-param-reassign': 'off',
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
@@ -133,11 +135,12 @@ module.exports = {
       },
     },
   ],
+  reportUnusedDisableDirectives: true,
   settings: {
     jest: {
       // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
       // https://github.com/digitalfabrik/entitlementcard/issues/1659
-      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+      // eslint-disable-next-line global-require, @typescript-eslint/no-require-imports
       version: require('jest/package.json').version,
     },
   },

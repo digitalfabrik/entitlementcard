@@ -47,7 +47,6 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
           intent={cardBlueprint.isFullNameValid() ? undefined : Intent.DANGER}
           value={cardBlueprint.fullName}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            // eslint-disable-next-line no-param-reassign
             cardBlueprint.fullName = event.target.value
             onUpdate()
           }}
@@ -70,7 +69,6 @@ const CreateCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormPr
             }}
             onChange={e => {
               try {
-                // eslint-disable-next-line no-param-reassign
                 cardBlueprint.expirationDate = PlainDate.from(e.target.value)
                 onUpdate()
               } catch (error) {

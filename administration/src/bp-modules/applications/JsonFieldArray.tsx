@@ -53,11 +53,13 @@ const JsonFieldArray = ({
   expandedRoot,
 }: JsonFieldViewProps<JsonField<'Array'>>) => {
   const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1 || expandedRoot)
-  const children = jsonField.value.map(jsonField => (
+  const children = jsonField.value.map((jsonField, index: number) => (
     <JsonFieldView
       jsonField={jsonField}
       baseUrl={baseUrl}
-      key={jsonField.name}
+      // This is the best key we have as jsonField.name is not unique
+      // eslint-disable-next-line react/no-array-index-key
+      key={index}
       hierarchyIndex={hierarchyIndex + 1}
       attachmentAccessible={attachmentAccessible}
       expandedRoot={expandedRoot}

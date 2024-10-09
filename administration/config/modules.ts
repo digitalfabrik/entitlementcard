@@ -52,9 +52,13 @@ const getAdditionalModulePaths = (paths: ReturnType<typeof getPaths>, options: {
 const getWebpackAliases = (paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) => {
   const baseUrl = options.baseUrl
 
-  const baseUrlResolved = baseUrl ? path.resolve(paths.appPath, baseUrl) : null
+  if (!baseUrl) {
+    return {}
+  }
 
-  if (baseUrlResolved && path.relative(paths.appPath, baseUrlResolved) === '') {
+  const baseUrlResolved = path.resolve(paths.appPath, baseUrl)
+
+  if (path.relative(paths.appPath, baseUrlResolved) === '') {
     return {
       src: paths.appSrc,
     }

@@ -485,13 +485,10 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): webpack.
         fileName: 'asset-manifest.json',
         publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce(
-            (manifest, file) => ({
-              ...manifest,
-              [file.name]: file.path,
-            }),
-            seed
-          )
+          const manifestFiles = files.reduce((manifest, file) => {
+            manifest[file.name] = file.path
+            return manifest
+          }, seed)
           const entrypointFiles = entrypoints.main.filter(fileName => !fileName.endsWith('.map'))
 
           return {

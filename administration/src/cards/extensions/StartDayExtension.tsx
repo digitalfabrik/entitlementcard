@@ -79,7 +79,6 @@ class StartDayExtension extends Extension<StartDayState, null> {
   }
 
   setProtobufData(message: PartialMessage<CardExtensions>): void {
-    // eslint-disable-next-line no-param-reassign
     message.extensionStartDay = {
       startDay: this.getValidProtobufStartDay(),
     }

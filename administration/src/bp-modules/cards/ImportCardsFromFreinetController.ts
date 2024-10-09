@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/extensions/BavariaCardTypeExtension'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
 
