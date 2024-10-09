@@ -1,6 +1,6 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import ClearInputButton from './components/ClearInputButton'
@@ -14,6 +14,7 @@ const KoblenzReferenceNumberMaxLength = 15
 class KoblenzReferenceNumberExtension extends Extension<KoblenzReferenceNumberState, null> {
   public readonly name = KoblenzReferenceNumberExtension.name
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setInitialState(): void {}
   createForm(onUpdate: () => void, viewportSmall = true): ReactElement {
     const clearInput = () => {

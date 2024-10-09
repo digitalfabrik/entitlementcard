@@ -12,6 +12,7 @@ type BirthdayState = { birthday: number }
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setInitialState(): void {}
 
   hasValidBirthdayDate(birthday?: number): boolean {

@@ -15,9 +15,9 @@ describe('SelfServiceCArd', () => {
     const card = new SelfServiceCard('Karla Koblenz', cardConfig)
 
     expect(card.fullName).toBe('Karla Koblenz')
-    expect(card.expirationDate).toEqual(null)
-    expect(card.extensions[0].state).toBe(null)
-    expect(card.extensions[1].state).toBe(null)
+    expect(card.expirationDate).toBeNull()
+    expect(card.extensions[0].state).toBeNull()
+    expect(card.extensions[1].state).toBeNull()
   })
 
   it('should generate CardInfo', () => {
