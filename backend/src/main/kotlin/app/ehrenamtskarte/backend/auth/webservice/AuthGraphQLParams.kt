@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordMutationSe
 import app.ehrenamtskarte.backend.auth.webservice.schema.ResetPasswordQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.SignInMutationService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ViewAdministratorsQueryService
+import app.ehrenamtskarte.backend.auth.webservice.schema.ViewPepperQueryService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -31,6 +32,7 @@ val authGraphQlParams = GraphQLParams(
         TopLevelObject(ViewAdministratorsQueryService()),
         TopLevelObject(ResetPasswordQueryService()),
         TopLevelObject(NotificationSettingsQueryService()),
-        TopLevelObject(ApiTokenQueryService())
+        TopLevelObject(ApiTokenQueryService()),
+        TopLevelObject(ViewPepperQueryService())
     )
 )

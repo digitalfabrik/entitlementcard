@@ -113,6 +113,7 @@ export type ProjectConfig = {
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
   cardCreation: boolean
+  selfServiceEnabled: boolean
   storesManagement: StoresManagementConfig
   userImportApiEnabled: boolean
 }

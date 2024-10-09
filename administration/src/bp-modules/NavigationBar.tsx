@@ -69,6 +69,11 @@ const Navigation = (props: Props): ReactElement => {
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
+        {role === Role.ProjectAdmin && config.userImportApiEnabled ? (
+          <NavLink to={'/project'}>
+            <Button minimal icon='projects' text='Projekt verwalten' />
+          </NavLink>
+        ) : null}
         {role === Role.ProjectStoreManager ? (
           <NavLink to={'/stores'}>
             <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />

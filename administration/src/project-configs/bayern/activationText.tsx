@@ -14,7 +14,7 @@ export const ActivationText = (applicationName: string, downloadLink: string, de
       Aktivierung nur in der App möglich
     </Typography>
     <span>
-      Falls Sie die App Ehrenamtskarte installiert haben und sich dennoch Ihr Browser geöffnet hat, nutzen Sie bitte
+      Falls Sie die App {applicationName} installiert haben und sich dennoch Ihr Browser geöffnet hat, nutzen Sie bitte
       diese Schaltfläche zur Aktivierung: <br />{' '}
       <ActivationButton href={deepLink} variant='contained' size='small'>
         Karte aktivieren
