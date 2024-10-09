@@ -49,7 +49,6 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
     },
     onError: error => {
-      console.log(error.message)
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
@@ -178,7 +177,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     async (applicationIdToMarkAsProcessed?: number) => {
       await generateCards(
         (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[]) =>
-          generatePdf(codes, cardBlueprints, region, projectConfig.pdf),
+          generatePdf(codes, cardBlueprints, projectConfig.pdf, region),
         'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )

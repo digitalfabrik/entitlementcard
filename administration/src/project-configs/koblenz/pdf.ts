@@ -21,7 +21,7 @@ const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 // TODO 1422 Create PDF for koblenz
 
 const pdfConfiguration: PdfConfig = {
-  title: 'Koblenz-Pässe',
+  title: 'KoblenzPässe',
   templatePath: pdfTemplate,
   issuer: 'Stadt Koblenz',
   elements: {

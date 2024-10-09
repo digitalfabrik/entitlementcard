@@ -24,10 +24,10 @@ const fillContentAreas = async (
   cardInfoHashBase64: string,
   dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
   staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
-  region: Region,
   cardBlueprint: CardBlueprint,
   pdfConfig: PdfConfig,
-  deepLink: string
+  deepLink: string,
+  region?: Region
 ): Promise<void> => {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
@@ -59,9 +59,9 @@ const fillContentAreas = async (
       form,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
+      region,
     })
   )
 
@@ -70,9 +70,9 @@ const fillContentAreas = async (
       page: templatePage,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
+      region,
     })
   )
 }
@@ -80,8 +80,8 @@ const fillContentAreas = async (
 export const generatePdf = async (
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
-  region: Region,
-  pdfConfig: PdfConfig
+  pdfConfig: PdfConfig,
+  region?: Region
 ): Promise<Blob> => {
   try {
     const doc = await PDFDocument.create()
@@ -118,10 +118,10 @@ export const generatePdf = async (
               value: staticCode,
             }
           : null,
-        region,
         cardBlueprint,
         pdfConfig,
-        getDeepLinkFromQrCode(dynamicPdfQrCode)
+        getDeepLinkFromQrCode(dynamicPdfQrCode),
+        region
       )
     }
 

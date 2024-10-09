@@ -18,6 +18,7 @@ export const getBuildConfig = (hostname: string): BuildConfigType => {
     case NUERNBERG_PRODUCTION_ID:
     case NUERNBERG_STAGING_ID:
       return buildConfigNuernberg
+    // TODO 1647 provide koblenz build config
     default:
       console.debug('Falling back to bayern.')
       return buildConfigBayern

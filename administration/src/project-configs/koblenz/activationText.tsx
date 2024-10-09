@@ -7,7 +7,7 @@ const ActivationButton = styled(Button)`
     color: white;
   }
 `
-
+// TODO #1676 Adjust activation text if pdf was opened without installed app
 export const ActivationText = (applicationName: string, downloadLink: string, deepLink: string): ReactElement => (
   <div>
     <Typography variant='h6' mb='8px'>
