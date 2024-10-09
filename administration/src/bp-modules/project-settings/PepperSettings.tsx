@@ -10,6 +10,13 @@ const Container = styled.div`
   padding: 10px 0;
 `
 
+const PepperSettingsView = ({ pepper }: { pepper: string }) => (
+  <Container>
+    <p>Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden:</p>
+    <PasswordInput label='' value={pepper} setValue={null} />
+  </Container>
+)
+
 const PepperSettings = (): ReactElement => {
   const errorComponent = (
     <Container>
@@ -24,15 +31,6 @@ const PepperSettings = (): ReactElement => {
     return result.component
   }
   return <PepperSettingsView pepper={result.data.pepper} />
-}
-
-const PepperSettingsView = ({ pepper }: { pepper: string }) => {
-  return (
-    <Container>
-      <p>Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden:</p>
-      <PasswordInput label='' value={pepper} setValue={null} />
-    </Container>
-  )
 }
 
 export default PepperSettings

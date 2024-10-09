@@ -56,7 +56,7 @@ const HomeController = (): ReactElement => {
         </NavLink>
       ) : null}
       {role === Role.ProjectAdmin && userImportApiEnabled ? (
-        <NavLink to={'/project'}>
+        <NavLink to='/project'>
           <StyledButton icon='projects' text='Projekt verwalten' />
         </NavLink>
       ) : null}
