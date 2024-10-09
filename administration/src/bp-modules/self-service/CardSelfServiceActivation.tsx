@@ -19,7 +19,6 @@ const CardSelfServiceActivation = ({ deepLink, downloadPdf }: CardSelfServiceAct
   return (
     <Container>
       <IconTextButton onClick={downloadPdf}>
-        {' '}
         <FileDownloadOutlinedIcon />
         AntragsPDF herunterladen
       </IconTextButton>
