@@ -39,10 +39,9 @@ type ValidatedInput = {
   givenInformationIsCorrectAndComplete: boolean
   hasAcceptedEmailUsage: boolean
 }
-type Options = {}
 type AdditionalProps = { regionId: number }
 
-const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
@@ -50,7 +49,7 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
     hasAcceptedEmailUsage: hasAcceptedEmailUsageOptions,
   }),
-  Component: ({ state, setState, regionId }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({ state, setState, regionId }: FormComponentProps<State, AdditionalProps>) => {
     const setHasAcceptedDataPrivacyState = useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')
     const setGivenInformationIsCorrectAndComplete = useUpdateStateCallback(
       setState,

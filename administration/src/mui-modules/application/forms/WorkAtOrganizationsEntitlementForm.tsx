@@ -52,9 +52,8 @@ const removeAt = <T,>(array: T[], index: number): T[] => {
 
 type State = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   validate: state => {
@@ -74,7 +73,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
       },
     }
   },
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1

@@ -18,7 +18,7 @@ type ValidatedInput =
   | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: BavariaCardType | null }
 type AdditionalProps = { applicantName: string }
-const StepRequirementsForm: Form<StepRequirementsFormState, Options, ValidatedInput, AdditionalProps> = {
+const StepRequirementsForm: Form<StepRequirementsFormState, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) => {

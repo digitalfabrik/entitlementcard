@@ -8,7 +8,7 @@ type State<T extends string> = { selectedValue: T | null }
 type ValidatedInput<T extends string> = T
 type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
-type RadioGroupForm<T extends string> = Form<State<T>, Options<T>, ValidatedInput<T>, AdditionalProps>
+type RadioGroupForm<T extends string> = Form<State<T>, ValidatedInput<T>, AdditionalProps, Options<T>>
 
 export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {

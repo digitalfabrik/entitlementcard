@@ -16,9 +16,9 @@ const SubForms = { certificate: FileInputForm }
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
-type Options = {}
-type AdditionalProps = {}
-const HonoredByMinisterPresidentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+type Options = Record<string, unknown>
+type AdditionalProps = Record<string, unknown>
+const HonoredByMinisterPresidentEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),

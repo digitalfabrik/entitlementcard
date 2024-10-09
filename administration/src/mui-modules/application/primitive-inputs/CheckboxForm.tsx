@@ -8,7 +8,7 @@ type State = { checked: boolean }
 type ValidatedInput = boolean
 type Options = { required: true; notCheckedErrorMessage: string } | { required: false }
 type AdditionalProps = { label: string | ReactElement }
-const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
   validate: ({ checked }, options) => {

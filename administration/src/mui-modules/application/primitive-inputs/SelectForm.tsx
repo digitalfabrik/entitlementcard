@@ -13,7 +13,7 @@ type Options = {
   items: SelectItem[]
 }
 type AdditionalProps = { label: string }
-const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {

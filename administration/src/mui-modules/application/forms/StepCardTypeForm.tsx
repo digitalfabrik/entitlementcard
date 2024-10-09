@@ -51,9 +51,7 @@ type ValidatedInput = {
   wantsPhysicalCard: boolean
   wantsDigitalCard: boolean
 }
-type Options = {}
-type AdditionalProps = {}
-const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const StepCardTypeForm: Form<State, ValidatedInput> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     wantsDigitalCard: { checked: true },
@@ -85,7 +83,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
     }
     return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
   },
-  Component: ({ state, setState }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({ state, setState }: FormComponentProps<State>) => {
     const updateApplicationType = useUpdateStateCallback(setState, 'applicationType')
     const validationResult = StepCardTypeForm.validate(state)
     const isInvalid = validationResult.type === 'error'

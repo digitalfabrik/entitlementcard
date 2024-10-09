@@ -20,13 +20,11 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardVolunteerServiceEntitlementInput
-type Options = {}
-type AdditionalProps = {}
-const VolunteerServiceEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const VolunteerServiceEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }: FormComponentProps<State, AdditionalProps, Options>) => (
+  Component: ({ state, setState }: FormComponentProps<State>) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
       <ShortTextForm.Component

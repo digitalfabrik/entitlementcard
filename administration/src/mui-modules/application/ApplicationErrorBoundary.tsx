@@ -24,7 +24,6 @@ class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { rese
 
   render(): ReactNode {
     // eslint-disable-next-line react/prop-types
-
     const { children } = this.props
     const { resetting } = this.state
     if (resetting) {

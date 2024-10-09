@@ -23,7 +23,7 @@ type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = { regions: Region[] }
 type AdditionalProps = { onSubmit: () => void; loading: boolean }
-const ApplicationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     activeStep: 0,

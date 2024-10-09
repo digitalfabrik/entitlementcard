@@ -20,7 +20,6 @@ module.exports = {
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/no-empty-object-type': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',

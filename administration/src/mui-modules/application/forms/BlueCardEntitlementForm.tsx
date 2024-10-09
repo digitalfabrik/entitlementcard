@@ -43,9 +43,9 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardEntitlementInput
-type Options = {}
+type Options = Record<string, unknown>
 type AdditionalProps = { applicantName: string }
-const BlueCardEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const BlueCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {

@@ -8,7 +8,7 @@ type State = { type: 'NumberForm'; value: string }
 type ValidatedInput = number
 type Options = { min: number; max: number }
 type AdditionalProps = { label: string; minWidth?: number }
-const NumberForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'NumberForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {

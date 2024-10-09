@@ -35,8 +35,8 @@ const dateOfBirthOptions = {
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = PersonalDataInput & { region: { regionId: number } }
 type Options = { regions: Region[] }
-type AdditionalProps = {}
-const PersonalDataForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+type AdditionalProps = Record<string, unknown>
+const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) =>

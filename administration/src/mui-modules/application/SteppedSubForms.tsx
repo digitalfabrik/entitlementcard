@@ -76,14 +76,14 @@ const SubForm = ({
 }
 
 export const useFormAsStep = <
-  Options extends {},
+  Options extends Record<string, unknown>,
   ValidatedInput,
-  AdditionalProps extends {},
+  AdditionalProps extends Record<string, unknown>,
   ParentState,
   KeyInParent extends keyof ParentState
 >(
   label: string,
-  form: Form<ParentState[KeyInParent], Options, ValidatedInput, AdditionalProps>,
+  form: Form<ParentState[KeyInParent], ValidatedInput, AdditionalProps, Options>,
   parentState: ParentState,
   setParentState: SetState<ParentState>,
   keyInParent: KeyInParent,

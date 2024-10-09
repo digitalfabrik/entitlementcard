@@ -58,9 +58,8 @@ const getValidatedCompoundInput = createCompoundValidate(SubForms, {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
@@ -83,7 +82,7 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       },
     }
   },
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => (
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <h4>Angaben zur Organisation</h4>
       <ShortTextForm.Component

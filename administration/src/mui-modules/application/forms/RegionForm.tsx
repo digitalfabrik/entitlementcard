@@ -81,7 +81,7 @@ const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof 
   return null
 }
 
-const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { ...createCompoundInitialState(SubForms), postalCodeUsedForAutoSelect: null },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) => {

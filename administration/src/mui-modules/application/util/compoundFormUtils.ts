@@ -23,8 +23,8 @@ const mapValues = <VPre extends { [k in keyof VPre]: unknown }, VPost extends { 
 type AnyForm = Form<any, any, any, any>
 type SubForms = { [key: string]: AnyForm }
 export type InferState<F extends AnyForm> = F extends Form<infer State, any, any, any> ? State : never
-type InferOptions<F extends AnyForm> = F extends Form<any, infer Options, any, any> ? Options : never
-type InferValidatedInput<F extends AnyForm> = F extends Form<any, any, infer ValidatedInput, any>
+type InferOptions<F extends AnyForm> = F extends Form<any, any, any, infer Options> ? Options : never
+type InferValidatedInput<F extends AnyForm> = F extends Form<any, infer ValidatedInput, any, any>
   ? ValidatedInput
   : never
 
@@ -50,7 +50,7 @@ export const createCompoundGetArrayBufferKeys =
       .flat()
 
 type KeyWithOptions<Forms extends SubForms> = {
-  [key in keyof Forms]: {} extends InferOptions<Forms[key]> ? never : key
+  [key in keyof Forms]: Record<string, never> extends InferOptions<Forms[key]> ? never : key
 }[keyof Forms]
 type SubFormsOptions<Forms extends SubForms> = {
   [key in KeyWithOptions<Forms>]: InferOptions<Forms[key]>
@@ -100,7 +100,7 @@ type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
   [k in keyof Forms]: InferValidatedInput<Forms[k]> | undefined
 }
 
-type FormWithStringValidatedInput = Form<any, any, string, any>
+type FormWithStringValidatedInput = Form<any, string, any, any>
 
 export const createSwitchValidate =
   <K extends string, Forms extends SubForms & { [k in K]: FormWithStringValidatedInput }>(

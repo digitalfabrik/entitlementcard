@@ -49,15 +49,13 @@ type State = {
   filename: string
 } | null
 type ValidatedInput = AttachmentInput
-type Options = {}
-type AdditionalProps = {}
 
 const Component = <I,>({
   state,
   setState,
   required,
   validate,
-}: FormComponentProps<State, AdditionalProps, Options> & {
+}: FormComponentProps<State> & {
   required: boolean
   validate: (state: State) => ValidationResult<I>
 }) => {
@@ -119,7 +117,7 @@ const Component = <I,>({
   )
 }
 
-const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const FileInputForm: Form<State, ValidatedInput> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   validate: state => {
@@ -140,7 +138,7 @@ const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState }) => Component({ state, setState, required: true, validate: FileInputForm.validate }),
 }
 
-export const OptionalFileInputForm: Form<State, Options, ValidatedInput | null, AdditionalProps> = {
+export const OptionalFileInputForm: Form<State, ValidatedInput | null> = {
   initialState: FileInputForm.initialState,
   getArrayBufferKeys: FileInputForm.getArrayBufferKeys,
   validate: state => {

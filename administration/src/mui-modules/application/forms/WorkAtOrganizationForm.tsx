@@ -54,9 +54,8 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = WorkAtOrganizationInput
-type Options = {}
 type AdditionalProps = { onDelete?: () => void; applicantName: string }
-const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
@@ -64,7 +63,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
     payment: paymentOptions,
     workSinceDate: { maximumDate: null },
   }),
-  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => (
+  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <ActivityDivider onDelete={onDelete} />
       <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>

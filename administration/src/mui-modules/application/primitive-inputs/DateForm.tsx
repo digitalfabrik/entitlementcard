@@ -10,7 +10,7 @@ type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
 type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: null }
 type AdditionalProps = { label: string; minWidth?: number }
-const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
