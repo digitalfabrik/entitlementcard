@@ -1,8 +1,8 @@
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ProjectConfig } from '../getProjectConfig'
-import { ActivationText } from './activationText'
 import { storesManagementConfig } from '../storesManagementConfig'
+import { ActivationText } from './activationText'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
