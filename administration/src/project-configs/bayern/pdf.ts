@@ -13,7 +13,7 @@ const renderPdfInfo = ({ info, region }: InfoParams): string => {
 Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
 Gültig bis: ${expirationDate}
 Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format()} 
-von ${region.prefix} ${region.name}`
+${region ? `von ${region.prefix} ${region.name}` : ''}`
 }
 
 const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
