@@ -18,4 +18,8 @@ export class AcceptingStoresEntry {
   hasValidCoordinates(): boolean {
     return isCoordinate(this.data[FIELD_LONGITUDE]) && isCoordinate(this.data[FIELD_LATITUDE])
   }
+
+  hasEmptyCoordinates(): boolean {
+    return this.data[FIELD_LONGITUDE].length === 0 && this.data[FIELD_LATITUDE].length === 0
+  }
 }

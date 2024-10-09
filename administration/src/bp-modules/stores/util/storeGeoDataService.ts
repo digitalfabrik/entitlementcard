@@ -63,5 +63,9 @@ export const getStoresWithCoordinates = (
     if (isStoreMissingLocationInformation(store)) {
       return Promise.resolve(handleStoreWithMissingLocationInformation(store, index, showInputError))
     }
+    if (!store.hasEmptyCoordinates() && !store.hasValidCoordinates()) {
+      showInputError(`Eintrag ${index + 1}: Koordinaten beinhalten ungültige Zeichen.`, LONG_ERROR_TIMEOUT)
+      return Promise.resolve(store)
+    }
     return getStoreCoordinatesFromGeoDataService(store, index, showInputError)
   })
