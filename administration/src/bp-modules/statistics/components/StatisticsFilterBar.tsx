@@ -86,9 +86,7 @@ const StatisticsFilterBar = ({
         </StyledFormGroup>
         <Tooltip
           disabled={IsValidDateTimePeriod(dateStart, dateEnd)}
-          content={
-            'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.'
-          }>
+          content='Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.'>
           <Button
             icon='tick'
             text='Filter anwenden'
@@ -98,7 +96,7 @@ const StatisticsFilterBar = ({
           />
         </Tooltip>
       </InputContainer>
-      <Tooltip disabled={isDataAvailable} content={'Es sind keine Daten zum Export verfügbar.'}>
+      <Tooltip disabled={isDataAvailable} content='Es sind keine Daten zum Export verfügbar.'>
         <Button
           icon='floppy-disk'
           text='CSV Export'

@@ -22,14 +22,13 @@ export enum CardActivationState {
   finished,
 }
 
-const extractCardInfoHashes = (codes: CreateCardsResult[]) => {
-  return codes.flatMap(code => {
+const extractCardInfoHashes = (codes: CreateCardsResult[]) =>
+  codes.flatMap(code => {
     if (code.staticCardInfoHashBase64) {
       return [code.dynamicCardInfoHashBase64, code.staticCardInfoHashBase64]
     }
     return code.dynamicCardInfoHashBase64
   })
-}
 
 type UseCardGeneratorReturn = {
   state: CardActivationState
@@ -44,6 +43,7 @@ type UseCardGeneratorReturn = {
 
 const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
+  const appToaster = useAppToaster()
   const [sendMail] = useSendCardCreationConfirmationMailMutation({
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: 'Bestätigungsmail wurde versendet.' })
@@ -61,7 +61,6 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const [state, setState] = useState(CardActivationState.input)
   const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
   const client = useApolloClient()
-  const appToaster = useAppToaster()
 
   const sendCardConfirmationMails = useCallback(
     async (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[], projectId: string): Promise<void> => {
@@ -79,6 +78,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
           case: 'dynamicActivationCode',
           value: dynamicCode,
         })
+        // eslint-disable-next-line no-await-in-loop
         await sendMail({
           variables: {
             project: projectId,
@@ -99,7 +99,9 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
         // try rollback
         try {
           await deleteCards(client, region.id, extractCardInfoHashes(codes))
-        } catch {}
+        } catch (e) {
+          console.log(e)
+        }
       }
       if (error instanceof CreateCardsError) {
         appToaster?.show({

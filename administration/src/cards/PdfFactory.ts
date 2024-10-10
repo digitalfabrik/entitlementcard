@@ -18,7 +18,7 @@ export class PdfError extends Error {
   }
 }
 
-async function fillContentAreas(
+const fillContentAreas = async (
   doc: PDFDocument,
   templatePage: PDFPage,
   cardInfoHashBase64: string,
@@ -28,7 +28,7 @@ async function fillContentAreas(
   pdfConfig: PdfConfig,
   deepLink: string,
   region?: Region
-): Promise<void> {
+): Promise<void> => {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
@@ -77,12 +77,12 @@ async function fillContentAreas(
   )
 }
 
-export async function generatePdf(
+export const generatePdf = async (
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
   pdfConfig: PdfConfig,
   region?: Region
-): Promise<Blob> {
+): Promise<Blob> => {
   try {
     const doc = await PDFDocument.create()
 
@@ -97,14 +97,16 @@ export async function generatePdf(
       const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
       const cardBlueprint = cardBlueprints[k]
 
+      // eslint-disable-next-line no-await-in-loop
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
-      const page = doc.addPage(templatePage ? templatePage : undefined)
+      const page = doc.addPage(templatePage || undefined)
       const dynamicPdfQrCode: PdfQrCode = {
         case: 'dynamicActivationCode',
         value: dynamicCode,
       }
 
+      // eslint-disable-next-line no-await-in-loop
       await fillContentAreas(
         doc,
         page,

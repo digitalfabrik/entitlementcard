@@ -16,9 +16,7 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
-  return cardInfoHash
-}
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
 // TODO 1422 Create PDF for koblenz
 

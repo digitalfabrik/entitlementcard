@@ -12,10 +12,10 @@ const CenteredMessage = styled(Alert)`
   margin: auto;
 `
 
-const ApplicationApplicantController = (props: { providedKey: string }): ReactElement => {
+const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const [isWithdrawed, setIsWithdrawed] = useState<boolean>(false)
   const applicationQuery = useGetApplicationByApplicantQuery({
-    variables: { accessKey: props.providedKey },
+    variables: { accessKey: providedKey },
   })
   const applicationQueryHandler = getQueryResult(applicationQuery)
   if (!applicationQueryHandler.successful) {
@@ -28,15 +28,14 @@ const ApplicationApplicantController = (props: { providedKey: string }): ReactEl
   }
   if (isWithdrawed) {
     return <CenteredMessage>Ihr Antrag wurde zurückgezogen.</CenteredMessage>
-  } else {
-    return (
-      <ApplicationApplicantView
-        application={application}
-        gotWithdrawed={() => setIsWithdrawed(true)}
-        providedKey={props.providedKey}
-      />
-    )
   }
+  return (
+    <ApplicationApplicantView
+      application={application}
+      gotWithdrawed={() => setIsWithdrawed(true)}
+      providedKey={providedKey}
+    />
+  )
 }
 
 const ControllerWithAccessKey = (): ReactElement | null => {
@@ -44,13 +43,12 @@ const ControllerWithAccessKey = (): ReactElement | null => {
 
   if (!accessKey) {
     return null
-  } else {
-    return (
-      <SnackbarProvider>
-        <ApplicationApplicantController providedKey={accessKey} />
-      </SnackbarProvider>
-    )
   }
+  return (
+    <SnackbarProvider>
+      <ApplicationApplicantController providedKey={accessKey} />
+    </SnackbarProvider>
+  )
 }
 
 export default ControllerWithAccessKey

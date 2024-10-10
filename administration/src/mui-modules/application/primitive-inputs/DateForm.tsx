@@ -1,16 +1,16 @@
 import { TextField } from '@mui/material'
 import { formatISO, parseISO } from 'date-fns'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { DateInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
 type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: null }
 type AdditionalProps = { label: string; minWidth?: number }
-const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
@@ -18,7 +18,7 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       return { type: 'error', message: 'Feld ist erforderlich.' }
     }
     const date = parseISO(value)
-    if (isNaN(date.valueOf())) {
+    if (Number.isNaN(date.valueOf())) {
       return { type: 'error', message: 'Eingabe ist kein gültiges Datum.' }
     }
 
@@ -30,7 +30,13 @@ const DateForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     const localISODate = formatISO(date, { representation: 'date' })
     return { type: 'valid', value: { date: localISODate } }
   },
-  Component: ({ state, setState, label, minWidth = 100, options }) => {
+  Component: ({
+    state,
+    setState,
+    label,
+    minWidth = 100,
+    options,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = DateForm.validate(state, options)

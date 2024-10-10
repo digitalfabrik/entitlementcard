@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -97,7 +97,7 @@ class StartDayExtension extends Extension<StartDayState, null> {
     try {
       const startDay = PlainDate.fromCustomFormat(value)
       this.state = { startDay: startDay.toDaysSinceEpoch() }
-    } catch (e) {
+    } catch {
       this.state = null
     }
   }

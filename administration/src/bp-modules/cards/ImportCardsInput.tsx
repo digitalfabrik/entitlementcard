@@ -1,5 +1,5 @@
 import { NonIdealState } from '@blueprintjs/core'
-import { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
+import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'

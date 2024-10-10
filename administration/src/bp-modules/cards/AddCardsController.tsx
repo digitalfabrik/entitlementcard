@@ -1,5 +1,5 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -9,21 +9,6 @@ import AddCardsForm from './AddCardsForm'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
-
-const AddCardsController = (): ReactElement => {
-  const { region } = useContext(WhoAmIContext).me!
-  if (!region) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Karten auszustellen.'
-      />
-    )
-  }
-
-  return <InnerAddCardsController region={region} />
-}
 
 const InnerAddCardsController = ({ region }: { region: Region }) => {
   const navigate = useNavigate()
@@ -73,6 +58,21 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
       />
     </>
   )
+}
+
+const AddCardsController = (): ReactElement => {
+  const { region } = useContext(WhoAmIContext).me!
+  if (!region) {
+    return (
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Karten auszustellen.'
+      />
+    )
+  }
+
+  return <InnerAddCardsController region={region} />
 }
 
 export default AddCardsController

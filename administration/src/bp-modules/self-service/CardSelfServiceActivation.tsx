@@ -15,19 +15,18 @@ type CardSelfServiceActivationProps = {
   deepLink: string
   downloadPdf: () => Promise<void>
 }
-const CardSelfServiceActivation = ({ deepLink, downloadPdf }: CardSelfServiceActivationProps): ReactElement => {
-  return (
-    <Container>
-      <IconTextButton onClick={downloadPdf}>
-        <FileDownloadOutlinedIcon />
-        AntragsPDF herunterladen
-      </IconTextButton>
-      <InfoText>Um Ihren Pass zu aktivieren, klicken Sie bitte hier:</InfoText>
-      <ActionButton href={deepLink} variant='contained' size='large'>
-        Pass aktivieren
-      </ActionButton>
-    </Container>
-  )
-}
+
+const CardSelfServiceActivation = ({ deepLink, downloadPdf }: CardSelfServiceActivationProps): ReactElement => (
+  <Container>
+    <IconTextButton onClick={downloadPdf}>
+      <FileDownloadOutlinedIcon />
+      AntragsPDF herunterladen
+    </IconTextButton>
+    <InfoText>Um Ihren Pass zu aktivieren, klicken Sie bitte hier:</InfoText>
+    <ActionButton href={deepLink} variant='contained' size='large'>
+      Pass aktivieren
+    </ActionButton>
+  </Container>
+)
 
 export default CardSelfServiceActivation
