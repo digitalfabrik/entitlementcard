@@ -2,7 +2,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { mocked } from 'jest-mock'
-import React, { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
@@ -18,14 +18,17 @@ const fieldNames = nuernbergConfig.storeManagement.enabled
 jest.mock('csv-parse/browser/esm/sync', () => ({
   parse: jest.fn(),
 }))
-const wrapper = ({ children }: { children: ReactElement }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <AppToasterProvider>
     <ProjectConfigProvider>{children}</ProjectConfigProvider>
   </AppToasterProvider>
 )
 const setAcceptingStores = jest.fn()
 const setIsLoadingCoordinates = jest.fn()
+
 describe('StoreCSVInput', () => {
+  beforeEach(jest.resetAllMocks)
+
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names

@@ -9,6 +9,8 @@ describe('StatisticFilterBar', () => {
   const onApplyFilter = jest.fn()
   const onExportCsv = jest.fn()
 
+  beforeEach(jest.resetAllMocks)
+
   it('should execute onApplyFilter if filter button was clicked', async () => {
     const { getByText } = render(
       <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />

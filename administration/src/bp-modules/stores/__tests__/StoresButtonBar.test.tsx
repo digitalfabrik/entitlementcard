@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import React, { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
@@ -13,7 +13,7 @@ const setDryRun = jest.fn()
 
 const goBack = jest.fn()
 const importStores = jest.fn()
-const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
+const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('StoresButtonBar', () => {
   it('Should goBack when clicking back', async () => {
