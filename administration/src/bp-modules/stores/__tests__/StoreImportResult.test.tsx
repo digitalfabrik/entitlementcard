@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import StoresImportResult from '../StoresImportResult'
 
-const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
+const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
-describe('StoreImportResult', () => {
+describe('StoresImportResult', () => {
   it('should show the correct amount of stores that were affected', () => {
     const { getByTestId } = render(
       <StoresImportResult dryRun={false} storesUntouched={5} storesCreated={15} storesDeleted={20} />,

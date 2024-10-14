@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 
 import JsonFieldArray from './JsonFieldArray'
 import JsonFieldElemental from './JsonFieldElemental'
@@ -41,12 +41,11 @@ export type JsonFieldViewProps<JsonFieldType extends GeneralJsonField> = {
   expandedRoot: boolean
 }
 
-const JsonFieldView = (props: JsonFieldViewProps<GeneralJsonField>) => {
-  if (props.jsonField.type === 'Array') {
-    return <JsonFieldArray {...props} jsonField={props.jsonField} />
-  } else {
-    return <JsonFieldElemental {...props} jsonField={props.jsonField} />
+const JsonFieldView = ({ jsonField, ...props }: JsonFieldViewProps<GeneralJsonField>) => {
+  if (jsonField.type === 'Array') {
+    return <JsonFieldArray {...props} jsonField={jsonField} />
   }
+  return <JsonFieldElemental {...props} jsonField={jsonField} />
 }
 
 export default memo(JsonFieldView)

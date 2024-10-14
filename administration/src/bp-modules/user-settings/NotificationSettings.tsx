@@ -1,5 +1,5 @@
 import { Button, Checkbox, H2 } from '@blueprintjs/core'
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
@@ -74,7 +74,7 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
           label='Antragsverifizierungen'
         />
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text={'Speichern'} intent={'primary'} type='submit' loading={loading} />
+          <Button text='Speichern' intent='primary' type='submit' loading={loading} />
         </div>
       </form>
     </SettingsCard>

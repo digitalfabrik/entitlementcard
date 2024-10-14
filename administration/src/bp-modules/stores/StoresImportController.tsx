@@ -7,29 +7,13 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
-import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
 import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
-
-const StoresImportController = (): ReactElement => {
-  const { role } = useContext(WhoAmIContext).me!
-  const storeManagement = useContext(ProjectConfigContext).storeManagement
-  if (role !== Role.ProjectStoreManager || !storeManagement.enabled) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Akzeptanzpartner zu verwalten.'
-      />
-    )
-  }
-
-  return <StoresImport fields={storeManagement.fields} />
-}
 
 const CenteredSpinner = styled(Spinner)`
   z-index: 999;
@@ -39,17 +23,17 @@ const CenteredSpinner = styled(Spinner)`
 `
 
 type StoreImportProps = {
-  fields: StoreFieldConfig[]
+  fields: StoresFieldConfig[]
 }
 
-export type StoreData = {
+export type StoresData = {
   [key: string]: string
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const { projectId } = useContext(ProjectConfigContext)
   const navigate = useNavigate()
   const appToaster = useAppToaster()
-  const [acceptingStores, setAcceptingStores] = useState<AcceptingStoreEntry[]>([])
+  const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
   const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
   const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
@@ -106,6 +90,22 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       />
     </>
   )
+}
+
+const StoresImportController = (): ReactElement => {
+  const { role } = useContext(WhoAmIContext).me!
+  const storesManagement = useContext(ProjectConfigContext).storesManagement
+  if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
+    return (
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Akzeptanzpartner zu verwalten.'
+      />
+    )
+  }
+
+  return <StoresImport fields={storesManagement.fields} />
 }
 
 export default StoresImportController

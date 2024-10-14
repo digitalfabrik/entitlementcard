@@ -4,7 +4,10 @@ import { Configuration } from 'webpack-dev-server'
 
 import getPaths from './getPaths'
 
-function createWebpackDevServerConfig(proxy: Configuration['proxy'], allowedHost: string | undefined): Configuration {
+const createWebpackDevServerConfig = (
+  proxy: Configuration['proxy'],
+  allowedHost: string | undefined
+): Configuration => {
   const host = process.env.HOST || '0.0.0.0'
   const sockHost = process.env.WDS_SOCKET_HOST
   const sockPath = process.env.WDS_SOCKET_PATH // default: '/ws'
@@ -32,6 +35,7 @@ function createWebpackDevServerConfig(proxy: Configuration['proxy'], allowedHost
     // really know what you're doing with a special environment variable.
     // Note: ["localhost", ".localhost"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
+    // eslint-disable-next-line no-nested-ternary
     allowedHosts: disableFirewall ? 'all' : allowedHost ? [allowedHost] : undefined,
     headers: {
       'Access-Control-Allow-Origin': '*',

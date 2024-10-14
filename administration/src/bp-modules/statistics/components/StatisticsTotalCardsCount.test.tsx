@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import React from 'react'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import StatisticsTotalCardsCount from './StatisticsTotalCardsCount'

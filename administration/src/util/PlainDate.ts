@@ -141,17 +141,20 @@ class PlainDate {
   static compare(one: PlainDate, two: PlainDate): -1 | 0 | 1 {
     if (one.isoYear < two.isoYear) {
       return -1
-    } else if (one.isoYear > two.isoYear) {
+    }
+    if (one.isoYear > two.isoYear) {
       return 1
     }
     if (one.isoMonth < two.isoMonth) {
       return -1
-    } else if (one.isoMonth > two.isoMonth) {
+    }
+    if (one.isoMonth > two.isoMonth) {
       return 1
     }
     if (one.day < two.day) {
       return -1
-    } else if (one.day > two.day) {
+    }
+    if (one.day > two.day) {
       return 1
     }
     return 0

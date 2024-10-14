@@ -47,12 +47,13 @@ if (process.env.HOST) {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper')
+
 checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
+  .then(() =>
     // We attempt to use the default port but if it is busy, we offer the user to
     // run on a different port. `choosePort()` Promise resolves to the next free port.
-    return choosePort(HOST, DEFAULT_PORT)
-  })
+    choosePort(HOST, DEFAULT_PORT)
+  )
   .then((port: number | null) => {
     if (port == null) {
       // We have not found a port.

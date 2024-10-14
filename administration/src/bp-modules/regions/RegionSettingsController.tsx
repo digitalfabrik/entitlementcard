@@ -9,7 +9,7 @@ import RegionSettingsCard from './RegionSettingsCard'
 const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElement => {
   const appToaster = useAppToaster()
   const regionSettingsByIdQuery = useGetRegionSettingsByIdQuery({
-    variables: { regionId: regionId },
+    variables: { regionId },
   })
 
   const [updateRegionSettings, { loading }] = useUpdateRegionSettingsMutation({

@@ -1,5 +1,4 @@
-import { buildConfigNuernberg } from 'build-configs'
-
+import { getBuildConfig } from '../util/getBuildConfig'
 import {
   FIELD_HOUSE_NUMBER,
   FIELD_LATITUDE,
@@ -8,22 +7,23 @@ import {
   FIELD_NAME,
   FIELD_POSTAL_CODE,
   FIELD_STREET,
-} from '../constants'
-import { StoresManagement } from '../getProjectConfig'
+} from './constants'
+import { StoresManagementConfig } from './getProjectConfig'
 import {
   hasMandatoryValue,
   hasValidCategoryId,
+  hasValidPostalCode,
   isCoordinate,
   noValidationRequired,
-} from '../helper/storeFieldValidation'
+} from './helper/storeFieldValidation'
 
-export const storeConfig: StoresManagement = {
+export const storesManagementConfig: StoresManagementConfig = {
   enabled: true,
   fields: [
     { name: FIELD_NAME, isMandatory: true, isValid: hasMandatoryValue, columnWidth: 400 },
     { name: FIELD_STREET, isMandatory: true, isValid: hasMandatoryValue, columnWidth: 200 },
     { name: FIELD_HOUSE_NUMBER, isMandatory: true, isValid: hasMandatoryValue, columnWidth: 150 },
-    { name: FIELD_POSTAL_CODE, isMandatory: true, isValid: hasMandatoryValue, columnWidth: 150 },
+    { name: FIELD_POSTAL_CODE, isMandatory: true, isValid: hasValidPostalCode, columnWidth: 150 },
     { name: FIELD_LOCATION, isMandatory: true, isValid: hasMandatoryValue, columnWidth: 150 },
     { name: FIELD_LATITUDE, isMandatory: true, isValid: isCoordinate, columnWidth: 150 },
     { name: FIELD_LONGITUDE, isMandatory: true, isValid: isCoordinate, columnWidth: 150 },
@@ -35,7 +35,7 @@ export const storeConfig: StoresManagement = {
     {
       name: 'categoryId',
       isMandatory: true,
-      isValid: category => hasValidCategoryId(category, buildConfigNuernberg.common.categories),
+      isValid: category => hasValidCategoryId(category, getBuildConfig(window.location.hostname).common.categories),
       columnWidth: 100,
     },
   ],

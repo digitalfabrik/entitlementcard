@@ -1,4 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
+import React from 'react'
 
 import TextAreaDialog from './TextAreaDialog'
 
@@ -14,7 +15,7 @@ describe('TextAreaDialog', () => {
         maxChars={maxChars}
         defaultText={defaultText}
         placeholder={placeholderText}
-        isOpen={true}
+        isOpen
         onClose={onClose}
         onSave={onSave}
       />

@@ -1,5 +1,5 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { ReactElement, useCallback, useContext, useMemo } from 'react'
+import React, { ReactElement, useCallback, useContext, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { FREINET_PARAM } from '../../Router'
@@ -15,21 +15,6 @@ import { convertFreinetImport } from './ImportCardsFromFreinetController'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
-
-const ImportCardsController = (): ReactElement => {
-  const { region } = useContext(WhoAmIContext).me!
-  if (!region) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Karten auszustellen.'
-      />
-    )
-  }
-
-  return <InnerImportCardsController region={region} />
-}
 
 export const getHeaders = (projectConfig: ProjectConfig): string[] => [
   projectConfig.card.nameColumnName,
@@ -112,6 +97,21 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       />
     </>
   )
+}
+
+const ImportCardsController = (): ReactElement => {
+  const { region } = useContext(WhoAmIContext).me!
+  if (!region) {
+    return (
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Karten auszustellen.'
+      />
+    )
+  }
+
+  return <InnerImportCardsController region={region} />
 }
 
 export default ImportCardsController

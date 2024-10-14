@@ -1,5 +1,5 @@
 import { Button, Tooltip } from '@blueprintjs/core'
-import { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
