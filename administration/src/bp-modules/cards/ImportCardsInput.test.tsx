@@ -2,7 +2,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import CSVCard from '../../cards/CSVCard'
+import { CardBlueprint, initializeCardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -33,7 +33,7 @@ describe('ImportCardsInput', () => {
   const renderAndSubmitCardsInput = async (
     projectConfig: ProjectConfig,
     csv: string,
-    lineToBlueprint: () => CSVCard,
+    lineToBlueprint: () => CardBlueprint,
     setCardBlueprints: () => void
   ) => {
     const fileReaderMock = {
@@ -84,7 +84,7 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
     },
   ])(`Correctly import CSV Card for project $projectConfig.name`, async ({ projectConfig, csv }) => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
-    const lineToBlueprint = jest.fn(() => new CSVCard(projectConfig.card, region))
+    const lineToBlueprint = jest.fn(() => initializeCardBlueprint(projectConfig.card, region))
     const setCardBlueprints = jest.fn()
 
     await renderAndSubmitCardsInput(projectConfig, csv, lineToBlueprint, setCardBlueprints)
@@ -120,7 +120,7 @@ ${'Thea Test,03.04.2024,12345678\n'.repeat(ENTRY_LIMIT + 1)}
     },
   ])(`Import CSV Card should fail with error '$error'`, async ({ csv, error }) => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
-    const lineToBlueprint = jest.fn(() => new CSVCard(bayernConfig.card, region))
+    const lineToBlueprint = jest.fn(() => initializeCardBlueprint(bayernConfig.card, region))
     const setCardBlueprints = jest.fn()
 
     await renderAndSubmitCardsInput(bayernConfig, csv, lineToBlueprint, setCardBlueprints)

@@ -1,38 +1,22 @@
-import { PartialMessage } from '@bufbuild/protobuf'
-
-import { CardExtensions } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
 import { Extension } from './extensions'
 
-type RegionState = { regionId: number }
+export const REGION_EXTENSION_NAME = 'regionId'
+export type RegionExtensionState = { [REGION_EXTENSION_NAME]: number }
 
-class RegionExtension extends Extension<RegionState, Region> {
-  public readonly name = RegionExtension.name
-
-  setInitialState(region: Region): void {
-    this.state = { regionId: region.id }
-  }
-  causesInfiniteLifetime(): boolean {
-    return false
-  }
-  createForm(): null {
-    return null
-  }
-  setProtobufData(message: PartialMessage<CardExtensions>): void {
-    message.extensionRegion = {
-      regionId: this.state?.regionId,
-    }
-  }
-  isValid(): boolean {
-    return this.state !== null
-  }
-
-  fromString(state: string): void {
-    this.state = { regionId: parseInt(state, 10) }
-  }
-  toString(): string {
-    return this.state ? `${this.state.regionId}` : ''
-  }
+const RegionExtension: Extension<RegionExtensionState> = {
+  name: REGION_EXTENSION_NAME,
+  Component: () => null,
+  getInitialState: (region?: Region) => ({ regionId: region!.id }),
+  causesInfiniteLifetime: () => false,
+  getProtobufData: ({ regionId }: RegionExtensionState) => ({
+    extensionRegion: {
+      regionId,
+    },
+  }),
+  isValid: () => true,
+  fromString: (value: string) => ({ regionId: parseInt(value, 10) }),
+  toString: ({ regionId }: RegionExtensionState) => regionId.toString(),
 }
 
 export default RegionExtension

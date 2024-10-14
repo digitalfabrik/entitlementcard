@@ -1,15 +1,15 @@
 import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import PlainDate from '../util/PlainDate'
-import CardBlueprint from './CardBlueprint'
-import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
-import RegionExtension from './extensions/RegionExtension'
+import { generateCardInfo, initializeCardBlueprint } from './CardBlueprint'
+import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from './extensions/BavariaCardTypeExtension'
+import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
 describe('CardBlueprint', () => {
   const region: Region = {
-    id: 0,
+    id: 6,
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
@@ -25,23 +25,25 @@ describe('CardBlueprint', () => {
   }
 
   it('should correctly initialize CardBlueprint', () => {
-    const card = new CardBlueprint('Thea Test', cardConfig, [region])
+    const card = initializeCardBlueprint(cardConfig, region, { fullName: 'Thea Test' })
 
     expect(card.fullName).toBe('Thea Test')
-    expect(card.expirationDate).toEqual(PlainDate.from('2023-01-01'))
-    expect(card.extensions[0].state).toBe('Standard')
-    expect(card.extensions[1].state).toEqual({ regionId: 0 })
+    expect(card.expirationDate).toEqual(PlainDate.from('2023-01-01').toDaysSinceEpoch())
+    expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBe('Standard')
+    expect(card.extensions[REGION_EXTENSION_NAME]).toEqual(region.id)
   })
 
   it('should generate CardInfo even with invalid expiration date', () => {
-    const card = new CardBlueprint('', cardConfig, [region])
-    card.expirationDate = PlainDate.from('1900-01-01')
-    expect(card.generateCardInfo().toJson({ enumAsInteger: true }) as object).toEqual({
+    const card = initializeCardBlueprint(cardConfig, region, {
+      fullName: '',
+      expirationDate: PlainDate.from('1900-01-01').toDaysSinceEpoch(),
+    })
+    expect(generateCardInfo(card).toJson({ enumAsInteger: true })).toEqual({
       fullName: '',
       expirationDay: 0,
       extensions: {
         extensionRegion: {
-          regionId: 0,
+          regionId: region.id,
         },
         extensionBavariaCardType: {
           cardType: BavariaCardType.STANDARD,

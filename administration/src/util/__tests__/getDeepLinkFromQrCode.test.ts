@@ -6,16 +6,16 @@ import {
   HTTPS_SCHEME,
 } from 'build-configs'
 
-import CardBlueprint from '../cards/CardBlueprint'
-import { CreateCardsResult } from '../cards/createCards'
-import BavariaCardTypeExtension from '../cards/extensions/BavariaCardTypeExtension'
-import RegionExtension from '../cards/extensions/RegionExtension'
-import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
-import { DynamicActivationCode } from '../generated/card_pb'
-import { Region } from '../generated/graphql'
-import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
-import { getBuildConfig } from './getBuildConfig'
-import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
+import { generateCardInfo, initializeCardBlueprint } from '../../cards/CardBlueprint'
+import { CreateCardsResult } from '../../cards/createCards'
+import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
+import RegionExtension from '../../cards/extensions/RegionExtension'
+import { PdfQrCode } from '../../cards/pdf/PdfQrCodeElement'
+import { DynamicActivationCode } from '../../generated/card_pb'
+import { Region } from '../../generated/graphql'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
+import { getBuildConfig } from '../getBuildConfig'
+import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
@@ -36,10 +36,10 @@ describe('DeepLink generation', () => {
     extensions: [BavariaCardTypeExtension, RegionExtension],
   }
 
-  const card = new CardBlueprint('Thea Test', cardConfigBayern, [region])
+  const card = initializeCardBlueprint(cardConfigBayern, region, { fullName: 'Thea Test' })
   const code: CreateCardsResult = {
     dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-    dynamicActivationCode: new DynamicActivationCode({ info: card.generateCardInfo() }),
+    dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(card) }),
   }
 
   const dynamicPdfQrCode: PdfQrCode = {

@@ -1,10 +1,9 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
 import { CsvExport } from '../project-configs/getProjectConfig'
-import CardBlueprint from './CardBlueprint'
+import { CardBlueprint } from './CardBlueprint'
 import { CreateCardsResult } from './createCards'
-import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
-import { findExtension } from './extensions/extensions'
+import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
 
 export class CsvError extends Error {
   constructor(message: string) {
@@ -38,7 +37,7 @@ export const generateCsv = (
 export const getCSVFilename = (cardBlueprints: CardBlueprint[]): string => {
   const filename =
     cardBlueprints.length === 1
-      ? findExtension(cardBlueprints[0].extensions, NuernbergPassIdExtension)?.state?.passId
-      : 'Pass-ID[0]mass'
+      ? cardBlueprints[0].extensions[NUERNBERG_PASS_ID_EXTENSION_NAME]
+      : 'SozialpassMassExport'
   return `${filename}.csv`
 }
