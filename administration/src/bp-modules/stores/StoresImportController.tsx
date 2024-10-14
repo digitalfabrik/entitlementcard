@@ -15,22 +15,6 @@ import StoresCSVInput from './StoresCSVInput'
 import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
 
-const StoresImportController = (): ReactElement => {
-  const { role } = useContext(WhoAmIContext).me!
-  const storesManagement = useContext(ProjectConfigContext).storesManagement
-  if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Akzeptanzpartner zu verwalten.'
-      />
-    )
-  }
-
-  return <StoresImport fields={storesManagement.fields} />
-}
-
 const CenteredSpinner = styled(Spinner)`
   z-index: 999;
   top: 50%;
@@ -110,8 +94,8 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
 const StoresImportController = (): ReactElement => {
   const { role } = useContext(WhoAmIContext).me!
-  const storeManagement = useContext(ProjectConfigContext).storesManagement
-  if (role !== Role.ProjectStoreManager || !storeManagement.enabled) {
+  const storesManagement = useContext(ProjectConfigContext).storesManagement
+  if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
     return (
       <NonIdealState
         icon='cross'
@@ -121,7 +105,7 @@ const StoresImportController = (): ReactElement => {
     )
   }
 
-  return <StoresImport fields={storeManagement.fields} />
+  return <StoresImport fields={storesManagement.fields} />
 }
 
 export default StoresImportController
