@@ -72,11 +72,10 @@ class UserImportHandler(
     private fun authenticate(ctx: Context): ApiTokenEntity {
         val authHeader = ctx.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
             ?: throw UnauthorizedException()
-
-        val encryptedToken = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
+        val tokenHash = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
 
         return transaction {
-            ApiTokensRepository.findByToken(encryptedToken)?.takeIf { it.expirationDate > LocalDate.now() }
+            ApiTokensRepository.findByTokenHash(tokenHash)?.takeIf { it.expirationDate > LocalDate.now() }
                 ?: throw ForbiddenException()
         }
     }

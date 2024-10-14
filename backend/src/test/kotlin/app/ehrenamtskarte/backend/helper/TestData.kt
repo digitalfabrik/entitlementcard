@@ -31,11 +31,11 @@ object TestData {
         creatorId: Int,
         expirationDate: LocalDate = LocalDate.now().plusYears(1)
     ): Int {
-        val encryptedToken = PasswordCrypto.hashWithSHA256(token.toByteArray())
+        val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
         return transaction {
             val admin = AdministratorEntity.findById(creatorId) ?: throw Exception("Test admin $creatorId not found")
             ApiTokens.insertAndGetId {
-                it[ApiTokens.token] = encryptedToken
+                it[ApiTokens.tokenHash] = tokenHash
                 it[ApiTokens.creatorId] = creatorId
                 it[ApiTokens.expirationDate] = expirationDate
                 it[projectId] = admin.projectId

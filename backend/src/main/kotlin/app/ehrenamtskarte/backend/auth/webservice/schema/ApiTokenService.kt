@@ -36,11 +36,11 @@ class ApiTokenService {
         SecureRandom().nextBytes(bytes)
         val token = Base64.getEncoder().encodeToString(bytes)
 
-        val encryptedToken = PasswordCrypto.hashWithSHA256(token.toByteArray())
+        val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
         val expirationDate = LocalDate.now().plusMonths(expiresIn.toLong())
 
         transaction {
-            ApiTokensRepository.insert(encryptedToken, admin.id, expirationDate, admin.projectId)
+            ApiTokensRepository.insert(tokenHash, admin.id, expirationDate, admin.projectId)
         }
 
         return token

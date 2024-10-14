@@ -7,20 +7,20 @@ import java.time.LocalDate
 
 object ApiTokensRepository {
     fun insert(
-        token: ByteArray,
+        tokenHash: ByteArray,
         adminId: EntityID<Int>,
         expirationDate: LocalDate,
         projectId: EntityID<Int>
     ): ApiTokenEntity {
         return ApiTokenEntity.new {
-            this.token = token
+            this.tokenHash = tokenHash
             this.creator = adminId
             this.expirationDate = expirationDate
             this.projectId = projectId
         }
     }
 
-    fun findByToken(token: ByteArray): ApiTokenEntity? {
-        return ApiTokenEntity.find { (ApiTokens.token eq token) }.singleOrNull()
+    fun findByTokenHash(tokenHash: ByteArray): ApiTokenEntity? {
+        return ApiTokenEntity.find { (ApiTokens.tokenHash eq tokenHash) }.singleOrNull()
     }
 }
