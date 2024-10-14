@@ -1,10 +1,12 @@
+import React from 'react'
+
 import { BlueCardJuleicaEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import DateForm from '../primitive-inputs/DateForm'
 import FileInputForm, { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -20,13 +22,11 @@ const SubForms = {
 }
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardJuleicaEntitlementInput
-type Options = {}
-type AdditionalProps = {}
-const JuleicaEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, { juleicaExpirationDate: { maximumDate: null } }),
-  Component: ({ state, setState }) => {
+  Component: ({ state, setState }: FormComponentProps<State>) => {
     const juleicaBackSetState = useUpdateStateCallback(setState, 'copyOfJuleicaBack')
     return (
       <>

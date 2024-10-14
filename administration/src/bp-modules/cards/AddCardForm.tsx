@@ -33,11 +33,10 @@ export const ExtensionForm = ({
   extension,
   onUpdate,
   viewportSmall,
-}: ExtensionFormProps): ReactElement<ExtensionInstance, string | JSXElementConstructor<ExtensionInstance>> | null => {
-  return extension.createForm(() => {
+}: ExtensionFormProps): ReactElement<ExtensionInstance, string | JSXElementConstructor<ExtensionInstance>> | null =>
+  extension.createForm(() => {
     onUpdate()
   }, viewportSmall)
-}
 
 const AddCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
@@ -51,7 +50,7 @@ const AddCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps
         <InputGroup
           placeholder='Erika Mustermann'
           autoFocus
-          //If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
+          // If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
           intent={cardBlueprint.isFullNameValid() ? undefined : Intent.DANGER}
           value={cardBlueprint.fullName}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -86,8 +85,8 @@ const AddCardForm = ({ cardBlueprint, onRemove, onUpdate }: CreateCardsFormProps
           />
         </FormGroup>
       )}
-      {cardBlueprint.extensions.map((ext, i) => (
-        <ExtensionForm key={i} extension={ext} onUpdate={onUpdate} viewportSmall={viewportSmall} />
+      {cardBlueprint.extensions.map(extension => (
+        <ExtensionForm key={extension.name} extension={extension} onUpdate={onUpdate} viewportSmall={viewportSmall} />
       ))}
     </Card>
   )

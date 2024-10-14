@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
@@ -15,7 +15,7 @@ const setDryRun = jest.fn()
 
 const goBack = jest.fn()
 const importStores = jest.fn()
-const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
+const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('StoresButtonBar', () => {
   const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]

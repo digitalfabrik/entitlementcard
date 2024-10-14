@@ -29,30 +29,28 @@ const LinkContainer = styled('div')`
   font-size: 16px;
 `
 // TODO 1647 provide store links
-const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformationProps): ReactElement => {
-  return (
-    <>
-      <LinkContainer>
-        <StoreLink href='https://apple.com' target='_blank' rel='noreferrer'>
-          <StoreIcon src={AppleStoreIcon} alt='AppStore öffnen' />
-          AppStore öffnen
-        </StoreLink>
-        <StoreLink href='https://google.com' target='_blank' rel='noreferrer'>
-          <StoreIcon src={AndroidStoreIcon} alt='Google Play öffnen' />
-          Google Play öffnen
-        </StoreLink>
-      </LinkContainer>
-      <InfoText>
-        <div>
-          <b>App bereits installiert?</b>
-        </div>
-        <div>Einfach weiter klicken.</div>
-      </InfoText>
-      <ActionButton onClick={goToActivation} variant='contained' size='large'>
-        Zur Aktivierung
-      </ActionButton>
-    </>
-  )
-}
+const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformationProps): ReactElement => (
+  <>
+    <LinkContainer>
+      <StoreLink href='https://apple.com' target='_blank' rel='noreferrer'>
+        <StoreIcon src={AppleStoreIcon} alt='AppStore öffnen' />
+        AppStore öffnen
+      </StoreLink>
+      <StoreLink href='https://google.com' target='_blank' rel='noreferrer'>
+        <StoreIcon src={AndroidStoreIcon} alt='Google Play öffnen' />
+        Google Play öffnen
+      </StoreLink>
+    </LinkContainer>
+    <InfoText>
+      <div>
+        <b>App bereits installiert?</b>
+      </div>
+      <div>Einfach weiter klicken.</div>
+    </InfoText>
+    <ActionButton onClick={goToActivation} variant='contained' size='large'>
+      Zur Aktivierung
+    </ActionButton>
+  </>
+)
 
 export default CardSelfServiceInformation

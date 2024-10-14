@@ -1,7 +1,7 @@
 import { Colors, FormGroup } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { TextField } from '@mui/material'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
@@ -12,6 +12,7 @@ type BirthdayState = { birthday: number }
 class BirthdayExtension extends Extension<BirthdayState, null> {
   public readonly name = BirthdayExtension.name
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setInitialState(): void {}
 
   hasValidBirthdayDate(birthday?: number): boolean {
@@ -80,7 +81,7 @@ class BirthdayExtension extends Extension<BirthdayState, null> {
     try {
       const birthday = PlainDate.fromCustomFormat(value)
       this.state = { birthday: birthday.toDaysSinceEpoch() }
-    } catch (e) {
+    } catch {
       this.state = null
     }
   }

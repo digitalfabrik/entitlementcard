@@ -85,6 +85,7 @@ const CardSelfServiceForm = ({
           />
         </FormGroup>
         {card.extensions.map((ext, i) => (
+          // eslint-disable-next-line react/no-array-index-key
           <ExtensionForm key={i} extension={ext} onUpdate={notifyUpdate} viewportSmall={viewportSmall} />
         ))}
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
@@ -108,7 +109,7 @@ const CardSelfServiceForm = ({
         open={openReferenceInformation}
         maxWidth='lg'
         onUpdateOpen={setOpenReferenceInformation}
-        title={'Informationen zur Referenznummer'}
+        title='Informationen zur Referenznummer'
         content={<>Noch keine Informationen verfügtbar, bitte wenden Sie sich an den Support.</>}
       />
       <BasicDialog

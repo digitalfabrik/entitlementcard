@@ -1,22 +1,14 @@
 import { Button, InputGroup, InputGroupProps2, Label, Tooltip } from '@blueprintjs/core'
-import { ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 
-const ShowPasswordButton = (props: { hidden: boolean; onClick: () => void }) => {
-  return (
-    <Tooltip
-      content={props.hidden ? 'Passwort anzeigen' : 'Passwort verstecken'}
-      renderTarget={({ isOpen, ref, ...tooltipProps }) => (
-        <Button
-          ref={ref}
-          {...tooltipProps}
-          minimal
-          icon={props.hidden ? 'eye-open' : 'eye-off'}
-          onClick={props.onClick}
-        />
-      )}
-    />
-  )
-}
+const ShowPasswordButton = ({ hidden, onClick }: { hidden: boolean; onClick: () => void }) => (
+  <Tooltip
+    content={hidden ? 'Passwort anzeigen' : 'Passwort verstecken'}
+    renderTarget={({ isOpen, ref, ...tooltipProps }) => (
+      <Button ref={ref} {...tooltipProps} minimal icon={hidden ? 'eye-open' : 'eye-off'} onClick={onClick} />
+    )}
+  />
+)
 
 const PasswordInput = ({
   label,

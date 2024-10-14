@@ -24,7 +24,7 @@ const ProjectSettingsController = (): ReactElement => {
       <NonIdealState
         icon='cross'
         title='Fehlende Berechtigung'
-        description={'Sie sind für die Projekteinstellungen nicht berechtigt'}
+        description='Sie sind für die Projekteinstellungen nicht berechtigt'
       />
     )
   }

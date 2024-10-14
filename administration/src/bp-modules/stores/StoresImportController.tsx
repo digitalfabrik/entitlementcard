@@ -108,4 +108,20 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   )
 }
 
+const StoresImportController = (): ReactElement => {
+  const { role } = useContext(WhoAmIContext).me!
+  const storeManagement = useContext(ProjectConfigContext).storesManagement
+  if (role !== Role.ProjectStoreManager || !storeManagement.enabled) {
+    return (
+      <NonIdealState
+        icon='cross'
+        title='Fehlende Berechtigung'
+        description='Sie sind nicht berechtigt, Akzeptanzpartner zu verwalten.'
+      />
+    )
+  }
+
+  return <StoresImport fields={storeManagement.fields} />
+}
+
 export default StoresImportController

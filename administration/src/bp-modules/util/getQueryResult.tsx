@@ -1,6 +1,6 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { Spinner } from '@blueprintjs/core'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import ErrorHandler from '../ErrorHandler'
@@ -33,7 +33,7 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
   if (data === undefined) {
     return { successful: false, component: <ErrorHandler refetch={refetch} /> }
   }
-  return { successful: true, data: data }
+  return { successful: true, data }
 }
 
 export default getQueryResult

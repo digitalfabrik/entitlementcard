@@ -43,8 +43,8 @@ const lineToStoreEntry = (line: string[], headers: string[], fields: StoresField
   return new AcceptingStoresEntry(storeData, fields)
 }
 
-const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] => {
-  return Object.values(
+const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
+  Object.values(
     stores.reduce((acc: Record<string, number[]>, entry, index) => {
       const { data } = entry
       const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
@@ -57,7 +57,6 @@ const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] => {
       return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
     }, {})
   ).filter(entryNumber => entryNumber.length > 1)
-}
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
@@ -165,7 +164,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon={'upload'} />}
+      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />}
       description={<StoresRequirementsText header={headers} />}
       action={
         <StoreImportInputContainer>

@@ -10,19 +10,18 @@ class CSVCard extends CardBlueprint {
       const columnName = cardConfig.extensionColumnNames[idx]
       if (!columnName) {
         extension.setInitialState(region)
-        return
       }
     })
   }
 
   getValue(key: string): string | null {
+    const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
     switch (key) {
       case this.cardConfig.nameColumnName:
         return this.fullName
       case this.cardConfig.expiryColumnName:
         return this.expirationDate ? this.expirationDate.format() : null
       default:
-        const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
         if (extensionIdx === -1) {
           return null
         }
@@ -31,13 +30,13 @@ class CSVCard extends CardBlueprint {
   }
 
   isValueValid = (key: string): boolean => {
+    const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
     switch (key) {
       case this.cardConfig.nameColumnName:
         return this.isFullNameValid()
       case this.cardConfig.expiryColumnName:
         return this.isExpirationDateValid() || this.hasInfiniteLifetime()
       default:
-        const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
         if (extensionIdx === -1) {
           return false
         }
