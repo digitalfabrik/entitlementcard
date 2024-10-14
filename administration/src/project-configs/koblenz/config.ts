@@ -1,6 +1,7 @@
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { storesManagementConfig } from '../storesManagementConfig'
 import { ActivationText } from './activationText'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
@@ -29,11 +30,9 @@ const config: ProjectConfig = {
   },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
-  cardCreation: true,
+  cardCreation: false,
   selfServiceEnabled: true,
-  storeManagement: {
-    enabled: false,
-  },
+  storesManagement: storesManagementConfig,
   userImportApiEnabled: true,
 }
 

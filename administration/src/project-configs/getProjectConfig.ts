@@ -77,17 +77,17 @@ export type CardStatistics =
   | {
       enabled: false
     }
-export type StoreFieldConfig = {
+export type StoresFieldConfig = {
   name: string
   isMandatory: boolean
   isValid: (value: string) => boolean
   columnWidth: number
 }
 
-export type StoresManagement =
+export type StoresManagementConfig =
   | {
       enabled: true
-      fields: StoreFieldConfig[]
+      fields: StoresFieldConfig[]
     }
   | {
       enabled: false
@@ -114,7 +114,7 @@ export type ProjectConfig = {
   freinetCSVImportEnabled: boolean
   cardCreation: boolean
   selfServiceEnabled: boolean
-  storeManagement: StoresManagement
+  storesManagement: StoresManagementConfig
   userImportApiEnabled: boolean
 }
 
