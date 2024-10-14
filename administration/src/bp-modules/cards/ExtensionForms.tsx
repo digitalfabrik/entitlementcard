@@ -9,12 +9,12 @@ type ExtensionFormsProps = {
 
 const ExtensionForms = ({ cardBlueprint, updateCard }: ExtensionFormsProps): ReactElement => (
   <>
-    {getExtensions(cardBlueprint).map(({ Component, ...extension }) => (
+    {getExtensions(cardBlueprint).map(({ extension: { Component, ...extension }, state }) => (
       <Component
         key={extension.name}
-        value={extension.state}
+        value={state}
         setValue={value => updateCard({ extensions: value })}
-        isValid={extension.isValid(extension.state)}
+        isValid={extension.isValid(state)}
       />
     ))}
   </>

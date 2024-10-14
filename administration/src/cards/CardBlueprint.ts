@@ -32,10 +32,8 @@ export const initializeCardBlueprint = (
 ): CardBlueprint => {
   const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity).toDaysSinceEpoch()
   const defaultExtensions = cardConfig.extensions.reduce(
-    (acc, extension) => ({
-      ...acc,
-      ...extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined),
-    }),
+    (acc, extension) =>
+      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
     {}
   )
 
@@ -56,12 +54,16 @@ export const getExtensions = ({ extensions }: CardBlueprint) => {
   return extensionKeys.map(key => {
     const extensionObject = Extensions.find(extension => extension.name === key)!
     type ExtensionStateType = InferExtensionStateType<typeof extensionObject>
-    return { ...extensionObject, state: extensions } as Extension<ExtensionStateType> & { state: ExtensionStateType }
+    // @ts-expect-error key is always a valid key
+    return { extension: extensionObject, state: { [key]: extensions[key] } } as {
+      extension: Extension<ExtensionStateType>
+      state: ExtensionStateType
+    }
   })
 }
 
 export const hasInfiniteLifetime = (cardBlueprint: CardBlueprint): boolean =>
-  getExtensions(cardBlueprint).some(extension => extension.causesInfiniteLifetime(extension.state))
+  getExtensions(cardBlueprint).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
 
 export const isFullNameValid = ({ fullName }: CardBlueprint): boolean => {
   const encodedName = new TextEncoder().encode(fullName)
@@ -91,15 +93,12 @@ export const isValid = (
   { expirationDateNullable } = { expirationDateNullable: false }
 ): boolean =>
   isFullNameValid(cardBlueprint) &&
-  getExtensions(cardBlueprint).every(extension => extension.isValid(extension.state)) &&
+  getExtensions(cardBlueprint).every(({ extension, state }) => extension.isValid(state)) &&
   (isExpirationDateValid(cardBlueprint, { nullable: expirationDateNullable }) || hasInfiniteLifetime(cardBlueprint))
 
 export const generateCardInfo = (cardBlueprint: CardBlueprint): CardInfo => {
   const extensionsMessage: PartialMessage<CardExtensions> = getExtensions(cardBlueprint).reduce(
-    (acc, extension) => ({
-      ...acc,
-      ...extension.getProtobufData(extension.state),
-    }),
+    (acc, { extension, state }) => Object.assign(acc, extension.getProtobufData(state)),
     {}
   )
 
@@ -141,8 +140,8 @@ export const isValueValid = (cardBlueprint: CardBlueprint, cardConfig: CardConfi
       return isExpirationDateValid(cardBlueprint) || hasInfiniteLifetime(cardBlueprint)
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
-      const extension = getExtensions(cardBlueprint).find(extension => extension.name === extensionName)
-      return extension?.isValid(extension.state) ?? false
+      const extension = getExtensions(cardBlueprint).find(({ extension }) => extension.name === extensionName)
+      return extension?.extension.isValid(extension.state) ?? false
     }
   }
 }
@@ -174,12 +173,7 @@ export const initializeCardFromCSV = (
   const extensions = headers.reduce((acc, header, index) => {
     const value = line[index]
     const extension = Extensions.find(extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header))
-    return extension && value != null
-      ? {
-          ...acc,
-          ...extension.fromString(value),
-        }
-      : acc
+    return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 
   const fullName = line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName
