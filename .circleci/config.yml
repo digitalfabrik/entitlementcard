@@ -299,6 +299,7 @@ jobs:
                     - bayern
                     - bayern-floss
                     - nuernberg
+                    - koblenz
                 type: enum
             flutterFlavor:
                 description: Flutter Flavor to use
@@ -306,6 +307,7 @@ jobs:
                     - Bayern
                     - BayernFloss
                     - Nuernberg
+                    - Koblenz
                 type: enum
         resource_class: large
         steps:
