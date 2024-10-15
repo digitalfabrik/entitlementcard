@@ -9,15 +9,13 @@ internal class V0020_AddApiTokenTable : Migration() {
             """
                 CREATE TABLE apitokens (
                     id SERIAL PRIMARY KEY ,
-                    "tokenHash" BYTEA NOT NULL,
+                    "token" BYTEA NOT NULL,
                     "creatorId" INTEGER NOT NULL,
                     "projectId" INTEGER NOT NULL,
                     "expirationDate" DATE NOT NULL
                 );
                 ALTER TABLE apitokens ADD CONSTRAINT fk_apitokens_creator__id FOREIGN KEY ("creatorId") REFERENCES administrators(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
                 ALTER TABLE apitokens ADD CONSTRAINT fk_apitokens_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
-                
-                ALTER TABLE ONLY apitokens ADD CONSTRAINT apitokens_tokenhash_unique UNIQUE ("tokenHash");
             """.trimIndent()
         )
     }
