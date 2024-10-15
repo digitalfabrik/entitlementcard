@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/activate_card.dart';
@@ -13,19 +12,19 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 
 enum DeepLinkActivationStatus {
-  // Link is invalid
+  /// Link is invalid
   invalidLink,
-  // The card already exists on the device.
+
+  /// The card already exists on the device.
   alreadyExists,
-  // The card limit is reached on the device.
+
+  /// The card limit is reached on the device.
   limitReached,
-  // The card can be activated
+
+  /// The card can be activated
   valid;
 
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
@@ -74,102 +73,86 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
     }
 
     final status = DeepLinkActivationStatus.from(userCodeModel, activationCode);
-    final regionId = cardInfo?.extensions.extensionRegion.regionId ?? -1;
-    final regionsQuery = GetRegionsByIdQuery(
-      variables: GetRegionsByIdArguments(
-        project: Configuration.of(context).projectId,
-        ids: [regionId],
-      ),
-    );
     final theme = Theme.of(context);
 
-    return Query(
-        options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
-        builder: (result, {refetch, fetchMore}) {
-          final data = result.data;
-          final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(t.deeplinkActivation.headline),
-              leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    if (status != DeepLinkActivationStatus.invalidLink)
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(t.deeplinkActivation.description,
-                            style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
-                      ),
-                    if (cardInfo != null)
-                      Center(
-                          child: IdCard(
-                        cardInfo: cardInfo,
-                        region: region != null ? Region(region.prefix, region.name) : null,
-                        // We trust the backend to have checked for expiration.
-                        isExpired: false,
-                        isNotYetValid: false,
-                      )),
-                    Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        if (_state == _State.waiting) _WarningText(status, userCodeModel),
-                        ElevatedButton.icon(
-                          onPressed: activationCode != null &&
-                                  _state == _State.waiting &&
-                                  status == DeepLinkActivationStatus.valid
-                              ? () async {
-                                  setState(() {
-                                    _state = _State.loading;
-                                  });
-                                  try {
-                                    final activated = await activateCard(context, activationCode);
-                                    if (activated) {
-                                      GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
-                                      setState(() {
-                                        _state = _State.success;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _state = _State.waiting;
-                                      });
-                                    }
-                                  } catch (_) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(t.deeplinkActivation.headline),
+        leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
+      ),
+      body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              if (status != DeepLinkActivationStatus.invalidLink)
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(t.deeplinkActivation.description,
+                      style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
+                ),
+              if (cardInfo != null)
+                Center(
+                    child: IdCardWithRegionQuery(
+                  cardInfo: cardInfo,
+                  // We trust the backend to have checked for expiration.
+                  isExpired: false,
+                  isNotYetValid: false,
+                )),
+              Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  if (_state == _State.waiting) _WarningText(status, userCodeModel),
+                  ElevatedButton.icon(
+                    onPressed:
+                        activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
+                            ? () async {
+                                setState(() {
+                                  _state = _State.loading;
+                                });
+                                try {
+                                  final activated = await activateCard(context, activationCode);
+                                  if (activated) {
+                                    GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
+                                    setState(() {
+                                      _state = _State.success;
+                                    });
+                                  } else {
                                     setState(() {
                                       _state = _State.waiting;
                                     });
-                                    // TODO 1656: Improve error handling!!
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        backgroundColor: Theme.of(context).colorScheme.primary,
-                                        content: Text(t.common.unknownError),
-                                      ),
-                                    );
-                                    rethrow;
                                   }
+                                } catch (_) {
+                                  setState(() {
+                                    _state = _State.waiting;
+                                  });
+                                  // TODO 1656: Improve error handling!!
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                      content: Text(t.common.unknownError),
+                                    ),
+                                  );
+                                  rethrow;
                                 }
-                              : null,
-                          icon: _state != _State.waiting
-                              ? Container(
-                                  width: 24,
-                                  height: 24,
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: const CircularProgressIndicator(
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                              : const Icon(Icons.add_card),
-                          label: Text(t.deeplinkActivation.buttonText),
-                        )
-                      ]),
-                    ),
-                  ],
-                )),
-          );
-        });
+                              }
+                            : null,
+                    icon: _state != _State.waiting
+                        ? Container(
+                            width: 24,
+                            height: 24,
+                            padding: const EdgeInsets.all(2.0),
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : const Icon(Icons.add_card),
+                    label: Text(t.deeplinkActivation.buttonText),
+                  )
+                ]),
+              ),
+            ],
+          )),
+    );
   }
 }
 
