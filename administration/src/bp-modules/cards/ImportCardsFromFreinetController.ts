@@ -29,9 +29,8 @@ const renameExpirationDateHeader = (csvHeader: string[], expiryColumnName: strin
 const getCardTypeByFreinetValue = (line: string[], indexCardTypeFreinet: number): string =>
   line[indexCardTypeFreinet].toLowerCase().includes('blau') ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
 
-const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: number): string => {
-  return !!line[indexOfExpirationDate] ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
-}
+const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: number): string =>
+  line[indexOfExpirationDate] ? BAVARIA_CARD_TYPE_STANDARD : BAVARIA_CARD_TYPE_GOLD
 
 const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: string, expiryColumnName: string) => {
   const indexCardTypeFreinet = csvHeader.indexOf(FREINET_CARDTYPE_COLUMN_HEADER)
@@ -49,7 +48,7 @@ const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: st
     : getCardTypeByExpirationDate(line, csvHeader.indexOf(expiryColumnName))
 }
 
-/***
+/** *
  * Converts Freinet CSV export data into valid input for CSV import
  * @param line The line of the Freinet CSV export
  * @param csvHeader the header of the Freinet CSV Export

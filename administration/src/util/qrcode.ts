@@ -25,22 +25,20 @@ export const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(
 // From EC L to M we have a double of EC capability: 7% -> 15%
 export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.M
 
-function calculateBitsNeeded(
+const calculateBitsNeeded = (
   mode: QRCodeMode,
   headerBitsSize: number,
   dataBitsSize: number,
   version: QRCodeVersion
-): number {
-  return headerBitsSize + mode.getCharacterCountBits(version) + dataBitsSize
-}
+): number => headerBitsSize + mode.getCharacterCountBits(version) + dataBitsSize
 
-function willFit(
+const willFit = (
   mode: QRCodeMode,
   headerBitsSize: number,
   dataBitsSize: number,
   version: QRCodeVersion,
   ecLevel: QRCodeDecoderErrorCorrectionLevel
-): boolean {
+): boolean => {
   // In the following comments, we use numbers of Version 7-H.
   // numBytes = 196
   const numBytes = version.getTotalCodewords()
@@ -53,12 +51,20 @@ function willFit(
   return numDataBytes >= totalInputBytes
 }
 
-function chooseMaskPattern(
+// The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
+// Basically it applies four rules and summate all penalties.
+const calculateMaskPenalty = (matrix: QRCodeByteMatrix): number =>
+  MaskUtil.applyMaskPenaltyRule1(matrix) +
+  MaskUtil.applyMaskPenaltyRule2(matrix) +
+  MaskUtil.applyMaskPenaltyRule3(matrix) +
+  MaskUtil.applyMaskPenaltyRule4(matrix)
+
+const chooseMaskPattern = (
   bits: BitArray,
   ecLevel: QRCodeDecoderErrorCorrectionLevel,
   version: QRCodeVersion,
   matrix: QRCodeByteMatrix
-): number {
+): number => {
   let minPenalty = Number.MAX_SAFE_INTEGER // Lower penalty is better.
   let bestMaskPattern = -1
   // We try all mask patterns to choose the best one.
@@ -73,18 +79,7 @@ function chooseMaskPattern(
   return bestMaskPattern
 }
 
-// The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
-// Basically it applies four rules and summate all penalties.
-function calculateMaskPenalty(matrix: QRCodeByteMatrix): number {
-  return (
-    MaskUtil.applyMaskPenaltyRule1(matrix) +
-    MaskUtil.applyMaskPenaltyRule2(matrix) +
-    MaskUtil.applyMaskPenaltyRule3(matrix) +
-    MaskUtil.applyMaskPenaltyRule4(matrix)
-  )
-}
-
-function createHeader(mode: QRCodeMode) {
+const createHeader = (mode: QRCodeMode) => {
   // This will store the header information, like mode and
   // length, as well as "header" segments like an ECI segment.
   const headerBits = new BitArray()
@@ -96,7 +91,7 @@ function createHeader(mode: QRCodeMode) {
   return headerBits
 }
 
-export function isContentLengthValid(content: Uint8Array): boolean {
+export const isContentLengthValid = (content: Uint8Array): boolean => {
   const mode = QRCodeMode.BYTE
   return willFit(mode, createHeader(mode).getSize(), content.length * 8, DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
 }
@@ -109,7 +104,7 @@ export function isContentLengthValid(content: Uint8Array): boolean {
  *
  * @param content binary content
  */
-export function encodeQRCode(content: Uint8Array): QRCode {
+export const encodeQRCode = (content: Uint8Array): QRCode => {
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
 

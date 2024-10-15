@@ -1,57 +1,10 @@
 import { Send } from '@mui/icons-material'
 import { Button, ButtonBase, CircularProgress, Divider, Step, StepContent, StepLabel, Stepper } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
-import React from 'react'
+import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
 
 import { SetState, useUpdateStateCallback } from './hooks/useUpdateStateCallback'
 import { Form, ValidationResult } from './util/FormType'
-
-const SteppedSubForms = ({
-  activeStep,
-  setActiveStep,
-  loading,
-  subForms,
-  onSubmit,
-}: {
-  activeStep: number
-  setActiveStep: SetState<number>
-  loading: boolean
-  subForms: { label: string; element: ReactNode; validate: () => ValidationResult<unknown> }[]
-  onSubmit: () => void
-}): ReactElement => {
-  const tryGoTo = (index: number) => {
-    for (let i = 0; i < index; i++) {
-      if (subForms[i].validate().type === 'error') {
-        return setActiveStep(() => i)
-      }
-    }
-    setActiveStep(() => index)
-  }
-  return (
-    <Stepper activeStep={activeStep} orientation='vertical'>
-      {subForms.map(({ validate, label, element }, index) => {
-        return (
-          <Step key={index}>
-            <ButtonBase onClick={() => tryGoTo(index)} style={{ marginLeft: '-8px' }} disabled={loading}>
-              <StepLabel style={{ cursor: 'pointer', padding: '8px' }}>{label}</StepLabel>
-            </ButtonBase>
-            <StepContent>
-              <SubForm
-                validate={validate}
-                index={index}
-                setActiveStep={setActiveStep}
-                loading={loading}
-                onSubmit={index === subForms.length - 1 ? onSubmit : undefined}>
-                {element}
-              </SubForm>
-            </StepContent>
-          </Step>
-        )
-      })}
-    </Stepper>
-  )
-}
 
 type FormContextType = {
   showAllErrors: boolean
@@ -123,14 +76,14 @@ const SubForm = ({
 }
 
 export const useFormAsStep = <
-  Options extends {},
+  Options extends Record<string, unknown>,
   ValidatedInput,
-  AdditionalProps extends {},
+  AdditionalProps extends Record<string, unknown>,
   ParentState,
   KeyInParent extends keyof ParentState
 >(
   label: string,
-  form: Form<ParentState[KeyInParent], Options, ValidatedInput, AdditionalProps>,
+  form: Form<ParentState[KeyInParent], ValidatedInput, AdditionalProps, Options>,
   parentState: ParentState,
   setParentState: SetState<ParentState>,
   keyInParent: KeyInParent,
@@ -143,6 +96,51 @@ export const useFormAsStep = <
   const formProps = { ...additionalProps, options, state, setState }
   const element = <form.Component {...formProps} />
   return { label, validate, element }
+}
+
+const SteppedSubForms = ({
+  activeStep,
+  setActiveStep,
+  loading,
+  subForms,
+  onSubmit,
+}: {
+  activeStep: number
+  setActiveStep: SetState<number>
+  loading: boolean
+  subForms: { label: string; element: ReactNode; validate: () => ValidationResult<unknown> }[]
+  onSubmit: () => void
+}): ReactElement => {
+  const tryGoTo = (index: number) => {
+    for (let i = 0; i < index; i++) {
+      if (subForms[i].validate().type === 'error') {
+        setActiveStep(() => i)
+        break
+      }
+    }
+    setActiveStep(() => index)
+  }
+  return (
+    <Stepper activeStep={activeStep} orientation='vertical'>
+      {subForms.map(({ validate, label, element }, index) => (
+        <Step key={label}>
+          <ButtonBase onClick={() => tryGoTo(index)} style={{ marginLeft: '-8px' }} disabled={loading}>
+            <StepLabel style={{ cursor: 'pointer', padding: '8px' }}>{label}</StepLabel>
+          </ButtonBase>
+          <StepContent>
+            <SubForm
+              validate={validate}
+              index={index}
+              setActiveStep={setActiveStep}
+              loading={loading}
+              onSubmit={index === subForms.length - 1 ? onSubmit : undefined}>
+              {element}
+            </SubForm>
+          </StepContent>
+        </Step>
+      ))}
+    </Stepper>
+  )
 }
 
 export default SteppedSubForms

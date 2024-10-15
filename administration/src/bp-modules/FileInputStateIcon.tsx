@@ -8,9 +8,9 @@ const FileInputStateIcon = ({ inputState }: { inputState: FileInputStateType }):
     return <Spinner intent='primary' />
   }
   if (inputState === 'error') {
-    return <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon={'error'} />
+    return <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon='error' />
   }
-  return <Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon={'upload'} />
+  return <Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />
 }
 
 export default FileInputStateIcon

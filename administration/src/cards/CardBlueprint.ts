@@ -43,6 +43,7 @@ export class CardBlueprint {
   }
 
   setValue(key: string, value: string): void {
+    const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
     switch (key) {
       case this.cardConfig.nameColumnName:
         this.fullName = value
@@ -51,7 +52,6 @@ export class CardBlueprint {
         this.setExpirationDate(value)
         break
       default:
-        const extensionIdx = this.cardConfig.extensionColumnNames.indexOf(key)
         if (extensionIdx === -1) {
           return
         }

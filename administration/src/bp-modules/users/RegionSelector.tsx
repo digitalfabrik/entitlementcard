@@ -19,22 +19,26 @@ const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filt
   )
 }
 
-const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => {
-  return (
-    <Button
-      style={{ display: 'block' }}
-      fill
-      key={region.id}
-      minimal
-      onClick={handleClick}
-      active={modifiers.active}
-      disabled={modifiers.disabled}>
-      {getTitle(region)}
-    </Button>
-  )
-}
+const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => (
+  <Button
+    style={{ display: 'block' }}
+    fill
+    key={region.id}
+    minimal
+    onClick={handleClick}
+    active={modifiers.active}
+    disabled={modifiers.disabled}>
+    {getTitle(region)}
+  </Button>
+)
 
-const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId: number | null }): ReactElement => {
+const RegionSelector = ({
+  onSelect,
+  selectedId,
+}: {
+  onSelect: (region: Region) => void
+  selectedId: number | null
+}): ReactElement => {
   const projectId = useContext(ProjectConfigContext).projectId
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
@@ -53,19 +57,19 @@ const RegionSelector = (props: { onSelect: (region: Region) => void; selectedId:
     return regionsQueryResult.component
   }
 
-  const activeItem = regions.find((other: Region) => props.selectedId === other.id)
+  const activeItem = regions.find((other: Region) => selectedId === other.id)
   return (
     <RegionSelect
       activeItem={activeItem}
       items={regions}
       itemRenderer={itemRenderer}
-      filterable={true}
+      filterable
       itemListPredicate={(filter, items) =>
         items.filter(region => getTitle(region).toLowerCase().includes(filter.toLowerCase()))
       }
       fill
       itemListRenderer={renderMenu}
-      onItemSelect={props.onSelect}>
+      onItemSelect={onSelect}>
       <div style={{ position: 'relative' }}>
         {/* Make the browser think there is an actual select element to make it validate the form. */}
         <select

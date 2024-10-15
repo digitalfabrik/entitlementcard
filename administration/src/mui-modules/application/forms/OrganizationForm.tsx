@@ -1,4 +1,5 @@
 import { Alert, Typography, styled } from '@mui/material'
+import React from 'react'
 
 import { OrganizationInput } from '../../../generated/graphql'
 import { normalizeName } from '../../../util/normalizeString'
@@ -7,7 +8,7 @@ import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -57,9 +58,8 @@ const getValidatedCompoundInput = createCompoundValidate(SubForms, {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
@@ -82,13 +82,13 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       },
     }
   },
-  Component: ({ state, setState, applicantName }) => (
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <h4>Angaben zur Organisation</h4>
       <ShortTextForm.Component
         state={state.name}
         setState={useUpdateStateCallback(setState, 'name')}
-        label={'Name der Organisation bzw. des Vereins'}
+        label='Name der Organisation bzw. des Vereins'
       />
       <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
       <SelectForm.Component

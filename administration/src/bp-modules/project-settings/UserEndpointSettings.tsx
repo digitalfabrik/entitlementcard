@@ -12,8 +12,9 @@ import {
 } from '../../generated/graphql'
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
+import SettingsCard from '../user-settings/SettingsCard'
 import getQueryResult from '../util/getQueryResult'
-import SettingsCard from './SettingsCard'
+import PepperSettings from './PepperSettings'
 
 const Container = styled.div`
   background: ghostwhite;
@@ -48,13 +49,13 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-const ApiTokenSetting = (): ReactElement => {
+const UserEndpointSettings = (): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
 
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
-  const [createdToken, setCreatedToken] = useState<string>('')
+  const [createdToken, setCreatedToken] = useState<string | null>(null)
   const [expiresIn, setExpiresIn] = useState<number>(1)
 
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
@@ -114,7 +115,8 @@ const ApiTokenSetting = (): ReactElement => {
         <p>Möchten Sie das Token unwiderruflich löschen?</p>
       </Alert>
       <SettingsCard>
-        <H2>Api Token</H2>
+        <H2>User Import Endpunkt</H2>
+        <PepperSettings />
         <Container>
           <H4>Neues Token erstellen</H4>
           <p>
@@ -127,7 +129,7 @@ const ApiTokenSetting = (): ReactElement => {
               name='expiresIn'
               id='expiresIn'
               value={expiresIn}
-              onChange={e => setExpiresIn(parseInt(e.target.value))}>
+              onChange={e => setExpiresIn(parseInt(e.target.value, 10))}>
               <option value='1'>1 Monat</option>
               <option value='3'>3 Monate</option>
               <option value='12'>1 Jahr</option>
@@ -137,7 +139,7 @@ const ApiTokenSetting = (): ReactElement => {
               Erstellen
             </Button>
           </Row>
-          {createdToken && (
+          {createdToken !== null && (
             <>
               <p>Neues Token:</p>
               <NewTokenText> {createdToken}</NewTokenText>
@@ -151,7 +153,7 @@ const ApiTokenSetting = (): ReactElement => {
               <tr>
                 <th>E-Mail des Erstellers</th>
                 <th>Ablaufdatum</th>
-                <th></th>
+                <th aria-label='Delete' />
               </tr>
             </thead>
             <tbody>
@@ -172,4 +174,4 @@ const ApiTokenSetting = (): ReactElement => {
   )
 }
 
-export default ApiTokenSetting
+export default UserEndpointSettings

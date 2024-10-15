@@ -4,7 +4,7 @@
  * HTML5 `download` attribute then clicks on it.
  */
 
-function downloadDataUri(blob: Blob, fileName: string): void {
+const downloadDataUri = (blob: Blob, fileName: string): void => {
   const data = window.URL.createObjectURL(blob)
   const downloadLink = document.createElement('a')
   downloadLink.href = data

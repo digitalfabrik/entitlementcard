@@ -1,12 +1,12 @@
 import { Alert, CircularProgress, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import { useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import { Region, useGetRegionsByPostalCodeQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialState } from '../util/compoundFormUtils'
 
 const StyledAlert = styled(Alert)`
@@ -31,11 +31,57 @@ type AdditionalProps = { postalCode: string }
 const getOptionsLabel = (prefix: string, name: string) => `${name} (${prefix})`
 
 export const getOptions = (regions: Region[]): SelectItem[] =>
-  regions.map(region => {
-    return { label: getOptionsLabel(region.prefix, region.name), value: region.id.toString() }
-  })
+  regions.map(region => ({ label: getOptionsLabel(region.prefix, region.name), value: region.id.toString() }))
 
-const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionsByPostalCodeQuery>) => {
+  if (state.region.manuallySelected) {
+    return null
+  }
+  if (postalCode.length !== 5) {
+    return (
+      <StyledAlert severity='error'>
+        Bitte geben Sie oben eine 5-stellige Postleitzahl an, sodass die zuständige Behörde automatisch ermittelt werden
+        kann.
+      </StyledAlert>
+    )
+  }
+  if (query.loading) {
+    return <StyledAlert severity='info' icon={<CircularProgress size='1em' />} />
+  }
+  if (query.error) {
+    return (
+      <StyledAlert severity='warning'>
+        Leider konnte die zuständige Behörde nicht automatisch anhand Ihrer Postleitzahl ermittelt werden. <br />
+        Bitte nutzen Sie das folgende Auswahlfeld, um Ihre zuständige Behörde auszuwählen.
+      </StyledAlert>
+    )
+  }
+  if (query.data && query.data.regions.length > 1) {
+    const regions = query.data.regions
+    return (
+      <StyledAlert severity='warning'>
+        Ihr Postleitzahlen-Gebiet ist nicht eindeutig einer Region zuordenbar. Bitte wählen Sie die korrekte Region
+        Ihres Hauptwohnsitzes aus der Liste:
+        <StyledRegionsList>
+          {regions.map(region => {
+            const displayName = `${region.name} (${region.prefix})`
+            return <li key={displayName}>{displayName}</li>
+          })}
+        </StyledRegionsList>
+      </StyledAlert>
+    )
+  }
+  if (query.data) {
+    return (
+      <StyledAlert severity='success'>
+        Die zuständige Behörde konnte anhand Ihrer Postleitzahl automatisch ermittelt werden.
+      </StyledAlert>
+    )
+  }
+  return null
+}
+
+const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { ...createCompoundInitialState(SubForms), postalCodeUsedForAutoSelect: null },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) => {
@@ -45,7 +91,7 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     }
     return { type: 'valid', value: { regionId: Number(result.value.shortText) } }
   },
-  Component: ({ state, setState, options, postalCode }) => {
+  Component: ({ state, setState, options, postalCode }: FormComponentProps<State, AdditionalProps, Options>) => {
     const setRegionState = useUpdateStateCallback(setState, 'region')
     const project = useContext(ProjectConfigContext).projectId
     const regionQuery = useGetRegionsByPostalCodeQuery({
@@ -113,48 +159,6 @@ const RegionForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
       </>
     )
   },
-}
-
-const renderAlert = (state: State, postalCode: string, query: ReturnType<typeof useGetRegionsByPostalCodeQuery>) => {
-  if (state.region.manuallySelected) {
-    return null
-  } else if (postalCode.length !== 5) {
-    return (
-      <StyledAlert severity='error'>
-        Bitte geben Sie oben eine 5-stellige Postleitzahl an, sodass die zuständige Behörde automatisch ermittelt werden
-        kann.
-      </StyledAlert>
-    )
-  } else if (query.loading) {
-    return <StyledAlert severity='info' icon={<CircularProgress size={'1em'} />}></StyledAlert>
-  } else if (query.error) {
-    return (
-      <StyledAlert severity='warning'>
-        Leider konnte die zuständige Behörde nicht automatisch anhand Ihrer Postleitzahl ermittelt werden. <br />
-        Bitte nutzen Sie das folgende Auswahlfeld, um Ihre zuständige Behörde auszuwählen.
-      </StyledAlert>
-    )
-  } else if (query.data && query.data.regions.length > 1) {
-    const regions = query.data.regions
-    return (
-      <StyledAlert severity='warning'>
-        Ihr Postleitzahlen-Gebiet ist nicht eindeutig einer Region zuordenbar. Bitte wählen Sie die korrekte Region
-        Ihres Hauptwohnsitzes aus der Liste:
-        <StyledRegionsList>
-          {regions.map(region => (
-            <li>{`${region.name} (${region.prefix})`}</li>
-          ))}
-        </StyledRegionsList>
-      </StyledAlert>
-    )
-  } else if (query.data) {
-    return (
-      <StyledAlert severity='success'>
-        Die zuständige Behörde konnte anhand Ihrer Postleitzahl automatisch ermittelt werden.
-      </StyledAlert>
-    )
-  }
-  return null
 }
 
 export default RegionForm
