@@ -1,5 +1,8 @@
 package app.ehrenamtskarte.backend.helper
 
+import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
@@ -22,6 +25,23 @@ import kotlin.random.Random
  * Helper object for creating test data in the database
  */
 object TestData {
+
+    fun createApiToken(
+        token: String = "dummy",
+        creatorId: Int,
+        expirationDate: LocalDate = LocalDate.now().plusYears(1)
+    ): Int {
+        val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
+        return transaction {
+            val admin = AdministratorEntity.findById(creatorId) ?: throw Exception("Test admin $creatorId not found")
+            ApiTokens.insertAndGetId {
+                it[ApiTokens.tokenHash] = tokenHash
+                it[ApiTokens.creatorId] = creatorId
+                it[ApiTokens.expirationDate] = expirationDate
+                it[projectId] = admin.projectId
+            }.value
+        }
+    }
 
     fun createAcceptingStore(
         name: String = "Test store",
