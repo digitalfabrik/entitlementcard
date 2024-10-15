@@ -1,5 +1,5 @@
 import { Button, Checkbox, H2 } from '@blueprintjs/core'
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
@@ -11,7 +11,7 @@ type NotificationSettingsProps = {
   projectId: string
 }
 
-const NotificationSettings = ({ projectId }: NotificationSettingsProps) => {
+const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactElement => {
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
 
@@ -38,7 +38,9 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps) => {
   }, [notificationSettingsQuery])
 
   const notificationQueryResult = getQueryResult(notificationSettingsQuery)
-  if (!notificationQueryResult.successful) return notificationQueryResult.component
+  if (!notificationQueryResult.successful) {
+    return notificationQueryResult.component
+  }
 
   const submit = () => {
     updateNotificationSettings({

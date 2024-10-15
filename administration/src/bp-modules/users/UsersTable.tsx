@@ -1,5 +1,5 @@
 import { Button } from '@blueprintjs/core'
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
 import { Administrator, Region, Role } from '../../generated/graphql'
@@ -42,7 +42,7 @@ const UsersTable = ({
   // Moreover, the region column of the table is hidden.
   selectedRegionId?: number | null
   refetch: () => void
-}) => {
+}): ReactElement => {
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
   const [userInEditDialog, setUserInEditDialog] = useState<Administrator | null>(null)
   const [userInDeleteDialog, setUserInDeleteDialog] = useState<Administrator | null>(null)

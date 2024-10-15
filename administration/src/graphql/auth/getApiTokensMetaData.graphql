@@ -1,0 +1,7 @@
+query getApiTokenMetaData {
+  tokenMetaData: getApiTokenMetaData {
+    id
+    creatorEmail
+    expirationDate
+  }
+}

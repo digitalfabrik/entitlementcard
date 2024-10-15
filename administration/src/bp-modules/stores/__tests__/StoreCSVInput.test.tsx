@@ -7,12 +7,10 @@ import React, { ReactElement } from 'react'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { AppToasterProvider } from '../../AppToaster'
-import StoresCSVInput from '../StoresCSVInput'
+import StoresCSVInput, { DEFAULT_ERROR_TIMEOUT } from '../StoresCSVInput'
+import StoresImportDuplicates from '../StoresImportDuplicates'
 
 // TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
 
 const fieldNames = nuernbergConfig.storeManagement.enabled
   ? nuernbergConfig.storeManagement.fields.map(field => field.name)
@@ -26,9 +24,11 @@ const wrapper = ({ children }: { children: ReactElement }) => (
   </AppToasterProvider>
 )
 const setAcceptingStores = jest.fn()
+const setIsLoadingCoordinates = jest.fn()
 describe('StoreCSVInput', () => {
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
+      // eslint-disable-next-line func-names
       readAsText: jest.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),
@@ -36,9 +36,16 @@ describe('StoreCSVInput', () => {
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
     const fields = nuernbergConfig.storeManagement.enabled ? nuernbergConfig.storeManagement.fields : []
-    const { getByTestId } = render(<StoresCSVInput setAcceptingStores={setAcceptingStores} fields={fields} />, {
-      wrapper,
-    })
+    const { getByTestId } = render(
+      <StoresCSVInput
+        setAcceptingStores={setAcceptingStores}
+        fields={fields}
+        setIsLoadingCoordinates={setIsLoadingCoordinates}
+      />,
+      {
+        wrapper,
+      }
+    )
 
     const fileInput = getByTestId('store-file-upload') as HTMLInputElement
     fireEvent.change(fileInput, { target: { files: [file] } })
@@ -80,7 +87,7 @@ describe('StoreCSVInput', () => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -90,7 +97,7 @@ describe('StoreCSVInput', () => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([fieldNames])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -131,7 +138,7 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
@@ -174,7 +181,49 @@ describe('StoreCSVInput', () => {
       ],
     ])
     await waitFor(async () => await renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(setAcceptingStores).not.toHaveBeenCalled()
+  })
+
+  it(`should fail if the csv includes duplicated stores`, async () => {
+    const error = <StoresImportDuplicates entries={[[1, 2]]} />
+    const csv = ''
+    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
+    mocked(parse).mockReturnValueOnce([
+      fieldNames,
+      [
+        'Test store',
+        'Teststr.',
+        '10',
+        '90408',
+        'Nürnberg',
+        '12.700',
+        '11.0765467',
+        '0911/123456',
+        'info@test.de',
+        'https://www.test.de/kontakt/',
+        '20% Ermäßigung für Erwachsene',
+        '20% discount for adults',
+        '17',
+      ],
+      [
+        'Test store',
+        'Teststr.',
+        '10',
+        '90408',
+        'Nürnberg',
+        '12.700',
+        '11.0765467',
+        '0911/123456',
+        'info@test.de',
+        'https://www.test.de/kontakt/',
+        '20% Ermäßigung für Erwachsene',
+        '20% discount for adults',
+        '17',
+      ],
+    ])
+    await waitFor(async () => await renderAndSubmitStoreInput(csv))
+    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: 0 })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 })

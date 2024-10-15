@@ -54,6 +54,12 @@ type Administrator {
   role: Role!
 }
 
+type ApiTokenMetaData {
+  creatorEmail: String!
+  expirationDate: String!
+  id: Int!
+}
+
 type ApplicationVerificationView {
   contactEmailAddress: String!
   contactName: String!
@@ -126,12 +132,16 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new api token for user import endpoint"
+  createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
+  "Deletes a selected API token"
+  deleteApiToken(id: Int!): Int!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
@@ -139,7 +149,7 @@ type Mutation {
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(stores: [CSVAcceptingStoreInput!]!): Boolean!
+  importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -181,6 +191,8 @@ type Query {
   categories: [Category!]!
   "Verify password reset link"
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
+  "Gets metadata of all api tokens for a project"
+  getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
   "Queries an application by application verification accessKey"
@@ -193,6 +205,8 @@ type Query {
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Get the pepper for Koblenz user hashing"
+  getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
@@ -248,6 +262,12 @@ type SignInPayload {
 type StaticVerificationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
+}
+
+type StoreImportReturnResultModel {
+  storesCreated: Int!
+  storesDeleted: Int!
+  storesUntouched: Int!
 }
 
 enum ActivationState {

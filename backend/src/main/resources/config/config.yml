@@ -1,3 +1,6 @@
+# Important:
+# - All updates in this file have to added/adjusted in salt before deployment!
+# - Example: https://git.tuerantuer.org/DF/salt/src/branch/master/pillars/entitlementcard/production/bayern.sls
 production: false
 postgres:
   url: jdbc:postgresql://localhost:5432/ehrenamtskarte
@@ -43,7 +46,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: koblenz.sozialpass.app
     importUrl: ""
-    pipelineName: SozialpassKoblenz
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
@@ -55,7 +57,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
-    pipelineName: BerechtigungskarteShowcase
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
     timezone: "Europe/Berlin"

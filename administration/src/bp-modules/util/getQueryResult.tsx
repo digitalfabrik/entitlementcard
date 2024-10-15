@@ -16,15 +16,23 @@ type QueryHandlerResult<Data> =
     }
 
 const getQueryResult = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>
+  queryResult: QueryResult<Data, Variables>,
+  errorComponent?: ReactElement
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
-  if (loading) return { successful: false, component: <Spinner /> }
+  if (loading) {
+    return { successful: false, component: <Spinner /> }
+  }
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
-    return { successful: false, component: <ErrorHandler title={title} description={description} refetch={refetch} /> }
+    return {
+      successful: false,
+      component: errorComponent ?? <ErrorHandler title={title} description={description} refetch={refetch} />,
+    }
   }
-  if (!data) return { successful: false, component: <ErrorHandler refetch={refetch} /> }
+  if (data === undefined) {
+    return { successful: false, component: <ErrorHandler refetch={refetch} /> }
+  }
   return { successful: true, data: data }
 }
 

@@ -568,9 +568,12 @@ jobs:
                 name: Lint
                 working_directory: ~/project/administration
             - run:
-                command: npm run test -- --maxWorkers=2
-                name: Test
+                command: npm run test:coverage -- --maxWorkers=2
+                name: Run tests and generate coverage report
                 working_directory: ~/project/administration
+            - store_artifacts:
+                destination: ~/attached_workspace/coverage
+                path: ~/project/administration/src/coverage
             - run:
                 command: npm run ts:check
                 name: Typescript

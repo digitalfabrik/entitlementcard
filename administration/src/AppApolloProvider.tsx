@@ -25,7 +25,7 @@ const createClient = (token?: string) =>
     },
   })
 
-const AppApolloProvider = ({ children }: { children: ReactElement }) => {
+const AppApolloProvider = ({ children }: { children: ReactElement }): ReactElement => {
   const authContext = useContext(AuthContext)
   return <ApolloProvider client={createClient(authContext.data?.token)}>{children}</ApolloProvider>
 }

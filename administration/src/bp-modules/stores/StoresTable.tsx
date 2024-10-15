@@ -1,16 +1,16 @@
 import { Cell, Column, Table2, TruncatedFormat } from '@blueprintjs/table'
 import '@blueprintjs/table/lib/css/table.css'
-import { useCallback } from 'react'
+import { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import dimensions from '../constants/dimensions'
 import { AcceptingStoreEntry } from './AcceptingStoreEntry'
 
 const TableContainer = styled.div`
   width: 100vw;
-  height: 85vh;
+  height: calc(100vh - ${dimensions.navigationBarHeight + dimensions.bottomBarHeight}px);
   display: flex;
-  align-self: center;
 `
 
 const StyledCell = styled(Cell)`
@@ -23,7 +23,7 @@ type CardImportTableProps = {
   acceptingStores: AcceptingStoreEntry[]
 }
 
-const StoresTable = ({ fields, acceptingStores }: CardImportTableProps) => {
+const StoresTable = ({ fields, acceptingStores }: CardImportTableProps): ReactElement => {
   const headers = fields.map(field => field.name)
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
@@ -39,6 +39,8 @@ const StoresTable = ({ fields, acceptingStores }: CardImportTableProps) => {
           tooltip={valid ? undefined : 'Validierungsfehler'}
           intent={valid ? 'none' : 'danger'}>
           <TruncatedFormat detectTruncation preformatted>
+            {/* This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig  */}
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {value ?? '-'}
           </TruncatedFormat>
         </StyledCell>

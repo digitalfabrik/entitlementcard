@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -73,7 +73,9 @@ const ApplyController = (): React.ReactElement | null => {
             Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
             Sie können das Fenster jetzt schließen.`
 
-  if (!regionsQueryResult.successful) return regionsQueryResult.component
+  if (!regionsQueryResult.successful) {
+    return regionsQueryResult.component
+  }
 
   const regions = regionsQueryResult.data.regions.filter(region => region.activatedForApplication)
 
@@ -119,7 +121,7 @@ const ApplyController = (): React.ReactElement | null => {
   )
 }
 
-const ApplyApp = () => (
+const ApplyApp = (): ReactElement => (
   <SnackbarProvider>
     <ApplicationErrorBoundary>
       <ApplyController />

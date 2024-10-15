@@ -31,7 +31,7 @@ const ImportCardsController = (): ReactElement => {
   return <InnerImportCardsController region={region} />
 }
 
-export const getHeaders = (projectConfig: ProjectConfig) => [
+export const getHeaders = (projectConfig: ProjectConfig): string[] => [
   projectConfig.card.nameColumnName,
   projectConfig.card.expiryColumnName,
   ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
@@ -60,7 +60,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   }
 
   const lineToBlueprint = useCallback(
-    (line: string[], csvHeader: string[], normalizeImport = false): CSVCard => {
+    (line: string[], csvHeader: string[]): CSVCard => {
       if (isFreinetFormat) {
         convertFreinetImport(line, csvHeader, projectConfig)
       }
@@ -75,11 +75,13 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       })
       return cardBlueprint
     },
-    [headers, projectConfig.card, region]
+    [headers, projectConfig, region, isFreinetFormat]
   )
 
-  if (state === CardActivationState.loading) return <Spinner />
-  if (state === CardActivationState.finished)
+  if (state === CardActivationState.loading) {
+    return <Spinner />
+  }
+  if (state === CardActivationState.finished) {
     return (
       <GenerationFinished
         reset={() => {
@@ -88,6 +90,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
         }}
       />
     )
+  }
 
   return (
     <>

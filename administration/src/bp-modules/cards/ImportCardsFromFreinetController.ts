@@ -7,7 +7,7 @@ const FREINET_LASTNAME_COLUMN_HEADER = 'nachname'
 const FREINET_CARDTYPE_COLUMN_HEADER = 'inhaber_ehrenamtskarte'
 
 const mergeFirstAndLastnameIntoNewColumn = (line: string[], csvHeader: string[], nameColumnName: string) => {
-  const columnNameDoesNotExist = csvHeader.indexOf(nameColumnName) == -1
+  const columnNameDoesNotExist = csvHeader.indexOf(nameColumnName) === -1
   if (columnNameDoesNotExist) {
     csvHeader[csvHeader.length] = nameColumnName
   }
@@ -36,13 +36,13 @@ const getCardTypeByExpirationDate = (line: string[], indexOfExpirationDate: numb
 const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: string, expiryColumnName: string) => {
   const indexCardTypeFreinet = csvHeader.indexOf(FREINET_CARDTYPE_COLUMN_HEADER)
 
-  const hasValidCardTypeColumn = csvHeader.indexOf(cardTypeColumnName) != -1
+  const hasValidCardTypeColumn = csvHeader.indexOf(cardTypeColumnName) !== -1
   if (!hasValidCardTypeColumn) {
     csvHeader[csvHeader.length] = cardTypeColumnName
   }
   const indexCardType = csvHeader.indexOf(cardTypeColumnName)
 
-  const hasFreinetCardType = indexCardTypeFreinet != -1
+  const hasFreinetCardType = indexCardTypeFreinet !== -1
 
   line[indexCardType] = hasFreinetCardType
     ? getCardTypeByFreinetValue(line, indexCardTypeFreinet)
@@ -59,7 +59,7 @@ const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: st
  *      column with the header expiration date must exist and be called "eak_datum"
  *      column with the name "inhaber_ehrenamtskarte" can exist, if so it is used, if not the expiration date is used
  */
-export const convertFreinetImport = (line: string[], csvHeader: string[], projectConfig: ProjectConfig) => {
+export const convertFreinetImport = (line: string[], csvHeader: string[], projectConfig: ProjectConfig): void => {
   mergeFirstAndLastnameIntoNewColumn(line, csvHeader, projectConfig.card.nameColumnName)
   renameExpirationDateHeader(csvHeader, projectConfig.card.expiryColumnName)
   if (projectConfig.card.extensionColumnNames[0]) {

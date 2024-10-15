@@ -1,4 +1,5 @@
-import { Colors, H5, Icon } from '@blueprintjs/core'
+import { Colors, H5, Icon, Intent } from '@blueprintjs/core'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
@@ -20,7 +21,7 @@ export enum VerificationStatus {
   Awaiting,
 }
 
-export const getIconByStatus = (status: VerificationStatus) => {
+export const getIconByStatus = (status: VerificationStatus): 'tick-circle' | 'cross-circle' | 'help' => {
   switch (status) {
     case VerificationStatus.Verified:
       return verifiedIcon
@@ -31,7 +32,7 @@ export const getIconByStatus = (status: VerificationStatus) => {
   }
 }
 
-export const getIntentByStatus = (status: VerificationStatus) => {
+export const getIntentByStatus = (status: VerificationStatus): Intent => {
   switch (status) {
     case VerificationStatus.Verified:
       return 'success'
@@ -42,7 +43,7 @@ export const getIntentByStatus = (status: VerificationStatus) => {
   }
 }
 
-export const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }) => {
+export const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }): ReactElement => {
   return (
     <StyledIndicator>
       <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />
@@ -51,7 +52,7 @@ export const Indicator = ({ status, text }: { status: VerificationStatus; text?:
   )
 }
 
-export const getStatus = (verification: Application['verifications'][number]) => {
+export const getStatus = (verification: Application['verifications'][number]): VerificationStatus => {
   if (!!verification.verifiedDate) {
     return VerificationStatus.Verified
   } else if (!!verification.rejectedDate) {
@@ -75,7 +76,7 @@ const VerificationContainer = styled.ul`
   }
 `
 
-const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }) => {
+const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }): ReactElement => {
   return (
     <>
       <H5>Bestätigung(en) durch Organisationen</H5>

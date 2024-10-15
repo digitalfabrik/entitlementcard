@@ -10,6 +10,11 @@ object Importer {
         val logger = LoggerFactory.getLogger(Importer::class.java)
         val project = config.findProject()
 
+        if (project.pipelineName == null) {
+            logger.info("There is no store import pipeline for ${project.id}")
+            return true
+        }
+
         return try {
             logger.info("== Pipeline ${project.pipelineName} started ==")
             when (project.pipelineName) {

@@ -8,7 +8,7 @@ import NuernbergPassIdExtension from '../extensions/NuernbergPassIdExtension'
 import { findExtension } from '../extensions/extensions'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: (input: any[]) => input[0].join(','),
+  stringify: (input: string[][]) => input[0].join(','),
 }))
 
 jest.mock('../../project-configs/showcase/config')
@@ -20,7 +20,9 @@ describe('CsvFactory', () => {
     const testPassId = '86152'
     const cards = [new CardBlueprint('Thea Test', nuernbergConfig.card)]
     const passIdExtenstion = findExtension(cards[0].extensions, NuernbergPassIdExtension) //cards[0].extensions.find(ext => ext instanceof NuernbergPassIdExtension)
-    if (!passIdExtenstion) throw Error('test failed')
+    if (!passIdExtenstion) {
+      throw Error('test failed')
+    }
     passIdExtenstion.fromString(testPassId)
     const filename = getCSVFilename(cards)
     expect(filename).toEqual(`${testPassId}.csv`)
@@ -57,7 +59,9 @@ describe('CsvFactory', () => {
         return TEST_BLOB_CONSTRUCTOR(blobParts, options)
       })
 
-    if (!nuernbergConfig.csvExport.enabled) throw Error('test failed')
+    if (!nuernbergConfig.csvExport.enabled) {
+      throw Error('test failed')
+    }
     generateCsv([], [], nuernbergConfig.csvExport)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith([nuernbergConfig.csvExport.csvHeader.join(',')], {
       type: 'text/csv;charset=utf-8;',

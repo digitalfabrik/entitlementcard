@@ -55,8 +55,9 @@ const ApplicationApplicantView = ({
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ isWithdrawed }: { isWithdrawed: boolean }) => {
-      if (isWithdrawed) gotWithdrawed()
-      else {
+      if (isWithdrawed) {
+        gotWithdrawed()
+      } else {
         console.error('Withdraw operation returned false.')
         enqueueSnackbar('Der Antrag wurde bereits zurückgezogen.', { variant: 'error' })
       }
@@ -71,7 +72,9 @@ const ApplicationApplicantView = ({
     })
   }
 
-  if (withdrawalLoading) return <CircularProgress style={{ margin: 'auto' }} />
+  if (withdrawalLoading) {
+    return <CircularProgress style={{ margin: 'auto' }} />
+  }
 
   return (
     <ApplicationViewCard elevation={2}>

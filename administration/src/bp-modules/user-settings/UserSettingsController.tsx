@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -16,7 +16,7 @@ const UserSettingsContainer = styled.div`
   flex-direction: column;
 `
 
-const UserSettingsController = () => {
+const UserSettingsController = (): ReactElement => {
   const { applicationFeature, activityLogConfig, projectId } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
   return (

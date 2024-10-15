@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from './StoresCSVInput'
@@ -11,7 +12,7 @@ type ImportCardsRequirementsProps = {
   header: string[]
 }
 
-const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps) => {
+const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): ReactElement => {
   return (
     <RequirementsList>
       <li>Maximale Dateigröße: {FILE_SIZE_LIMIT_MEGA_BYTES}MB</li>

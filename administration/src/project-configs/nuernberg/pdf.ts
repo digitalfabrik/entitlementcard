@@ -1,4 +1,4 @@
-import { PDFForm, rgb } from 'pdf-lib'
+import { PDFForm, PDFTextField, rgb } from 'pdf-lib'
 
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import { findExtension } from '../../cards/extensions/extensions'
@@ -7,9 +7,9 @@ import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
-const renderPdfDetails = ({ info, cardBlueprint }: InfoParams) => {
+const renderPdfDetails = ({ info }: InfoParams): string => {
   const expirationDay = info.expirationDay
-  if (!expirationDay) {
+  if (expirationDay === undefined) {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
   const passId = info.extensions?.extensionNuernbergPassId?.passId
@@ -22,7 +22,11 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlueprint }: InfoParams) => {
+const createAddressFormFields = (
+  form: PDFForm,
+  pageIdx: number,
+  { info, cardBlueprint }: InfoParams
+): PDFTextField[] => {
   const [addressLine1, addressLine2, plz, location] = AddressExtensions.map(
     ext => findExtension(cardBlueprint.extensions, ext)?.state
   )
@@ -36,23 +40,28 @@ const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, cardBlu
     // avoid only printing the name
     nameField.setText(info.fullName)
   }
-  if (addressLine1) addressLine1Field.setText(addressLine1)
+  if (addressLine1) {
+    addressLine1Field.setText(addressLine1)
+  }
   if (addressLine2) {
     addressLine2Field.setText(addressLine2)
   }
   if (plz && location) {
-    if (!addressLine2) addressLine2Field.setText(`${plz} ${location}`)
-    else plzAndLocationField.setText(`${plz} ${location}`)
+    if (!addressLine2) {
+      addressLine2Field.setText(`${plz} ${location}`)
+    } else {
+      plzAndLocationField.setText(`${plz} ${location}`)
+    }
   }
   return [nameField, addressLine1Field, addressLine2Field, plzAndLocationField]
 }
 
-const renderPassId = ({ info }: InfoParams) => {
+const renderPassId = ({ info }: InfoParams): string => {
   const passId = info.extensions?.extensionNuernbergPassId?.passId
-  return passId ? `${passId?.toString()}` : ''
+  return passId?.toString() ?? ''
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams) => {
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
   return cardInfoHash
 }
 

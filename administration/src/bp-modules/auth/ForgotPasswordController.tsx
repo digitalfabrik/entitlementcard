@@ -1,5 +1,5 @@
 import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -8,7 +8,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { useAppToaster } from '../AppToaster'
 import StandaloneCenter from '../StandaloneCenter'
 
-const ForgotPasswordController = () => {
+const ForgotPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [finished, setFinished] = useState(false)

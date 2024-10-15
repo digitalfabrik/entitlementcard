@@ -17,7 +17,9 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {
-    if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (selectedValue.length === 0) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
     if (!options.items.map(item => item.value).includes(selectedValue)) {
       return {
         type: 'error',

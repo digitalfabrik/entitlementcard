@@ -1,5 +1,5 @@
 import { Button, H3 } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -17,8 +17,8 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const HomeController = () => {
-  const { applicationFeature, cardStatistics, cardCreation } = useContext(ProjectConfigContext)
+const HomeController = (): ReactElement => {
+  const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -53,6 +53,11 @@ const HomeController = () => {
       {role === Role.RegionAdmin && applicationFeature ? (
         <NavLink to={'/region'}>
           <StyledButton icon='path-search' text='Region verwalten' />
+        </NavLink>
+      ) : null}
+      {role === Role.ProjectAdmin && userImportApiEnabled ? (
+        <NavLink to={'/project'}>
+          <StyledButton icon='projects' text='Projekt verwalten' />
         </NavLink>
       ) : null}
       {role === Role.ProjectStoreManager ? (

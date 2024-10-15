@@ -24,7 +24,7 @@ describe('TextAreaDialog', () => {
     const { getByText, getByDisplayValue } = renderTextDialog({ maxChars: 10, defaultText })
     const input = getByDisplayValue(defaultText)
     fireEvent.change(input, { target: { value: 'Das ist ein zu langer Text' } })
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
     const saveButton = getByText('Speichern').closest('button')
     expect(saveButton?.hasAttribute('disabled')).toBeTruthy()
   })
@@ -44,7 +44,7 @@ describe('TextAreaDialog', () => {
     const { getByText, getByDisplayValue } = renderTextDialog({ maxChars: 15, defaultText })
     const input = getByDisplayValue(defaultText)
     fireEvent.change(input, { target: { value: 'Das ist kurz' } })
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
     const saveButton = getByText('Speichern').closest('button')
     expect(saveButton?.hasAttribute('disabled')).toBeFalsy()
     fireEvent.click(getByText('Speichern'))

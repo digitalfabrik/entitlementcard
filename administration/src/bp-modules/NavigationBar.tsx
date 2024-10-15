@@ -1,5 +1,5 @@
 import { Alignment, Button, Navbar } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -7,18 +7,20 @@ import { WhoAmIContext } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import UserMenu from './UserMenu'
+import dimensions from './constants/dimensions'
 
 const PrintAwareNavbar = styled(Navbar)`
   @media print {
     display: none;
   }
+  height: ${dimensions.navigationBarHeight};
 `
 
-interface Props {
+type Props = {
   onSignOut: () => void
 }
 
-const Navigation = (props: Props) => {
+const Navigation = (props: Props): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
 
@@ -65,6 +67,11 @@ const Navigation = (props: Props) => {
         {role === Role.RegionAdmin && config.applicationFeature ? (
           <NavLink to={'/region'}>
             <Button minimal icon='path-search' text='Region verwalten' />
+          </NavLink>
+        ) : null}
+        {role === Role.ProjectAdmin && config.userImportApiEnabled ? (
+          <NavLink to={'/project'}>
+            <Button minimal icon='projects' text='Projekt verwalten' />
           </NavLink>
         ) : null}
         {role === Role.ProjectStoreManager ? (

@@ -33,8 +33,12 @@ const ManageProjectUsers = () => {
   const regionsQueryResult = getQueryResult(regionsQuery)
   const usersQueryResult = getQueryResult(usersQuery)
 
-  if (!regionsQueryResult.successful) return regionsQueryResult.component
-  if (!usersQueryResult.successful) return usersQueryResult.component
+  if (!regionsQueryResult.successful) {
+    return regionsQueryResult.component
+  }
+  if (!usersQueryResult.successful) {
+    return usersQueryResult.component
+  }
 
   const regions = regionsQueryResult.data.regions
   const users = usersQueryResult.data.users
@@ -54,8 +58,12 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   const regionsQueryResult = getQueryResult(regionsQuery)
   const usersQueryResult = getQueryResult(usersQuery)
 
-  if (!regionsQueryResult.successful) return regionsQueryResult.component
-  if (!usersQueryResult.successful) return usersQueryResult.component
+  if (!regionsQueryResult.successful) {
+    return regionsQueryResult.component
+  }
+  if (!usersQueryResult.successful) {
+    return usersQueryResult.component
+  }
 
   const regions = regionsQueryResult.data.regions
   const users = usersQueryResult.data.users
@@ -67,7 +75,7 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   )
 }
 
-const ManageUsersController = () => {
+const ManageUsersController = (): ReactElement => {
   const { role, region } = useContext(WhoAmIContext).me!
   if (role === Role.RegionAdmin && region) {
     return <ManageRegionUsers region={region} />

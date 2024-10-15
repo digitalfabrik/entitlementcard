@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,6 +14,7 @@ import AddCardsController from './bp-modules/cards/AddCardsController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
 import ImportCardsController from './bp-modules/cards/ImportCardsController'
 import HomeController from './bp-modules/home/HomeController'
+import ProjectSettingsController from './bp-modules/project-settings/ProjectSettingsController'
 import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
@@ -40,7 +41,7 @@ const Main = styled.div`
 
 export const FREINET_PARAM = 'freinet'
 
-const Router = () => {
+const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
   const router = useMemo(() => {
@@ -83,7 +84,7 @@ const Router = () => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
-          ...(projectConfig.cardStatistics ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
+          ...(projectConfig.cardStatistics.enabled ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
           ...(projectConfig.cardCreation
             ? [
                 { path: 'cards', element: <CreateCardsController /> },
@@ -95,19 +96,13 @@ const Router = () => {
           { path: 'user-settings', element: <UserSettingsController /> },
           { path: 'stores', element: <StoresController /> },
           { path: 'stores/import', element: <StoresImportController /> },
+          { path: 'project', element: <ProjectSettingsController /> },
           { path: '*', element: <HomeController /> },
         ],
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [
-    authData,
-    projectConfig.applicationFeature,
-    signIn,
-    signOut,
-    projectConfig.cardStatistics,
-    projectConfig.cardCreation,
-  ])
+  }, [authData, signIn, signOut, projectConfig])
 
   return <RouterProvider router={router} />
 }

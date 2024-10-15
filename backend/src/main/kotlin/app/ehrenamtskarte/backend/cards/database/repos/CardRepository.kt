@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsRe
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
@@ -21,6 +22,7 @@ import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.intLiteral
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 import java.time.Instant
 
 object CardRepository {
@@ -47,6 +49,7 @@ object CardRepository {
         expirationDay: Long?,
         regionId: Int,
         issuerId: Int?,
+        entitlementId: Int?,
         codeType: CodeType,
         startDay: Long?
     ) =
@@ -58,6 +61,7 @@ object CardRepository {
             this.issueDate = Instant.now()
             this.regionId = EntityID(regionId, Regions)
             this.issuerId = if (issuerId != null) EntityID(issuerId, Administrators) else null
+            this.entitlementId = if (entitlementId != null) EntityID(entitlementId, UserEntitlements) else null
             this.revoked = false
             this.codeType = codeType
             this.startDay = startDay
@@ -116,5 +120,11 @@ object CardRepository {
                 )
             }
             .toList()
+    }
+
+    fun revokeByEntitlementId(entitlementId: Int): Int {
+        return Cards.update({ Cards.entitlementId eq entitlementId and (Cards.revoked eq false) }) {
+            it[revoked] = true
+        }
     }
 }

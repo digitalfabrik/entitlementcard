@@ -1,5 +1,5 @@
 import { Button, Icon } from '@blueprintjs/core'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -13,11 +13,11 @@ const Container = styled.div`
   }
 `
 
-interface Props {
+type Props = {
   reset: () => void
 }
 
-const CardsCreatedMessage = (props: Props) => {
+const CardsCreatedMessage = (props: Props): ReactElement => {
   return (
     <Container>
       <Icon icon='tick-circle' color='green' iconSize={100} />
