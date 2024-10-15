@@ -41,17 +41,38 @@ enum DeepLinkActivationStatus {
   }
 }
 
-class DeepLinkActivation extends StatelessWidget {
+class DeepLinkActivation extends StatefulWidget {
   final String base64qrcode;
 
   const DeepLinkActivation({super.key, required this.base64qrcode});
 
   @override
+  State<DeepLinkActivation> createState() => _DeepLinkActivationState();
+}
+
+enum _State {
+  waiting,
+  loading,
+  success,
+}
+
+class _DeepLinkActivationState extends State<DeepLinkActivation> {
+  _State _state = _State.waiting;
+
+  @override
   Widget build(BuildContext context) {
     final t = context.t;
-    DynamicActivationCode? activationCode = getActivationCode(context, base64qrcode);
+    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode);
     CardInfo? cardInfo = activationCode?.info;
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    final userCodeModel = Provider.of<UserCodeModel>(context);
+
+    if (!userCodeModel.isInitialized) {
+      if (userCodeModel.initializationFailed) {
+        return SafeArea(child: Center(child: Text(t.common.unknownError, textAlign: TextAlign.center)));
+      }
+      return Container();
+    }
+
     final status = DeepLinkActivationStatus.from(userCodeModel, activationCode);
     final regionId = cardInfo?.extensions.extensionRegion.regionId ?? -1;
     final regionsQuery = GetRegionsByIdQuery(
@@ -60,9 +81,6 @@ class DeepLinkActivation extends StatelessWidget {
         ids: [regionId],
       ),
     );
-
-    final String cardsInUse = userCodeModel.userCodes.length.toString();
-    final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final theme = Theme.of(context);
 
     return Query(
@@ -97,34 +115,56 @@ class DeepLinkActivation extends StatelessWidget {
                       )),
                     Padding(
                       padding: const EdgeInsets.all(32),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ...switch (status) {
-                            DeepLinkActivationStatus.invalidLink => [_WarningText(t.deeplinkActivation.invalidCode)],
-                            DeepLinkActivationStatus.limitReached => [
-                                _WarningText('${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)')
-                              ],
-                            DeepLinkActivationStatus.alreadyExists => [
-                                _WarningText(t.deeplinkActivation.alreadyExists)
-                              ],
-                            DeepLinkActivationStatus.valid => [
-                                ElevatedButton(
-                                  onPressed: activationCode != null
-                                      ? () {
-                                          activateCard(
-                                              context,
-                                              () => GoRouter.of(context)
-                                                  .pushReplacement('$homeRouteName/$identityTabIndex'),
-                                              activationCode);
-                                        }
-                                      : null,
-                                  child: Text(t.deeplinkActivation.buttonText),
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        if (_state == _State.waiting) _WarningText(status, userCodeModel),
+                        ElevatedButton.icon(
+                          onPressed: activationCode != null &&
+                                  _state == _State.waiting &&
+                                  status == DeepLinkActivationStatus.valid
+                              ? () async {
+                                  setState(() {
+                                    _state = _State.loading;
+                                  });
+                                  try {
+                                    final activated = await activateCard(context, activationCode);
+                                    if (activated) {
+                                      GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
+                                      setState(() {
+                                        _state = _State.success;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _state = _State.waiting;
+                                      });
+                                    }
+                                  } catch (_) {
+                                    setState(() {
+                                      _state = _State.waiting;
+                                    });
+                                    // TODO 1656: Improve error handling!!
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Theme.of(context).colorScheme.primary,
+                                        content: Text(t.common.unknownError),
+                                      ),
+                                    );
+                                    rethrow;
+                                  }
+                                }
+                              : null,
+                          icon: _state != _State.waiting
+                              ? Container(
+                                  width: 24,
+                                  height: 24,
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                  ),
                                 )
-                              ],
-                          },
-                        ],
-                      ),
+                              : const Icon(Icons.add_card),
+                          label: Text(t.deeplinkActivation.buttonText),
+                        )
+                      ]),
                     ),
                   ],
                 )),
@@ -134,18 +174,32 @@ class DeepLinkActivation extends StatelessWidget {
 }
 
 class _WarningText extends StatelessWidget {
-  final String text;
+  final DeepLinkActivationStatus status;
+  final UserCodeModel userCodeModel;
 
-  const _WarningText(this.text);
+  const _WarningText(this.status, this.userCodeModel);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(Icons.warning, color: Theme.of(context).colorScheme.secondary),
-        Text(text, textAlign: TextAlign.center)
-      ],
-    );
+    final String cardsInUse = userCodeModel.userCodes.length.toString();
+    final String maxCardAmount = buildConfig.maxCardAmount.toString();
+    final text = switch (status) {
+      DeepLinkActivationStatus.invalidLink => t.deeplinkActivation.activationInvalid,
+      DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
+      DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
+      DeepLinkActivationStatus.valid => '',
+    };
+    if (status == DeepLinkActivationStatus.valid) {
+      return Container();
+    }
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: [
+            Icon(Icons.warning, color: Theme.of(context).colorScheme.secondary),
+            Text(text, textAlign: TextAlign.center)
+          ],
+        ));
   }
 }
 

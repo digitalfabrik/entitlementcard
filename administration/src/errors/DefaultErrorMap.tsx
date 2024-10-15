@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
@@ -23,10 +23,10 @@ type ErrorExtensions = {
 const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
-  if (!extensions || !extensions['code']) {
+  if (!extensions || extensions.code === undefined) {
     return defaultError
   }
-  switch (extensions['code']) {
+  switch (extensions.code) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
         title: 'Die Email-Adresse wird bereits verwendet.',
@@ -81,23 +81,24 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: 'Ungültiger Link',
         description: <InvalidPasswordResetLink />,
       }
-    case GraphQlExceptionCode.InvalidQrCodeSize:
+    case GraphQlExceptionCode.InvalidQrCodeSize: {
       const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
       const codeTypeText = extensions.codeType === CodeType.Dynamic ? 'Aktivierungscode' : 'statische QR-Code'
       return {
         title: `Der ${codeTypeText} für ${cardInfo.fullName} kann nicht generiert werden, da er zu viele Daten enthält.`,
       }
+    }
     case GraphQlExceptionCode.InvalidRole:
       return {
         title: 'Diese Rolle kann nicht zugewiesen werden.',
       }
     case GraphQlExceptionCode.InvalidUserEntitlements:
       return {
-        title: 'Die Benutzerberechtigungen sind ungültig.',
+        title: 'Sie sind scheinbar nicht berechtigt einen KoblenzPass zu erstellen. Bitte prüfen Sie Ihre Eingaben',
       }
     case GraphQlExceptionCode.MailNotSent:
       return {
-        title: `Email konnte nicht an ${extensions['recipient']} gesendet werden.`,
+        title: `Email konnte nicht an ${extensions.recipient} gesendet werden.`,
       }
     case GraphQlExceptionCode.PasswordResetKeyExpired:
       return {

@@ -1,6 +1,6 @@
-import { StoreData } from '../StoresImportController'
+import { StoresData } from '../StoresImportController'
 
-export const invalidStoreData: StoreData = {
+export const invalidStoreData: StoresData = {
   categoryId: '25',
   discountDE: '20% Ermäßigung für Erwachsene',
   discountEN: '20% discount for adults',
@@ -16,7 +16,7 @@ export const invalidStoreData: StoreData = {
   telephone: '0911/9944884',
 }
 
-export const validStoreData: StoreData = {
+export const validStoreData: StoresData = {
   categoryId: '15',
   discountDE: '20% Ermäßigung für Erwachsene',
   discountEN: '20% discount for adults',

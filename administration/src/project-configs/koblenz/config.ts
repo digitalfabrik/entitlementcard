@@ -1,20 +1,21 @@
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
-import RegionExtension from '../../cards/extensions/RegionExtension'
-import StartDayExtension from '../../cards/extensions/StartDayExtension'
+import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { storesManagementConfig } from '../storesManagementConfig'
+import { ActivationText } from './activationText'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
 const config: ProjectConfig = {
-  name: 'Digitaler Koblenz-Pass',
+  name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
   staticQrCodesEnabled: true,
   card: {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Startdatum', 'Geburtsdatum', null],
+    extensionColumnNames: ['Geburtsdatum', 'Referenznummer'],
     defaultValidity: { years: 1 },
-    extensions: [StartDayExtension, BirthdayExtension, RegionExtension],
+    extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
@@ -23,12 +24,15 @@ const config: ProjectConfig = {
   csvExport: {
     enabled: false,
   },
+  activation: {
+    activationText: ActivationText,
+    downloadLink: 'https://download.koblenz.sozialpass.app/',
+  },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
   cardCreation: false,
-  storeManagement: {
-    enabled: false,
-  },
+  selfServiceEnabled: true,
+  storesManagement: storesManagementConfig,
   userImportApiEnabled: true,
 }
 

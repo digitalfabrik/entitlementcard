@@ -1,16 +1,15 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { EmailInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 
 type State = { email: string }
 type ValidatedInput = EmailInput
-type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
-const EmailForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: { email: '' },
   getArrayBufferKeys: () => [],
   validate: ({ email }) => {
@@ -25,7 +24,7 @@ const EmailForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     }
     return { type: 'valid', value: { email } }
   },
-  Component: ({ state, setState, label, minWidth = 100 }) => {
+  Component: ({ state, setState, label, minWidth = 100 }: FormComponentProps<State, AdditionalProps>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = EmailForm.validate(state)

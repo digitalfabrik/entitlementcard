@@ -1,5 +1,5 @@
 import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -47,7 +47,7 @@ const ForgotPasswordController = (): ReactElement => {
             </p>
             <p>Bitte prüfen Sie Ihren Spam-Ordner.</p>
             <p>
-              <Link to={'/'}>Zum Login</Link>
+              <Link to='/'>Zum Login</Link>
             </p>
           </>
         ) : (

@@ -1,11 +1,12 @@
 import { Alert, Typography, styled } from '@mui/material'
+import React from 'react'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -50,9 +51,7 @@ type ValidatedInput = {
   wantsPhysicalCard: boolean
   wantsDigitalCard: boolean
 }
-type Options = {}
-type AdditionalProps = {}
-const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const StepCardTypeForm: Form<State, ValidatedInput> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     wantsDigitalCard: { checked: true },
@@ -84,7 +83,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
     }
     return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
   },
-  Component: ({ state, setState }) => {
+  Component: ({ state, setState }: FormComponentProps<State>) => {
     const updateApplicationType = useUpdateStateCallback(setState, 'applicationType')
     const validationResult = StepCardTypeForm.validate(state)
     const isInvalid = validationResult.type === 'error'
@@ -145,7 +144,7 @@ const StepCardTypeForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
           label='Ich beantrage eine physische Ehrenamtskarte.'
           options={wantsPhysicalCardOptions}
         />
-        {isInvalid && validationResult.message && (
+        {isInvalid && validationResult.message !== undefined && (
           <CardTypeAlert severity='error'>{validationResult.message}</CardTypeAlert>
         )}
       </div>

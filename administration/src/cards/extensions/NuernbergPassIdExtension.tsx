@@ -1,6 +1,6 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { CardExtensions, NuernergPassIdentifier } from '../../generated/card_pb'
 import { Extension } from './extensions'
@@ -11,7 +11,9 @@ const nuernbergPassIdLength = 10
 class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
   public readonly name = NuernbergPassIdExtension.name
 
-  setInitialState(): void {}
+  setInitialState(): void {
+    return undefined
+  }
   createForm(onUpdate: () => void): ReactElement {
     return (
       <FormGroup
@@ -30,9 +32,9 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
               return
             }
 
-            const parsedNumber = Number.parseInt(value)
+            const parsedNumber = Number.parseInt(value, 10)
 
-            if (isNaN(parsedNumber)) {
+            if (Number.isNaN(parsedNumber)) {
               this.state = null
               onUpdate()
               return
@@ -64,7 +66,7 @@ class NuernbergPassIdExtension extends Extension<NuernbergPassIdState, null> {
 
   fromString(state: string): void {
     const passId = parseInt(state, 10)
-    this.state = !isNaN(passId) ? { passId } : null
+    this.state = !Number.isNaN(passId) ? { passId } : null
   }
 
   toString(): string {

@@ -205,6 +205,8 @@ type Query {
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Get the pepper for Koblenz user hashing"
+  getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."

@@ -19,13 +19,13 @@ export type CreateCardsResult = {
   staticVerificationCode?: StaticVerificationCode
 }
 
-async function createCards(
+const createCards = async (
   client: ApolloClient<object>,
   projectId: string,
   cardInfos: CardInfo[],
   generateStaticCodes: boolean,
   applicationIdToMarkAsProcessed?: number
-): Promise<CreateCardsResult[]> {
+): Promise<CreateCardsResult[]> => {
   const encodedCardInfos = cardInfos.map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
   const result = await client.mutate<CreateCardsMutation, CreateCardsMutationVariables>({
     mutation: CreateCardsDocument,

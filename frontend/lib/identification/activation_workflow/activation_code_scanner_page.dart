@@ -42,7 +42,10 @@ class ActivationCodeScannerPage extends StatelessWidget {
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
-      await activateCard(context, moveToLastCard, activationCode);
+      final activated = await activateCard(context, activationCode);
+      if (activated) {
+        moveToLastCard();
+      }
     } on ActivationDidNotOverwriteExisting catch (_) {
       await showError(t.identification.cardAlreadyActivated, null);
     } on QrCodeFieldMissingException catch (e) {

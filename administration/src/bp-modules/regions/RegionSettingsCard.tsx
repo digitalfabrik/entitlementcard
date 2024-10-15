@@ -44,8 +44,8 @@ const RegionSettingsCard = ({
       />
       <ButtonContainer>
         <Button
-          text={'Speichern'}
-          intent={'primary'}
+          text='Speichern'
+          intent='primary'
           onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)}
           loading={loading}
         />

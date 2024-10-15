@@ -14,7 +14,7 @@ const DataPrivacyCard = (): ReactElement => {
         erweitern.
       </p>
       <div style={{ textAlign: 'right', padding: '10px 0' }}>
-        <Button text={'Öffnen'} intent={'primary'} onClick={() => navigate('/region/data-privacy-policy')} />
+        <Button text='Öffnen' intent='primary' onClick={() => navigate('/region/data-privacy-policy')} />
       </div>
     </SettingsCard>
   )
