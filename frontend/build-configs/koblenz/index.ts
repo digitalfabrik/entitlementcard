@@ -43,7 +43,7 @@ export const koblenzCommon: CommonBuildConfigType = {
         headerTitleLeft: "",
         headerTitleRight: "Koblenz-Pass",
         headerTextFontSize: 8,
-        headerLogo: "assets/koblenz/header-logo.svg",
+        headerLogo: "assets/koblenz/header-logo.png",
         headerLogoPadding: 4,
         headerLogoWidth: 60,
         headerContainerPadding: { top: 0, right: 4, bottom: 0, left: 8 },
