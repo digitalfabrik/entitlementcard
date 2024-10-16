@@ -1,7 +1,8 @@
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import bayern, { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
+import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
+import pdfConfiguration from '../bayern/pdf'
 import { ProjectConfig } from '../getProjectConfig'
 
 const config: ProjectConfig = {
@@ -22,12 +23,7 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
-  pdf: {
-    title: 'Karten',
-    templatePath: null,
-    issuer: 'Tür an Tür Digitalfabrik gGmbH',
-    elements: bayern.pdf.elements,
-  },
+  pdf: pdfConfiguration,
   csvExport: {
     enabled: false,
   },
