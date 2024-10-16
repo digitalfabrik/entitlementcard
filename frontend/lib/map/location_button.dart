@@ -98,13 +98,10 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> _determinePosition() async {
     setState(() => _locationStatus = null);
-    final requestedPosition = await determinePosition(
-      context,
-      requestIfNotGranted: true,
-      onDisableFeature: () async {
-        await _showFeatureDisabled();
-      },
-    );
+    final requestedPosition = await determinePosition(context, requestIfNotGranted: true);
+    if (requestedPosition.locationStatus == LocationStatus.deniedForever) {
+      await _showFeatureDisabled();
+    }
 
     await widget.bringCameraToUser(requestedPosition);
 

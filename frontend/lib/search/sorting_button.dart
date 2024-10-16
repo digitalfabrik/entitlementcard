@@ -86,14 +86,12 @@ class _SortingButtonState extends State<SortingButton> {
   Future<void> _determinePosition(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     final requiredPosition = userInteract
-        ? await determinePosition(
-            context,
-            requestIfNotGranted: true,
-            onDisableFeature: () async {
-              _showFeatureDisabled();
-            },
-          )
+        ? await determinePosition(context, requestIfNotGranted: true)
         : await determinePosition(context, requestIfNotGranted: false).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+
+    if (userInteract && requiredPosition.locationStatus == LocationStatus.deniedForever) {
+      await _showFeatureDisabled();
+    }
 
     final position = requiredPosition.position;
     if (position != null) {
