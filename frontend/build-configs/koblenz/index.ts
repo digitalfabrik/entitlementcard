@@ -5,9 +5,10 @@ import publisherText from "./publisherText"
 
 const ANDROID_APPLICATION_ID = "app.sozialpass.koblenz"
 const IOS_BUNDLE_IDENTIFIER = "app.sozialpass.koblenz"
+const APP_NAME = "KoblenzPass"
 
 export const koblenzCommon: CommonBuildConfigType = {
-    appName: "Koblenz-Pass",
+    appName: APP_NAME,
     appIcon: "app_icon_koblenz",
     projectId: {
         production: KOBLENZ_PRODUCTION_ID,
@@ -41,7 +42,7 @@ export const koblenzCommon: CommonBuildConfigType = {
         headerTextColor: "#c4262e",
         headerColor: "#b1b3b4",
         headerTitleLeft: "",
-        headerTitleRight: "Koblenz-Pass",
+        headerTitleRight: APP_NAME,
         headerTextFontSize: 8,
         headerLogo: "assets/koblenz/header-logo.png",
         headerLogoPadding: 4,
@@ -51,7 +52,7 @@ export const koblenzCommon: CommonBuildConfigType = {
         bodyLogo: "assets/koblenz/body-logo.png",
         bodyLogoPosition: "center",
         bodyLogoWidth: 125,
-        bodyLabel: "Koblenz-Pass",
+        bodyLabel: APP_NAME,
         bodyTextColor: "#97233f",
         bodyBackgroundImage: true,
         bodyBackgroundImageUrl: "assets/koblenz/background.png",
@@ -94,7 +95,7 @@ export const koblenzCommon: CommonBuildConfigType = {
     },
 }
 
-let koblenz: BuildConfigType = {
+const koblenz: BuildConfigType = {
     common: koblenzCommon,
     android: {
         ...koblenzCommon,
