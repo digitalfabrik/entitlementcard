@@ -2,7 +2,7 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { ProjectConfig } from '../getProjectConfig'
+import { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
@@ -23,7 +23,7 @@ export const applicationJsonToPersonalData = (
   return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
 }
 
-const cardConfig = {
+const cardConfig: CardConfig = {
   defaultValidity: { years: 3 },
   nameColumnName: 'Name',
   expiryColumnName: 'Ablaufdatum',

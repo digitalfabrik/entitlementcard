@@ -2,7 +2,14 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
-import AddressExtensions from './AddressFieldExtensions'
+import { Region } from '../../generated/graphql'
+import { UnionToIntersection } from '../../util/helper'
+import {
+  AddressLine1Extension,
+  AddressLine2Extension,
+  AddressLocationExtension,
+  AddressPlzExtension,
+} from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import EMailNotificationExtension from './EMailNotificationExtension'
@@ -11,35 +18,46 @@ import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import RegionExtension from './RegionExtension'
 import StartDayExtension from './StartDayExtension'
 
-export const findExtension = <E extends ExtensionClass>(
-  array: ExtensionInstance[],
-  extension: E
-): InstanceType<E> | undefined => array.find(e => e instanceof extension) as InstanceType<E> | undefined
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type InferExtensionStateType<T extends Extension<any>> = T extends Extension<infer ExtensionStateType>
+  ? ExtensionStateType
+  : never
 
-export type JSONExtension<T> = {
+export type ExtensionComponentProps<T> = {
+  value: T
+  setValue: (value: T) => void
+  isValid: boolean
+}
+
+export type Extension<T = Record<string, unknown>> = {
   name: string
-  state: T | null
+  getInitialState(region?: Region): T
+  isValid(state: T): boolean
+  Component(props: ExtensionComponentProps<T>): ReactElement | null
+  causesInfiniteLifetime(state: T): boolean
+  getProtobufData(state: T): PartialMessage<CardExtensions>
+  fromString(value: string): T | null
+  toString(state: T): string
 }
 
-export abstract class Extension<T, R> implements JSONExtension<T> {
-  public abstract readonly name: string
-  public state: T | null = null
-  abstract setInitialState(args: R, ...xargs: unknown[]): void
-  abstract isValid(): boolean
-  abstract createForm(onChange: () => void, viewportSmall?: boolean): ReactElement | null
-  abstract causesInfiniteLifetime(): boolean
-  setProtobufData?(message: PartialMessage<CardExtensions>): void
-  abstract fromString(state: string): void
-  abstract toString(): string
-}
+const Extensions = [
+  BirthdayExtension,
+  RegionExtension,
+  StartDayExtension,
+  BavariaCardTypeExtension,
+  AddressLine1Extension,
+  AddressLine2Extension,
+  AddressPlzExtension,
+  AddressLocationExtension,
+  NuernbergPassIdExtension,
+  NuernbergPassIdExtension,
+  EMailNotificationExtension,
+  KoblenzReferenceNumberExtension,
+] as const
 
-export type ExtensionClass =
-  | typeof BavariaCardTypeExtension
-  | typeof BirthdayExtension
-  | typeof NuernbergPassIdExtension
-  | typeof RegionExtension
-  | typeof StartDayExtension
-  | typeof EMailNotificationExtension
-  | typeof KoblenzReferenceNumberExtension
-  | (typeof AddressExtensions)[number]
-export type ExtensionInstance = InstanceType<ExtensionClass>
+export type PossibleExtensionTypes = (typeof Extensions)[number]
+export type PossibleExtensionStateTypes = InferExtensionStateType<PossibleExtensionTypes>
+export type ExtensionState = UnionToIntersection<PossibleExtensionStateTypes>
+export type ExtensionKey = keyof ExtensionState
+
+export default Extensions

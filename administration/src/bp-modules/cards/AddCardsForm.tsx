@@ -3,7 +3,7 @@ import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint, initializeCardBlueprint, initializeCardFromCSV } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
@@ -39,6 +39,7 @@ type CreateCardsFormProps = {
   region: Region
   cardBlueprints: CardBlueprint[]
   setCardBlueprints: (blueprints: CardBlueprint[]) => void
+  updateCardBlueprint: (updatedCard: Partial<CardBlueprint>, index: number) => void
   setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
@@ -46,6 +47,7 @@ const AddCardsForm = ({
   region,
   cardBlueprints,
   setCardBlueprints,
+  updateCardBlueprint,
   setApplicationIdToMarkAsProcessed,
 }: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
@@ -54,15 +56,8 @@ const AddCardsForm = ({
   useEffect(() => {
     if (cardBlueprints.length === 0) {
       const headers = getHeaders(projectConfig)
-      const cardBlueprint = new CardBlueprint('', projectConfig.card, [region])
-      headers.forEach(header => {
-        const value = searchParams.get(header)
-        if (!value) {
-          return
-        }
-        cardBlueprint.setValue(header, value)
-      })
-      setCardBlueprints([cardBlueprint])
+      const values = headers.map(header => searchParams.get(header))
+      setCardBlueprints([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
 
       const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
       setApplicationIdToMarkAsProcessed(
@@ -89,7 +84,7 @@ const AddCardsForm = ({
   }
 
   const addForm = useCallback(() => {
-    const cardBlueprint = new CardBlueprint('', projectConfig.card, [region])
+    const cardBlueprint = initializeCardBlueprint(projectConfig.card, region)
     setCardBlueprints([...cardBlueprints, cardBlueprint])
     scrollToBottom()
   }, [cardBlueprints, projectConfig.card, region, setCardBlueprints])
@@ -98,22 +93,18 @@ const AddCardsForm = ({
     setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
   }
 
-  const notifyUpdate = () => {
-    setCardBlueprints([...cardBlueprints])
-  }
-
   return (
     <Scrollable>
       <FormsWrapper
         onFinishAll={() => {
           scrollToBottom()
         }}>
-        {cardBlueprints.map(blueprint => (
+        {cardBlueprints.map((blueprint, index) => (
           <FormColumn key={blueprint.id}>
             <AddCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}
-              onUpdate={notifyUpdate}
+              updateCard={updatedCard => updateCardBlueprint(updatedCard, index)}
             />
           </FormColumn>
         ))}

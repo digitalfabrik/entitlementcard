@@ -2,6 +2,8 @@ import { add, differenceInCalendarDays, format, isValid, parse } from 'date-fns'
 
 type DateDuration = { years?: number; months?: number; days?: number }
 
+const ISO_8601_DATE_FORMAT = 'yyyy-MM-dd'
+
 /**
  * A PlainDate represents a calendar date.
  * "Calendar date" refers to the concept of a date as expressed in everyday usage, independent of any time zone.
@@ -46,7 +48,7 @@ class PlainDate {
    * @throws RangeError, if the given value does not represent a valid date.
    */
   static from(valueISO8601: string): PlainDate {
-    const date = parse(valueISO8601, 'yyyy-MM-dd', new Date(0))
+    const date = parse(valueISO8601, ISO_8601_DATE_FORMAT, new Date(0))
     return PlainDate.fromLocalDate(date)
   }
 
@@ -56,9 +58,25 @@ class PlainDate {
    * @param format A custom format as used by date-fns
    * @example
    */
-  static fromCustomFormat(value: string, format: 'dd.MM.yyyy' = 'dd.MM.yyyy'): PlainDate {
+  static fromCustomFormat(value: string, format: string = 'dd.MM.yyyy'): PlainDate {
     const date = parse(value, format, new Date(0))
     return PlainDate.fromLocalDate(date)
+  }
+
+  static safeEpochsFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): number | null {
+    if (value === null) {
+      return null
+    }
+    try {
+      return PlainDate.fromCustomFormat(value, format).toDaysSinceEpoch()
+    } catch (e) {
+      console.error(`Could not parse date from string '${value}'.`, e)
+      return null
+    }
+  }
+
+  static safeEpochsFrom(valueISO8601: string | null): number | null {
+    return PlainDate.safeEpochsFromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
   }
 
   /**

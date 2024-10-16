@@ -1,4 +1,4 @@
-import PlainDate from './PlainDate'
+import PlainDate from '../PlainDate'
 
 describe('PlainDate.toDaysSinceEpoch', () => {
   it('should be 0 for epoch', () => {

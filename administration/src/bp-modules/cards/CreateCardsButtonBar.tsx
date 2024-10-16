@@ -1,7 +1,7 @@
 import { Button, Tooltip } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint, isValid } from '../../cards/CardBlueprint'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ButtonBar from '../ButtonBar'
 
@@ -18,7 +18,7 @@ const CreateCardsButtonBar = ({
   generateCardsCsv,
   goBack,
 }: CreateCardsButtonBarProps): ReactElement => {
-  const allCardsValid = cardBlueprints.every(cardBlueprint => cardBlueprint.isValid())
+  const allCardsValid = cardBlueprints.every(cardBlueprint => isValid(cardBlueprint))
   const { csvExport } = useContext(ProjectConfigContext)
 
   return (

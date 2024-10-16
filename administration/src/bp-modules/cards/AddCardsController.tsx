@@ -18,6 +18,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     generateCardsPdf,
     generateCardsCsv,
     setCardBlueprints,
+    updateCardBlueprint,
     cardBlueprints,
     applicationIdToMarkAsProcessed,
     setApplicationIdToMarkAsProcessed,
@@ -48,6 +49,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
         region={region}
         cardBlueprints={cardBlueprints}
         setCardBlueprints={setCardBlueprints}
+        updateCardBlueprint={updateCardBlueprint}
         setApplicationIdToMarkAsProcessed={setApplicationIdToMarkAsProcessed}
       />
       <CreateCardsButtonBar

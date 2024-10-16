@@ -2,7 +2,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import CSVCard from '../../cards/CSVCard'
+import { CardBlueprint } from '../../cards/CardBlueprint'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
@@ -29,8 +29,8 @@ export const ENTRY_LIMIT = 300
 
 type ImportCardsInputProps = {
   headers: string[]
-  setCardBlueprints: (cardBlueprints: CSVCard[]) => void
-  lineToBlueprint: (line: string[], csvHeader: string[]) => CSVCard
+  setCardBlueprints: (cardBlueprints: CardBlueprint[]) => void
+  lineToBlueprint: (line: string[], csvHeader: string[]) => CardBlueprint
   isFreinetFormat: boolean
 }
 

@@ -2,7 +2,7 @@ import { PDFFont, PDFForm, PDFPage, PDFTextField, grayscale } from 'pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
-import CardBlueprint from '../CardBlueprint'
+import { CardBlueprint } from '../CardBlueprint'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type InfoParams = {

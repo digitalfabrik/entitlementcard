@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { FREINET_PARAM } from '../../Router'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import CSVCard from '../../cards/CSVCard'
+import { CardBlueprint, initializeCardFromCSV } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -44,23 +44,15 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     }
   }
 
+  // TODO headers or csvHeader?
   const lineToBlueprint = useCallback(
-    (line: string[], csvHeader: string[]): CSVCard => {
+    (line: string[], csvHeader: string[]): CardBlueprint => {
       if (isFreinetFormat) {
         convertFreinetImport(line, csvHeader, projectConfig)
       }
-      const cardBlueprint = new CSVCard(projectConfig.card, region)
-      headers.forEach(header => {
-        const idx = csvHeader.indexOf(header)
-        if (idx === -1) {
-          // column is missing in csv
-          return
-        }
-        cardBlueprint.setValue(header, line[idx])
-      })
-      return cardBlueprint
+      return initializeCardFromCSV(projectConfig.card, line, csvHeader, region)
     },
-    [headers, projectConfig, region, isFreinetFormat]
+    [projectConfig, region, isFreinetFormat]
   )
 
   if (state === CardActivationState.loading) {
@@ -87,7 +79,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
           isFreinetFormat={isFreinetFormat}
         />
       ) : (
-        <CardImportTable cardBlueprints={cardBlueprints} headers={headers} />
+        <CardImportTable cardBlueprints={cardBlueprints} cardConfig={projectConfig.card} headers={headers} />
       )}
       <CreateCardsButtonBar
         cardBlueprints={cardBlueprints}
