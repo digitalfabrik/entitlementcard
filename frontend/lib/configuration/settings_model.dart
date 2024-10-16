@@ -71,15 +71,6 @@ class SettingsModel extends ChangeNotifier {
     _notifyChange(currentlyHideVerificationInfo, enabled);
   }
 
-  String locationFeatureKey = 'location';
-  bool get locationFeatureEnabled => _getBool(locationFeatureKey) ?? false;
-
-  Future<void> setLocationFeatureEnabled({required bool enabled}) async {
-    bool? currentlyLocationFeatureEnabled = locationFeatureEnabled;
-    await _preferences?.setBool(locationFeatureKey, enabled);
-    _notifyChange(currentlyLocationFeatureEnabled, enabled);
-  }
-
   String languageKey = 'language';
   String? get language => _getString(languageKey);
 
@@ -91,7 +82,7 @@ class SettingsModel extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, locationFeatureEnabled: $locationFeatureEnabled, enableStaging:$enableStaging, language:$language}';
+    return 'SettingsModel{firstStart: $firstStart, hideVerificationInfo: $hideVerificationInfo, enableStaging:$enableStaging, language:$language}';
   }
 
   // only notify if value has changed

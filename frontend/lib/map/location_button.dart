@@ -1,8 +1,6 @@
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/widgets/small_button_spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
@@ -51,14 +49,7 @@ class _LocationButtonState extends State<LocationButton> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settings = context.read<SettingsModel>();
-
-      checkAndRequestLocationPermission(
-        context,
-        requestIfNotGranted: false,
-        onDisableFeature: () => settings.setLocationFeatureEnabled(enabled: false),
-        onEnableFeature: () => settings.setLocationFeatureEnabled(enabled: true),
-      ).then(
+      checkAndRequestLocationPermission(context, requestIfNotGranted: false).then(
         (status) => setState(() {
           _locationStatus = status;
         }),
@@ -69,7 +60,6 @@ class _LocationButtonState extends State<LocationButton> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final settings = Provider.of<SettingsModel>(context);
 
     return Container(
       // Makes sure that the FAB has
@@ -80,7 +70,7 @@ class _LocationButtonState extends State<LocationButton> {
         heroTag: 'fab_map_view',
         elevation: 1,
         backgroundColor: theme.colorScheme.surfaceVariant,
-        onPressed: _locationStatus != null ? () => _determinePosition(settings) : null,
+        onPressed: _locationStatus != null ? () => _determinePosition() : null,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: LocationIcon(locationStatus: _locationStatus, followUserLocation: widget.followUserLocation),
@@ -106,17 +96,13 @@ class _LocationButtonState extends State<LocationButton> {
     );
   }
 
-  Future<void> _determinePosition(SettingsModel settings) async {
+  Future<void> _determinePosition() async {
     setState(() => _locationStatus = null);
     final requestedPosition = await determinePosition(
       context,
       requestIfNotGranted: true,
       onDisableFeature: () async {
-        await settings.setLocationFeatureEnabled(enabled: false);
         await _showFeatureDisabled();
-      },
-      onEnableFeature: () async {
-        await settings.setLocationFeatureEnabled(enabled: true);
       },
     );
 
