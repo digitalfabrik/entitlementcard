@@ -5,9 +5,7 @@ import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
-import 'package:provider/provider.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
@@ -28,10 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settings = context.read<SettingsModel>();
-      setState(() => _sortingMode = settings.locationFeatureEnabled && _coordinates != null
-          ? SortingMode.byDistance
-          : SortingMode.alphabetically);
+      setState(() => _sortingMode = _coordinates == null ? SortingMode.alphabetically : SortingMode.byDistance);
     });
   }
 

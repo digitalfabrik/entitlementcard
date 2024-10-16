@@ -26,6 +26,7 @@ class MapContainer extends StatefulWidget {
   final OnFeatureClickCallback? onFeatureClick;
   final OnNoFeatureClickCallback? onNoFeatureClick;
   final OnMapCreatedCallback? onMapCreated;
+  final void Function(bool followUserLocation) setFollowUserLocation;
   final List<String> onFeatureClickLayerFilter;
   final bool locationAvailable;
   final LatLng? userLocation;
@@ -37,6 +38,7 @@ class MapContainer extends StatefulWidget {
     required this.onFeatureClickLayerFilter,
     required this.locationAvailable,
     required this.onMapCreated,
+    required this.setFollowUserLocation,
     this.userLocation,
   });
 
@@ -91,6 +93,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
           compassViewPosition: CompassViewPosition.TopRight,
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
+          onCameraTrackingDismissed: () => widget.setFollowUserLocation(false),
         ),
         Positioned(
           bottom: 3,
