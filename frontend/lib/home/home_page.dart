@@ -92,8 +92,8 @@ class HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionMapBar(
         bringCameraToUser: (position) async {
-          setState(() => followUserLocation = true);
           await mapPageController?.bringCameraToUser(position);
+          setState(() => followUserLocation = true);
         },
         selectedAcceptingStoreId: selectedAcceptingStoreId,
         followUserLocation: followUserLocation,
