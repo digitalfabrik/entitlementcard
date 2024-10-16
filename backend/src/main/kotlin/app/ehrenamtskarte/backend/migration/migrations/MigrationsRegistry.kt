@@ -21,6 +21,7 @@ object MigrationsRegistry {
         V0017_AlterUserEntitlementsUserHashConstraint(),
         V0018_AlterRegionIdentifierConstraint(),
         V0019_AddEntitlementIdColumnToCards(),
-        V0020_AddApiTokenTable()
+        V0020_AddApiTokenTable(),
+        V0021_AlterTokenHashColumn()
     )
 }

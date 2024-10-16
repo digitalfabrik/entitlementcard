@@ -33,8 +33,7 @@ class CardStatisticsQueryService {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
-            val projectConfig = context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
+            val projectConfig = context.backendConfiguration.getProjectConfig(project)
             val projectId = projectEntity.id.value
             if (!Authorizer.mayViewCardStatisticsInProject(admin, projectId)) {
                 throw ForbiddenException()
@@ -63,8 +62,7 @@ class CardStatisticsQueryService {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
-            val projectConfig = context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
+            val projectConfig = context.backendConfiguration.getProjectConfig(project)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
 
             if (!Authorizer.mayViewCardStatisticsInRegion(admin, region)) {

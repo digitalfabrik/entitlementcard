@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.stores.webservice.schema
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
@@ -48,9 +47,7 @@ class AcceptingStoreQueryService {
     @GraphQLDescription("Search for accepting stores in the given project using searchText and categoryIds.")
     fun searchAcceptingStoresInProject(project: String, params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> {
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig =
-            context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val filteredStores = transaction {
             AcceptingStoresRepository.findBySearch(
                 project,

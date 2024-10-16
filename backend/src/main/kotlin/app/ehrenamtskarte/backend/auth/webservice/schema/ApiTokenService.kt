@@ -3,13 +3,13 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.TOKEN_LENGTH
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import at.favre.lib.crypto.bcrypt.BCrypt
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -32,17 +32,15 @@ class ApiTokenService {
         val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
         admin?.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
 
-        val random = SecureRandom()
         val bytes = ByteArray(getByteArrayLength())
-        random.nextBytes(bytes)
-        val token = Base64.getEncoder()
-            .encodeToString(bytes)
+        SecureRandom().nextBytes(bytes)
+        val token = Base64.getEncoder().encodeToString(bytes)
 
-        val encryptedToken = BCrypt.withDefaults().hash(11, token.toCharArray())
+        val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
         val expirationDate = LocalDate.now().plusMonths(expiresIn.toLong())
 
         transaction {
-            ApiTokensRepository.insert(encryptedToken, admin.id, expirationDate, admin.projectId)
+            ApiTokensRepository.insert(tokenHash, admin.id, expirationDate, admin.projectId)
         }
 
         return token
@@ -72,7 +70,7 @@ class ApiTokenQueryService {
         val jwtPayload = context.enforceSignedIn()
 
         val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
-        admin?.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
+        admin?.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
 
         return transaction {
             (ApiTokens leftJoin Administrators)
