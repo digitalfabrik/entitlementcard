@@ -26,9 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() => _sortingMode = _coordinates == null
-          ? SortingMode.alphabetically
-          : SortingMode.byDistance);
+      setState(() => _sortingMode = _coordinates == null ? SortingMode.alphabetically : SortingMode.byDistance);
     });
   }
 

@@ -87,7 +87,8 @@ class _SortingButtonState extends State<SortingButton> {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     final requiredPosition = userInteract
         ? await determinePosition(context, requestIfNotGranted: true)
-        : await determinePosition(context, requestIfNotGranted: false).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+        : await determinePosition(context, requestIfNotGranted: false)
+            .timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
 
     if (userInteract && requiredPosition.locationStatus == LocationStatus.deniedForever) {
       await _showFeatureDisabled();
