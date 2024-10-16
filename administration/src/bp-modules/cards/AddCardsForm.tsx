@@ -56,7 +56,7 @@ const AddCardsForm = ({
   useEffect(() => {
     if (cardBlueprints.length === 0) {
       const headers = getHeaders(projectConfig)
-      const values = headers.map(searchParams.get)
+      const values = headers.map(header => searchParams.get(header))
       setCardBlueprints([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
 
       const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
