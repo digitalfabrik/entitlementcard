@@ -3,7 +3,9 @@ import { Extension } from './extensions'
 class EMailNotificationExtension extends Extension<string, null> {
   public readonly name = EMailNotificationExtension.name
 
-  setInitialState(): void {}
+  setInitialState(): void {
+    return undefined
+  }
   createForm(): null {
     return null
   }

@@ -1,4 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
+import React from 'react'
 
 import { defaultEndDate, defaultStartDate } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
@@ -7,6 +8,8 @@ jest.useFakeTimers()
 describe('StatisticFilterBar', () => {
   const onApplyFilter = jest.fn()
   const onExportCsv = jest.fn()
+
+  beforeEach(jest.resetAllMocks)
 
   it('should execute onApplyFilter if filter button was clicked', async () => {
     const { getByText } = render(

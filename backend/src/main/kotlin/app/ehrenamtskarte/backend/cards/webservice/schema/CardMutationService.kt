@@ -20,7 +20,6 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificati
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
@@ -134,7 +133,7 @@ class CardMutationService {
         generateStaticCode: Boolean
     ): CardCreationResultModel {
         val context = dfe.getContext<GraphQLContext>()
-        val config = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+        val config = context.backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
             throw NotFoundException()
         }
@@ -220,9 +219,7 @@ class CardMutationService {
         applicationIdToMarkAsProcessed: Int? = null
     ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig =
-            context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val jwtPayload = context.enforceSignedIn()
         val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
         val activationCodes = transaction {
@@ -269,9 +266,7 @@ class CardMutationService {
     ): CardActivationResultModel {
         val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig =
-            context.backendConfiguration.projects.find { it.id == project }
-                ?: throw ProjectNotFoundException(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
 
@@ -348,9 +343,7 @@ class CardMutationService {
                 throw ForbiddenException()
             }
             val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-            val projectConfig =
-                context.backendConfiguration.projects.find { it.id == project }
-                    ?: throw ProjectNotFoundException(project)
+            val projectConfig = context.backendConfiguration.getProjectConfig(project)
             Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
         }
         return true

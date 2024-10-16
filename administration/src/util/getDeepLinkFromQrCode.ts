@@ -8,7 +8,7 @@ import { isDevMode, isStagingMode } from './helper'
 
 const getDeepLinkFromQrCode = (qrCode: PdfQrCode): string => {
   const qrCodeContent = new QrCode({
-    qrCode: qrCode,
+    qrCode,
   }).toBinary()
   const buildConfigProjectId = getBuildConfig(window.location.hostname).common.projectId
   // custom link schemes don't work in browsers or pdf thats why we use the staging link scheme also for development

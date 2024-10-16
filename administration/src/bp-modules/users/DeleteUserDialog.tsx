@@ -1,5 +1,5 @@
 import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
-import { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -57,7 +57,7 @@ const DeleteUserDialog = ({
           })
         }}>
         <div className={Classes.DIALOG_BODY}>
-          Möchten Sie den Benutzer '{selectedUser?.email}' unwiderruflich löschen?
+          Möchten Sie den Benutzer &apos;{selectedUser?.email}&apos; unwiderruflich löschen?
           {selectedUser?.id !== actingAdminId ? null : (
             <Callout intent='danger' style={{ marginTop: '16px' }}>
               <b>Sie löschen Ihr eigenes Konto.</b> Sie werden ausgeloggt und können sich nicht mehr einloggen.

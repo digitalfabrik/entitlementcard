@@ -1,13 +1,13 @@
 import { FIELD_LATITUDE, FIELD_LONGITUDE } from '../../project-configs/constants'
-import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { isCoordinate } from '../../project-configs/helper/storeFieldValidation'
-import { StoreData } from './StoresImportController'
+import { StoresData } from './StoresImportController'
 
-export class AcceptingStoreEntry {
-  data: StoreData
-  fields: StoreFieldConfig[]
+export class AcceptingStoresEntry {
+  data: StoresData
+  fields: StoresFieldConfig[]
 
-  constructor(data: StoreData, fields: StoreFieldConfig[]) {
+  constructor(data: StoresData, fields: StoresFieldConfig[]) {
     this.data = data
     this.fields = fields
   }
@@ -17,5 +17,9 @@ export class AcceptingStoreEntry {
 
   hasValidCoordinates(): boolean {
     return isCoordinate(this.data[FIELD_LONGITUDE]) && isCoordinate(this.data[FIELD_LATITUDE])
+  }
+
+  hasEmptyCoordinates(): boolean {
+    return this.data[FIELD_LONGITUDE].length === 0 && this.data[FIELD_LATITUDE].length === 0
   }
 }

@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const HomeController = (): ReactElement => {
-  const { applicationFeature, cardStatistics, cardCreation } = useContext(ProjectConfigContext)
+  const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -27,12 +27,12 @@ const HomeController = (): ReactElement => {
       {role === Role.RegionAdmin || role === Role.RegionManager ? (
         <>
           {applicationFeature ? (
-            <NavLink to={'/applications'}>
+            <NavLink to='/applications'>
               <StyledButton icon='form' text='Eingehende Anträge' />
             </NavLink>
           ) : null}
           {cardCreation ? (
-            <NavLink to={'/cards'}>
+            <NavLink to='/cards'>
               <StyledButton icon='id-number' text='Karten erstellen' />
             </NavLink>
           ) : null}
@@ -40,23 +40,28 @@ const HomeController = (): ReactElement => {
       ) : null}
       {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
         <>
-          <NavLink to={'/users'}>
+          <NavLink to='/users'>
             <StyledButton icon='people' text='Benutzer verwalten' />
           </NavLink>
           {cardStatistics.enabled ? (
-            <NavLink to={'/statistics'}>
+            <NavLink to='/statistics'>
               <StyledButton icon='stacked-chart' text='Statistiken' />
             </NavLink>
           ) : null}
         </>
       ) : null}
       {role === Role.RegionAdmin && applicationFeature ? (
-        <NavLink to={'/region'}>
+        <NavLink to='/region'>
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
       ) : null}
+      {role === Role.ProjectAdmin && userImportApiEnabled ? (
+        <NavLink to='/project'>
+          <StyledButton icon='projects' text='Projekt verwalten' />
+        </NavLink>
+      ) : null}
       {role === Role.ProjectStoreManager ? (
-        <NavLink to={'/stores'}>
+        <NavLink to='/stores'>
           <StyledButton icon='shop' text='Akzeptanzpartner verwalten' />
         </NavLink>
       ) : null}

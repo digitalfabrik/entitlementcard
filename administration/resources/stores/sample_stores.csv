@@ -1,0 +1,4 @@
+name,street,houseNumber,postalCode,location,latitude,longitude,telephone,email,homepage,discountDE,discountEN,categoryId
+Test Ballett et Danse,Teststr.,10,90408,Nürnberg,49.4622598,11.0765467,0911/123456,info@test-ballettschule-uliczay.de,https://www.test.de/kontakt/,20% Ermäßigung für Erwachsene,20% discount for adults,17
+Apotheke,Test Str.,187,90429,Nürnberg,49.4565929,11.0365767,0911/323213123,info@apotheke.com,https://www.apotheke-nuernberg.de,"10 % Ermäßigung auf nicht verschreibungspflichtige Medikamente, die die Kasse nicht bezahlt („grüne Rezepte“). Außer Angebotspreise",10% discount on non-prescription medicine that is not covered by health insurance (“green prescriptions”). Except special offers,15
+Shop,Test-Henlein-Str.,27,90443,Nürnberg,49.441456,11.0740208,0911/12340,info@test-group.eu,https://www.afbshop.de/nuernberg,"10% Ermäßigung für PC, Notebooks (gebraucht mit Garantie)","10% discount for PC, notebooks (used with warranty)",16

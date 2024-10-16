@@ -25,14 +25,13 @@ const RegionController = (): ReactElement => {
         description='Sie sind nicht berechtigt, Änderungen an der Region vorzunehmen.'
       />
     )
-  } else {
-    return (
-      <RegionSettingsContainer>
-        <DataPrivacyCard />
-        <RegionSettingsController regionId={region.id} />
-      </RegionSettingsContainer>
-    )
   }
+  return (
+    <RegionSettingsContainer>
+      <DataPrivacyCard />
+      <RegionSettingsController regionId={region.id} />
+    </RegionSettingsContainer>
+  )
 }
 
 export default RegionController

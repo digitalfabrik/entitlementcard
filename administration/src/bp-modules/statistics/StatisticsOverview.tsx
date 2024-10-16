@@ -23,7 +23,7 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
   const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
     try {
       downloadDataUri(generateCsv(statistics, cardStatistics), getCsvFileName(`${dateStart}_${dateEnd}`, region))
-    } catch (error) {
+    } catch {
       appToaster?.show({
         message: 'Etwas ist schiefgegangen beim Export der CSV.',
         intent: 'danger',

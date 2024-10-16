@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
 class ActivationExistingCardDialog extends StatelessWidget {
   const ActivationExistingCardDialog({super.key});
 
@@ -18,9 +20,9 @@ class ActivationExistingCardDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Ok'),
+          child: Text(context.t.common.ok),
           onPressed: () {
-            Navigator.of(context).pop(false);
+            Navigator.of(context).pop();
           },
         )
       ],
@@ -28,11 +30,10 @@ class ActivationExistingCardDialog extends StatelessWidget {
   }
 
   /// Returns true, if the user wants to activate an existing card
-  static Future<bool> showExistingCardDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => ActivationExistingCardDialog(),
-        ) ??
-        false;
+  static Future<void> showExistingCardDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => ActivationExistingCardDialog(),
+    );
   }
 }

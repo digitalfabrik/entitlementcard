@@ -53,7 +53,7 @@ class WebService {
         val mapStyleHandler = MapStyleHandler(config)
         val applicationHandler = ApplicationAttachmentHandler(applicationData)
         val healthHandler = HealthHandler(config)
-        val userImportHandler = UserImportHandler()
+        val userImportHandler = UserImportHandler(config)
 
         app.post("/") { ctx ->
             if (!production) {
@@ -77,10 +77,7 @@ class WebService {
 
         app.get("/health") { ctx -> healthHandler.handle(ctx) }
 
-        // TODO remove the condition once the Koblenz project is ready to go live
-        if (!production) {
-            app.post("/users/import") { ctx -> userImportHandler.handle(ctx) }
-        }
+        app.post("/users/import") { ctx -> userImportHandler.handle(ctx) }
 
         app.start(host, port)
         println("Server is running at http://$host:$port")
