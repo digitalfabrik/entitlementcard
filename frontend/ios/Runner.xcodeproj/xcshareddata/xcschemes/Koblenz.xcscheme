@@ -58,7 +58,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "BUNDLE_IDENTIFIER"
-            value = "app.sozialpass.nuernberg"
+            value = "app.sozialpass.koblenz"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
