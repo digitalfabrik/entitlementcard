@@ -11,13 +11,15 @@ const mapTabIndex = 0;
 class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
   final int? selectedAcceptingStoreId;
+  final bool followUserLocation;
   final int currentTabIndex;
 
   const FloatingActionMapBar(
       {super.key,
       required this.bringCameraToUser,
       required this.selectedAcceptingStoreId,
-      required this.currentTabIndex});
+      required this.currentTabIndex,
+      required this.followUserLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class FloatingActionMapBar extends StatelessWidget {
           ? [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [LocationButton(bringCameraToUser: bringCameraToUser)],
+                children: [
+                  LocationButton(bringCameraToUser: bringCameraToUser, followUserLocation: followUserLocation)
+                ],
               ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 200),

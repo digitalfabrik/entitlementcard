@@ -57,10 +57,13 @@ extension GrantedExtension on LocationStatus {
 
 class RequestedPosition {
   Position? position;
+  LocationStatus? locationStatus;
 
-  RequestedPosition(this.position);
+  RequestedPosition(this.position, this.locationStatus);
 
-  RequestedPosition.unknown() : position = null;
+  RequestedPosition.unknown()
+      : position = null,
+        locationStatus = null;
 
   bool isAvailable() {
     return position != null;
@@ -87,13 +90,13 @@ Future<RequestedPosition> determinePosition(
   );
 
   if (!permission.isPermissionGranted()) {
-    return RequestedPosition.unknown();
+    return RequestedPosition(null, permission);
   }
 
   var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
   position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
 
-  return RequestedPosition(position);
+  return RequestedPosition(position, permission);
 }
 
 /// Ensures all preconditions needed to determine the current position.

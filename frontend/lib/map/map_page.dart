@@ -17,8 +17,10 @@ typedef OnMapCreatedCallback = void Function(MapPageController controller);
 class MapPage extends StatefulWidget {
   final OnMapCreatedCallback onMapCreated;
   final void Function(int? id) selectAcceptingStore;
+  final void Function(bool followUserLocation) setFollowUserLocation;
 
-  const MapPage({super.key, required this.onMapCreated, required this.selectAcceptingStore});
+  const MapPage(
+      {super.key, required this.onMapCreated, required this.selectAcceptingStore, required this.setFollowUserLocation});
 
   @override
   State<StatefulWidget> createState() {
@@ -43,6 +45,7 @@ class _MapPageState extends State<MapPage> implements MapPageController {
       onFeatureClick: _onFeatureClick,
       onNoFeatureClick: stopShowingAcceptingStore,
       onFeatureClickLayerFilter: const ['physical_stores'],
+      setFollowUserLocation: widget.setFollowUserLocation,
       onMapCreated: (controller) {
         controller.setTelemetryEnabled(enabled: false);
         setState(() => _controller = controller);
